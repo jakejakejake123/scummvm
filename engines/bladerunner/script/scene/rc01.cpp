@@ -767,12 +767,26 @@ void SceneScriptRC01::PlayerWalkedIn() {
 		Player_Gains_Control();
 		Game_Flag_Reset(kFlagRC02toRC01);
 
-		if ( Game_Flag_Query(kFlagRC02Entered)
-		 && !Game_Flag_Query(kFlagRC02Left)
-		) {
-			Actor_Voice_Over(1910, kActorVoiceOver);
-			Actor_Voice_Over(1920, kActorVoiceOver);
-			Actor_Voice_Over(1930, kActorVoiceOver);
+		// Jake - Added in some code so McCoy will only come to the conclusion that the suspects motive is vengeance if he learned
+		// from Runciter that nothing was stolen. Also added in a line where McCoy reflects on the massacre that he saw in the shop. The line seems to be in the past
+		// so it makes sense to put it here. It will only be said however if McCoy didn't ask Runciter about the suspects motives.
+		// The flag RunciterTalkMotives will be the trigger for this and has been added in the game constants sheet. 
+		// The trigger for RunciterTalkMotives will be placed in RC02 and will be set at the end of the conversation where McCoy
+		// asks Runciter about the suspects motives.
+		if (Game_Flag_Query(kFlagRC02Entered) && !Game_Flag_Query(kFlagRC02Left)) {
+			if (_vm->_cutContent) {
+				if (Game_Flag_Query(kFlagRunciterTalkMotives)) {
+					Actor_Voice_Over(1910, kActorVoiceOver); //99-1910.AUD	It didn't add up. Animal murders, the lack of any theft.
+					Actor_Voice_Over(1920, kActorVoiceOver); //99-1920.AUD	The small animals alone were worth a good chunk of change on the street.
+					Actor_Voice_Over(1930, kActorVoiceOver); //99-1930.AUD	It seemed more like an act of vengeance.
+				} else {
+					Actor_Voice_Over(1940, kActorVoiceOver); //99-1940.AUD	I'd never seen so many authentic animals under the same roof. It was beautiful... and horrendous.
+				}
+			} else {
+				Actor_Voice_Over(1910, kActorVoiceOver);
+				Actor_Voice_Over(1920, kActorVoiceOver);
+				Actor_Voice_Over(1930, kActorVoiceOver);
+			}
 			Game_Flag_Set(kFlagRC02Left);
 		}
 		//return true;

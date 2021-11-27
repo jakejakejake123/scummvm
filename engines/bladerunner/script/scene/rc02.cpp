@@ -239,19 +239,41 @@ void SceneScriptRC02::dialogueWithRunciter() {
 
 	switch (answer) {
 	case 0: // MOTIVES
-		if (_vm->_cutContent
-		    && Player_Query_Agenda() != kPlayerAgendaSurly
-		    && Player_Query_Agenda() != kPlayerAgendaErratic) {
-			Actor_Says(kActorMcCoy, 4575, kAnimationModeTalk);
-		}
+		// Jake - Moved the I can tell your crushed line to later in the conversation and McCoy only says it if he is not surly or erratic.
 		Actor_Says(kActorMcCoy, 4580, 13);
 		Actor_Face_Actor(kActorRunciter, kActorMcCoy, true);
 		Actor_Says(kActorRunciter, 110, 18);
 		Actor_Says(kActorRunciter, 120, 17);
 		Actor_Says(kActorRunciter, 130, 19);
-		Actor_Says(kActorMcCoy, 4605, 13);
-		Actor_Says(kActorRunciter, 140, 16);
-		Game_Flag_Set(kFlagRC02RunciterTalk1);
+		Actor_Says(kActorMcCoy, 4605, 13);	
+		// Jake - Added in some extra dialogue for Runciter. Originally these lines were only played one at a time as banter dialogue
+		// but I think they work better as a conversation. Basically after Runciter says how barbaric the reps were he then says they should have just killed him
+		// McCoys asks why and Runciter tells him how he lost everything. McCoy can be kind or cruel towards Runciter based on his agenda. Also set the flag
+		// Runciter talk motives to be triggered when you ask him about the suspects motives. This will ensure that when McCoy exits the store he will only talk
+		// about the suspects motive if he learned from Runciter that nothing was stolen. Also McCoys friendliness towards Runciter now changes based on whether 
+		// he is surly or erratic.	
+
+		Actor_Says(kActorRunciter, 140, 16); // 15-0140.AUD	Who else would be capable of such barbaric acts?
+		if (_vm->_cutContent) {
+			Actor_Says(kActorRunciter, 310, 18);  // 15-0310.AUD	They should have just killed me!
+			Actor_Says(kActorMcCoy, 8190, 0);	// 00-8190.AUD	Why?
+			Actor_Says(kActorRunciter, 300, 16); // 15-0300.AUD	Do you have any idea how much this is going to cost me? I'm ruined!		
+			Actor_Says(kActorRunciter, 90, 17); // 15-0090.AUD	That snow tiger alone was worth more than most people will ever see in a lifetime. 
+			Actor_Says(kActorRunciter, 540, 19); // 15-0540.AUD	I sacrificed everything to get that tiger. And now she's dead.
+			Game_Flag_Set(kFlagRunciterTalkMotives);
+			if (Player_Query_Agenda() == kPlayerAgendaSurly 
+					|| Player_Query_Agenda() == kPlayerAgendaErratic) {
+				Actor_Says(kActorRunciter, 530, 17); //15-0530.AUD	My precious one. She was my baby.   
+				Actor_Says(kActorMcCoy, 2660, 18); // 00-2660.AUD	That breaks my heart. (Sarcastically.)
+				Actor_Modify_Friendliness_To_Other(kActorRunciter, kActorMcCoy, -5);
+			} else {
+				Actor_Says(kActorMcCoy, 4575, kAnimationModeTalk); //	00-4575.AUD	I can tell you're crushed.
+				Actor_Says(kActorRunciter, 530, 17); //15-0530.AUD	My precious one. She was my baby.
+				Actor_Says(kActorMcCoy, 2305, 13); //00-2305.AUD	I’m sorry.
+				Actor_Modify_Friendliness_To_Other(kActorRunciter, kActorMcCoy, +5);
+			}	
+		}
+		Game_Flag_Set(kFlagRC02RunciterTalk1);		
 		break;
 
 	case 10: // LUCY
