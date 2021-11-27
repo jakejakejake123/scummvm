@@ -43,13 +43,31 @@ void KIAScript::SCRIPT_KIA_DLL_Play_Clue_Asset_Script(int notUsed, int clueId) {
 		KIA_Play_Actor_Dialogue(kActorOfficerLeary, 40);
 		break;
 	case kClueDoorForced2:
-		KIA_Play_Actor_Dialogue(kActorOfficerLeary, 0);
+		// Made it so the door forced 2 contains the entire dialogue for both door force clues. It makes no sense for the player to check the door later to inspect the broken lock because
+		// because after you investigate the place and the police are gone from act 2 onwards the door is LOCKED, meaning the lock has been replaced. It wouldn't make much sense for McCoy to inspect a LOCKED door only to say that the lock had been forced
+		// So I reappropriated door force 1 to play the unused dialogue where McCoy comments on Sebastians door being forced instead. I mean the reps broke into his place after all and he knows about it,
+		// So it must be because he saw that the lock was broken 
+		if (_vm->_cutContent) {
+			KIA_Play_Actor_Dialogue(kActorVoiceOver, 1870); //99-1870.AUD	Whoever did it showed some serious strength. They busted the lock clean off.
+			KIA_Play_Actor_Dialogue(kActorOfficerLeary, 180); //23-0180.AUD	Gaff said you didn't need to hear this, but I guess you deserve to know.
+			KIA_Play_Actor_Dialogue(kActorMcCoy, 2635); ////00-2635.AUD	I’m all ears.
+			KIA_Play_Actor_Dialogue(kActorOfficerLeary, 0); //23-0000.AUD	I already checked for a crowbar or some kind of tool. No luck but it looks like we've got some latents.
+			KIA_Play_Actor_Dialogue(kActorMcCoy, 4495); //00-4495.AUD	Make sure the lab boys run them through the mainframe. Human and Rep.
+		}
+		KIA_Play_Actor_Dialogue(kActorOfficerLeary, 0); //23-0000.AUD	I already checked for a crowbar or some kind of tool. No luck but it looks like we've got some latents.
 		break;
 	case kClueDoorForced1:
-		if (_vm->_cutContent || _vm->_gameVars[kVariableChapter] == 1) {
+		if (_vm->_gameVars[kVariableChapter] == 1) {
 			// keep in mind, this line in only available in Act 1 (1.TLK) unless _vm->_cutContent is selected (provided that cut content now loads all TLKs)
 			// Without cut content it will be silent in subsequent Acts
 			KIA_Play_Actor_Dialogue(kActorVoiceOver, 1870);
+		}
+		// Made it so the other door forced clue is acquired when you enter Sebastians place which now has the door forced dialogue play just before you enter.
+		// This is the dialogoue that will be included in this clue.
+		if (_vm->_cutContent) {
+			KIA_Play_Actor_Dialogue(kActorVoiceOver, 0); //99-0000.AUD	The lock had been forced.
+			KIA_Play_Actor_Dialogue(kActorVoiceOver, 10); //99-0010.AUD	Tyrell sub-cons might have been a little dingy...
+			KIA_Play_Actor_Dialogue(kActorVoiceOver, 20); //99-0020.AUD	But I didn't think they'd bust down their own doors, if they forgot their keys.
 		}
 		break;
 	case kClueLimpingFootprints:

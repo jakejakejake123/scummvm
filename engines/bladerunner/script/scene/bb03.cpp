@@ -107,6 +107,17 @@ bool SceneScriptBB03::ClickedOnExit(int exitId) {
 	}
 
 	if (exitId == 2) {
+		// Added in dialogue where McCoy makes a comment on Sebastians door which has been busted open.
+		if (!Loop_Actor_Walk_To_XYZ(kActorMcCoy, 204.0f, 60.16f, -164.0f, 0, true, false, false)) {
+			if (_vm->_cutContent &&	!Game_Flag_Query(kFlagBB05Visited)) {
+				Actor_Voice_Over(0, kActorVoiceOver); // 99-0000.AUD	The lock had been forced.
+				Actor_Voice_Over(10, kActorVoiceOver); // 99-0010.AUD	Tyrell sub-cons might have been a little dingy...
+				Actor_Voice_Over(20, kActorVoiceOver); // 99-0020.AUD	But I didn't think they'd bust down their own doors, if they forgot their keys.
+				Actor_Clue_Acquire(kActorMcCoy, kClueDoorForced1, true, -1);
+				Game_Flag_Set(kFlagBB05Visited);
+				Set_Enter(kSetBB05, kSceneBB05);
+			}
+		}
 		if (!Loop_Actor_Walk_To_XYZ(kActorMcCoy, 204.0f, 60.16f, -164.0f, 0, true, false, false)) {
 			if (Global_Variable_Query(kVariableChapter) < 4) {
 				if (Actor_Query_Goal_Number(kActorSebastian) == 200) {

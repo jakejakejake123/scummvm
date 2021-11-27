@@ -279,9 +279,23 @@ bool SceneScriptRC01::ClickedOn3DObject(const char *objectName, bool a2) {
 #endif // BLADERUNNER_ORIGINAL_BUGS
 				Actor_Set_Goal_Number(kActorOfficerLeary, kGoalOfficerLearyDefault);
 				Actor_Face_Actor(kActorOfficerLeary, kActorMcCoy, true);
-				Actor_Says(kActorOfficerLeary, 0, 12);
-				Actor_Says(kActorMcCoy, 4495, 13);
-				Actor_Clue_Acquire(kActorMcCoy, kClueDoorForced2, true, kActorOfficerLeary);
+				// Jake - Added in some code so you receive the door forced 1 clue even if Leary is there. It doesn't make any sense for McCoy not to provide
+				// his outlook just because there is another officer there. If anything that should give McCoy even more reason to mention what he thinks, especially
+				// with a fellow officer being there. Also added in a couple of extra lines. Also adjusted the clue so McCoys statement along with officer Learys comments 
+				// are now all placed in door forced 2. Door forced 1 will now be the cut lines of McCoy commenting on Sebastians broken door.
+				if (_vm->_cutContent) {
+					Actor_Voice_Over(1870, kActorVoiceOver); //99-1870.AUD	Whoever did it showed some serious strength. They busted the lock clean off.
+					Actor_Face_Actor(kActorMcCoy, kActorOfficerLeary, true);
+					Actor_Says(kActorOfficerLeary, 180, 14); //23-0180.AUD	Gaff said you didn't need to hear this, but I guess you deserve to know.
+					Actor_Says(kActorMcCoy, 2635, 18); //00-2635.AUD	I’m all ears.
+					Actor_Says(kActorOfficerLeary, 0, 12); //23-0000.AUD	I already checked for a crowbar or some kind of tool. No luck but it looks like we've got some latents. 
+					Actor_Says(kActorMcCoy, 4495, 13); //00-4495.AUD	Make sure the lab boys run them through the mainframe. Human and Rep.
+					Actor_Clue_Acquire(kActorMcCoy, kClueDoorForced2, true, kActorOfficerLeary);
+				} else { 
+					Actor_Says(kActorOfficerLeary, 0, 12);
+					Actor_Says(kActorMcCoy, 4495, 13);
+					Actor_Clue_Acquire(kActorMcCoy, kClueDoorForced2, true, kActorOfficerLeary);
+				}
 #if BLADERUNNER_ORIGINAL_BUGS
 #else
 				if (officerLearyWasInterrogatingTheCrowd) {
@@ -291,17 +305,23 @@ bool SceneScriptRC01::ClickedOn3DObject(const char *objectName, bool a2) {
 			}
 #if BLADERUNNER_ORIGINAL_BUGS
 #else
+				// Made some alteration to the door forced 1 clue. After the police have left from act 2 onwards the door to Runciters is LOCKED meaning the lock has been replaced.
+				// It would not make any sense for McCoy to make a comment on the lock being busted for a door that is LOCKED. So I reworked the clue to play the cut dialogue of McCoy commenting
+				// on Sebastians busted lock instead. I mean how else would Sebastian know if there was a break in unless the door had been forced, nothing was stolen after all. 
+				// Also McCoy just says hmph when he clicks on the door again since him repeating his initial description wouldn't make sense.
 			else if (!Actor_Clue_Query(kActorMcCoy, kClueDoorForced2)
 			         && !Actor_Clue_Query(kActorMcCoy, kClueDoorForced1)
 			         && !Actor_Query_In_Set(kActorOfficerLeary, kSetRC01)
 			         && Global_Variable_Query(kVariableChapter) == 1) {
 				if (_vm->_cutContent) {
 					// keep in mind, this line in only available in Act 1 (1.TLK) unless _vm->_cutContent is selected (provided that cut content now loads all TLKs)
-					Actor_Voice_Over(1870, kActorVoiceOver);
+					Actor_Says(kActorMcCoy, 8525, 14); // 00-8525.AUD	Hmph.
 				} else {
 					Actor_Says(kActorMcCoy, 8570, 14);
 				}
-				Actor_Clue_Acquire(kActorMcCoy, kClueDoorForced1, true, -1);
+				if (!_vm->_cutContent) {
+					Actor_Clue_Acquire(kActorMcCoy, kClueDoorForced1, true, -1);
+				}
 			}
 #endif // BLADERUNNER_ORIGINAL_BUGS
 			else {

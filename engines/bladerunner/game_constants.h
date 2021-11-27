@@ -505,8 +505,8 @@ enum Flags {
 	kFlagMA05toMA04                           =  63,
 	kFlagGaffApproachedMcCoyAboutZuben        =  64,
 	kFlagMcCoyCommentsOnTB05Monitors          =  65, // Re-purposed. Original: 65 is never used
-	// 66 is never used
-	// 67 is never used
+	kFlagRunciterTalkMotives				   = 66,
+	kFlagRunciterTalkFriends 				   = 67,
 	kFlagCT02toCT01                           =  68,
 	kFlagCT02toCT03                           =  69,
 	kFlagCT03toCT02                           =  70,
@@ -526,13 +526,13 @@ enum Flags {
 	kFlagCT09toCT08                           =  84, // is never checked
 	kFlagCT10toCT09                           =  85,
 	kFlagCT11toCT12                           =  86,
-	// 87 is never used
+	kFlagGrigorianUpset                       =  87,
 	kFlagCT12toCT01                           =  88,
 	kFlagCT12toCT03                           =  89,
 	kFlagCT12toCT05                           =  90,
 	kFlagCT12toCT11                           =  91,
-	// 92 is never used
-	// 93 is never used
+	kFlagCT12Visited					      =  92,
+	kFlagLearyChecksCar					      =  93,	
 	kFlagCT05WarehouseOpen                    =  94,
 	kFlagTB05toTB02                           =  95,
 	kFlagTB02toTB05                           =  96, // is never checked
@@ -561,9 +561,9 @@ enum Flags {
 	kFlagUG01toRC03                           = 119,
 	kFlagRC03toRC04                           = 120, // is never checked
 	kFlagRC04toRC03                           = 121,
-	// 122 is never used
+	kFlagKleinTalkChain					      = 122,
 	kFlagCT01toCT12                           = 123,
-	// 122 is never used
+	kFlagGuzzaInformed						  = 124,
 	kFlagMcCoyHasShellCasings                 = 125,
 	kFlagMcCoyHasOfficersStatement            = 126,
 	kFlagMcCoyHasPaintTransfer                = 127,
@@ -579,10 +579,10 @@ enum Flags {
 	kFlagCT04HomelessTalk                     = 137,
 	kFlagPS07KleinInsulted                    = 138,
 	kFlagMcCoyTalkedToBulletBobAboutHasan     = 139, // Re-purposed. Original: 139 is never used
-	// 140 is never used
+	kFlagCT01Visit						      = 140,
 	kFlagRC51Available                        = 141,
 	kFlagNotUsed142                           = 142, // is never checked
-	// 143 is never used
+	kFlagBB05Visited             			  = 143,
 	kFlagCT07toCT06                           = 144,
 	kFlagCT06ZubenPhoto                       = 145,
 	kFlagChapter1Ending                       = 146,
@@ -627,12 +627,12 @@ enum Flags {
 	kFlagSteeleInPoliceStation                = 185,
 	kFlagRC01PoliceDone                       = 186,
 	kFlagRC02RunciterTalk1                    = 187,
-	// 188 is never used
-	// 189 is never used
+	kFlagCandyWrapperTaken					  = 188,
+	kFlagMcCoyCommentsOnBurnMarks			  = 189,
 	kFlagRC02ShellCasingsTaken                = 190,
-	// 191 is never used
+	kFlagBuzzerPressed						  = 191,
 	kFlagCT01BoughtHowieLeeFood               = 192,
-	// 193 is never used
+	kFlagMcCoyHasVest						  = 193,
 	// 194 is never used
 	// 195 is never used
 	kFlagKleinAnimation1                      = 196,
