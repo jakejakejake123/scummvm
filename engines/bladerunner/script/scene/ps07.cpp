@@ -131,14 +131,19 @@ bool SceneScriptPS07::ClickedOnActor(int actorId) {
 				Game_Flag_Set(kFlagPS07KleinTalkOfficersStatement);
 				Actor_Clue_Acquire(kActorMcCoy, kClueLabCorpses, false, kActorKlein);
 				Actor_Says(kActorKlein, 100, 13);
-				Actor_Says(kActorMcCoy, 4145, 13);
-				Actor_Says(kActorKlein, 110, 12);
-				Actor_Says(kActorMcCoy, 4150, 13);
+				Actor_Says(kActorMcCoy, 4145, 13); //-	00-4145.AUD	Bone marrow?
+				//Jake - Added in some extra lines for Klein.
+				if (_vm->_cutContent) {
+					Actor_Says(kActorKlein, 310, 13); //-	30-0310.AUD	I’m gonna tell it to you straight. But you ain’t gonna like it.
+					Actor_Says(kActorMcCoy, 620, 18); //-	00-0620.AUD	Try me.
+				}
+				Actor_Says(kActorKlein, 110, 12); //-	30-0110.AUD	About 50% were real. The rest were fakes.
+				Actor_Says(kActorMcCoy, 4150, 15);
 				Actor_Says(kActorKlein, 120, 14);
 				Actor_Says(kActorMcCoy, 4155, 17);
 				Actor_Says(kActorKlein, 130, 15);
-				Actor_Says(kActorMcCoy, 4160, 13);
-				Actor_Says(kActorKlein, 140, 16);
+				Actor_Says(kActorMcCoy, 4160, 13); //-	00-4160.AUD	What about the wounds?
+				Actor_Says(kActorKlein, 140, 16); 
 				// quote 150 is *boop* in ENG version
 				// it is redundant in DEU and FRA versions (identical to second half of quote 140)
 				// it is required in ESP and ITA versions. It is the missing second half of quote 140.
@@ -146,16 +151,34 @@ bool SceneScriptPS07::ClickedOnActor(int actorId) {
 				    && (_vm->_language == Common::ES_ESP
 				        || _vm->_language == Common::IT_ITA)
 				) {
-					Actor_Says(kActorKlein, 150, kAnimationModeTalk);
+					Actor_Says(kActorKlein, 150, kAnimationModeTalk); //30-0140.AUD	Most of them were shot point-blank but we're looking at some others… pteh, sloppy cuts with a knife. Like the perp was really pissed off at something.
 				}
-				Actor_Says(kActorMcCoy, 4165, 18);
-				Actor_Says(kActorKlein, 160, 13);
-				Actor_Says(kActorMcCoy, 4170, 19);
-				Actor_Says(kActorMcCoy, 4175, 19);
-				Actor_Modify_Friendliness_To_Other(kActorKlein, kActorMcCoy, 3);
-				Actor_Set_Goal_Number(kActorKlein, kGoalKleinMovingInLab01);
-				return true;
-			}
+				// Made it so McCoy only makes the meat cleaver joke if he is not surly or erratic. Also made it so if McCoy is surly or erratic he is annoyed about Klein not mentioning the knife wounds before.
+				if (_vm->_cutContent) {
+					if (Player_Query_Agenda() == kPlayerAgendaSurly 
+							|| Player_Query_Agenda() == kPlayerAgendaErratic) {
+						Actor_Says(kActorMcCoy, 3725, 18); //00-3725.AUD	Is that right? Any reason you didn’t tell me that right off?
+						Actor_Says(kActorKlein, 300, 17); //30-0300.AUD	I didn’t think you needed to hear about this.
+						Actor_Modify_Friendliness_To_Other(kActorKlein, kActorMcCoy, -3);
+						Actor_Set_Goal_Number(kActorKlein, kGoalKleinMovingInLab01); 
+					} else {
+						Actor_Says(kActorMcCoy, 4165, 18);
+						Actor_Says(kActorKlein, 160, 13);
+						Actor_Says(kActorMcCoy, 4170, 19); // 00-4170.AUD	Nice bunch of Reps I'm tailing.
+						Actor_Says(kActorMcCoy, 4175, 19); // 00-4175.AUD	Hope you're not pulling a meat cleaver out of my back next week.
+						Actor_Modify_Friendliness_To_Other(kActorKlein, kActorMcCoy, 3);
+						Actor_Set_Goal_Number(kActorKlein, kGoalKleinMovingInLab01);
+			   		}		
+				} else {
+					Actor_Says(kActorMcCoy, 4165, 18);
+					Actor_Says(kActorKlein, 160, 13);
+					Actor_Says(kActorMcCoy, 4170, 19); // 00-4170.AUD	Nice bunch of Reps I'm tailing.
+					Actor_Says(kActorMcCoy, 4175, 19); // 00-4175.AUD	Hope you're not pulling a meat cleaver out of my back next week.
+					Actor_Modify_Friendliness_To_Other(kActorKlein, kActorMcCoy, 3);
+					Actor_Set_Goal_Number(kActorKlein, kGoalKleinMovingInLab01);
+			    }
+					return true;
+				}
 
 			if (((_vm->_cutContent && Actor_Clue_Query(kActorKlein, kCluePaintTransfer))
 			      || (!_vm->_cutContent && Game_Flag_Query(kFlagMcCoyHasPaintTransfer)))
@@ -164,19 +187,47 @@ bool SceneScriptPS07::ClickedOnActor(int actorId) {
 				Game_Flag_Set(kFlagPS07KleinTalkPaintTransfer);
 				Actor_Clue_Acquire(kActorMcCoy, kClueLabPaintTransfer, false, kActorKlein);
 				Actor_Says(kActorKlein, 170, 14);
-				Actor_Says(kActorMcCoy, 4180, 13);
-				Actor_Says(kActorKlein, 180, 12);
+				Actor_Says(kActorMcCoy, 4180, 13); //00-4180.AUD	You sure?
+				//Jake - Added in a couple of lines.
+				if (_vm->_cutContent) {
+					Actor_Says(kActorKlein, 290, 14); //30-0290.AUD	Would I lie to you?
+					if (Player_Query_Agenda() == kPlayerAgendaSurly 
+							|| Player_Query_Agenda() == kPlayerAgendaErratic) {
+						Actor_Says(kActorMcCoy, 8295, 13); //00-8295.AUD	You tell me.
+						Delay (1000);
+					} else {
+						Actor_Says(kActorMcCoy, 3530, 13); //00-3530.AUD	No, sir.
+					}
+				}
+					Actor_Says(kActorKlein, 180, 12); //30-0180.AUD	The angle of impact was almost head-on.
 #if BLADERUNNER_ORIGINAL_BUGS
 				Actor_Says(kActorKlein, 190, 13);
 #else
 				// Dino's quote 190 is continued in quote 200, and needs 0.0f pause to sound better flowing
 				Actor_Says_With_Pause(kActorKlein, 190, 0.0f, 13);
 #endif // BLADERUNNER_ORIGINAL_BUGS
-				Actor_Says(kActorKlein, 200, 16);
-				Actor_Says(kActorMcCoy, 4185, 18);
-				Actor_Says(kActorKlein, 210, 12);
-				Actor_Modify_Friendliness_To_Other(kActorKlein, kActorMcCoy, -12);
-				Actor_Set_Goal_Number(kActorKlein, kGoalKleinMovingInLab01);
+				// Made it so McCoy only makes that mean spirited joke towards Dinos wife if he is surly or erratic.
+				// Also adjusted the friendliness loss towards Dino so doesn't walk off when McCoy insults his wife.
+				// Seems a bit unfair to punish the player so harshly by having Dino  walk off because of a single comment.
+				if (_vm->_cutContent) {
+					if (Player_Query_Agenda() == kPlayerAgendaSurly 
+							|| Player_Query_Agenda() == kPlayerAgendaErratic) {
+						Actor_Says(kActorKlein, 200, 16);
+						Actor_Says(kActorMcCoy, 4185, 18); //00-4185.AUD	I heard your wife got her license back.
+						Actor_Says(kActorKlein, 210, 12); //30-0210.AUD  	Ha, you're a real funny guy, McCoy.	
+						Actor_Modify_Friendliness_To_Other(kActorKlein, kActorMcCoy, -3);
+						Actor_Set_Goal_Number(kActorKlein, kGoalKleinMovingInLab01);
+			  	    } else {
+					    Actor_Says(kActorKlein, 200, 16);
+						Actor_Set_Goal_Number(kActorKlein, kGoalKleinMovingInLab01);
+				    }
+				} else {
+					Actor_Says(kActorKlein, 200, 16);
+					Actor_Says(kActorMcCoy, 4185, 18);
+					Actor_Says(kActorKlein, 210, 12);	
+					Actor_Modify_Friendliness_To_Other(kActorKlein, kActorMcCoy, -12);
+					Actor_Set_Goal_Number(kActorKlein, kGoalKleinMovingInLab01);
+				}
 				return true;
 			}
 
@@ -188,9 +239,13 @@ bool SceneScriptPS07::ClickedOnActor(int actorId) {
 				Actor_Says(kActorKlein, 220, 12);
 				Actor_Says(kActorMcCoy, 4190, 13);
 				Actor_Says(kActorKlein, 230, 14);
+				// Made it so McCoy won't ask Dino how to locate the car if he has already found it.
 				if (_vm->_cutContent) {
-					Actor_Says(kActorMcCoy, 4195, 13);
-					Actor_Says(kActorKlein, 240, 16); // Car VIN
+					if (!Actor_Clue_Query(kActorMcCoy, kClueCar)) {
+						Actor_Says(kActorMcCoy, 4195, 13);
+						Actor_Says(kActorKlein, 240, 16); 
+					}
+					// Car VIN
 					// quote 250 is *boop* in ENG version
 					// it is redundant in DEU and FRA versions (identical to second half of quote 240)
 					// it is required in ESP and ITA versions. It is the missing second half of quote 240.
@@ -203,21 +258,36 @@ bool SceneScriptPS07::ClickedOnActor(int actorId) {
 				Actor_Set_Goal_Number(kActorKlein, kGoalKleinMovingInLab01);
 				return true;
 			}
-			// If Dino has nothing to analyze
+			// Restored the lab analysis gold chain clue. In place of the gold chain will be the Maggie bracelet and you will only
+			// receive it from Klein if you have seen the Tyrell security photo. This is because the chain belongs to Sadik and McCoy
+			// says where have I seen that before upon receiving the clue. The clue is added to Sadiks suspect profile. I'll admit you can
+			// still see the Maggie inscription on the 'gold chain' but Sadik did mention having a lover that was killed by a blade runner.
+			// Could it be that her name was also Maggie? It certainly is a possibility and would be pretty if it were true.
+			if (_vm->_cutContent && Actor_Clue_Query(kActorMcCoy, kClueTyrellSecurityPhoto)	
+			    && !Game_Flag_Query(kFlagKleinTalkChain)
+		        && (Actor_Query_Friendliness_To_Other(kActorKlein, kActorMcCoy) > 49)) {
+				Game_Flag_Set(kFlagKleinTalkChain);
+				Actor_Says(kActorKlein, 260, 12); //30-0260.AUD Yeah, dig this. It's been doing the circuits throughout the station.
+				Item_Pickup_Spin_Effect(kModelAnimationMaggieBracelet, 180, 228); 
+				Actor_Voice_Over(4190, kActorVoiceOver); //99-4190.AUD	Where have I seen that before?
+				Actor_Clue_Acquire(kActorMcCoy, kClueLabAnalysisGoldChain, false, kActorKlein);
+				Actor_Set_Goal_Number(kActorKlein, kGoalKleinMovingInLab01);
+				return true;
+			}				
+			// Altered code so Dinos response to McCoy if he has nothing left to analyze is determined based on his friendliness with McCoy.
 			if (_vm->_cutContent) {
-				switch (Random_Query(1, 4)) {
-				case 1:
-					Actor_Says(kActorKlein, 0, 13);
-					break;
-				case 2:
-					Actor_Says(kActorKlein, 40, 13);
-					break;
-				case 3:
-					Actor_Says(kActorKlein, 270, 13);
-					break;
-				case 4:
-					Actor_Says(kActorKlein, 280, 13);
-					break;
+				if (Actor_Query_Friendliness_To_Other(kActorKlein, kActorMcCoy) == 53) {
+					Actor_Says(kActorKlein, 40, 13); //30-0040.AUD	Not right now. If anything else turns up, you'll be the first to know.
+				} else if 
+					(Actor_Query_Friendliness_To_Other(kActorKlein, kActorMcCoy) == 50) {
+					Actor_Says(kActorKlein, 270, 13); //30-0270.AUD	Nah, the place has been pretty quiet the last couple of days.
+				} else if 
+					(Actor_Query_Friendliness_To_Other(kActorKlein, kActorMcCoy) == 47) {
+					Actor_Says(kActorKlein, 0, 13); //30-0000.AUD	Zip, man. Try me later.
+				} else if 
+					(Actor_Query_Friendliness_To_Other(kActorKlein, kActorMcCoy) == 44) {
+					Actor_Says(kActorKlein, 280, 13); //30-0280.AUD	Come back at me when you got something worthwhile, McCoy.
+					// If the relationship is between 40 - 43 Dino walks up to you but says nothing because he is very upset with McCoy.
 				}
 			} else {
 				Actor_Says(kActorKlein, 0, 13);
