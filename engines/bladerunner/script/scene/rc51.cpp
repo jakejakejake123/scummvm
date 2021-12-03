@@ -79,6 +79,13 @@ bool SceneScriptRC51::ClickedOn3DObject(const char *objectName, bool a2) {
 	if (Object_Query_Click("POSTER_2", objectName)) {
 		Actor_Face_Object(kActorMcCoy, "POSTER_2", true);
 		Actor_Says(kActorMcCoy, 8620, 3);
+		// Jake - Added in the frog and toad are friends line. From our conversations we came to the conclusion that this line
+		// was related to Lucy. So I figured the best place to put it was on the poster above Lucys desk. She wrote the message
+		// on the poster of the cute monkeys and it gives us a view into her innocent nature.
+		if (_vm->_cutContent) {
+			Actor_Says(kActorMcCoy, 8525, 3); //00-8525.AUD	Hmph.
+			Actor_Says(kActorMcCoy, 250, 3); //00-0250.AUD	Frog and toad are friends. What the hell is that?
+		}
 		return true;
 	}
 	return false;

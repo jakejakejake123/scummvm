@@ -291,13 +291,26 @@ void SceneScriptRC02::dialogueWithRunciter() {
 		Actor_Says(kActorMcCoy, 4645, 13);
 		Actor_Says(kActorRunciter, 280, 13);
 		Actor_Says(kActorRunciter, 290, 13);
-		Actor_Says(kActorMcCoy, 4650, 18);
-		Actor_Says(kActorRunciter, 320, 13);
+		// Added in some code so McCoy only asks Runciter if he treated Lucy well depending on their friendliness status. 
 		if (_vm->_cutContent) {
-			Actor_Says(kActorMcCoy, 4655, 13);
-			Actor_Says(kActorRunciter, 330, 13);
-			Actor_Says(kActorMcCoy, 4660, 13);
-			Actor_Says(kActorRunciter, 340, 13);
+			if (Actor_Query_Friendliness_To_Other(kActorRunciter, kActorMcCoy) < 50) {
+				Actor_Says(kActorMcCoy, 4650, 18);
+				Actor_Says(kActorRunciter, 320, 13);
+			}
+		} else {
+			Actor_Says(kActorMcCoy, 4650, 18);
+			Actor_Says(kActorRunciter, 320, 13);
+		}
+		if (_vm->_cutContent) {
+			Actor_Says(kActorMcCoy, 4655, 15);
+			Actor_Says(kActorRunciter, 330, 13); // 15-0330.AUD	I'm the only one who handles my animals, detective.
+
+			// Made it so Runciter only says the unskilled labor line where he says Lucy was practically made for it only if Lucy is a
+			// replicant. That line is just too on the nose for it not to be a hint to Lucys true nature.
+			if (_vm->_cutContent &&	Game_Flag_Query(kFlagLucyIsReplicant)) {
+				Actor_Says(kActorMcCoy, 4660, 13); // 00-4660.AUD	So what did she do?
+				Actor_Says(kActorRunciter, 340, 14); // 15-0340.AUD	Unskilled labor, mostly. She was perfect for that. As if she were made for it.
+			}
 		}
 		Actor_Says(kActorMcCoy, 4665, 13);
 		Actor_Face_Object(kActorRunciter, "CURTAIN", true);
@@ -332,36 +345,34 @@ void SceneScriptRC02::dialogueWithRunciter() {
 			Actor_Face_Actor(kActorMcCoy, kActorRunciter, true);
 			Actor_Says(kActorMcCoy, 395, 14);
 			Actor_Face_Actor(kActorRunciter, kActorMcCoy, true);
-			Actor_Says(kActorRunciter, 1680, 13);
-			Actor_Says(kActorMcCoy, 400, 14);
+			// Changed code so Runciter is less resistent to being VKed if he has high friendliness with McCoy. Also you now lose less friendliness if this is the case
+			// because Runciter is still a little annoyed but not as much if you are friendly with him.
+			if (Actor_Query_Friendliness_To_Other(kActorRunciter, kActorMcCoy) < 46) {
+				Actor_Says(kActorRunciter, 1680, 13); //15-1680.AUD	No. I have a lot of cleaning up to do.
+				Actor_Says(kActorMcCoy, 400, 14); //00-0400.AUD	It won't take too long.
+				Actor_Modify_Friendliness_To_Other(kActorRunciter, kActorMcCoy, -5);
+			} else {
+				Actor_Says(kActorMcCoy, 400, 14); //00-0400.AUD	It won't take too long.
+				Actor_Modify_Friendliness_To_Other(kActorRunciter, kActorMcCoy, -2);
+			}
 			Voight_Kampff_Activate(kActorRunciter, 20);
-			Actor_Modify_Friendliness_To_Other(kActorRunciter, kActorMcCoy, -10);
+			// Added in a line for when McCoy finishes giving Runciter the VK test. It seemed a bit odd where there was just silence
+			// after the test was finished.
+			if (!Actor_Clue_Query(kActorMcCoy, kClueVKRunciterReplicant)) {
+				Actor_Says(kActorMcCoy, 6880, 14); //00-6880.AUD	The test says you're human.
+			}
 		}
 		break;
 
 	case 30: // DONE
-		if (_vm->_cutContent && Global_Variable_Query(kVariableRC02Act1RunciterBanter) < 4) {
-			Actor_Says(kActorMcCoy, 4685, 14);
-			switch (Global_Variable_Query(kVariableRC02Act1RunciterBanter)) {
-			case 0:
-				Actor_Says(kActorRunciter, 90, 16);
-				Global_Variable_Set(kVariableRC02Act1RunciterBanter, 1);
-				break;
-
-			case 1:
-				Actor_Says(kActorRunciter, 300, 12);
-				Actor_Says(kActorRunciter, 310, 14);
-				Global_Variable_Set(kVariableRC02Act1RunciterBanter, 2);
-				break;
-
-			case 2:
-				Actor_Says(kActorRunciter, 1610, 12);
-				Global_Variable_Set(kVariableRC02Act1RunciterBanter, 3);
-				break;
-
-			default:
-				Actor_Says(kActorRunciter, 100, 12);
-				Global_Variable_Set(kVariableRC02Act1RunciterBanter, 4);
+		// Added in some banter dialogue for Runciter. It is also different based on your friendliness with Runcter.
+		if (_vm->_cutContent) {
+			Actor_Says(kActorMcCoy, 4600, 14); // A couple questions.
+			Actor_Face_Actor(kActorRunciter, kActorMcCoy, true);
+			if (Actor_Query_Friendliness_To_Other(kActorRunciter, kActorMcCoy) < 46) {
+				Actor_Says(kActorRunciter, 100, 13); //15-0100.AUD	I'm all talked out. Shouldn't you be tracking down the girl?
+			} else {
+				Actor_Says(kActorRunciter, 730, 13); //15-0730.AUD	Please. Just leave me alone.
 			}
 		} else {
 			Actor_Says(kActorMcCoy, 4595, 14);
@@ -400,12 +411,30 @@ bool SceneScriptRC02::ClickedOnActor(int actorId) {
 			if (!Game_Flag_Query(kFlagRC02RunciterTalkWithGun)
 			 && !Game_Flag_Query(kFlagRC02RunciterTalk2)
 			) {
-				Actor_Says(kActorMcCoy, 4690, 11);
-				Actor_Says(kActorMcCoy, 4695, 13);
+				// Added in a flag for when Runciter talks about Luther and Lance. Originally in act 4 McCoy always said to Runciter he wanted
+				// to talk about his friends again even if he did not talk about them before so this flag will fix that. Also made it so McCoy only says
+				// aggresively says we're going to have a little chat if he has the Zubens motive clue.
+				if (_vm->_cutContent) {
+					if (Game_Flag_Query(kFlagRunciterTalkFriends) && Actor_Clue_Query(kActorMcCoy, kClueEnvelope)) {
+						Actor_Says(kActorMcCoy, 4690, 11); // 00-4690.AUD	I wanted to ask you about the Tyrell subcontractors again.
+						Actor_Says(kActorMcCoy, 4695, 13); // 00-4695.AUD	The ones down on DNA Row.
+					} else if (Actor_Clue_Query(kActorMcCoy, kClueZubensMotive))	{
+						Actor_Says(kActorMcCoy, 4680, 11); // 00-4680.AUD	We're gonna have a little chat.
+					} else {
+						Actor_Says(kActorMcCoy, 4685, 11);	// 00-4685.AUD	You're sure there's nothing else you wanna tell me?	
+					}
+				} else {
+					Actor_Says(kActorMcCoy, 4690, 11);
+					Actor_Says(kActorMcCoy, 4695, 13);
+				}
 				Actor_Face_Actor(kActorRunciter, kActorMcCoy, true);
 				if (_vm->_cutContent) {
-					Actor_Says(kActorRunciter, 1670, 14);
-				} else {
+					if (Game_Flag_Query(kFlagRunciterTalkFriends)) {
+						Actor_Says(kActorRunciter, 1670, 14); // 15-1670.AUD	Haven't we been already through this? Why would I have any dealings with those people?
+					} else {
+						Actor_Says(kActorRunciter, 1610, 11); // 15-1610.AUD	Detective, if I knew something you can be sure I'd tell you.	 		
+					}		
+    			} else {
 					Actor_Says(kActorRunciter, 1610, 14);
 				}
 				if (Actor_Clue_Query(kActorMcCoy, kClueEnvelope)) {
@@ -418,13 +447,32 @@ bool SceneScriptRC02::ClickedOnActor(int actorId) {
 					Actor_Says(kActorMcCoy, 4720, 16);
 					Actor_Says(kActorMcCoy, 4725, 17);
 					Actor_Says(kActorRunciter, 430, 16);
+					// Added in some dialogue where if you click on Runciter and McCoy knows what he did to Lucy he brings it up.
+					if (_vm->_cutContent) {
+						if (Actor_Clue_Query(kActorMcCoy, kClueZubensMotive)) {
+							Actor_Says(kActorMcCoy, 4760, 13); // 00-4760.AUD	About the girl.
+							Actor_Says(kActorRunciter, 590, 14); // 15-0590.AUD	What? Who?
+							Actor_Says(kActorMcCoy, 4765, 15); // 00-4765.AUD	Lucy. I know what you did.
+							Actor_Says(kActorRunciter, 1690, 12); // 15-1690.AUD	Get out of my shop.
+						}					
+					}
 					Actor_Face_Heading(kActorRunciter, 1007, false);
 				}
 				Game_Flag_Set(kFlagRC02RunciterTalk2);
 				return true;
 			}
 
-			Actor_Says(kActorMcCoy, 4805, 11);
+			// Made it so after McCoy has pulled his gun on Runciter and the player puts it away and click on Runciter McCoy will now say listen up more aggresively.
+			if (_vm->_cutContent) {
+				Actor_Face_Actor(kActorMcCoy, kActorRunciter, true);
+				if (Game_Flag_Query(kFlagRC02RunciterTalk2)) {
+					Actor_Says(kActorMcCoy, 4805, 11); //00-4805.AUD	Listen up.
+				} else {
+					Actor_Says(kActorMcCoy, 4810, 11); //00-4810.AUD	Listen up!
+				}
+			} else {
+				Actor_Says(kActorMcCoy, 4805, 11); //00-4805.AUD	Listen up.
+			}
 			Actor_Face_Actor(kActorRunciter, kActorMcCoy, true);
 			if (Game_Flag_Query(kFlagRC02RunciterTalk2)) {
 				Actor_Says(kActorRunciter, 720, 15);
@@ -461,11 +509,8 @@ bool SceneScriptRC02::ClickedOnActor(int actorId) {
 				AI_Movement_Track_Unpause(kActorRunciter);
 				return true;
 			}
-
-			if (_vm->_cutContent
-			   && Player_Query_Agenda() == kPlayerAgendaSurly) {
-				Actor_Says(kActorMcCoy, 4600, kAnimationModeTalk);
-			}
+			// Jake - Removed the line where McCoy says a couple of question if he is surly or erratic. He doesn't say it in an aggressive tone and McCoy is actually
+			// quite calm so it didn't make any sense to have it here.
 			Actor_Says(kActorMcCoy, 4610, 19);
 			Actor_Face_Actor(kActorRunciter, kActorMcCoy, true);
 			Actor_Says(kActorRunciter, 150, 15);
@@ -473,8 +518,46 @@ bool SceneScriptRC02::ClickedOnActor(int actorId) {
 			Actor_Says(kActorRunciter, 160, 14);
 			Actor_Says(kActorRunciter, 170, 15);
 			Actor_Says(kActorRunciter, 180, 13);
+			if (_vm->_cutContent) {
+				// Made it so McCoy talks about Runciters friends regardless of his agenda. McCoy doesn't really come of as a jerk here so
+				// it wouldn't make sense for these lines to play based on whether or not he is surly or erratic.
+				Actor_Says(kActorMcCoy, 4620, 19);
+				Actor_Says(kActorRunciter, 190, 14);
+				Actor_Says(kActorMcCoy, 4625, 13); // 00-4625.AUD	Do you know anybody who works at Tyrell Corporation? 
 
-			if (Player_Query_Agenda() == kPlayerAgendaSurly) {
+				// Added in some extra lines for Runciter where he first denies knowing any genetiscists and depending on McCoys agenda he is calm or aggressive 
+				// when trying to get the truth out of him. Also this bit of dialogue where Runcter lies to you only plays if you have low friendliness with him. 
+				if (Actor_Query_Friendliness_To_Other(kActorRunciter, kActorMcCoy) < 46) {
+					Actor_Says(kActorRunciter, 9000, 14); //15-9000.AUD	No! 
+					Delay (1000);
+					Actor_Says(kActorMcCoy, 4685, 15); //00-4685.AUD	You're sure there's nothing else you wanna tell me?
+					Actor_Says(kActorRunciter, 1630, 17); //15-1630.AUD	What? Do you really think I'd lie to you? Preposterous,
+					if (Player_Query_Agenda() == kPlayerAgendaSurly 
+							|| Player_Query_Agenda() == kPlayerAgendaErratic) {
+						Actor_Says(kActorMcCoy, 8519, 14);//00-8519.AUD	What do you say we dish each other the straight goods.
+						Actor_Modify_Friendliness_To_Other(kActorRunciter, kActorMcCoy, -2);
+					} else { 
+						Actor_Says(kActorMcCoy, 3910, 13);//00-3910.AUD	You’re lying.
+					}
+					Actor_Says(kActorRunciter, 1640, 14); //15-1640.AUD	Ah...well, yes. I suppose that isn't the whole truth but...
+					Actor_Says(kActorRunciter, 1650, 16); //15-1650.AUD	All right, all right. Here's the real truth.
+				}
+				Actor_Says(kActorRunciter, 210, 13);
+				Actor_Says(kActorMcCoy, 4630, 18);
+				Actor_Says(kActorRunciter, 220, 14);
+				Actor_Says(kActorRunciter, 230, 13);
+				Game_Flag_Set(kFlagRunciterTalkFriends);
+				// These last few lines where McCoy calls the DNA row subcons freaks and sarcastically says sorry will only play if he is surly or erratic. It also results in
+				// a friendliness loss.
+				if (Player_Query_Agenda() == kPlayerAgendaSurly 
+						|| Player_Query_Agenda() == kPlayerAgendaErratic) {
+					Actor_Says(kActorMcCoy, 4635, 19); // 00-4635.AUD	I assume you're talking about some of those fruitcakes on DNA Row.
+					Actor_Says(kActorRunciter, 240, 16); // 15-0240.AUD	That's a horrible thing to say about people, detective.
+					Actor_Says(kActorMcCoy, 4640, 17); // 00-4640.AUD	Sorry.
+					Actor_Modify_Friendliness_To_Other(kActorRunciter, kActorMcCoy, -2);
+				} 
+				// Original behaviour without cut content.
+			} else if (Player_Query_Agenda() == kPlayerAgendaSurly) {
 				Actor_Says(kActorMcCoy, 4620, 19);
 				Actor_Says(kActorRunciter, 190, 14);
 				Actor_Says(kActorMcCoy, 4625, 13);
