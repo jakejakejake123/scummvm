@@ -174,7 +174,8 @@ void SceneScriptCT09::PlayerWalkedIn() {
 		if (_vm->_cutContent) {
 			// don't allow McCoy to leave until the situation is resolved
 			// (the vanilla game allows him to leave)
-			Scene_Exits_Disable();
+			// Jake - Removed the code which disables the scene exits so when Leon approaches McCoy and the player has been given control
+			// they have a chance to escape. 
 		}
 	}
 

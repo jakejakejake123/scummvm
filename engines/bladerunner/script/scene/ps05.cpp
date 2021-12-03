@@ -90,8 +90,23 @@ bool SceneScriptPS05::ClickedOn3DObject(const char *objectName, bool a2) {
 	}
 	if (Object_Query_Click("WIRE BASKET", objectName) && !Loop_Actor_Walk_To_Scene_Object(kActorMcCoy, "WIRE BASKET", 12, true, false)) {
 		Actor_Face_Object(kActorMcCoy, "WIRE BASKET", true);
-		Actor_Voice_Over(1810, kActorVoiceOver);
-		Actor_Voice_Over(1820, kActorVoiceOver);
+		// Jake - Restored the wanted poster clue. In place of the missing wanted poster asset will be the Grigorians note model. Made adjustments to script CT09 so
+		// the player can run away from Leon if he realizes you are a blade runner. Essentially I enabled the scene exits because when Leon approaches you
+		// the game gives you control of McCoy so you can exit the area and escape Leon. Also I put the poster in the trashcan because someone is trying 
+		// to cover for the reps, Guzza perhaps?
+		if (_vm->_cutContent) {
+			if (!Actor_Clue_Query (kActorMcCoy, kClueWantedPoster)) {
+			Item_Pickup_Spin_Effect(kModelAnimationGrigoriansNote, 513, 285);		
+			Actor_Voice_Over(4080, kActorVoiceOver); //	99-4080.AUD	He looks familiar.		
+			Actor_Clue_Acquire(kActorMcCoy, kClueWantedPoster, true, -1); 		
+		} else {
+			Actor_Voice_Over(1810, kActorVoiceOver);
+			Actor_Voice_Over(1820, kActorVoiceOver);
+		} 
+		} else {
+			Actor_Voice_Over(1810, kActorVoiceOver);
+			Actor_Voice_Over(1820, kActorVoiceOver);
+	  	}
 	}
 	if (Object_Query_Click("WANTED POSTERS", objectName) && !Loop_Actor_Walk_To_Scene_Object(kActorMcCoy, "WANTED POSTERS", 12, true, false)) {
 		Actor_Face_Object(kActorMcCoy, "WANTED POSTERS", true);
@@ -256,6 +271,12 @@ void SceneScriptPS05::turnOnTV() {
 				ADQ_Add(kActorGuzza, 1540, kAnimationModeTalk);
 				ADQ_Add(kActorGuzza, 1550, kAnimationModeTalk);
 				ADQ_Add(kActorGuzza, 1560, kAnimationModeTalk);
+				//Jake - Added in a line for Guzza when he is being interviewed by the news.
+				if (_vm->_cutContent) {
+					Delay (1000);
+					ADQ_Add(kActorGuzza, 1600, kAnimationModeTalk); //-	04-1600.AUD	No comment.
+				}
+
 			}
 			Game_Flag_Set(kFlagPS05TV2);
 		}
