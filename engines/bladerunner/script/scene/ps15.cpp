@@ -42,8 +42,14 @@ void SceneScriptPS15::InitializeScene() {
 
 void SceneScriptPS15::SceneLoaded() {
 	Obstacle_Object("E.ARCH", true);
+	#if BLADERUNNER_ORIGINAL_BUGS
 	if (Global_Variable_Query(kVariableChapter) == 2) {
 		Item_Add_To_World(kItemWeaponsCrate, kModelAnimationWeaponsCrate, kSetPS15, -208.0f, -113.43f, 30.28f, 750, 16, 12, false, true, false, true);
+	#else 
+	if (Global_Variable_Query(kVariableChapter) > 1) {
+		Item_Add_To_World(kItemWeaponsCrate, kModelAnimationWeaponsCrate, kSetPS15, -208.0f, -113.43f, 30.28f, 750, 16, 12, false, true, false, true);
+	#endif // BLADERUNNER_ORIGINAL_BUGS. Jake  -  Adjusted code so the weapons crate is placed in the set when you enter the 
+		   // weapons range for the first time at any point from act 2 onwards. 
 	}
 }
 
@@ -68,16 +74,59 @@ bool SceneScriptPS15::ClickedOnActor(int actorId) {
 		    && !Actor_Clue_Query(kActorMcCoy, kClueWeaponsOrderForm)
 #endif // BLADERUNNER_ORIGINAL_BUGS
 		) {
+			// Added in code so McCoys conversation with Walls about the weapons shipment paperwork will play out differently based on McCoys agenda and how he
+			// acted in his previous conversation with Walls. If their interaction was positive Walls will give the weapon shipment form to McCoy right away
+			// and if not he will be resistant like he always is. Their friendliness will be decided by a flag called Walls upset.
 			if (!Loop_Actor_Walk_To_XYZ(kActorMcCoy, -256.0f, -113.43f, 43.51f, 0, true, false, false)) {
 				Actor_Face_Actor(kActorMcCoy, kActorSergeantWalls, true);
 				Actor_Face_Actor(kActorSergeantWalls, kActorMcCoy, true);
-				Actor_Says(kActorMcCoy, 4470, 17);
-				Actor_Says(kActorSergeantWalls, 130, 12);
-				Actor_Says(kActorMcCoy, 4475, 18);
-				Actor_Says(kActorMcCoy, 4480, 13);
-				Actor_Says(kActorSergeantWalls, 140, 16);
-				Item_Pickup_Spin_Effect(kModelAnimationWeaponsOrderForm, 211, 239);
-				Actor_Says(kActorSergeantWalls, 150, 14);
+				Actor_Says(kActorMcCoy, 4470, 17); //00-4470.AUD	That weapons' shipment just came in. You got the paperwork handy?
+				if (_vm->_cutContent) {	
+					if (!Game_Flag_Query(kFlagWallsUpset)) {
+						Actor_Says(kActorSergeantWalls, 180, 16); // 34-0180.AUD	Yeah, dig this. It's been doing the circuits around the station
+						Item_Pickup_Spin_Effect(kModelAnimationWeaponsOrderForm, 211, 239);
+					} else {
+						Actor_Says(kActorSergeantWalls, 130, 12); //34-0130.AUD	Why? You got a pressing need to rummage through my private files?
+					}
+				} else {
+					Actor_Says(kActorSergeantWalls, 130, 12); //34-0130.AUD	Why? You got a pressing need to rummage through my private files?
+				}
+				// Made it so McCoy only insults Walls if he is surly or erratic.
+				if (_vm->_cutContent) {
+					if (Player_Query_Agenda() == kPlayerAgendaSurly 
+							|| Player_Query_Agenda() == kPlayerAgendaErratic) {
+						Actor_Says(kActorMcCoy, 4475, 17); //00-4475.AUD	Yeah. I forgot you were keeping your lacy underthings in there.
+					}
+				} else if (!_vm->_cutContent) {						
+					Actor_Says(kActorMcCoy, 4475, 17); //00-4475.AUD	Yeah. I forgot you were keeping your lacy underthings in there.
+				}
+				if (_vm->_cutContent &&	Game_Flag_Query(kFlagWallsUpset)) {
+					Actor_Says(kActorMcCoy, 4480, 13); //00-4480.AUD	Look, Jack, I just want to see what they're charging for a crate of rifles these days.
+					Actor_Says(kActorSergeantWalls, 140, 16); // 34-0140.AUD	Too damn much if you ask me. Especially at the rate the assault teams are losing them.
+				} else if (!_vm->_cutContent) {						
+					Actor_Says(kActorMcCoy, 4480, 13); //00-4480.AUD	Look, Jack, I just want to see what they're charging for a crate of rifles these days.
+					Actor_Says(kActorSergeantWalls, 140, 16); // 34-0140.AUD	Too damn much if you ask me. Especially at the rate the assault teams are losing them.
+				}
+				if (_vm->_cutContent && Game_Flag_Query(kFlagWallsUpset)) {
+					// If McCoy is on bad terms with Walls he will aggressively question Walls about why he didn't mention the assault teams losing their weapons before.
+					Actor_Says(kActorMcCoy, 3725, 18); //00-3725.AUD	Is that right? Any reason you didn’t tell me that right off?
+					Actor_Says(kActorSergeantWalls, 220, 16); // 34-0220.  AUD	I didn't think you needed to hear about this.
+					// If you upset Walls and your agenda is surly or erratic he won't give you the form and the player has to get it from Guzzas desk instead.
+					if (Player_Query_Agenda() == kPlayerAgendaSurly 
+							|| Player_Query_Agenda() == kPlayerAgendaErratic) {
+							Actor_Says(kActorMcCoy, 8519, 14); // 00-8519.AUD	What do you say we dish each other the straight goods.
+						Actor_Says(kActorSergeantWalls, 200, 13); //34-0200.AUD	Come back at me when you got something worthwhile, McCoy.
+					} else {	   
+						Actor_Says(kActorMcCoy, 6985, 18); // 00-6985.AUD	Got the straight scoop for me or what?
+						Delay (2000);
+						Item_Pickup_Spin_Effect(kModelAnimationWeaponsOrderForm, 211, 239);
+						Actor_Says(kActorSergeantWalls, 150, 14); //34-0150.AUD	I guess there ain't no harm in it.
+					}
+				}
+				if (!_vm->_cutContent) {
+					Item_Pickup_Spin_Effect(kModelAnimationWeaponsOrderForm, 211, 239);
+					Actor_Says(kActorSergeantWalls, 150, 14); //34-0150.AUD	I guess there ain't no harm in it.
+				}
 #if BLADERUNNER_ORIGINAL_BUGS
 				// This code makes no sense (why remove the order form from the world,
 				// when it's not added (it only gets added when kFlagPS04WeaponsOrderForm is set)
@@ -98,22 +147,36 @@ bool SceneScriptPS15::ClickedOnActor(int actorId) {
 				}
 #endif // BLADERUNNER_ORIGINAL_BUGS
 			}
-		} else {
-			Actor_Face_Actor(kActorMcCoy, kActorSergeantWalls, true);
-			Actor_Says(kActorMcCoy, 8600, 15);
-			if (_vm->_cutContent) {
-				switch (Random_Query(1, 2)) {
-				case 1:
-					Actor_Says(kActorSergeantWalls, 190, 12);
-					break;
-				case 2:
-					Actor_Says(kActorSergeantWalls, 200, 12);
-					break;
-				}
+			// Jake - Made it so when you receive the two forms in the station and have a good standing with Walls when you talk to Walls again in act 3
+			// he gives you the requisition form clue which was originally cut.
+			}  else if (_vm->_cutContent 
+				&& Actor_Clue_Query(kActorMcCoy, kClueShippingForm) 
+				&& Actor_Clue_Query(kActorMcCoy, kClueWeaponsOrderForm) 
+				&& !Actor_Clue_Query(kActorMcCoy, kClueRequisitionForm)
+				&& !Game_Flag_Query(kFlagWallsUpset)
+				&& Global_Variable_Query(kVariableChapter) == 3) {
+				Actor_Face_Actor(kActorMcCoy, kActorSergeantWalls, true);
+				Actor_Face_Actor(kActorSergeantWalls, kActorMcCoy, true);
+				Actor_Says(kActorMcCoy, 8610, 18); //00-8610.AUD	What's the word, friend?
+				Actor_Says(kActorSergeantWalls, 180, 30); //34-0180.AUD	Yeah, dig this. It's been doing the circuits around the station
+				Item_Pickup_Spin_Effect(kModelAnimationRequisitionForm, 211, 239);
+				Actor_Voice_Over(3930, kActorVoiceOver);
+				Actor_Voice_Over(3940, kActorVoiceOver);
+				Actor_Clue_Acquire(kActorMcCoy, kClueRequisitionForm, true, kActorSergeantWalls);	
 			} else {
-				Actor_Says(kActorSergeantWalls, 190, 12);
+				Actor_Face_Actor(kActorMcCoy, kActorSergeantWalls, true);
+				Actor_Says(kActorMcCoy, 8600, 15);
+				// Made it so Walls response to McCoy is different based on whether the Walls upset flag is triggered.
+				if (_vm->_cutContent) {
+					if (!Game_Flag_Query(kFlagWallsUpset)) {
+						Actor_Says(kActorSergeantWalls, 190, 13); //34-0190.AUD	Nah, the place has been pretty quiet the last couple of days.
+					} else {
+						Actor_Says(kActorSergeantWalls, 200, 13); //34-0200.AUD	Come back at me when you got something worthwhile, McCoy.
+					}
+				} else {
+					Actor_Says(kActorSergeantWalls, 190, 12);
+				}
 			}
-		}
 		return true;
 	}
 	return false;
@@ -144,14 +207,21 @@ bool SceneScriptPS15::ClickedOnItem(int itemId, bool a2) {
 #else
 			// A form is added to McCoy's KIA from examining the crate
 			// but no item pickup effect was playing in the original
-			Item_Pickup_Spin_Effect(kModelAnimationWeaponsOrderForm, 411, 333);
+
+			//Jake - Added in the actual model for the shipping form in place of the weapons order form.
+			Item_Pickup_Spin_Effect(kModelAnimationOriginalShippingForm, 411, 333);
 #endif // BLADERUNNER_ORIGINAL_BUGS
 			Actor_Face_Actor(kActorMcCoy, kActorSergeantWalls, true);
 			Actor_Face_Actor(kActorSergeantWalls, kActorMcCoy, true);
 			Actor_Says(kActorMcCoy, 4485, 17);
 			Actor_Says(kActorSergeantWalls, 160, 14);
-			Actor_Says(kActorMcCoy, 4490, 12);
-			Actor_Says(kActorSergeantWalls, 170, 13);
+			Actor_Says(kActorMcCoy, 4490, 12); //00-4490.AUD	Let me guess. He's planning on taking out a small city.
+			//Jake - Added in some lines that Walls will only say to McCoy if he showed disgust to Guzzas behaviour towards the pimps.
+			if (_vm->_cutContent && !Game_Flag_Query(kFlagWallsUpset)) {
+			Actor_Says(kActorSergeantWalls, 230, 14); //34-0230.AUD	I'm gonna tell it to you straight but you ain't gonna like it.
+			Actor_Says(kActorMcCoy, 8490, 18); //00-8490.AUD	And that would be...?
+			}
+			Actor_Says(kActorSergeantWalls, 170, 13); //34-0170.AUD	Lieutenant's a big believer in overkill.
 #if BLADERUNNER_ORIGINAL_BUGS
 			// if the player did not get the weapons order form from Guzza's office, they get it here
 			Actor_Clue_Acquire(kActorMcCoy, kClueWeaponsOrderForm,   true, kActorMcCoy);
@@ -229,19 +299,47 @@ void SceneScriptPS15::PlayerWalkedIn() {
 			Actor_Says(kActorSergeantWalls, 20, 13);
 			Actor_Says(kActorSergeantWalls, 30, 12);
 			Actor_Says(kActorMcCoy, 4455, 12);
-			Actor_Says(kActorSergeantWalls, 40, 12);
-			Actor_Says(kActorSergeantWalls, 50, 12);
+			Actor_Says(kActorSergeantWalls, 40, 12); //34-0040.AUD	You can keep going but your score is gonna suffer.
+			//Added in some lines.
+			if (_vm->_cutContent) {
+			Actor_Says(kActorMcCoy, 8320, 18); //00-8320.AUD	Really?
+			Actor_Says(kActorSergeantWalls, 210, 0); //34-0210.AUD	Would I lie to you?
+			}
+			Actor_Says(kActorSergeantWalls, 50, 12); //34-0050.AUD	And take it easy in there.
 		}
 		Actor_Says(kActorSergeantWalls, 60, 13);
 		Actor_Says(kActorSergeantWalls, 70, 12);
 		Actor_Says(kActorMcCoy, 4460, 15);
-		Actor_Says(kActorSergeantWalls, 80, 13);
-		Actor_Says(kActorMcCoy, 4465, 16);
-		Actor_Says(kActorSergeantWalls, 90, 13);
+		Actor_Says(kActorSergeantWalls, 80, 13); // 34-0080.AUD	I ain't seen him down here in a month. Guess he's been busy.
+		// Made it so McCoy only insults Guzza and upsets Walls if he is surly or erratic. This is also what sets the WallsUpset flag since Walls really like Guzza.
+		if (_vm->_cutContent) {
+			if (Player_Query_Agenda() == kPlayerAgendaSurly 
+					|| Player_Query_Agenda() == kPlayerAgendaErratic) {
+				Actor_Says(kActorMcCoy, 4465, 16); // 00-4465.AUD	Poor guy. I bet he gets all tuckered out from pushing those papers around.
+				Actor_Says(kActorSergeantWalls, 90, 13); // 34-0090.AUD	Ah, don't sell him short, McCoy. Guzza can be one tough hombre.
+				Game_Flag_Set(kFlagWallsUpset); 
+			} else {
+			    Actor_Says(kActorMcCoy, 7835, 18); //00-7835.AUD	Is that so?
+			}
+		} else {
+			Actor_Says(kActorMcCoy, 4465, 16);
+			Actor_Says(kActorSergeantWalls, 90, 13);
+		}
 		Actor_Says(kActorSergeantWalls, 100, 14);
 		Actor_Says(kActorSergeantWalls, 110, 15);
 		Actor_Says(kActorSergeantWalls, 120, 15);
-		Actor_Says(kActorMcCoy, 4555, 14);
+		// Made it so if McCoy is not surly or erratic he is disgusted with how Guzza treated the pimps by seting them on fire and if he is surly or erratic 
+		// he is totally fine with this violent behaviour.
+		if (_vm->_cutContent) {
+			if (Player_Query_Agenda() == kPlayerAgendaSurly 
+			  	   || Player_Query_Agenda() == kPlayerAgendaErratic) {
+				Actor_Says(kActorMcCoy, 4555, 14); //	00-4555.AUD	Peachy.
+			} else {
+				Actor_Says(kActorMcCoy, 4750, 14); //	00-4750.AUD	Unbelievable.
+			} 
+		} else {
+			Actor_Says(kActorMcCoy, 4555, 14);
+		}
 		Game_Flag_Set(kFlagPS15Entered);
 		//return true;
 		return;

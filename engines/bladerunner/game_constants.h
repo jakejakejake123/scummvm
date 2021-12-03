@@ -633,13 +633,13 @@ enum Flags {
 	kFlagBuzzerPressed						  = 191,
 	kFlagCT01BoughtHowieLeeFood               = 192,
 	kFlagMcCoyHasVest						  = 193,
-	// 194 is never used
-	// 195 is never used
+	kFlagWallsUpset							  = 194,
+	kFlagElevatorLocked						  =	195,
 	kFlagKleinAnimation1                      = 196,
 	kFlagKleinAnimation2                      = 197,
 	kFlagKleinAnimation3                      = 198,
 	kFlagOfficerLearyTakingNotes              = 199,
-	// 200 is never used
+	kFlagBoughtFish							  = 200,
 	// 201 is never used
 	// 202 is never used
 	// 203 is never used
