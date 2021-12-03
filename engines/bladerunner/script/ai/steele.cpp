@@ -415,6 +415,47 @@ void AIScriptSteele::EnteredSet(int setId) {
 		}
 	}
 #endif // BLADERUNNER_ORIGINAL_BUGS
+	//Added in all the unused Crystal clues. Essentially when McCoy puts a certain clue in the mainframe Crystal will receive it and when she does the correlating clue will appear
+	// in her database and she will then later put it in the mainframe.
+	if (_vm->_cutContent) {
+		if (Actor_Clue_Query(kActorSteele, kClueVKBobGorskyReplicant) && !Game_Flag_Query(kFlagSteeleKnowsBulletBobIsDead)) {
+			Actor_Clue_Acquire(kActorSteele, kClueCrystalTestedBulletBob, true, kActorSteele);
+			Actor_Clue_Acquire(kActorSteele, kClueVKBobGorskyHuman,  true, -1);
+			return; //true;
+		}
+		if (Actor_Clue_Query(kActorSteele, kClueCrazysInvolvement)) {
+			Actor_Clue_Acquire(kActorSteele, kClueCrystalTestedCrazylegs, true, kActorSteele);
+			Actor_Clue_Acquire(kActorSteele, kClueCrystalArrestedCrazylegs,  true, kActorSteele);
+			Actor_Clue_Acquire(kActorSteele, kClueVKCrazylegsHuman,  true, kActorSteele);
+			Game_Flag_Set(kFlagCrazylegsArrested);
+			return;	
+		}
+		if (Actor_Clue_Query(kActorSteele, kClueVKRunciterReplicant)) {
+			Actor_Clue_Acquire(kActorSteele, kClueCrystalTestedRunciter, true, kActorSteele);
+			Actor_Clue_Acquire(kActorSteele, kClueVKRunciterHuman, true, -1);
+			return;	
+		}
+		if (Game_Flag_Query(kFlagZubenSpared)) {
+			Actor_Clue_Acquire(kActorSteele, kClueSightingZuben, true, kActorSteele);
+			return;
+		}
+		if (Game_Flag_Query(kFlagGordoIsReplicant) && Game_Flag_Query(kFlagGordoRanAway)) {
+			Actor_Clue_Acquire(kActorSteele, kClueSightingGordo, true, kActorSteele);
+			return;
+		}
+		if (Game_Flag_Query(kFlagGordoIsReplicant) && Game_Flag_Query(kFlagGordoRanAway)) {		
+			Actor_Clue_Acquire(kActorSteele, kClueWarRecordsGordoFrizz, true, kActorSteele);
+			return;
+		}
+		if (!Game_Flag_Query(kFlagIzoIsReplicant) && Game_Flag_Query(kFlagIzoArrested)) {
+			Actor_Clue_Acquire(kActorSteele, kClueVKIzoHuman, true, kActorSteele);
+			return;
+		}
+		if (Actor_Clue_Query(kActorSteele, kClueEarlyQAndLucy)) {
+			Actor_Clue_Acquire(kActorSteele, kClueVKEarlyQHuman, true, kActorSteele);
+			return;
+		}
+	}
 
 	if (Actor_Query_Goal_Number(kActorSteele) == kGoalSteeleGoToRC02) {
 		if (!Game_Flag_Query(kFlagRC51ChopstickWrapperTaken)
@@ -826,14 +867,17 @@ bool AIScriptSteele::GoalChanged(int currentGoalNumber, int newGoalNumber) {
 		Actor_Says_With_Pause(kActorSteele, 2100, 1.0f, kAnimationModeTalk);
 		Actor_Says(kActorIzo, 690, kAnimationModeTalk);
 		Actor_Says(kActorSteele, 2110, kAnimationModeTalk);
-		Actor_Says(kActorSteele, 2120, kAnimationModeTalk);
-		Actor_Face_Actor(kActorSteele, kActorMcCoy, true);
-		Actor_Says(kActorSteele, 2140, kAnimationModeTalk);
+		Actor_Says(kActorSteele, 2120, kAnimationModeTalk); //01-2120.AUD	You'll be giving him up to me soon enough.
+		Actor_Face_Actor(kActorSteele, kActorMcCoy, true); 
+		Actor_Says(kActorSteele, 2140, kAnimationModeTalk); //01-2140.AUD	I can handle it from here, Slim. Why don't you go buy yourself a lollipop? Something else to suck on.
 		Actor_Says(kActorMcCoy, 4850, kAnimationModeTalk);
-		Actor_Says(kActorSteele, 2150, kAnimationModeTalk);
+		Actor_Says(kActorSteele, 2150, kAnimationModeTalk); //01-2150.AUD	But I wasn't trying to be.
 		// Scene_Exits_Enable() is done in Izo's kGoalIzoGetArrested - CompletedMovementTrack() case
 		Actor_Set_Goal_Number(kActorIzo, kGoalIzoGetArrested);
 		Actor_Set_Goal_Number(kActorSteele, kGoalSteeleLeaveRC03);
+		if (_vm->_cutContent) {
+			Game_Flag_Set(kFlagIzoArrested);
+		}
 #if BLADERUNNER_ORIGINAL_BUGS
 		Actor_Set_Goal_Number(kActorSteele, kGoalSteeleDefault); // TODO - a bug? why set to default here?
 #endif // BLADERUNNER_ORIGINAL_BUGS

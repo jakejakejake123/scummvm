@@ -85,6 +85,15 @@ bool SceneScriptPS06::ClickedOn3DObject(const char *objectName, bool a2) {
 			Actor_Clues_Transfer_New_From_Mainframe(kActorMcCoy);
 			if (_vm->_cutContent) {
 				Actor_Clues_Transfer_New_From_Mainframe(kActorKlein);
+				// Made it so Crystal receives the clues that McCoy uploads to the mainframe. This is so the unused Crystal clues can now be received by McCoy.
+				// Also did it for the other members of the police department because why would they not receive the clues from the mainframe.
+				Actor_Clues_Transfer_New_From_Mainframe(kActorSteele);
+				Actor_Clues_Transfer_New_From_Mainframe(kActorGuzza);
+				Actor_Clues_Transfer_New_From_Mainframe(kActorSergeantWalls);
+				Actor_Clues_Transfer_New_From_Mainframe(kActorGaff);
+				Actor_Clues_Transfer_New_From_Mainframe(kActorOfficerLeary);
+				Actor_Clues_Transfer_New_From_Mainframe(kActorOfficerGrayford);
+				Actor_Clues_Transfer_New_From_Mainframe(kActorDispatcher);
 				// also play "new clues added" cue, since McCoy gets the registrations clues
 				Actor_Says(kActorAnsweringMachine, 360, kAnimationModeTalk);
 			}
@@ -94,6 +103,13 @@ bool SceneScriptPS06::ClickedOn3DObject(const char *objectName, bool a2) {
 			if (!_vm->_cutContent || uploadedClues) {
 				if (_vm->_cutContent) {
 					Actor_Clues_Transfer_New_From_Mainframe(kActorKlein);
+					Actor_Clues_Transfer_New_From_Mainframe(kActorSteele);
+					Actor_Clues_Transfer_New_From_Mainframe(kActorGuzza);
+					Actor_Clues_Transfer_New_From_Mainframe(kActorSergeantWalls);
+					Actor_Clues_Transfer_New_From_Mainframe(kActorGaff);
+					Actor_Clues_Transfer_New_From_Mainframe(kActorOfficerLeary);
+					Actor_Clues_Transfer_New_From_Mainframe(kActorOfficerGrayford);
+					Actor_Clues_Transfer_New_From_Mainframe(kActorDispatcher);
 				}
 				Ambient_Sounds_Play_Sound(kSfxDATALOAD, 50, 0, 0, 99);
 				if (_vm->_cutContent) {
