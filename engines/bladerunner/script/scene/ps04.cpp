@@ -214,13 +214,22 @@ void SceneScriptPS04::dialogueWithGuzza() {
 			// 2. Guzza can refuse the loan (CUT)
 			// Basically, if McCoy hasn't retired Zuben or if he drunk away his money at the bar
 			// then he'll have a small amount of chinyen and Guzza should accept the loan
-			if (Global_Variable_Query(kVariableChinyen) <= 100) {
+
+			//JakeJakeJake123 - Altered code so Guzza gives you the loan if you retired Zuben and Guzza
+			//likes you. Considering Guzza says if you retire a rep you get an advance when he refuses the loan, this make sense.
+			//I mean if you let Zuben go and you get the Guzza is furious dialogue it would not make any 
+			//sense for Guzza to give you the loan since he is upset with you.
+		
+			if (Actor_Query_Friendliness_To_Other(kActorGuzza, kActorMcCoy) >= 50) {
 				Actor_Clue_Acquire(kActorMcCoy, kClueGuzzasCash, true, kActorGuzza);
 				Actor_Says(kActorGuzza, 520, 33);
 				Actor_Says(kActorMcCoy, 4055, 13);
-				Actor_Says(kActorGuzza, 530, 31);
-				Actor_Says(kActorMcCoy, 4060, 13);
-				Actor_Says(kActorGuzza, 540, 31);
+				Actor_Says(kActorGuzza, 530, 31); //04-0530.AUD	This goddamn city doesn't know how to manage funds. They've been flush for years.
+				//Added in some lines.
+				Actor_Says(kActorMcCoy, 8265, 13); //00-8265.AUD	Really?
+				Actor_Says(kActorGuzza, 1520, 33); //04-1520.AUD	Everything I say is as true as holy writ.
+				Actor_Says(kActorMcCoy, 4060, 13)
+				Actor_Says(kActorGuzza, 540, 31); //04-0540.AUD	Trust me. Ain't nobody getting rich unless they're sneaking some on the side.
 				Actor_Says(kActorGuzza, 550, 32);
 				Actor_Says(kActorMcCoy, 4065, 18);
 				Actor_Says(kActorGuzza, 560, 34);
@@ -254,21 +263,45 @@ void SceneScriptPS04::dialogueWithGuzza() {
 		break;
 
 	case 130: // REPORT IN
-		if (Game_Flag_Query(kFlagZubenRetired)
-		    && !Game_Flag_Query(kFlagPS04GuzzaTalkZubenRetired)
-		) {
-			Actor_Says(kActorMcCoy, 3920, 13);
-			Actor_Says(kActorGuzza, 140, 30);
-			Actor_Face_Current_Camera(kActorGuzza, true);
-			Actor_Says(kActorGuzza, 150, 31);
-			Actor_Says(kActorGuzza, 160, 32);
-			Actor_Says(kActorMcCoy, 3925, 18);
-			Actor_Face_Actor(kActorGuzza, kActorMcCoy, true);
-			Actor_Says(kActorGuzza, 170, 33);
-			Loop_Actor_Walk_To_XYZ(kActorMcCoy, -716.0f, -354.85f, 1042.0f, 0, false, false, false);
-			Actor_Face_Actor(kActorMcCoy, kActorGuzza, true);
-			Actor_Says(kActorMcCoy, 3930, 13);
-			Actor_Face_Actor(kActorGuzza, kActorMcCoy, true);
+	//Altered code so Guzza gets angry at McCoy just based on the fact that he let Zuben escape. This fact alone should make Guzza
+	//angry and not all the other factors that was included in the code originally.
+		if (_vm->_cutContent 
+			&& Game_Flag_Query(kFlagZubenSpared)
+			&& !Game_Flag_Query(kFlagPS04GuzzaTalkIsFurious)) {
+				Actor_Says(kActorMcCoy, 3970, 18);
+				Actor_Says(kActorGuzza, 330, 30);
+				Actor_Says(kActorGuzza, 340, 32);
+				Actor_Says(kActorMcCoy, 3975, 13);
+				Actor_Says(kActorGuzza, 350, 31);
+				Actor_Says(kActorGuzza, 360, 34);
+				Actor_Says(kActorMcCoy, 3980, 13);
+				Actor_Says(kActorGuzza, 370, 33);
+				Actor_Says(kActorGuzza, 380, 32);
+				Actor_Says(kActorGuzza, 390, 31);
+				Actor_Says(kActorMcCoy, 3985, 18);
+				Actor_Says(kActorGuzza, 400, 34);
+				Actor_Says(kActorGuzza, 410, 31);
+				// Lowered friendlines towards Guzza and McCoy so a conversation where Guzza tells you to go away will now play.
+				Actor_Modify_Friendliness_To_Other(kActorGuzza, kActorMcCoy, -5);
+				Game_Flag_Set(kFlagPS04GuzzaTalkIsFurious);
+			} else if 
+				(Game_Flag_Query(kFlagZubenRetired)
+				&& !Game_Flag_Query(kFlagPS04GuzzaTalkIsFurious)
+				&& !Game_Flag_Query(kFlagPS04GuzzaTalkZubenRetired)
+			) {
+				Actor_Says(kActorMcCoy, 3920, 13);
+				Actor_Says(kActorGuzza, 140, 30);
+				Actor_Face_Current_Camera(kActorGuzza, true);
+				Actor_Says(kActorGuzza, 150, 31);
+				Actor_Says(kActorGuzza, 160, 32);
+				Actor_Says(kActorMcCoy, 3925, 18);
+				Actor_Face_Actor(kActorGuzza, kActorMcCoy, true);
+				Actor_Says(kActorGuzza, 170, 33);
+				Loop_Actor_Walk_To_XYZ(kActorMcCoy, -716.0f, -354.85f, 1042.0f, 0, false, false, false);
+				Actor_Face_Actor(kActorMcCoy, kActorGuzza, true);
+				Actor_Says(kActorMcCoy, 3930, 13);
+				Actor_Modify_Friendliness_To_Other(kActorGuzza, kActorMcCoy, 5);
+				Actor_Face_Actor(kActorGuzza, kActorMcCoy, true);
 #if BLADERUNNER_ORIGINAL_BUGS
 			Actor_Says(kActorGuzza, 180, 34);	// But I'm proud of you McCoy. Why don't you take the rest of the day off?
 			Actor_Says(kActorMcCoy, 3935, 13);	// Thanks.
@@ -304,8 +337,25 @@ void SceneScriptPS04::dialogueWithGuzza() {
 				Game_Flag_Set(kFlagZubenBountyPaid); // not a proper bug, but was missing from original code, so the flag would remain in non-consistent state in this case
 			}
 #endif // BLADERUNNER_ORIGINAL_BUGS
-		} else if (Game_Flag_Query(kFlagZubenSpared)
-		           && !Game_Flag_Query(kFlagPS04GuzzaTalkZubenEscaped)
+		// Made it so Guzza is nice to McCoy if he retired Zuben and Guzza didn't get angry at McCoy.
+		} else if (_vm->_cutContent 
+		    && !Game_Flag_Query(kFlagPS04GuzzaTalkIsFurious)
+		    && Game_Flag_Query(kFlagPS04GuzzaTalkZubenRetired)
+			&& Actor_Query_Friendliness_To_Other(kActorGuzza, kActorMcCoy) >= 50
+		) {
+			Actor_Says(kActorMcCoy, 3955, 13);
+			Actor_Says(kActorGuzza, 280, 30);
+			Actor_Says(kActorMcCoy, 3960, 18);
+				if (Global_Variable_Query(kVariableChapter) == 1) { // only play this dialogue (about day off) on day one. It doesn't fit in the next days
+				Actor_Says(kActorGuzza, 290, 32);	// Don't push it kid. You look like you're beat anyway.
+				Actor_Says(kActorGuzza, 300, 31);	// Why don't you rest them dogs the rest of the day.
+				Actor_Says(kActorMcCoy, 3965, 13);	// I still got plenty energy.
+				Actor_Says(kActorGuzza, 310, 33);	// That's an order McCoy.
+				Actor_Says(kActorGuzza, 320, 34);	// I'm ordering you to relax.
+			}
+			} else if (!_vm->_cutContent 
+			 && Game_Flag_Query(kFlagZubenSpared)
+		     && !Game_Flag_Query(kFlagPS04GuzzaTalkZubenEscaped)
 		) {
 			Actor_Says(kActorMcCoy, 3955, 13);
 			Actor_Says(kActorGuzza, 280, 30);
@@ -364,8 +414,16 @@ void SceneScriptPS04::dialogueWithGuzza() {
 			Actor_Says(kActorMcCoy, 4075, 16);
 			Actor_Says(kActorGuzza, 590, 33);
 		} else {
-			Actor_Says(kActorMcCoy, 4020, 18);
-			Actor_Says(kActorGuzza, 130, 30);
+			//Jake - Added in some banter dialogue for McCoy and Guzza. Also this conversation will now play since McCoys friendliness was lowered during
+			//Guzza is furious conversation.
+			if (_vm->_cutContent) {
+				Actor_Says(kActorMcCoy, 8514, 18); //00-8514.AUD	Got anything new to tell me?
+				Actor_Says(kActorGuzza, 1510, 30); //04-1510.AUD	You’re the one on the job, kid. My own case looks stacked up on a desk a yard high. 
+				Actor_Says(kActorMcCoy, 2305, 16); //00-2305.AUD	I’m sorry.
+				Actor_Says(kActorGuzza, 1500, 30); //04-1500.AUD	Anything comes up, kid, you’ll be the first to know.
+				Actor_Says(kActorMcCoy, 5150, 16); //00-5150.AUD	One more thing.
+			}
+			Actor_Says(kActorGuzza, 130, 30); //04-0130.AUD	Don't got time for you now, McCoy. Hit me later.
 			Actor_Face_Current_Camera(kActorGuzza, true);
 			Actor_Says(kActorMcCoy, 3915, 13);
 		}
@@ -412,7 +470,14 @@ void SceneScriptPS04::dialogueWithGuzza() {
 		Actor_Face_Actor(kActorMcCoy, kActorGuzza, true);
 		Actor_Says(kActorMcCoy, 4110, 13);
 		Actor_Says(kActorGuzza, 770, 32);
-		Actor_Says(kActorGuzza, 780, 31);
+		Actor_Says(kActorGuzza, 780, 31); 
+		//Jake - added in a flag so at the end of act 3 when talking to Crystal she will also mention McCoy killing someone if
+		//he killed the homeless guy and told Guzza about it. Guzza ends up using it against McCoy to get him out of the way.
+		//Also if Guzza liked you he will now be angry with you and the next dialogues you receive is him being angry with McCoy.
+		if (_vm->_cutContent) {
+			Game_Flag_Set(kFlagGuzzaInformed);
+			Actor_Modify_Friendliness_To_Other(kActorGuzza, kActorMcCoy, -6);
+		}
 		break;
 
 	case 150: // HOLDEN'S BADGE
@@ -426,6 +491,10 @@ void SceneScriptPS04::dialogueWithGuzza() {
 		Actor_Says(kActorMcCoy, 4095, 17);
 		Actor_Says(kActorGuzza, 680, 32);
 		Actor_Says(kActorGuzza, 690, 31);
+		//Jake - Made it so your friendliness with Guzza increases when you show him the badge.
+		if (_vm->_cutContent) {
+			Actor_Modify_Friendliness_To_Other(kActorGuzza, kActorMcCoy, 8);
+		}
 		break;
 
 	case 160: // DONE
