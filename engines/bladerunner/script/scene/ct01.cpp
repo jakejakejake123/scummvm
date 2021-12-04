@@ -198,16 +198,27 @@ bool SceneScriptCT01::ClickedOnActor(int actorId) {
 				// Howie begins with friendliness of 60
 				if (!Game_Flag_Query(kFlagCT01TalkToHowieAfterZubenMissing)) {
 					dialogueWithHowieLee();
+					//altered code so if the friendliness between Howie Lee and McCoy is low McCoy is harsh towards Howie employing a replicant
+					//and if their relationship is high McCoy is not as harsh towards him.
 				} else {
-					if (Game_Flag_Query(kFlagCT01ZubenGone) && !Game_Flag_Query(kFlagCT01TalkToHowieAboutDeadZuben)) {
+					if (Game_Flag_Query(kFlagZubenRetired) 
+					&& !Game_Flag_Query(kFlagCT01TalkToHowieAboutDeadZuben)
+					&& Actor_Query_Friendliness_To_Other(kActorHowieLee, kActorMcCoy) > 50) {
 						Game_Flag_Set(kFlagCT01TalkToHowieAboutDeadZuben);
-						Actor_Says(kActorMcCoy, 330, 17);
-						Actor_Says(kActorHowieLee, 130, 13);
-						Actor_Says(kActorHowieLee, 140, 14);
-						if (_vm->_cutContent) {
-							Actor_Says(kActorMcCoy, 315, 16);
-						}
-						Actor_Modify_Friendliness_To_Other(kActorHowieLee, kActorMcCoy, -10);
+						Actor_Says(kActorMcCoy, 330, 17); //00-0330.AUD	Hey, Howie, what's cooking?
+						Actor_Says(kActorHowieLee, 130, 13); //28-0130.AUD	Nothing now, McCoy.
+						Actor_Says(kActorHowieLee, 140, 14); //28-0140.AUD	Got to find a new chef thanks to you.
+						Actor_Says(kActorMcCoy, 315, 16); //00-0315.AUD	Can't help you there, Howie.
+					} else if (Game_Flag_Query(kFlagZubenRetired) 
+						&& !Game_Flag_Query(kFlagCT01TalkToHowieAboutDeadZuben) 
+						&& Actor_Query_Friendliness_To_Other(kActorHowieLee, kActorMcCoy) < 50) {
+						Game_Flag_Set(kFlagCT01TalkToHowieAboutDeadZuben);
+						Actor_Says(kActorMcCoy, 4260, 17);//00-4260.AUD	You've been helping Reps, pal?
+						Actor_Says(kActorHowieLee, 210, 13);//28-0210.AUD	You sharp one, McCoy. I try protect you, but you want truth.
+						Actor_Says(kActorMcCoy, 4420, 17);//00-4420.AUD	Contacting business with Reps is against the Law.
+						Actor_Says(kActorMcCoy, 1970, 13); //00-1970.AUD	You should start thinking about the company you keep.
+						Actor_Says(kActorHowieLee, 220, 14); //28-0220.AUD	Fine. But Howie do you favors no more.
+						Actor_Modify_Friendliness_To_Other(kActorHowieLee, kActorMcCoy, -5);		
 					} else if (Actor_Query_Friendliness_To_Other(kActorHowieLee, kActorMcCoy) < 50) {
 						Actor_Says(kActorMcCoy, 310, 11);    // keeping out of trouble...?
 						Actor_Says(kActorHowieLee, 190, 13); // I look like I got time for chit-er chat-er?
@@ -259,7 +270,10 @@ bool SceneScriptCT01::ClickedOnActor(int actorId) {
 				Actor_Face_Actor(kActorMcCoy, kActorHowieLee, true);
 				Actor_Says(kActorMcCoy, 360, 13);
 				Actor_Modify_Friendliness_To_Other(kActorHowieLee, kActorMcCoy, -5);
-				Actor_Modify_Friendliness_To_Other(kActorZuben, kActorMcCoy, -4);
+				//Removed code that lessens Zubens friendlisness towards McCoy. Did this because later on in the game when McCoy talks to Gordo about Zuben he mentions both Gordo 
+				//and Zuben leaving Howie Lees at the same time. Zuben leaves depending on your friendliness rating with him and this can also be lowered by talking to him behind the counter.
+				//The other way is by talking to Gordo which for the sake of narrative consistency should be the only circumstance in which Zuben leaves so McCoys later conversation with Gordo makes sense. 
+				//So I removed the friendliness decrement for when you talk to Zuben behind the counter and made it lower only if you talk to Gordo.
 			}
 			return true;
 		}
@@ -532,6 +546,38 @@ void SceneScriptCT01::PlayerWalkedIn() {
 				Actor_Voice_Over(220, kActorVoiceOver);
 			}
 		}
+		//Altered code so the dispatcher dialogue for the hit and run will play here instead of when you arrive at the police station or McCoys aprtment building.
+		//Narratively it makes more sense for the dispatcher dialogue talking about an incident happening in China town to play when the player is actually in China town.
+		//Also I have restored the dispatcher dialogue for when either Leary or Grayford finds the car and calls it in so a flag had been added in called Leary checks car has been
+		//added in. This other dispatcher dialogue plays after you talk to Gaff in act 1 and will happen either in China town or McCoys apartment.
+		if (_vm->_cutContent) {
+			if (!Game_Flag_Query(kFlagCT01Visit) && !Actor_Clue_Query(kActorMcCoy, kClueDispatchHitAndRun)) {
+				Actor_Clue_Acquire(kActorMcCoy, kClueDispatchHitAndRun, false, kActorDispatcher);
+				Game_Flag_Set(kFlagCT01Visit);
+				Delay (1000);
+				ADQ_Add(kActorDispatcher, 80, kAnimationModeTalk);
+				if (Game_Flag_Query(kFlagRC01PoliceDone)) {
+					ADQ_Add(kActorOfficerLeary, 340, kAnimationModeTalk);  // sector 3 - go ahead
+				} else {
+					ADQ_Add(kActorOfficerGrayford, 360, kAnimationModeTalk);  // sector 3 - go ahead
+				}
+				ADQ_Add(kActorDispatcher, 90, kAnimationModeTalk);
+				ADQ_Add(kActorDispatcher, 100, kAnimationModeTalk);
+				ADQ_Add(kActorDispatcher, 110, kAnimationModeTalk);
+				if (Game_Flag_Query(kFlagRC01PoliceDone)) {
+					ADQ_Add(kActorOfficerLeary, 350, kAnimationModeTalk);  // sector 3 - responding code 3
+					Game_Flag_Set(kFlagLearyChecksCar);
+				} else {
+					ADQ_Add(kActorOfficerGrayford, 370, kAnimationModeTalk);  // sector 3 - responding code 3
+				}
+				ADQ_Add_Pause(1000);
+				ADQ_Add(kActorDispatcher, 120, kAnimationModeTalk);
+				ADQ_Add(kActorDispatcher, 130, kAnimationModeTalk);
+				ADQ_Add(kActorDispatcher, 140, kAnimationModeTalk);
+				ADQ_Add(kActorDispatcher, 150, kAnimationModeTalk);
+			}
+		}
+	//return false;
 	}
 }
 
@@ -621,9 +667,8 @@ void SceneScriptCT01::dialogueWithHowieLee() {
 				Actor_Says(kActorZuben, 40, 18);
 				Actor_Face_Heading(kActorZuben, 103, false);
 				Actor_Face_Actor(kActorHowieLee, kActorMcCoy, true);
-				Actor_Modify_Friendliness_To_Other(kActorZuben, kActorMcCoy, -2);
 				if (Actor_Query_Is_In_Current_Set(kActorGordo)) {
-					Actor_Modify_Friendliness_To_Other(kActorGordo, kActorMcCoy, -3);
+					//Removed friendliness decrement for Zuben and Gordo for same reasons that I mentioned above.
 					Actor_Clue_Acquire(kActorGordo, kClueMcCoysDescription, true, kActorMcCoy);
 				}
 			}
@@ -643,10 +688,27 @@ void SceneScriptCT01::dialogueWithHowieLee() {
 
 	case 60: // MORE RUNCITER CLUES
 		if (Actor_Clue_Query(kActorMcCoy, kClueSushiMenu)) {
-			Actor_Says(kActorMcCoy, 270, 11);
+			//Replaced the this from your place line with the line that is supposed to play.
+			if (_vm->_cutContent) {
+				Actor_Says(kActorMcCoy, 280, 23);  //00-0280.AUD	How about this?
+			} else {
+				Actor_Says(kActorMcCoy, 270, 11);
+			}
 			Actor_Says(kActorHowieLee, 40, 15); // You do Howie a favor? Distribute...
-			// TODO Possible YES/NO option for McCoy? -> and friendliness adjustment accordingly
-		} else {
+			// TODO Possible YES/NO option for McCoy? -> and friendliness adjustment accordingly.
+			
+			//Altered code so depending on McCoys agenda he will either do Howie the favour or not and 
+			//their friendliness rating will be adjusted accordingly.
+			if (_vm->_cutContent) {
+		  	  	if  (Player_Query_Agenda() == kPlayerAgendaSurly
+		   				|| Player_Query_Agenda() == kPlayerAgendaErratic) {  
+					Actor_Says(kActorMcCoy, 360, 18); //00-0360.AUD	Sorry, Howie.
+					Actor_Modify_Friendliness_To_Other(kActorHowieLee, kActorMcCoy, -5);	
+				} else {
+					Actor_Says(kActorMcCoy, 1025, kAnimationModeTalk); //00-1025.AUD	Absolutely.
+					Actor_Modify_Friendliness_To_Other(kActorHowieLee, kActorMcCoy, 5);
+				}
+			} else {
 #if BLADERUNNER_ORIGINAL_BUGS
 			Actor_Says(kActorMcCoy, 270, 11);
 #else
@@ -654,6 +716,7 @@ void SceneScriptCT01::dialogueWithHowieLee() {
 #endif // BLADERUNNER_ORIGINAL_BUGS
 			Actor_Says(kActorHowieLee, 30, 14);
 		}
+	}
 		Actor_Modify_Friendliness_To_Other(kActorHowieLee, kActorMcCoy, 5);
 		Game_Flag_Set(kFlagCT01Evidence2Linked);
 		break;
@@ -672,6 +735,12 @@ void SceneScriptCT01::dialogueWithHowieLee() {
 			}
 			Actor_Face_Actor(kActorHowieLee, kActorMcCoy, true);
 			Actor_Says(kActorHowieLee, 70, 16);
+			//Made it so when you buy food from Howie Lee a food box appears onscreen so the player knows that they bought something. Originally I never
+			//even knew that McCoy buys food from Howie since the topic is called small talk and an item doesn't flash on screen so this should help alleviate
+			//this confusion.
+			if (_vm->_cutContent) {
+				Item_Pickup_Spin_Effect(kModelAnimationKingstonKitchenBox, 454, 297);
+			}
 			Actor_Says(kActorMcCoy, 325, 13);
 			if (Query_Difficulty_Level() != kGameDifficultyEasy) {
 				Global_Variable_Decrement(kVariableChinyen, 10);
@@ -697,9 +766,23 @@ void SceneScriptCT01::dialogueWithHowieLee() {
 	case 90: // HIT AND RUN
 		Actor_Says(kActorMcCoy, 300, 13);
 		Actor_Says(kActorHowieLee, 110, 16);
+		//Added dialogue that plays if McCoys agenda is surly or erratic.
+		if (_vm->_cutContent) {
+			if  (Player_Query_Agenda() == kPlayerAgendaSurly
+		    		|| Player_Query_Agenda() == kPlayerAgendaErratic) {  
+				Actor_Says(kActorMcCoy, 8519, 14);//00-8519.AUD	What do you say we dish each other the straight goods.
+				Actor_Says(kActorHowieLee, 200, 16); //28-0200.AUD	You call Howie liar? You find another place to eat lunch now [speaks Japanese]
+				Actor_Modify_Friendliness_To_Other(kActorHowieLee, kActorMcCoy, -3);
+			}
+		}
 		break;
 
 	case 100: // DONE
+	//Added in some more dialogue.
+	if (_vm->_cutContent) {
+		Actor_Says(kActorMcCoy, 8514, 13); //00-8514.AUD	Got anything new to tell me?
+		Actor_Says(kActorHowieLee, 180, kAnimationModeTalk); //28-0180.AUD	Nothing, nothing. Customer here to eat.
+	}
 		Actor_Says(kActorMcCoy, 305, 18);
 		break;
 	}

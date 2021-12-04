@@ -122,9 +122,7 @@ void AIScriptZuben::TimerExpired(int timer) {
 		if (Actor_Query_Goal_Number(kActorZuben) == kGoalZubenDefault
 		 && Player_Query_Current_Scene() == kSceneCT01
 		 && Random_Query(1, 3) < 3
-		) {
-			Actor_Modify_Friendliness_To_Other(kActorZuben, kActorMcCoy, -1);
-		}
+		) //Removed code so Zuben only loses friendliness with McCoy at the front of Howie Lees if McCoy talks to Gordo.
 		Game_Flag_Reset(kFlagCT01ZubenMcCoyCheck);
 		// return true;
 	} else if (timer == kActorTimerAIScriptCustomTask1) {
