@@ -77,6 +77,11 @@ void SceneScriptCT05::SceneLoaded() {
 	Unclickable_Object("STAIR 2");
 	Unclickable_Object("LFTDOOR");
 	Unclickable_Object("LFTDOORFRM");
+	//Added in the Zuben incept clue. He dropped it while running away and it is near the staircase.
+	if (_vm->_cutContent &&
+		!Actor_Clue_Query(kActorMcCoy, kClueZubenIncept)) {
+		Item_Add_To_World(kItemNote, kModelAnimationPhoto, kSetCT05, -74.94, -109.42, 358.92, 0, 12, 12, false, true, false, true);
+	}
 }
 
 bool SceneScriptCT05::MouseClick(int x, int y) {
@@ -135,6 +140,18 @@ bool SceneScriptCT05::ClickedOnActor(int actorId) {
 }
 
 bool SceneScriptCT05::ClickedOnItem(int itemId, bool a2) {
+	//added in the Zuben incept clue.
+	if (_vm->_cutContent) {
+		if (itemId ==  kItemNote) {
+			if (!Loop_Actor_Walk_To_Item(kActorMcCoy,  kItemNote, 12, true, false)) {
+				Actor_Face_Item(kActorMcCoy,  kItemNote, true);
+				Actor_Clue_Acquire(kActorMcCoy, kClueZubenIncept, true, -1);
+				Item_Pickup_Spin_Effect(kModelAnimationPhoto, 461, 319);
+				Item_Remove_From_World(kItemNote);
+				return true;
+			}			
+		}	
+	}
 	return false;
 }
 
