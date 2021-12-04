@@ -422,6 +422,9 @@ void SceneScriptUG18::DialogueQueueFlushed(int a1) {
 			Overlay_Play("UG18OVER", 1, false, true, 0);
 		}
 		Actor_Set_Goal_Number(kActorGuzza, kGoalGuzzaUG18FallDown);
+		if (_vm->_cutContent) {
+		Actor_Clue_Acquire(kActorMcCoy,kClueClovisOrdersMcCoysDeath, true, -1);
+		}
 		Player_Gains_Control();
 		ADQ_Add_Pause(2000);
 		ADQ_Add(kActorSadik, 360, -1); // The Hunter, he do us a favor...

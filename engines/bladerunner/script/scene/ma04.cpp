@@ -218,7 +218,11 @@ bool SceneScriptMA04::ClickedOn2DRegion(int region) {
 				Overlay_Remove("MA04OVER");
 				Delay(500);
 				Actor_Says(kActorLucy, 500, 3);
-				Actor_Says(kActorLucy, 510, 3);
+				Actor_Says(kActorLucy, 510, 3); //-	06-0510.AUD	I heard about what you did for my friend and I just wanted to say thanks.
+				//Added in an extra line
+				if (_vm->_cutContent) {
+					Actor_Says(kActorLucy, 520, 3); //-	06-0520.AUD	Sorry I missed you. Goodbye.
+				}
 				if (!Game_Flag_Query(kFlagDirectorsCut) && Global_Variable_Query(kVariableChapter) < 3) {
 					Actor_Voice_Over(1330, kActorVoiceOver);
 					Actor_Voice_Over(1340, kActorVoiceOver);
@@ -389,9 +393,17 @@ void SceneScriptMA04::phoneCallWithDektora() {
 	if (answer == 1160) { // OK
 		Actor_Says(kActorMcCoy, 2500, 19);
 		Actor_Says(kActorDektora, 360, 3);
-		Actor_Says(kActorMcCoy, 2510, 0);
-		Actor_Says(kActorDektora, 370, 3);
+		Actor_Says(kActorMcCoy, 2510, 0); //00-2510.AUD	I know it.
+		//Made it so the lines where Dektora mentions her and Gordo going to buy a car from Crazylegs only plays if Dektora is a replicant.
+		if (_vm->_cutContent) {
+			if (Game_Flag_Query(kFlagDektoraIsReplicant)) {
+				Actor_Says(kActorDektora, 370, 3); //03-0370.AUD	Gordo and I went there before looking for a vehicle.
+				Actor_Says(kActorDektora, 380, 3); //03-0380.AUD	The owner was nice to us. He’ll probably help us, if we pay him.
+			}
+		} else {
+		Actor_Says(kActorDektora, 370, 3); 
 		Actor_Says(kActorDektora, 380, 3);
+		}
 		Actor_Says(kActorMcCoy, 2515, 12);
 		Actor_Says(kActorDektora, 390, 3);
 		Actor_Says(kActorMcCoy, 2520, 13);
@@ -452,7 +464,12 @@ void SceneScriptMA04::phoneCallWithLucy() {
 	} else {
 		Actor_Says(kActorLucy, 590, 3);
 		Actor_Says(kActorMcCoy, 2565, 12);
-		Actor_Says(kActorLucy, 600, 3);
+		Actor_Says(kActorLucy, 600, 3); //06-0600.AUD	One of those flying cars would though. 
+		//Added in a line where McCoy says Lucys escape plan is risky and illegal. This will help mitigate some conclusion for players wherew Lucy is human
+		//and McCoy is found innocent yet the police still show up at Crazylegs place.
+		if (_vm->_cutContent) {
+			Actor_Says(kActorMcCoy, 2520, 12); //00-2520.AUD	It’s real risky. And illegal.
+		}
 		Actor_Says(kActorLucy, 610, 3);
 		Actor_Says(kActorLucy, 620, 3);
 #if BLADERUNNER_ORIGINAL_BUGS
@@ -490,8 +507,17 @@ void SceneScriptMA04::phoneCallWithSteele() {
 	Actor_Says(kActorSteele, 740, 3);
 	Actor_Says(kActorSteele, 750, 3);
 	Actor_Says(kActorMcCoy, 2650, 12);
-	Actor_Says(kActorSteele, 760, 3);
-	Actor_Says(kActorMcCoy, 2665, 13);
+	Actor_Says(kActorSteele, 760, 3); //01-0760.AUD	They’ve been accessing through an old sewer tunnel.
+	
+	// Restored some of the dialogue for the phone conversation with Crystal.
+	if (_vm->_cutContent) {
+		Actor_Says(kActorSteele, 770, 3); //01-0770.AUD	That son of a bitch, Clovis, was climbing in and out of a manhole right next to the police station and nobody ever noticed.
+		Actor_Says(kActorMcCoy, 2655, 16); //00-2655.AUD	Figures. With incompetents like Guzza at the helm.
+		Actor_Says(kActorSteele, 790, 3); //01-0790.AUD	I think we can forget about Guzza. That guy’s gonna be fed to the barracudas.
+		Actor_Says(kActorMcCoy, 2660, 18); //00-2660.AUD	That breaks my heart.
+		Actor_Says(kActorSteele, 800, 3); //01-0800.AUD	I knew it would.
+	}
+	Actor_Says(kActorMcCoy, 2665, 13); //00-2665.AUD	We’re gonna air out the Reps together or what?
 	Actor_Says(kActorSteele, 810, 3);
 	Actor_Says(kActorSteele, 820, 3);
 	Sound_Play(kSfxSPNBEEP9, 100, 0, 0, 50);
@@ -499,13 +525,29 @@ void SceneScriptMA04::phoneCallWithSteele() {
 }
 
 void SceneScriptMA04::phoneCallWithClovis() {
-	Actor_Says(kActorClovis, 330, 3);
-	Actor_Says(kActorMcCoy, 2580, 14);
+	Actor_Says(kActorClovis, 330, 3); //05-0330.AUD	I see you survived.
+
+	//Altered code so McCoy only gets angry at Clovis for trying to kill him if Clovis actually tried to kill McCoy in the sewers. If that didn't happen we skip straight to the part
+	//Where Clovis apologises to McCoy for the situation with Guzza.
+	if (_vm->_cutContent) {
+		if (Actor_Clue_Query(kActorMcCoy, kClueClovisOrdersMcCoysDeath)) {
+			Actor_Says(kActorMcCoy, 2580, 14); //00-2580.AUD	No thanks to you.
+			Actor_Says(kActorClovis, 340, 3); //05-0340.AUD	Don’t you think you’d already be dead, if that’s what I so desired?
+			Actor_Says(kActorMcCoy, 2585, 19); //00-2585.AUD	Talking like a god, Clovis. Isn’t that a little over the top? Even for you?
+			Actor_Says(kActorClovis, 350, 3); //05-0350.AUD	Prometheus was chained to a rock and vultures pecked at his liver.
+			Actor_Says(kActorClovis, 360, 3); //05-0360.AUD	I haven’t quite had to suffer such ordeals literally speaking of course.
+			Actor_Says(kActorMcCoy, 2590, 18); //00-2590.AUD	Well, there’s still time.
+		} else {
+			Actor_Says(kActorMcCoy, 8305, 18); //00-8305.AUD	I think so.
+		}
+	} else {
+	Actor_Says(kActorMcCoy, 2580, 14); //05-0370.AUD	(laughs) I’m calling to apologize, brother. I should have never recruited Guzza against you. I just had to make sure that you weren’t going to betray us.
 	Actor_Says(kActorClovis, 340, 3);
 	Actor_Says(kActorMcCoy, 2585, 19);
 	Actor_Says(kActorClovis, 350, 3);
 	Actor_Says(kActorClovis, 360, 3);
 	Actor_Says(kActorMcCoy, 2590, 18);
+	}
 	Actor_Says(kActorClovis, 370, 3);
 	Actor_Says(kActorMcCoy, 2595, 15);
 	Actor_Says(kActorClovis, 390, 3);
@@ -522,9 +564,20 @@ void SceneScriptMA04::phoneCallWithClovis() {
 	Actor_Says(kActorClovis, 470, 3);
 	Actor_Says(kActorClovis, 480, 3);
 	Actor_Says(kActorClovis, 490, 3);
-	Actor_Says(kActorMcCoy, 2615, 17);
-	Actor_Says(kActorClovis, 500, 3);
-	Actor_Says(kActorClovis, 530, 3);
+	Actor_Says(kActorMcCoy, 2615, 17); //00-2615.AUD	I don’t remember.
+	//Restored some dialogue for the phone call.
+	if (_vm->_cutContent) {
+		Actor_Says(kActorClovis, 1230, 3); //05-1230.AUD	That’s what I remember.
+		Actor_Says(kActorMcCoy, 8565, 13); //00-8565.AUD	Really?
+	}
+		Actor_Says(kActorClovis, 500, 3); //05-0500.AUD	But if you dig real deep and feel, you’ll know what’s real.
+	if (_vm->_cutContent) {
+		Actor_Says(kActorMcCoy, 2620, 15); //00-2620.AUD	Okay. What do we do next?
+		Actor_Says(kActorClovis, 510, 3); //05-0510.AUD	In the sewers near the police station is a tunnel that leads out to the Kipple.
+		Actor_Says(kActorClovis, 520, 3); //05-0520.AUD	Do you know it?
+		Actor_Says(kActorMcCoy, 2625, 14); //00-2625.AUD	I can find it.
+	}
+	Actor_Says(kActorClovis, 530, 3); //05-0530.AUD	It’s a passage to freedom, McCoy. To your destiny.
 	Actor_Says(kActorClovis, 540, 3);
 	Sound_Play(kSfxSPNBEEP9, 100, 0, 0, 50);
 	Actor_Clue_Acquire(kActorMcCoy, kCluePhoneCallClovis, true, -1);
