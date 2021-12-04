@@ -261,6 +261,23 @@ void AIScriptZuben::OtherAgentEnteredCombatMode(int otherActorId, int combatMode
 		Actor_Modify_Friendliness_To_Other(kActorZuben, kActorMcCoy, 5);
 		Actor_Set_Goal_Number(kActorZuben, kGoalZubenCT07Spared);
 		// return true;
+		//Restored the scene where if McCoy shot at Zuben even if he put his gun away while cornered by Zuben
+		//he still procceeds to attack him.
+	} else if ( otherActorId == kActorMcCoy
+	 && !combatMode
+	 &&  Game_Flag_Query(kFlagCT07ZubenAttack)
+	 && Game_Flag_Query(kFlagMcCoyShotAtZuben)
+	) {
+			Actor_Says(kActorMcCoy, 450, 12); //00-0450.AUD	Take it easy big fella.
+			Delay (3000);
+			Actor_Change_Animation_Mode(kActorZuben, kAnimationModeCombatAttack);
+			Actor_Says(kActorMcCoy, 445, 12); //00-0445.AUD	Gah! Guess I've made a mistake. 
+			Actor_Says(kActorZuben, 90, 14); //19-0090.AUD	Big mistake.
+			Actor_Change_Animation_Mode(kActorZuben, kAnimationModeCombatAttack);
+			Actor_Says(kActorMcCoy, 255, 13); //00-0255.AUD	Wait, I just-- Argh!
+			Actor_Change_Animation_Mode(kActorMcCoy, 48);
+			Player_Gains_Control();
+			Actor_Retired_Here(kActorMcCoy, 12, 48, 1, kActorZuben);
 	}
 	// return false;
 }
@@ -357,6 +374,10 @@ bool AIScriptZuben::GoalChanged(int currentGoalNumber, int newGoalNumber) {
 		}
 		Actor_Clue_Acquire(kActorZuben, kClueMcCoyLetZubenEscape, true, -1);
 		Actor_Set_Goal_Number(kActorZuben, kGoalZubenCT07RunToFreeSlotA);
+		//Added in a flag
+		if (_vm->_cutContent) {
+		Game_Flag_Set(kFlagMcCoyIsHelpingReplicants);
+		}
 		return false;
 
 	case kGoalZubenCT07RunToFreeSlotA:
