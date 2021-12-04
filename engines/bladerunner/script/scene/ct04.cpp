@@ -129,6 +129,22 @@ bool SceneScriptCT04::ClickedOn3DObject(const char *objectName, bool a2) {
 				Actor_Clue_Acquire(kActorMcCoy, kClueLicensePlate, true, -1);
 				Item_Pickup_Spin_Effect(kModelAnimationLicensePlate, 392, 225);
 				Game_Flag_Set(kFlagCT04LicensePlaceFound);
+				if (_vm->_cutContent) { 
+					//Restored the license plate match clue. When McCoy finds the license plate in the dumpster and he has the partial license plate photo clue
+					//he runs a test on the KIA and it is a positive match. Also added in code to the esper script so the same happens if it is the other way around.
+					Actor_Says(kActorMcCoy, 8760, 9);//00-8760.AUD	A license plate.
+					if (Actor_Clue_Query(kActorMcCoy, kCluePartialLicenseNumber)) {
+						Actor_Says(kActorMcCoy, 8525, 9); //00-8525.AUD	Hmph.
+						Actor_Says(kActorAnsweringMachine, 390, kAnimationModeTalk); // 39-0390.AUD	Begin test.
+						Ambient_Sounds_Play_Sound(kSfxDATALOAD, 50, 0, 0, 99);
+						Delay(2000);
+						Ambient_Sounds_Play_Sound(kSfxBEEPNEAT, 80, 0, 0, 99);
+						Actor_Says(kActorAnsweringMachine, 420, 19); //39-0420.AUD	Positive result.
+						Actor_Says(kActorAnsweringMachine, 470, kAnimationModeTalk); //39-0470.AUD	End test.
+						Actor_Says(kActorMcCoy, 7200, 13); //00-7200.AUD	Bingo.
+						Actor_Clue_Acquire(kActorMcCoy, kClueLicensePlateMatch, true, -1); 
+			  		}
+				}
 				return true;
 			}
 		}
@@ -162,6 +178,10 @@ void SceneScriptCT04::dialogueWithHomeless() {
 	case 410: // YES
 		Actor_Says(kActorTransient, 10, 14); // Thanks. The big man. He kind of limping.
 		Actor_Says(kActorTransient, 20, 14); // That way.
+		//Restored the big man limping clue.
+		if (_vm->_cutContent) {
+			Actor_Clue_Acquire(kActorMcCoy, kClueBigManLimping, true, kActorTransient);
+		}
 		Actor_Modify_Friendliness_To_Other(kActorTransient, kActorMcCoy, 5);
 		if (Query_Difficulty_Level() != kGameDifficultyEasy) {
 			Global_Variable_Decrement(kVariableChinyen, 10);
@@ -195,6 +215,11 @@ bool SceneScriptCT04::ClickedOnActor(int actorId) {
 					} else {
 						Music_Stop(3u);
 						Actor_Says(kActorMcCoy, 425, kAnimationModeTalk);
+						// Added in code so the homeless guy faces McCoy when he talks to him.
+						// I mean how would McCoy give him money if his back is turned to him.
+						if (_vm->_cutContent) {
+							Actor_Face_Actor(kActorTransient, kActorMcCoy, true);
+						}
 						Actor_Says(kActorTransient, 0, 13); // Hey, maybe spare some chinyen?
 						dialogueWithHomeless();
 						Actor_Set_Goal_Number(kActorTransient, kGoalTransientCT04Leave);
