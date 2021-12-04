@@ -93,6 +93,33 @@ bool SceneScriptMA01::ClickedOn3DObject(const char *objectName, bool a2) {
 }
 
 bool SceneScriptMA01::ClickedOnActor(int actorId) {
+	//Added in some code so you can find Zubens photo on his body when you retire him on McCoys roof.
+	if (_vm->_cutContent) {
+		if (actorId == kActorZuben) {
+			if (Actor_Clue_Query(kActorMcCoy, kClueMcCoyRetiredZuben)) {
+				Loop_Actor_Walk_To_Actor(kActorMcCoy, kActorZuben, 24, true, false);
+				Actor_Face_Actor(kActorMcCoy, kActorZuben, true);
+				if (!Game_Flag_Query(kFlagCT06ZubenPhoto)) {
+					Actor_Clue_Acquire(kActorMcCoy, kClueZubenSquadPhoto, true, -1);
+					Item_Pickup_Spin_Effect(kModelAnimationPhoto, 340, 369);
+					Actor_Voice_Over(350, kActorVoiceOver);
+					Actor_Voice_Over(360, kActorVoiceOver);
+					Actor_Voice_Over(370, kActorVoiceOver);
+					if (!Game_Flag_Query(kFlagDirectorsCut)) {
+						Actor_Voice_Over(380, kActorVoiceOver);
+						Actor_Voice_Over(390, kActorVoiceOver);
+						Actor_Voice_Over(400, kActorVoiceOver);
+						Actor_Voice_Over(410, kActorVoiceOver);
+					}
+					Game_Flag_Set(kFlagCT06ZubenPhoto);
+				return true;
+				}
+			Actor_Says(kActorMcCoy, 8570, 13);
+			}
+			return false;
+		}
+		return false;
+	}
 	return false;
 }
 

@@ -80,6 +80,10 @@ void AIScriptGaff::CompletedMovementTrack() {
 			Actor_Says(kActorMcCoy, 700, kAnimationModeTalk);
 			Actor_Says(kActorGaff, 70, kAnimationModeTalk);
 			Actor_Clue_Acquire(kActorGaff, kClueMcCoyRetiredZuben, true, -1);
+			//Restored clue McCoy retred Zuben as an audio clue for McCoy
+			if (_vm->_cutContent) {
+				Actor_Clue_Acquire(kActorMcCoy, kClueMcCoyRetiredZuben, true, kActorGaff);
+			}
 		} else {
 			Actor_Says(kActorGaff, 80, kAnimationModeTalk);
 			Actor_Says(kActorGaff, 90, kAnimationModeTalk);
@@ -99,6 +103,33 @@ void AIScriptGaff::CompletedMovementTrack() {
 		Game_Flag_Set(kFlagGaffApproachedMcCoyAboutZuben);
 		Player_Gains_Control();
 		Actor_Set_Goal_Number(kActorGaff, kGoalGaffMA01Leave);
+		//Added dispatcher dialogue which plays after McCoy talks with Gaff on the apartment roof.
+		if (_vm->_cutContent) {
+			if (!Game_Flag_Query(kFlagCT12Visited)) {
+				if (Game_Flag_Query(kFlagLearyChecksCar)) {
+					Delay (2000);
+					ADQ_Add(kActorOfficerLeary, 360, kAnimationModeTalk); 	//23-0360.AUD	LA, 31 Metro 3 is 10-97 at the scene. 
+					ADQ_Add(kActorDispatcher, 370, kAnimationModeTalk);   //38-0370.AUD	32 Metro 1 LA. Go ahead.
+					ADQ_Add(kActorOfficerLeary, 420, kAnimationModeTalk);	//23-0420.AUD	LA, 13 Metro 1. 10-29 on abandoned vehicle.
+					ADQ_Add(kActorOfficerLeary, 430, kAnimationModeTalk);  //23-0430.AUD	LA, 10-29 on 1-6-9-8-7. The ignition appears punched out. 10-20 is one block west of Tyrell.
+					ADQ_Add(kActorDispatcher, 380, kAnimationModeTalk);  //38-0380.AUD	32 Metro 1 LA. No wants in a 1959 Chevy Coupe with plate 16987. Transfer on file.
+					ADQ_Add(kActorDispatcher, 400, kAnimationModeTalk);  //38-0400.AUD	Registration info temporarily unavailable at this time.
+					ADQ_Add(kActorOfficerLeary, 270, kAnimationModeTalk);  	//23-0270.AUD	LA, 38 Metro 3. 10-4.
+					Game_Flag_Set(kFlagCT12Visited);
+				} else {
+					Delay (2000);
+					ADQ_Add(kActorOfficerGrayford, 380, kAnimationModeTalk);   //24-0380.AUD	LA, 31 Metro 3 is 10-97 at the scene.	
+					ADQ_Add(kActorDispatcher, 370, kAnimationModeTalk);  //38-0370.AUD	32 Metro 1 LA. Go ahead.
+					ADQ_Add(kActorOfficerGrayford, 420, kAnimationModeTalk);  //24-0420.AUD	LA, 13 Metro 1. 10-29 on abandoned vehicle.
+					ADQ_Add(kActorOfficerGrayford, 430, kAnimationModeTalk); //24-0430.AUD	LA, 10-29 on 16987. The ignition appears punched out.
+					ADQ_Add(kActorOfficerGrayford, 440, kAnimationModeTalk); //24-0440.AUD	LA, 10-20 is one block West of Tyrell.
+					ADQ_Add(kActorDispatcher, 380, kAnimationModeTalk); //38-0380.AUD	32 Metro 1 LA. No wants in a 1959 Chevy Coupe with plate 16987. Transfer on file.
+					ADQ_Add(kActorDispatcher, 400, kAnimationModeTalk); //38-0400.AUD	Registration info temporarily unavailable at this time.
+					ADQ_Add(kActorOfficerGrayford, 550, kAnimationModeTalk); //24-0550.AUD	LA, 38 Metro 3.10-4.
+					Game_Flag_Set(kFlagCT12Visited); 
+			}		
+		}
+	}
 	}
 
 	if (Actor_Query_Goal_Number(kActorGaff) == kGoalGaffCT12GoToSpinner) {
