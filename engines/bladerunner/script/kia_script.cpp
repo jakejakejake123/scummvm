@@ -101,7 +101,21 @@ void KIAScript::SCRIPT_KIA_DLL_Play_Clue_Asset_Script(int notUsed, int clueId) {
 		KIA_Play_Actor_Dialogue(kActorVoiceOver, 2040);
 		break;
 	case kClueLabCorpses:
-		KIA_Play_Actor_Dialogue(kActorKlein, 140);
+		if (_vm->_cutContent) {
+			KIA_Play_Actor_Dialogue(kActorKlein, 100); //30-0100.AUD	We got the animal corpses from Runciter's but there wasn't a whole lot to work with.
+			KIA_Play_Actor_Dialogue(kActorMcCoy, 4145); //00-4145.AUD	Bone marrow?
+			KIA_Play_Actor_Dialogue(kActorKlein, 110); //30-0110.AUD	About 50% were real. The rest were fakes.
+			KIA_Play_Actor_Dialogue(kActorMcCoy, 4150); //00-4150.AUD	So, Runciter was ripping his customers off.
+			KIA_Play_Actor_Dialogue(kActorKlein, 120); //30-0120.AUD	State-of-the-art fakes. Miles beyond the crap you see on Animoid Row.
+			KIA_Play_Actor_Dialogue(kActorMcCoy, 4155); //00-4155.AUD	The kind that comes from legit manufacturers?
+			KIA_Play_Actor_Dialogue(kActorKlein, 130); //30-0130.AUD	Eh, they're the ones that usually produce the quality.
+			KIA_Play_Actor_Dialogue(kActorMcCoy, 4160); //00-4160.AUD	What about the wounds?
+		}
+		KIA_Play_Actor_Dialogue(kActorKlein, 140); //30-0140.AUD	Most of them were shot point-blank but we're looking at some others… pteh, sloppy cuts with a knife. Like the perp was really pissed off at something.
+		if (_vm->_cutContent) {
+			KIA_Play_Actor_Dialogue(kActorMcCoy, 4165); //00-4165.AUD	Butcher knife?
+			KIA_Play_Actor_Dialogue(kActorKlein, 160); //30-0160.AUD	Could be. But who cuts meat anymore?
+		}
 		// Similar fix to PS07:
 		// quote 150 is *boop* in ENG version
 		// it is redundant in DEU and FRA versions (identical to second half of quote 140)
@@ -114,17 +128,34 @@ void KIAScript::SCRIPT_KIA_DLL_Play_Clue_Asset_Script(int notUsed, int clueId) {
 		}
 		break;
 	case kClueLabShellCasings:
-		KIA_Play_Actor_Dialogue(kActorKlein, 50);
-		KIA_Play_Actor_Dialogue(kActorKlein, 60);
-		KIA_Play_Actor_Dialogue(kActorKlein, 70);
-		KIA_Play_Actor_Dialogue(kActorKlein, 80);
-		KIA_Play_Actor_Dialogue(kActorKlein, 90);
+		KIA_Play_Actor_Dialogue(kActorKlein, 50); //30-0050.AUD	The shell casings from Runciter's should be in the Museum of military history.
+		if (_vm->_cutContent) {
+			KIA_Play_Actor_Dialogue(kActorMcCoy, 4135); //00-4135.AUD	How's that?
+		}
+		KIA_Play_Actor_Dialogue(kActorKlein, 60); //30-0060.AUD	They're from an Ender rifle. It's standard-issue Off-World military hardware.
+		KIA_Play_Actor_Dialogue(kActorKlein, 70); //30-0070.AUD	Heavy caliber. That puppy can punch right through a tank.
+		if (_vm->_cutContent) {
+			KIA_Play_Actor_Dialogue(kActorMcCoy, 4140); //00-4140.AUD	What can I conclude from that?
+		}
+		KIA_Play_Actor_Dialogue(kActorKlein, 80); //30-0080.AUD	Whoever used this piece didn't just walk into their local sporting goods store and buy it.
+		KIA_Play_Actor_Dialogue(kActorKlein, 90); //30-0090.AUD	Those babies are collectibles and they ain't cheap.
 		break;
 	case kClueRuncitersVideo:
 		KIA_Play_Slice_Model(kModelAnimationVideoDisc);
+		if (_vm->_cutContent) {
+			KIA_Play_Actor_Dialogue(kActorMcCoy, 4545); //00-4545.AUD	You got any discs from that camera?
+			KIA_Play_Actor_Dialogue(kActorRunciter, 0); //15-0000.AUD	It's irrelevant.
+			KIA_Play_Actor_Dialogue(kActorRunciter, 10); //15-0010.AUD	Those murderers also destroyed the camera. Thousands of chinyens' worth.
+			KIA_Play_Actor_Dialogue(kActorMcCoy, 4550); //00-4550.AUD	Maybe it photographed them, before they shot it out.
+			KIA_Play_Actor_Dialogue(kActorRunciter, 20); //15-0020.AUD	Hmm, I guess you've got a point at that.
+			KIA_Play_Actor_Dialogue(kActorRunciter, 30); //15-0030.AUD	I believe this is the disc from last night.
+		}
 		break;
 	case kClueLucy:
 		KIA_Play_Photograph(5);
+		if (_vm->_cutContent) {
+			KIA_Play_Actor_Dialogue(kActorVoiceOver, 4040); //99-4040.AUD	Hello there Lucy.
+		}
 		break;
 	case kClueDragonflyAnklet:
 		KIA_Play_Photograph(4);
@@ -159,27 +190,73 @@ void KIAScript::SCRIPT_KIA_DLL_Play_Clue_Asset_Script(int notUsed, int clueId) {
 		KIA_Play_Actor_Dialogue(kActorZuben, 40);
 		KIA_Play_Actor_Dialogue(kActorMcCoy, 410);
 		KIA_Play_Actor_Dialogue(kActorZuben, 50);
+		if (_vm->_cutContent) {
+			KIA_Play_Actor_Dialogue(kActorMcCoy, 415); //00-0415.AUD	North, huh?
+		}
 		break;
 	case kClueZubenSquadPhoto:
 		KIA_Play_Photograph(33);
 		KIA_Play_Actor_Dialogue(kActorVoiceOver, 350);
+		if (_vm->_cutContent) {
+			KIA_Play_Actor_Dialogue(kActorVoiceOver, 360); //99-0360.AUD	I'd retired a war hero.
+			KIA_Play_Actor_Dialogue(kActorVoiceOver, 370); //99-0370.AUD	Someone who'd fought for the freedom of the Off-World colonists.
+			KIA_Play_Actor_Dialogue(kActorVoiceOver, 380); //99-0380.AUD	The poor guy kind of reminded me of one of those Buffalo Soldiers...
+			KIA_Play_Actor_Dialogue(kActorVoiceOver, 390); //99-0390.AUD	Blacks who had killed and died for America...
+			KIA_Play_Actor_Dialogue(kActorVoiceOver, 400); //99-0400.AUD	yet weren't allowed to drink alongside whites.
+			KIA_Play_Actor_Dialogue(kActorVoiceOver, 410); //99-0410.AUD	And maybe, just maybe, the photograph validated his own existence.
+		}
 		break;
 	case kClueBigManLimping:
-		KIA_Play_Actor_Dialogue(kActorTransient, 10);
+		KIA_Play_Actor_Dialogue(kActorTransient, 10); //12-0010.AUD	Thanks. The big man. He kind of limping.
+		KIA_Play_Actor_Dialogue(kActorTransient, 20); //12-0020.AUD	That way.
 		break;
 	case kClueRunciterInterviewA:
 		KIA_Play_Actor_Dialogue(kActorRunciter, 40);
 		KIA_Play_Actor_Dialogue(kActorRunciter, 50);
 		KIA_Play_Actor_Dialogue(kActorMcCoy, 4565);
-		KIA_Play_Actor_Dialogue(kActorRunciter, 60);
+		KIA_Play_Actor_Dialogue(kActorRunciter, 60); //15-0060.AUD	No, of course not! It was two men acting in concert with her, obviously.
+		if (_vm->_cutContent) {
+			KIA_Play_Actor_Dialogue(kActorMcCoy, 4570); //
+			KIA_Play_Actor_Dialogue(kActorRunciter, 70); //15-0070.AUD	Big and scary and absolutely malevolent.
+		}
 		break;
 	case kClueRunciterInterviewB1:
-		KIA_Play_Actor_Dialogue(kActorRunciter, 250);
-		KIA_Play_Actor_Dialogue(kActorRunciter, 270);
+		if (_vm->_cutContent) {
+			KIA_Play_Actor_Dialogue(kActorMcCoy, 4585); //00-4585.AUD	Tell me about this Lucy.
+		}
+		KIA_Play_Actor_Dialogue(kActorRunciter, 250); //15-0250.AUD	There's not a lot I can tell you. She's only worked for me for about a month.
+		KIA_Play_Actor_Dialogue(kActorRunciter, 270); //15-0270.AUD	She's about fourteen years old with pink hair. A very attractive young thing.
+		if (_vm->_cutContent) {
+			KIA_Play_Actor_Dialogue(kActorMcCoy, 4645); //00-4645.AUD	How did you find her? 
+			KIA_Play_Actor_Dialogue(kActorRunciter, 280); //15-0280.AUD	She came to me with a reference from Ogilvies in the North West Zone.
+			KIA_Play_Actor_Dialogue(kActorRunciter, 290); //15-0290.AUD	And he's a very reputable wholesaler.
+			KIA_Play_Actor_Dialogue(kActorMcCoy, 4650); //00-4650.AUD	You treat her well? 
+			KIA_Play_Actor_Dialogue(kActorRunciter, 320); //15-0320.AUD	As well as any young tart should be treated.
+			KIA_Play_Actor_Dialogue(kActorMcCoy, 4655); //00-4655.AUD	What did she do around here? Feed the animals?
+			KIA_Play_Actor_Dialogue(kActorRunciter, 330); //15-0330.AUD	I'm the only one who handles my animals, detective.
+			KIA_Play_Actor_Dialogue(kActorMcCoy, 4660); //00-4660.AUD	So what did she do?
+			KIA_Play_Actor_Dialogue(kActorRunciter, 340); //15-0340.AUD	Unskilled labor, mostly. She was perfect for that. As if she were made for it.
+			KIA_Play_Actor_Dialogue(kActorMcCoy, 4665); //00-4665.AUD	She got a desk or some place where she worked?
+			KIA_Play_Actor_Dialogue(kActorRunciter, 350); //15-0350.AUD	She used to eat over there.
+		}
 		break;
 	case kClueRunciterInterviewB2:
-		KIA_Play_Actor_Dialogue(kActorRunciter, 260);
-		KIA_Play_Actor_Dialogue(kActorRunciter, 270);
+		if (_vm->_cutContent) {
+			KIA_Play_Actor_Dialogue(kActorMcCoy, 4585); //00-4585.AUD	Tell me about this Lucy.
+		}
+		KIA_Play_Actor_Dialogue(kActorRunciter, 260); //15-0260.AUD	There's not a lot I can tell you. She's only worked for me for a short while.
+		KIA_Play_Actor_Dialogue(kActorRunciter, 270); //15-0270.AUD	She's about fourteen years old with pink hair. A very attractive young thing.
+		if (_vm->_cutContent) {
+			KIA_Play_Actor_Dialogue(kActorMcCoy, 4645); //00-4645.AUD	How did you find her? 
+			KIA_Play_Actor_Dialogue(kActorRunciter, 280); //15-0280.AUD	She came to me with a reference from Ogilvies in the North West Zone.
+			KIA_Play_Actor_Dialogue(kActorRunciter, 290); //15-0290.AUD	And he's a very reputable wholesaler.
+			KIA_Play_Actor_Dialogue(kActorMcCoy, 4650); //00-4650.AUD	You treat her well? 
+			KIA_Play_Actor_Dialogue(kActorRunciter, 320); //15-0320.AUD	As well as any young tart should be treated.
+			KIA_Play_Actor_Dialogue(kActorMcCoy, 4655); //00-4655.AUD	What did she do around here? Feed the animals?
+			KIA_Play_Actor_Dialogue(kActorRunciter, 330); //15-0330.AUD	I'm the only one who handles my animals, detective.
+			KIA_Play_Actor_Dialogue(kActorMcCoy, 4665); //00-4665.AUD	She got a desk or some place where she worked?
+			KIA_Play_Actor_Dialogue(kActorRunciter, 350); //15-0350.AUD	She used to eat over there.
+		}
 		break;
 	case kClueHowieLeeInterview:
 		KIA_Play_Actor_Dialogue(kActorMcCoy, 295);
@@ -192,6 +269,12 @@ void KIAScript::SCRIPT_KIA_DLL_Play_Clue_Asset_Script(int notUsed, int clueId) {
 		break;
 	case kClueChromeDebris:
 		KIA_Play_Slice_Model(kModelAnimationChromeDebris);
+		if (_vm->_cutContent) {
+			KIA_Play_Actor_Dialogue(kActorOfficerLeary, 20); //23-0020.AUD	Find something? 
+			KIA_Play_Actor_Dialogue(kActorMcCoy, 4505); //00-4505.AUD	Piece of chrome.
+			KIA_Play_Actor_Dialogue(kActorOfficerLeary, 30); //23-0030.AUD	From a car?
+			KIA_Play_Actor_Dialogue(kActorMcCoy, 4510); //No, I think it's horse chrome. Bag it and tag it.
+		}
 		break;
 	case kClueRuncitersViewA:
 		KIA_Play_Photograph(11);
@@ -201,9 +284,15 @@ void KIAScript::SCRIPT_KIA_DLL_Play_Clue_Asset_Script(int notUsed, int clueId) {
 		break;
 	case kClueCarColorAndMake:
 		KIA_Play_Photograph(10);
+		if (_vm->_cutContent) {
+			KIA_Play_Actor_Dialogue(kActorVoiceOver, 4070); //99-4070.AUD	A black ground car. Looks like it's been around the block a few times.
+		}
 		break;
 	case kCluePartialLicenseNumber:
 		KIA_Play_Photograph(9);
+		if (_vm->_cutContent) {
+			KIA_Play_Actor_Dialogue(kActorVoiceOver, 4120); //99-4120.AUD	Local license plate. 
+		}
 		break;
 	case kClueBriefcase:
 		KIA_Play_Slice_Model(kModelAnimationBriefcase);
@@ -214,14 +303,21 @@ void KIAScript::SCRIPT_KIA_DLL_Play_Clue_Asset_Script(int notUsed, int clueId) {
 	case kClueGaffsInformation:
 		KIA_Play_Actor_Dialogue(kActorGaff, 20);
 		KIA_Play_Actor_Dialogue(kActorMcCoy, 680);
-		KIA_Play_Actor_Dialogue(kActorGaff, 30);
+		KIA_Play_Actor_Dialogue(kActorGaff, 30); //53-0030.AUD	Disappeared into thin air. Bryant thinks it crashed out in the Kipple.
+		if (_vm->_cutContent) {
+			KIA_Play_Actor_Dialogue(kActorMcCoy, 685); //00-0685.AUD	How many Reps we're talking about?
+			KIA_Play_Actor_Dialogue(kActorGaff, 40); //53-0040.AUD	Enough. They're Nexus-6s, so don't take too much slack.
+		}
 		break;
 	case kClueLicensePlate:
 		KIA_Play_Slice_Model(kModelAnimationLicensePlate);
 		break;
 	case kClueLabPaintTransfer:
-		KIA_Play_Actor_Dialogue(kActorKlein, 170);
-		KIA_Play_Actor_Dialogue(kActorKlein, 180);
+		KIA_Play_Actor_Dialogue(kActorKlein, 170); //30-0170.AUD	That black paint you found on the fire hydrant is from a ground car.
+		if (_vm->_cutContent) {
+			KIA_Play_Actor_Dialogue(kActorMcCoy, 4180); //00-4180.AUD	You sure?
+		}
+		KIA_Play_Actor_Dialogue(kActorKlein, 180); //30-0180.AUD	The angle of impact was almost head-on.
 		KIA_Play_Actor_Dialogue(kActorKlein, 190);
 		KIA_Play_Actor_Dialogue(kActorKlein, 200);
 		break;
@@ -235,9 +331,17 @@ void KIAScript::SCRIPT_KIA_DLL_Play_Clue_Asset_Script(int notUsed, int clueId) {
 		KIA_Play_Actor_Dialogue(kActorDispatcher, 150);
 		break;
 	case kCluePhoneCallGuzza:
-		KIA_Play_Actor_Dialogue(kActorGuzza, 30);
-		KIA_Play_Actor_Dialogue(kActorGuzza, 50);
-		KIA_Play_Actor_Dialogue(kActorGuzza, 70);
+		KIA_Play_Actor_Dialogue(kActorGuzza, 30); //04-0030.AUD	One of Tyrell's employees got his fat face splattered all over the marble interior of the Tyrell Building.
+		if (_vm->_cutContent) {
+			KIA_Play_Actor_Dialogue(kActorMcCoy, 2695); //00-2695.AUD	Inside?
+			KIA_Play_Actor_Dialogue(kActorGuzza, 40); //04-0040.AUD	That's right. But we also got a sweet little break at it.
+		}
+		KIA_Play_Actor_Dialogue(kActorGuzza, 50); //04-0050.AUD	Tyrell's surveillance system recorded the whole shebang.
+		if (_vm->_cutContent) {
+			KIA_Play_Actor_Dialogue(kActorMcCoy, 2700); //00-2700.AUD	Beautiful! How many perps?
+			KIA_Play_Actor_Dialogue(kActorGuzza, 60); //04-0060.AUD	Just one. I don't know if it's related to the Runciter deal or not.
+		}
+		KIA_Play_Actor_Dialogue(kActorGuzza, 70); //04-0070.AUD	Tyrell security will have the disk for you when you get there. You be good, killer.
 		break;
 	case kClueDragonflyEarring:
 		KIA_Play_Slice_Model(kModelAnimationDragonflyEarring);
