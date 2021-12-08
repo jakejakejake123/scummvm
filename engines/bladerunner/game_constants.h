@@ -640,21 +640,21 @@ enum Flags {
 	kFlagKleinAnimation3                      = 198,
 	kFlagOfficerLearyTakingNotes              = 199,
 	kFlagBoughtFish							  = 200,
-	// 201 is never used
-	// 202 is never used
-	// 203 is never used
+	kFlagMcCoyShotIzo						  = 201,	
+	kFlagIzoVKAttempt						  = 202,
+	kFlagIzoWarnedAboutCrystal				  = 203,	
 	kFlagPS15toPS05                           = 204,
-	// 205 is never used
+	kFlagIzoEscaped							  = 205,
 	kFlagSergeantWallsBuzzInRequest           = 206, // is never set
-	// 207 is never used
-	// 208 is never used
-	// 209 is never used
+	kFlagCrystalConvinced					  = 207,
+	kFlagIzoGotAway							  = 208,
+	//
 	kFlagCT02ZubenFled                        = 210,
 	kFlagPS09Entered                          = 211,
 	kFlagNotUsed212                           = 212, // is never checked
-	// 213 is never used
-	// 214 is never used
-	// 215 is never used
+	kFlagChewTalkGiveData					  = 213,
+	kFlagSebastiansComputerChecked			  = 214,	
+	kFlagNewDoll							  = 215,
 	kFlagBB09toBB10a                          = 216,
 	// 217 is never used
 	kFlagBB08toBB09                           = 218,
@@ -2891,6 +2891,8 @@ enum GoalSteele {
 	kGoalSteeleIzoBlockedByMcCoy           = 125,
 	kGoalSteeleLeaveRC03                   = 130,
 	kGoalSteeleWalkAroundRestart           = 190,
+	kGoalSteeleRC03GoToAR02					= 191,
+	//
 	// chapter 3
 	kGoalSteeleStartChapter3               = 205,
 	kGoalSteeleNR11StartWaiting            = 210,
@@ -3438,6 +3440,7 @@ enum GoalMoraji {
 	kGoalMorajiLayDown    = 21,
 	kGoalMorajiDie        = 22,
 	kGoalMorajiDead       = 23,
+	kGoalMorajiAlive       = 24,
 	kGoalMorajiChooseFate = 30,
 	kGoalMorajiPerished   = 99
 };

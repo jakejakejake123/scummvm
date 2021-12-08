@@ -128,6 +128,11 @@ bool AIScriptTyrellGuard::GoalChanged(int currentGoalNumber, int newGoalNumber) 
 		AI_Countdown_Timer_Reset(kActorTyrellGuard, kActorTimerAIScriptCustomTask0);
 		Actor_Says(kActorTyrellGuard, 310, 14);
 		AI_Countdown_Timer_Start(kActorTyrellGuard, kActorTimerAIScriptCustomTask1, 20);
+		// Added in a line for the Tyrell guard.
+		if (_vm->_cutContent) {
+			ADQ_Add (kActorTyrellGuard, 320, 13); //17-0320.AUD	Hey, you! Stop!
+			Game_Flag_Set(kFlagElevatorLocked);
+		}
 		return true;
 
 	case kGoalTyrellGuardArrestMcCoy:

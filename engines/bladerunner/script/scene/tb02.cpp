@@ -110,10 +110,32 @@ bool SceneScriptTB02::ClickedOnActor(int actorId) {
 				if ( Game_Flag_Query(kFlagTB02ElevatorToTB05)
 				 && !Game_Flag_Query(kFlagTB05Entered)
 				) {
-					Actor_Says(kActorMcCoy, 5150, 18);
-					Actor_Says(kActorTyrellGuard, 60, 12);
-					Actor_Says(kActorTyrellGuard, 70, 13);
-					Actor_Says(kActorMcCoy, 5155, 13);
+					// Added in some more dialogue for the Tyrell guard. Depending on McCoys agenda he will continue to pester the guard which results in friendliness loss. 
+					Actor_Says(kActorMcCoy, 5150, 18); //00-5150.AUD	One more thing.
+					Actor_Says(kActorTyrellGuard, 60, 12); //17-0060.AUD	I've told you everything I know, detective.
+					if (_vm->_cutContent) {
+						Actor_Says(kActorMcCoy, 4180, 13); //00-4180.AUD	You sure? 
+						Actor_Says(kActorTyrellGuard, 400, 12); //17-0400.AUD	I'm a little busy for this, sir.
+						if (Player_Query_Agenda() == kPlayerAgendaSurly 
+								|| Player_Query_Agenda() == kPlayerAgendaErratic) {
+							Actor_Says(kActorMcCoy, 3910, 13); //00-3910.AUD	You’re lying.
+							Actor_Says(kActorTyrellGuard, 410, 12);	//17-0410.AUD	What I said is the truth, sir.
+							
+							Actor_Modify_Friendliness_To_Other(kActorTyrellGuard, kActorMcCoy, -2);
+						}
+					} 
+					if (_vm->_cutContent) {
+						Actor_Says(kActorMcCoy, 4880, 18); //00-4880.AUD	Is that right?
+					}
+					Actor_Says(kActorTyrellGuard, 70, 13); //17-0070.AUD	I gotta work! These monitors don't watch themselves.
+					if (_vm->_cutContent) {
+						if (Player_Query_Agenda() == kPlayerAgendaSurly 
+								|| Player_Query_Agenda() == kPlayerAgendaErratic) {
+							Actor_Says(kActorMcCoy, 5155, 13); //00-5155.AUD	Yeah. It's a tough gig.
+							}
+						} else {
+							Actor_Says(kActorMcCoy, 5155, 13); //00-5155.AUD	Yeah. It's a tough gig.
+						}					
 					Actor_Modify_Friendliness_To_Other(kActorTyrellGuard, kActorMcCoy, -1);
 					return true;
 				}
@@ -145,9 +167,18 @@ bool SceneScriptTB02::ClickedOnActor(int actorId) {
 			if (chapter == 3) {
 				Actor_Says(kActorMcCoy, 5235, 18);
 				Actor_Says(kActorTyrellGuard, 280, 13);
-				Actor_Says(kActorTyrellGuard, 290, 12);
-				Actor_Says(kActorMcCoy, 5240, 18);
-				Actor_Says(kActorTyrellGuard, 300, 12);
+				// Depending on your friendliness rating with the guard he will either tell you to leave or he will leave you alone. 
+				if (_vm->_cutContent) {
+					if (Actor_Query_Friendliness_To_Other(kActorTyrellGuard, kActorMcCoy) < 48) {
+						Actor_Says(kActorTyrellGuard, 290, 12); //17-0290.AUD	I'm gonna have to ask you to leave, sir.
+						Actor_Says(kActorMcCoy, 5240, 18); //00-5240.AUD	You're gonna throw me out?
+						Actor_Says(kActorTyrellGuard, 300, 12); // 17-0300.AUD	If need be.
+					}
+				} else {
+					Actor_Says(kActorTyrellGuard, 290, 12); //17-0290.AUD	I'm gonna have to ask you to leave, sir.
+					Actor_Says(kActorMcCoy, 5240, 18); //00-5240.AUD	You're gonna throw me out?
+					Actor_Says(kActorTyrellGuard, 300, 12); // 17-0300.AUD	If need be.	
+				}
 				return false;
 			}
 
@@ -183,11 +214,37 @@ bool SceneScriptTB02::ClickedOnExit(int exitId) {
 			Ambient_Sounds_Remove_All_Non_Looping_Sounds(true);
 			Ambient_Sounds_Remove_All_Looping_Sounds(1u);
 			if (Global_Variable_Query(kVariableChapter) < 4) {
+				// Restored the buzzer for the elevator along with its correlating dialogue. When McCoy first tries to access the elevator it is locked and he asks the guard
+				// to buzz him in again to which the guard complies. Later on when the guard is asleep the elevator door is again locked and McCoy presses the buzzer to unlock it.
+				if (_vm->_cutContent) {
+					if (!Game_Flag_Query(kFlagTB05Entered)) {
+						Actor_Says(kActorMcCoy, 8522, 13); //00-8522.AUD	Locked.
+						Actor_Face_Actor(kActorMcCoy, kActorTyrellGuard, true);
+						Actor_Says(kActorMcCoy, 5160, 15); //00-5160.AUD	Buzz me in again. I haven't made it up to Grav Test Lab yet.
+						Actor_Says(kActorTyrellGuard, 80, 13); //17-0080.AUD	All right.
+					}
+				}	
 				Game_Flag_Set(kFlagTB05Entered);
 				Game_Flag_Set(kFlagTB02toTB05);
 				Set_Enter(kSetTB05, kSceneTB05);
-			} else {
-				Set_Enter(kSetTB07, kSceneTB07);
+			} else if (Global_Variable_Query(kVariableChapter) == 4) {
+				// Made it so in act 4 when breaking into the Tyrell building when McCoy approaches the elevator it is locked and he presses the buzzer to get in.
+				if (_vm->_cutContent && Game_Flag_Query(kFlagElevatorLocked)) { 
+					Actor_Says(kActorMcCoy, 8522, 13); //00-8522.AUD	Locked.
+				} else {
+					Actor_Says(kActorMcCoy, 8522, 13); //00-8522.AUD	Locked.
+					Actor_Face_Actor(kActorMcCoy, kActorTyrellGuard, true);
+					Delay (1000);
+					Actor_Says(kActorMcCoy, 8525, 0); //00-8525.AUD	Hmph.
+					Player_Loses_Control();
+					Loop_Actor_Walk_To_Actor(kActorMcCoy, kActorTyrellGuard, 24, true, false);
+					Sound_Play(kSfxLABBUZZ1, 90, 0, 0, 50);
+					Loop_Actor_Walk_To_XYZ(kActorMcCoy, -32.0f, 0.0f, 1578.0f, 0, true, false, false);
+					Player_Gains_Control();
+					Set_Enter(kSetTB07, kSceneTB07);
+					}
+				} else {
+			Set_Enter(kSetTB07, kSceneTB07);
 			}
 		}
 		return true;
@@ -207,7 +264,10 @@ bool SceneScriptTB02::ClickedOnExit(int exitId) {
 				Game_Flag_Reset(kFlagMcCoyInBradburyBuilding);
 				Game_Flag_Reset(kFlagMcCoyInHysteriaHall);
 				Game_Flag_Reset(kFlagMcCoyInTyrellBuilding);
-				Game_Flag_Reset(kFlagTB02ElevatorToTB05);
+				// Removed code that triggers the original buzzer scenario since the whole scene has now been revamped.
+				if (!_vm->_cutContent) {
+					Game_Flag_Reset(kFlagTB02ElevatorToTB05);
+				}
 				switch (Spinner_Interface_Choose_Dest(-1, false)) {
 				case kSpinnerDestinationPoliceStation:
 					Game_Flag_Set(kFlagMcCoyInPoliceStation);
@@ -320,9 +380,18 @@ void SceneScriptTB02::PlayerWalkedIn() {
 			Actor_Says(kActorMcCoy, 5125, 18);
 			Actor_Says(kActorTyrellGuard, 0, 50);
 			Actor_Says(kActorMcCoy, 5130, 13);
-			Actor_Says(kActorTyrellGuard, 10, 15);
+			// Made it so the guard now presses the buzzer to let McCoy in. Also restored some dialogue.
+			Actor_Says(kActorTyrellGuard, 10, 15); //17-0010.AUD	Grav Test on the East Wing. 66th floor.
+			if (_vm->_cutContent) {
+				Actor_Change_Animation_Mode(kActorTyrellGuard, 50);
+				Delay (800);
+				Sound_Play(kSfxLABBUZZ1, 90, 0, 0, 50);
+				Delay (1000);
+				Actor_Says(kActorMcCoy, 4130, kAnimationModeTalk); //00-4130.AUD	Anything else?
+				Actor_Says(kActorTyrellGuard, 380, 10); //17-0380.AUD	Oh, yeah, there-- There is one more thing.
+			}
 			Item_Pickup_Spin_Effect(kModelAnimationVideoDisc, 351, 315);
-			Actor_Says(kActorTyrellGuard, 20, 23);
+			Actor_Says(kActorTyrellGuard, 20, 23); //17-0020.AUD	Ah-- here's the footage from the security cameras. You get a pretty good look at the man's face.
 			Actor_Says(kActorMcCoy, 5140, 17);
 			Actor_Says(kActorTyrellGuard, 30, 14);
 			Actor_Says(kActorTyrellGuard, 40, 13);
@@ -336,7 +405,12 @@ void SceneScriptTB02::PlayerWalkedIn() {
 			Actor_Says(kActorMcCoy, 5145, 13);
 			Actor_Says(kActorTyrellGuard, 50, 15);
 			Actor_Face_Heading(kActorTyrellGuard, 788, false);
-			Actor_Clue_Acquire(kActorMcCoy, kClueTyrellSecurity, true, -1);
+			// Made it so the source of the Tyrell security disc is the Tyrell guard.
+			if (_vm->_cutContent) {
+				Actor_Clue_Acquire(kActorMcCoy, kClueTyrellSecurity, true, kActorTyrellGuard);
+			} else {
+				Actor_Clue_Acquire(kActorMcCoy, kClueTyrellSecurity, true, -1);	
+			}
 			Game_Flag_Set(kFlagTB02GuardTalk1);
 			Game_Flag_Set(kFlagTB02ElevatorToTB05);
 			Player_Gains_Control();
@@ -359,10 +433,30 @@ void SceneScriptTB02::PlayerWalkedIn() {
 		 && !Game_Flag_Query(kFlagTB02SteeleTalk)
 		) {
 			Loop_Actor_Walk_To_Actor(kActorSteele, kActorMcCoy, 36, true, false);
-			Actor_Says(kActorSteele, 2220, 14);
-			Actor_Says(kActorMcCoy, 5245, 13);
-			Actor_Says(kActorSteele, 2230, 12);
-			Actor_Says(kActorSteele, 2240, 13);
+			if (_vm->_cutContent) {
+				Actor_Face_Actor(kActorMcCoy, kActorSteele, true);
+			}
+			// Made it so Crystal is a 'little' nicer to you if you have high friendliness with her. The friendliness increase will be a result of you retiring Zuben
+			// which will be added into his script page.
+			if (_vm->_cutContent) {
+				if (Actor_Query_Friendliness_To_Other(kActorRunciter, kActorMcCoy) > 49) {
+					Actor_Says(kActorSteele, 2030, 14); //	01-2030.AUD	Been keeping yourself busy?
+					Actor_Says(kActorMcCoy, 5245, 13); //00-5245.AUD	Guzza didn't say anything about me working with a partner.
+					Actor_Says(kActorSteele, 2230, 12); //01-2230.AUD	(laughs) Oh, in a pig's ass, Slim. No, I'm following up on my own.
+					Actor_Says(kActorSteele, 2240, 13); //01-2240.AUD	Could be it's linked to this Tyrell debacle.
+					Actor_Says(kActorSteele, 2760, 12); //-	01-2760.AUD	What’s the latest?	
+				} else {
+					Actor_Says(kActorSteele, 2220, 14); //01-2220.AUD	Lagging behind again?
+					Actor_Says(kActorMcCoy, 5245, 13); ////00-5245.AUD	Guzza didn't say anything about me working with a partner.
+					Actor_Says(kActorSteele, 2230, 12); //01-2230.AUD	(laughs) Oh, in a pig's ass, Slim. No, I'm following up on my own.
+					Actor_Says(kActorSteele, 2240, 13); //01-2240.AUD	Could be it's linked to this Tyrell debacle.
+					}	
+				} else {								
+					Actor_Says(kActorSteele, 2220, 14); //01-2220.AUD	Lagging behind again?
+					Actor_Says(kActorMcCoy, 5245, 13); ////00-5245.AUD	Guzza didn't say anything about me working with a partner.
+					Actor_Says(kActorSteele, 2230, 12); //01-2230.AUD	(laughs) Oh, in a pig's ass, Slim. No, I'm following up on my own.
+					Actor_Says(kActorSteele, 2240, 13); //01-2240.AUD	Could be it's linked to this Tyrell debacle.
+				}
 			dialogueWithSteele();
 			//return true;
 		}
@@ -376,7 +470,11 @@ void SceneScriptTB02::PlayerWalkedIn() {
 		Loop_Actor_Walk_To_XYZ(kActorMcCoy, -131.28f, 0.79f, 1448.25f, 12, true, false, false);
 		Actor_Says(kActorTyrellGuard, 260, 15);
 		Actor_Says(kActorMcCoy, 5225, 16);
-		Actor_Says(kActorTyrellGuard, 270, 14);
+		Actor_Says(kActorTyrellGuard, 270, 14); //17-0270.AUD	So why you're here?
+		// Added in a line for McCoy.
+		if (_vm->_cutContent) {
+			Actor_Says(kActorMcCoy, 5230, 15); //00-5230.AUD	Just looking around.
+		}
 		Game_Flag_Set(kFlagTB02GuardTalk2);
 		Actor_Modify_Friendliness_To_Other(kActorTyrellGuard, kActorMcCoy, -1);
 	}
@@ -448,9 +546,20 @@ void SceneScriptTB02::dialogueWithTyrellGuard() {
 		Actor_Says(kActorMcCoy, 5170, 12);
 		Actor_Says(kActorTyrellGuard, 180, 12);
 		Actor_Says(kActorTyrellGuard, 190, 14);
-		if (Game_Flag_Query(kFlagTB06Visited)) {
-			Actor_Says(kActorMcCoy, 5195, 13);
-			Actor_Says(kActorTyrellGuard, 200, 13);
+		// Made it so McCoy also makes the Eisenduller mumu comment if he just saw the Tyrell security photo.
+		if (_vm->_cutContent) {
+			if (Game_Flag_Query(kFlagTB06Visited) || Actor_Clue_Query(kActorMcCoy, kClueTyrellSecurityPhoto)) {
+				Actor_Says(kActorMcCoy, 5195, 13); //00-5195.AUD	How did Eisenduller's muumuu fit in?
+				Actor_Says(kActorTyrellGuard, 200, 13); //17-0200.AUD	Heh. Hey, you know company rules only apply to the lesser mortals.
+			}
+		} else if (Game_Flag_Query(kFlagTB06Visited)) {
+			Actor_Says(kActorMcCoy, 5195, 13); //00-5195.AUD	How did Eisenduller's muumuu fit in?
+			Actor_Says(kActorTyrellGuard, 200, 13); //17-0200.AUD	Heh. Hey, you know company rules only apply to the lesser mortals.
+		}
+		// Added in some lines. I'm assuming pickup is some kind of lost and found.
+		if (_vm->_cutContent) {
+			Actor_Says(kActorTyrellGuard, 440, 13); //17-0440.AUD	You wanna leave it for pickup?
+			Actor_Says(kActorMcCoy, 7815, 16); //00-7815.AUD	No.
 		}
 		break;
 
@@ -501,6 +610,15 @@ void SceneScriptTB02::dialogueWithSteele() {
 			Actor_Says(kActorSteele, 2280, 13);
 			Actor_Says(kActorMcCoy, 5270, 16);
 			Actor_Says(kActorSteele, 2290, 14);
+			// Added in some dialogue for when you have high friendliness with Steele.
+			if (_vm->_cutContent) {
+				if (Actor_Query_Friendliness_To_Other(kActorRunciter, kActorMcCoy) > 49) {
+					Actor_Says(kActorMcCoy, 5260, 18); //00-5260.AUD	Happy trails, Steele.
+					Actor_Says(kActorSteele, 2350, 12);  //01-2350.AUD	Ditto.
+				} else {
+					Actor_Says(kActorSteele, 1990, 12); //01-1990.AUD	A little word of advice, Slim. Stay out of my way.
+				}
+			}
 			Actor_Clue_Acquire(kActorMcCoy, kClueCrystalsCase, true, kActorSteele);
 			Actor_Modify_Friendliness_To_Other(kActorSteele, kActorMcCoy, 1);
 			Game_Flag_Set(kFlagTB02SteeleTalk);
