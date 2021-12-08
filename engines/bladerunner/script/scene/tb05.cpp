@@ -88,10 +88,15 @@ bool SceneScriptTB05::ClickedOn3DObject(const char *objectName, bool a2) {
 				Actor_Voice_Over(2190, kActorVoiceOver);
 				Actor_Voice_Over(2200, kActorVoiceOver);
 				Game_Flag_Set(kFlagTB05MonitorIntro);
-				if (_vm->_cutContent) {
-					// in order not to confuse the player (much) with a red herring region,
-					// we enable this region *after* the player has accessed the correct pc / panel
+				// Made it McCoy only makes his distasteful comment about the 'wallpapered engineer' if he has seen Eisendullers body and if he is surly or erratic.
+				if (_vm->_cutContent 
+					&& Game_Flag_Query(kFlagTB05toTB06)) {
+					if (Player_Query_Agenda() == kPlayerAgendaSurly
+		   				|| Player_Query_Agenda() == kPlayerAgendaErratic) {
+						// in order not to confuse the player (much) with a red herring region,
+						// we enable this region *after* the player has accessed the correct pc / panel
 					Scene_2D_Region_Add(0, 382, 255, 634, 325); // monitors and panels other than the "main monitor"
+					}
 				}
 				return true;
 			}
@@ -187,8 +192,19 @@ bool SceneScriptTB05::ClickedOnItem(int itemId, bool a2) {
 bool SceneScriptTB05::ClickedOnExit(int exitId) {
 	if (exitId == 0) {
 		if (!Loop_Actor_Walk_To_XYZ(kActorMcCoy, 23.0f, 151.53f, -205.0f, 12, true, false, false)) {
+			// Added in some dialogue for when McCoy first enters the grav lab. The smell of charred flesh and burnt walls is still quite pungent.
+			if (_vm->_cutContent) {
+				if (!Game_Flag_Query(kFlagTB05toTB06)) {
+					Actor_Says(kActorMcCoy, 8650, kAnimationModeTalk); //00-8650.AUD	What smells in there?
+					Actor_Says(kActorMcCoy, 8660, kAnimationModeTalk);  //00-8660.AUD	I think something's burning.
+				}
+			}
 			Game_Flag_Set(kFlagTB05toTB06);
 			Set_Enter(kSetTB06, kSceneTB06);
+			//Reset this flag so the buzzer doesn't go off when you exit the grav lab.
+			if (_vm->_cutContent) {
+				Game_Flag_Reset(kFlagTB02toTB05);
+			}
 			Scene_Loop_Start_Special(kSceneLoopModeChangeSet, 2, true);
 		}
 		return true;
@@ -232,6 +248,12 @@ void SceneScriptTB05::ActorChangedGoal(int actorId, int newGoal, int oldGoal, bo
 }
 
 void SceneScriptTB05::PlayerWalkedIn() {
+	//Altered code so the buzzer sound plays when you enter the set.
+	if (_vm->_cutContent) {
+		if (Game_Flag_Query(kFlagTB02toTB05)) {
+		Sound_Play(kSfxLABBUZZ1, 90, 0, 0, 50);
+		}
+	}
 }
 
 void SceneScriptTB05::PlayerWalkedOut() {
