@@ -228,7 +228,8 @@ void SceneScriptPS04::dialogueWithGuzza() {
 				//Added in some lines.
 				Actor_Says(kActorMcCoy, 8265, 13); //00-8265.AUD	Really?
 				Actor_Says(kActorGuzza, 1520, 33); //04-1520.AUD	Everything I say is as true as holy writ.
-				Actor_Says(kActorMcCoy, 4060, 13)
+				//Fixed this line.
+				Actor_Says(kActorMcCoy, 4060, 13);
 				Actor_Says(kActorGuzza, 540, 31); //04-0540.AUD	Trust me. Ain't nobody getting rich unless they're sneaking some on the side.
 				Actor_Says(kActorGuzza, 550, 32);
 				Actor_Says(kActorMcCoy, 4065, 18);
@@ -492,7 +493,11 @@ void SceneScriptPS04::dialogueWithGuzza() {
 		Actor_Says(kActorGuzza, 680, 32);
 		Actor_Says(kActorGuzza, 690, 31);
 		//Jake - Made it so your friendliness with Guzza increases when you show him the badge.
+		//Made it so when you show Holdens badge to Guzza you give it to him. It would not make any sense to show it to him
+		//and to also have the option to give it to Bob so it looks like he found it. Also added in the McCoy recovered Holdens badge clue.
 		if (_vm->_cutContent) {
+			Actor_Clue_Acquire(kActorMcCoy, kClueMcCoyRecoveredHoldensBadge, true, kActorGuzza);
+			Actor_Clue_Acquire(kActorGuzza, kClueHoldensBadge, true, kActorMcCoy);
 			Actor_Modify_Friendliness_To_Other(kActorGuzza, kActorMcCoy, 8);
 		}
 		break;
