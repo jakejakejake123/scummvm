@@ -84,7 +84,14 @@ bool SceneScriptTB07::ClickedOnItem(int itemId, bool a2) {
 		Actor_Face_Item(kActorMcCoy, itemId, true);
 		if (itemId == kItemDNATyrell) {
 			Item_Pickup_Spin_Effect(kModelAnimationDNADataDisc, 331, 296);
-			Actor_Clue_Acquire(kActorMcCoy, kClueDNATyrell, false, -1);
+			Actor_Clue_Acquire(kActorMcCoy, kClueDNATyrell, false, -1);	
+			// Added in the incept shot Roy clue. You pick it up when you pick up the Tyrell DNA data.
+			if (_vm->_cutContent) {
+				Delay(1500);
+				Item_Pickup_Spin_Effect(kModelAnimationPhoto, 331, 296);
+				Delay(1500);		
+				Actor_Clue_Acquire(kActorMcCoy, kClueInceptShotRoy, true, -1);
+			}
 		}
 		Item_Remove_From_World(itemId);
 	}
@@ -286,11 +293,23 @@ void SceneScriptTB07::McCoyTalkWithRachaelAndTyrell() {
 	Actor_Says_With_Pause(kActorMcCoy, 5390, 2.0f, 14);
 	Actor_Says(kActorMcCoy, 5395, 15);
 	Actor_Says_With_Pause(kActorRachael, 630, 0.0f, 14);
-	Actor_Says(kActorMcCoy, 5400, 18);
-	Actor_Says(kActorMcCoy, 5405, kAnimationModeTalk);
-	Actor_Says(kActorRachael, 640, 12);
-	Actor_Says(kActorMcCoy, 5410, 16);
-	Actor_Says(kActorRachael, 650, 15);
+	Actor_Says(kActorMcCoy, 5400, 18); //00-5400.AUD	I'm surprised you are not doing spin control.
+	// Made it so McCoy only refers to repliacants as pets if he is sury or erratic. Since McCoy is more sympathetic towards replicants when speaking to Rachael later
+	// on based on his agenda this change feels appropraiate. 
+	if (_vm->_cutContent) {
+		if (Player_Query_Agenda() == kPlayerAgendaSurly 
+			|| Player_Query_Agenda() == kPlayerAgendaErratic) {
+		Actor_Says(kActorMcCoy, 5405, kAnimationModeTalk); //00-5405.AUD	The public gets nervous when your pets wander around the city without a leash.
+		Actor_Says(kActorRachael, 640, 12); //57-0640.AUD	Replicants aren't pets.
+		Actor_Says(kActorMcCoy, 5410, 16); //00-5410.AUD	Right. Pets live longer and don't go around killing people.
+		}
+	} else {
+		Actor_Says(kActorMcCoy, 5405, kAnimationModeTalk); //00-5405.AUD	The public gets nervous when your pets wander around the city without a leash.
+		Actor_Says(kActorRachael, 640, 12); //57-0640.AUD	Replicants aren't pets.
+		Actor_Says(kActorMcCoy, 5410, 16); //00-5410.AUD	Right. Pets live longer and don't go around killing people.
+
+	}
+	Actor_Says(kActorRachael, 650, 15); //57-0650.AUD	They-- There are safeguards in the design.
 	Actor_Says_With_Pause(kActorMcCoy, 5415, 1.0f, 17);
 	Actor_Says(kActorMcCoy, 5420, 14);
 	Actor_Says(kActorRachael, 660, 15);
@@ -326,6 +345,10 @@ void SceneScriptTB07::McCoyTalkWithRachaelAndTyrell() {
 	Actor_Says_With_Pause(kActorMcCoy, 5450, 1.0f, 15);
 	Actor_Says(kActorMcCoy, 5455, 12);
 	Actor_Says(kActorTyrell, 100, 14);
+	// Added in the moonbus 2 clue. Essentially it is the dialogue where Rachael and McCoy talk about the moonbus hijacking.
+	if (_vm->_cutContent) {
+		Actor_Clue_Acquire(kActorMcCoy, kClueMoonbus2, false, kActorRachael);
+	}
 	Actor_Clue_Acquire(kActorMcCoy, kClueRachaelInterview, false, kActorRachael);
 	Actor_Clue_Acquire(kActorMcCoy, kClueTyrellInterview, false, kActorTyrell);
 	Loop_Actor_Walk_To_XYZ(kActorTyrell, -260.15f, 12.0f, -19.16f, 0, false, false, false);
