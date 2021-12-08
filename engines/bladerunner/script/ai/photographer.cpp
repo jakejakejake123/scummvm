@@ -102,12 +102,19 @@ void AIScriptPhotographer::ClickedByPlayer() {
 		AI_Movement_Track_Pause(kActorPhotographer);
 		Actor_Face_Actor(kActorMcCoy, kActorPhotographer, true);
 		Actor_Face_Actor(kActorPhotographer, kActorMcCoy, true);
-		if (_vm->_cutContent && Random_Query(1, 10) < 3) {
-			Actor_Says(kActorMcCoy, 8516, 14); // Any idea if they were real dogs? (gets no answer)
-			Actor_Says(kActorPhotographer, 60, kAnimationModeTalk);
+		// Made it so if McCoy is surly or erratic he is harsher towards the photographer.
+		if (_vm->_cutContent) {
+			if (Player_Query_Agenda() == kPlayerAgendaSurly 
+					|| Player_Query_Agenda() == kPlayerAgendaErratic) {
+				Actor_Says(kActorMcCoy, 8519, kAnimationModeTalk); // 00-8519.AUD	What do you say we dish each other the straight goods.
+				Actor_Says(kActorPhotographer, 80, kAnimationModeTalk); //37-0080.AUD	You ain't talking to some flunky, McCoy.	
+			} else {
+				Actor_Says(kActorMcCoy, 5310, 11); //00-5310.AUD	You spot anything you think I ought to know about, tell me.
+				Actor_Says(kActorPhotographer, 40, kAnimationModeTalk); // 37-0040.AUD	Absolutely.
+			}
 		} else {
-			Actor_Says(kActorMcCoy, 5310, 11);
-			Actor_Says(kActorPhotographer, 40, kAnimationModeTalk);
+			Actor_Says(kActorMcCoy, 5310, 11); //00-5310.AUD	You spot anything you think I ought to know about, tell me.
+			Actor_Says(kActorPhotographer, 40, kAnimationModeTalk); // 37-0040.AUD	Absolutely.	
 		}
 		AI_Movement_Track_Unpause(kActorPhotographer);
 	}

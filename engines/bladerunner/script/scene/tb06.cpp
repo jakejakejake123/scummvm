@@ -27,6 +27,9 @@ namespace BladeRunner {
 void SceneScriptTB06::InitializeScene() {
 	Setup_Scene_Information(-16.0f, 149.0f, -466.0f, 990);
 	Scene_Exit_Add_2D_Exit(0, 330, 195, 417, 334, 0);
+	if (_vm->_cutContent && !Game_Flag_Query(kFlagMcCoyCommentsOnBurnMarks)) {
+		Scene_2D_Region_Add(0, 1, 1, 280, 325); 
+}
 	Ambient_Sounds_Add_Looping_Sound(kSfxTB5LOOP1, 50, 0, 1);
 	Ambient_Sounds_Add_Looping_Sound(kSfxTB5LOOP2, 50, 0, 1);
 	Ambient_Sounds_Add_Looping_Sound(kSfxTBLOOP1,  66, 0, 1);
@@ -135,6 +138,13 @@ bool SceneScriptTB06::ClickedOnItem(int itemId, bool a2) {
 			Actor_Voice_Over(2380, kActorVoiceOver);
 			Actor_Voice_Over(2390, kActorVoiceOver);
 			Actor_Voice_Over(2400, kActorVoiceOver);
+			// Added in some lines for when McCoy examines the dead dogs. 
+			if (_vm->_cutContent) {
+				Actor_Face_Actor(kActorMcCoy, kActorPhotographer, true);
+				Actor_Face_Actor(kActorPhotographer, kActorMcCoy, true);
+				Actor_Says(kActorMcCoy, 8516, kAnimationModeTalk); //00-8516.AUD	Any idea if they were real dogs?
+				Actor_Says(kActorPhotographer, 60, kAnimationModeTalk); //37-0060.AUD	I've hit a brick, McCoy. You're running this investigation, right?
+			}
 			return true;
 		}
 	}
@@ -154,6 +164,16 @@ bool SceneScriptTB06::ClickedOnExit(int exitId) {
 }
 
 bool SceneScriptTB06::ClickedOn2DRegion(int region) {
+	// Made it so the player can now click on the burn marks on the wall and McCoy comments on it. 
+	if (_vm->_cutContent) {
+		if (!Game_Flag_Query(kFlagMcCoyCommentsOnBurnMarks)) {
+			Game_Flag_Set(kFlagMcCoyCommentsOnBurnMarks);
+			Actor_Face_Heading(kActorMcCoy, 240, true);
+			Actor_Says(kActorMcCoy, 5285, 13);
+			Scene_2D_Region_Remove(0);
+			return true;
+		}
+	}
 	return false;
 }
 
@@ -194,11 +214,35 @@ void SceneScriptTB06::PlayerWalkedIn() {
 			AI_Movement_Track_Pause(kActorPhotographer);
 			Actor_Face_Actor(kActorMcCoy, kActorPhotographer, true);
 			Actor_Face_Actor(kActorPhotographer, kActorMcCoy, true);
-			Actor_Says(kActorPhotographer, 0, kAnimationModeTalk);
-			Actor_Says(kActorMcCoy, 5295, kAnimationModeTalk);
+			Actor_Says(kActorPhotographer, 0, kAnimationModeTalk); //37-0000.AUD	I've seen worse but not by much.
+			Actor_Says(kActorMcCoy, 5295, kAnimationModeTalk); //00-5295.AUD	Learn anything?
+			// Added in some dialogue for the photographer.
+			if (_vm->_cutContent) {
+				AI_Movement_Track_Pause(kActorPhotographer);
+				Actor_Says(kActorPhotographer, 50, kAnimationModeTalk); //37-0050.AUD	Yeah, I dug up a couple of leads, let me clue you in.
+				Actor_Says(kActorMcCoy, 2635, 18); //00-2635.AUD	I’m all ears.
+			}
 			Actor_Face_Actor(kActorPhotographer, kActorMarcus, true);
-			Actor_Says(kActorPhotographer, 10, kAnimationModeTalk);
+			Actor_Says(kActorPhotographer, 10, kAnimationModeTalk); //37-0010.AUD	You could strain him through a sieve.
 			AI_Movement_Track_Unpause(kActorPhotographer);
+			if (_vm->_cutContent) {
+				AI_Movement_Track_Pause(kActorPhotographer);
+				Actor_Face_Actor(kActorPhotographer, kActorMcCoy, true);
+				Delay (1000);
+				// Depending on McCoys agenda he will be a little more disgusted to the tastless joke that the photograher makes about Eisenduller.
+				if (Player_Query_Agenda() == kPlayerAgendaSurly
+					|| Player_Query_Agenda() == kPlayerAgendaErratic) {
+					// McCoy doesn't care.
+					Actor_Says(kActorMcCoy, 2685, kAnimationModeTalk); //00-2685.AUD	Hmph. Very funny.
+				} else {
+					// McCoy annoyed.
+					Actor_Says(kActorMcCoy, 665, 16); //00-0665.AUD	Real funny, pal.
+				}
+				Delay (500);
+				Actor_Says(kActorMcCoy, 4130, kAnimationModeTalk); //00-4130.AUD	Anything else?
+				Actor_Says(kActorPhotographer, 70, kAnimationModeTalk); //37-0070.AUD	Zero that would interest you, detective.
+				AI_Movement_Track_Unpause(kActorPhotographer);
+			}
 		}
 		Game_Flag_Set(kFlagTB06Introduction);
 		//return true;
