@@ -648,7 +648,7 @@ enum Flags {
 	kFlagSergeantWallsBuzzInRequest           = 206, // is never set
 	kFlagCrystalConvinced					  = 207,
 	kFlagIzoGotAway							  = 208,
-	//
+	kFlagAR01FishDealerTalkInsects		      = 209,
 	kFlagCT02ZubenFled                        = 210,
 	kFlagPS09Entered                          = 211,
 	kFlagNotUsed212                           = 212, // is never checked
@@ -656,7 +656,7 @@ enum Flags {
 	kFlagSebastiansComputerChecked			  = 214,	
 	kFlagNewDoll							  = 215,
 	kFlagBB09toBB10a                          = 216,
-	// 217 is never used
+	kFlagIzoPrepared						  = 217,
 	kFlagBB08toBB09                           = 218,
 	kFlagBB09toBB08                           = 219,
 	kFlagBB09toBB10b                          = 220,
