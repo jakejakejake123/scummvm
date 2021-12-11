@@ -378,7 +378,7 @@ void SceneScriptRC03::PlayerWalkedIn() {
 		}
 	}
 
-	if (Actor_Query_Goal_Number(kActorIzo) == kGoalIzoEscape) {
+	if (Game_Flag_Query(kFlagIzoEscaped)) {
 		Player_Loses_Control();
 		Actor_Set_Goal_Number(kActorSteele, 200);
 		Actor_Put_In_Set(kActorSteele, kSetRC03);
@@ -389,10 +389,34 @@ void SceneScriptRC03::PlayerWalkedIn() {
 		} else {
 			Actor_Set_At_Waypoint(kActorSteele, 203, 0);
 		}
-		talkWithSteele();
+		// Code for the scene where you talk to Crystal after Izo has escaped. The scene will play out differently depending on whether
+		// or not you warned Izo about Crystal.
+		Player_Set_Combat_Mode(false);
 		Async_Actor_Walk_To_Waypoint(kActorSteele, 174, 0, false);
-		Actor_Set_Goal_Number(kActorIzo, kGoalIzoEscapedSteeleKnows);
-		Player_Gains_Control();
+		Actor_Face_Actor(kActorSteele, kActorMcCoy, true);
+		Actor_Face_Actor(kActorMcCoy, kActorSteele, true);
+		Actor_Says(kActorSteele, 1820, 58); //01-1820.AUD	Where's Izo?
+		Actor_Says(kActorMcCoy, 4815, 13); //00-4815.AUD	You're looking for him, too?
+		Actor_Says(kActorSteele, 1830, 59); //01-1830.AUD	I was at the bar over in Hawker's circle. I saw him pop that flash in your face.
+		Actor_Says(kActorSteele, 1840, 59); //01-1840.AUD	Then some lummox got in my way and I didn't see where it disappeared to.
+		Actor_Says(kActorMcCoy, 4820, 16); //00-4820.AUD	He probably went down in the sewers.
+		Actor_Says(kActorSteele, 1850, 59); //01-1850.AUD	Right where that dirt-bag belongs.
+		Actor_Says(kActorSteele, 1950, 59); //01-1950.AUD	I've been tracking Izo for a week and you ruined my whole plan in two seconds.
+		if (!Game_Flag_Query(kFlagIzoGotAway)) {
+			Actor_Says(kActorMcCoy, 4835, 13); //00-4835.AUD	Sorry, I bet you can still catch him if you want.
+			Actor_Says(kActorSteele, 1960, 60); //01-1960.AUD	Crawl down that hole and ruin a twenty thousand chinyen Yamamoto suit? I don't think so.
+			Actor_Says(kActorSteele, 1980, 60); //01-1980.AUD	If I didn't know any better, I'd think you wanted him to get away.
+			Actor_Says(kActorMcCoy, 4840, 16); //00-4840.AUD	You crazy? I've been tailing him myself.
+			Actor_Says(kActorSteele, 1990, 60); //01-1990.AUD	A little word of advice, Slim. Stay out of my way.
+			Player_Gains_Control();
+			Actor_Set_Goal_Number(kActorSteele, kGoalSteeleLeaveRC03);
+		} else {
+			Actor_Says(kActorMcCoy, 8565, 15); //00-8565.AUD	Really?
+			Actor_Says(kActorSteele, 1990, 60); //01-1990.AUD	A little word of advice, Slim. Stay out of my way.
+			Actor_Says(kActorMcCoy, 5150, 15); //00-5150.AUD	One more thing.
+			Actor_Says(kActorSteele, 670, 60); //01-0670.AUD	Look. I’ll give you two minutes. That’s all.
+			Actor_Set_Goal_Number(kActorSteele, kGoalSteeleRC03GoToAR02);
+		}
 	}
 	Game_Flag_Reset(kFlagUG01toRC03);
 	Game_Flag_Reset(kFlagAR02toRC03);

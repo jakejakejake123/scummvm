@@ -1058,6 +1058,13 @@ bool AIScriptSteele::GoalChanged(int currentGoalNumber, int newGoalNumber) {
 		Set_Enter(kSetNR05_NR08, kSceneNR08);
 		return true;
 
+	case kGoalSteeleRC03GoToAR02:
+		AI_Movement_Track_Flush(kActorSteele);
+		Actor_Put_In_Set(kActorSteele, kSetAR01_AR02);
+		Actor_Set_At_XYZ(kActorSteele, -250.43, 0.57, -741.23, 372);
+		Set_Enter(kSetAR01_AR02, kSceneAR02);
+		return true;
+		
 	case kGoalSteeleNR01GoToNR02:
 		Game_Flag_Set(kFlagNR01toNR02);
 		Set_Enter(kSetNR02, kSceneNR02);

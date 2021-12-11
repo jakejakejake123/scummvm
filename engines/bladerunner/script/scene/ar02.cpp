@@ -392,6 +392,24 @@ void SceneScriptAR02::ActorChangedGoal(int actorId, int newGoal, int oldGoal, bo
 }
 
 void SceneScriptAR02::PlayerWalkedIn() {
+	// This is the scene that plays after McCoy tries to convince Crystal offscreen.
+	if (Actor_Query_Goal_Number(kActorSteele) == kGoalSteeleRC03GoToAR02) {
+		Actor_Change_Animation_Mode(kActorSteele, kAnimationModeIdle);
+		Actor_Face_Actor(kActorMcCoy, kActorSteele, true);
+		Actor_Face_Actor(kActorSteele, kActorMcCoy, true);			
+		Actor_Says(kActorSteele, 1780, 60); //01-1780.AUD	(sigh) Sorry I missed all the laughs.
+		Actor_Says(kActorSteele, 1800, 60); //01-1800.AUD	You should have waited for me, Slim.
+		Actor_Says(kActorMcCoy, 2305, 15); //00-2305.AUD	I’m sorry.
+		Actor_Says(kActorSteele, 2110, 60); //01-2110.AUD	That's okay.
+		Loop_Actor_Walk_To_XYZ(kActorSteele, -637.99, 0.74, -916.12, 48, false, true, false);
+		Actor_Set_Invisible(kActorSteele, true);
+		Actor_Set_Goal_Number(kActorSteele, kGoalSteeleLeaveRC03);
+		Game_Flag_Reset(kFlagIzoEscaped);
+		Player_Gains_Control();
+		Scene_Exits_Enable();
+		return; // true;
+	}
+
 	if (Game_Flag_Query(kFlagRC03toAR02)) {
 		Loop_Actor_Walk_To_XYZ(kActorMcCoy, -465.0f, 0.0f, -799.0f, 0, false, false, false);
 		Game_Flag_Reset(kFlagRC03toAR02);
