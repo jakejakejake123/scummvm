@@ -268,7 +268,67 @@ bool AIScriptIzo::ShotAtAndHit() {
 		Actor_Set_Health(kActorIzo, 50, 50);
 
 		if (Actor_Query_Goal_Number(kActorIzo) == kGoalIzoRC03Walk) {
+			// This is code for the scene for when McCoy shoots Izo. If Izo is human Crystal arrests McCoy and if he is a replicant you get 200 chinyen.
+			if (_vm->_cutContent) {
+			Game_Flag_Set(kFlagIzoShot);
+			_animationFrame = 0;
+			_animationState = 19;
+			Actor_Retired_Here(kActorIzo, 36, 12, true, -1);
+			Actor_Set_Goal_Number(kActorIzo, kGoalIzoDie);
+			if (Game_Flag_Query(kFlagIzoIsReplicant)) {
+				Actor_Set_Goal_Number(kActorSteele, 200);
+				Actor_Put_In_Set(kActorSteele, kSetRC03);
+				Actor_Set_At_XYZ(kActorSteele, 292.24, -3.66, 331.70, 0);
+				Actor_Force_Stop_Walking(kActorMcCoy);
+				Player_Set_Combat_Mode(false);
+				Actor_Change_Animation_Mode(kActorMcCoy, kAnimationModeIdle);
+				Loop_Actor_Walk_To_Actor(kActorSteele, kActorMcCoy, 60, false, true);
+				Actor_Face_Actor(kActorMcCoy, kActorSteele, true);
+				Actor_Face_Actor(kActorSteele, kActorMcCoy, true);
+				Actor_Modify_Friendliness_To_Other(kActorSteele, kActorMcCoy, 5);
+				if (Actor_Query_Friendliness_To_Other(kActorRunciter, kActorMcCoy) < 56) {
+					Actor_Says(kActorSteele, 2710, 59); //01-2710.AUD	You must be in better shape that I thought.
+					Actor_Says(kActorSteele, 2720, 59); //01-2720.AUD	You’re still alive.			
+					Actor_Says(kActorMcCoy, 1025, 12); //00-1025.AUD	Absolutely.
+				}
+				Actor_Says(kActorSteele, 1790, 59); //01-1790.AUD	We having fun yet?
+				Actor_Says(kActorMcCoy, 6275, 15); //00-6275.AUD	Just doing what I get paid the big bucks to do.
+				Actor_Says(kActorSteele, 1800, 59); //01-1800.AUD	You should have waited for me, Slim.
+				Actor_Says(kActorMcCoy, 6280, 15); //00-6280.AUD	Ha. A guy’s got to start somewhere.
+				Actor_Says(kActorSteele, 1810, 59); //01-1810.AUD	(smacks lips) We’ll see who has it next time.
+				Actor_Set_Goal_Number(kActorSteele, kGoalSteeleLeaveRC03);
+				Scene_Exits_Enable();
+				Game_Flag_Set(kFlagMcCoyShotIzo);
+				Game_Flag_Reset (kFlagMcCoyIsHelpingReplicants);
+			if (Query_Difficulty_Level() != kGameDifficultyEasy) {
+				Global_Variable_Increment(kVariableChinyen, 200);
+			}
+		} else {
+			Actor_Set_Goal_Number(kActorSteele, 200);
+			Actor_Put_In_Set(kActorSteele, kSetRC03);
+			Actor_Set_At_XYZ(kActorSteele, 292.24, -3.66, 331.70, 0);
+			ADQ_Add (kActorMcCoy, 3830, 13);//00-3830.AUD	Oh, yeah.
+			Loop_Actor_Walk_To_Actor(kActorSteele, kActorMcCoy, 60, false, true);
+			Actor_Force_Stop_Walking(kActorMcCoy);
+			Player_Set_Combat_Mode(false);
+			Actor_Change_Animation_Mode(kActorMcCoy, kAnimationModeIdle);
+			Actor_Face_Actor(kActorSteele, kActorMcCoy, true);
+			Actor_Says(kActorSteele, 2160, 59); //01-2160.AUD	Are you nuts?
+			Actor_Face_Actor(kActorMcCoy, kActorSteele, true);
+			Actor_Says(kActorMcCoy, 3835, 12); // 00-3835.AUD	I had the shot, so I took it.
+			Actor_Says(kActorSteele, 2170, 59); //01-2170.AUD	Give me your gun, goddammit! Give it to me!
+			Actor_Says(kActorMcCoy, 4855, 16); //00-4855.AUD	But... weren't you gonna shoot him?
+			Actor_Says(kActorSteele, 2180, 59); //01-2180.AUD	I was just gonna take him downtown. He's a material witness in a case I'm working. Now look! He's freaking useless, Slim.
+			Actor_Says(kActorMcCoy, 4860, 16); //00-4860.AUD	I didn't realize!
+			Actor_Says(kActorSteele, 2200, 59); //01-2200.AUD	You killed him, McCoy!
+			Actor_Says(kActorSteele, 2210, 59); //01-2210.AUD	I guess I gotta take you in. They'll probably have to run a couple of tests, too.
+			Actor_Set_Goal_Number(kActorMcCoy, kGoalMcCoyArrested);
+		}
+		return true;
+			} else {
 			Actor_Set_Goal_Number(kActorIzo, kGoalIzoRC03Run);
+			
+			}
 		}
 		return true;
 	} else {
@@ -833,6 +893,10 @@ bool AIScriptIzo::UpdateAnimation(int *animation, int *frame) {
 			Game_Flag_Set(kFlagUnused407);
 			Item_Add_To_World(kItemCamera, kModelAnimationIzoCamera, kSetHC01_HC02_HC03_HC04, 597.46f, 0.14f, 49.92f, 0, 12, 12, false, true, false, false);
 			Actor_Set_Goal_Number(kActorIzo, kGoalIzoRunToUG02);
+			if	(Game_Flag_Query(kFlagIzoEscaped)) {
+				Actor_Set_Goal_Number(kActorIzo, kGoalIzoRC03RunAway);
+				Player_Gains_Control();
+			}
 		}
 		break;
 
