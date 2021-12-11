@@ -244,7 +244,16 @@ bool SceneScriptRC03::ClickedOnExit(int exitId) {
 	}
 	if (exitId == 4) { // To Bullet Bob's
 		if (!Loop_Actor_Walk_To_XYZ(kActorMcCoy, -22.0f, 1.0f, -63.0f, 0, true, false, false)) {
-			if (Global_Variable_Query(kVariableChapter) == 3
+			// Made it so Bobs shop is open in act 3
+			if (_vm->_cutContent)  {
+				if (Global_Variable_Query(kVariableChapter) == 5
+				) {
+				Actor_Says(kActorMcCoy, 8522, 14);
+			} else {
+				Game_Flag_Set(kFlagRC03toRC04);
+				Set_Enter(kSetRC04, kSceneRC04);
+			}
+			} else if (Global_Variable_Query(kVariableChapter) == 3
 			 || Global_Variable_Query(kVariableChapter) == 5
 			 || Game_Flag_Query(kFlagBulletBobDead)
 			) {

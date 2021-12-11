@@ -148,6 +148,8 @@ bool AIScriptBulletBob::ShotAtAndHit() {
  		_animationState = 3;
 		Ambient_Sounds_Play_Speech_Sound(kActorGordo, 9000, 100, 0, 0, 0); // not a typo, it's really from Gordo
 		Actor_Face_Heading(kActorBulletBob, 281, false);
+		//Made it so the clickable 2D region for the bullet proof vest is removed after you shoot Bob.
+		Scene_2D_Region_Remove(0);
 	}
 
 	return false;
@@ -175,7 +177,20 @@ bool AIScriptBulletBob::GoalChanged(int currentGoalNumber, int newGoalNumber) {
 	 &&  Player_Query_Current_Scene() == kSceneRC04
 	) {
 		Actor_Says(kActorBulletBob, 120, 37);
-		Actor_Says(kActorMcCoy, 4915, 13);
+		// Made it so McCoy can only shoot Bob and says he is going to put something away if he suspects Bob of being a replicant.
+		// This will be if McCoy has the clues Hasan interview or VKBobGorskyReplicant.
+		if (_vm->_cutContent) {
+			if (Actor_Clue_Query(kActorMcCoy, kClueHasanInterview)
+				||  Actor_Clue_Query(kActorMcCoy, kClueVKBobGorskyReplicant)) {
+			Actor_Says(kActorMcCoy, 4915, 13);
+			Actor_Set_Targetable(kActorBulletBob, true);
+			} else {
+				Actor_Set_Targetable(kActorBulletBob, false);
+			}
+		} else {
+			Actor_Says(kActorMcCoy, 4915, 13);
+		}
+
 		return true;
 	}
 

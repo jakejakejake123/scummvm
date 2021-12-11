@@ -29,6 +29,10 @@ void SceneScriptRC04::InitializeScene() {
 	Game_Flag_Reset(kFlagRC03toRC04);
 
 	Scene_Exit_Add_2D_Exit(0, 225, 47, 359, 248, 0);
+	// Added a 2D region to the left weapons cabinet so when the player clicks on it the dialogue about the bullet proof vest plays.
+	if (_vm->_cutContent && !Game_Flag_Query(kFlagMcCoyHasVest)) {
+		Scene_2D_Region_Add(0, 1, 1, 150, 200); 
+	}
 
 	if (!Game_Flag_Query(kFlagRC04McCoyShotBob)) {
 		Actor_Put_In_Set(kActorBulletBob, kSetRC04);
@@ -100,15 +104,24 @@ void SceneScriptRC04::dialogueWithBulletBob() {
 
 	switch (answer) {
 	case 580: // WEAPONS
+		if (_vm->_cutContent) {
+			Actor_Face_Actor(kActorBulletBob, kActorMcCoy, true);
+		}
 		Actor_Says(kActorMcCoy, 4955, 30);
 		Actor_Says(kActorBulletBob, 210, 37);
 		Actor_Says(kActorBulletBob, 220, 37);
 		Actor_Says(kActorBulletBob, 230, 37);
 		Actor_Says(kActorBulletBob, 240, 37);
 		Actor_Says(kActorMcCoy, 4990, 16);
-		Actor_Says(kActorMcCoy, 4995, 11);
-		Actor_Says(kActorBulletBob, 270, 31);
-		Actor_Says(kActorMcCoy, 5005, 16);
+		Actor_Says(kActorMcCoy, 4995, 11); //00-4995.AUD	Somebody shot up Runciter's shop with one.
+		// Added in some dialogue for Bob and McCoy.
+		if (_vm->_cutContent) {
+			Actor_Says(kActorBulletBob, 1860, 33); //14-1860.AUD	Runciter? You mean that animal dealer down the street?
+			Actor_Says(kActorMcCoy, 8535, 18); //00-8535.AUD	Yeah.
+			Delay (1000);
+		}
+		Actor_Says(kActorBulletBob, 270, 31); // 14-0270.AUD	Sucker had it coming. I'm sure of that.
+		Actor_Says(kActorMcCoy, 5005, 16); 
 		Actor_Says(kActorBulletBob, 280, 32);
 		Actor_Says(kActorBulletBob, 290, 30);
 		Actor_Says(kActorBulletBob, 300, 33);
@@ -149,12 +162,21 @@ void SceneScriptRC04::dialogueWithBulletBob() {
 		return;
 
 	case 590: // SHELL CASINGS
+		if (_vm->_cutContent) {
+			Actor_Face_Actor(kActorBulletBob, kActorMcCoy, true);
+		}
 		Actor_Says(kActorMcCoy, 4960, 13);
 		Actor_Says(kActorBulletBob, 250, 30);
 		Actor_Says(kActorBulletBob, 260, 33);
-		Actor_Says(kActorMcCoy, 4995, 15);
-		Actor_Says(kActorBulletBob, 270, 32);
-		Actor_Says(kActorMcCoy, 5005, 11);
+		Actor_Says(kActorMcCoy, 4995, 15); //00-4995.AUD	Somebody shot up Runciter's shop with one.
+		// Added in some dialogue for Bob and McCoy.
+		if (_vm->_cutContent) {
+			Actor_Says(kActorBulletBob, 1860, 33); //14-1860.AUD	Runciter? You mean that animal dealer down the street?
+			Actor_Says(kActorMcCoy, 8535, 18); ////00-8535.AUD	Yeah.
+			Delay (1000);
+		}
+		Actor_Says(kActorBulletBob, 270, 32); //14-0270.AUD	Sucker had it coming. I'm sure of that.
+		Actor_Says(kActorMcCoy, 5005, 11); 
 		Actor_Says(kActorBulletBob, 280, 33);
 		Actor_Says(kActorBulletBob, 290, 30);
 		Actor_Says(kActorBulletBob, 300, 32);
@@ -196,6 +218,9 @@ void SceneScriptRC04::dialogueWithBulletBob() {
 		break;
 
 	case 600: // HASAN
+		if (_vm->_cutContent) {
+			Actor_Face_Actor(kActorBulletBob, kActorMcCoy, true);
+		}
 		Actor_Says(kActorMcCoy, 4965, 11);
 		Actor_Says(kActorBulletBob, 470, 11);
 		Actor_Says(kActorMcCoy, 5035, 15);
@@ -215,12 +240,17 @@ void SceneScriptRC04::dialogueWithBulletBob() {
 		Actor_Says(kActorBulletBob, 550, 11);
 		Actor_Modify_Friendliness_To_Other(kActorBulletBob, kActorMcCoy, -6);
 		if (_vm->_cutContent) {
+			// Restored Bob robbed clue. This clue is of how Hasan robbed Bob by scamming him with the iguana.
+			Actor_Clue_Acquire(kActorMcCoy, kClueBobRobbed, true, kActorBulletBob);
 			Actor_Modify_Friendliness_To_Other(kActorHasan, kActorMcCoy, 6);
 		}
 		Game_Flag_Set(kFlagMcCoyTalkedToBulletBobAboutHasan);
 		break;
 
 	case 610: // GOGGLES
+	if (_vm->_cutContent) {
+		Actor_Face_Actor(kActorBulletBob, kActorMcCoy, true);
+		}
 		Actor_Says(kActorMcCoy, 4970, 16);
 		if (Actor_Query_Friendliness_To_Other(kActorBulletBob, kActorMcCoy) < 50) {
 			Actor_Says(kActorBulletBob, 700, 11);
@@ -262,6 +292,7 @@ void SceneScriptRC04::dialogueWithBulletBob() {
 		break;
 
 	case 620: // HOLDEN'S BADGE
+		Actor_Face_Actor(kActorBulletBob, kActorMcCoy, true);
 		Actor_Says(kActorMcCoy, 4985, 11);
 		Actor_Says(kActorBulletBob, 850, 35);
 		Actor_Says(kActorMcCoy, 5105, 13);
@@ -272,6 +303,8 @@ void SceneScriptRC04::dialogueWithBulletBob() {
 		Actor_Says(kActorMcCoy, 5120, 15);
 		Actor_Says(kActorBulletBob, 880, 34);
 		Actor_Clue_Acquire(kActorBulletBob, kClueHoldensBadge, true, kActorMcCoy);
+		// Made it so you actually lose Holdens badge when you give it to Bob.
+		Actor_Clue_Lose(kActorMcCoy, kClueHoldensBadge);
 		Actor_Modify_Friendliness_To_Other(kActorBulletBob, kActorMcCoy, 8);
 		if (Query_Difficulty_Level() != kGameDifficultyEasy) {
 			Global_Variable_Increment(kVariableChinyen, 60);
@@ -279,11 +312,36 @@ void SceneScriptRC04::dialogueWithBulletBob() {
 		break;
 
 	case 630: // DONE
-		Actor_Says(kActorMcCoy, 1315, 12);
-		break;
+	//Restored some banter dialogue for Bob. Also made it so he treats you differently based on your friendliness rating.
+	if (_vm->_cutContent) {
+		Actor_Face_Actor(kActorBulletBob, kActorMcCoy, true);
+		Actor_Says(kActorMcCoy, 30, 12); //00-0030.AUD	Anything unusual happening down here?
+		if (Actor_Query_Friendliness_To_Other(kActorBulletBob, kActorMcCoy) < 50) {
+			Actor_Says(kActorBulletBob, 1820, 34); //14-1820.AUD	You want to make it as a Blade Runner, you ought to do your own investigations.
+			Actor_Says(kActorMcCoy, 5075, 18); //00-5075.AUD	Hey, pal.
+		} else {
+			Actor_Says(kActorBulletBob, 200, 34); //14-0200.AUD	Nah, it's been quite around here, Ray.
+			Actor_Says(kActorMcCoy, 8320, 18); //00-8320.AUD	Really?
+			Actor_Says(kActorBulletBob, 1810, 34); //14-1810.AUD	Sorry, man. You know if I heard something you guys would be the first call I'd make.
+		}
+	} else {
+		Actor_Says(kActorMcCoy, 1315, 12); //00-1315.AUD	Thanks for your time.
+	}
+	break;
 
 	case 1280: // AMMO
-		Actor_Says(kActorMcCoy, 9040, 16);
+	// Added in some extra dialogue for McCoy and Bob.
+	if (_vm->_cutContent) {
+		Actor_Face_Actor(kActorBulletBob, kActorMcCoy, true);
+		Actor_Says(kActorMcCoy, 4975, 15); //00-4975.AUD	I'm looking for some ammunition.
+		Actor_Says(kActorBulletBob, 670, 33); //14-0670.AUD	Nothing but the best. My special blend.
+		Actor_Says(kActorBulletBob, 680, 30); //14-0680.AUD	Three times the stopping power of that police-issue crap you're packing.
+		Actor_Says(kActorMcCoy, 8320, 18); //00-8320.AUD	Really?
+		Actor_Says(kActorBulletBob, 690, 36); //14-0690.AUD	You betcha. Twenty chinyen a clip. You ain't gonna find a better price in this city.
+		Actor_Says(kActorMcCoy, 4880, 18); //00-4880.AUD	Is that right?
+		Delay (1000);
+	}
+		Actor_Says(kActorMcCoy, 9040, 16); //00-9040.AUD	You got any decent ammo for my piece?
 		if (!Game_Flag_Query(kFlagRC04BobTalkAmmo)) {
 			Actor_Says(kActorBulletBob, 2080, 30);
 			Actor_Says(kActorBulletBob, 2090, 37);
@@ -357,11 +415,15 @@ bool SceneScriptRC04::ClickedOnActor(int actorId) {
 	}
 
 	if (actorId == kActorBulletBob) {
-		if ( Global_Variable_Query(kVariableChapter) == 2
+		// Made it so you can talk to Bob in act 3.
+		if ( Global_Variable_Query(kVariableChapter) >= 2
 		 && !Game_Flag_Query(kFlagRC04McCoyShotBob)
 		) {
 			Loop_Actor_Walk_To_Waypoint(kActorMcCoy, 104, 0, false, false);
 			Actor_Face_Actor(kActorMcCoy, kActorBulletBob, true);
+			if (_vm->_cutContent) {
+			Actor_Face_Actor(kActorBulletBob, kActorMcCoy, true);
+		}
 			if ( Game_Flag_Query(kFlagRC04Entered)
 			 && !Game_Flag_Query(kFlagRC04BobTalk2)
 			 &&  Actor_Query_Friendliness_To_Other(kActorBulletBob, kActorMcCoy) > 45
@@ -373,6 +435,17 @@ bool SceneScriptRC04::ClickedOnActor(int actorId) {
 				Actor_Says(kActorBulletBob, 90, 33);
 				Actor_Says(kActorBulletBob, 100, 34);
 				Actor_Says(kActorMcCoy, 4905, 15);
+				//Added in some extra dialogue for Bob and McCoy.
+				if (_vm->_cutContent) {
+					Actor_Face_Heading(kActorMcCoy, 240, true);
+					Actor_Face_Heading(kActorBulletBob, 240, true);
+					Actor_Says(kActorMcCoy, 4920, 15); //00-4920.AUD	You got some nice pieces here.
+					Actor_Says(kActorBulletBob, 110, 33); //14-0110.AUD	Take your time, Ray. Enjoy the goods. I got the best in the city right here.
+					Actor_Says(kActorBulletBob, 130, 34); //14-0130.AUD	Anything you want and you don't see, just ask.
+					Actor_Face_Actor(kActorMcCoy, kActorBulletBob, true);
+					Actor_Face_Actor(kActorBulletBob, kActorMcCoy, true);
+					Actor_Says(kActorMcCoy, 4910, 15); //00-4910.AUD	Thanks.
+				}
 				Game_Flag_Set(kFlagRC04BobTalk2);
 			} else if ( Game_Flag_Query(kFlagRC04Entered)
 					&& !Game_Flag_Query(kFlagRC04BobTalk1)
@@ -398,7 +471,20 @@ bool SceneScriptRC04::ClickedOnActor(int actorId) {
 				Actor_Says(kActorBulletBob, 1900, 35);
 				Actor_Says(kActorMcCoy, 8965, 16);
 				Actor_Says(kActorBulletBob, 1920, 36);
-				Actor_Says(kActorBulletBob, 1930, 33);
+				Actor_Says(kActorBulletBob, 1930, 33); //14-1930.AUD	You don't have to step soft around me.
+				//Added in some dialogue that plays if McCoy is surly or erratic.
+				if (_vm->_cutContent) {
+					if (Player_Query_Agenda() == kPlayerAgendaSurly
+							|| Player_Query_Agenda() == kPlayerAgendaErratic) { 
+						Actor_Says(kActorMcCoy, 4950, 16); //00-4950.AUD	Frankly I don't see you as the comforting type.
+						Delay (500);
+						Actor_Says(kActorBulletBob, 1830, 33); //14-1830.AUD	I'm hurt, McCoy. Deeply hurt. After all I've done for you.
+						Actor_Says(kActorMcCoy, 8519, 14); //00-8519.AUD	What do you say we dish each other the straight goods.
+						Actor_Says(kActorBulletBob, 1840, 36); //14-1840.AUD	Okay, okay, look.
+						Actor_Says(kActorBulletBob, 1850, 35); //14-1850.AUD	I didn't want to get you riled up for no reason but here's the real skinny.
+						Delay (500);
+					}
+				}
 				Actor_Says(kActorBulletBob, 1940, 36);
 				Actor_Says(kActorBulletBob, 1950, 30);
 				Actor_Says(kActorMcCoy, 8970, 13);
@@ -407,11 +493,31 @@ bool SceneScriptRC04::ClickedOnActor(int actorId) {
 				Actor_Says(kActorBulletBob, 1980, 36);
 				Delay(1000);
 				Actor_Says(kActorBulletBob, 2010, 35);
-				if (Global_Variable_Query(kVariableChinyen) > 50
-				 || Query_Difficulty_Level() == kGameDifficultyEasy
-				) {
-					Actor_Says(kActorMcCoy, 8975, 16);
-					if (Query_Difficulty_Level() != kGameDifficultyEasy) {
+				// Added in some dialogue. Changed the price of the KIA upgrade from 50 chinyen to 100 chinyen so it matches the dialogue.
+				if (_vm->_cutContent) {
+					Actor_Says(kActorMcCoy, 3940, 13); //00-3940.AUD	How much? 
+					Actor_Says(kActorBulletBob, 1990, 33); //14-1990.AUD	100 chinyen.
+					Actor_Says(kActorBulletBob, 2000, 30); //14-2000.AUD	You'd spend that much on a day's worth of mouldy soya.
+				}
+				if (_vm->_cutContent) {
+					if (Global_Variable_Query(kVariableChinyen) >= 100
+						 || Query_Difficulty_Level() == kGameDifficultyEasy
+					 ) {
+						Actor_Says(kActorMcCoy, 8975, 16); //00-8975.AUD	Sounds like a plan. Set it up.
+						Actor_Says(kActorBulletBob, 2020, 30); //14-2020.AUD	Hand it over.
+						if (Query_Difficulty_Level() != kGameDifficultyEasy) {
+							Global_Variable_Decrement(kVariableChinyen, 100);
+						}
+						Delay(3000);
+						Item_Pickup_Spin_Effect(kModelAnimationDNADataDisc, 405, 192);
+						Actor_Says(kActorBulletBob, 2030, 30); //14-2030.AUD	There you go better than new.
+						Game_Flag_Set(kFlagKIAPrivacyAddon);
+						}
+					} else if (Global_Variable_Query(kVariableChinyen) >= 50
+					   || Query_Difficulty_Level() == kGameDifficultyEasy
+					) {
+						Actor_Says(kActorMcCoy, 8975, 16); //00-8975.AUD	Sounds like a plan. Set it up.
+						if (Query_Difficulty_Level() != kGameDifficultyEasy) {
 						Global_Variable_Decrement(kVariableChinyen, 50);
 					}
 					Delay(3000);
@@ -469,6 +575,52 @@ bool SceneScriptRC04::ClickedOnExit(int exitId) {
 }
 
 bool SceneScriptRC04::ClickedOn2DRegion(int region) {
+	// Added in the option to buy the bulletproof vest. The price of the vest will be based on whether or not Bob likes you.
+	if (_vm->_cutContent) {
+		if (!Game_Flag_Query(kFlagMcCoyHasVest)) {
+			Actor_Face_Heading(kActorMcCoy, 240, true);
+			Actor_Face_Heading(kActorBulletBob, 240, true);
+			Actor_Says(kActorMcCoy, 4925, 11); //00-4925.AUD	That a bulletproof vest?
+			Actor_Says(kActorBulletBob, 150, 35); //14-0150.AUD	It'd stop a slug dead cold. You wouldn't even feel it.
+			Actor_Face_Actor(kActorMcCoy, kActorBulletBob, true);
+			Actor_Face_Actor(kActorBulletBob, kActorMcCoy, true);
+			Actor_Says(kActorMcCoy, 4930, 13); //00-4930.AUD	How much?
+			if (Actor_Query_Friendliness_To_Other(kActorBulletBob, kActorMcCoy) > 49) {
+				Actor_Says(kActorBulletBob, 160, 33); //14-0160.AUD	200 chinyen.				
+				if (Global_Variable_Query(kVariableChinyen) >= 200
+	  			  || Query_Difficulty_Level() == kGameDifficultyEasy
+				) {
+					Actor_Says(kActorMcCoy, 4940, 13); //00-4940.AUD	Okay, let's have it.
+					Actor_Set_Health(kActorMcCoy, 90, 90);
+					Game_Flag_Set(kFlagMcCoyHasVest);
+					Scene_2D_Region_Remove(0);
+					if (Query_Difficulty_Level() != kGameDifficultyEasy) {
+						Global_Variable_Decrement(kVariableChinyen, 200);
+					}
+				}
+			} else if (Actor_Query_Friendliness_To_Other(kActorBulletBob, kActorMcCoy) < 49) {
+				Actor_Says(kActorBulletBob, 170, 33); //14-0170.AUD	300 chinyen.
+				if (Global_Variable_Query(kVariableChinyen) >= 200
+	  			 	|| Query_Difficulty_Level() == kGameDifficultyEasy
+				) {
+					Actor_Says(kActorMcCoy, 4940, 13); //00-4940.AUD	Okay, let's have it.
+					Actor_Face_Actor(kActorBulletBob, kActorMcCoy, true);
+					Actor_Set_Health(kActorMcCoy, 90, 90);
+					Game_Flag_Set(kFlagMcCoyHasVest);
+					Scene_2D_Region_Remove(0);
+					if (Query_Difficulty_Level() != kGameDifficultyEasy) {
+						Global_Variable_Decrement(kVariableChinyen, 300);
+					}
+				}
+			} else {
+				Actor_Says(kActorMcCoy, 4935, 13); //00-4935.AUD	That's a little steep.
+				Actor_Says(kActorBulletBob, 180, 35); //14-0180.AUD	Retire a few skin-jobs and maybe you'll get a discount.
+				Actor_Says(kActorMcCoy, 4945, 16); //00-4945.AUD	I think I'll pass.
+				Actor_Says(kActorBulletBob, 190, 30); //14-0190.AUD	You better not come crying to me when you catch a bullet.
+			}
+		}	
+			return true;
+	}
 	return false;
 }
 
@@ -479,14 +631,26 @@ void SceneScriptRC04::ActorChangedGoal(int actorId, int newGoal, int oldGoal, bo
 }
 
 void SceneScriptRC04::PlayerWalkedIn() {
+	// Made it so McCoy has his gun holstered when he enters the shop.
+	if (_vm->_cutContent) {
+		Player_Set_Combat_Mode(false);
+	}
 	Loop_Actor_Walk_To_Waypoint(kActorMcCoy, 103, 0, false, false);
 
-	if ( Global_Variable_Query(kVariableChapter) == 2
+	if ( Global_Variable_Query(kVariableChapter) >= 2
 	 && !Game_Flag_Query(kFlagRC04Entered)
 	 && !Player_Query_Combat_Mode()
 	) {
+		// Made it so Bob actually faces you when he talks to you. I mean how is he supposed to know that McCoy has a 45 blaster under his coat unless he is looking at him? 
+		if (_vm->_cutContent) {
+			Actor_Face_Actor(kActorBulletBob, kActorMcCoy, true);
+		}
 		Actor_Says(kActorBulletBob, 0, 31);
 		Loop_Actor_Walk_To_Waypoint(kActorMcCoy, 104, 0, false, false);
+		// Made it so Bob continually faces you.
+		if (_vm->_cutContent) {
+			Actor_Face_Actor(kActorBulletBob, kActorMcCoy, true);
+		}
 		Actor_Face_Actor(kActorMcCoy, kActorBulletBob, true);
 		Actor_Says(kActorMcCoy, 4865, 13);
 		Actor_Says(kActorBulletBob, 10, 32);
