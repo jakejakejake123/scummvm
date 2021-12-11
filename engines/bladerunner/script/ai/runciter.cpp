@@ -149,11 +149,18 @@ void AIScriptRunciter::OtherAgentEnteredCombatMode(int otherActorId, int combatM
 #if BLADERUNNER_ORIGINAL_BUGS
 				Actor_Says(kActorRunciter, 670, 18);
 #else
+			// Jake - Added in some extra lines for McCoy. Also restored the Runciter confession clues.
+			if (_vm->_cutContent) {
+				Actor_Says(kActorMcCoy, 4800, -1); //00-4800.AUD	You son of a bitch she couldn't object.
+			}
 				// Runciter is interrupted here
-				Actor_Says_With_Pause(kActorRunciter, 670, 0.0f, 18);
+				Actor_Says_With_Pause(kActorRunciter, 670, 0.0f, 18); //15-0670.AUD	She...
 #endif // BLADERUNNER_ORIGINAL_BUGS
-				Actor_Says(kActorMcCoy, 4795, -1);
-				Actor_Says(kActorRunciter, 730, 17);
+				Actor_Says(kActorMcCoy, 4795, -1); //00-4795.AUD	If you say she asked for it, you're dead.
+				Actor_Says(kActorRunciter, 730, 17); //15-0730.AUD	Please. Just leave me alone.
+				if (_vm->_cutContent) {					
+					Actor_Clue_Acquire(kActorMcCoy, kClueRuncitersConfession2, true, kActorRunciter);
+				}
 			}
 		} else if (Actor_Clue_Query(kActorMcCoy, kClueEnvelope)) {
 			Actor_Says(kActorMcCoy, 4730, -1);
@@ -165,8 +172,15 @@ void AIScriptRunciter::OtherAgentEnteredCombatMode(int otherActorId, int combatM
 #endif // BLADERUNNER_ORIGINAL_BUGS
 			Actor_Says(kActorMcCoy, 4735, -1);
 			Actor_Says(kActorRunciter, 490, 16);
+			// Made it so McCoy is a 'little' less agressive if he has high friendliness with Runciter.
+			if (_vm->_cutContent) {
+				if (Actor_Query_Friendliness_To_Other(kActorRunciter, kActorMcCoy) < 46) {
+					Actor_Says(kActorMcCoy, 4740, -1); //00-4740.AUD	Lie to me. Go ahead. You'll only do it once.
+				}
+			} else {
 			Sound_Play(kSfxSHOTCOK1, 100, 0, 100, 50);
-			Actor_Says(kActorMcCoy, 4740, -1);
+			Actor_Says(kActorMcCoy, 4740, -1); //00-4740.AUD	Lie to me. Go ahead. You'll only do it once.
+			}
 			Actor_Says(kActorRunciter, 500, 18);
 #if BLADERUNNER_ORIGINAL_BUGS
 			Actor_Says(kActorRunciter, 510, 19);
@@ -176,9 +190,16 @@ void AIScriptRunciter::OtherAgentEnteredCombatMode(int otherActorId, int combatM
 #endif // BLADERUNNER_ORIGINAL_BUGS
 			Actor_Says(kActorMcCoy, 4745, -1);
 			Actor_Says(kActorMcCoy, 4750, -1);
-			Actor_Says(kActorRunciter, 520, 17);
-			Actor_Says(kActorRunciter, 530, 18);
-			Actor_Says(kActorRunciter, 540, 16);
+			// Jake - Added in some extra lines for McCoy. Also restored the Runciter confession clues.
+			if (_vm->_cutContent) {
+				Actor_Says(kActorMcCoy, 4755, -1); //-	00-4755.AUD	Was the tiger a fake?
+			}
+				Actor_Says(kActorRunciter, 520, 17); //15-0520.AUD	No! The tiger was real. I swear it.
+				Actor_Says(kActorRunciter, 530, 18);
+				Actor_Says(kActorRunciter, 540, 16);
+				if (_vm->_cutContent) {
+					Actor_Clue_Acquire(kActorMcCoy, kClueRuncitersConfession3, true, kActorRunciter);
+			}
 		}
 		Game_Flag_Set(kFlagRC02RunciterTalkWithGun);
 	}
@@ -188,6 +209,12 @@ void AIScriptRunciter::ShotAtAndMissed() {}
 
 bool AIScriptRunciter::ShotAtAndHit() {
 	Actor_Set_Targetable(kActorRunciter, false);
+	// Jake - Restored Runciters death rattle. Achieved this so when he is shot the animation of his head tilting back plays
+	// and he falls to the ground. Also added in the McCoy retired Runciter flag which activates when you shoot Runciter.
+	if (_vm->_cutContent) {
+		Game_Flag_Set(kFlagMcCoyRetiredHuman);	
+		ADQ_Add(kActorRunciter, 9020, 18); //15-9020.AUD	Argh!		
+	}
 	Actor_Change_Animation_Mode(kActorRunciter, kAnimationModeDie);
 	Actor_Set_Goal_Number(kActorRunciter, kGoalRunciterDead);
 	Delay(2000);
