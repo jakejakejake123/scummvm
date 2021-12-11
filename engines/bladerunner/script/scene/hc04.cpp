@@ -168,7 +168,15 @@ void SceneScriptHC04::dialogueWithIsabella() {
 	if (Actor_Clue_Query(kActorMcCoy, kClueKingstonKitchenBox2)
 	 || Actor_Clue_Query(kActorMcCoy, kClueKingstonKitchenBox1)
 	) {
-		if (Actor_Clue_Query(kActorMcCoy, kClueBombingSuspect)) {
+		// Made it so the deliverymen option will display if you have the bombing suspect photo.
+		// It makes no sense for the option to be labelled Sadik photo because in act 2 McCoy hasn't 
+		// learned Sadiks name. Instead McCoy will now first ask about the delivery men and when he has no luck with that
+		// he shows Isabella the photo.
+		if (_vm->_cutContent) {
+			if (Actor_Clue_Query(kActorMcCoy, kClueBombingSuspect)) {
+				DM_Add_To_List_Never_Repeat_Once_Selected(350, 5, 6, 5); // DELIVERYMEN
+			}
+		} else if (Actor_Clue_Query(kActorMcCoy, kClueBombingSuspect)) {
 			DM_Add_To_List_Never_Repeat_Once_Selected(340, 5, 6, 5); // SADIK PHOTO
 		} else if (Actor_Clue_Query(kActorMcCoy, kClueTyrellSecurityPhoto)) {
 			DM_Add_To_List_Never_Repeat_Once_Selected(350, 5, 6, 5); // DELIVERYMEN
@@ -183,7 +191,15 @@ void SceneScriptHC04::dialogueWithIsabella() {
 	if (Actor_Clue_Query(kActorMcCoy, kClueSpecialIngredient)) {
 		DM_Add_To_List_Never_Repeat_Once_Selected(380, -1, 5, 8); // MIA AND MURRAY INFO
 	}
-	DM_Add_To_List_Never_Repeat_Once_Selected(390, 7, 5, -1); // BUY STEW
+	// Made it so McCoy doesn't have the option to buy the stew if he found out about the special ingredient.
+	// It would make no sense for McCoy to ask what's in the stew and then buy some of it knowing it contains illegal ingredients.
+	if (_vm->_cutContent) {
+		if (!Actor_Clue_Query(kActorMcCoy, kClueSpecialIngredient)) {
+			DM_Add_To_List_Never_Repeat_Once_Selected(390, 7, 5, -1); // BUY STEW
+		}
+	} else {
+		DM_Add_To_List_Never_Repeat_Once_Selected(390, 7, 5, -1); // BUY STEW	
+	}
 	Dialogue_Menu_Add_DONE_To_List(400); // DONE
 
 	Dialogue_Menu_Appear(320, 240);
@@ -199,13 +215,28 @@ void SceneScriptHC04::dialogueWithIsabella() {
 		break;
 
 	case 350: // DELIVERYMEN
-		Actor_Says(kActorMcCoy, 1290, kAnimationModeTalk);
-		Actor_Says(kActorIsabella, 70, kAnimationModeTalk);
-		Actor_Says(kActorMcCoy, 1335, kAnimationModeTalk);
-		Actor_Says(kActorIsabella, 80, kAnimationModeTalk);
-		Actor_Says(kActorMcCoy, 1340, kAnimationModeTalk);
-		Actor_Says(kActorIsabella, 90, kAnimationModeTalk);
-		Actor_Says(kActorMcCoy, 1345, kAnimationModeTalk);
+		// Altered deliverymen dialogue to also contain the dialogue for the Sadiks photo option.
+		if (_vm->_cutContent) {
+			Actor_Says(kActorMcCoy, 1290, kAnimationModeTalk); //00-1290.AUD	How many delivery men you got working here?
+			Actor_Says(kActorIsabella, 70, kAnimationModeTalk); //59-0070.AUD	Two. Sometimes three on the busy night.
+			Actor_Says(kActorIsabella, 80, kAnimationModeTalk); //59-0080.AUD	Usual two riders. They Chinese. Third guy part timer. He Moroccan I think.
+			Actor_Says(kActorMcCoy, 1340, kAnimationModeTalk); //00-1340.AUD	A big guy with dreadlocks?
+			Actor_Says(kActorIsabella, 90, kAnimationModeTalk); //59-0090.AUD	Oh no. Shaved head. Real short.
+			Actor_Says(kActorMcCoy, 1335, kAnimationModeTalk); //00-1335.AUD	Any Rastafarians?
+			Delay (500);
+			Actor_Says(kActorMcCoy, 1285, 23); //00-1285.AUD	This guy work for you?
+			Actor_Says(kActorIsabella, 50, kAnimationModeTalk);  //59-0050.AUD	No, but I wish he do. He be one fine-looking man.
+			Actor_Says(kActorMcCoy, 1330, kAnimationModeTalk); //00-1330.AUD	You sure? Never seen him before?
+			Actor_Says(kActorIsabella, 60, kAnimationModeTalk); //59-0060.AUD	I'd remember him for sure.
+		} else {
+			Actor_Says(kActorMcCoy, 1290, kAnimationModeTalk);
+			Actor_Says(kActorIsabella, 70, kAnimationModeTalk);
+			Actor_Says(kActorMcCoy, 1335, kAnimationModeTalk);
+			Actor_Says(kActorIsabella, 80, kAnimationModeTalk);
+			Actor_Says(kActorMcCoy, 1340, kAnimationModeTalk);
+			Actor_Says(kActorIsabella, 90, kAnimationModeTalk);
+			Actor_Says(kActorMcCoy, 1345, kAnimationModeTalk);
+		}
 		break;
 
 	case 360: // MARCUS EISENDULLER
@@ -230,9 +261,23 @@ void SceneScriptHC04::dialogueWithIsabella() {
 		Actor_Modify_Friendliness_To_Other(kActorIsabella, kActorMcCoy, -2);
 		Actor_Says(kActorIsabella, 160, kAnimationModeTalk);
 		Actor_Says(kActorMcCoy, 1370, kAnimationModeTalk);
-		Actor_Says(kActorIsabella, 170, kAnimationModeTalk);
-		Actor_Says(kActorMcCoy, 1375, kAnimationModeTalk);
-		Actor_Says(kActorIsabella, 180, kAnimationModeTalk);
+		Actor_Says(kActorIsabella, 170, kAnimationModeTalk); //59-0170.AUD	Why you pick on Mama Isabella? I never do you no harm.
+		// Added in some dialogue and made the conversation play out differently based on whether McCoy is surly or erratic.
+		if (_vm->_cutContent) {
+			Actor_Says(kActorMcCoy, 1365, kAnimationModeTalk); //00-1365.AUD	I'm not looking to bust the dealer. I just want to know who bought it.
+			Actor_Says(kActorIsabella, 150, kAnimationModeTalk); //59-0150.AUD	This is a clean place man. Mama Isabella law-abiding soul.
+			Delay (1000);
+			if (Player_Query_Agenda() == kPlayerAgendaSurly 
+					|| Player_Query_Agenda() == kPlayerAgendaErratic) {
+				Actor_Says(kActorMcCoy, 4360, 16); //00-4360.AUD	Tell it straight or I'm gonna make sure you get the same as he gets. Full conspiracy, payable for 25.
+				Actor_Modify_Friendliness_To_Other(kActorIsabella, kActorMcCoy, -10);
+			} else {
+				Actor_Says(kActorMcCoy, 1375, kAnimationModeTalk); //00-1375.AUD	Where did you get it?
+			}
+		} else {
+			Actor_Says(kActorMcCoy, 1375, kAnimationModeTalk); //00-1375.AUD	Where did you get it?
+		}
+		Actor_Says(kActorIsabella, 180, kAnimationModeTalk); //59-0180.AUD	My sister. She got connections.
 		Actor_Says(kActorMcCoy, 1380, kAnimationModeTalk);
 		Actor_Says(kActorIsabella, 190, kAnimationModeTalk);
 		Actor_Says(kActorIsabella, 210, kAnimationModeTalk);
@@ -242,21 +287,61 @@ void SceneScriptHC04::dialogueWithIsabella() {
 		Actor_Says(kActorMcCoy, 1390, kAnimationModeTalk);
 		Actor_Says(kActorIsabella, 300, kAnimationModeTalk);
 		Actor_Says(kActorIsabella, 310, kAnimationModeTalk);
-		Actor_Says(kActorIsabella, 320, kAnimationModeTalk);
-		Actor_Says(kActorMcCoy, 1395, kAnimationModeTalk);
-		Actor_Says(kActorIsabella, 330, kAnimationModeTalk);
+		Actor_Says(kActorIsabella, 320, kAnimationModeTalk); //59-0320.AUD	I'm thinking you not really care about the cheese.
+		// If McCoy has low friendliness with Isabella he is indifferent to her, if not he gives her some advice about finding a new ingredient.
+		if (_vm->_cutContent) {
+			if (Actor_Query_Friendliness_To_Other(kActorIsabella, kActorMcCoy) < 50) {
+				Actor_Says(kActorMcCoy, 5430, kAnimationModeTalk); //00-5430.AUD	Not really, no.
+			} else {
+				Actor_Says(kActorMcCoy, 1395, kAnimationModeTalk); //00-1395.AUD	You're right. But I still think you ought to get yourself a different secret ingredient.
+				Actor_Says(kActorIsabella, 330, kAnimationModeTalk); //59-0330.AUD	You bet, mon. That cheese’s been nothing but trouble for Mama Isabella.
+			}
+		} else {
+			Actor_Says(kActorMcCoy, 1395, kAnimationModeTalk); //00-1395.AUD	You're right. But I still think you ought to get yourself a different secret ingredient.
+			Actor_Says(kActorIsabella, 330, kAnimationModeTalk); //59-0330.AUD	You bet, mon. That cheese’s been nothing but trouble for Mama Isabella.
+		}
 		Actor_Clue_Acquire(kActorMcCoy, kClueStolenCheese, false, kActorIsabella);
 		break;
 
 	case 390: // BUY STEW
 		Actor_Says(kActorMcCoy, 1310, kAnimationModeTalk);
 		Actor_Modify_Friendliness_To_Other(kActorIsabella, kActorMcCoy, 2);
-		Actor_Says(kActorIsabella, 340, kAnimationModeTalk);
+		// Added in some dialogue. Made it so you actually lose 30 chinyen when you buy the stew. Made it so you
+		// receive a kingston kitchen box when you buy the stew.
+		Actor_Says(kActorIsabella, 340, kAnimationModeTalk); //59-0340.AUD	Fix you right up. Only 30 chinyen. It put a spring in your step, mon. The ladies they be loving you.
+		if (_vm->_cutContent) {
+			Actor_Says(kActorMcCoy, 1320, kAnimationModeTalk); // 00-1320.AUD	Smells good. What is it?
+			Actor_Says(kActorIsabella, 30, kAnimationModeTalk); //59-0030.AUD	All in special recipe. (laughs) But if I be telling you what's in it, you might be thinking twice about eating it.
+			if (Global_Variable_Query(kVariableChinyen) >= 30
+			|| Query_Difficulty_Level() == kGameDifficultyEasy) {
+				Actor_Says(kActorMcCoy, 4940, 14); //00-4940.AUD	Okay, let's have it.
+				if (Query_Difficulty_Level() != kGameDifficultyEasy) {
+					Global_Variable_Decrement(kVariableChinyen, 30);
+				}
+				Delay (1000);
+				Item_Pickup_Spin_Effect(kModelAnimationKingstonKitchenBox, 228, 224);
+				Actor_Says(kActorMcCoy, 1345, 12); //00-1345.AUD	Thanks.		
+				Actor_Modify_Friendliness_To_Other(kActorIsabella, kActorMcCoy, 5);
+			} else {
+				Actor_Says(kActorMcCoy, 1325, 13); //00-1325.AUD/Uh... I'm not that hungry anyway.
+			}
+
+		}
+
 		break;
 
 	case 400: // DONE
+	// Made it so McCoy responds differently to Isabella based on his friendliness status.
+	if (_vm->_cutContent) {
+		if (Actor_Query_Friendliness_To_Other(kActorIsabella, kActorMcCoy) < 50) {
+			Actor_Says(kActorMcCoy, 8605, kAnimationModeTalk);//00-8605.AUD	You staying out of trouble, buddy?
+		} else {
+			Actor_Says(kActorMcCoy, 1315, kAnimationModeTalk); //00-1315.AUD	Thanks for your time.
+		}
+	} else {
 		Actor_Says(kActorMcCoy, 1315, kAnimationModeTalk);
-		break;
+	}
+	break;
 
 	default: // never used?
 		Actor_Says(kActorMcCoy, 1320, kAnimationModeTalk);
