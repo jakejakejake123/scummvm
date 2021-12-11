@@ -192,10 +192,20 @@ bool SceneScriptAR02::ClickedOnActor(int actorId) {
 							Global_Variable_Increment(kVariableInsectDealerBanterTalk, 1);
 							Actor_Says(kActorMcCoy, 8920, 13); // I gotta ask you a question.
 							Actor_Says(kActorInsectDealer, 410, 13); //	Ah, perhaps you should ask someone else.
-							if (Player_Query_Agenda() == kPlayerAgendaSurly) {
+							//Added in some more dialogue for McCoy and the Peruvian woman.
+							Actor_Says(kActorMcCoy, 1620, 13);  //00-1620.AUD	I’m not gonna hurt you.
+							Delay (1000);
+							Actor_Says(kActorInsectDealer, 400, 13); // I hear very little.							
+							if (Player_Query_Agenda() == kPlayerAgendaSurly
+							|| Player_Query_Agenda() == kPlayerAgendaErratic) { 
 								Actor_Says(kActorMcCoy, 8450, 14); // Does this badge mean anything to you?
 								Actor_Says(kActorInsectDealer, 440, 14); // Please, this is all I know.
-								Actor_Modify_Friendliness_To_Other(kActorInsectDealer, kActorMcCoy, -5);
+				 				Actor_Says(kActorMcCoy, 8519, 14);//00-8519.AUD	What do you say we dish each other the straight goods.
+								Actor_Says(kActorInsectDealer, 430, 14); //16-0430.AUD	I did not mean to offend. I only thought to spare you from the truth of it.
+								Actor_Says(kActorMcCoy, 8455, 14); //00-8455.AUD	Let me judge what's gonna make me upset.	 		
+								Actor_Says(kActorInsectDealer, 380, 14); //16-0380.AUD	You promised no hurt!
+								Actor_Says(kActorMcCoy, 440, 16); //00-0440.AUD	Forget it.
+								Actor_Modify_Friendliness_To_Other(kActorInsectDealer, kActorMcCoy, -10);
 							}
 							break;
 						case 2:
@@ -203,7 +213,8 @@ bool SceneScriptAR02::ClickedOnActor(int actorId) {
 							Global_Variable_Increment(kVariableInsectDealerBanterTalk, 1);
 							Actor_Says(kActorMcCoy, 8520, 13); // What do you know?
 							Actor_Says(kActorInsectDealer, 450, 13);
-							if (Actor_Query_Friendliness_To_Other(kActorInsectDealer, kActorMcCoy) > 40) {
+							// Made it so the Peruvian woman only sells you the slug if you have high friendliness.
+							if (Actor_Query_Friendliness_To_Other(kActorInsectDealer, kActorMcCoy) >= 50) {
 								Actor_Says(kActorInsectDealer, 460, 14);
 								Actor_Says(kActorInsectDealer, 470, 13); // This slug, perhaps.
 								Item_Pickup_Spin_Effect_From_Actor(kModelAnimationSlug, kActorInsectDealer, 0, -40);
@@ -212,7 +223,8 @@ bool SceneScriptAR02::ClickedOnActor(int actorId) {
 							break;
 						case 3:
 							Global_Variable_Increment(kVariableInsectDealerBanterTalk, 1);
-							if (Actor_Query_Friendliness_To_Other(kActorInsectDealer, kActorMcCoy) > 45) {
+							// Made it so friendliness actually effects the conversation.
+							if (Actor_Query_Friendliness_To_Other(kActorInsectDealer, kActorMcCoy) >= 50) {
 								Actor_Says(kActorMcCoy, 8610, 17); // What's the word, friend?
 							} else {
 								Actor_Says(kActorMcCoy, 8615, 17); // Heard anything on the street?
@@ -220,7 +232,11 @@ bool SceneScriptAR02::ClickedOnActor(int actorId) {
 							Actor_Says(kActorInsectDealer, 400, 13); // I hear very little.
 							break;
 						default:
+						if (Actor_Query_Friendliness_To_Other(kActorInsectDealer, kActorMcCoy) >= 50) {
 							Actor_Says(kActorMcCoy, 215, 13);
+						} else {
+							Actor_Says(kActorMcCoy, 8940, 13); //00-8940.AUD	What are you staring at?
+						}
 							break;
 						}
 					} else {
@@ -298,7 +314,8 @@ bool SceneScriptAR02::ClickedOnActor(int actorId) {
 						break;
 					default:
 						if (Actor_Query_Friendliness_To_Other(kActorHasan, kActorMcCoy) <= 45 ) {
-							Actor_Says(kActorMcCoy, 8940, 13);
+							// Added in a line.
+							Actor_Says(kActorMcCoy, 8595, 13); //00-8595.AUD	Hmm. He's damn unfriendly.
 						} else {
 							Actor_Says(kActorMcCoy, 1315, 13);
 						}
@@ -416,7 +433,12 @@ void SceneScriptAR02::dialogueWithInsectDealer1() {
 		if (answerValue == 490) { // EARRING
 			Actor_Says(kActorMcCoy, 145, 15);
 		} else { // ANKLET
-			Actor_Says(kActorMcCoy, 150, 15);
+		// Added in the appropriate line.
+			if (_vm->_cutContent) {
+				Actor_Says(kActorMcCoy, 8470, 15); //00-8470.AUD	You recognize the insect in this photo?
+			} else {
+				Actor_Says(kActorMcCoy, 150, 15); //00-0150.AUD	You know anything about insects?
+			}
 		}
 		Actor_Says(kActorInsectDealer, 80, 14);
 		Actor_Says(kActorMcCoy, 80, 16);
@@ -538,14 +560,64 @@ void SceneScriptAR02::dialogueWithHassan() {
 	switch (answerValue) {
 	case 550: // SCALE
 		Actor_Says(kActorMcCoy, 145, 11); // This your work?
-		Actor_Says(kActorHasan, 30, 11);
-		Actor_Says(kActorMcCoy, 160, 11);
-		Actor_Says(kActorHasan, 40, 11);
-		Actor_Says(kActorMcCoy, 165, 11);
-		Actor_Says(kActorHasan, 50, 11);
-		Actor_Says(kActorMcCoy, 170, 11);
-		Actor_Says(kActorHasan, 60, 11);
-		Actor_Says(kActorMcCoy, 175, 11);
+		// It never made any sense that Hasan is surprised that McCoy is a policeman even though he reffered to him as being part of the LPD earlier on.
+		// I have rectified this by having Hasan say this only if you have not received the Hasan interview clue where he says this. 
+		if (_vm->_cutContent) {
+			if (!Actor_Clue_Query(kActorMcCoy, kClueHasanInterview)) {
+				Actor_Says(kActorHasan, 30, 11); //20-0030.AUD	Oh, you're a policeman.
+				Actor_Modify_Friendliness_To_Other(kActorHasan, kActorMcCoy, -1);
+				Actor_Says(kActorMcCoy, 160, 11); //00-0160.AUD	That's right, McCoy, LPD.
+			}
+		} else {
+			Actor_Says(kActorHasan, 30, 11); //20-0030.AUD	Oh, you're a policeman.
+			Actor_Says(kActorMcCoy, 160, 11); //00-0160.AUD	That's right, McCoy, LPD.
+		}
+		// Made it so the conversation with Hasan will play out differently depending on your friendliness with him.
+		// Firstly if you have low friendliness towards Hasan he lies to you and says he knows nothing.
+		if (_vm->_cutContent) {
+			if (Actor_Query_Friendliness_To_Other(kActorHasan, kActorMcCoy) < 50) {
+				Actor_Says(kActorHasan, 250, 11);  //20-0250.AUD	I'm afraid not, noble one. But you shall surely be the first to know, if I do hear something.
+				Actor_Says(kActorMcCoy, 3910, 16); //00-3910.AUD	You’re lying.
+				Actor_Says(kActorHasan, 270, 11); //20-0270.AUD	You sully my good name with such accusations. I speak only the truth, I swear!
+					if (Player_Query_Agenda() == kPlayerAgendaSurly 
+							|| Player_Query_Agenda() == kPlayerAgendaErratic) {
+						Actor_Says(kActorMcCoy, 8519, 14);//00-8519.AUD	What do you say we dish each other the straight goods.
+						Actor_Modify_Friendliness_To_Other(kActorHasan, kActorMcCoy, -2);
+					} else { 
+						Actor_Says(kActorMcCoy, 6985, 11);	//-	00-6985.AUD	Got the straight scoop for me or what?
+					}
+				Delay (500);
+				Actor_Says(kActorHasan, 280, 11); //20-0280.AUD	Oh, yes, now I remember. I misspoke before, that is all. Here's the truth of it.
+				Actor_Says(kActorMcCoy, 2635, 18); //00-2635.AUD	I’m all ears.
+			}
+		}
+		Actor_Says(kActorHasan, 40, 11); //20-0040.AUD	I told the last detective I sold the snake to Taffy Lewis.
+		Actor_Says(kActorMcCoy, 165, 11); //00-0165.AUD	The last detective?
+		// If you have high friendliness with Hasan he tells you the detectives name was Deckard.
+		if (_vm->_cutContent) {
+			Delay (500);
+			if (Actor_Query_Friendliness_To_Other(kActorHasan, kActorMcCoy) >= 50) {
+				Actor_Says(kActorMcCoy, 4130, kAnimationModeTalk); //00-4130.AUD	Anything else?
+				Actor_Says(kActorHasan, 240, 11); //20-0240.AUD	In truth this humble merchant has discovered a fact surely to be of interest to you.
+				Actor_Says(kActorHasan, 50, 11); //20-0050.AUD	His name was Deckard.
+				Actor_Says(kActorMcCoy, 170, 11); //00-0170.AUD	Damn.
+				Actor_Says(kActorHasan, 60, 11); //20-0060.AUD	What's the problem, noble one?
+				Actor_Says(kActorMcCoy, 175, 16); //00-0175.AUD	I think I've been following up on someone else's case.
+			} else {
+				// However if you have low friendlines with Hasan he won't mention Deckards name.
+				Actor_Says(kActorMcCoy, 4130, kAnimationModeTalk); //00-4130.AUD	Anything else?
+				Actor_Says(kActorHasan, 70, 11); //20-0070.AUD	Certainly the LPD must have better things to do than to question a humble merchant over and over again about the same things.
+				Actor_Says(kActorMcCoy, 6985, 11);	//-	00-6985.AUD	Got the straight scoop for me or what?
+				Actor_Says(kActorHasan, 260, 11); //20-0260.AUD	My time is quite valuable, noble one. And I'm afraid I can spend no more with you.
+				Actor_Says(kActorMcCoy, 440, 16); //00-0440.AUD	Forget it.
+				Actor_Modify_Friendliness_To_Other(kActorHasan, kActorMcCoy, -2);
+				}		
+			} else {
+				Actor_Says(kActorHasan, 50, 11); //20-0050.AUD	His name was Deckard.
+				Actor_Says(kActorMcCoy, 170, 11); //00-0170.AUD	Damn.
+				Actor_Says(kActorHasan, 60, 11); //20-0060.AUD	What's the problem, noble one?
+				Actor_Says(kActorMcCoy, 175, 16); //00-0175.AUD	I think I've been following up on someone else's case.
+			}
 		if (_vm->_cutContent) {
 			Game_Flag_Set(kFlagWrongInvestigation);
 		}
@@ -564,15 +636,39 @@ void SceneScriptAR02::dialogueWithHassan() {
 		Actor_Says(kActorHasan, 180, 11);
 		Actor_Says(kActorHasan, 190, 11);
 		Actor_Says(kActorHasan, 200, 11);
-		Actor_Says(kActorMcCoy, 200, 11);
-		Actor_Says(kActorHasan, 210, 11); // Perhaps you should ask the Peruvian woman next door.
-		Actor_Says(kActorHasan, 220, 11); // She's an expert on such things
-		Actor_Says(kActorHasan, 230, 11); // and will cut a wonderful deal to friends.
+		// Made it so McCoy only asks Hasan where to find more information on the earring and is directed to the Peruvian woman only
+		// if he has not talked to her yet.
+		if (_vm->_cutContent) {
+			if (!Actor_Clue_Query(kActorMcCoy, kCluePeruvianLadyInterview)) {
+				Actor_Says(kActorMcCoy, 200, 11);
+				Actor_Says(kActorHasan, 210, 11); // Perhaps you should ask the Peruvian woman next door.
+				Actor_Says(kActorHasan, 220, 11); // She's an expert on such things
+				Actor_Says(kActorHasan, 230, 11); // and will cut a wonderful deal to friends.
+			}
+		} else {
+			Actor_Says(kActorMcCoy, 200, 11);
+			Actor_Says(kActorHasan, 210, 11); // Perhaps you should ask the Peruvian woman next door.
+			Actor_Says(kActorHasan, 220, 11); // She's an expert on such things
+			Actor_Says(kActorHasan, 230, 11); // and will cut a wonderful deal to friends.
+		}
 		Game_Flag_Set(kFlagNotUsed370);
 		break;
 
 	case 570: // DONE
 		if (!Actor_Clue_Query(kActorMcCoy, kClueHasanInterview)) {
+			// It never made any sense that Hasan seemed to know McCoy was a policemen but seemed to be surprised by this when you show him the scale later on.
+			// I fixed this by having Hasan be a little resistant to McCoy which leads McCoy to reveal that he is a police officer. This only happens if McCoy has not shown 
+			// Hasan the scale and he already found out.
+			if (_vm->_cutContent &&
+			 !Game_Flag_Query(kFlagWrongInvestigation)) {
+				Actor_Says(kActorMcCoy, 8615, 13); // Heard anything on the street?
+				Actor_Says(kActorHasan, 290, 11);  //20-0290.AUD	I have heard nothing of late, noble one.
+				Actor_Says(kActorMcCoy, 505, 23); //00-0505.AUD	McCoy, LPD.
+				Actor_Says(kActorHasan, 30, 11);//20-0030.AUD	Oh, you're a policeman.	
+				Actor_Modify_Friendliness_To_Other(kActorHasan, kActorMcCoy, -1);
+				Actor_Says(kActorMcCoy, 7200, 14); //00-7200.AUD	Bingo.
+				Delay (500);
+			 }
 			Actor_Says(kActorMcCoy, 940, 13);
 			// Quote 80 is *boop* in ENG and DEU versions
 			// In FRA, ITA versions it is identical to the second half of quote 70, and thus redundant
@@ -586,8 +682,17 @@ void SceneScriptAR02::dialogueWithHassan() {
 				Actor_Says(kActorHasan, 70, 12);
 			}
 			Actor_Says(kActorHasan, 90, 12);
-			Actor_Says(kActorMcCoy, 180, 15);
-			Actor_Says(kActorHasan, 100, 14);
+			// Made it so McCoy only questions who Bob is and is directed to Bobs shop only if McCoy hasn't Met Bob.
+			if (_vm->_cutContent) {
+				if (!Game_Flag_Query(kFlagRC04Entered)) {
+					Actor_Says(kActorMcCoy, 180, 15); //00-0180.AUD	Bob?
+					Actor_Says(kActorHasan, 100, 14); //20-0100.AUD	He owns the armament shop up the street. He is insane, noble one. Insane.
+				}
+				} else {
+					Actor_Says(kActorMcCoy, 180, 15); //00-0180.AUD	Bob?
+					Actor_Says(kActorHasan, 100, 14); //20-0100.AUD	He owns the armament shop up the street. He is insane, noble one. Insane.
+				}
+
 			Actor_Says(kActorHasan, 110, 12);
 			// Quote 130 is *boop* in ENG and DEU versions
 			// In FRA, ITA versions it is identical to the second half of quote 120, and thus redundant
