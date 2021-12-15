@@ -69,7 +69,14 @@ void SceneScriptBB11::SceneLoaded() {
 		Unobstacle_Object("X2_VENTS05", true);
 		Unobstacle_Object("X2_VENTSCYL05", true);
 	}
-}
+	// Added in the Sadik incept clue.
+		if (_vm->_cutContent) {
+			if (!Actor_Clue_Query(kActorMcCoy, kClueSadikIncept)
+				&& (Game_Flag_Query(kFlagSadikIsReplicant))) {
+				Item_Add_To_World(kItemNote, kModelAnimationPhoto, kSetBB11, 103.42, -30.74, 217.77, 0, 12, 12, false, true, false, true);
+			}
+		}
+	}
 
 bool SceneScriptBB11::MouseClick(int x, int y) {
 	return false;
@@ -84,6 +91,18 @@ bool SceneScriptBB11::ClickedOnActor(int actorId) {
 }
 
 bool SceneScriptBB11::ClickedOnItem(int itemId, bool a2) {
+	// Code for picking up the Sadik incept clue.
+	if (_vm->_cutContent) {
+		if (itemId ==  kItemNote) {
+			if (!Loop_Actor_Walk_To_Item(kActorMcCoy,  kItemNote, 12, true, false)) {
+				Actor_Face_Item(kActorMcCoy,  kItemNote, true);
+				Actor_Clue_Acquire(kActorMcCoy, kClueSadikIncept, true, -1);
+				Item_Pickup_Spin_Effect(kModelAnimationPhoto, 502, 423);
+				Item_Remove_From_World(kItemNote);
+				return true;
+			}			
+		}	
+	}
 	return false;
 }
 
