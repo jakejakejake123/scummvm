@@ -160,6 +160,10 @@ void SceneScriptBB11::PlayerWalkedIn() {
 		Music_Play(kMusicBeating1, 61, 0, 1, -1, kMusicLoopPlayOnce, 0);
 		Player_Loses_Control();
 	}
+	// Added in this flag so the scene with the new doll will be initiated when you return to set bb07.
+	if (Global_Variable_Query(kVariableChapter) == 3) {
+		Game_Flag_Set(kFlagBB11Visited);
+	}
 }
 
 void SceneScriptBB11::PlayerWalkedOut() {

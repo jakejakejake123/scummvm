@@ -37,6 +37,18 @@ void SceneScriptBB12::InitializeScene() {
 	Scene_Exit_Add_2D_Exit(0,   0,   0,  30, 479, 3);
 	Scene_Exit_Add_2D_Exit(1, 589,   0, 639, 479, 1);
 	Scene_Exit_Add_2D_Exit(2, 377, 374, 533, 479, 2);
+	// Made it so Dektora (Pris) and Sebastian appears in the set after you go to the roof.
+	// Dektora will be placed at the back of the room and her face will be obscured by a ceiling ornament so the player won't
+	// know it's her and will assume it's Pris.
+	if (_vm->_cutContent) {
+		if  (Game_Flag_Query(kFlagBB11Visited) &&
+			(Global_Variable_Query(kVariableChapter) == 3)) {
+			Actor_Put_In_Set(kActorDektora, kSetBB12);
+			Actor_Set_At_XYZ(kActorDektora, 39.97, 0.31, -56.65, 180);
+			Actor_Put_In_Set(kActorSebastian, kSetBB12);
+			Actor_Set_At_XYZ(kActorSebastian, 85.70, 0.17, 124.84, 0);
+		}
+	}
 
 	Ambient_Sounds_Add_Looping_Sound(kSfxRAINAWN1, 28, 0, 1);
 	Ambient_Sounds_Add_Sound(kSfxSCARY4,  2, 180, 14, 16, -100, 100, -101, -101, 0, 0);
@@ -74,7 +86,29 @@ bool SceneScriptBB12::ClickedOn3DObject(const char *objectName, bool a2) {
 }
 
 bool SceneScriptBB12::ClickedOnActor(int actorId) {
-	return false;
+	// Code for when you click on Dektora (Pris).
+	if (_vm->_cutContent) {
+		if (actorId == kActorDektora && !Game_Flag_Query(kFlagNewDoll)) {
+			Actor_Face_Actor(kActorMcCoy, kActorDektora, true);
+			Actor_Face_Actor(kActorSebastian, kActorDektora, true);
+			Actor_Says(kActorMcCoy, 7230, 13); //00-7230.AUD	That's a real pretty design. I don't remember seeing it before.
+			Actor_Says(kActorSebastian, 620, 16); //56-0620.AUD	She is new.
+			Actor_Says(kActorMcCoy, 7235, 18); //00-7235.AUD	You make her, too?
+			Actor_Says(kActorSebastian, 630, 13); //56-0630.AUD	I-- I found her. On the street.
+			Actor_Says(kActorSebastian, 640, 13); //56-0640.AUD	But she's mine now.
+			Actor_Says(kActorMcCoy, 7240, 18); //00-7240.AUD	Easy boy, I'm not gonna take her away from ya.
+			Actor_Says(kActorMcCoy, 7245, 15); //00-7245.AUD	The detail! She's a real beauty, ain't she?
+			Actor_Says(kActorSebastian, 650, 14); //56-0650.AUD	I haven't named her yet.
+			Actor_Says(kActorMcCoy, 7250, 13); //00-7250.AUD	She almost looks real.
+			Actor_Says(kActorSebastian, 660, 14); //56-0660.AUD	She isn't. Believe you me.
+			Actor_Says(kActorMcCoy, 7255, 15); //00-7255.AUD	You know, I can't place her for sure but she looks familiar.
+			Actor_Says(kActorSebastian, 670, 14); //56-0670.AUD	Familiar to what?
+			Delay(1000);
+			Actor_Says(kActorMcCoy, 1535, 16); //00-1535.AUD	Ah, never mind.
+			Game_Flag_Set(kFlagNewDoll);
+		}
+	}
+	return true;
 }
 
 bool SceneScriptBB12::ClickedOnItem(int itemId, bool a2) {
