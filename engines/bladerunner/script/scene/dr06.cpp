@@ -90,6 +90,18 @@ bool SceneScriptDR06::ClickedOn3DObject(const char *objectName, bool a2) {
 		}
 		return true;
 	}
+	// Made it so if you click on the ashtray and Lucy is a replicant you find the Lucy incept photo.
+	if (Object_Query_Click("X2_ASHTRAY", objectName)) {
+		if (!Loop_Actor_Walk_To_XYZ(kActorMcCoy, -645.03, 136.84, -1111.44, 0, true, false, false)) {
+			Actor_Face_Object(kActorMcCoy, "X2_ASHTRAY", true);
+			if (Game_Flag_Query(kFlagLucyIsReplicant) 
+			&& !Actor_Clue_Query(kActorMcCoy, kClueLucyIncept)) {
+				Item_Pickup_Spin_Effect(kModelAnimationPhoto, 365, 344);
+				Actor_Voice_Over(4040, kActorVoiceOver);
+				Actor_Clue_Acquire(kActorMcCoy, kClueLucyIncept, true, -1);
+			}
+		}
+	}
 
 	if (Object_Query_Click("X2_MON01A04", objectName)) {
 		if (Actor_Clue_Query(kActorMcCoy, kClueAnsweringMachineMessage)) {
