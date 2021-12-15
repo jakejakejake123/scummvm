@@ -112,7 +112,20 @@ bool SceneScriptDR04::ClickedOnActor(int actorId) {
 		if (Actor_Query_Goal_Number(kActorMoraji) == kGoalMorajiLayDown) {
 			if (!Loop_Actor_Walk_To_Waypoint(kActorMcCoy, 109, 0, true, true)) {
 				Actor_Face_Actor(kActorMcCoy, kActorMoraji, true);
-				Actor_Says(kActorMcCoy, 945, 13);
+				// Made it so you can now save Moraji life. In order to do this you have to as always shoot his handcuffs so he can escape.
+				// However if the player didn't waste time talking to Chew and went immediately to Dermo design, Moraji will get far enough from the explosion to survive.
+				// He will still be wounded but the injuries will not be fatal. Also McCoy will either show concern to Moraji or be indifferent based on his agenda.
+				// If Moraji survives he will give McCoy his DNA data, but only if McCoy was nice to him by calling him an ambulance.
+				if (_vm->_cutContent) {
+					if (Player_Query_Agenda() == kPlayerAgendaSurly 
+					|| Player_Query_Agenda() == kPlayerAgendaErratic) {
+						Actor_Says(kActorMcCoy, 3970, 15); //00-3970.AUD	Hey.
+					} else {
+						Actor_Says(kActorMcCoy, 2175, 13); //00-2175.AUD	Hold on, I’ll get an ambulance out here.
+					}
+				} else {
+					Actor_Says(kActorMcCoy, 945, 13); //00-0945.AUD	Hold on. An ambulance will be coming.
+				}
 				Actor_Says(kActorMoraji, 0, kAnimationModeTalk);
 				Actor_Says(kActorMoraji, 10, kAnimationModeTalk);
 				Actor_Says(kActorMcCoy, 950, 13);
@@ -122,7 +135,17 @@ bool SceneScriptDR04::ClickedOnActor(int actorId) {
 				Actor_Says_With_Pause(kActorMoraji, 40, 0.0f, kAnimationModeTalk);
 				Actor_Says(kActorMoraji, 50, kAnimationModeTalk);
 				Actor_Clue_Acquire(kActorMcCoy, kClueMorajiInterview, true, kActorMoraji);
-				Actor_Set_Goal_Number(kActorMoraji, kGoalMorajiDie);
+				// Code which determines whether or not Moraji survives depending on whether you talked to Chew.
+				if (_vm->_cutContent) {
+					if (Game_Flag_Query(kFlagDR03ChewTalk1)) {
+						Actor_Set_Goal_Number(kActorMoraji, kGoalMorajiDie);
+					} else if (!Game_Flag_Query(kFlagDR03ChewTalk1)) {
+					 Game_Flag_Set(kFlagMorajiAlive);
+					 Actor_Set_Goal_Number(kActorMoraji, kGoalMorajiLives);
+					}
+				} else {
+					Actor_Set_Goal_Number(kActorMoraji, kGoalMorajiDie);
+				}
 				Actor_Set_Goal_Number(kActorOfficerGrayford, kGoalOfficerGrayfordArrivesToDR04); // Grayford arrives at scene of Moraji corpse
 				return true;
 			}
@@ -267,7 +290,9 @@ void SceneScriptDR04::SceneFrameAdvanced(int frame) {
 			) {
 				Actor_Set_Goal_Number(kActorOfficerGrayford, kGoalOfficerGrayfordArrivesToDR04);
 			}
-			Scene_Exits_Enable();
+			// Removed code that enables the scene exits so you will have to talk to Moraji before you can leave the area.
+			// This is done so the player can't leave the area early which will trigger Morajis death animation.
+			// The exits will be enabled after either Moraji gives you the data or Grayford calls for backup. 
 			break;
 
 		case 237:

@@ -210,10 +210,19 @@ void SceneScriptUG16::PlayerWalkedIn() {
 		Actor_Change_Animation_Mode(kActorLuther, 17);
 		Actor_Says(kActorLance, 0, 17);
 		Actor_Says(kActorMcCoy, 5710, 14);
-		Actor_Says(kActorLuther, 40, 13);
-		Actor_Says(kActorLuther, 50, 15);
-		Actor_Says(kActorLance, 20, 12);
-		Actor_Says(kActorLuther, 60, 23);
+		Actor_Says(kActorLuther, 40, 13); //10-0040.AUD	Detective Ray McCoy.
+		// Made it so Luther and Lance only mention Morajis death if Moraji died.
+		if (_vm->_cutContent) {
+			if (!Game_Flag_Query(kFlagMorajiAlive)) { 
+				Actor_Says(kActorLuther, 50, 15); //10-0050.AUD	You’re investigating Moraji’s death.
+				Actor_Says(kActorLance, 20, 12); //13-0020.AUD	And Eisenduller’s.
+				Actor_Says(kActorLuther, 60, 23); //10-0060.AUD	Having any luck?
+			}
+		} else {
+			Actor_Says(kActorLuther, 50, 15);
+			Actor_Says(kActorLance, 20, 12);
+			Actor_Says(kActorLuther, 60, 23);
+		}
 		Actor_Says(kActorMcCoy, 5715, 14);
 		Actor_Says(kActorLance, 30, 16);
 		Actor_Says(kActorLuther, 70, 6);

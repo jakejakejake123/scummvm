@@ -133,9 +133,23 @@ bool SceneScriptDR03::ClickedOnActor(int actorId) {
 			Actor_Says(kActorChew, 70, 14);
 			Actor_Says(kActorChew, 80, 14);
 			Actor_Says(kActorMcCoy, 820, 18);
-			Actor_Says(kActorChew, 90, 14);
-			Actor_Says(kActorMcCoy, 825, 18);
-			Actor_Says(kActorChew, 100, 14);
+			Actor_Says(kActorChew, 90, 14); //52-0090.AUD	Oh, what-- what of Moraji?
+			// Made it so if McCoy saves Moraji (a scenario which will be added in later) it is achknowledged in this dialogue.
+			if (_vm->_cutContent) {
+				if (Game_Flag_Query(kFlagMorajiAlive)) { 
+					Actor_Says(kActorMcCoy, 4900, 18); //00-4900.AUD	Word is he's gonna be okay.
+				} else {
+					Actor_Says(kActorMcCoy, 825, 13); //00-0825.AUD	He didn't make it.
+				}
+			} else {
+				Actor_Says(kActorMcCoy, 825, 18); //00-0825.AUD	He didn't make it.
+			}
+			Actor_Says(kActorChew, 100, 14); //52-0100.AUD	You leave now, okay? Very busy. Must work. Must work, ah.
+			// Restored some more dialogue.
+			if (_vm->_cutContent) {
+				Actor_Says(kActorMcCoy, 4270, 18); //00-4270.AUD	I got some more questions for you.
+				Actor_Says(kActorChew, 730, 14); //52-0730.AUD	Oy, I tell you something then you go, okay?
+			}
 			Game_Flag_Reset(kFlagDR05JustExploded);
 			Game_Flag_Set(kFlagDR03ChewTalkExplosion);
 			return true;

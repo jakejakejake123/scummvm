@@ -163,6 +163,11 @@ bool AIScriptMoraji::GoalChanged(int currentGoalNumber, int newGoalNumber) {
 		_animationState = 10;
 		_animationFrame = 0;
 		Actor_Retired_Here(kActorMoraji, 60, 16, true, -1);
+		// Made it so McCoy says damn after he accidentally shoots Moraji instead of the handcuffs. Also made it so this now counts as McCoy
+		// retiring a human.
+		Delay (2000);
+		Actor_Says(kActorMcCoy, 170, 13); //00-0170.AUD	Damn.
+		Game_Flag_Set(kFlagMcCoyRetiredHuman);
 		return true;
 
 	case kGoalMorajiFreed:
@@ -188,7 +193,11 @@ bool AIScriptMoraji::GoalChanged(int currentGoalNumber, int newGoalNumber) {
 
 	case kGoalMorajiLayDown:
 		Actor_Retired_Here(kActorMoraji, 60, 16, 0, -1);
+		// Made it so Moraji isn't targetable when he is lying on the ground. It makes no sense for McCoy to just shoot a man who
+		// he just tried to save.
+		if (!_vm->_cutContent) {
 		Actor_Set_Targetable(kActorMoraji, true);
+		}
 		return true;
 
 	case kGoalMorajiDie:
