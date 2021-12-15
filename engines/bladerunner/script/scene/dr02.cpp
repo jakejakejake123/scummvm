@@ -177,7 +177,10 @@ bool SceneScriptDR02::ClickedOnExit(int exitId) {
 
 	if (exitId == 1) {
 		if (!Loop_Actor_Walk_To_XYZ(kActorMcCoy, -1162.0f, 7.18f, -322.0f, 0, true, false, false)) {
-			if (Global_Variable_Query(kVariableChapter) > 2) {
+			// Made it so you can enter Chews place in act 3 and the scene with him giving you the data plays. Once it plays McCoy exits the place and the door is now locked.
+			if (Game_Flag_Query(kFlagChewTalkGiveData)
+			 || (Global_Variable_Query(kVariableChapter) > 3))
+			   {
 				Actor_Says(kActorMcCoy, 8522, 15);
 			} else {
 				Game_Flag_Set(kFlagDR02toDR03);
