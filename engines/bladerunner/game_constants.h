@@ -672,9 +672,9 @@ enum Flags {
 	kFlagDR04toDR06                           = 230,
 	kFlagDR06toDR04                           = 231,
 	kFlagNotUsed232                           = 232,
-	// 233 is never used
+	kFlagMorajiAlive						  = 233,
 	kFlagCT02toCT01walk                       = 234,
-	// 235 is never used
+	kFlagGaffTalk							  = 235,	
 	kFlagMcCoyAnimation1                      = 236,
 	// 237 is never used
 	// 238 is never used
@@ -3441,6 +3441,7 @@ enum GoalMoraji {
 	kGoalMorajiDie        = 22,
 	kGoalMorajiDead       = 23,
 	kGoalMorajiAlive       = 24,
+	kGoalMorajiLives	   = 25,	
 	kGoalMorajiChooseFate = 30,
 	kGoalMorajiPerished   = 99
 };
