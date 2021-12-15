@@ -304,7 +304,11 @@ void AIScriptOfficerGrayford::ClickedByPlayer() {
 		Actor_Face_Actor(kActorMcCoy, kActorOfficerGrayford, true);
 		Actor_Face_Actor(kActorOfficerGrayford, kActorMcCoy, true);
 		if (Random_Query(1, 2) == 1) {
-			Actor_Says(kActorMcCoy, 5075, 14);
+			Actor_Says(kActorMcCoy, 5075, 14); //00-5075.AUD	Hey, pal.
+			// Added in some Grayford dialogue.
+			if (_vm->_cutContent) {
+				Actor_Says(kActorOfficerGrayford, 340, 13); //24-0340.AUD	Hey, you ain’t talking to some flunky, McCoy.
+			}
 		} else {
 			Actor_Says(kActorMcCoy, 4515, 13);
 			Actor_Says(kActorOfficerGrayford, 230, 13);
@@ -345,8 +349,14 @@ void AIScriptOfficerGrayford::ClickedByPlayer() {
 		Actor_Face_Actor(kActorMcCoy, kActorOfficerGrayford, true);
 		Actor_Face_Actor(kActorOfficerGrayford, kActorMcCoy, true);
 		if (Random_Query(1, 2) == 1) {
-			Actor_Says(kActorMcCoy, 5075, 14);
-			Actor_Says(kActorOfficerGrayford, 160, 13);
+			// Added in some Grayford dialogue.
+			if (_vm->_cutContent) {
+			Actor_Says(kActorMcCoy, 5295, 14); //00-5295.AUD	Learn anything?
+			Actor_Says(kActorOfficerGrayford, 320, 13); //24-0320.AUD	Nah, I’ve hit a brick, McCoy. You running this investigation, right?
+			} else {
+				Actor_Says(kActorMcCoy, 5075, 14);
+				Actor_Says(kActorOfficerGrayford, 160, 13);
+			}
 		} else {
 			Actor_Says(kActorMcCoy, 4515, 13);
 			Actor_Says(kActorOfficerGrayford, 330, 13);
@@ -653,6 +663,11 @@ bool AIScriptOfficerGrayford::GoalChanged(int currentGoalNumber, int newGoalNumb
 		}
 
 		Actor_Face_Actor(kActorOfficerGrayford, kActorMcCoy, true);
+		// Added in some dialogue.
+		if (_vm->_cutContent) {
+			Actor_Says(kActorOfficerGrayford, 350, 18); //24-0350.AUD	Eh, Gaff said that you didn’t need to hear this. Ah, but I guess you deserve to know.
+			Actor_Says(kActorMcCoy, 7805, 14); //00-7805.AUD	Answer the question.
+		}
 		Actor_Says(kActorOfficerGrayford, 180, 18);
 		Actor_Set_Goal_Number(kActorOfficerGrayford, currentGoalNumber);
 		return true; // possible bugfix: was break;
