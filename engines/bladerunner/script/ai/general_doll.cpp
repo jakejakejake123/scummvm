@@ -56,8 +56,13 @@ bool AIScriptGeneralDoll::Update() {
 	) {
 		return true;
 	}
-
-	return false;
+	// Made it so the general doll is now targetable.
+	if (_vm->_cutContent) {
+		Actor_Set_Targetable(kActorGeneralDoll, true);
+	} else {
+		Actor_Set_Targetable(kActorGeneralDoll, false);	
+	}
+	return true;
 }
 
 void AIScriptGeneralDoll::TimerExpired(int timer) {
@@ -167,6 +172,31 @@ bool AIScriptGeneralDoll::ShotAtAndHit() {
 		ChangeAnimationMode(kAnimationModeDie);
 		Actor_Set_Targetable(kActorGeneralDoll, false);
 	}
+	// Made it so when you shoot the general doll and Sebastian is in the room he reacts to this and so does McCoy.
+	// If you shoot the general doll in front of Sebastian the McCoy is a blade runner clue will be added to Sebastians database and Sebastian will tell you to leave.
+	if (Game_Flag_Query(kFlagGeneralDollShot)) {
+		Player_Loses_Control();
+		Sound_Play(kSfxSERVOD1, 100, 0, 0, 50);
+		Game_Flag_Set(kFlagGeneralDollShot);
+		Actor_Set_Goal_Number(kActorGeneralDoll, 104);
+		ChangeAnimationMode(kAnimationModeDie);
+		Actor_Set_Targetable(kActorGeneralDoll, false);
+		if (Actor_Query_Is_In_Current_Set(kActorSebastian)) {		
+			Actor_Face_Actor(kActorMcCoy, kActorGeneralDoll, true);
+			Actor_Face_Actor(kActorSebastian, kActorMcCoy, true);
+			Actor_Modify_Friendliness_To_Other(kActorSebastian, kActorMcCoy, -10);
+			Actor_Says(kActorSebastian, 710, 31); //56-0710.AUD	Stop! Please! Why are you doing all these terrible things?
+			Actor_Says(kActorMcCoy, 7275, 19); //  00-7275.AUD	Sometimes I just can't help myself.
+			Actor_Clue_Acquire(kActorSebastian, kClueMcCoyIsABladeRunner, true, -1);
+			Player_Gains_Control();
+		} else {	
+			Player_Set_Combat_Mode(false);	
+			Delay (2000);
+			Actor_Says(kActorMcCoy, 8508, 19); //00-8508.AUD	No retirement swag.
+			Player_Gains_Control();
+		}
+	}
+
 
 	return false;
 }
