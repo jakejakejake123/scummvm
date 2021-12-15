@@ -176,9 +176,27 @@ void AIScriptGaff::ClickedByPlayer() {
 			Actor_Says(kActorMcCoy, 3970, 14);
 			Actor_Says(kActorGaff, 180, 13);
 		}
+		if (Game_Flag_Query(kFlagGaffTalk)) {
 		AI_Movement_Track_Unpause(kActorGaff);
+		}
 		// return true;
+		// Restored some dialogue for Gaff when you talk to him in DNA row.
+		if (_vm->_cutContent) {
+			if (!Game_Flag_Query(kFlagGaffTalk)) {
+				Actor_Says(kActorMcCoy, 8610, 13); //00-8610.AUD	What's the word, friend?
+				Actor_Says(kActorGaff, 320, 13); //53-0320.AUD	Someone said you've been earning your stripes, McCoy.
+				Actor_Says(kActorMcCoy, 6915, 13); //00-6915.AUD	Trying to.
+				Actor_Says(kActorGaff, 330, 13); //53-0330.AUD	You just might have a future in this business.
+				Actor_Says(kActorMcCoy, 6920, 18); //00-6920.AUD	I like to hear that.
+				Actor_Says(kActorGaff, 340, 13); //53-0340.AUD	Don't crack a bottle too soon. Steele is still way ahead on points.
+				Actor_Says(kActorMcCoy, 6925, 16); //00-6925.AUD	Don't bet on it.
+				Actor_Says(kActorGaff, 70, 13); //	53-0070.AUD	You ever retire human, your career is over. Remember that.
+				Game_Flag_Set(kFlagGaffTalk);
+				AI_Movement_Track_Unpause(kActorGaff);
+			}
+		} 
 	}
+		
 	// return false;
 }
 
