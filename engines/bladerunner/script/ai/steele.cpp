@@ -850,6 +850,7 @@ bool AIScriptSteele::GoalChanged(int currentGoalNumber, int newGoalNumber) {
 				Actor_Face_Actor(kActorMcCoy, kActorIzo, true);
 				Actor_Face_Actor(kActorSteele, kActorIzo, true);
 				Actor_Says(kActorSteele, 1870, kAnimationModeTalk); //01-0090.AUD	Just another stroll in the park.
+				Actor_Clue_Acquire(kActorMcCoy, kClueCrystalRetiredIzo, true, kActorSteele);
 			} else {
 				Actor_Face_Actor(kActorSteele, kActorIzo, true);
 				Actor_Says(kActorSteele, 1920, kAnimationModeTalk); //01-1920.AUD	And pick up a bottle of scotch for the real Blade Runner, will ya?
@@ -857,6 +858,7 @@ bool AIScriptSteele::GoalChanged(int currentGoalNumber, int newGoalNumber) {
 				Actor_Face_Actor(kActorSteele, kActorMcCoy, true); 
 				Actor_Says(kActorMcCoy, 6295, 13); //00-6295.AUD	Who made you queen of the world?
 				Actor_Says(kActorSteele, 1930, kAnimationModeTalk); //01-1930.AUD	Just kidding, Slim.
+				Actor_Clue_Acquire(kActorMcCoy, kClueCrystalRetiredIzo, true, kActorSteele);
 			}
 		} else {
 			Actor_Face_Actor(kActorSteele, kActorIzo, true);
