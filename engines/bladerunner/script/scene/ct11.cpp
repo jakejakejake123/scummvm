@@ -251,7 +251,11 @@ bool SceneScriptCT11::ClickedOn2DRegion(int region) {
 #endif // !BLADERUNNER_ORIGINAL_BUGS
 
 			} else {
-				Actor_Says(kActorMcCoy, 8525, 12);
+				Actor_Says(kActorMcCoy, 8525, 12); //00-8525.AUD	Hmph.
+				// Added in a line.
+				if (_vm->_cutContent) {
+					Actor_Says(kActorMcCoy, 8524, 12); //00-8524.AUD	That's a washout.
+				}
 			}
 		}
 		return true;
@@ -280,6 +284,25 @@ void SceneScriptCT11::PlayerWalkedIn() {
 		Player_Gains_Control();
 		Game_Flag_Reset(kFlagCT09toCT11);
 	}
+		if (_vm->_cutContent) {
+			if (!Game_Flag_Query(kFlagCT11Visited)) {
+				Game_Flag_Set (kFlagCT11Visited);
+				ADQ_Add(kActorDispatcher, 220, kAnimationModeTalk); //38-0220.AUD	Attention all Sector 3 units.
+				ADQ_Add(kActorDispatcher, 230, kAnimationModeTalk); //38-0230.AUD	Be advised. 2-11 in progress. Kitty Hawk Savings and Loan. Corner of Peach and Lincoln.
+				ADQ_Add(kActorDispatcher, 240, kAnimationModeTalk); //38-0240.AUD	Units responding identify..
+				ADQ_Add(kActorOfficerGrayford, 500, kAnimationModeTalk); //24-0500.AUD	LA, Two men Unit 32 Metro 3 is responding to provide backup. ETA three minutes.
+				ADQ_Add(kActorDispatcher, 250, kAnimationModeTalk); //38-0250.AUD	LA Copy. Units 34 and 32 en route. 2-11 in progress at Peach and Lincoln.
+				ADQ_Add(kActorOfficerGrayford, 490 , kAnimationModeTalk); // 24-0490.AUD	LA, 34 Metro 3. Copied. ETA two minutes. Be advised 34 is a two men Unit.
+				ADQ_Add(kActorDispatcher, 260, kAnimationModeTalk); //38-0260.AUD	All Sector 3 units. Hold your traffic until we confirm a Code 4.
+				ADQ_Add_Pause(1000);
+				ADQ_Add(kActorOfficerGrayford, 510, kAnimationModeTalk); //24-0510.AUD	LA, Units 34 and 32 are 10-97
+				ADQ_Add(kActorDispatcher, 270, kAnimationModeTalk); //38-0270.AUD	LA Copy. 34 and 32 at 10-97 at the scene. All Third Sector Units stand by.
+				ADQ_Add_Pause(2000);
+				ADQ_Add(kActorOfficerGrayford, 410 , kAnimationModeTalk); // 24-0410.AUD	LA, This is 32 Metro 3. Code 4. Two suspects in custody.
+				ADQ_Add(kActorDispatcher, 280, kAnimationModeTalk);	//38-0280.AUD	32 Metro 3. 10-4. LA Copy. Code 4. Two in custody.
+				ADQ_Add(kActorDispatcher, 290, kAnimationModeTalk); //38-0290.AUD	Attention all Third Sector units. We have a Code 4 at the Kitty Hawk Savings and Loan. LA clear. Resume normal traffic.
+			}	
+		}
 }
 
 void SceneScriptCT11::PlayerWalkedOut() {
