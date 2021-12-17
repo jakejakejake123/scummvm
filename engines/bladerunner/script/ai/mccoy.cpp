@@ -1288,6 +1288,11 @@ bool AIScriptMcCoy::UpdateAnimation(int *animation, int *frame) {
 			_animationState = 0;
 			Player_Gains_Control();
 			Item_Add_To_World(kItemChair, kModelAnimationYukonHotelChair, kSetCT08_CT51_UG12, -110.0, 0.0, -192.0, 0, 48, 32, false, true, false, false);
+			// Added in a couple of lines for McCoy. Since McCoy was beaten up by Sadik these lines fit perfectly here.
+			if (_vm->_cutContent) {
+				Actor_Says(kActorMcCoy, 8680, 12); //00-8680.AUD	I'm in bad shape.
+				Actor_Says(kActorMcCoy, 8685, 15); //00-8685.AUD	I better get some help.
+			}
 		}
 		break;
 

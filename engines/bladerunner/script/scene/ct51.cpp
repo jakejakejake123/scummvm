@@ -84,6 +84,9 @@ bool SceneScriptCT51::ClickedOnItem(int itemId, bool a2) {
 		Item_Pickup_Spin_Effect(kModelAnimationRagDoll, 260, 200);
 		Ambient_Sounds_Play_Sound(kSfxBABYCRY2, 40, 99, 0, 0);
 		Item_Remove_From_World(kItemRagDoll);
+		if (_vm->_cutContent) {
+			Actor_Says(kActorMcCoy, 8815, kAnimationModeTalk); //00-8815.AUD	A creepy looking doll.
+		}
 		return true;
 	}
 

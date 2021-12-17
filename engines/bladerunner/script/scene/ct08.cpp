@@ -190,6 +190,25 @@ void SceneScriptCT08::PlayerWalkedIn() {
 		Scene_Exits_Disable();
 		Game_Flag_Reset(kFlagCT51toCT08);
 		Game_Flag_Reset(kFlagCT06toCT08);
+		// Made it so after the act 3 intro plays McCoy makes some comments on the current situation. If Sadik is a replicant he will comment on how Sadik didn't act like a rep. It never really made any sense how this clue appeared
+		// in the KIA even though McCoy was unconcious the whole time, this should help rectify that. Also if Sadik is not a replicant McCoy will make the reps being like boy scout comment instead.
+		// Also you will receive the Sadik sighting Bradbury clue regardless of Sadiks status. It will be the conversation between Clovis and Sadik at the end of act 2. 
+		if (_vm->_cutContent) {
+			if (!Game_Flag_Query(kFlagSadikIsReplicant)) {
+				Actor_Voice_Over(4370, kActorVoiceOver); //99-4370.AUD	My ribs still hurt and at least two teeth were loose.
+				Actor_Voice_Over(4380, kActorVoiceOver); //99-4380.AUD	Sadik was a tough customer but he just didn't act like a Rep.
+				Actor_Voice_Over(4390, kActorVoiceOver); //99-4390.AUD	I got in at least one good shot and he definitely felt it.
+				Actor_Voice_Over(4400, kActorVoiceOver); //99-4400.AUD	A Nexus-6 wouldn't have even blinked.
+				Actor_Clue_Acquire(kActorMcCoy, kClueStaggeredbyPunches, true, -1);
+				Actor_Clue_Acquire(kActorMcCoy, kClueSightingSadikBradbury, true, -1);
+			} else {
+				Actor_Voice_Over(430, kActorVoiceOver); //99-0430.AUD	The Reps were regular Boy Scouts.
+				Actor_Voice_Over(440, kActorVoiceOver); //99-0440.AUD	The knots were tighter than my grandma on New Year's Eve.
+				Actor_Voice_Over(940,  kActorVoiceOver); //99-0940.AUD	I had an idea. I didn't know if it was gonna work or not, but I'd run out of options.
+				Actor_Clue_Acquire(kActorMcCoy, kClueSightingSadikBradbury, true, -1);
+			}
+		}
+
 #if BLADERUNNER_ORIGINAL_BUGS
 #else
 		// The player is now (teleported) in Chinatown (CT08) but the flag was not set here
