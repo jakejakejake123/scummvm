@@ -301,6 +301,15 @@ void AIScriptLucy::Retired(int byActorId) {
 	}
 
 	Actor_Set_Goal_Number(kActorLucy, kGoalLucyGone);
+	// McCoy now makes a comment when retiring Lucy
+	if (_vm->_cutContent) {
+		if (Player_Query_Agenda() == kPlayerAgendaSurly 
+			|| Player_Query_Agenda() == kPlayerAgendaErratic) {
+			Actor_Voice_Over(920, kActorVoiceOver); // 99-0920.AUD	Easy money.
+		} else {
+			Actor_Voice_Over(930, kActorVoiceOver); // 99-0930.AUD	Hope I was right about her.	
+		}	
+	}
 }
 
 int AIScriptLucy::GetFriendlinessModifierIfGetsClue(int otherActorId, int clueId) {
@@ -423,8 +432,15 @@ bool AIScriptLucy::GoalChanged(int currentGoalNumber, int newGoalNumber) {
 
 	case kGoalLucyHF04TalkToMcCoy:
 		Player_Loses_Control();
-		Actor_Says(kActorMcCoy, 1700, 16);
+		// Added in a line and made it so Lucy approaches McCoy when he talks to her in the maze.
+		if (_vm->_cutContent) {
+			Actor_Says(kActorMcCoy, 1695, 16); //00-1695.AUD	Lucy? Come on out. I’m not the hunter anymore.
+		}
+		Actor_Says(kActorMcCoy, 1700, 16); //00-1700.AUD	I put my gun away.
 		AI_Movement_Track_Flush(kActorLucy);
+		if (_vm->_cutContent) {
+			Loop_Actor_Walk_To_Actor(kActorLucy, kActorMcCoy, 24, true, false);
+		}
 		Actor_Face_Actor(kActorLucy, kActorMcCoy, true);
 		Actor_Face_Actor(kActorMcCoy, kActorLucy, true);
 		Actor_Says(kActorLucy, 350, 13);

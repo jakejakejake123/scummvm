@@ -251,9 +251,18 @@ void SceneScriptHF03::PlayerWalkedIn() {
 
 	if (Actor_Query_Goal_Number(kActorLucy) == kGoalLucyReturnToHF03) {
 		Actor_Set_Goal_Number(kActorLucy, kGoalLucyHF03RunToHF041);
-		Actor_Says(kActorSteele, 210, 13);
+		// Added in some dialogue.
+		if (_vm->_cutContent) {
+			if (Actor_Query_Friendliness_To_Other(kActorSteele, kActorMcCoy) < 51) {
+				Actor_Says(kActorSteele, 200, 13);  //01-0200.AUD	Don’t even ask me who’d be doing the leading, Rookie.
+				Actor_Face_Actor(kActorMcCoy, kActorSteele, true);
+				Actor_Says(kActorMcCoy, 6290, 15); //00-6290.AUD	Who made you the jello police?
+			} else {	
+				Actor_Says(kActorSteele, 210, 13); // 01-0210.AUD	Just follow my lead, Slim.
+			}
+		}
 		Actor_Face_Actor(kActorMcCoy, kActorSteele, true);
-		Actor_Says(kActorMcCoy, 1680, 15);
+		Actor_Says(kActorMcCoy, 1680, 15); //00-1680.AUD	There’s civilians all over the place.
 		Actor_Says(kActorSteele, 220, 14);
 		Actor_Says(kActorMcCoy, 1685, 13);
 		Actor_Says(kActorSteele, 230, 16);

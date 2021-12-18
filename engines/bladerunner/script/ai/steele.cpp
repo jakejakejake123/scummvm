@@ -1107,6 +1107,11 @@ bool AIScriptSteele::GoalChanged(int currentGoalNumber, int newGoalNumber) {
 		Actor_Set_At_XYZ(kActorSteele, 254.94f, 47.76f, -262.58f, 210);
 		Actor_Put_In_Set(kActorLucy, kSetHF02);
 		Actor_Set_At_XYZ(kActorLucy, 596.49f, 47.76f, -260.04f, 731);
+		// Added in some lines.
+		if (_vm->_cutContent) {
+			Actor_Says(kActorMcCoy, 1595, 13); //00-1595.AUD	Everybody out of the way!
+			Actor_Says(kActorLucy, 330, 16); //06-0330.AUD	Please, please don’t!
+		} 
 		return true;
 
 	case kGoalSteeleHF02ShootLucy:
@@ -1135,10 +1140,17 @@ bool AIScriptSteele::GoalChanged(int currentGoalNumber, int newGoalNumber) {
 		Actor_Says(kActorMcCoy, 1545, 13);
 		Actor_Face_Actor(kActorSteele, kActorMcCoy, true);
 		Actor_Says(kActorSteele, 30, 18);
-		Actor_Says(kActorSteele, 40, 18);
-		Actor_Says(kActorMcCoy, 1550, 13);
+		Actor_Says(kActorSteele, 40, 18); //01-0040.AUD	Maybe she’ll see ‘em in the next life.
+		if (_vm->_cutContent) {
+			if (Player_Query_Agenda() == kPlayerAgendaSurly 
+				|| Player_Query_Agenda() == kPlayerAgendaErratic) {
+				Actor_Says(kActorMcCoy, 1570, 13); //	00-1570.AUD	You sure aired that sucker out.
+			} else {
+				Actor_Says(kActorMcCoy, 1550, 13); //00-1550.AUD	You’re cruel and unusual.
+			}
+		}
 		Actor_Face_Actor(kActorSteele, kActorLucy, true);
-		Actor_Says(kActorSteele, 50, 12);
+		Actor_Says(kActorSteele, 50, 12); //01-0050.AUD	That’s funny. Sometimes I actually feel bad for these poor Lolita models. 
 		Actor_Says(kActorMcCoy, 1555, 13);
 		Actor_Says(kActorSteele, 60, 12);
 		Actor_Face_Actor(kActorSteele, kActorMcCoy, true);
@@ -1172,11 +1184,18 @@ bool AIScriptSteele::GoalChanged(int currentGoalNumber, int newGoalNumber) {
 
 	case kGoalSteeleHF02LucyShotByMcCoy:
 		Actor_Face_Actor(kActorMcCoy, kActorSteele, true);
-		Actor_Says(kActorMcCoy, 1560, 14);
+		// Added in some dialogue along with the McCoy retired Lucy clue.
+		Actor_Says(kActorMcCoy, 1560, 14); //00-1560.AUD	Commerce is our business.
 		Actor_Face_Actor(kActorSteele, kActorMcCoy, true);
-		Actor_Says(kActorSteele, 100, 13);
-		Actor_Says(kActorMcCoy, 1575, 13);
-		Actor_Says(kActorSteele, 120, 15);
+		if (_vm->_cutContent) {
+			Actor_Says(kActorSteele, 90, 13); //01-0090.AUD	Just another stroll in the park.
+		}
+		Actor_Says(kActorSteele, 100, 13); //01-0100.AUD	Unless Tyrell can design a faster brain processor, I’m gonna get pretty damn bored with this gig.
+		Actor_Says(kActorMcCoy, 1575, 13); //00-1575.AUD	You don’t feel bad about juicing a little girl?
+		Actor_Says(kActorSteele, 120, 15); //She was an it, Slim. Don’t you forget that.
+		if (_vm->_cutContent) {
+			Actor_Clue_Acquire(kActorMcCoy, kClueMcCoyRetiredLucy, true, kActorSteele);
+		}
 		Actor_Set_Goal_Number(kActorSteele, kGoalSteeleHFxxGoToSpinner);
 		return true;
 
