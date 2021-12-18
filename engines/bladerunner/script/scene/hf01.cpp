@@ -124,21 +124,52 @@ bool SceneScriptHF01::ClickedOnActor(int actorId) {
 			ADQ_Flush();
 			Actor_Face_Actor(kActorMcCoy, kActorMurray, true);
 			if (!Game_Flag_Query(kFlagHF01MurrayMiaTalk)) {
-				Actor_Says(kActorMcCoy, 1455, 15);
-				Actor_Says(kActorMurray, 40, 13);
-				Actor_Says(kActorMcCoy, 1460, 13);
-				Actor_Says(kActorMurray, 50, 12);
+				Actor_Says(kActorMcCoy, 1455, 15); //00-1455.AUD	You guys still battling it out?
+				// Made it so Mia, Murray and McCoy face the appropriate character when they talk to them. Any other actor face actor code on this page is for that purpose.
+				if (_vm->_cutContent) {
+					Actor_Face_Actor(kActorMurray, kActorMcCoy, true);
+					Actor_Face_Actor(kActorMia, kActorMcCoy, true);
+				}
+				Actor_Says(kActorMurray, 40, 13); // 31-0040.AUD	That's what keeps our marriage alive and kicking, Ray. What can we do you for?
+				Actor_Says(kActorMcCoy, 1460, 13); //00-1460.AUD	The works.
+				if (_vm->_cutContent) {
+					Actor_Face_Actor(kActorMurray, kActorMia, true);
+				}
+				Actor_Says(kActorMurray, 50, 12); //31-0050.AUD	Coming right up.
 				Item_Pickup_Spin_Effect(kModelAnimationLichenDogWrapper, 396, 359);
-				Actor_Face_Heading(kActorMurray, 271, false);
-				Actor_Says(kActorMurray, 60, 12);
+				if (_vm->_cutContent) {
+						Actor_Face_Actor(kActorMurray, kActorMcCoy, true);
+					Delay (1000);
+				} else {
+					Actor_Face_Heading(kActorMurray, 271, false); 
+				}
+				Actor_Says(kActorMurray, 60, 12); //31-0060.AUD	You know anything about politics, Ray? Famous quotes, things like that?
 				Actor_Says(kActorMcCoy, 1465, 15);
 				Actor_Face_Actor(kActorMurray, kActorMcCoy, true);
 				Actor_Says(kActorMurray, 70, 13);
 				Actor_Says(kActorMcCoy, 1470, 14);
 				Actor_Says(kActorMia, 30, kAnimationModeTalk);
+				if (_vm->_cutContent) {
+				Actor_Face_Actor(kActorMurray, kActorMia, true);
+				Actor_Face_Actor(kActorMia, kActorMurray, true);
+				}
 				Actor_Says(kActorMurray, 80, 15);
-				Actor_Says(kActorMia, 50, kAnimationModeTalk);
-				Actor_Says(kActorMurray, 110, 14);
+				// Restored some dialogue for Mia and Murray
+				if (_vm->_cutContent) {
+					Actor_Says(kActorMurray, 90, 15); //31-0090.AUD	Maybe we should consult the Bard. What do you say?
+					Actor_Says(kActorMia, 40, kAnimationModeTalk); //22-0040.AUD	I'd say it's a waste of money. Heh, not to mention the fact that the Bard only does poetry.
+					Actor_Says(kActorMurray, 100, 15); //31-0100.AUD	Ah, right. I forgot.
+					Actor_Says(kActorMia, 50, kAnimationModeTalk); //22-0050.AUD	(snickers) You're forgetting a lot in your old age.
+					Actor_Says(kActorMurray, 110, 14); //31-0110.AUD	Right behind you, lady.
+					Actor_Face_Actor(kActorMurray, kActorMcCoy, true);
+					Actor_Face_Actor(kActorMia, kActorMcCoy, true);
+					Actor_Says(kActorMia, 60, kAnimationModeTalk); //22-0060.AUD	We got a two for one special today, Ray. How about it?
+					Actor_Voice_Over(910, kActorVoiceOver);  //99-0910.AUD	The thought of eating another one of those green-dogs made my stomach roll.
+					Actor_Says(kActorMcCoy, 1475, 18); //00-1475.AUD	No thanks. But I got a question for you guys.
+				} else {
+					Actor_Says(kActorMia, 50, kAnimationModeTalk);
+					Actor_Says(kActorMurray, 110, 14);
+				}
 				Game_Flag_Set(kFlagHF01MurrayMiaTalk);
 			} else {
 				dialogueWithMiaAndMurray();
@@ -459,6 +490,13 @@ void SceneScriptHF01::dialogueWithMiaAndMurray() {
 	if (Actor_Clue_Query(kActorMcCoy, kClueCheese)) {
 		DM_Add_To_List_Never_Repeat_Once_Selected(460, 3, 5, 6); // CHEESE
 	}
+	// Restored the black sedan option.
+	if (_vm->_cutContent) {
+		if (Actor_Clue_Query(kActorMcCoy, kClueCarRegistration1)
+		|| Actor_Clue_Query(kActorMcCoy, kClueCarRegistration3)) {
+			DM_Add_To_List_Never_Repeat_Once_Selected(1130, -1, 3, 8); // BLACK SEDAN
+		}
+	}
 	if (Actor_Clue_Query(kActorMcCoy, kClueLichenDogWrapper)) {
 		DM_Add_To_List_Never_Repeat_Once_Selected(470, -1, 3, 8); // LICHEN DOG WRAPPER
 	}
@@ -470,35 +508,124 @@ void SceneScriptHF01::dialogueWithMiaAndMurray() {
 
 	switch (answer) {
 	case 440: // LUCY PHOTO
+		if (_vm->_cutContent) {
+		Actor_Face_Actor(kActorMurray, kActorMcCoy, true);
+		Actor_Face_Actor(kActorMia, kActorMcCoy, true);
+		}
 		Actor_Says(kActorMcCoy, 1480, 15);
 		Actor_Says(kActorMia, 70, kAnimationModeTalk);
-		Actor_Says(kActorMurray, 120, kAnimationModeTalk);
+		if (_vm->_cutContent) {
+			Actor_Face_Actor(kActorMurray, kActorMia, true);
+			Actor_Face_Actor(kActorMia, kActorMurray, true);
+		}
+			Actor_Says(kActorMurray, 120, kAnimationModeTalk);
+		if (_vm->_cutContent) {
+			Actor_Face_Actor(kActorMurray, kActorMcCoy, true);
+			Actor_Face_Actor(kActorMia, kActorMcCoy, true);
+		}
 		Actor_Says(kActorMcCoy, 1505, 14);
+		if (_vm->_cutContent) {
+			Actor_Face_Actor(kActorMurray, kActorMia, true);
+			Actor_Face_Actor(kActorMia, kActorMurray, true);
+		}
 		Actor_Says(kActorMia, 80, kAnimationModeTalk);
 		Actor_Says(kActorMurray, 130, kAnimationModeTalk);
 		Actor_Says(kActorMia, 90, kAnimationModeTalk);
+		if (_vm->_cutContent) {
+			Actor_Face_Actor(kActorMurray, kActorMcCoy, true);
+			Actor_Face_Actor(kActorMia, kActorMcCoy, true);
+		}
 		Actor_Says(kActorMcCoy, 1510, 12);
 		break;
 
 	case 450: // LUCY
+		if (_vm->_cutContent) {
+			Actor_Face_Actor(kActorMurray, kActorMcCoy, true);
+			Actor_Face_Actor(kActorMia, kActorMcCoy, true);
+		}
 		Actor_Says(kActorMcCoy, 1485, 16);
 		Actor_Says(kActorMia, 100, kAnimationModeTalk);
+		if (_vm->_cutContent) {
+			Actor_Face_Actor(kActorMurray, kActorMia, true);
+			Actor_Face_Actor(kActorMia, kActorMurray, true);
+		}
 		Actor_Says(kActorMurray, 140, 12);
 		Actor_Says(kActorMia, 110, kAnimationModeTalk);
+		if (_vm->_cutContent) {
+			Actor_Face_Actor(kActorMurray, kActorMcCoy, true);
+			Actor_Face_Actor(kActorMia, kActorMcCoy, true);
+		}
 		Actor_Says(kActorMia, 120, kAnimationModeTalk);
 		Actor_Says(kActorMurray, 150, 14);
 		break;
 
 	case 460: // CHEESE
-		Actor_Says(kActorMcCoy, 1490, 13);
-		Actor_Says(kActorMurray, 160, 15);
-		Actor_Says(kActorMia, 130, 13);
-		Actor_Says(kActorMurray, 170, 12);
-		Actor_Says(kActorMurray, 180, 13);
-		Actor_Says(kActorMurray, 190, 14);
-		Actor_Says(kActorMcCoy, 1515, 15);
-		Actor_Says(kActorMurray, 200, kAnimationModeTalk);
-		Actor_Says(kActorMcCoy, 1520, 15);
+		if (_vm->_cutContent) {
+			Actor_Face_Actor(kActorMurray, kActorMcCoy, true);
+			Actor_Face_Actor(kActorMia, kActorMcCoy, true);
+			// Restored some Mia and Murray dialogue. Reworked the conversation so McCoy in a round about way accuses Mia and Murray of dealing illegal substances.
+			// This annoys Mia and Murray and they ignore McCoy for a little bit until they eventually talk to him again.
+		}
+		Actor_Says(kActorMcCoy, 1490, 13); //00-1490.AUD	You know where I could score some cheese, like this stuff?
+		Actor_Says(kActorMurray, 160, 15); //31-0160.AUD	Oy, don't flash that around here!
+		if (_vm->_cutContent) {
+			Actor_Says(kActorMcCoy, 1515, 13);	//00-1515.AUD	Who sells it?
+		} else {
+			Actor_Says(kActorMia, 130, 13); 
+		}
+		Actor_Says(kActorMurray, 170, 13); //31-0170.AUD	Besides, the kids today...
+		Actor_Says(kActorMurray, 180, 12); //31-0180.AUD	just as soon twist a knife in your back side as to ask for chinyen for the tram home.
+		Actor_Says(kActorMurray, 190, 14); //31-0190.AUD	You show that cheese around here, you become a marked man.
+		if (_vm->_cutContent) {
+			Actor_Says(kActorMcCoy, 1365, 15); //00-1365.AUD	I'm not looking to bust the dealer. I just want to know who bought it.
+			Actor_Says(kActorMurray, 310, 13); //31-0310.AUD	McCoy, we've been friends for years. How dare you accuse us?
+			Actor_Says(kActorMcCoy, 940, 13); //00-0940.AUD	I need to ask you--
+		}
+		if (_vm->_cutContent) {
+			Actor_Face_Actor(kActorMurray, kActorMia, true);
+			Actor_Face_Heading(kActorMia, 511, false);
+			Delay (2000);
+			Actor_Says(kActorMcCoy, 3970, 14); //00-3970.AUD	Hey.
+			Delay (1000);
+			Actor_Says(kActorMcCoy, 815, 14); //00-0815.AUD	Listen to me!
+			Actor_Face_Actor(kActorMia, kActorMurray, true);
+			Actor_Says(kActorMia, 210, 12); //22-0210.AUD	Hmph! Is that rude boy talking to us?
+			Actor_Face_Actor(kActorMurray, kActorMia, true);
+			Actor_Says(kActorMurray, 290, 10); //31-0290.AUD	I think he is.
+			Actor_Says(kActorMia, 220, 12); //22-0220.AUD	And after how he's been behaving. Well, surely he can't expect us to help him.
+			Actor_Says(kActorMurray, 300, 11); //31-0300.AUD	For once we're in agreement. 
+			Actor_Says(kActorMurray, 320, 14); //31-0320.AUD	Ah... when I was young we respected our elders.
+			Actor_Face_Actor(kActorMia, kActorMcCoy, true);
+			Actor_Says(kActorMia, 230, 12); //22-0230.AUD	Hmph! No more free ‘dogs for you, young man.
+			Actor_Says(kActorMcCoy, 3910, 16); //00-3910.AUD	You’re lying.
+			Actor_Face_Actor(kActorMia, kActorMurray, true);
+			Actor_Says(kActorMia, 240, 12); //22-0240.AUD	Oh, dear! He caught us in a fib, Murray.
+			Actor_Face_Actor(kActorMurray, kActorMcCoy, true);
+			Actor_Face_Actor(kActorMia, kActorMcCoy, true);
+			if (_vm->_cutContent) {
+				if (Player_Query_Agenda() == kPlayerAgendaSurly || Player_Query_Agenda() == kPlayerAgendaErratic) {
+					Actor_Says(kActorMcCoy, 8519, 14);//00-8519.AUD	What do you say we dish each other the straight goods.
+				} else { 
+					Actor_Says(kActorMcCoy, 6985, 14); //00-6985.AUD	Got the straight scoop for me or what?
+				}
+			}
+			Actor_Says(kActorMurray, 200, kAnimationModeTalk); //31-0200.AUD	Now, we aren't asking for any trouble, Ray. 
+			Actor_Face_Actor(kActorMia, kActorMurray, true);
+			Actor_Says(kActorMia, 130, 12); //22-0130.AUD	He's the police, sweetie.
+			Actor_Face_Actor(kActorMia, kActorMcCoy, true);
+			if (Player_Query_Agenda() == kPlayerAgendaSurly || Player_Query_Agenda() == kPlayerAgendaErratic) {
+				Actor_Says(kActorMcCoy, 4360, 16); //00-4360.AUD	Tell it straight or I'm gonna make sure you get the same as he gets. Full conspiracy, payable for 25.
+			} else {
+				Actor_Says(kActorMcCoy, 1520, 15); //00-1520.AUD	I'm not working Bunco. I just want some information
+			}
+			Actor_Says(kActorMia, 180, 12); //22-0180.AUD	Well, we did hear something, Ray. I hope this won't get anybody into trouble.
+			Actor_Says(kActorMcCoy, 1845, 18); //00-1845.AUD	I’ll have to think about it.
+			Actor_Says(kActorMia, 250, 12); //22-0250.AUD	All right, then. Ray, here's the truth.
+		} else {
+			Actor_Says(kActorMcCoy, 1515, 15); //00-1515.AUD	Who sells it?
+			Actor_Says(kActorMurray, 200, kAnimationModeTalk); //31-0200.AUD	Now, we aren't asking for any trouble, Ray. 
+			Actor_Says(kActorMcCoy, 1520, 15); //00-1520.AUD	I'm not working Bunco. I just want some information
+		}
 		Actor_Says(kActorMurray, 210, 13);
 		Actor_Says(kActorMurray, 220, 13);
 		Actor_Says(kActorMia, 140, 12);
@@ -506,15 +633,49 @@ void SceneScriptHF01::dialogueWithMiaAndMurray() {
 		Actor_Clue_Acquire(kActorMcCoy, kClueSpecialIngredient, false, kActorMurray);
 		break;
 
+	// Restored dialogur for the black sedan option.
+	case 1130: // BLACK SEDAN
+		Actor_Says(kActorMcCoy, 1525, 13); //00-1525.AUD	You ever see a black ground car around here?
+		Actor_Face_Actor(kActorMia, kActorMcCoy, true);
+		Actor_Says(kActorMia, 150, kAnimationModeTalk); //22-0150.AUD	Oh, sure.
+		Actor_Says(kActorMcCoy, 1530, 15); //00-1530.AUD	When?
+		Actor_Says(kActorMia, 160, kAnimationModeTalk); //22-0160.AUD	Well, let's see, er, we saw three this afternoon.
+		Actor_Says(kActorMurray, 250, kAnimationModeTalk); //31-0250.AUD	At least six this morning.
+		Actor_Face_Actor(kActorMurray, kActorMcCoy, true); 
+		Actor_Says(kActorMia, 170, kAnimationModeTalk); //22-0170.AUD	Oh, and yesterday was even busier.
+		Delay (2000);
+		Actor_Says(kActorMcCoy, 1535, 16); //00-1535.AUD	Ah, never mind.
+		break;
+
+
 	case 470: // LICHEN DOG WRAPPER
 		Actor_Says(kActorMcCoy, 1495, 14);
 		Actor_Face_Actor(kActorMurray, kActorMcCoy, true);
 		Actor_Says(kActorMurray, 240, 13);
 		Actor_Face_Actor(kActorMurray, kActorMia, true);
+		if (_vm->_cutContent) {
+			Actor_Face_Heading(kActorMia, 511, false);
+		}
 		break;
 
 	case 480: // DONE
+	if (_vm->_cutContent) {
+		Actor_Face_Actor(kActorMurray, kActorMcCoy, true);
+		Actor_Face_Actor(kActorMia, kActorMcCoy, true);
+		Actor_Says(kActorMcCoy, 8514, 16); //00-8514.AUD	Got anything new to tell me?
+		Actor_Says(kActorMurray, 270, 13); //31-0270.AUD	We haven't heard anything lately. It's like the city's dead or something. 
+		Actor_Face_Actor(kActorMia, kActorMurray, true);
+		Actor_Face_Actor(kActorMurray, kActorMia, true);
+		Actor_Says(kActorMia, 200, 12); //22-0200.AUD	You mean the city's asleep.
+		Actor_Says(kActorMurray, 280, 13); //31-0280.AUD	No! I mean exactly what I said.
+		Actor_Face_Actor(kActorMurray, kActorMcCoy, true);
+		Actor_Face_Actor(kActorMia, kActorMcCoy, true);
+	}
 		Actor_Says(kActorMcCoy, 1500, 16);
+		if (_vm->_cutContent) {
+			Actor_Face_Actor(kActorMurray, kActorMia, true);
+			Actor_Face_Heading(kActorMia, 511, false);
+		}
 		break;
 	}
 }
