@@ -61,6 +61,10 @@ bool AIScriptRachael::Update() {
 				Actor_Set_Goal_Number(kActorRachael, kGoalRachaelAtEndOfAct4);
 				return true;
 		}
+		// Restored the ability to shoot Rachael.
+		if (Global_Variable_Query(kVariableChapter) == 3) {
+			Actor_Set_Targetable(kActorRachael, true);
+		}
 	}
 	return false;
 }
@@ -119,7 +123,12 @@ void AIScriptRachael::ShotAtAndMissed() {
 }
 
 bool AIScriptRachael::ShotAtAndHit() {
-	return false;
+	// Made it so when you shoot Rachael you are taken to Guzzas office and the code for the scene of Guzza getting angry at McCoy for trying to retire Rachael
+	// is in sheet PS04.
+	Player_Set_Combat_Mode(false);
+	Set_Enter(kSetPS04, kScenePS04);
+	Game_Flag_Set(kFlagMcCoyShotRachael);
+	return true;
 }
 
 void AIScriptRachael::Retired(int byActorId) {

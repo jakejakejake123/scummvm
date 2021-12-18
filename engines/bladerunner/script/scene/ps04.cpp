@@ -155,6 +155,23 @@ void SceneScriptPS04::PlayerWalkedIn() {
 	if (Actor_Query_Which_Set_In(kActorGuzza) == kSetPS04) {
 		Actor_Face_Actor(kActorMcCoy, kActorGuzza, true);
 	}
+	// Code for the scene where Guzza gets angry at you for retiring Rachael.
+	if (Game_Flag_Query(kFlagMcCoyShotRachael)) {
+		Actor_Put_In_Set(kActorGuzza, kSetPS04);
+		Actor_Set_At_XYZ(kActorGuzza, -728.0f, -354.0f, 1090.0f, 150);
+		Actor_Change_Animation_Mode(kActorGuzza, 53);
+		Actor_Face_Actor(kActorGuzza, kActorMcCoy, true);
+		Actor_Face_Actor(kActorMcCoy, kActorGuzza, true);
+		Actor_Says(kActorGuzza, 80, 31); //04-0080.AUD	Tyrell's niece! Are you out of your cotton-picking mind?
+		Actor_Says(kActorMcCoy, 2725, 14); //00-2725.AUD	Bring her in! We'll do a bone marrow test, you'll see.
+		Actor_Says(kActorMcCoy, 2720, 15); //00-2720.AUD	She's a Rep. I'm telling you Nexus-6!
+		Actor_Says(kActorGuzza, 90, 33); //04-0090.AUD	So what? She's private property.
+		Actor_Says(kActorGuzza, 100, 32); //04-0100.AUD	Did you even stop to think about what her last name was, idiot?
+		Actor_Says(kActorGuzza, 110, 31); //04-0110.AUD	I can't save you, McCoy. Bryant wants your walking papers and I can't blame him.
+		Actor_Says(kActorGuzza, 120, 34); //04-0120.AUD	I don't want to ever see your sorry ass again.
+		Actor_Set_Goal_Number(kActorMcCoy, kGoalMcCoyArrested);
+	}
+
 	//return false;
 }
 

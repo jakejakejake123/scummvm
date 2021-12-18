@@ -681,7 +681,7 @@ enum Flags {
 	kFlagHowieLeeAnimation1                   = 239,
 	kFlagCT11Visited						  = 240,
 	kFlagCT09DeskClerkTalk2					  = 241,
-	// 242 is never used
+	kFlagMcCoyShotRachael					  = 242,
 	// 243 is never used
 	// 244 is never used
 	// 245 is never used
