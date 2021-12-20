@@ -258,20 +258,44 @@ void SceneScriptNR05::talkToBartender() {
 		Game_Flag_Set(kFlagNR05BartenderTalk1);
 		Actor_Change_Animation_Mode(kActorMcCoy, 75);
 		Global_Variable_Increment(kVariableMcCoyDrinks, 1);
+		// Made it so you lose 5 chinyen when the bartender gives you a drink.
+		if (_vm->_cutContent) {
+			if (Query_Difficulty_Level() != kGameDifficultyEasy) {
+				Global_Variable_Decrement(kVariableChinyen, 5);
+			}
+		}
+
 	} else if (!Game_Flag_Query(kFlagNR05BartenderTalk2)) {
 		Actor_Says(kActorMcCoy, 3475, 17);
 		Actor_Says(kActorEarlyQBartender, 20, 23);
 		Game_Flag_Set(kFlagNR05BartenderTalk2);
 		Actor_Change_Animation_Mode(kActorMcCoy, 75);
 		Global_Variable_Increment(kVariableMcCoyDrinks, 1);
+		if (_vm->_cutContent) {
+			if (Query_Difficulty_Level() != kGameDifficultyEasy) {
+				Global_Variable_Decrement(kVariableChinyen, 5);
+			}
+		}
+
 	} else {
 		Actor_Says(kActorMcCoy, 3480, 19);
 		Actor_Says(kActorEarlyQBartender, 30, 12);
 		Actor_Says(kActorMcCoy, 3485, kAnimationModeTalk);
 		Actor_Says(kActorEarlyQBartender, 40, 13);
+		// Added in some dialogue.
+		if (_vm->_cutContent) {
+			Actor_Says(kActorMcCoy, 3490, kAnimationModeTalk); //00-3490.AUD	Here’s what I need.
+			Actor_Says(kActorMcCoy, 3330, kAnimationModeTalk); //00-3330.AUD	Single orange. Straight up.
+		}
 		Actor_Change_Animation_Mode(kActorEarlyQBartender, 23);
 		Actor_Change_Animation_Mode(kActorMcCoy, 75);
 		Global_Variable_Increment(kVariableMcCoyDrinks, 1);
+		if (_vm->_cutContent) {
+			if (Query_Difficulty_Level() != kGameDifficultyEasy) {
+				Global_Variable_Decrement(kVariableChinyen, 5);
+			}
+		}
+
 	}
 }
 
@@ -286,8 +310,16 @@ void SceneScriptNR05::talkToEarlyQ() {
 	if (!Game_Flag_Query(kFlagNR05EarlyQTalk)) {
 		Actor_Says(kActorMcCoy, 8513, kAnimationModeTalk);
 		Actor_Says(kActorEarlyQ, 360, kAnimationModeTalk);
-		Actor_Says(kActorMcCoy, 3495, 11);
-		Actor_Says(kActorEarlyQ, 370, 15);
+		// Made it so McCoy only mentions Hanoi giving him a hard time only if he interacted with McCoy.
+		if (_vm->_cutContent) {
+			if (Game_Flag_Query(kFlagHanoiTalk)) {
+				Actor_Says(kActorMcCoy, 3495, 11); //00-3495.AUD	Your man gave me a hard time out there.
+				Actor_Says(kActorEarlyQ, 370, 15); //18-0370.AUD	I like Hanoi but I can’t deny his sphincter is a little tight.
+			}
+		} else {	
+			Actor_Says(kActorMcCoy, 3495, 11); //00-3495.AUD	Your man gave me a hard time out there.
+			Actor_Says(kActorEarlyQ, 370, 15); //18-0370.AUD	I like Hanoi but I can’t deny his sphincter is a little tight.
+		}
 		Actor_Says(kActorMcCoy, 3500, 17);
 		Actor_Says(kActorEarlyQ, 380, 13);
 		Game_Flag_Set(kFlagNR05EarlyQTalk);
@@ -304,23 +336,35 @@ void SceneScriptNR05::talkToEarlyQ() {
 		if (Actor_Clue_Query(kActorMcCoy, kClueLucy)) {
 			DM_Add_To_List_Never_Repeat_Once_Selected(900, 5, 6, 5); // LUCY
 		}
-		if (Actor_Clue_Query(kActorMcCoy, kClueDektorasDressingRoom)) {
-			// TODO A bug? kClueDektorasDressingRoom is acquired from EarlyQ
-			// at his office (nr04) while being threatened by McCoy.
-			// At which point EarlyQ already tells McCoy who the people on the photograph are.
-			// It makes no sense that McCoy will next find EarlyQ at the VIP area (this area, nr05)
-			// and casually ask him about who the woman is in this photo.
-			// (McCoy won't be able to even find EarlyQ there again).
-			// Maybe it's another photo of Dektora needed here
-			// --- Animoid Row? Why would McCoy suspect that woman?
-			// --- Hawker's Bar? Can we find a Dektora pic in SHP resources?
-			DM_Add_To_List_Never_Repeat_Once_Selected(910, 5, 5, 5); // BLOND WOMAN
+		// Made it so the blonde woman option is now available if you have either the China bar photo or the woman in animoid row photo.
+			if (_vm->_cutContent) {
+				if (Actor_Clue_Query(kActorMcCoy, kClueChinaBar)
+				|| (Actor_Clue_Query(kActorMcCoy, kClueWomanInAnimoidRow))) {
+				// TODO A bug? kClueDektorasDressingRoom is acquired from EarlyQ
+				// at his office (nr04) while being threatened by McCoy.
+				// At which point EarlyQ already tells McCoy who the people on the photograph are.
+				// It makes no sense that McCoy will next find EarlyQ at the VIP area (this area, nr05)
+				// and casually ask him about who the woman is in this photo.
+				// (McCoy won't be able to even find EarlyQ there again).
+				// Maybe it's another photo of Dektora needed here
+				// --- Animoid Row? Why would McCoy suspect that woman?
+				// --- Hawker's Bar? Can we find a Dektora pic in SHP resources?
+				DM_Add_To_List_Never_Repeat_Once_Selected(910, 5, 5, 5); // BLOND WOMAN
+			}
 		}
 	}
 
 	if (!Dialogue_Menu_Query_List_Size()) {
-		Actor_Says(kActorMcCoy, 3520, kAnimationModeTalk);
-		Actor_Says(kActorEarlyQ, 730, kAnimationModeTalk);
+		Actor_Says(kActorMcCoy, 3520, kAnimationModeTalk); //00-3520.AUD	Hey, Early.
+		// Added in some banter dialogue. 
+		if (_vm->_cutContent) {
+			Actor_Says(kActorMcCoy, 8514, kAnimationModeTalk); //00-8514.AUD	Got anything new to tell me?
+			Actor_Says(kActorEarlyQ, 710, kAnimationModeTalk); //18-0710.AUD	The only thing I’ve heard lately is that ol’ moan of pleasure from an ultra-vixen, if you know what I mean.
+			Actor_Says(kActorMcCoy, 3910, kAnimationModeTalk); //00-3910.AUD	You’re lying.
+			Actor_Says(kActorEarlyQ, 740, kAnimationModeTalk); //18-0740.AUD	Hey, would this face lie to you?
+			Actor_Says(kActorMcCoy, 5150, kAnimationModeTalk); //00-5150.AUD	One more thing.
+		}
+		Actor_Says(kActorEarlyQ, 730, kAnimationModeTalk); //18-0730.AUD	I’m working right now, General. Ask me later.
 		Actor_Face_Heading(kActorEarlyQ, 849, false);
 		return;
 	}
@@ -346,6 +390,12 @@ void SceneScriptNR05::talkToEarlyQ() {
 		Actor_Says(kActorEarlyQ, 500, 13);
 		Actor_Says(kActorMcCoy, 3545, 15);
 		Actor_Says(kActorEarlyQ, 520, 12);
+		// Added in this flag so when McCoy shows Early Q the photo of Dektora after talking to Early about the jewelry Early mentions Dektora being the one that he gave the jewelry to.
+		// Early slipped up by saying Hecuba was the one he gave the jewelry after looking at the photo of Dektora whereas if you did not ask him about the jewelry he does not
+		// mention that therefore McCoy has no reason not press him into telling the truth and Early outright denies knowing the woman in the photo.
+		if (_vm->_cutContent) {
+			Game_Flag_Set(kFlagEarlyQTalkJewelry);
+		}
 		Actor_Face_Heading(kActorEarlyQ, 849, false);
 		break;
 
@@ -364,7 +414,7 @@ void SceneScriptNR05::talkToEarlyQ() {
 	case 910: // BLOND WOMAN
 		Actor_Says(kActorMcCoy, 3515, 14);
 		Actor_Modify_Friendliness_To_Other(kActorEarlyQ, kActorMcCoy, -1);
-		if (Actor_Clue_Query(kActorMcCoy, kClueGrigoriansNote)) { // cut content? this clue is unobtanium
+		if (Game_Flag_Query(kFlagEarlyQTalkJewelry)) { 
 			// A BUG?
 			// TODO why is Grigorian's Note needed here, for EarlyQ to reveal who Hecuba is?
 			// TODO could CrazysInvolvement also do here?
@@ -386,6 +436,10 @@ void SceneScriptNR05::talkToEarlyQ() {
 			Actor_Says(kActorMcCoy, 3570, 14);
 			Actor_Says(kActorEarlyQ, 620, 15);
 			Actor_Says(kActorMcCoy, 3575, 13);
+			// Added in the this Early interview clue where he mentions Hecuba is Dektora.
+			if (_vm->_cutContent) {
+				Actor_Clue_Acquire(kActorMcCoy, kClueEarlyInterviewB1, true, kActorEarlyQ);
+			}
 		} else {
 			// Early Q denies recongnizing Dektora
 			Actor_Says(kActorEarlyQ, 640, 13);
