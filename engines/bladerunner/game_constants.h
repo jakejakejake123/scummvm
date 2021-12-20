@@ -699,7 +699,7 @@ enum Flags {
 	kFlagMcCoyInHysteriaHall                  = 257,
 	kFlagMcCoyInBradburyBuilding              = 258,
 	kFlagMcCoyInUnderground                   = 259,
-	// 260 is never used
+	kFlagCrazylegsTalkWoman					  = 260,
 	kFlagMcCoyInTyrellBuilding                = 261,
 	kFlagBB01toBB02                           = 262,
 	kFlagBB02toBB01                           = 263,

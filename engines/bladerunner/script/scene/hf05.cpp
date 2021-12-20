@@ -298,6 +298,10 @@ void SceneScriptHF05::ActorChangedGoal(int actorId, int newGoal, int oldGoal, bo
 }
 
 void SceneScriptHF05::PlayerWalkedIn() {
+	// Made it so McCoy has his gun holstered when he enters Crazys store.
+	if (_vm->_cutContent) {
+		Player_Set_Combat_Mode(false);
+	}
 	if (Game_Flag_Query(kFlagHF01TalkToLovedOne)) {
 		int affectionTowardsActor = getAffectionTowardsActor();
 		if (Game_Flag_Query(kFlagHF01TalkToLovedOne)
@@ -381,14 +385,39 @@ void SceneScriptHF05::talkWithCrazyLegs2() {
 	Actor_Face_Actor(kActorCrazylegs, kActorMcCoy, true);
 	Actor_Face_Actor(kActorMcCoy, kActorCrazylegs, true);
 	Actor_Says(kActorCrazylegs, 370, kAnimationModeTalk);
-	Actor_Says(kActorMcCoy, 1855, kAnimationModeTalk);
-	Actor_Says(kActorCrazylegs, 380, 12);
-	Actor_Says(kActorCrazylegs, 390, 14);
-	Actor_Says(kActorCrazylegs, 400, 15);
-	Actor_Says(kActorCrazylegs, 410, 16);
-	Actor_Says(kActorMcCoy, 1860, kAnimationModeTalk);
-	Actor_Says(kActorCrazylegs, 420, kAnimationModeTalk);
-	Actor_Says(kActorMcCoy, 1865, kAnimationModeTalk);
+	// Made it so when you enter Crazys store a second time if McCoy is surly or erratic he is mean towards Crazylegs. This annoys Crazylegs and he leaves the room.
+	if (_vm->_cutContent) {
+		if (Player_Query_Agenda() == kPlayerAgendaSurly
+		|| (Player_Query_Agenda() == kPlayerAgendaErratic)) {	
+			Actor_Says(kActorCrazylegs, 380, 14); //09-0380.AUD	You’ve been thinking about the Caddy, haven’t you?
+			Actor_Says(kActorMcCoy, 7815, kAnimationModeTalk); //00-7815.AUD	No.
+			Actor_Says(kActorCrazylegs, 990, 16); //09-0990.AUD	I’m looking to make deals, you know?
+			Actor_Says(kActorCrazylegs, 980, 14); //09-0980.AUD	You want the Caddy or not?
+			Actor_Says(kActorMcCoy, 1875, kAnimationModeTalk); //00-1875.AUD	I wouldn’t drag that bucket of bolts if you paid me.
+			Actor_Says(kActorCrazylegs, 970, 16); //09-0970.AUD	Hey, I’d never turn away a customer but… you’re getting to be a pain in the ass.
+			Actor_Says(kActorMcCoy, 2660, kAnimationModeTalk); //00-2660.AUD	That breaks my heart.
+			Actor_Says(kActorCrazylegs, 1000, 16); //09-1000.AUD	I got customers on the line, so I ain’t got time to chit chat.
+			Actor_Set_Goal_Number(kActorCrazylegs, kGoalCrazyLegsLeavesShowroom);
+		} else {
+			Actor_Says(kActorMcCoy, 1855, kAnimationModeTalk);
+			Actor_Says(kActorCrazylegs, 380, 12);
+			Actor_Says(kActorCrazylegs, 390, 14);
+			Actor_Says(kActorCrazylegs, 400, 15);
+			Actor_Says(kActorCrazylegs, 410, 16);
+			Actor_Says(kActorMcCoy, 1860, kAnimationModeTalk);
+			Actor_Says(kActorCrazylegs, 420, kAnimationModeTalk);
+			Actor_Says(kActorMcCoy, 1865, kAnimationModeTalk);
+		}
+	} else {
+		Actor_Says(kActorMcCoy, 1855, kAnimationModeTalk);
+		Actor_Says(kActorCrazylegs, 380, 12);
+		Actor_Says(kActorCrazylegs, 390, 14);
+		Actor_Says(kActorCrazylegs, 400, 15);
+		Actor_Says(kActorCrazylegs, 410, 16);
+		Actor_Says(kActorMcCoy, 1860, kAnimationModeTalk);
+		Actor_Says(kActorCrazylegs, 420, kAnimationModeTalk);
+		Actor_Says(kActorMcCoy, 1865, kAnimationModeTalk);
+	}
 }
 
 void SceneScriptHF05::dialogueWithCrazylegs1() {
@@ -422,7 +451,20 @@ void SceneScriptHF05::dialogueWithCrazylegs1() {
 		DM_Add_To_List_Never_Repeat_Once_Selected(1200, 5, 5, 3); // WOMAN'S PHOTO
 	}
 #else
-	if ((Actor_Clue_Query(kActorMcCoy, kClueDektorasDressingRoom)
+// Made it so if you have any photo of Dektora you are able to show it to Crazylegs and not just the dressing room photo. Also this option will only be available
+// if you seleced the woman option earlier since Crazylegs describes Dektora in that option and it would make no sense for him to do that if you showed him the photo.
+	if (_vm->_cutContent) {
+		if (Game_Flag_Query(kFlagCrazylegsTalkWoman)) {
+			if (Actor_Clue_Query(kActorMcCoy, kClueChinaBar)
+				|| Actor_Clue_Query(kActorMcCoy, kClueDektorasDressingRoom)
+				|| Actor_Clue_Query(kActorMcCoy, kClueWomanInAnimoidRow)
+				|| Actor_Clue_Query(kActorMcCoy, kClueLucyWithDektora)
+				|| Actor_Clue_Query(kActorMcCoy, kClueOuterDressingRoom)
+				) {
+				DM_Add_To_List_Never_Repeat_Once_Selected(1200, 5, 5, 3); // WOMAN'S PHOTO
+			}
+		}
+	} else if ((Actor_Clue_Query(kActorMcCoy, kClueDektorasDressingRoom)
 	    && Actor_Clue_Query(kActorMcCoy, kClueCrazylegsInterview1))
 	) {
 		// kClueDektorasDressingRoom is acquired from EarlyQ at his office (nr04)
@@ -468,7 +510,12 @@ void SceneScriptHF05::dialogueWithCrazylegs1() {
 		Actor_Says(kActorMcCoy, 1880, 15);
 		Actor_Says(kActorCrazylegs, 490, kAnimationModeTalk);
 		Actor_Says(kActorMcCoy, 1885, kAnimationModeTalk);
-		Actor_Says(kActorCrazylegs, 500, 16);
+		Actor_Says(kActorCrazylegs, 500, 16); //09-0500.AUD	You can take it anyway you want. Just don’t take it for a test-drive in the Fourth Sector.
+		// Added in some banter dialogue.
+		if (_vm->_cutContent) {
+			Actor_Says(kActorMcCoy, 8615, kAnimationModeTalk);	//00-8615.AUD	Heard anything on the street?
+			Actor_Says(kActorCrazylegs, 1150, kAnimationModeTalk); //09-1150.AUD	Only thing I know is that the best deals you can make are right in this showroom.
+	}
 		return;
 	}
 
@@ -504,8 +551,13 @@ void SceneScriptHF05::dialogueWithCrazylegs1() {
 		Actor_Says(kActorMcCoy, 1945, -1);
 		// CrazyLegs cuts his sentence short here. He is not interrupted.
 		Actor_Says(kActorCrazylegs, 560, 15);
-		Actor_Says(kActorCrazylegs, 570, 16);
-		Actor_Says(kActorMcCoy, 1950, 17);
+		Actor_Says(kActorCrazylegs, 570, 16); //09-0570.AUD	Hey, they came to me first. I didn’t go to them.
+		// Added in some dialogue.
+		if (_vm->_cutContent) {
+			Actor_Says(kActorMcCoy, 3910, 16); //00-3910.AUD	You’re lying.
+			Actor_Says(kActorCrazylegs, 1170, 14); //09-1170.AUD	I might lie about a sticker price but not about this.
+		}
+		Actor_Says(kActorMcCoy, 1950, 17); //00-1950.AUD	Unscrupulous businessman, eh?
 		dialogueWithCrazylegs2();
 		break;
 
@@ -525,6 +577,8 @@ void SceneScriptHF05::dialogueWithCrazylegs1() {
 		Actor_Says(kActorMcCoy, 2015, 14);
 		Actor_Says(kActorCrazylegs, 700, 15);
 		Actor_Says(kActorMcCoy, 2020, 18);
+		// Inserted a flag to make the womans photo option available.
+		Game_Flag_Set(kFlagCrazylegsTalkWoman);
 		break;
 
 	case 1200: // WOMAN'S PHOTO
@@ -536,14 +590,29 @@ void SceneScriptHF05::dialogueWithCrazylegs1() {
 		break;
 
 	case 1210: // LUCY'S PHOTO
-		Actor_Says(kActorMcCoy, 1905, 23);
+		// Added in some dialogue.
+		if (_vm->_cutContent) {
+			Actor_Says(kActorMcCoy, 5600, 13); //00-5600.AUD	Let me ask you something.
+			Actor_Says(kActorCrazylegs, 1140, 14); //09-1140.AUD	You can bet I’ve heard something you might be interested in.
+		}
+		Actor_Says(kActorMcCoy, 1905, 23); //00-1905.AUD	How about this girl. She look familiar?
 		Actor_Says(kActorCrazylegs, 740, 14);
 		Actor_Says(kActorMcCoy, 2030, 13);
 		Actor_Says(kActorCrazylegs, 750, 15);
 		Actor_Says(kActorMcCoy, 2035, 18);
 		Actor_Says(kActorCrazylegs, 760, 16);
-		Actor_Says(kActorCrazylegs, 770, kAnimationModeTalk);
-		Actor_Says(kActorMcCoy, 2040, kAnimationModeIdle);
+		Actor_Says(kActorCrazylegs, 770, kAnimationModeTalk); //09-0770.AUD	She looks like the kind of girl you see there all the time.
+		if (_vm->_cutContent) {
+			if (Player_Query_Agenda() == kPlayerAgendaSurly 
+			|| Player_Query_Agenda() == kPlayerAgendaErratic) {
+				Actor_Says(kActorMcCoy, 8640, 18); //00-8640.AUD	That's useless.
+				Actor_Says(kActorCrazylegs, 1180, kAnimationModeTalk);	//	09-1180.AUD	What do you expect? I sell cars for a living.
+			} else {
+				Actor_Says(kActorMcCoy, 2040, kAnimationModeIdle);
+			}	
+		} else {				
+			Actor_Says(kActorMcCoy, 2040, kAnimationModeIdle);
+		}
 		break;
 
 	case 1220: // GRIGORIAN
@@ -605,7 +674,11 @@ void SceneScriptHF05::dialogueWithCrazylegs1() {
 			Actor_Says(kActorMcCoy, 2105, kAnimationModeTalk);
 			Actor_Says(kActorCrazylegs, 950, 15);
 			Actor_Says(kActorMcCoy, 2110, kAnimationModeIdle);
-			Actor_Says(kActorCrazylegs, 960, 16);
+			Actor_Says(kActorCrazylegs, 960, 16); //09-0960.AUD	Yeah. Pretty scary. But, heck, I never turn away a customer.
+			// Made it so you receive the Crazylegs interview 2 clue if Clovis bought the car. 
+			if (_vm->_cutContent) {
+				Actor_Clue_Acquire(kActorMcCoy, kClueCrazylegsInterview2, true, kActorCrazylegs);
+			}
 		}
 		break;
 	}
@@ -632,6 +705,10 @@ void SceneScriptHF05::dialogueWithCrazylegs2() { // Restored feature - Original:
 		Actor_Says(kActorMcCoy, 1990, 17);
 		Actor_Says(kActorCrazylegs, 600, 16);
 		Actor_Says(kActorMcCoy, 1995, kAnimationModeTalk);
+		// Made it so you receive the Crazylegs grovels clue.
+		if (_vm->_cutContent) {
+			Actor_Clue_Acquire(kActorMcCoy, kClueCrazylegGrovels, true, kActorCrazylegs);
+		}
 		Game_Flag_Set(kFlagCrazylegsArrested);
 		Actor_Put_In_Set(kActorCrazylegs, kSetPS09);
 		// This XYZ is awry (won't show Crazylegs inside a cell or at all in the PS09 scene)
