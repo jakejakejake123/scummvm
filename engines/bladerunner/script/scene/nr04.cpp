@@ -99,7 +99,12 @@ bool SceneScriptNR04::ClickedOn3DObject(const char *objectName, bool a2) {
 					Actor_Voice_Over(1560, kActorVoiceOver);
 					Actor_Voice_Over(1570, kActorVoiceOver);
 					Actor_Voice_Over(1580, kActorVoiceOver);
-					Actor_Voice_Over(1590, kActorVoiceOver);
+					Actor_Voice_Over(1590, kActorVoiceOver); //99-1590.AUD	for more money than I’d see, if I retired a dozen Reps.
+					// Added in a couple of lines/
+					if (_vm->_cutContent) {
+						Actor_Voice_Over(1600, kActorVoiceOver); //99-1600.AUD	I was pretty sure Early kept at least two sets of books…
+						Actor_Voice_Over(1610, kActorVoiceOver); //99-1610.AUD	but I didn’t have time to go through it all.
+					}
 				} else {
 					Actor_Says(kActorMcCoy, 8580, kAnimationModeTalk);
 				}
@@ -142,6 +147,12 @@ bool SceneScriptNR04::ClickedOnActor(int actorId) {
 		Actor_Voice_Over(1660, kActorVoiceOver);
 		Actor_Voice_Over(1670, kActorVoiceOver);
 		Actor_Voice_Over(1680, kActorVoiceOver);
+		// Added in some code so you can loot Early Qs body after he dies and receive the Dektoras dressing room photo.
+		if (_vm->_cutContent && !Actor_Clue_Query(kActorMcCoy, kClueDektorasDressingRoom)) {
+			Delay (1000);
+			Actor_Clue_Acquire(kActorMcCoy, kClueDektorasDressingRoom, true, kActorEarlyQ);
+			Item_Pickup_Spin_Effect(kModelAnimationPhoto, 173, 321);
+		}
 		return true;
 	}
 	return false;
@@ -283,6 +294,10 @@ void SceneScriptNR04::ActorChangedGoal(int actorId, int newGoal, int oldGoal, bo
 			Actor_Says(kActorMcCoy, 3440, kAnimationModeTalk);
 			Actor_Says(kActorEarlyQ, 280, 30);
 			Actor_Says(kActorMcCoy, 3445, kAnimationModeTalk);
+			// Added in a clue.
+			if (_vm->_cutContent) {
+				Actor_Clue_Acquire(kActorMcCoy, kClueEarlyInterviewB2, true, kActorEarlyQ);
+			}
 			Actor_Set_Goal_Number(kActorEarlyQ, kGoalEarlyQNR04AskForDisk);
 			//return true;
 			break;
@@ -345,8 +360,15 @@ void SceneScriptNR04::dialogueWithEarlyQ() {
 		Actor_Says(kActorEarlyQ, 300, kAnimationModeTalk);
 		Actor_Change_Animation_Mode(kActorMcCoy, kAnimationModeIdle);
 		Actor_Change_Animation_Mode(kActorEarlyQ, kAnimationModeIdle);
-		Actor_Says(kActorEarlyQ, 310, kAnimationModeTalk);
-		ADQ_Add(kActorMcCoy, 3450, kAnimationModeTalk);
+		Actor_Says(kActorEarlyQ, 310, kAnimationModeTalk); //18-0310.AUD	And don’t you worry. I’ll be keeping my nose clean from now on.
+		// Added in some lines.
+		if (_vm->_cutContent) {
+			Actor_Says(kActorMcCoy, 3450, kAnimationModeTalk);	//	00-3450.AUD	It ain’t your nose I’m worried about.	
+			Actor_Says(kActorEarlyQ, 410, kAnimationModeTalk); // 18-0410.AUD	Sorry, General. I’ve got a major crisis backstage. One of my girls ran full steam into a pencil and we’re fresh out of tampons.
+			ADQ_Add(kActorMcCoy, 3525, kAnimationModeTalk); //00-3525.AUD	Ouch.
+		} else {
+			ADQ_Add(kActorMcCoy, 3450, kAnimationModeTalk);	///	00-3450.AUD	It ain’t your nose I’m worried about.
+		}
 		Actor_Set_Targetable(kActorEarlyQ, false);
 		Actor_Set_Goal_Number(kActorEarlyQ, kGoalEarlyQNR04Leave);
 		Actor_Clue_Lose(kActorMcCoy, kClueEarlyQsClub);

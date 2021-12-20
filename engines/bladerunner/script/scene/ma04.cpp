@@ -261,6 +261,23 @@ void SceneScriptMA04::ActorChangedGoal(int actorId, int newGoal, int oldGoal, bo
 }
 
 void SceneScriptMA04::PlayerWalkedIn() {
+	// Made it so when McCoy is drugged and appears in his apartment these unused lines play. McCoy then appears back in nightclub row since the player
+	// can not use the spinner since it is in nightclub row. McCoy had to walk all the way back to nightclub row. 
+	if (_vm->_cutContent) {
+		if (Game_Flag_Query(kFlagNR01McCoyIsDrugged)) {
+			Actor_Change_Animation_Mode(kActorMcCoy, kAnimationModeIdle);
+			Actor_Says(kActorVoiceOver, 3560, kAnimationModeTalk); //99-3560.AUD	Ugh. This was all too familiar territory. Jackhammers were drilling through my brain and my stomach felt like it had been bathed in battery acid.	
+			Actor_Says(kActorVoiceOver, 3580, kAnimationModeTalk); //99-3580.AUD	I couldn’t remember how I got home, but it was damn sure a miracle I’d made it at all.
+			Actor_Says(kActorVoiceOver, 3590, kAnimationModeTalk); //99-3590.AUD	I don’t know if somebody had slipped me a mickey or what…	
+			Actor_Says(kActorVoiceOver, 3600, kAnimationModeTalk); //99-3600.AUD	but whatever it was I was sure as hell paying the price.	 
+			Actor_Says(kActorVoiceOver, 3610, kAnimationModeTalk); //99-3610.AUD	Something inside told me that if I made a hash out of things any more…	
+			Actor_Says(kActorVoiceOver, 3620, kAnimationModeTalk); //99-3620.AUD	the next price I paid would probably be my life.
+			Game_Flag_Reset(kFlagNR01McCoyIsDrugged);
+			Set_Enter(kSceneNR01, kSceneNR01);
+			Scene_Exits_Enable();
+			Player_Gains_Control();
+		}
+	}
 	if (Game_Flag_Query(kFlagMA04McCoySleeping)) {
 		Player_Gains_Control();
 	}

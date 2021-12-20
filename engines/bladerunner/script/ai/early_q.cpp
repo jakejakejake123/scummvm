@@ -389,10 +389,20 @@ bool AIScriptEarlyQ::GoalChanged(int currentGoalNumber, int newGoalNumber) {
 		Actor_Says(kActorEarlyQ, 10, kAnimationModeTalk);
 		Actor_Says(kActorEarlyQ, 20, kAnimationModeTalk);
 		Actor_Clue_Lose(kActorMcCoy, kClueEarlyQsClub);
-		Scene_Exits_Enable();
-		Player_Gains_Control();
-		Game_Flag_Set(kFlagNR01McCoyIsDrugged);
-		Actor_Set_Goal_Number(kActorHanoi, kGoalHanoiThrowOutMcCoy);
+		// Made it so when McCoy is drugged by Early Q McCoy now appears in his apartment.
+		if (_vm->_cutContent) {
+			Music_Stop(1u);
+			Game_Flag_Set(kFlagNR01McCoyIsDrugged);
+			Set_Enter(kSceneMA04, kSceneMA04);
+			Scene_Exits_Enable();
+			Player_Gains_Control();
+		}
+		if (!_vm->_cutContent) {
+			Scene_Exits_Enable();
+			Player_Gains_Control();
+			Game_Flag_Set(kFlagNR01McCoyIsDrugged);
+			Actor_Set_Goal_Number(kActorHanoi, kGoalHanoiThrowOutMcCoy);
+		}
 		break;
 
 	case kGoalEarlyQNR04HandDrink:
