@@ -37,6 +37,15 @@ void SceneScriptUG03::InitializeScene() {
 	Scene_Exit_Add_2D_Exit(0,  46, 137, 131, 296, 0);
 	Scene_Exit_Add_2D_Exit(1, 559, 141, 639, 380, 1);
 
+	// Made it so Holloway appears in the set but offscreen for the scene where he tells McCoy about his incept photo. This is because Holloway is supposed to be lying down and doesn't have a lying down pose or animation 
+	// so to circumvent this he will appear offscreen.
+	if (_vm->_cutContent) {
+		if (Global_Variable_Query(kVariableChapter) == 3) {
+			Actor_Put_In_Set(kActorHolloway, kSetUG03);
+			Actor_Set_At_XYZ(kActorHolloway, 4.22f, -1.37f, -925.0f, 750);
+		}
+	}
+
 	Ambient_Sounds_Add_Looping_Sound(kSfxSTMLOOP7, 15, 0, 1);
 	Ambient_Sounds_Add_Looping_Sound(kSfxUGBED1,   40, 0, 1);
 	Ambient_Sounds_Add_Looping_Sound(kSfxUGBED2,   40, 0, 1);
@@ -79,6 +88,11 @@ void SceneScriptUG03::SceneLoaded() {
 		Unclickable_Object("CHAIR_STRAPLEGRIGHT");
 	}
 #endif // BLADERUNNER_ORIGINAL_BUGS
+	//Added in the Bakers badge clue to the set.
+	if (_vm->_cutContent &&
+		!Actor_Clue_Query(kActorMcCoy, kClueBakersBadge)) {
+		Item_Add_To_World(kItemBakersBadge, kModelAnimationBadge, kSetUG03, -158.78, 0.25, -39.55, 0, 12, 12, false, true, false, true);
+	}
 }
 
 bool SceneScriptUG03::MouseClick(int x, int y) {
@@ -123,7 +137,17 @@ bool SceneScriptUG03::ClickedOnActor(int actorId) {
 }
 
 bool SceneScriptUG03::ClickedOnItem(int itemId, bool a2) {
-	return false;
+	//Code for picking up Bakers badge.
+	if (itemId == kItemBakersBadge) {
+		if (!Loop_Actor_Walk_To_Item(kActorMcCoy, kItemBakersBadge, 12, true, false)) {
+			Actor_Face_Item(kActorMcCoy, kItemBakersBadge, true);
+			Actor_Clue_Acquire(kActorMcCoy, kClueBakersBadge, true, -1);
+			Item_Pickup_Spin_Effect(kModelAnimationBadge, 13, 298);
+			Item_Remove_From_World(kItemBakersBadge);
+			Actor_Says(kActorMcCoy, 8855, 12); //00-8855.AUD	Baker's badge.
+		}
+	}			
+	return true;
 }
 
 bool SceneScriptUG03::ClickedOnExit(int exitId) {
@@ -164,6 +188,39 @@ void SceneScriptUG03::ActorChangedGoal(int actorId, int newGoal, int oldGoal, bo
 }
 
 void SceneScriptUG03::PlayerWalkedIn() {
+	//Code for the scene where McCoy confronts a dying Holloway and he shows McCoy the incept photo.
+	if (_vm->_cutContent) {
+		if (Global_Variable_Query(kVariableChapter) == 3) {
+			if (!Game_Flag_Query(kFlagHollowayTalk)) {
+				Delay (1000);
+				Actor_Face_Heading(kActorMcCoy, 511, false);
+				Actor_Says (kActorHolloway, 0, kAnimationModeTalk); //33-0000.AUD	(Coughs) You're a Rep, McCoy. I've seen your incept photo with my own eyes.
+				Actor_Says(kActorMcCoy, 5520, 18); //00-5520.AUD	Oh, yeah?
+				Delay (1000);
+				Item_Pickup_Spin_Effect(kModelAnimationPhoto, 602, 435);
+				Actor_Voice_Over(4240, kActorVoiceOver); //99-4240.AUD	That can't be me.
+				Actor_Clue_Acquire(kActorMcCoy, kClueMcCoyIncept, true, kActorHolloway);
+				Delay (1000);
+				Actor_Says (kActorHolloway, 10, kAnimationModeTalk); //33-0010.AUD	It's all over the place. You don't got a chance. (groans)
+				Actor_Says(kActorMcCoy, 5530, 15); //00-5530.AUD	Photos can be doctored. Who showed you this piece of art?
+				Delay (2000);
+				Actor_Says(kActorMcCoy, 5525, 14); //00-5525.AUD	Who’s behind this? Who set me up?
+				Delay (3000);
+				Actor_Says(kActorMcCoy, 170, 12); //00-0170.AUD	Damn.
+				Actor_Clue_Acquire(kActorMcCoy, kClueHollowayInterview, true, kActorHolloway);
+				Game_Flag_Set(kFlagHollowayTalk);
+			}
+		}
+	}
+	// Addded in some dispatcher dialogue.
+	if (_vm->_cutContent) {
+		if (Global_Variable_Query(kVariableChapter) == 4) {
+			if (!Game_Flag_Query(kFlagDispatcherTalkMcCoy)) {
+				ADQ_Add(kActorDispatcher, 40, kAnimationModeTalk); //38-0040.AUD	Attention all units. Be on the lookout for Ray McCoy. Last seen in the Fourth Sector. Subject is armed and extremely dangerous. Repeat armed and extremely dangerous.
+				Game_Flag_Set(kFlagDispatcherTalkMcCoy);	 
+			}
+		}
+	}
 }
 
 void SceneScriptUG03::PlayerWalkedOut() {

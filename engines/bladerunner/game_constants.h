@@ -714,9 +714,9 @@ enum Flags {
 	kFlagDR05BombExploded                     = 272,
 	kFlagArrivedFromSpinner2                  = 273,
 	kFlagDR05MorajiTalk                       = 274,
-	// 275 is never used
+	kFlagHollowayTalk						  = 275,
 	kFlagNotUsed276                           = 276, // is never set
-	// 277 is never used
+	kFlagDispatcherTalkMcCoy				  = 277,	
 	kFlagDR06KeyboardChecked                  = 278,
 	// 279 is never used
 	kFlagDR06VidphoneChecked                  = 280,
@@ -1633,8 +1633,8 @@ enum GameItems {
 	// 64 is never used
 	// 65 is never used
 	kItemChromeDebris           =  66,
-	// 67 is never used
-	// 68 is never used
+	kItemDragonflyBelt			=  67,
+	kItemBakersBadge			=  68,
 	// 69 is never used
 	// 70 is never used
 	// 71 is never used
