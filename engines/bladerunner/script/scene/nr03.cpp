@@ -124,9 +124,37 @@ bool SceneScriptNR03::ClickedOnActor(int actorId) {
 				Actor_Face_Actor(kActorHanoi, kActorMcCoy, true);
 				Actor_Says(kActorHanoi, 30, 13);
 				Actor_Says(kActorMcCoy, 3345, 14);
-				Actor_Says(kActorHanoi, 40, 14);
+				Actor_Says(kActorHanoi, 40, 14); //25-0040.AUD	No, it’s true. Mr. Q sent me a vid just yesterday. Getting a hell of a tan he is.
+				// Restored dialogue for Hanoi
+				if (_vm->_cutContent) {
+					Actor_Says(kActorMcCoy, 3350, 14); //00-3350.AUD	Early’s waiting on me.
+					Actor_Says(kActorMcCoy, 3360, 15); //00-3360.AUD	It’s a social visit.
+					Actor_Says(kActorHanoi, 60, 13); //25-0060.AUD	Dirty old geezer blow me. There’s nothing social about the cops.
+					Actor_Says(kActorMcCoy, 3365, 16); //00-3365.AUD	You and I both know he ain’t at any spa, Hanoi.
+					Actor_Says(kActorHanoi, 70, 13); //25-0070.AUD	He ring you from the spa or what?
+					Actor_Says(kActorMcCoy, 2215, 18); //00-2215.AUD	That’s right.
+					Actor_Says(kActorHanoi, 80, 13); //25-0080.AUD	Listen good, boy-o.
+					Actor_Says(kActorHanoi, 90, 14); //25-0090.AUD	You can sit in here and do whatever you want.
+					Actor_Says(kActorHanoi, 100, 13); //25-0100.AUD	Drink, shoot some pocket nine ball. Whatever cops like to do in joints like this.
+					Actor_Says(kActorHanoi, 110, 14); //25-0110.AUD	Or you can take a flying leap through the front door. Are we clear?
+					Actor_Says(kActorMcCoy, 3370, 13); //00-3370.AUD	As the banks of the LA river.
+					Delay (1000);
+					Actor_Says(kActorMcCoy, 8615, 13); //00-8615.AUD	Heard anything on the street?
+					Actor_Says(kActorHanoi, 190, 14); //25-0190.AUD	I heard something, yeah. Maybe I’ll even tell it to you, mate.
+					Actor_Says(kActorMcCoy, 8320, 15); //00-8320.AUD	Really?
+					Actor_Says(kActorHanoi, 240, 13); //25-0240.AUD	I’ll give it to you straight, then you’re gone, right?
+					Actor_Says(kActorMcCoy, 2635, 18); //00-2635.AUD	I’m all ears.
+					Actor_Says(kActorHanoi, 200, 14); //25-0200.AUD	Mostly I’ve been hearing about you, McCoy. And what a piss-ant little wanker you are.
+					Actor_Says(kActorMcCoy, 665, 16); //00-0665.AUD	Real funny, pal.
+					Game_Flag_Set(kFlagHanoiTalk);
+				}
 			} else {
-				Actor_Says(kActorMcCoy, 3350, 16);
+				if (_vm->_cutContent) {
+				Actor_Says(kActorMcCoy, 3355, 15); //00-3355.AUD	Early told me the real party is in the back room.
+				Actor_Says(kActorHanoi, 220, 13); //25-0220.AUD	You got nothing, McCoy. Nothing!
+				Actor_Says(kActorHanoi, 230, 14); //25-0230.AUD	Bent the truth a little is all. Look, Mr. Q don’t want no trouble of you lads.
+				}
+				Actor_Says(kActorMcCoy, 3350, 16); //00-3350.AUD	Early’s waiting on me.
 				Actor_Says(kActorHanoi, 50, 17);
 			}
 			AI_Movement_Track_Unpause(kActorHanoi);
@@ -161,10 +189,18 @@ bool SceneScriptNR03::ClickedOnExit(int exitId) {
 				case 0:
 					Actor_Says(kActorHanoi, 50, 13);
 					AI_Movement_Track_Unpause(kActorHanoi);
+					// Added in this flag so if McCoy got into the hidden sanctuary without interacting with Hanoi McCoy won't mention to Early Q that Hanoi
+					// gave him a hard time.
+					if (_vm->_cutContent) {
+						Game_Flag_Set(kFlagHanoiTalk);
+					}
 					break;
 				case 1:
 					Actor_Says(kActorHanoi, 210, 15);
 					AI_Movement_Track_Unpause(kActorHanoi);
+					if (_vm->_cutContent) {
+						Game_Flag_Set(kFlagHanoiTalk);
+					}
 					break;
 				case 2:
 					// fall through
@@ -211,11 +247,17 @@ bool SceneScriptNR03::ClickedOnExit(int exitId) {
 					Actor_Says(kActorMcCoy, 3335, 13);
 					Actor_Says(kActorHanoi, 10, 16);
 					AI_Movement_Track_Unpause(kActorHanoi);
+					if (_vm->_cutContent) {
+						Game_Flag_Set(kFlagHanoiTalk);
+					}
 					break;
 				case 1:
 					Actor_Face_Actor(kActorMcCoy, kActorHanoi, true);
 					Actor_Says(kActorHanoi, 210, 12);
 					AI_Movement_Track_Unpause(kActorHanoi);
+					if (_vm->_cutContent) {
+						Game_Flag_Set(kFlagHanoiTalk);
+					}
 					break;
 				case 2:
 					// fall through

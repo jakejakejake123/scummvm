@@ -682,9 +682,9 @@ enum Flags {
 	kFlagCT11Visited						  = 240,
 	kFlagCT09DeskClerkTalk2					  = 241,
 	kFlagMcCoyShotRachael					  = 242,
-	// 243 is never used
-	// 244 is never used
-	// 245 is never used
+	kFlagNR01Visited						  = 243,
+	kFlagHanoiTalk							  = 244,	
+	kFlagEarlyQTalkJewelry					  = 245,	
 	kFlagWrongInvestigation                   = 246, // Re-purposed. Original: 246 is never used
 	kFlagArrivedFromSpinner1                  = 247,
 	kFlagSpinnerAtCT01                        = 248,

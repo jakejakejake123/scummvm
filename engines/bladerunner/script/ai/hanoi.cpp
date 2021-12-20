@@ -185,6 +185,14 @@ void AIScriptHanoi::OtherAgentEnteredCombatMode(int otherActorId, int combatMode
 	 && otherActorId == kActorMcCoy
 	 && combatMode
 	) {
+		// Added in some dialogue where Hanoi makes some comments on McCoy pulling out his gun and then Hanoi approaches him.
+		// I wanted to have Hanoi grab McCoy and McCoy says let go you lug but I couldn't get it to work. Maybe you could add this in?
+		Actor_Face_Actor(kActorHanoi, kActorMcCoy, true);
+		Actor_Face_Actor(kActorMcCoy, kActorHanoi, true);
+		Actor_Says(kActorHanoi, 160, 13); //25-0160.AUD	Here, what’s this then?
+		Actor_Says(kActorHanoi, 170, 14); //25-0170.AUD	You’re bomb mate waving your piece around in here like this.
+		Actor_Says(kActorHanoi, 180, 13); //25-0180.AUD	Early Q's is for lovers, not fighters.
+		Loop_Actor_Walk_To_Actor(kActorHanoi, kActorMcCoy, 48, true, false); 
 		Player_Set_Combat_Mode(false);
 #if BLADERUNNER_ORIGINAL_BUGS
 		// redundant call to lose control here
