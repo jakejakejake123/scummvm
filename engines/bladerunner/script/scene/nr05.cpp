@@ -393,7 +393,9 @@ void SceneScriptNR05::talkToEarlyQ() {
 		// Added in this flag so when McCoy shows Early Q the photo of Dektora after talking to Early about the jewelry Early mentions Dektora being the one that he gave the jewelry to.
 		// Early slipped up by saying Hecuba was the one he gave the jewelry after looking at the photo of Dektora whereas if you did not ask him about the jewelry he does not
 		// mention that therefore McCoy has no reason not press him into telling the truth and Early outright denies knowing the woman in the photo.
+		//Added in a clue.
 		if (_vm->_cutContent) {
+		Actor_Clue_Acquire(kActorMcCoy, kClueEarlyInterviewA, true, kActorEarlyQ);
 			Game_Flag_Set(kFlagEarlyQTalkJewelry);
 		}
 		Actor_Face_Heading(kActorEarlyQ, 849, false);
