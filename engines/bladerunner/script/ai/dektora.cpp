@@ -327,6 +327,13 @@ bool AIScriptDektora::ShotAtAndHit() {
 void AIScriptDektora::Retired(int byActorId) {
 	if (byActorId == kActorMcCoy) {
 		Actor_Modify_Friendliness_To_Other(kActorClovis, kActorMcCoy, -5);
+		// Added in some code so when you retire Dektora the McCoy is helping replicnants flag is reset and he receives 200 chinyen.
+		if (_vm->_cutContent) {
+			Game_Flag_Reset(kFlagMcCoyIsHelpingReplicants);
+			if (Query_Difficulty_Level() != kGameDifficultyEasy) {
+				Global_Variable_Increment(kVariableChinyen, 200);
+			}
+		}
 	}
 
 	if (byActorId == kActorSteele

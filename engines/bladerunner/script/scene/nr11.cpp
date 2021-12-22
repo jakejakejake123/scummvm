@@ -186,7 +186,12 @@ bool SceneScriptNR11::ClickedOn3DObject(const char *objectName, bool combatMode)
 					Loop_Actor_Walk_To_XYZ(kActorDektora, -135.0f, 0.33f, -267.0f, 0, false, false, false);
 					Actor_Face_Actor(kActorDektora, kActorMcCoy, true);
 					Actor_Face_Actor(kActorMcCoy, kActorDektora, true);
-					Actor_Clue_Acquire(kActorMcCoy, kClueDektoraInterview4, true, kActorDektora);
+					//Repurposed the Dektora interview 4 clue for reasons I mentioned in NR07.
+					if (_vm->_cutContent) {
+						Actor_Clue_Acquire(kActorMcCoy, kClueDektoraConfession, true, kActorDektora);
+					} else {
+						Actor_Clue_Acquire(kActorMcCoy, kClueDektoraInterview4, true, kActorDektora);
+					}
 					Actor_Says(kActorDektora, 990, 13);
 					Actor_Says(kActorDektora, 1000, 14);
 					Loop_Actor_Walk_To_Actor(kActorDektora, kActorMcCoy, 108, false, false);
@@ -208,12 +213,12 @@ bool SceneScriptNR11::ClickedOn3DObject(const char *objectName, bool combatMode)
 					 && Global_Variable_Query(kVariableAffectionTowards) == kAffectionTowardsNone
 					) {
 						Global_Variable_Set(kVariableAffectionTowards, kAffectionTowardsDektora);
-						Actor_Says(kActorDektora, 1130, 17);
-						Actor_Says(kActorMcCoy, 6365, 12);
-						Actor_Says(kActorDektora, 1140, 14);
-						Actor_Says(kActorMcCoy, 6370, 14);
-						Actor_Says(kActorDektora, 1150, 12);
-						Actor_Says(kActorDektora, 1160, 16);
+						// Added in a flag here. Also removed several lines where Dektora mentions Clovis' jealousy and how she's worried that he may suspect something is going on
+						// between her and McCoy. Considering they just met and Dektora just tried to kill McCoy this dialogue about a romannce feels out of place here so instead I
+						// i'll put it in the conversation that you have with her in act 4.
+						if (_vm->_cutContent) {
+							Game_Flag_Set(kFlagMcCoyIsHelpingReplicants);
+						}
 					}
 					Actor_Says(kActorDektora, 1080, 13);
 					Actor_Says(kActorMcCoy, 3875, 14);

@@ -35,7 +35,13 @@ void SceneScriptNR07::InitializeScene() {
 void SceneScriptNR07::SceneLoaded() {
 	Obstacle_Object("VANITY", true);
 	Clickable_Object("VASE");
-
+	// Added code so the dragonfly belt appears on Dektoras desk. It never made sense to me that you just receive the belt after asking Dektora about it.
+	// I mean she doesn't give it to you and why would she, you are a complete stranger after all. So now it will appear on her desk and if you try to take it
+	// while she's there she will say not to touch it and while she's away you can pick it up.
+	if (_vm->_cutContent &&
+		!Actor_Clue_Query(kActorMcCoy, kClueDragonflyBelt)) {
+		Item_Add_To_World(kItemDragonflyBelt, kModelAnimationDragonflyBelt, kSetNR07,  -103.12, -38.08, 42.14,  0, 12, 12, false, true, false, true);
+	}
 	if (_vm->_cutContent
 	    && Global_Variable_Query(kVariableChapter) < 4) {
 		// The car is only bought by Reps from CrazyLegs
@@ -75,16 +81,21 @@ bool SceneScriptNR07::ClickedOnActor(int actorId) {
 		if (Game_Flag_Query(kFlagNR07McCoyIsCop)) {
 			DM_Add_To_List_Never_Repeat_Once_Selected(1100, -1, 3, 8); // VOIGT-KAMPFF
 			DM_Add_To_List_Never_Repeat_Once_Selected(1110, 8, -1, -1); // CRYSTAL
-			if (Actor_Clue_Query(kActorMcCoy, kClueSuspectDektora)) { // cut content? clue is not obtainable
-				// TODO - restore trigger
-				DM_Add_To_List_Never_Repeat_Once_Selected(1120, 3, 6, 7); // MOONBUS
+			// Made it so the moonbus option is now available when talking to Dektora. The trigger will be the clue EarlyInterviewB where he tells McCoy
+			// about Dektora and others are trying to help the reps get offworld.
+			if (_vm->_cutContent) {
+				if (Actor_Clue_Query(kActorMcCoy, kClueEarlyInterviewB2)) {	
+					DM_Add_To_List_Never_Repeat_Once_Selected(1120, 3, 6, 7); // MOONBUS
+				}
 			}
 			if (Actor_Clue_Query(kActorMcCoy, kClueCarRegistration1)) {
 				DM_Add_To_List_Never_Repeat_Once_Selected(1130, 3, 5, 7); // BLACK SEDAN
 			}
-			if (Game_Flag_Query(kFlagNotUsed510)) { // cut content? flag is never set
-				// TODO - restore trigger
-				DM_Add_To_List_Never_Repeat_Once_Selected(1140, 1, 4, 7); // SCORPIONS
+			// Made it so the scorpions option is now available. The trigger for this will be the clue purchased scorpions.
+			if (_vm->_cutContent) {
+				if (Actor_Clue_Query(kActorMcCoy, kCluePurchasedScorpions)) {
+					DM_Add_To_List_Never_Repeat_Once_Selected(1140, 1, 4, 7); // SCORPIONS
+				}
 			}
 		} else {
 			DM_Add_To_List_Never_Repeat_Once_Selected(1080, 3, 5, 7); // BELT
@@ -143,7 +154,23 @@ bool SceneScriptNR07::ClickedOnActor(int actorId) {
 }
 
 bool SceneScriptNR07::ClickedOnItem(int itemId, bool a2) {
-	return false;
+		// Code for picking up the dragonfly belt.
+		if (itemId == kItemDragonflyBelt) {
+			if (!Loop_Actor_Walk_To_Item(kActorMcCoy, kItemDragonflyBelt, 12, true, false)) {
+				Actor_Face_Item(kActorMcCoy, kItemDragonflyBelt, true);
+				if (Actor_Query_Is_In_Current_Set(kActorDektora)) {
+					Actor_Modify_Friendliness_To_Other(kActorDektora, kActorMcCoy, -2);
+					Actor_Says(kActorDektora, 560, 31); // Please don't touch that. It's private.
+					Actor_Says(kActorMcCoy, 8525, 19);  // Hmph.
+				} else {			
+					Actor_Clue_Acquire(kActorMcCoy, kClueDragonflyBelt, true, -1);
+					Item_Pickup_Spin_Effect(kModelAnimationDragonflyBelt, 542, 350);
+					Item_Remove_From_World(kItemDragonflyBelt);
+					Actor_Says(kActorMcCoy, 8825, 12);
+				}
+			}			
+		}
+	return true;
 }
 
 bool SceneScriptNR07::ClickedOnExit(int exitId) {
@@ -185,6 +212,10 @@ bool SceneScriptNR07::ClickedOn2DRegion(int region) {
 						Actor_Voice_Over(3690, kActorVoiceOver); // Hmm
 						Delay(1200);
 						Item_Pickup_Spin_Effect(kModelAnimationLetter, 508, 401);
+						// Added in code so you receive the Dektora incept clue when you are searching her desk.
+						Delay (3000);
+						Item_Pickup_Spin_Effect(kModelAnimationPhoto, 508, 401);
+						Actor_Clue_Acquire(kActorMcCoy, kClueDektoraIncept, false, -1);
 						Actor_Says(kActorMcCoy, 6975, 12); // Interesting
 						// We don't remove the region after picking the clue
 						// McCoy will just point out that there's nothing more there to find.
@@ -302,7 +333,12 @@ void SceneScriptNR07::clickedOnVase() {
 	Actor_Face_Object(kActorMcCoy, "VASE", true);
 	if (Actor_Query_Is_In_Current_Set(kActorDektora)) {
 		if (!Actor_Clue_Query(kActorMcCoy, kClueDektoraInterview3)) {
-			Actor_Clue_Acquire(kActorMcCoy, kClueDektoraInterview3, true, -1);
+			// Made it so you now receive the Dektora interview 3 clue after you talk to Dektora about the flowers.
+			// Originally you could click on the vase after McCoy reveals that he is a cop and still receive the clue despite 
+			// him not having the conversation with Dektora.
+			if (!_vm->_cutContent) {
+				Actor_Clue_Acquire(kActorMcCoy, kClueDektoraInterview3, true, -1);
+			}
 			int friendliness = Actor_Query_Friendliness_To_Other(kActorDektora, kActorMcCoy);
 			if (friendliness > 50) {
 				Actor_Modify_Friendliness_To_Other(kActorDektora, kActorMcCoy, 2);
@@ -322,6 +358,10 @@ void SceneScriptNR07::clickedOnVase() {
 				Actor_Says(kActorMcCoy, 3605, 19);  // That's a pretty card. (McCoy fake fan voice)
 				Actor_Says(kActorDektora, 560, 31); // Please don't touch that. It's private.
 				Actor_Says(kActorMcCoy, 3610, 19);  // Sorry (McCoy fake fan voice)
+				// The clue will now be obtained here.
+				if (_vm->_cutContent) {
+					Actor_Clue_Acquire(kActorMcCoy, kClueDektoraInterview3, true, -1);
+				}
 			} else {
 				Actor_Says(kActorDektora, 560, 31); // Please don't touch that. It's private.
 				Actor_Says(kActorMcCoy, 8525, 19);  // Hmph.
@@ -357,8 +397,10 @@ void SceneScriptNR07::talkAboutBelt1() {
 	Actor_Face_Actor(kActorDektora, kActorMcCoy, true);
 
 	Game_Flag_Set(kFlagNR07McCoyIsCop);
-	Actor_Clue_Acquire(kActorMcCoy, kClueDragonflyBelt, true, kActorDektora);
-
+	// Made it so you don't receive the dragonflybelt after talking to Dektora about it.
+	if (!_vm->_cutContent) {
+		Actor_Clue_Acquire(kActorMcCoy, kClueDragonflyBelt, true, kActorDektora);
+	}
 	int friendliness = Actor_Query_Friendliness_To_Other(kActorDektora, kActorMcCoy);
 	if (!Game_Flag_Query(kFlagDektoraIsReplicant)
 	 &&  friendliness < 40
@@ -447,7 +489,12 @@ void SceneScriptNR07::talkAboutSteele() {
 		Actor_Says(kActorMcCoy, 3700, kAnimationModeTalk); // If I found you, so will she.
 	}
 	Actor_Modify_Friendliness_To_Other(kActorDektora, kActorMcCoy, 5);
-
+	// Made it so when you warn Dektora about Crystal you receive the global affection for Dektora which will trigger the car ending with her.
+	// Originally you were only able to do this when she was a replicant and as a result you could never receive the car ending where she is a human.
+	// This altered code will now change that.
+	if (_vm->_cutContent) {
+		Global_Variable_Set(kVariableAffectionTowards, kAffectionTowardsDektora);
+	}
 	if (Game_Flag_Query(kFlagDektoraIsReplicant)) {
 		callHolloway();
 	} else {
@@ -459,21 +506,18 @@ void SceneScriptNR07::talkAboutMoonbus() {
 	// TODO cut content - restore trigger
 	Actor_Says(kActorMcCoy, 3705, 19);
 	Actor_Says(kActorDektora, 760, kAnimationModeSit); // Excuse me?
-
+	// Fixed the code here so now Dektora will run away or call Holloway after the conversation is finished and not in the middle of it. 
+	Actor_Says(kActorMcCoy, 3710, kAnimationModeTalk); // Somebody told me about this moonbus that got hijacked.
+	Actor_Says(kActorMcCoy, 3715, 15); // You know, the one where all those humans got killed?
 	if (Game_Flag_Query(kFlagDektoraIsReplicant)) {
 		Actor_Modify_Friendliness_To_Other(kActorDektora, kActorMcCoy, -5);
 #if BLADERUNNER_ORIGINAL_BUGS
 		Actor_Says(kActorMcCoy, 3710, 18);
 #else
-		Actor_Says(kActorMcCoy, 3710, kAnimationModeTalk); // Somebody told me about this moonbus that got hijacked.
 #endif // BLADERUNNER_ORIGINAL_BUGS
-		if (_vm->_cutContent) {
-			Actor_Says(kActorMcCoy, 3715, 15); // You know, the one where all those humans got killed?
-		}
 		callHolloway();
 	} else {
 		Actor_Modify_Friendliness_To_Other(kActorDektora, kActorMcCoy, -3);
-		Actor_Start_Speech_Sample(kActorMcCoy, 3710);
 		Loop_Actor_Walk_To_XYZ(kActorMcCoy, -109.0f, -73.0f, -89.0f, 0, false, false, false);
 		Actor_Face_Actor(kActorMcCoy, kActorDektora, true);
 		dektoraRunAway();
@@ -495,6 +539,10 @@ void SceneScriptNR07::talkAboutBlackSedan() {
 	Actor_Says(kActorMcCoy, 3735, 14);
 	Actor_Says(kActorDektora, 830, 31);
 	Actor_Says(kActorMcCoy, 3740, 19);
+	// Added in the clue CarWasStolen where Dektora mentions the sedan being stolen.
+	if (_vm->_cutContent) {
+		Actor_Clue_Acquire(kActorMcCoy, kClueCarWasStolen, true, kActorDektora);
+	}
 }
 
 void SceneScriptNR07::talkAboutScorpions() {
@@ -519,8 +567,11 @@ void SceneScriptNR07::talkAboutScorpions() {
 	Actor_Says(kActorDektora, 880, 30);
 	Actor_Says(kActorMcCoy, 3755, 16);
 	Actor_Says(kActorDektora, 890, 31);
+	// Repurposed the Dektora interview 4 clue to be about the scorpions. The original Dektora interview 4 clue dialogue will now be under the clue
+	// Dektora confession where she admits to McCoy about being involved with Clovis and even calling him and Lucy her family.
 	if (_vm->_cutContent) {
 		Actor_Says(kActorDektora, 900, 30); // Who would need to add insects to the list?
+		Actor_Clue_Acquire(kActorMcCoy, kClueDektoraInterview4, true, kActorDektora);
 	}
 }
 

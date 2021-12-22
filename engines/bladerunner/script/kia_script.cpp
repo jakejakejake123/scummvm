@@ -808,16 +808,31 @@ void KIAScript::SCRIPT_KIA_DLL_Play_Clue_Asset_Script(int notUsed, int clueId) {
 		KIA_Play_Slice_Model(kModelAnimationGordosLighterHuman);
 		break;
 	case kClueDektoraInterview4:
-		KIA_Play_Actor_Dialogue(kActorMcCoy, 3860);
-		KIA_Play_Actor_Dialogue(kActorDektora, 1030);
-		KIA_Play_Actor_Dialogue(kActorDektora, 1040);
-		KIA_Play_Actor_Dialogue(kActorMcCoy, 3865);
-		KIA_Play_Actor_Dialogue(kActorDektora, 1050);
-		KIA_Play_Actor_Dialogue(kActorDektora, 1060);
+		if (_vm->_cutContent) {
+			KIA_Play_Actor_Dialogue(kActorMcCoy, 3620); //00-3620.AUD	You like scorpions, huh?
+			KIA_Play_Actor_Dialogue(kActorDektora, 840); //03-0840.AUD	Scorpions?
+			KIA_Play_Actor_Dialogue(kActorMcCoy, 3745); //00-3745.AUD	Insects. Fakes. From Animoid Row. You buy a box of them?
+			KIA_Play_Actor_Dialogue(kActorDektora, 870); //03-0870.AUD	I just had to have the whole set.
+			KIA_Play_Actor_Dialogue(kActorMcCoy, 3750); //00-3750.AUD	Did you know they were poisonous?
+			KIA_Play_Actor_Dialogue(kActorDektora, 880); //03-0880.AUD	The woman who sold them said something about that, yes.
+			KIA_Play_Actor_Dialogue(kActorMcCoy, 3755); //00-3755.AUD	And that doesn’t scare you?
+			KIA_Play_Actor_Dialogue(kActorDektora, 890); //03-0890.AUD	There are plenty of things in this world that are truly frightening.
+			KIA_Play_Actor_Dialogue(kActorDektora, 900); //03-0900.AUD	Who would need to add insects to the list?
+		} else {
+			KIA_Play_Actor_Dialogue(kActorMcCoy, 3860); //00-3860.AUD	And you’re lovers?
+			KIA_Play_Actor_Dialogue(kActorDektora, 1030); //03-1030.AUD	We were once. But now we’ve evolved beyond that.
+			KIA_Play_Actor_Dialogue(kActorDektora, 1040); //03-1040.AUD	They are still my family. Clovis and Lucy.
+			KIA_Play_Actor_Dialogue(kActorMcCoy, 3865); //00-3865.AUD	What’s Clovis looking for?
+			KIA_Play_Actor_Dialogue(kActorDektora, 1050); //03-1050.AUD	Information. Data. Four years isn’t enough time, Mr. McCoy.
+			KIA_Play_Actor_Dialogue(kActorDektora, 1060); //03-1060.AUD	If anyone deserves more than four years, it’s Clovis. If you could only meet him.
+		}
 		break;
 	case kClueHollowayInterview:
-		KIA_Play_Actor_Dialogue(kActorHolloway, 0);
-		KIA_Play_Actor_Dialogue(kActorHolloway, 10);
+		KIA_Play_Actor_Dialogue(kActorHolloway, 0); //33-0000.AUD	(Coughs) You're a Rep, McCoy. I've seen your incept photo with my own eyes.
+		if (_vm->_cutContent) {
+			KIA_Play_Actor_Dialogue(kActorMcCoy, 5520); //00-5520.AUD	Oh, yeah?
+		}
+		KIA_Play_Actor_Dialogue(kActorHolloway, 10); //33-0010.AUD	It's all over the place. You don't got a chance. (groans)
 		break;
 	case kClueBakersBadge:
 		KIA_Play_Slice_Model(kModelAnimationBadge);
@@ -1620,6 +1635,14 @@ void KIAScript::SCRIPT_KIA_DLL_Play_Clue_Asset_Script(int notUsed, int clueId) {
 		break;
 	case kClueDektoraConfession:
 		KIA_Play_Actor_Dialogue(kActorDektora, 1010); //03-1010.AUD	I’m not worried. She may kill some of us but not all of us. Clovis will see to that.
+		KIA_Play_Actor_Dialogue(kActorMcCoy, 3855); //00-3855.AUD	Is he the one that sent you the flowers?
+		KIA_Play_Actor_Dialogue(kActorDektora, 1020); //03-1020.AUD	Yes.
+		KIA_Play_Actor_Dialogue(kActorMcCoy, 3860); //00-3860.AUD	And you’re lovers?
+		KIA_Play_Actor_Dialogue(kActorDektora, 1030); //03-1030.AUD	We were once. But now we’ve evolved beyond that.
+		KIA_Play_Actor_Dialogue(kActorDektora, 1040); //03-1040.AUD	They are still my family. Clovis and Lucy.
+		KIA_Play_Actor_Dialogue(kActorMcCoy, 3865); //00-3865.AUD	What’s Clovis looking for?
+		KIA_Play_Actor_Dialogue(kActorDektora, 1050); //03-1050.AUD	Information. Data. Four years isn’t enough time, Mr. McCoy.
+		KIA_Play_Actor_Dialogue(kActorDektora, 1060); //03-1060.AUD	If anyone deserves more than four years, it’s Clovis. If you could only meet him.
 		break;
 	case kClueClovisOrdersMcCoysDeath:
 		KIA_Play_Actor_Dialogue(kActorClovis, 650); //05-0650.AUD	So, what should we do with this detective. He’s been so persistent, so industrious.
@@ -1658,13 +1681,19 @@ void KIAScript::SCRIPT_KIA_DLL_Play_Clue_Asset_Script(int notUsed, int clueId) {
 		KIA_Play_Actor_Dialogue(kActorSteele, 1280); //01-1280.AUD	This is the real world, Slim. Not some candy-ass video game.
 		KIA_Play_Actor_Dialogue(kActorSteele, 1290); //01-1290.AUD	I better call this in. Your vehicle close by?
 		break;
-	case kClueSightingDektora:
+	case kClueSuspectDektora:
+		KIA_Play_Actor_Dialogue(kActorSteele, 3150); //00-3150.AUD	They must have been phony cops. Hired by the Reps for protection.
+		KIA_Play_Actor_Dialogue(kActorSteele, 1470); //01-1470.AUD	Cops? Yes. Phony? No. I remembered Baker.
+		KIA_Play_Actor_Dialogue(kActorSteele, 1480); //01-1480.AUD	He used to be an S.I.D. (Scientific Investigation Division) expert on Coercive Technique until he was fired from the force a couple of years ago.
+		KIA_Play_Actor_Dialogue(kActorMcCoy, 3155); //00-3155.AUD	A mercenary?
+		KIA_Play_Actor_Dialogue(kActorSteele, 1500); //01-1500.AUD	Bingo.
+		KIA_Play_Actor_Dialogue(kActorSteele, 3160); //00-3160.AUD	He won’t have to worry about getting paid no more.
 		KIA_Play_Actor_Dialogue(kActorSteele, 1510); //01-1510.AUD	That stripper you interviewed. She’s one of them.
 		KIA_Play_Actor_Dialogue(kActorSteele, 1520); //01-1520.AUD	Figure it out! She must have made the call to Baker and that other Bozo.
 		KIA_Play_Actor_Dialogue(kActorSteele, 1530); //01-1530.AUD	Let’s attend to some business.
 		KIA_Play_Actor_Dialogue(kActorMcCoy, 3170); //00-3170.AUD	I’m there.
 		break;
-	case kClueSuspectDektora:
+	case kClueSightingDektora:
 		KIA_Play_Actor_Dialogue(kActorSteele, 2890); //01-2890.AUD	I knew I’d seen her somewhere before, but I had to dig real deep to find it.
 		KIA_Play_Actor_Dialogue(kActorSteele, 2900); //01-2900.AUD	Somebody had tried to bury the incept photos and files of all the Reps who came down on the moonbus.
 		break;
