@@ -239,7 +239,12 @@ void SceneScriptNR08::PlayerWalkedIn() {
 		Actor_Says(kActorMcCoy, 3795, 16);
 		Actor_Says(kActorSteele, 1670, 13);
 		Actor_Says(kActorSteele, 1680, 14);
-		Actor_Says(kActorSteele, 1690, 15);
+		Actor_Says(kActorSteele, 1690, 15); //01-1690.AUD	I don’t want this one giving us the blow-off.
+		// Added in some dialogue for Crystal and McCoy.
+		if (_vm->_cutContent) {
+			Actor_Says(kActorMcCoy, 6285, 14); //00-6285.AUD	Who made you Captain?
+			Actor_Says(kActorSteele, 1530, 15); //01-1530.AUD	Let’s attend to some business.
+		}
 		Actor_Set_Goal_Number(kActorSteele, kGoalSteeleNR08WalkOut);
 		return; // true;
 	}

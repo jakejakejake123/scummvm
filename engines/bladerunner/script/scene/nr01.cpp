@@ -299,6 +299,21 @@ void SceneScriptNR01::ActorChangedGoal(int actorId, int newGoal, int oldGoal, bo
 }
 
 void SceneScriptNR01::PlayerWalkedIn() {
+	// Added in some dispatcher dialogue.
+	if (_vm->_cutContent) {
+		if (!Game_Flag_Query(kFlagNR01Visited)) {
+			ADQ_Add(kActorDispatcher, 410, kAnimationModeTalk); //38-0410.AUD	Any Sector 3 unit in position. We have a 4-15 in progress between an unknown vendor and customer.
+			ADQ_Add(kActorDispatcher, 430, kAnimationModeTalk); //38-0430.AUD	The dispute is causing traffic problems in Nightclub Row.
+			ADQ_Add(kActorOfficerGrayford, 540, kAnimationModeTalk); //24-0540.AUD	LA, 38 Metro 3. Copied. Responding with an ETA momentarily.
+			ADQ_Add(kActorDispatcher, 440, kAnimationModeTalk); //38-0440.AUD	38, Metro 3, LA. Copy.
+			ADQ_Add(kActorDispatcher, 450, kAnimationModeTalk); //38-0450.AUD	Be advised. A second caller reports one of the parties is being a possible 51-50.
+			ADQ_Add(kActorDispatcher, 460, kAnimationModeTalk); //38-0460.AUD	Use extreme caution on approach.
+			ADQ_Add(kActorOfficerLeary, 330, kAnimationModeTalk); //23-0330.AUD	LA, 38 Metro 3. Copied. Be advised I'll be 10-98 from the scene.
+			ADQ_Add(kActorDispatcher, 470, kAnimationModeTalk); //38-0470.AUD	38 Metro 3. 10-4. LA copy. 10-97 in Code 4.
+			Game_Flag_Set(kFlagNR01Visited);	
+		}
+	}
+
 	if (Game_Flag_Query(kFlagSpinnerMissing)) {
 		Actor_Set_Goal_Number(kActorSteele, kGoalSteeleTalkAboutMissingSpinner);
 		Game_Flag_Reset(kFlagSpinnerMissing);
@@ -357,7 +372,16 @@ void SceneScriptNR01::PlayerWalkedIn() {
 		Game_Flag_Reset(kFlagUG06toNR01);
 		if (Actor_Query_Goal_Number(kActorSteele) == kGoalSteeleNR01WaitForMcCoy) {
 			Actor_Face_Actor(kActorSteele, kActorMcCoy, true);
-			Actor_Says(kActorSteele, 1440, 13);
+			// Changed a Steele line based on your friendliness with her.
+			if (_vm->_cutContent) {
+				if (Actor_Query_Friendliness_To_Other(kActorSteele, kActorMcCoy) > 50) {
+					Actor_Says(kActorSteele, 2600, 13); //01-2600.AUD	Hey, Slim!
+				} else {
+					Actor_Says(kActorSteele, 1440, 13);
+				}
+			} else {
+				Actor_Says(kActorSteele, 1440, 13);
+			}
 			Loop_Actor_Walk_To_Actor(kActorMcCoy, kActorSteele, 48, false, true);
 			Actor_Says(kActorMcCoy, 3145, 13);
 			if (Global_Variable_Query(kVariableHollowayArrest) != 3) {
@@ -370,7 +394,10 @@ void SceneScriptNR01::PlayerWalkedIn() {
 			Actor_Says(kActorMcCoy, 3155, 15);
 			Actor_Says(kActorSteele, 1500, 16);
 			Actor_Says(kActorMcCoy, 3160, 12);
-			if (Game_Flag_Query(kFlagSteeleKnowsBulletBobIsDead)) {
+			// Made it so Crystal also says that Guzza mentioned that McCoy retired a human if you told him about killing the homeless man.
+			// Guzza lied and did not cover it up like he said he would and instead used it against McCoy to get him out of the way.
+			if (Game_Flag_Query(kFlagSteeleKnowsBulletBobIsDead)
+			|| Game_Flag_Query(kFlagGuzzaInformed)) {
 				Actor_Says(kActorSteele, 1330, 12);
 				Actor_Says(kActorSteele, 1340, 12);
 				Actor_Says(kActorSteele, 1350, 12);
@@ -384,10 +411,20 @@ void SceneScriptNR01::PlayerWalkedIn() {
 				Actor_Says(kActorSteele, 1400, 12);
 				Actor_Says(kActorSteele, 1410, 12);
 				Actor_Says(kActorMcCoy, 3135, 15);
-				Actor_Says(kActorSteele, 1420, 12);
-				Actor_Says(kActorMcCoy, 3140, 15);
-				Actor_Says(kActorSteele, 1430, 12);
-				Actor_Set_Goal_Number(kActorSteele, kGoalSteeleImmediatelyStartChapter4);
+				Actor_Says(kActorSteele, 1420, 12); //01-1420.AUD	Go, if you’re going. I’m gonna talk to Guzza before I do anything.
+				// Made it so Crystal arrests McCoy for killing Bob or the homeless guy instead of letting him go. The plot makes no sense from this point if
+				// McCoy actually did kill someone since he mentions from this point onwards multiple times about him being framed which doesn't make any sense if
+				// he actually killed someone.
+				if (_vm->_cutContent) {
+					Actor_Says(kActorMcCoy, 8565, 15); //00-8565.AUD	Really?
+					Actor_Says(kActorSteele, 1930, 12); //01-1930.AUD	Just kidding, Slim.
+					Actor_Says(kActorSteele, 2210, 12); //01-2210.AUD	I guess I gotta take you in. They'll probably have to run a couple of tests, too.
+					Actor_Set_Goal_Number(kActorMcCoy, kGoalMcCoyArrested);
+				} else {
+					Actor_Says(kActorMcCoy, 3140, 15); //00-3140.AUD	Thanks.
+					Actor_Says(kActorSteele, 1430, 12); //01-1430.AUD	Don’t thank me yet. The next time you see me... (smacks lips twice) 
+					Actor_Set_Goal_Number(kActorSteele, kGoalSteeleImmediatelyStartChapter4);
+				}
 			} else {
 				int v0 = Global_Variable_Query(kVariableHollowayArrest);
 				if (v0 == 1) { // Dektora called the fake cops
@@ -395,6 +432,10 @@ void SceneScriptNR01::PlayerWalkedIn() {
 					Actor_Says(kActorSteele, 1520, 14);
 					Actor_Says(kActorSteele, 1530, 13);
 					Actor_Says(kActorMcCoy, 3170, 13);
+					// Added in a clue.
+					if (_vm->_cutContent) {
+						Actor_Clue_Acquire(kActorMcCoy, kClueSuspectDektora, true, kActorSteele);
+					}
 					Actor_Set_Goal_Number(kActorSteele, kGoalSteeleNR01GoToNR08);
 				} else if (v0 == 2) { // Gordo called the fake cops
 					Actor_Says(kActorSteele, 1590, 15);

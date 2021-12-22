@@ -332,6 +332,8 @@ void AIScriptDektora::Retired(int byActorId) {
 			Game_Flag_Reset(kFlagMcCoyIsHelpingReplicants);
 			if (Query_Difficulty_Level() != kGameDifficultyEasy) {
 				Global_Variable_Increment(kVariableChinyen, 200);
+				// Added in a clue.
+				Actor_Clue_Acquire(kActorMcCoy, kClueMcCoyRetiredDektora, true, kActorSteele);
 			}
 		}
 	}

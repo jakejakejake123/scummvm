@@ -1398,10 +1398,20 @@ bool AIScriptSteele::GoalChanged(int currentGoalNumber, int newGoalNumber) {
 		Actor_Says(kActorDispatcher, 0, kAnimationModeTalk);
 		Actor_Says(kActorDispatcher, 10, kAnimationModeTalk);
 		Actor_Face_Actor(kActorMcCoy, kActorSteele, true);
-		Actor_Says(kActorMcCoy, 2980, 12);
-		Actor_Says(kActorSteele, 860, 14);
-		Actor_Says(kActorMcCoy, 2985, 13);
-		Actor_Says(kActorSteele, 870, 15);
+		Actor_Says(kActorMcCoy, 2980, 12); 	
+		// Made it so if McCoy actually did shoot Izo he won't say the line I didn't kill Izo.
+		if (_vm->_cutContent) {
+			if (!Game_Flag_Query(kFlagMcCoyShotIzo)) {
+				Actor_Says(kActorSteele, 860, 14); //01-0860.AUD	Maybe they just want to bring you in for questioning.
+				Actor_Says(kActorMcCoy, 2985, 13); //00-2985.AUD	I didn’t kill Izo.
+			} else {
+				Actor_Says(kActorSteele, 860, 14); //01-0860.AUD	Maybe they just want to bring you in for questioning.
+			}
+		} else {
+			Actor_Says(kActorSteele, 860, 14); //01-0860.AUD	Maybe they just want to bring you in for questioning.
+			Actor_Says(kActorMcCoy, 2985, 13); //00-2985.AUD	I didn’t kill Izo.
+		}
+		Actor_Says(kActorSteele, 870, 15); //01-0870.AUD	Hm, maybe they... think you’re not what you think you are.
 		Actor_Says(kActorMcCoy, 2990, 16);
 		Actor_Says(kActorSteele, 880, 17);
 		Actor_Says(kActorSteele, 890, 18);
@@ -1415,9 +1425,22 @@ bool AIScriptSteele::GoalChanged(int currentGoalNumber, int newGoalNumber) {
 		Actor_Says(kActorSteele, 950, 13);
 		Actor_Says(kActorMcCoy, 3010, 15);
 		Actor_Says(kActorSteele, 960, 15);
-		Actor_Says(kActorSteele, 970, 13);
-		Actor_Says(kActorMcCoy, 3015, 12);
-		Actor_Says(kActorSteele, 980, 17);
+		Actor_Says(kActorSteele, 970, 13); //01-0970.AUD	We’ll be meeting again, Slim. You can bank on it.
+		// If McCoy has establshed an affection rating with eiher Dektora or Lucy and is heading towards the car ending Crystal will say this ominous line. 
+		// Some foreshadowing for the events of the car ending.
+		if (_vm->_cutContent) {
+			if (Global_Variable_Query(kVariableAffectionTowards) == kAffectionTowardsLucy 
+			|| Global_Variable_Query(kVariableAffectionTowards) == kAffectionTowardsLucy) {
+				Actor_Says(kActorMcCoy, 3140, 15); //00-3140.AUD	Thanks.
+				Actor_Says(kActorSteele, 1430, 12); //01-1430.AUD	Don’t thank me yet. The next time you see me... (smacks lips twice) 
+			} else {
+				Actor_Says(kActorMcCoy, 3015, 12); // 00-3015.AUD	You got a deal.	
+				Actor_Says(kActorSteele, 980, 17); //01-0980.AUD	Now get cracking. Before I change my mind.
+			}
+			} else {
+				Actor_Says(kActorMcCoy, 3015, 12); // 00-3015.AUD	You got a deal.	
+				Actor_Says(kActorSteele, 980, 17); //01-0980.AUD	Now get cracking. Before I change my mind.
+			}
 		if (Player_Query_Current_Scene() == kSceneNR01) {
 			Actor_Set_Goal_Number(kActorSteele, kGoalSteeleNR01StartChapter4);
 		} else {
