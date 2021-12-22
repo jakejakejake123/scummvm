@@ -1269,6 +1269,10 @@ bool AIScriptSteele::GoalChanged(int currentGoalNumber, int newGoalNumber) {
 		Actor_Says(kActorMcCoy, 3065, 18);
 		Actor_Says(kActorSteele, 1280, 13);
 		Actor_Says(kActorSteele, 1290, 13);
+		//Added in a clue.
+		if (_vm->_cutContent) {
+			Actor_Clue_Acquire(kActorMcCoy, kClueCrystalRetiredGordo, true, kActorSteele);
+		}
 		Game_Flag_Set(kFlagGordoRanAway);
 		Player_Gains_Control();
 		if (Game_Flag_Query(kFlagSpinnerAtHF01)) {
@@ -1397,6 +1401,11 @@ bool AIScriptSteele::GoalChanged(int currentGoalNumber, int newGoalNumber) {
 		Actor_Says(kActorSteele, 850, 16);
 		Actor_Says(kActorDispatcher, 0, kAnimationModeTalk);
 		Actor_Says(kActorDispatcher, 10, kAnimationModeTalk);
+		//Added in a dispatcher line and a clue.
+		if (_vm->_cutContent) {
+			Actor_Says(kActorDispatcher, 20, kAnimationModeTalk); //38-0020.AUD	Photo and descriptive information available on ESPER.
+			Actor_Clue_Acquire(kActorMcCoy, kClueMcCoysDescription, true, kActorDispatcher);
+		}
 		Actor_Face_Actor(kActorMcCoy, kActorSteele, true);
 		Actor_Says(kActorMcCoy, 2980, 12); 	
 		// Made it so if McCoy actually did shoot Izo he won't say the line I didn't kill Izo.

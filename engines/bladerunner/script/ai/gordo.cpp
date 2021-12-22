@@ -307,6 +307,9 @@ void AIScriptGordo::Retired(int byActorId) {
 		if (Query_Difficulty_Level() > kGameDifficultyEasy) {
 			Global_Variable_Increment(kVariableChinyen, 200);
 		}
+		if (_vm->_cutContent) {
+			Actor_Clue_Acquire(kActorMcCoy, kClueMcCoyRetiredGordo, true, -1);
+		}
 		Player_Gains_Control();
 		Scene_Exits_Enable();
 	}
@@ -714,6 +717,11 @@ bool AIScriptGordo::GoalChanged(int currentGoalNumber, int newGoalNumber) {
 	case kGoalGordoNR01RanAway:
 		Scene_Exits_Enable();
 		Game_Flag_Set(kFlagGordoRanAway);
+		// Added in some dialogue.
+		if (_vm->_cutContent) {
+			Actor_Voice_Over(180, kActorVoiceOver); //99-0180.AUD	Sometimes my trigger finger starts to itch.
+			Actor_Voice_Over(190, kActorVoiceOver); //99-0190.AUD	If only we had a target range worth a damn back at the station.
+		}
 		Actor_Put_In_Set(kActorGordo, kSetFreeSlotA);
 		Actor_Set_At_Waypoint(kActorGordo, 33, 0);
 		break;
@@ -1737,6 +1745,25 @@ void AIScriptGordo::talkToMcCoyInCity() {
 #endif // BLADERUNNER_ORIGINAL_BUGS
 		Actor_Says(kActorGordo, 990, 13);
 		Actor_Says(kActorGordo, 1000, 15);
+		// Added in an option to give Gordo money for lichen dogs.
+		if (_vm->_cutContent) {
+			Actor_Says(kActorMcCoy, 1125, 12); //00-1125.AUD	Thanks a million.
+			Actor_Says(kActorGordo, 980, 15); //02-0980.AUD	Got any chinyen you can part with? Just so I can grab myself a couple of lichen-dogs.
+		  	if  (Player_Query_Agenda() == kPlayerAgendaSurly
+		   	|| Player_Query_Agenda() == kPlayerAgendaErratic) {  
+				Actor_Says(kActorMcCoy, 430, 14); //00-0430.AUD	Sorry, pal. All I got are hundreds.
+				Actor_Says(kActorGordo, 570, 15); //02-0570.AUD	Gotta go, daddy-o.
+				Actor_Modify_Friendliness_To_Other(kActorGordo, kActorMcCoy, -5);
+			} else {
+				Actor_Says(kActorMcCoy, 1025, 13); //00-1025.AUD	Absolutely.
+				Actor_Says(kActorGordo, 10, 15); //02-0010.AUD	Catch you later.
+				AI_Movement_Track_Unpause(kActorGordo);
+				Actor_Modify_Friendliness_To_Other(kActorGordo, kActorMcCoy, 5);
+				if (Query_Difficulty_Level() != kGameDifficultyEasy) {
+					Global_Variable_Decrement(kVariableChinyen, 10);
+				}
+			}
+		}
 		Game_Flag_Set(kFlagGordoTalk2);
 		AI_Movement_Track_Unpause(kActorGordo);
 	} else {
@@ -1817,11 +1844,20 @@ void AIScriptGordo::dialogue2() {
 		Actor_Says(kActorGordo, 240, 14);
 		if (Actor_Clue_Query(kActorMcCoy, kClueStolenCheese)) {
 			Actor_Says(kActorMcCoy, 3105, 15);
-			Actor_Says(kActorMcCoy, 3110, 17);
+			Actor_Says(kActorMcCoy, 3110, 17); //00-3110.AUD	You’re gonna go tell your pal, Clovis, that I’m looking for him.
+			//Added in some Gordo dialogue.
+			if (_vm->_cutContent) {
+				Actor_Says(kActorMcCoy, 1210, 15); //02-1210.AUD	Sure. But he wants to pick the venue. And he doesn’t like to be hurried into anything.
+				Actor_Says(kActorMcCoy, 880, 17); //00-0880.AUD	That so?
+			}
 			Actor_Says(kActorGordo, 250, 13);
 			Actor_Says(kActorGordo, 260, 18);
 			Actor_Says(kActorMcCoy, 3115, 14);
-			Actor_Says(kActorGordo, 270, 15);
+			Actor_Says(kActorGordo, 270, 15); //02-0270.AUD	Very funny.
+			if (_vm->_cutContent) {
+				Actor_Says(kActorMcCoy, 3255, 18); //00-3255.AUD	Maybe I’ll see you again.
+				Actor_Says(kActorGordo, 570, 15); //02-0570.AUD	Gotta go, daddy-o.
+			}
 			Actor_Clue_Acquire(kActorGordo, kClueMcCoyHelpedGordo, true, -1);
 		} else {
 			Delay(1000);
@@ -1862,7 +1898,9 @@ void AIScriptGordo::dialogue1() {
 		Actor_Says(kActorGordo, 370, 13);
 		Actor_Says(kActorGordo, 380, 12);
 		Actor_Says(kActorGordo, 390, 14);
-		if (Player_Query_Agenda() == kPlayerAgendaSurly) {
+		//Made it so McCoy will also say these lines if he is erratic.
+		if (Player_Query_Agenda() == kPlayerAgendaSurly
+		|| (Player_Query_Agenda() == kPlayerAgendaErratic)) {
 			Actor_Says(kActorMcCoy, 3265, 13);
 			Actor_Says(kActorGordo, 400, 12);
 			Actor_Modify_Friendliness_To_Other(kActorGordo, kActorMcCoy, -3);

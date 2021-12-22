@@ -337,7 +337,17 @@ void SceneScriptNR01::PlayerWalkedIn() {
 		ADQ_Add(kActorGordo, 110, 82);
 		ADQ_Add(kActorSteele, 1030, kAnimationModeTalk);
 		ADQ_Add(kActorSteele, 1040, kAnimationModeTalk);
-		ADQ_Add(kActorGordo, 120, 82);
+		//Restoed some Gordo dialogue.
+		if (_vm->_cutContent) {
+			ADQ_Add(kActorGordo, 1400, 82); //02-1400.AUD	That old killer instinct? That was just a bonus. But, heck, you gotta have it, if you wanna work in this town.
+			ADQ_Add(kActorGordo, 120, 81); //02-0120.AUD	An entertainer. That’s all I ever was. That’s all I ever wanted to be.
+			ADQ_Add(kActorGordo, 130, 82); //02-0130.AUD	Curtain call time, baby.
+			ADQ_Add(kActorGordo, 140, 81); //02-0140.AUD	I’ve waited all my life for my big break. And now you’re gonna get yours.
+			ADQ_Add(kActorGordo, 150, 81); //02-0150.AUD	(singing) I did it my way!
+			ADQ_Add(kActorGordo, 160, 82); //02-0160.AUD	(singing) I did it my way!
+		} else {
+			ADQ_Add(kActorGordo, 120, 82);
+		}
 	}
 
 	if (Game_Flag_Query(kFlagNR03McCoyThrownOut)) {
