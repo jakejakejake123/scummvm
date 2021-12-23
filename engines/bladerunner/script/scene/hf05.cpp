@@ -440,7 +440,14 @@ void SceneScriptHF05::dialogueWithCrazylegs1() {
 		DM_Add_To_List_Never_Repeat_Once_Selected(1180, 3, 6, 7); // ADVERTISEMENT
 	}
 #endif // BLADERUNNER_ORIGINAL_BUGS
-	if (Actor_Clue_Query(kActorMcCoy, kClueCrazylegsInterview1)) {
+	// Added in flag so this topic will activate after you talk to Crazy about the car registration. The reason for this is because I made the Crazylegs interview 1 
+	// clue feature the dialogue of this topic since it not only includes that facts mentioned in car registration but also some extra facts that are also relevant such as mentioning 
+	// Gordo being with Dektora and saying that they were after a police spinner.
+	if (_vm->_cutContent) {
+		if (Game_Flag_Query(kFlagCrazylegsTalkCarRegistration)) {
+			DM_Add_To_List_Never_Repeat_Once_Selected(1190, 2, 7, 4); // WOMAN
+		}
+	} else if (Actor_Clue_Query(kActorMcCoy, kClueCrazylegsInterview1)) {
 		// kClueCrazylegsInterview1 is acquired (after bug fix)
 		// only when Dektora has bought the car (kClueCarRegistration1)
 		// and McCoy has asked Crazylegs for the CAR REGISTRATION topic already
@@ -577,6 +584,11 @@ void SceneScriptHF05::dialogueWithCrazylegs1() {
 		Actor_Says(kActorMcCoy, 2015, 14);
 		Actor_Says(kActorCrazylegs, 700, 15);
 		Actor_Says(kActorMcCoy, 2020, 18);
+		// Made it so the crazylegs interview 1 clue is for this dialogue instead. The reason is it contains a lot more information than the car registration topic.
+		// I mean not only does Crazy describe Dektora in this topic, but he also mentions Gordo and how they asked for a police spinner. Pretty relevant information.
+		if (_vm->_cutContent) {
+			Actor_Clue_Acquire(kActorMcCoy, kClueCrazylegsInterview1, true, kActorCrazylegs);
+		}
 		// Inserted a flag to make the womans photo option available.
 		Game_Flag_Set(kFlagCrazylegsTalkWoman);
 		break;
@@ -652,12 +664,18 @@ void SceneScriptHF05::dialogueWithCrazylegs1() {
 			Actor_Says(kActorMcCoy, 2080, kAnimationModeTalk);
 			Actor_Says(kActorCrazylegs, 860, 16);
 			Actor_Says(kActorCrazylegs, 870, kAnimationModeTalk);
+			// Added in a flag so the woman option will activate after talking to Crazy about the car registration.
+			if (_vm->_cutContent) {
+				Game_Flag_Set(kFlagCrazylegsTalkCarRegistration);
+			}
 #if BLADERUNNER_ORIGINAL_BUGS
 #else
 			// This clue was never acquired, even though it is checked in KIA
 			// (so that it appears as a recording in KIA if acquired)
 			// It also enables the "WOMAN" conversation option with CrazyLegs.
-			Actor_Clue_Acquire(kActorMcCoy, kClueCrazylegsInterview1, true, kActorCrazylegs);
+			if (!_vm->_cutContent) {
+				Actor_Clue_Acquire(kActorMcCoy, kClueCrazylegsInterview1, true, kActorCrazylegs);
+			}
 #endif // BLADERUNNER_ORIGINAL_BUGS
 		} else if (Actor_Clue_Query(kActorMcCoy, kClueCarRegistration3)) {
 			Actor_Says(kActorCrazylegs, 880, 12);

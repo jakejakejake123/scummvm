@@ -727,7 +727,7 @@ enum Flags {
 	kFlagBB03toBB05                           = 285, // is never checked
 	kFlagBB05toBB03                           = 286,
 	kFlagRC04Entered                          = 287,
-	// 288 is never used
+	kFlagCrazylegsTalkCarRegistration		  = 288,	
 	kFlagRC04McCoyShotBob                     = 289,
 	kFlagRC04BobTalk1                         = 290,
 	// 291 is never used

@@ -863,12 +863,36 @@ void KIAScript::SCRIPT_KIA_DLL_Play_Clue_Asset_Script(int notUsed, int clueId) {
 		KIA_Play_Actor_Dialogue(kActorVoiceOver, 3900);
 		break;
 	case kClueCrazylegsInterview1:
-		KIA_Play_Actor_Dialogue(kActorCrazylegs, 830);
-		KIA_Play_Actor_Dialogue(kActorCrazylegs, 840);
-		KIA_Play_Actor_Dialogue(kActorCrazylegs, 850);
+	if (_vm->_cutContent) {
+		KIA_Play_Actor_Dialogue(kActorMcCoy, 1895); //00-1895.AUD	I gotta know more about the woman, Crazy.
+		KIA_Play_Actor_Dialogue(kActorCrazylegs, 620); //09-0620.AUD	Like I said, she was tall and blonde. Real woo bait.
+		KIA_Play_Actor_Dialogue(kActorCrazylegs, 630); //09-0630.AUD	She was tooling around with a short guy in a bow tie.
+		KIA_Play_Actor_Dialogue(kActorMcCoy, 2000); //00-2000.AUD	And she wanted a car.
+		KIA_Play_Actor_Dialogue(kActorCrazylegs, 640); //09-0640.AUD	At first, she was looking for a very hard to find item.
+		KIA_Play_Actor_Dialogue(kActorCrazylegs, 650); //09-0650.AUD	Something that doesn’t show up on the lot too often.
+		KIA_Play_Actor_Dialogue(kActorCrazylegs, 660); //09-0660.AUD	A… police-issue vehicle.
+		KIA_Play_Actor_Dialogue(kActorMcCoy, 2005); //00-2005.AUD	A Spinner?
+		KIA_Play_Actor_Dialogue(kActorMcCoy, 2010); //00-2010.AUD	But you didn’t have one.
+		KIA_Play_Actor_Dialogue(kActorCrazylegs, 670); //09-0670.AUD	Well, not one that would actually fly.
+		KIA_Play_Actor_Dialogue(kActorCrazylegs, 680); //09-0680.AUD	I told them to check back in a couple of days.
+		KIA_Play_Actor_Dialogue(kActorCrazylegs, 690); //09-0690.AUD	So, then they got looking at that Sedan.
+		KIA_Play_Actor_Dialogue(kActorMcCoy, 2015); //00-2015.AUD	You know how many years mandatory you’d get for selling a police Spinner?
+		KIA_Play_Actor_Dialogue(kActorCrazylegs, 700); //09-0700.AUD	I was gonna report them, if they showed up again.
+		KIA_Play_Actor_Dialogue(kActorMcCoy, 2020); //00-2020.AUD	Sure you were.
+	} else {
+		KIA_Play_Actor_Dialogue(kActorCrazylegs, 830); //09-0830.AUD	Oh-- Ooh, that Sedan.
+		KIA_Play_Actor_Dialogue(kActorCrazylegs, 840); //09-0840.AUD	Hey, look. A sexy blonde wants to pay top dollar for the ugliest car in the place…
+		KIA_Play_Actor_Dialogue(kActorCrazylegs, 850); //09-0850.AUD	who am I to say no?
+	}
 		break;
 	case kClueLichenDogWrapper:
 		KIA_Play_Slice_Model(kModelAnimationLichenDogWrapper);
+		if (_vm->_cutContent) {
+			KIA_Play_Actor_Dialogue(kActorVoiceOver, 550); //99-0550.AUD	The wrapper was from a vendor I knew. Best lichen-dogs in the Fourth Sector.
+			KIA_Play_Actor_Dialogue(kActorVoiceOver, 560); //99-0560.AUD	That wasn't saying a whole lot...
+			KIA_Play_Actor_Dialogue(kActorVoiceOver, 570); //99-0570.AUD	but with an arcade next door and a dozen Nightclubs down the street...
+			KIA_Play_Actor_Dialogue(kActorVoiceOver, 580); //99-0580.AUD	Mia and Murray's stand saw more action in a night than my spinster aunt saw all last century.
+		}
 		break;
 	case kClueRequisitionForm:
 		KIA_Play_Slice_Model(kModelAnimationRequisitionForm);
