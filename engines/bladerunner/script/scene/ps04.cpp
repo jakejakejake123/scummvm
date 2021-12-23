@@ -185,7 +185,13 @@ void SceneScriptPS04::DialogueQueueFlushed(int a1) {
 void SceneScriptPS04::dialogueWithGuzza() {
 	Dialogue_Menu_Clear_List();
 	if (Global_Variable_Query(kVariableChapter) > 1) {
-		if (Actor_Clue_Query(kActorMcCoy, kClueAttemptedFileAccess)) {
+		// Made it so this flag which activates after you ask the Tyrell guard for a meeting with Tyrell is the trigger for requesting a meeing with Tyrell from Guzza
+		// and not the attempted file access clue.
+		if (_vm->_cutContent) {
+			if	(Game_Flag_Query(kFlagTyrellGuardTalkMeeting)) {
+				DM_Add_To_List_Never_Repeat_Once_Selected(110, 5, 7, 4); // REQUEST TYRELL MEETING
+			}
+		} else if (Actor_Clue_Query(kActorMcCoy, kClueAttemptedFileAccess)) {
 			DM_Add_To_List_Never_Repeat_Once_Selected(110, 5, 7, 4); // REQUEST TYRELL MEETING
 		}
 		DM_Add_To_List_Never_Repeat_Once_Selected(120, 1, -1, -1); // MONEY

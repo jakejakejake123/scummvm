@@ -571,6 +571,11 @@ void SceneScriptTB02::dialogueWithTyrellGuard() {
 		Actor_Says(kActorMcCoy, 5205, 15);
 		Actor_Says(kActorTyrellGuard, 230, 12);
 		Actor_Says(kActorMcCoy, 5210, 12);
+		// Added a flag here so instead of the clue attempted file access being the trigger that allows you to ask Guzza for a meeting with Tyrell
+		// instead it will be this flag that activates after the guard denies you a meeting.
+		if (_vm->_cutContent) {
+			Game_Flag_Set(kFlagTyrellGuardTalkMeeting);
+		}
 		break;
 
 	case 730: // SECURITY

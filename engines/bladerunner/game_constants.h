@@ -718,7 +718,7 @@ enum Flags {
 	kFlagNotUsed276                           = 276, // is never set
 	kFlagDispatcherTalkMcCoy				  = 277,	
 	kFlagDR06KeyboardChecked                  = 278,
-	// 279 is never used
+	kFlagTyrellGuardTalkMeeting				  = 279,
 	kFlagDR06VidphoneChecked                  = 280,
 	kFlagBB03toBB02                           = 281,
 	kFlagBB02toBB03                           = 282, // is never checked
