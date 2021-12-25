@@ -81,10 +81,9 @@ bool SceneScriptNR07::ClickedOnActor(int actorId) {
 		if (Game_Flag_Query(kFlagNR07McCoyIsCop)) {
 			DM_Add_To_List_Never_Repeat_Once_Selected(1100, -1, 3, 8); // VOIGT-KAMPFF
 			DM_Add_To_List_Never_Repeat_Once_Selected(1110, 8, -1, -1); // CRYSTAL
-			// Made it so the moonbus option is now available when talking to Dektora. The trigger will be the clue EarlyInterviewB where he tells McCoy
-			// about Dektora and others are trying to help the reps get offworld.
+			// Made it so the moonbus option is now available when talking to Dektora. The trigger will be the clue DektorasDressingRoom. 
 			if (_vm->_cutContent) {
-				if (Actor_Clue_Query(kActorMcCoy, kClueEarlyInterviewB2)) {	
+				if (Actor_Clue_Query(kActorMcCoy, kClueDektorasDressingRoom)) {	
 					DM_Add_To_List_Never_Repeat_Once_Selected(1120, 3, 6, 7); // MOONBUS
 				}
 			}
@@ -241,7 +240,12 @@ void SceneScriptNR07::ActorChangedGoal(int actorId, int newGoal, int oldGoal, bo
 }
 
 void SceneScriptNR07::PlayerWalkedIn() {
-	Loop_Actor_Walk_To_XYZ(kActorMcCoy, -110.0f, -73.5f, -169.0f, 0, false, false, false);
+	// Altered
+	if (_vm->_cutContent) {
+		Loop_Actor_Walk_To_XYZ(kActorMcCoy, -112.0f, -73.0f, -89.0f, 0, false, false, false);
+	} else {
+		Loop_Actor_Walk_To_XYZ(kActorMcCoy, -110.0f, -73.5f, -169.0f, 0, false, false, false);
+	}
 
 	if (Actor_Query_In_Set(kActorDektora, kSetNR07)) {
 		if (!Game_Flag_Query(kFlagNR07Entered)) {
@@ -254,15 +258,38 @@ void SceneScriptNR07::PlayerWalkedIn() {
 			) {
 				Actor_Modify_Friendliness_To_Other(kActorDektora, kActorMcCoy, 10);
 			}
-
+			// Made it so if McCoy touches Dektora when McCoy enters her dressing room she will immediately either run away or call Holloway.
+			// It doesn't make any sense for Dektora to be so calm and have aconversation with someon who just assaulted her.
+			if (_vm->_cutContent) {
+				if (Game_Flag_Query(kFlagDektoraAssaulted)) {
+					Loop_Actor_Walk_To_XYZ(kActorMcCoy, -112.51, -73.26, -129.17, 525, false, false, false);
+					Actor_Face_Actor(kActorDektora, kActorMcCoy, true);	
+					Actor_Says(kActorMcCoy, 940, 13);
+					if (Game_Flag_Query(kFlagDektoraIsReplicant)) {
+						Actor_Face_Actor(kActorDektora, kActorMcCoy, true);
+						callHolloway();
+					} else {
+						dektoraRunAway();
+					}
+			} else if (!Game_Flag_Query(kFlagDektoraAssaulted)) {
 			Actor_Says(kActorDektora, 500, 30);
 			Actor_Says(kActorMcCoy, 3585, 14);
 			Actor_Says(kActorDektora, 510, 30);
 			Actor_Start_Speech_Sample(kActorMcCoy, 3590);
 			Loop_Actor_Walk_To_XYZ(kActorMcCoy, -112.0f, -73.0f, -89.0f, 525, false, false, false);
 			Actor_Says(kActorDektora, 520, kAnimationModeSit);
+			}
+		} else {
+			Actor_Says(kActorDektora, 500, 30);
+			Actor_Says(kActorMcCoy, 3585, 14);
+			Actor_Says(kActorDektora, 510, 30);
+			Actor_Start_Speech_Sample(kActorMcCoy, 3590);
+			Loop_Actor_Walk_To_XYZ(kActorMcCoy, -112.0f, -73.0f, -89.0f, 525, false, false, false);
+			Actor_Says(kActorDektora, 520, kAnimationModeSit);
+			}
 		} else {
 			Actor_Modify_Friendliness_To_Other(kActorDektora, kActorMcCoy, -2);
+			Actor_Face_Actor(kActorDektora, kActorMcCoy, true);
 			Actor_Says(kActorDektora, 530, 31);
 		}
 		Actor_Set_Goal_Number(kActorHanoi, kGoalHanoiDefault);
@@ -516,11 +543,54 @@ void SceneScriptNR07::talkAboutMoonbus() {
 #else
 #endif // BLADERUNNER_ORIGINAL_BUGS
 		callHolloway();
-	} else {
-		Actor_Modify_Friendliness_To_Other(kActorDektora, kActorMcCoy, -3);
-		Loop_Actor_Walk_To_XYZ(kActorMcCoy, -109.0f, -73.0f, -89.0f, 0, false, false, false);
-		Actor_Face_Actor(kActorMcCoy, kActorDektora, true);
-		dektoraRunAway();
+		// Added in an extra scenario where McCoy arrests Dektora if he has enough evidence against her. McCoy will arrest her after selecting the moonbus option if he has enough evidence.
+		// If Early Q is murdered and you have the purchased scorpions clue McCoy arrests Dektora fot the murder of Early Q. If you have the EarlyInterviewB2 clue where Early tells you about Dektora
+		// and other trying to help get the reps offworld McCoy arrests her for being a rep sympathizer.
+	} else if (!Game_Flag_Query(kFlagDektoraIsReplicant)) {
+		if (Game_Flag_Query(kFlagNR04EarlyQStungByScorpions)
+		&&  Actor_Clue_Query(kActorMcCoy, kCluePurchasedScorpions)) {
+			Actor_Modify_Friendliness_To_Other(kActorDektora, kActorMcCoy, -3);
+			Delay (2000);
+			Actor_Says(kActorMcCoy, 6985, 16); //00-6985.AUD	Got the straight scoop for me or what?
+			Actor_Says(kActorDektora, 620, 30); //03-0620.AUD	I’m sure I don’t know what you mean.
+			Actor_Says(kActorMcCoy, 6495, 15); //00-6495.AUD	Cut the shit. A man was killed back there.
+			Actor_Says(kActorDektora, 610, 31); //03-0610.AUD	Is this about Early Q? Because I could tell you--
+			Actor_Says(kActorMcCoy, 3095, 18); //00-3095.AUD	Now we’re gonna take a little ride downtown.
+			dektoraRunAway();
+			Actor_Face_Heading(kActorMcCoy, 0, false);
+			Actor_Says(kActorMcCoy, 460, 14); //00-0460.AUD	Hold it right there!
+			Delay (1000);
+			Actor_Put_In_Set(kActorDektora, kSetPS09);
+			Actor_Set_At_XYZ(kActorDektora, -330.0f, 0.33f, -270.0f, 583);
+			Game_Flag_Reset(kFlagSpinnerAtNR01);
+			Game_Flag_Reset(kFlagSpinnerAtHF01);
+			Game_Flag_Set(kFlagSpinnerAtPS01);
+			Scene_Exits_Enable();
+			Game_Flag_Reset(kFlagMcCoyInNightclubRow);
+			Game_Flag_Set(kFlagMcCoyInPoliceStation);
+			Set_Enter(kSetPS09, kScenePS09);
+		} else if (Actor_Clue_Query(kActorMcCoy, kClueEarlyInterviewB2)) {
+			Actor_Modify_Friendliness_To_Other(kActorDektora, kActorMcCoy, -3);
+			Actor_Says(kActorDektora, 620, 30);	//03-0620.AUD	I’m sure I don’t know what you mean.
+			Actor_Says(kActorMcCoy, 3090, 14); //00-3090.AUD	You may not be a Rep but you’re a damn Rep sympathizer for sure.
+			Actor_Says(kActorDektora, 760, 30); //03-0760.AUD	Excuse me?
+			Actor_Says(kActorMcCoy, 3095, 18); //00-3095.AUD	Now we’re gonna take a little ride downtown.
+			dektoraRunAway();
+			Actor_Face_Heading(kActorMcCoy, 0, false);
+			Actor_Says(kActorMcCoy, 460, 14); //00-0460.AUD	Hold it right there!
+			Delay (1000);
+			Actor_Put_In_Set(kActorDektora, kSetPS09);
+			Actor_Set_At_XYZ(kActorDektora, -330.0f, 0.33f, -270.0f, 583);
+			Game_Flag_Reset(kFlagSpinnerAtNR01);
+			Game_Flag_Reset(kFlagSpinnerAtHF01);
+			Game_Flag_Set(kFlagSpinnerAtPS01);
+			Scene_Exits_Enable();
+			Game_Flag_Reset(kFlagMcCoyInNightclubRow);
+			Game_Flag_Set(kFlagMcCoyInPoliceStation);
+			Set_Enter(kSetPS09, kScenePS09);
+		} else {
+			dektoraRunAway();
+		}
 	}
 }
 

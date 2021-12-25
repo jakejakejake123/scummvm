@@ -229,6 +229,11 @@ void AIScriptDektora::ClickedByPlayer() {
 
 	if (Actor_Query_Goal_Number(kActorDektora) == kGoalDektoraNR08Dance) {
 		Game_Flag_Set(kFlagNR08TouchedDektora);
+		if (_vm->_cutContent) {
+			Game_Flag_Set(kFlagDektoraAssaulted);
+			Actor_Face_Actor(kActorHanoi, kActorMcCoy, true);
+			Actor_Says(kActorHanoi, 120, 12); //25-0120.AUD	Look but don’t touch, boy-o.
+		}
 		AI_Movement_Track_Flush(kActorHanoi);
 		Actor_Force_Stop_Walking(kActorMcCoy);
 #if BLADERUNNER_ORIGINAL_BUGS
