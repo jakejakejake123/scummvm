@@ -2742,10 +2742,10 @@ enum GameModelAnimations {
 	kModelAnimationSpinnerKeys                 = 986,
 	kModelAnimationBriefcase                   = 987,
 	kModelAnimationDNAEvidence01OutOf6         = 988,
-//	kModelAnimationDNAEvidence02OutOf6         = 989, // UNUSED - actual 2 parts of DNA
+	kModelAnimationDNAEvidence02OutOf6         = 989, // UNUSED - actual 2 parts of DNA
 	kModelAnimationDNAEvidence03OutOf6         = 990, // used for two parts found
 	kModelAnimationDNAEvidence04OutOf6         = 991, // used for three parts found
-//	kModelAnimationDNAEvidence05OutOf6         = 992, // UNUSED - actual 5 parts of DNA
+	kModelAnimationDNAEvidence05OutOf6         = 992, // UNUSED - actual 5 parts of DNA
 	kModelAnimationDNAEvidenceComplete         = 993,
 //	kModelAnimationAmmoType00                  = 994, // UNUSED - simple bullet
 	kModelAnimationAmmoType01                  = 995, // from Bullet Bob's
