@@ -820,7 +820,7 @@ enum Flags {
 	kFlagDirectorsCut                         = 378, // Designer's Cut (KIA options) flag!
 	kFlagCT08toCT51                           = 379, // is never checked
 	kFlagCT51toCT08                           = 380,
-	// 381 is never used
+	kFlagLutherLanceTalkWork 				  = 381,	
 	kFlagHF01MurrayMiaTalk                    = 382,
 	kFlagNotUsed383                           = 383,
 	kFlagHC01toHC02                           = 384,

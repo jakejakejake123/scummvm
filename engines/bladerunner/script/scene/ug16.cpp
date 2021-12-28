@@ -95,6 +95,12 @@ bool SceneScriptUG16::ClickedOn3DObject(const char *objectName, bool a2) {
 				Actor_Voice_Over(2750, kActorVoiceOver);
 				Actor_Voice_Over(2760, kActorVoiceOver);
 				Actor_Voice_Over(2770, kActorVoiceOver);
+				// Added in an extra line.
+				if (_vm->_cutContent) {
+					if (!Actor_Clue_Query(kActorMcCoy, kClueGuzzaFramedMcCoy)) {
+						Actor_Voice_Over(2820, kActorVoiceOver); //99-2820.AUD	Why did the Reps have this? Were they blackmailing Guzza? I knew I was getting close.
+					}
+				}
 				Actor_Clue_Acquire(kActorMcCoy, kClueFolder, true, -1);
 			} else {
 				Actor_Says(kActorMcCoy, 8523, 12);
@@ -193,6 +199,11 @@ void SceneScriptUG16::ActorChangedGoal(int actorId, int newGoal, int oldGoal, bo
 }
 
 void SceneScriptUG16::PlayerWalkedIn() {
+	// Made it so McCoys gun is holstrered when entering the twins lab so the conversation with them isn't cut off.
+	if (_vm->_cutContent) {
+		Player_Set_Combat_Mode(false);
+
+	}
 	Game_Flag_Set(kFlagDR06UnlockedToUG16);
 
 	if (!Game_Flag_Query(kFlagLutherLanceAreDead)) {
@@ -226,6 +237,11 @@ void SceneScriptUG16::PlayerWalkedIn() {
 		Actor_Says(kActorMcCoy, 5715, 14);
 		Actor_Says(kActorLance, 30, 16);
 		Actor_Says(kActorLuther, 70, 6);
+		// Made it so you can not shoot Luther and Lance at first. Doesn't make sense for McCoy to shoot two random strangers in the back.
+		// This will change when Luther and Lance reveal that they are reps.
+		if (_vm->_cutContent) {
+			Actor_Set_Targetable(kActorLuther, false);
+		}
 		Player_Gains_Control();
 		Game_Flag_Set(kFlagUG16LutherLanceTalk1);
 	}
@@ -245,11 +261,20 @@ void SceneScriptUG16::DialogueQueueFlushed(int a1) {
 void SceneScriptUG16::dialogueWithLuther() {
 	Dialogue_Menu_Clear_List();
 	DM_Add_To_List_Never_Repeat_Once_Selected(1400, 5, 6, 2); // REPLICANTS
+	// Made it so the lifespan option is only available when you ask the twins about their work and they mention that they are
+	// trying to extend the replicant lifespan.
+	if (_vm->_cutContent) {
+		if (Game_Flag_Query(kFlagLutherLanceTalkWork)) {
+			DM_Add_To_List_Never_Repeat_Once_Selected(1420, 6, 4, 5); // LIFESPAN
+		}
+	}
 	DM_Add_To_List_Never_Repeat_Once_Selected(1410, 5, 4, 8); // WORK
 	if (Game_Flag_Query(kFlagUG16LutherLanceTalkReplicants)
 	 || Game_Flag_Query(kFlagUG16LutherLanceTalkHumans)
 	) {
-		DM_Add_To_List_Never_Repeat_Once_Selected(1420, 6, 4, 5); // LIFESPAN
+		if (!_vm->_cutContent) {
+			DM_Add_To_List_Never_Repeat_Once_Selected(1420, 6, 4, 5); // LIFESPAN
+		}
 		DM_Add_To_List_Never_Repeat_Once_Selected(1430, 6, 4, 5); // CLOVIS
 		DM_Add_To_List_Never_Repeat_Once_Selected(1440, 6, 4, 5); // VOIGT-KAMPFF
 	}
@@ -298,6 +323,10 @@ void SceneScriptUG16::dialogueWithLuther() {
 			Actor_Says(kActorLuther, 170, 14);
 			Game_Flag_Set(kFlagUG16LutherLanceTalkReplicants);
 			Actor_Modify_Friendliness_To_Other(kActorLuther, kActorMcCoy, 5);
+			// Gave McCoy the ability to shoot the twins once they say they are replicants.
+			if (_vm->_cutContent) {
+				Actor_Set_Targetable(kActorLuther, true);
+			}
 		} else {
 			Actor_Says(kActorLuther, 180, 14);
 			Actor_Says(kActorMcCoy, 5795, 13);
@@ -306,6 +335,9 @@ void SceneScriptUG16::dialogueWithLuther() {
 			Actor_Says(kActorLuther, 190, 15);
 			Game_Flag_Set(kFlagUG16LutherLanceTalkHumans);
 			Actor_Modify_Friendliness_To_Other(kActorLuther, kActorMcCoy, -10);
+			if (_vm->_cutContent) {
+				Actor_Set_Targetable(kActorLuther, true);
+			}
 		}
 		break;
 
@@ -313,7 +345,14 @@ void SceneScriptUG16::dialogueWithLuther() {
 		Actor_Says(kActorMcCoy, 5735, 13);
 		Actor_Face_Actor(kActorMcCoy, kActorLuther, true);
 		Actor_Says(kActorLance, 160, 17);
+		// Added in a line and a flag which triggers the lifespan option to appear.
+		if (_vm->_cutContent) {
+			Actor_Says(kActorLance, 170, 17); //13-0170.AUD	We’re gonna figure out a way to beat that four year lifespan if it kills us.
+		}
 		Actor_Says(kActorLuther, 200, 14);
+		if (_vm->_cutContent) {
+			Game_Flag_Set(kFlagLutherLanceTalkWork);
+		}
 		break;
 
 	case 1420: // LIFESPAN
@@ -336,13 +375,24 @@ void SceneScriptUG16::dialogueWithLuther() {
 		break;
 
 	case 1430: // CLOVIS
-		Actor_Says(kActorMcCoy, 5745, 13);
+		Actor_Says(kActorMcCoy, 5745, 13); //00-5745.AUD	Where’s Clovis now?
 		Actor_Face_Actor(kActorMcCoy, kActorLuther, true);
-		Actor_Says(kActorLance, 240, 15);
-		Actor_Says(kActorMcCoy, 5815, 13);
+		// Added in some lines and a clue.
+		if (_vm->_cutContent) {
+			Actor_Says(kActorLuther, 340, 15); //10-0340.AUD	Clovis has gone to see Eldon.
+			Actor_Says(kActorMcCoy, 8965, 14); //00-8965.AUD	What for?
+		}
+		Actor_Says(kActorLance, 240, 15); //13-0240.AUD	Gone to have a little heart to heart with Eldon.
+		if (_vm->_cutContent) {
+			Actor_Says(kActorLuther, 280, 15); //10-0280.AUD	We showed him how to get in through the basement.
+		}
+		Actor_Says(kActorMcCoy, 5815, 13); //00-5815.AUD	He’ll kill Tyrell, if he gets to him.
 		Actor_Says(kActorLance, 250, 16);
 		Actor_Says(kActorLuther, 290, 15);
 		Actor_Says(kActorLance, 260, 15);
+		if (_vm->_cutContent) {
+			Actor_Clue_Acquire(kActorMcCoy, kClueSightingClovis, true, kActorLuther);
+		}
 		break;
 
 	case 1440: // VOIGT-KAMPFF
@@ -377,12 +427,20 @@ void SceneScriptUG16::dialogueWithLuther() {
 		Actor_Says(kActorMcCoy, 5760, 13);
 		Actor_Face_Actor(kActorMcCoy, kActorLuther, true);
 		Actor_Says(kActorLuther, 370, 15);
-		Actor_Says(kActorLance, 340, 14);
-		Actor_Says(kActorMcCoy, 5835, 13);
+		Actor_Says(kActorLance, 340, 14); //13-0340.AUD	We just wanted to make some extra cash on the side.
+		// Added in some lines.
+		if (_vm->_cutContent) {
+			Actor_Says(kActorLance, 350, 14); //13-0350.AUD	So, I sold Runciter some of Tyrell’s state of the art animals.
+			Actor_Says(kActorLance, 360, 14); //13-0360.AUD	He was going to pawn them off as real.
+		}
+		Actor_Says(kActorMcCoy, 5835, 13); //00-5835.AUD	That probably had something to do with you guys getting fired.
 		Actor_Says(kActorLuther, 380, 15);
 		Actor_Says(kActorLance, 370, 6);
 		Actor_Says(kActorMcCoy, 5840, 13);
-		Actor_Says(kActorLance, 380, 13);
+		Actor_Says(kActorLance, 380, 13); //13-0380.AUD	It was all just a coincidence.
+		if (_vm->_cutContent) {
+			Actor_Says(kActorLance, 390, 6); //13-0390.AUD	We just happened to be doing business with the same scumbag.
+		}
 		break;
 
 	case 1470: // TRADE
@@ -401,6 +459,12 @@ void SceneScriptUG16::dialogueWithLuther() {
 #endif // BLADERUNNER_ORIGINAL_BUGS
 		Delay(1000);
 		Item_Pickup_Spin_Effect(kModelAnimationFolder, 239, 454);
+		// Made it so you receive the original shipping form from the twins when they give you the folder.
+		if (_vm->_cutContent) {
+			Delay(2000);
+			Item_Pickup_Spin_Effect(kModelAnimationOriginalShippingForm, 239, 454);
+			Actor_Clue_Acquire(kActorMcCoy, kClueOriginalShippingForm, true, -1);
+		}
 		Actor_Voice_Over(2740, kActorVoiceOver);
 		Actor_Voice_Over(2750, kActorVoiceOver);
 		Actor_Voice_Over(2760, kActorVoiceOver);
@@ -415,6 +479,13 @@ void SceneScriptUG16::dialogueWithLuther() {
 		break;
 
 	case 1480: // DONE
+		// Added in some banter dialogue.
+		if (_vm->_cutContent) {
+			Actor_Says(kActorMcCoy, 5770, 15); //00-5770.AUD	Listen, fellas.
+			Actor_Says(kActorLuther, 90, 15); //10-0090.AUD	Can’t talk now.
+			Actor_Says(kActorLance, 50, 6); //13-0050.AUD	We gotta get this done.
+			Actor_Says(kActorLance, 60, 6); //13-0060.AUD	Major crunch time.
+		}
 		Actor_Says(kActorMcCoy, 4595, 14);
 		break;
 	}

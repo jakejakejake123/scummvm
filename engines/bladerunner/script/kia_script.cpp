@@ -1002,7 +1002,11 @@ void KIAScript::SCRIPT_KIA_DLL_Play_Clue_Asset_Script(int notUsed, int clueId) {
 		KIA_Play_Actor_Dialogue(kActorVoiceOver, 2500);
 		break;
 	case kClueHomelessManInterview1:
-		KIA_Play_Actor_Dialogue(kActorMcCoy, 5615);
+		KIA_Play_Actor_Dialogue(kActorMcCoy, 5615); 
+		if (_vm->_cutContent) {
+			KIA_Play_Actor_Dialogue(kActorTransient, 160);
+			KIA_Play_Actor_Dialogue(kActorMcCoy, 5620);
+		}
 		KIA_Play_Actor_Dialogue(kActorTransient, 170);
 		KIA_Play_Actor_Dialogue(kActorMcCoy, 5625);
 		KIA_Play_Actor_Dialogue(kActorTransient, 180);
@@ -1010,6 +1014,9 @@ void KIAScript::SCRIPT_KIA_DLL_Play_Clue_Asset_Script(int notUsed, int clueId) {
 		KIA_Play_Actor_Dialogue(kActorTransient, 190);
 		KIA_Play_Actor_Dialogue(kActorMcCoy, 5635);
 		KIA_Play_Actor_Dialogue(kActorTransient, 200);
+		if (_vm->_cutContent) {
+			KIA_Play_Actor_Dialogue(kActorTransient, 210);
+		}
 		break;
 	case kClueHomelessManInterview2:
 		KIA_Play_Actor_Dialogue(kActorMcCoy, 5640);
@@ -1021,8 +1028,17 @@ void KIAScript::SCRIPT_KIA_DLL_Play_Clue_Asset_Script(int notUsed, int clueId) {
 		KIA_Play_Actor_Dialogue(kActorTransient, 260);
 		break;
 	case kClueHomelessManKid:
+		if (_vm->_cutContent) {
+			KIA_Play_Actor_Dialogue(kActorMcCoy, 5670);
+		}
 		KIA_Play_Actor_Dialogue(kActorTransient, 340);
+		if (_vm->_cutContent) {
+			KIA_Play_Actor_Dialogue(kActorMcCoy, 5690);
+		}
 		KIA_Play_Actor_Dialogue(kActorTransient, 350);
+		if (_vm->_cutContent) {
+			KIA_Play_Actor_Dialogue(kActorMcCoy, 5695);
+		}
 		KIA_Play_Actor_Dialogue(kActorTransient, 360);
 		KIA_Play_Actor_Dialogue(kActorVoiceOver, 2710);
 		KIA_Play_Actor_Dialogue(kActorVoiceOver, 2730);
@@ -1042,23 +1058,66 @@ void KIAScript::SCRIPT_KIA_DLL_Play_Clue_Asset_Script(int notUsed, int clueId) {
 		break;
 	case kClueOriginalRequisitionForm:
 		KIA_Play_Slice_Model(kModelAnimationOriginalRequisitionForm);
+		if (_vm->_cutContent) {
+			KIA_Play_Actor_Dialogue(kActorVoiceOver, 3950);
+			KIA_Play_Actor_Dialogue(kActorVoiceOver, 3960);
+			KIA_Play_Actor_Dialogue(kActorVoiceOver, 3970);
+			KIA_Play_Actor_Dialogue(kActorVoiceOver, 3980);
+			KIA_Play_Actor_Dialogue(kActorVoiceOver, 3900);
+			KIA_Play_Actor_Dialogue(kActorVoiceOver, 4000);
+		}
 		break;
 	case kClueCandyWrapper:
 		KIA_Play_Slice_Model(kModelAnimationCandyWrapper);
+		if (_vm->_cutContent) {
+			if (Actor_Clue_Query(kActorMcCoy, kClueCandy)) {
+				KIA_Play_Actor_Dialogue(kActorVoiceOver, 3300);
+				KIA_Play_Actor_Dialogue(kActorVoiceOver, 3310);
+			}
+		}
 		break;
 	case kClueFlaskOfAbsinthe:
 		KIA_Play_Slice_Model(kModelAnimationFlaskOfAbsinthe);
 		break;
 	case kClueLutherLanceInterview:
+		if (_vm->_cutContent) {
+			KIA_Play_Actor_Dialogue(kActorMcCoy, 5740);
+			KIA_Play_Actor_Dialogue(kActorLance, 180);
+			KIA_Play_Actor_Dialogue(kActorLuther, 220);
+			KIA_Play_Actor_Dialogue(kActorLance, 190);
+			KIA_Play_Actor_Dialogue(kActorMcCoy, 5805);
+			KIA_Play_Actor_Dialogue(kActorLuther, 230);
+		}
 		KIA_Play_Actor_Dialogue(kActorLuther, 240);
 		KIA_Play_Actor_Dialogue(kActorLance, 200);
 		KIA_Play_Actor_Dialogue(kActorLance, 210);
 		KIA_Play_Actor_Dialogue(kActorLuther, 260);
 		KIA_Play_Actor_Dialogue(kActorLuther, 270);
+		if (_vm->_cutContent) {
+			KIA_Play_Actor_Dialogue(kActorMcCoy, 5810);
+			KIA_Play_Actor_Dialogue(kActorLance, 220);
+			KIA_Play_Actor_Dialogue(kActorLance, 230);
+		}
 		break;
 	case kCluePhoneCallDektora1:
+		if (_vm->_cutContent) {
+			KIA_Play_Actor_Dialogue(kActorDektora, 340);
+			KIA_Play_Actor_Dialogue(kActorDektora, 350);
+		}
 		KIA_Play_Actor_Dialogue(kActorDektora, 360);
-		KIA_Play_Actor_Dialogue(kActorDektora, 380);
+		if (_vm->_cutContent) {
+   			 KIA_Play_Actor_Dialogue(kActorMcCoy, 2510);
+		} else {
+  	  		KIA_Play_Actor_Dialogue(kActorDektora, 380);
+		}
+		if (_vm->_cutContent) {
+			KIA_Play_Actor_Dialogue(kActorDektora, 390);
+			KIA_Play_Actor_Dialogue(kActorMcCoy, 2520);
+			KIA_Play_Actor_Dialogue(kActorDektora, 400);
+			KIA_Play_Actor_Dialogue(kActorDektora, 410);
+			KIA_Play_Actor_Dialogue(kActorMcCoy, 2525);
+			KIA_Play_Actor_Dialogue(kActorDektora, 420);
+		}
 		break;
 	case kCluePhoneCallDektora2:
 		KIA_Play_Actor_Dialogue(kActorMcCoy, 2505);
@@ -1069,31 +1128,100 @@ void KIAScript::SCRIPT_KIA_DLL_Play_Clue_Asset_Script(int notUsed, int clueId) {
 		KIA_Play_Actor_Dialogue(kActorMcCoy, 2535);
 		KIA_Play_Actor_Dialogue(kActorDektora, 460);
 		KIA_Play_Actor_Dialogue(kActorDektora, 470);
+		if (_vm->_cutContent) {
+			KIA_Play_Actor_Dialogue(kActorDektora, 480);
+			KIA_Play_Actor_Dialogue(kActorDektora, 490);
+		}
 		break;
 	case kCluePhoneCallLucy1:
-		KIA_Play_Actor_Dialogue(kActorLucy, 590);
-		KIA_Play_Actor_Dialogue(kActorLucy, 630);
+		if (_vm->_cutContent) {
+			KIA_Play_Actor_Dialogue(kActorLucy, 570); //
+			KIA_Play_Actor_Dialogue(kActorMcCoy, 2560); //00-2560.AUD	Maybe we’ll do it after I talk to him.
+			KIA_Play_Actor_Dialogue(kActorLucy, 580); //
+		}
+		KIA_Play_Actor_Dialogue(kActorLucy, 590); //
+		if (_vm->_cutContent) {
+			KIA_Play_Actor_Dialogue(kActorMcCoy, 2565); //00-2565.AUD	A ground car wouldn’t get us too far.
+			KIA_Play_Actor_Dialogue(kActorLucy, 600); //
+			KIA_Play_Actor_Dialogue(kActorLucy, 610); //
+			KIA_Play_Actor_Dialogue(kActorLucy, 620); //
+		}
+		KIA_Play_Actor_Dialogue(kActorLucy, 630); //
+		if (_vm->_cutContent) {
+			KIA_Play_Actor_Dialogue(kActorMcCoy, 2570); //00-2570.AUD	Lucy, there’s a good chance--
+			KIA_Play_Actor_Dialogue(kActorLucy, 640); //
+		}
 		break;
 	case kCluePhoneCallLucy2:
 		KIA_Play_Actor_Dialogue(kActorLucy, 540);
 		KIA_Play_Actor_Dialogue(kActorLucy, 550);
 		KIA_Play_Actor_Dialogue(kActorMcCoy, 2550);
 		KIA_Play_Actor_Dialogue(kActorLucy, 560);
+		if (_vm->_cutContent) {
+			KIA_Play_Actor_Dialogue(kActorMcCoy, 2555);
+		}
 		break;
 	case kCluePhoneCallClovis:
+		if (_vm->_cutContent) {
+			KIA_Play_Actor_Dialogue(kActorClovis, 450);
+			KIA_Play_Actor_Dialogue(kActorClovis, 460);
+			KIA_Play_Actor_Dialogue(kActorClovis, 470);
+			KIA_Play_Actor_Dialogue(kActorClovis, 480);
+			KIA_Play_Actor_Dialogue(kActorClovis, 490);
+			KIA_Play_Actor_Dialogue(kActorMcCoy, 2615);
+			KIA_Play_Actor_Dialogue(kActorClovis, 500);
+			KIA_Play_Actor_Dialogue(kActorMcCoy, 2620);
+			KIA_Play_Actor_Dialogue(kActorClovis, 510);
+			KIA_Play_Actor_Dialogue(kActorClovis, 520);
+			KIA_Play_Actor_Dialogue(kActorMcCoy, 2625);
+		}
 		KIA_Play_Actor_Dialogue(kActorClovis, 530);
 		KIA_Play_Actor_Dialogue(kActorClovis, 540);
 		break;
 	case kCluePhoneCallCrystal:
+		if (_vm->_cutContent) {
+			KIA_Play_Actor_Dialogue(kActorSteele, 690);
+			KIA_Play_Actor_Dialogue(kActorMcCoy, 2635);
+		}
 		KIA_Play_Actor_Dialogue(kActorSteele, 700);
+		if (_vm->_cutContent) {
+			KIA_Play_Actor_Dialogue(kActorMcCoy, 2640);
+			KIA_Play_Actor_Dialogue(kActorSteele, 710);
+			KIA_Play_Actor_Dialogue(kActorSteele, 720);
+			KIA_Play_Actor_Dialogue(kActorMcCoy, 2645);
+			KIA_Play_Actor_Dialogue(kActorSteele, 740);
+		}
 		KIA_Play_Actor_Dialogue(kActorSteele, 750);
+		if (_vm->_cutContent) {
+			KIA_Play_Actor_Dialogue(kActorMcCoy, 2650);
+		}
 		KIA_Play_Actor_Dialogue(kActorSteele, 760);
+		if (_vm->_cutContent) {
+			KIA_Play_Actor_Dialogue(kActorSteele, 770);
+			KIA_Play_Actor_Dialogue(kActorMcCoy, 2655);
+			KIA_Play_Actor_Dialogue(kActorSteele, 790);
+			KIA_Play_Actor_Dialogue(kActorMcCoy, 2660);
+			KIA_Play_Actor_Dialogue(kActorSteele, 800);
+			KIA_Play_Actor_Dialogue(kActorSteele, 810);
+			KIA_Play_Actor_Dialogue(kActorSteele, 820);
+		}
 		break;
 	case kCluePowerSource:
 		KIA_Play_Slice_Model(kModelAnimationPowerSource);
+		if (_vm->_cutContent) {
+			KIA_Play_Actor_Dialogue(kActorSadik, 240);
+			KIA_Play_Actor_Dialogue(kActorSadik, 250);
+			KIA_Play_Actor_Dialogue(kActorSadik, 260);
+		}
 		break;
 	case kClueBomb:
 		KIA_Play_Slice_Model(kModelAnimationBomb);
+		if (_vm->_cutContent) {
+			KIA_Play_Actor_Dialogue(kActorVoiceOver, 1020);
+			KIA_Play_Actor_Dialogue(kActorVoiceOver, 1030);
+			KIA_Play_Actor_Dialogue(kActorVoiceOver, 1040);
+			KIA_Play_Actor_Dialogue(kActorVoiceOver, 1050);
+		}
 		break;
 	case kClueDNATyrell:
 	case kClueDNASebastian:
@@ -1138,19 +1266,61 @@ void KIAScript::SCRIPT_KIA_DLL_Play_Clue_Asset_Script(int notUsed, int clueId) {
 		KIA_Play_Slice_Model(kModelAnimationGoldfish);
 		break;
 	case kClueZubenTalksAboutLucy1:
+		if (_vm->_cutContent) {
+			KIA_Play_Actor_Dialogue(kActorMcCoy, 7295);
+			KIA_Play_Actor_Dialogue(kActorZuben, 200);
+			KIA_Play_Actor_Dialogue(kActorMcCoy, 7315);
+			KIA_Play_Actor_Dialogue(kActorZuben, 210);
+			KIA_Play_Actor_Dialogue(kActorZuben, 220); 
+			KIA_Play_Actor_Dialogue(kActorZuben, 340);
+			KIA_Play_Actor_Dialogue(kActorMcCoy, 7345);
+			KIA_Play_Actor_Dialogue(kActorMcCoy, 7320);
+		}
 		KIA_Play_Actor_Dialogue(kActorZuben, 230);
+		if (_vm->_cutContent) {
+			KIA_Play_Actor_Dialogue(kActorMcCoy, 7325);
+		}
 		KIA_Play_Actor_Dialogue(kActorZuben, 240);
 		break;
 	case kClueZubenTalksAboutLucy2:
+		if (_vm->_cutContent) {
+			KIA_Play_Actor_Dialogue(kActorMcCoy, 7295);
+			KIA_Play_Actor_Dialogue(kActorZuben, 200);
+			KIA_Play_Actor_Dialogue(kActorMcCoy, 7315);
+			KIA_Play_Actor_Dialogue(kActorZuben, 210); 
+			KIA_Play_Actor_Dialogue(kActorZuben, 220); 
+			KIA_Play_Actor_Dialogue(kActorZuben, 340);
+			KIA_Play_Actor_Dialogue(kActorMcCoy, 7345);
+			KIA_Play_Actor_Dialogue(kActorMcCoy, 7320);
+		}
 		KIA_Play_Actor_Dialogue(kActorZuben, 250);
+		if (_vm->_cutContent) {
+			KIA_Play_Actor_Dialogue(kActorMcCoy, 7335);
+		}
 		KIA_Play_Actor_Dialogue(kActorZuben, 260);
+		if (_vm->_cutContent) {
+			KIA_Play_Actor_Dialogue(kActorMcCoy, 7340);
+		}
 		break;
 	case kClueZubensMotive:
+		if (_vm->_cutContent) {
+			KIA_Play_Actor_Dialogue(kActorMcCoy, 7300);
+		}
 		KIA_Play_Actor_Dialogue(kActorZuben, 280);
 		KIA_Play_Actor_Dialogue(kActorMcCoy, 7350);
+		if (_vm->_cutContent) {
+			KIA_Play_Actor_Dialogue(kActorMcCoy, 7355);
+		}
 		KIA_Play_Actor_Dialogue(kActorZuben, 290);
+		if (_vm->_cutContent) {
+			KIA_Play_Actor_Dialogue(kActorMcCoy, 7360);
+		}
 		KIA_Play_Actor_Dialogue(kActorZuben, 300);
 		KIA_Play_Actor_Dialogue(kActorZuben, 310);
+		if (_vm->_cutContent) {
+			KIA_Play_Actor_Dialogue(kActorZuben, 320);
+			KIA_Play_Actor_Dialogue(kActorZuben, 330);
+		}
 		break;
 	case kClueVKDektoraReplicant:
 		KIA_Play_Actor_Dialogue(kActorAnsweringMachine, 420);
@@ -1439,6 +1609,18 @@ void KIAScript::SCRIPT_KIA_DLL_Play_Clue_Asset_Script(int notUsed, int clueId) {
 		break;
 	case kClueSpinnerKeys:
 		KIA_Play_Slice_Model(kModelAnimationSpinnerKeys);
+		if (_vm->_cutContent) {
+			KIA_Play_Actor_Dialogue(kActorMcCoy, 1720);
+			KIA_Play_Actor_Dialogue(kActorCrazylegs, 20);
+			KIA_Play_Actor_Dialogue(kActorCrazylegs, 30);
+			KIA_Play_Actor_Dialogue(kActorMcCoy, 1725);
+			KIA_Play_Actor_Dialogue(kActorCrazylegs, 40);
+			KIA_Play_Actor_Dialogue(kActorCrazylegs, 50);
+			KIA_Play_Actor_Dialogue(kActorCrazylegs, 60);
+			KIA_Play_Actor_Dialogue(kActorCrazylegs, 70);
+			KIA_Play_Actor_Dialogue(kActorMcCoy, 1730);
+			KIA_Play_Actor_Dialogue(kActorCrazylegs, 80);
+		}
 		break;
 	case kClueExpertBomber:
 		KIA_Play_Actor_Dialogue(kActorVoiceOver, 730);
@@ -1923,7 +2105,7 @@ void KIAScript::SCRIPT_KIA_DLL_Play_Clue_Asset_Script(int notUsed, int clueId) {
 	case kClueSightingClovis:
 		KIA_Play_Actor_Dialogue(kActorMcCoy, 5745); //00-5745.AUD	Where’s Clovis now?
 		KIA_Play_Actor_Dialogue(kActorLuther, 340); //10-0340.AUD	Clovis has gone to see Eldon.
-		KIA_Play_Actor_Dialogue(kActorMcCoy, 8695); //00-8965.AUD	What for?
+		KIA_Play_Actor_Dialogue(kActorMcCoy, 8965); //00-8965.AUD	What for?
 		KIA_Play_Actor_Dialogue(kActorLance, 240); //13-0240.AUD	Gone to have a little heart to heart with Eldon.
 		KIA_Play_Actor_Dialogue(kActorLuther, 280); //10-0280.AUD	We showed him how to get in through the basement.
 		KIA_Play_Actor_Dialogue(kActorMcCoy, 5815); //00-5815.AUD	He’ll kill Tyrell, if he gets to him.
