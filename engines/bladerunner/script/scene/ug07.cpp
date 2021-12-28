@@ -145,6 +145,11 @@ bool SceneScriptUG07::ClickedOnExit(int exitId) {
 					Sound_Play(kSfxBRKFNGR1, 100, 0, 0, 50);
 					Delay(2000);
 				}
+				// Added in a line.
+				if (_vm->_cutContent) {
+					Actor_Says(kActorClovis, 580, 0); //05-0580.AUD	And now it’s time to end this game.
+					Actor_Clue_Acquire(kActorMcCoy, kClueClovisOrdersMcCoysDeath, true, kActorClovis);
+				}
 				Actor_Set_Goal_Number(kActorMcCoy, kGoalMcCoyUG07Released);
 				Delay(1000);
 				Actor_Set_Goal_Number(kActorClovis, kGoalClovisUG07ChaseMcCoy);

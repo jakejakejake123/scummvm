@@ -259,7 +259,11 @@ bool AIScriptLucy::ShotAtAndHit() {
 
 void AIScriptLucy::Retired(int byActorId) {
 	if (byActorId == kActorMcCoy) {
-		Actor_Modify_Friendliness_To_Other(kActorClovis, kActorMcCoy, -6);
+		// Made it so when McCoy retired Lucy Clovis gains the McCoy retired Lucy clue which leads him to breaking one of McCoys fingers.
+		if (_vm->_cutContent) {
+			Actor_Clue_Acquire(kActorClovis, kClueMcCoyRetiredLucy, true, -1);
+			Actor_Modify_Friendliness_To_Other(kActorClovis, kActorMcCoy, -6);
+		}
 	}
 
 #if BLADERUNNER_ORIGINAL_BUGS
