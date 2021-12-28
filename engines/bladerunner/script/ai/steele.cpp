@@ -1336,6 +1336,9 @@ bool AIScriptSteele::GoalChanged(int currentGoalNumber, int newGoalNumber) {
 		Actor_Set_Goal_Number(kActorGordo, kGoalGordoNR01ReleaseHostage);
 		Game_Flag_Reset(kFlagSteeleAimingAtGordo);
 		Game_Flag_Set(kFlagGordoRanAway);
+		if (_vm->_cutContent) {
+			Actor_Clue_Acquire(kActorGordo, kClueMcCoyHelpedGordo, true, -1);
+		}
 		Actor_Set_Targetable(kActorSteele, false);
 		Player_Loses_Control();
 		return true;
