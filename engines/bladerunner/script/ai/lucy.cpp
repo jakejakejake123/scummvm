@@ -899,9 +899,18 @@ void AIScriptLucy::FledCombat() {
 void AIScriptLucy::voightKampffTest() {
 	Player_Loses_Control();
 	Actor_Face_Actor(kActorMcCoy, kActorLucy, true);
-	Actor_Says(kActorMcCoy, 6815, 11);
+	// Added in some lines for Lucy and McCoy.
+	if (_vm->_cutContent) {
+		Actor_Says(kActorMcCoy, 1600, 11); //00-1600.AUD	Lucy? 
+	}
+	Actor_Says(kActorMcCoy, 6815, 11); //00-6815.AUD	I told you to stay hidden.
 	Actor_Face_Actor(kActorLucy, kActorMcCoy, true);
-	Actor_Says(kActorLucy, 1060, 16);
+	if (_vm->_cutContent) {
+		Actor_Says(kActorLucy, 650, 16); //06-0650.AUD	Haven’t we already been through this?
+		Actor_Says(kActorLucy, 660, 13); //06-0660.AUD	Why would I have any dealings with those people? 
+		Actor_Says(kActorMcCoy, 630, 11); //00-0630.AUD	What?
+	}
+	Actor_Says(kActorLucy, 1060, 13); //06-1060.AUD	I can’t stay there anymore.
 	Actor_Says(kActorLucy, 1070, 17);
 	Delay(1000);
 	Actor_Says(kActorLucy, 1080, 14);

@@ -131,6 +131,10 @@ bool SceneScriptUG01::ClickedOn3DObject(const char *objectName, bool a2) {
 			Game_Flag_Set(kFlagUG01SteamOff);
 		} else {
 			Actor_Says(kActorMcCoy, 8525, 13);
+			// Added in a line when McCoy expects the tap with the strange pipe design.
+			if (_vm->_cutContent) {
+				Actor_Says(kActorMcCoy, 8695, 13); //00-8695.AUD	That's an unusual design.
+			}
 		}
 	}
 	return false;
@@ -257,7 +261,10 @@ void SceneScriptUG01::PlayerWalkedIn() {
 	}
 
 	if (Actor_Query_Goal_Number(kActorLucy) == kGoalLucyUG01Wait) {
-		Music_Play(kMusicLoveSong, 35, 0, 3, -1, kMusicLoopPlayOnce, 0);
+		//REMOVED LOVE SONG.
+		if (!_vm->_cutContent) {
+			Music_Play(kMusicLoveSong, 35, 0, 3, -1, kMusicLoopPlayOnce, 0);
+		}
 		Actor_Set_Goal_Number(kActorLucy, kGoalLucyUG01VoightKampff);
 	}
 	//return false;
