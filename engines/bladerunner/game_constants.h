@@ -766,7 +766,7 @@ enum Flags {
 	kFlagUG01SteamOff                         = 324,
 	kFlagCT04BodyDumped                       = 325,
 	kFlagBB01Available                        = 326,
-	// 327 is never used
+	kFlagDektoraTalkAct4					  = 327,
 	kFlagAR01FishDealerTalk                   = 328,
 	kFlagAR02InsectDealerInterviewed          = 329,
 	kFlagAR02HassanTalk                       = 330,
