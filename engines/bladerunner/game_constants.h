@@ -810,12 +810,12 @@ enum Flags {
 	kFlagHF07Hole                             = 368,
 	kFlagHF05Hole                             = 369,
 	kFlagNotUsed370                           = 370, // is never checked
-	// 371 is never used
-	// 372 is never used
+	kFlagGordoTalkAct4						  = 371,	
+	kFlagCrystalTalkAct4					  = 372,	
 	kFlagKP02Available                        = 373,
 	kFlagAR02DektoraBoughtScorpions           = 374,
 	kFlagBB11SadikPunchedMcCoy                = 375,
-	// 376 is never used
+	kFlagIzoTalkAct4						  = 376,
 	kFlagHF01MurrayMiaIntro                   = 377,
 	kFlagDirectorsCut                         = 378, // Designer's Cut (KIA options) flag!
 	kFlagCT08toCT51                           = 379, // is never checked
