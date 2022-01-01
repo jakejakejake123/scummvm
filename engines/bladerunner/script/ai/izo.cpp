@@ -73,8 +73,12 @@ bool AIScriptIzo::Update() {
 	) {
 		Actor_Set_Goal_Number(kActorIzo, kGoalIzoGoToHC03);
 	}
-
-	if (Global_Variable_Query(kVariableChapter) == 4
+	if (_vm->_cutContent) {
+		if	(!Game_Flag_Query(kFlagUG09Visited) 
+		&& (Global_Variable_Query(kVariableChapter) == 4)) {
+			Actor_Set_Goal_Number(kActorIzo, kGoalIzoWaitAtUG09);
+		}
+	} else if (Global_Variable_Query(kVariableChapter) == 4
 	 && Actor_Query_Goal_Number(kActorIzo) < kGoalIzoGone
 	 && Actor_Query_Goal_Number(kActorIzo) < 300
 	 && Actor_Query_Goal_Number(kActorIzo) != kGoalIzoGotArrested
@@ -549,6 +553,12 @@ bool AIScriptIzo::GoalChanged(int currentGoalNumber, int newGoalNumber) {
 
 	case kGoalIzoEscapedSteeleKnows:
 		Game_Flag_Set(kFlagDNARowAvailable);
+		return true;
+
+	case kGoalIzoWaitAtUG09:
+		AI_Movement_Track_Flush(kActorIzo);
+		Actor_Put_In_Set(kActorIzo, kSetUG09);
+		Actor_Set_At_XYZ(kActorIzo, -81.17, 157.41, 71.37, 0);
 		return true;
 
 	case 300:

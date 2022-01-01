@@ -828,8 +828,8 @@ enum Flags {
 	kFlagHC01toHC03                           = 386, // is never checked
 	kFlagHC03toHC01                           = 387,
 	kFlagHC03TrapDoorOpen                     = 388,
-	// 389 is never used
-	// 390 is never used
+	kFlagUG09Visited						  = 389,	
+	kFlagZubenTalkAct4						  = 390,
 	kFlagBB09SadikRun                         = 391,
 	kFlagRC01McCoyAndOfficerLearyTalking      = 392,
 	kFlagBB06toBB51                           = 393, // is never checked
@@ -3131,6 +3131,7 @@ enum GoalIzo {
 	kGoalIzoPrepareCamera      =   1,
 	kGoalIzoTakePhoto          =   2,
 	kGoalIzoRunToUG02          =   3,
+	kGoalIzoWaitAtUG09		   = 10,	
 	kGoalIzoStopRunning        = 100,
 	kGoalIzoRunToRC03          = 101,
 	kGoalIzoWaitingAtRC03      = 102,
