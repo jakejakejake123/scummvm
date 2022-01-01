@@ -77,8 +77,13 @@ bool AIScriptZuben::Update() {
 		Actor_Set_Goal_Number(kActorZuben, kGoalZubenCT01WalkToCT02);
 		return true;
 	}
-
-	if ( Global_Variable_Query(kVariableChapter) >= 4
+	if (_vm->_cutContent) {
+		if	(!Game_Flag_Query(kFlagUG09Visited) 
+		&& !Game_Flag_Query(kFlagZubenRetired)
+		&& (Global_Variable_Query(kVariableChapter) == 4)) {
+			Actor_Set_Goal_Number(kActorZuben, kGoalZubenWaitAtHF01);
+		}
+	} else if ( Global_Variable_Query(kVariableChapter) >= 4
 	 && !Game_Flag_Query(kFlagZubenRetired)
 	 &&  Actor_Query_Goal_Number(kActorZuben) < 200
 	) {
@@ -465,6 +470,12 @@ bool AIScriptZuben::GoalChanged(int currentGoalNumber, int newGoalNumber) {
 		AI_Movement_Track_Flush(kActorZuben);
 		AI_Movement_Track_Append_Run(kActorZuben, 125, 0);
 		AI_Movement_Track_Repeat(kActorZuben);
+		return false;
+
+	case kGoalZubenWaitAtHF01:
+		AI_Movement_Track_Flush(kActorZuben);
+		Actor_Put_In_Set(kActorZuben, kSetHF01);
+		Actor_Set_At_XYZ(kActorZuben, 566.07f, -0.01f, -205.43f, 271);
 		return false;
 
 	case 22: // is never set

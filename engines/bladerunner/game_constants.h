@@ -3302,6 +3302,7 @@ enum GoalZuben {
 	kGoalZubenCT06AttackMcCoy     =  12,
 	kGoalZubenCT06HideAtFreeSlotA =  13,
 	kGoalZubenCT02PotDodgeCheck   =  14,
+	kGoalZubenWaitAtHF01		  = 15,	
 	kGoalZubenFled                =  20,
 	kGoalZubenMA01AttackMcCoy     =  21,
 	kGoalZubenDiesInChapter1      =  99,

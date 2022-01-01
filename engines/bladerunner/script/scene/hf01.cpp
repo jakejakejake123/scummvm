@@ -365,6 +365,85 @@ void SceneScriptHF01::ActorChangedGoal(int actorId, int newGoal, int oldGoal, bo
 }
 
 void SceneScriptHF01::PlayerWalkedIn() {
+	// Reworked the encounter with Zuben in act 4. Made it so it is an actually that plays if Zuben in alive and you go to Hysteria hall in act 4.
+	// This encounter with Zuben in the original game was way too cryptic in the origianl game. Not only does Zuben have to be alive and you have to go to Hysteria 
+	// hall there is a high chance that he won't appear at all. Heck even though I knew what to do he almost never showed up so this change feels neccessary 
+	// especially for a scene where McCoy learns some very important information.
+	if (_vm->_cutContent) {
+		if  (!Game_Flag_Query(kFlagZubenTalkAct4)
+		&& !Game_Flag_Query(kFlagZubenRetired)
+		&& (Global_Variable_Query(kVariableChapter) == 4)) {
+			Actor_Face_Actor(kActorMcCoy, kActorZuben, true);
+			Delay(1000);
+			Actor_Says(kActorMcCoy, 3970, 14); //00-3970.AUD	Hey.
+			Player_Loses_Control();
+			Loop_Actor_Walk_To_Actor(kActorMcCoy, kActorZuben, 24, true, false);
+			Actor_Face_Actor(kActorZuben, kActorMcCoy, true);
+			Actor_Says(kActorMcCoy, 8910, 11); //00-8910.AUD	Hey you.
+			Actor_Says(kActorZuben, 140, 14); //19-0140.AUD	Stay away!
+			Actor_Says(kActorMcCoy, 7280, 11); //00-7280.AUD	You remember me?
+			Actor_Says(kActorZuben, 150, 15); //19-0150.AUD	You chased Zuben.
+			Actor_Says(kActorMcCoy, 7285, 12); //00-7285.AUD	But I didn't kill you, did I?
+			Actor_Says(kActorZuben, 160, 13); //19-0160.AUD	You following me?
+			Actor_Says(kActorMcCoy, 7305, 15); //00-7305.AUD	No, it's just a coincidence.
+			Delay(1000);
+			Actor_Says(kActorMcCoy, 5600, 14); //00-5600.AUD	Let me ask you something.
+			if (Actor_Query_Goal_Number(kActorLucy) != kGoalLucyGone) {
+				Actor_Says(kActorMcCoy, 7295, 11); //00-7295.AUD	The girl. I need to know where's the girl.
+				Actor_Says(kActorZuben, 200, 12); //19-0200.AUD	Girl?
+				Actor_Says(kActorMcCoy, 7315, 16); //00-7315.AUD	Lucy.
+				Actor_Says(kActorZuben, 210, 12); //19-0210.AUD	She daughter. She with Clovis.
+				Delay(1000);
+				Actor_Says(kActorZuben, 220, 14); //19-0220.AUD	You not hurt her.
+				Actor_Says(kActorMcCoy, 7320, 17); //00-7320.AUD	Is she a Replicant?
+				if (Game_Flag_Query(kFlagLucyIsReplicant)) {
+					Actor_Says(kActorZuben, 230, 14); //19-0230.AUD	Daughter sick. Only four years to live. Four years. Daughter Zuben whole family.
+					Actor_Says(kActorMcCoy, 7325, 17); //00-7325.AUD	I know.
+					Actor_Says(kActorZuben, 240, 15); //19-0240.AUD	But Clovis he fix.
+					Actor_Says(kActorMcCoy, 7330, 16); //00-7330.AUD	Let's hope so.
+					Actor_Clue_Acquire(kActorMcCoy, kClueZubenTalksAboutLucy1, false, kActorZuben);
+				} else {
+					Actor_Says(kActorZuben, 250, 14); //19-0250.AUD	Daughter not like me.
+					Actor_Says(kActorMcCoy, 7335, 14); //00-7335.AUD	She's not a Replicant?
+					Actor_Says(kActorZuben, 260, 15); //19-0260.AUD	She good girl. She stay with Clovis.
+					Actor_Says(kActorMcCoy, 7340, 16); //00-7340.AUD	I know.
+					Actor_Says(kActorZuben, 340, 15); //19-0340.AUD	You promise no hurt.
+					Actor_Says(kActorMcCoy, 7345, 12); //00-7345.AUD	Right, no hurt. No hurt anymore.
+					Actor_Clue_Acquire(kActorMcCoy, kClueZubenTalksAboutLucy2, false, kActorZuben);
+				}
+			}
+			Delay(1000);
+			Actor_Says(kActorMcCoy, 7300, 13); //00-7300.AUD	Did you kill the animals?
+			Actor_Says(kActorZuben, 270, 15); //19-0270.AUD	Because he bad.
+			Actor_Says(kActorMcCoy, 7350, 14);	//00-7350.AUD	Runciter?
+			Actor_Says(kActorZuben, 280, 12); //19-0280.AUD	He not pay. Bad to Lucy. Bad to everybody. Make people starve.
+			Actor_Says(kActorMcCoy, 7355, 14); //00-7355.AUD	All those animals died.
+			Actor_Says(kActorZuben, 290, 15); //19-0290.AUD	He made Lucy do bad things. Lucy hurt. Clovis more angry.
+			Actor_Says(kActorZuben, 300, 14); //19-0300.AUD	Girl was forced to do bad things Off-World. Clovis thought Terra better.
+			Actor_Says(kActorZuben, 310, 13); //19-0310.AUD	But Terra's no better for young girls. Runciter bad to Lucy.
+			Delay(2000);
+			if (Player_Query_Agenda() == kPlayerAgendaSurly 
+			|| Player_Query_Agenda() == kPlayerAgendaErratic) {
+				Actor_Says(kActorMcCoy, 7365, 12);	//00-7365.AUD	You should have killed him.
+			} else {
+				Actor_Says(kActorMcCoy, 7360, 11); //00-7360.AUD	Did he do things to Lucy?
+			}
+			Actor_Says(kActorZuben, 320, 12); //19-0320.AUD	Clovis say Runciter love animals. Runciter still alive so he hurt now. Know what pain is.
+			Actor_Says(kActorZuben, 330, 12); //19-0330.AUD	Kill him, he not hurt. Just dead.
+			Actor_Clue_Acquire(kActorMcCoy, kClueZubensMotive, false, kActorZuben);
+			Actor_Says(kActorMcCoy, 7290, 12); //00-7290.AUD	Listen it's very important I talked to Clovis.
+			Actor_Says(kActorZuben, 180, 15); //19-0180.AUD	No way. You enemy of Clovis.
+			Actor_Says(kActorMcCoy, 7310, 16); //00-7310.AUD	No, I'm trying to help him and you.
+			Actor_Says(kActorZuben, 190, 15); //19-0190.AUD	We do good without you. Do good without anybody.
+			Actor_Says(kActorMcCoy, 7835, 14);	//00-7835.AUD	Is that so?
+			Actor_Says(kActorZuben, 170, 14); //19-0170.AUD	Now I go.
+			Loop_Actor_Walk_To_XYZ(kActorZuben,  200.17, 0.29, -190.72 , 0, true, false, false);
+			Actor_Set_Invisible(kActorZuben, true);
+			Player_Gains_Control();
+			Game_Flag_Set(kFlagZubenTalkAct4);
+		}
+	}
+
 	if (Game_Flag_Query(kFlagHF05PoliceArrived)) {
 		ADQ_Flush();
 		ADQ_Add(kActorOfficerGrayford, 280, kAnimationModeTalk);
