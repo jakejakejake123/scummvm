@@ -3329,6 +3329,7 @@ enum GoalOfficerLeary {
 	kGoalOfficerLearyRC01ResumeWalkToCrowd            =   4, // added OfficerLeary goal
 #endif // BLADERUNNER_ORIGINAL_BUGS
 	kGoalOfficerLearyPoliceDoneFromRC01               =   3,
+	kGoalOfficerLearyAtPS14							  = 10,	
 	kGoalOfficerLearyEndOfAct1                        =  99,
 	kGoalOfficerLearyVisitsBulletBob                  = 102, // un-triggered
 	kGoalOfficerLearyStartOfAct4                      = 300,
@@ -3358,6 +3359,7 @@ enum GoalOfficerGrayford {
 	kGoalOfficerGrayfordWalksInPS09c                  =   8,
 	kGoalOfficerGrayfordWalksInPS03e                  =   9,
 	kGoalOfficerGrayfordPrepareToRestartWalkAround    =  10,
+	kGoalOfficerGrayfordAtPS14						  =  11,	
 	kGoalOfficerGrayfordStopAndTalk1                  =  99, // this is used temporarily to make him stop and talk
 	kGoalOfficerGrayfordArrivesToDR04                 = 101,
 	kGoalOfficerGrayfordArrivedAtDR04                 = 102,

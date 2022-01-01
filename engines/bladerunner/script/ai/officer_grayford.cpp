@@ -47,7 +47,9 @@ void AIScriptOfficerGrayford::Initialize() {
 }
 
 bool AIScriptOfficerGrayford::Update() {
-	if (Global_Variable_Query(kVariableChapter) == 4
+	 if (Game_Flag_Query(kFlagUG18GuzzaScene)) {
+		Actor_Set_Goal_Number(kActorOfficerGrayford, kGoalOfficerGrayfordAtPS14);
+	 } else	if (Global_Variable_Query(kVariableChapter) == 4
 	 && Actor_Query_Goal_Number(kActorOfficerGrayford) < kGoalOfficerGrayfordStartOfAct4) {
 		AI_Movement_Track_Flush(kActorOfficerGrayford);
 		Actor_Set_Goal_Number(kActorOfficerGrayford, kGoalOfficerGrayfordStartOfAct4);
@@ -287,6 +289,11 @@ void AIScriptOfficerGrayford::CompletedMovementTrack() {
 		Actor_Face_Actor(kActorOfficerGrayford, kActorMcCoy, true);
 		break;
 
+	case kGoalOfficerGrayfordAtPS14:
+		Actor_Put_In_Set(kActorOfficerGrayford, kSetPS14);
+		Actor_Set_At_XYZ(kActorOfficerGrayford, -879.97, 507.86, -1132.41, 0);
+		AI_Movement_Track_Flush(kActorOfficerGrayford);
+		break;
 	}
 
 	// return true;

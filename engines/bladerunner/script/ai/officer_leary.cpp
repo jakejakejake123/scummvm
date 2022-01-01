@@ -46,7 +46,9 @@ void AIScriptOfficerLeary::Initialize() {
 }
 
 bool AIScriptOfficerLeary::Update() {
-	if (Global_Variable_Query(kVariableChapter) == 4
+	if (Game_Flag_Query(kFlagUG18GuzzaScene)) {
+		Actor_Set_Goal_Number(kActorOfficerLeary, kGoalOfficerLearyAtPS14);
+	} else if (Global_Variable_Query(kVariableChapter) == 4
 	 && Actor_Query_Goal_Number(kActorOfficerLeary) < kGoalOfficerLearyStartOfAct4
 	) {
 		AI_Movement_Track_Flush(kActorOfficerLeary);
@@ -399,6 +401,13 @@ bool AIScriptOfficerLeary::GoalChanged(int currentGoalNumber, int newGoalNumber)
 
 	case kGoalOfficerLearyEndOfAct1:
 		AI_Movement_Track_Flush(kActorOfficerLeary);
+		return false;
+
+	case kGoalOfficerLearyAtPS14:
+		AI_Movement_Track_Flush(kActorOfficerLeary);
+		Actor_Put_In_Set(kActorOfficerLeary, kSetPS14);
+		Actor_Set_At_XYZ(kActorOfficerLeary,  -849.86, 507.81, -1023.00, 0);
+		Actor_Face_Actor(kActorOfficerLeary, kActorOfficerGrayford, true);
 		return false;
 
 	case kGoalOfficerLearyVisitsBulletBob:
