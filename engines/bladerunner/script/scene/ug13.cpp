@@ -355,7 +355,9 @@ void SceneScriptUG13::PlayerWalkedIn() {
 	 && !Game_Flag_Query(kFlagCT04HomelessKilledByMcCoy)
 	) {
 		if (!Game_Flag_Query(kFlagUG13Entered)) {
-			Game_Flag_Set(kFlagUG13Entered);
+			if (!_vm->_cutContent) {
+				Game_Flag_Set(kFlagUG13Entered);
+			}
 			Actor_Says(kActorTransient, 50, kAnimationModeTalk); // Hey, another one? ...
 			// Made it so McCoy can't shoot the homeless guy. It doesn't make sense for McCoy to shoot a defenceless man that helped him.
 			if (_vm->_cutContent) {
@@ -365,6 +367,39 @@ void SceneScriptUG13::PlayerWalkedIn() {
 			if (Random_Query(1, 3) == 1) {
 				Actor_Set_Goal_Number(kActorTransient, 395);
 			}
+		}	
+		// It never made any sense to me when McCoy calls Guzza and tells him to meet him in the sewers in the room with the round platform even though 
+		// McCoy has never been there before. To fix his I have added a scene where when McCoy first enters the homeless mans place he hears a noise and goes 
+		// towards the gate which is locked. In order to open the gate McCoy shoots the lock and walks into the room with the round platform and there is nothing 
+		// there. Since this scene will always happen McCoys phone call with Guzza where he organises a meeting will always makes sense since McCoy will always 
+		// see the room by default.	
+		if (_vm->_cutContent && !Game_Flag_Query(kFlagUG13Entered)) {
+		Sound_Play(kSfxRICOCHT1, 50, 0, 0, 50);
+		Actor_Face_Heading(kActorMcCoy, 830, false);
+		Delay (1000);
+		Actor_Says(kActorMcCoy, 8525, 19); //00-8525.AUD	Hmph.
+		Player_Loses_Control();
+		Loop_Actor_Walk_To_XYZ(kActorMcCoy, -267.0f, 44.0f, -795.0f, 0, true, false, false);
+		Footstep_Sound_Override_On(3);
+		Loop_Actor_Travel_Stairs(kActorMcCoy, 11, true, kAnimationModeIdle);
+		Footstep_Sound_Override_Off();
+		if (Actor_Query_Goal_Number(kActorTransient) == 391
+			|| Actor_Query_Goal_Number(kActorTransient) == 395
+			|| Actor_Query_Goal_Number(kActorTransient) == 599
+		) {
+			Actor_Says(kActorMcCoy, 8522, 14); // Locked
+		} else {
+			Actor_Says(kActorMcCoy, 8522, 14); // Locked
+			Actor_Face_Actor(kActorMcCoy, kActorTransient, true);
+			Actor_Says(kActorMcCoy, 5555, 14); // How do I get this thing open?
+			Actor_Says(kActorTransient, 60, 31); // Nah, it only happens when they want it to open.
+			Actor_Face_Heading(kActorMcCoy, 830, false);
+			Actor_Says(kActorMcCoy, 8525, 19); //00-8525.AUD	Hmph.
+			Player_Set_Combat_Mode(true);
+			Game_Flag_Set(kFlagUG13Entered);
+		}				
+		Game_Flag_Set(kFlagUG13toUG18);
+		Set_Enter(kSetUG18, kSceneUG18);
 		}
 	}
 	//return false;

@@ -353,8 +353,21 @@ void SceneScriptUG18::PlayerWalkedIn() {
 			}
 		}
 	}
-
+	//Added code so a gunshot will play, a continuation of the scene where McCoy comes across the locked gate along with the remainder of the scene.
+	if (_vm->_cutContent
+		&& !Game_Flag_Query(kFlagUG18Visited)
+		&& !Game_Flag_Query(kFlagCallWithGuzza)) {
+			Sound_Play(kSfxSHOTGUN1, 50, 0, 0, 50);
+		}
 	Loop_Actor_Walk_To_XYZ(kActorMcCoy, -488.71f, 0.0f, 123.59f, 0, false, false, false);
+	if (_vm->_cutContent
+		&& !Game_Flag_Query(kFlagUG18Visited)
+		&& !Game_Flag_Query(kFlagCallWithGuzza)) {
+		Actor_Says(kActorMcCoy, 8526, 14); // 00-8526.AUD	Nothing.
+		Player_Set_Combat_Mode(false);
+		Player_Gains_Control();
+		Game_Flag_Set(kFlagUG18Visited);
+	}
 
 	if ( Game_Flag_Query(kFlagCallWithGuzza)
 	 && !Game_Flag_Query(kFlagUG18GuzzaScene)

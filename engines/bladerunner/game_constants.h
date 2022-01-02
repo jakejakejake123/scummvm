@@ -884,8 +884,8 @@ enum Flags {
 	kFlagNR07toNR06                           = 442,
 	kFlagGenericWalkerWaiting                 = 443,
 	kFlagIzoShot                              = 444,
-	// 445 is never used
-	// 446 is never used
+	kFlagMcCoyIsInnocent					  = 445,
+	kFlagUG18Visited						  = 446,	
 	kFlagTB03toUG17                           = 447,
 	kFlagUG17toTB03                           = 448,
 	kFlagUG02WeaponsChecked                   = 449,
