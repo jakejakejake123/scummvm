@@ -119,6 +119,9 @@ void AIScriptMutant1::ReceivedClue(int clueId, int fromActorId) {
 }
 
 void AIScriptMutant1::ClickedByPlayer() {
+	if (_vm->_cutContent) {
+		Actor_Says(kActorMcCoy, 8690, 13); //00-8690.AUD	I wonder what that is.
+	}
 	//return false;
 }
 
