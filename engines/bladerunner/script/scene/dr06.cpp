@@ -131,8 +131,17 @@ bool SceneScriptDR06::ClickedOn3DObject(const char *objectName, bool a2) {
 
 	if (Object_Query_Click("X2_MON01D01", objectName)) {
 		if (!Loop_Actor_Walk_To_XYZ(kActorMcCoy, -645.34f, 136.6f, -1047.37f, 0, true, false, false)) {
-			Actor_Face_Heading(kActorMcCoy, 329, false);
-			if ( Actor_Clue_Query(kActorMcCoy, kClueFolder)
+			Actor_Face_Heading(kActorMcCoy, 329, false);			
+				// Made it so Luther and Lances vidphone won't work if you have affection towards Dektora and you haven't met her yet in act 4.
+				// This will get the player to go to Taffys to use the phone the phone there instead and that's when they will meet up with Dektora.
+				// I did this because I would really like the player to see this scene especially after putting a lot of time and effort into restoring it.
+			if (_vm->_cutContent
+			&& Global_Variable_Query(kVariableAffectionTowards) == kAffectionTowardsDektora) {
+				Sound_Play(kSfxSPNBEEP9, 50, 0, 0, 50);
+				Delay(2000);
+				Actor_Says(kActorMcCoy, 170, 13); //00-0170.AUD	Damn.
+				Actor_Says(kActorMcCoy, 8640, 13); //00-8640.AUD	That's useless.
+			 } else if ( Actor_Clue_Query(kActorMcCoy, kClueFolder)
 			 &&  Actor_Clue_Query(kActorMcCoy, kClueGuzzaFramedMcCoy)
 			 && !Game_Flag_Query(kFlagCallWithGuzza)
 			) {
