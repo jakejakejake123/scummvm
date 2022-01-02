@@ -586,7 +586,27 @@ void SceneScriptUG18::talkWithGuzza() {
 		Actor_Says(kActorGuzza, 1000, 3);
 		Actor_Says(kActorMcCoy, 5975, 15);
 		// Made it so McCoys following responses to Guzza is based on the players actions and not on McCoys mood.
+		// Fixed the code so the conversation now plays out properly based on your choices.
+	} else if (_vm->_cutContent) {
+		if (Global_Variable_Query(kVariableAffectionTowards) == kAffectionTowardsDektora 
+		|| (Global_Variable_Query(kVariableAffectionTowards) == kAffectionTowardsLucy)) {
+			Loop_Actor_Walk_To_XYZ(kActorMcCoy, -117.13f, 0.0f, -284.47f, 0, false, false, false);
+			Actor_Face_Actor(kActorMcCoy, kActorGuzza, true);
+			// McCoy now has a love interest or a daughter figure.
+			Actor_Says(kActorMcCoy, 5945, 12); //00-5945.AUD	I don’t know. A lot has changed. I don’t know what I want anymore.
+			Actor_Says(kActorGuzza, 1040, 15);
+			Actor_Says(kActorMcCoy, 5980, 15);
+			Actor_Says(kActorGuzza, 1050, 12);
+			Actor_Says(kActorGuzza, 1060, 13);
+			Actor_Says(kActorGuzza, 1070, 14);
+			Actor_Says(kActorMcCoy, 5985, 18);
+			Actor_Says(kActorGuzza, 1080, 3);
+			Actor_Says(kActorGuzza, 1090, 14);
+			Actor_Says(kActorGuzza, 1100, 13);
+		}
 	} else if (_vm->_cutContent && !Game_Flag_Query(kFlagMcCoyIsHelpingReplicants)) {
+	 if	(Global_Variable_Query(kVariableAffectionTowards) != kAffectionTowardsDektora 
+		|| (Global_Variable_Query(kVariableAffectionTowards) != kAffectionTowardsLucy)) {
 		Actor_Modify_Friendliness_To_Other(kActorClovis, kActorMcCoy, -1);
 		Actor_Modify_Friendliness_To_Other(kActorSadik, kActorMcCoy, -1);
 		// McCoy acted like a true blade runner.
@@ -594,19 +614,15 @@ void SceneScriptUG18::talkWithGuzza() {
 		Actor_Says(kActorMcCoy, 5940, 18); //00-5940.AUD	But don’t think I’m doing this to save your worthless hide.
 		Actor_Says(kActorGuzza, 1020, 13);
 		Actor_Says(kActorGuzza, 1030, 14);
-	} else if (Player_Query_Agenda() == kPlayerAgendaPolite) {
-		Actor_Modify_Friendliness_To_Other(kActorClovis, kActorMcCoy, -1);
-		Actor_Modify_Friendliness_To_Other(kActorSadik, kActorMcCoy, -1);
-		Actor_Says(kActorMcCoy, 5935, 14);
-		Actor_Says(kActorMcCoy, 5940, 18);
-		Actor_Says(kActorGuzza, 1020, 13);
-		Actor_Says(kActorGuzza, 1030, 14);
-		// McCoy is a rep sympahizer.
+		}
 	} else if (_vm->_cutContent && Game_Flag_Query(kFlagMcCoyIsHelpingReplicants)) {
+	 if	(Global_Variable_Query(kVariableAffectionTowards) != kAffectionTowardsDektora 
+		|| (Global_Variable_Query(kVariableAffectionTowards) != kAffectionTowardsLucy)) {
 		Actor_Modify_Friendliness_To_Other(kActorClovis, kActorMcCoy, 20);
 		Actor_Modify_Friendliness_To_Other(kActorSadik, kActorMcCoy, 10);
 		Loop_Actor_Walk_To_XYZ(kActorMcCoy, -117.13f, 0.0f, -284.47f, 0, false, false, false);
 		Actor_Face_Actor(kActorMcCoy, kActorGuzza, true);
+		// McCoy is a rep sympahizer.
 		Actor_Says(kActorMcCoy, 5950, 16); //00-5950.AUD	There’s no way I’m retiring another Rep. Not after what I’ve been through.
 		Actor_Says(kActorMcCoy, 5955, 14); //00-5955.AUD	It ain’t worth it. Do it yourself.
 		Actor_Says(kActorGuzza, 1110, 13);
@@ -614,6 +630,14 @@ void SceneScriptUG18::talkWithGuzza() {
 		Actor_Says(kActorMcCoy, 5990, 3);
 		Actor_Says(kActorGuzza, 1130, 15);
 		Actor_Says(kActorGuzza, 1140, 16);
+		}
+	} else if (Player_Query_Agenda() == kPlayerAgendaPolite) {
+		Actor_Modify_Friendliness_To_Other(kActorClovis, kActorMcCoy, -1);
+		Actor_Modify_Friendliness_To_Other(kActorSadik, kActorMcCoy, -1);
+		Actor_Says(kActorMcCoy, 5935, 14);
+		Actor_Says(kActorMcCoy, 5940, 18);
+		Actor_Says(kActorGuzza, 1020, 13);
+		Actor_Says(kActorGuzza, 1030, 14);		
 	} else if (Global_Variable_Query(kVariableAffectionTowards) > 1
 		|| Player_Query_Agenda() == kPlayerAgendaSurly
 	) {
@@ -628,23 +652,7 @@ void SceneScriptUG18::talkWithGuzza() {
 		Actor_Says(kActorMcCoy, 5990, 3);
 		Actor_Says(kActorGuzza, 1130, 15);
 		Actor_Says(kActorGuzza, 1140, 16);
-		// McCoy now has a love interest or a daughter figure.
-	} else if (_vm->_cutContent) {
-		 if (Global_Variable_Query(kVariableAffectionTowards) == kAffectionTowardsDektora 
-		 || (Global_Variable_Query(kVariableAffectionTowards) == kAffectionTowardsLucy)) {
-			Loop_Actor_Walk_To_XYZ(kActorMcCoy, -117.13f, 0.0f, -284.47f, 0, false, false, false);
-			Actor_Face_Actor(kActorMcCoy, kActorGuzza, true);
-			Actor_Says(kActorMcCoy, 5945, 12); //00-5945.AUD	I don’t know. A lot has changed. I don’t know what I want anymore.
-			Actor_Says(kActorGuzza, 1040, 15);
-			Actor_Says(kActorMcCoy, 5980, 15);
-			Actor_Says(kActorGuzza, 1050, 12);
-			Actor_Says(kActorGuzza, 1060, 13);
-			Actor_Says(kActorGuzza, 1070, 14);
-			Actor_Says(kActorMcCoy, 5985, 18);
-			Actor_Says(kActorGuzza, 1080, 3);
-			Actor_Says(kActorGuzza, 1090, 14);
-			Actor_Says(kActorGuzza, 1100, 13);
-		} else {
+	} else {
 		Loop_Actor_Walk_To_XYZ(kActorMcCoy, -117.13f, 0.0f, -284.47f, 0, false, false, false);
 		Actor_Face_Actor(kActorMcCoy, kActorGuzza, true);
 		Actor_Says(kActorMcCoy, 5945, 12);
@@ -659,7 +667,6 @@ void SceneScriptUG18::talkWithGuzza() {
 		Actor_Says(kActorGuzza, 1100, 13);
 		}
 	}
-}
 
 void SceneScriptUG18::talkWithClovis() {
 	ADQ_Flush();
