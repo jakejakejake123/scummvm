@@ -55,6 +55,16 @@ bool AIScriptLucy::Update() {
 	float x, y, z;
 
 	if (Global_Variable_Query(kVariableChapter) == 3
+	// If you don't meet Crazylegs in act 3 this leads to some problems later in the game. If you meet him for the first time in act 4 the first half of 
+	// conversation that you have with him is missing and if you meet him for the first time in act 5 he talks as if you have met before by referring to you by name
+	// and saying that he thought you were going to arrest Dektora/Lucy. In order to circumvent this I have made it so you can only meet Lucy in act 3 if you have talked to
+	// Crazylegs first. To be honest I couldn't fully test this since Lucy appearing at Hysteria hall has a random element to it so you should test this out just to be safe. 
+	 && (_vm->_cutContent) 
+	 && Actor_Query_Goal_Number(kActorLucy) < kGoalLucyMoveAround
+	 && Game_Flag_Query(kFlagHF05CrazyLegsTalk1)
+	) {
+		Actor_Set_Goal_Number(kActorLucy, kGoalLucyMoveAround);
+	} else if (Global_Variable_Query(kVariableChapter) == 3
 	 && Actor_Query_Goal_Number(kActorLucy) < kGoalLucyMoveAround
 	) {
 		Actor_Set_Goal_Number(kActorLucy, kGoalLucyMoveAround);
