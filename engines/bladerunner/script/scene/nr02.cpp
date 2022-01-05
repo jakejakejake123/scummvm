@@ -261,7 +261,7 @@ void SceneScriptNR02::PlayerWalkedIn() {
 						Loop_Actor_Walk_To_XYZ(kActorDektora, 27.17, 22.87, 365.88, 48, true, false, false);
 						Loop_Actor_Walk_To_XYZ(kActorDektora, -20.92, 22.15, 239.17, 48, true, false, false);
 						Loop_Actor_Walk_To_XYZ(kActorDektora, -300.18, -23.44, 44.75, 48, true, false, false);
-						Actor_Set_Invisible(kActorDektora, true);
+						// Removed code that makes Dekora invisible.
 						Game_Flag_Set(kFlagDektoraTalkAct4);
 					}
 				}

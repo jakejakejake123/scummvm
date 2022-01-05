@@ -283,9 +283,11 @@ void SceneScriptMA07::PlayerWalkedIn() {
 					Actor_Says(kActorMcCoy, 1345, 13); //00-1345.AUD	Thanks.
 					Actor_Says(kActorMcCoy, 5260, 15); //00-5260.AUD	Happy trails, Steele.
 					Actor_Says(kActorSteele, 2350, 14); //01-2350.AUD	Ditto.
+					// Added in flag which determines Steeles status towards McCoy in the endgame.
+					Game_Flag_Set(kFlagCrystalTrustsMcCoy);
 				}
-				Loop_Actor_Walk_To_XYZ(kActorSteele, -270.65, -162.25, 276.32, 0, true, false, false);
-				Actor_Set_Invisible(kActorSteele, true);
+				// Removed invisibility line code.
+				Loop_Actor_Walk_To_XYZ(kActorSteele, -250.65, -162.25, 276.32, 0, true, false, false);
 				Player_Gains_Control();
 				Game_Flag_Set(kFlagCrystalTalkAct4);
 			}

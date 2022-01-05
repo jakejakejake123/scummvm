@@ -499,7 +499,9 @@ void SceneScriptHC01::dialogueWithIzo() {
 		if (answer == 1110) { // CRYSTAL
 			Dialogue_Menu_Remove_From_List(1110);
 			Actor_Says(kActorMcCoy, 5475, 18); //00-5475.AUD	Listen, there’s another Blade Runner after you and she won’t stop to talk.
+			// Added in two flags here, the first one is so the scene with Izo in the sewers will play and then will be reset so the scene doesn't repaet. The other will be used in the endgame to decide Steeles status towards McCoy.
 			Game_Flag_Set(kFlagIzoWarnedAboutCrystal);
+			Game_Flag_Set(kFlagIzoWarned);
 			if (Actor_Query_Friendliness_To_Other(kActorIzo, kActorMcCoy) < 60) {
 				takePhotoAndRunAway();
 			}

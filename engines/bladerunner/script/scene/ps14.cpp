@@ -172,8 +172,11 @@ void SceneScriptPS14::PlayerWalkedIn() {
 					Actor_Says(kActorOfficerGrayford, 100, kAnimationModeTalk); //24-0100.AUD	you gonna wish we disposed you right here and now.
 					Actor_Says(kActorOfficerGrayford, 110, kAnimationModeTalk); //24-0110.AUD	Take him in!
 					Player_Gains_Control();
-					Actor_Set_Invisible(kActorOfficerGrayford, true);
+					// Removed invisibility code, instead placed Grayford outside of the set.
+					Actor_Set_At_XYZ(kActorOfficerGrayford, 180.04, 11.73, -5.42, 0);
 					Game_Flag_Set(kFlagMcCoyFreedOfAccusations);
+					// Added in flag for the endgame.
+					Game_Flag_Set(kFlagMcCoyIsInnocent);
 					Actor_Set_Goal_Number(kActorMcCoy, kGoalMcCoyStartChapter5);
 			}
 		}

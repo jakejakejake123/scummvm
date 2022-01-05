@@ -891,9 +891,9 @@ enum Flags {
 	kFlagUG02WeaponsChecked                   = 449,
 	kFlagTB02ElevatorToTB05                   = 450,
 	kFlagTB05Entered                          = 451,
-	// 452 is never used
+	kFlagCrystalTrustsMcCoy					  = 452,
 	kFlagTB02GuardTalk1                       = 453,
-	// 454 is never used
+	kFlagIzoWarned							  = 454,
 	kFlagTB02GuardTalk2                       = 455,
 	kFlagTB02SteeleTalk                       = 456,
 	kFlagTB02SteeleEnter                      = 457,

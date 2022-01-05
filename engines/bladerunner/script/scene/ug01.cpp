@@ -235,7 +235,7 @@ void SceneScriptUG01::PlayerWalkedIn() {
 			Actor_Says(kActorIzo, 840, 17); //07-0840.AUD	You’ll be hearing from them soon enough.
 			Actor_Says(kActorMcCoy, 5470, 15); //00-5470.AUD	Get lost, Izo. Take off.
 			Loop_Actor_Walk_To_XYZ(kActorIzo, -57.24, -48.79, -2023.48, 48, false, true, false);
-			Actor_Set_Invisible(kActorIzo, true);
+			// Removed code that makes Izo invisible.
 			Actor_Set_Goal_Number(kActorIzo, kGoalIzoRC03RunAway);
 			Game_Flag_Reset(kFlagIzoWarnedAboutCrystal);
 			Game_Flag_Set(kFlagIzoEscaped);

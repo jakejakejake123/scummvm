@@ -206,8 +206,12 @@ void SceneScriptUG19::PlayerWalkedIn() {
 						Actor_Says(kActorGordo, 1270, 11); //02-1270.AUD	And when the spinning is gonna stop.
 						Actor_Says(kActorMcCoy, 6585, 15); //00-6585.AUD	That’s real profound, Gordo.
 						Actor_Says(kActorGordo, 620, 16); //02-0620.AUD		Look I’d love to stay and jawbone but the show must go on, you dig?
-						Loop_Actor_Walk_To_XYZ(kActorGordo, 157.04, 11.73, -5.42, 0, true, false, false);
-						Actor_Set_Invisible(kActorGordo, true);
+						// Removed code that makes Gordo invisible. Also added in code so McCoy moves out of the way when Gordo leaves so Gordo doesn't phase through McCoy.
+						Player_Loses_Control();
+						Loop_Actor_Walk_To_XYZ(kActorMcCoy, 115.51, 11.73, -40.11, 0, true, false, false);
+						Actor_Face_Actor(kActorMcCoy, kActorGordo, true);
+						Loop_Actor_Walk_To_XYZ(kActorGordo, 180.04, 11.73, -5.42, 0, true, false, false);
+						Player_Gains_Control();
 						Game_Flag_Set(kFlagGordoTalkAct4);
 					}
 				}

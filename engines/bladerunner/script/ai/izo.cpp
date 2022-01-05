@@ -75,6 +75,8 @@ bool AIScriptIzo::Update() {
 	}
 	if (_vm->_cutContent) {
 		if	(!Game_Flag_Query(kFlagUG09Visited) 
+		// Added code so Izo will only appear in UG09 if he got away in act 2.
+		&& Game_Flag_Query(kFlagIzoGotAway)
 		&& (Global_Variable_Query(kVariableChapter) == 4)) {
 			Actor_Set_Goal_Number(kActorIzo, kGoalIzoWaitAtUG09);
 		}

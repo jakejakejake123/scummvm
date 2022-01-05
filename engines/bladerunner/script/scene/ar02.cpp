@@ -401,9 +401,11 @@ void SceneScriptAR02::PlayerWalkedIn() {
 		Actor_Says(kActorSteele, 1800, 60); //01-1800.AUD	You should have waited for me, Slim.
 		Actor_Says(kActorMcCoy, 2305, 15); //00-2305.AUD	I’m sorry.
 		Actor_Says(kActorSteele, 2110, 60); //01-2110.AUD	That's okay.
-		Loop_Actor_Walk_To_XYZ(kActorSteele, -637.99, 0.74, -916.12, 48, false, true, false);
-		Actor_Set_Invisible(kActorSteele, true);
+		// Removed invisibility code and made it so Steele actually runs offscreen completely.
+		Loop_Actor_Walk_To_XYZ(kActorSteele, -700.99, 0.74, -916.12, 48, false, true, false);
 		Actor_Set_Goal_Number(kActorSteele, kGoalSteeleLeaveRC03);
+		// Crystal will be convinced for now but will still check on Izo later. If you don't warn him about her in act 3 she discovers and confiscates his weapons.
+		Game_Flag_Set(kFlagCrystalConvinced);
 		Game_Flag_Reset(kFlagIzoEscaped);
 		Player_Gains_Control();
 		Scene_Exits_Enable();

@@ -146,14 +146,15 @@ void SceneScriptUG09::PlayerWalkedIn() {
 	}
 	// Restored scene when you talk to Izo in the sewers in act 4.
 	if  (!Game_Flag_Query(kFlagIzoTalkAct4)
-	&& Game_Flag_Query(kFlagIzoEscaped)
+	// Added in correct flag.
+	&& Game_Flag_Query(kFlagIzoGotAway)
 	&& !Game_Flag_Query(kFlagUG09Visited)
 	&& (Global_Variable_Query(kVariableChapter) == 4)) {
 		Actor_Face_Actor(kActorMcCoy, kActorIzo, true);
 		Actor_Face_Actor(kActorIzo, kActorMcCoy, true);
 		Actor_Says(kActorMcCoy, 6745, 18); //00-6745.AUD	Izo, we gotta talk.
-		// If you didn't help Izo with Crystal by convinvcing her that he isn't smuggling weapons.
-		if (!Game_Flag_Query(kFlagCrystalConvinced)) {
+		// If you didn't help Izo with Crystal by convinvcing her that he isn't smuggling weapons and warning him in act 3 outside his shop this happens.
+		if (!Game_Flag_Query(kFlagIzoPrepared)) {
 			Actor_Says(kActorMcCoy, 6710, 16); //00-6710.AUD	How’s business these days, Izo?
 			Actor_Says(kActorIzo, 850, 17); //07-0850.AUD	Non existent. You and Steele made sure of that. Scavengers took the rest.
 			Actor_Says(kActorMcCoy, 6740, 16); //00-6740.AUD	What exactly did the scavengers take?
@@ -164,10 +165,14 @@ void SceneScriptUG09::PlayerWalkedIn() {
 		Actor_Says(kActorMcCoy, 6760, 18); //00-6760.AUD	Feel like sharing?
 		Actor_Says(kActorIzo, 930, 17); //07-0930.AUD	My life wouldn’t be worth one chinyen, if I did.
 		Actor_Says(kActorMcCoy, 6765, 13); //00-6765.AUD	You’re talking about Clovis. 
-		if (!Game_Flag_Query(kFlagCrystalConvinced)) {
+		// If you didn't help Izo he doesn't help you.
+		if (!Game_Flag_Query(kFlagIzoPrepared)) {
 			Actor_Says(kActorIzo, 870, 17); //07-0870.AUD	I’ve been warned not to waste any more words with you.
 			Loop_Actor_Walk_To_XYZ(kActorIzo, -109.20, 152.67, -676.67, 48, false, true, false);
 			Actor_Set_Invisible(kActorIzo, true);
+			// Added code so Izo will turn visible and be put offscreen just after he turns invisible.
+			Actor_Set_At_XYZ(kActorIzo, -250.65, -162.25, 276.32, 0);
+			Actor_Set_Invisible(kActorIzo, false);
 			Game_Flag_Set(kFlagIzoTalkAct4);
 		// If you didn't help Izo with Crystal the conversation ends here, if you did help however the conversation continues.
 		} else {
@@ -196,6 +201,8 @@ void SceneScriptUG09::PlayerWalkedIn() {
 			Actor_Says(kActorIzo, 900, 17); //07-0900.AUD	Clovis has done that. A thousand times over. He’s not to be taken lightly.
 			Loop_Actor_Walk_To_XYZ(kActorIzo, -109.20, 152.67, -676.67, 48, false, true, false);
 			Actor_Set_Invisible(kActorIzo, true);
+			Actor_Set_At_XYZ(kActorIzo, -250.65, -162.25, 276.32, 0);
+			Actor_Set_Invisible(kActorIzo, false);
 			Game_Flag_Set(kFlagIzoTalkAct4);
 		}
 	}
