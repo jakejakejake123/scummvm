@@ -919,32 +919,111 @@ void SceneScriptHF05::talkWithCrazylegs3(int affectionTowardsActor) {
 		Item_Pickup_Spin_Effect(kModelAnimationSpinnerKeys, 315, 327);
 		Actor_Says(kActorCrazylegs, 80, 23);
 		Actor_Clue_Acquire(kActorMcCoy, kClueSpinnerKeys, true, kActorCrazylegs);
-		Actor_Says(kActorCrazylegs, 90, 15);
-		Actor_Says(kActorMcCoy, 1735, 17);
-		Actor_Says(kActorCrazylegs, 100, 16);
-		Actor_Says(kActorCrazylegs, 110, kAnimationModeTalk);
-		Actor_Face_Actor(affectionTowardsActor, kActorMcCoy, true);
-		if (affectionTowardsActor == kActorDektora) {
-			Actor_Says(kActorDektora, 90, kAnimationModeTalk);
+		// Made it so Crystal only shows up if either your companion is a replicant or you haven't proven your innocence or both.
+		// If neither of these conditions are fulfilled Crystal won't show up at all. After all if neither you and companion are replicants or at least suspected
+		// of being replicants then Crystal has no reason to come after you.
+		// First set of code is for when Dektora is with you.
+		// Your companion is a replicant and McCoys innocence hasn't been proven Steele shows up.
+		if (_vm->_cutContent) {
+			if (getCompanionActor() == kActorDektora) {
+				if (Game_Flag_Query(kFlagDektoraIsReplicant)
+				|| !Game_Flag_Query(kFlagMcCoyIsInnocent)) {
+					Actor_Says(kActorCrazylegs, 90, 15);
+					Actor_Says(kActorMcCoy, 1735, 17);
+					Actor_Says(kActorCrazylegs, 100, 16);
+					Actor_Says(kActorCrazylegs, 110, kAnimationModeTalk);
+					Actor_Face_Actor(affectionTowardsActor, kActorMcCoy, true);
+					if (affectionTowardsActor == kActorDektora) {
+						Actor_Says(kActorDektora, 90, kAnimationModeTalk);
+					} else {
+						Actor_Says(kActorLucy, 380, kAnimationModeTalk);
+					}
+					Actor_Says(kActorMcCoy, 1740, 14);    // You tell her we're headed South.
+					Actor_Says(kActorCrazylegs, 120, 12); // Ten Four.
+					Actor_Set_Goal_Number(kActorCrazylegs, kGoalCrazyLegsLeavesShowroom);
+					if (affectionTowardsActor == kActorDektora) {
+						// Dektora is only afraid is he is a human.
+						if (!Game_Flag_Query(kFlagDektoraIsReplicant)) {
+							Actor_Says(kActorDektora, 100, kAnimationModeTalk); //03-0100.AUD	I’m afraid, Ray.
+						}
+						Actor_Face_Actor(kActorMcCoy, affectionTowardsActor, true);
+						Actor_Says(kActorMcCoy, 1745, kAnimationModeTalk);
+						Actor_Says(kActorDektora, 110, 12); //03-0110.AUD	Please, we don’t have time for this. Let’s just take the Spinner and go!
+						Async_Actor_Walk_To_XYZ(affectionTowardsActor, 309.0f, 40.63f, 402.0f, 0, false);
+						Loop_Actor_Walk_To_XYZ(kActorMcCoy, 277.0f, 40.63f, 410.0f, 0, false, false, false);
+						Game_Flag_Set(kFlagHF05toHF06);
+						Set_Enter(kSetHF06, kSceneHF06);
+						// If McCoy is found to be innocent and his companion is human, Steele doesn't show up and this happens instead.
+					} else {
+						Actor_Face_Actor(kActorMcCoy, affectionTowardsActor, true);
+						Actor_Set_Goal_Number(kActorCrazylegs, kGoalCrazyLegsLeavesShowroom);
+						Actor_Says(kActorMcCoy, 2115, kAnimationModeTalk); //00-2115.AUD	Let’s go. There’s nothing here for us anymore.
+						Async_Actor_Walk_To_XYZ(affectionTowardsActor, 309.0f, 40.63f, 402.0f, 0, false);
+						Loop_Actor_Walk_To_XYZ(kActorMcCoy, 277.0f, 40.63f, 410.0f, 0, false, false, false);
+						Game_Flag_Set(kFlagHF05toHF06);
+						Set_Enter(kSetHF06, kSceneHF06);
+					}
+				}
+				// This is the code for when Lucy is with you.
+			} else if (getCompanionActor() == kActorLucy) { 
+				if (Game_Flag_Query(kFlagLucyIsReplicant)
+				|| !Game_Flag_Query(kFlagMcCoyIsInnocent)) {
+					Actor_Says(kActorCrazylegs, 90, 15);
+					Actor_Says(kActorMcCoy, 1735, 17);
+					Actor_Says(kActorCrazylegs, 100, 16);
+					Actor_Says(kActorCrazylegs, 110, kAnimationModeTalk);
+					Actor_Face_Actor(affectionTowardsActor, kActorMcCoy, true);	
+					Actor_Says(kActorDektora, 90, kAnimationModeTalk);
+					Actor_Says(kActorMcCoy, 1740, 14);    // You tell her we're headed South.
+					Actor_Says(kActorCrazylegs, 120, 12); // Ten Four.
+					Actor_Set_Goal_Number(kActorCrazylegs, kGoalCrazyLegsLeavesShowroom);
+					Actor_Says(kActorLucy, 390, kAnimationModeTalk);
+					Actor_Face_Actor(kActorMcCoy, affectionTowardsActor, true);
+					Actor_Says(kActorMcCoy, 1745, kAnimationModeTalk);
+					Actor_Says(kActorLucy, 480, kAnimationModeTalk); //06-0480.AUD	I love you, Ray. Remember that.
+					Async_Actor_Walk_To_XYZ(affectionTowardsActor, 309.0f, 40.63f, 402.0f, 0, false);
+					Loop_Actor_Walk_To_XYZ(kActorMcCoy, 277.0f, 40.63f, 410.0f, 0, false, false, false);
+					Game_Flag_Set(kFlagHF05toHF06);
+					Set_Enter(kSetHF06, kSceneHF06);
+				} else {
+					Actor_Set_Goal_Number(kActorCrazylegs, kGoalCrazyLegsLeavesShowroom);
+					Actor_Face_Actor(kActorMcCoy, affectionTowardsActor, true);
+					Actor_Says(kActorMcCoy, 2115, kAnimationModeTalk); //00-2115.AUD	Let’s go. There’s nothing here for us anymore.
+					Async_Actor_Walk_To_XYZ(affectionTowardsActor, 309.0f, 40.63f, 402.0f, 0, false);
+					Loop_Actor_Walk_To_XYZ(kActorMcCoy, 277.0f, 40.63f, 410.0f, 0, false, false, false);
+					Game_Flag_Set(kFlagHF05toHF06);
+					Set_Enter(kSetHF06, kSceneHF06);
+				}
+			}
+				// This section is the default code that plays in the vanilla game.
 		} else {
-			Actor_Says(kActorLucy, 380, kAnimationModeTalk);
+			Actor_Says(kActorCrazylegs, 90, 15);
+			Actor_Says(kActorMcCoy, 1735, 17);
+			Actor_Says(kActorCrazylegs, 100, 16);
+			Actor_Says(kActorCrazylegs, 110, kAnimationModeTalk);
+			Actor_Face_Actor(affectionTowardsActor, kActorMcCoy, true);
+			if (affectionTowardsActor == kActorDektora) {
+				Actor_Says(kActorDektora, 90, kAnimationModeTalk);
+			} else {
+				Actor_Says(kActorLucy, 380, kAnimationModeTalk);
+			}
+			Actor_Says(kActorMcCoy, 1740, 14);    // You tell her we're headed South.
+			Actor_Says(kActorCrazylegs, 120, 12); // Ten Four.
+			Actor_Set_Goal_Number(kActorCrazylegs, kGoalCrazyLegsLeavesShowroom);
+			if (affectionTowardsActor == kActorDektora) {
+				Actor_Says(kActorDektora, 100, kAnimationModeTalk); //03-0100.AUD	I’m afraid, Ray.
+			} else {
+				Actor_Says(kActorLucy, 390, kAnimationModeTalk);
+			}
+			Actor_Face_Actor(kActorMcCoy, affectionTowardsActor, true);
+			Actor_Says(kActorMcCoy, 1745, kAnimationModeTalk);
+			Async_Actor_Walk_To_XYZ(affectionTowardsActor, 309.0f, 40.63f, 402.0f, 0, false);
+			Loop_Actor_Walk_To_XYZ(kActorMcCoy, 277.0f, 40.63f, 410.0f, 0, false, false, false);
+			Game_Flag_Set(kFlagHF05toHF06);
+			Set_Enter(kSetHF06, kSceneHF06);
+			}
 		}
-		Actor_Says(kActorMcCoy, 1740, 14);    // You tell her we're headed South.
-		Actor_Says(kActorCrazylegs, 120, 12); // Ten Four.
-		Actor_Set_Goal_Number(kActorCrazylegs, kGoalCrazyLegsLeavesShowroom);
-		if (affectionTowardsActor == kActorDektora) {
-			Actor_Says(kActorDektora, 100, kAnimationModeTalk);
-		} else {
-			Actor_Says(kActorLucy, 390, kAnimationModeTalk);
-		}
-		Actor_Face_Actor(kActorMcCoy, affectionTowardsActor, true);
-		Actor_Says(kActorMcCoy, 1745, kAnimationModeTalk);
-		Async_Actor_Walk_To_XYZ(affectionTowardsActor, 309.0f, 40.63f, 402.0f, 0, false);
-		Loop_Actor_Walk_To_XYZ(kActorMcCoy, 277.0f, 40.63f, 410.0f, 0, false, false, false);
-		Game_Flag_Set(kFlagHF05toHF06);
-		Set_Enter(kSetHF06, kSceneHF06);
 	}
-}
 
 void SceneScriptHF05::talkWithCrazyLegs1() {
 	Player_Loses_Control();
