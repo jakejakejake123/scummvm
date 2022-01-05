@@ -108,7 +108,13 @@ bool SceneScriptHF05::ClickedOn3DObject(const char *objectName, bool a2) {
 				Actor_Face_Actor(kActorMcCoy, getCompanionActor(), true);
 				Actor_Face_Actor(getCompanionActor(), kActorMcCoy, true);
 				Actor_Says(kActorMcCoy, 1785, kAnimationModeTalk);
-				Actor_Says(kActorMcCoy, 1790, kAnimationModeTalk);
+				Actor_Says(kActorMcCoy, 1790, kAnimationModeTalk); //00-1790.AUD	But wait for my signal before you drop it in.
+				// Added in some dialogue.
+				if (_vm->_cutContent) {
+				Delay (2000);
+				Actor_Says(kActorMcCoy, 1795, kAnimationModeTalk); //00-1795.AUD	Hang on!
+				}
+
 			}
 
 			Actor_Face_Heading(kActorMcCoy, 0, false);
@@ -141,7 +147,21 @@ bool SceneScriptHF05::ClickedOn3DObject(const char *objectName, bool a2) {
 					Actor_Change_Animation_Mode(kActorLucy, 13);
 				}
 				Actor_Face_Actor(kActorMcCoy, getCompanionActor(), true);
-				Actor_Says(kActorMcCoy, 1805, kAnimationModeTalk);
+				Actor_Says(kActorMcCoy, 1805, kAnimationModeTalk); //00-1805.AUD	Now!
+				if (_vm->_cutContent) {
+					// Added in some lines for Dektora and Lucy. The lines are said just after McCoy drops the car into the sewers.
+					Delay (5000);
+					if (getCompanionActor() == kActorDektora) {
+						if (!Game_Flag_Query(kFlagDektoraIsReplicant)) {
+						Actor_Says(kActorDektora, 180, kAnimationModeTalk); //03-0180.AUD	What are you waiting for?
+						Actor_Says(kActorDektora, 190, kAnimationModeTalk); //03-0190.AUD	They’ll be coming in any second!
+						}
+					}
+					if (getCompanionActor() == kActorLucy) {
+						Actor_Says(kActorLucy, 460, kAnimationModeTalk); //06-0460.AUD	What are you waiting for?
+						Actor_Says(kActorLucy, 470, kAnimationModeTalk); //06-0470.AUD	They’ll be coming any second!
+					}
+				}
 			}
 			Player_Gains_Control();
 		}
@@ -778,25 +798,77 @@ void SceneScriptHF05::policeAttack() {
 void SceneScriptHF05::talkWithDektora() {
 	Actor_Face_Actor(kActorMcCoy, kActorDektora, true);
 	Actor_Face_Actor(kActorDektora, kActorMcCoy, true);
+	// Added in some lines for Dektora. I noticed that when she says some of her lines she is over emotional where as for other lines she is
+	// totally calm and almost emotionless. Playing these lines back to back is really jarring since she switches from totally calm to downright hysterical.
+	// So what I will do is for the lines where Dektora is overly emotional she is human and when she is calm she is a replicant.
+	if (_vm->_cutContent) {
+		if (!Game_Flag_Query(kFlagDektoraIsReplicant)) {
+			Actor_Says(kActorDektora, 120, 12); //03-0120.AUD	I won’t let them shoot us down like that.
+		} else {
+			Actor_Says(kActorDektora, 2660, 12); //03-2660.AUD	I’ll be right back.
+		}
+	} else {
 	Actor_Says(kActorDektora, 2660, 12);
+	}
 	Actor_Says(kActorMcCoy, 8990, kAnimationModeTalk);
-	Actor_Says(kActorDektora, 2670, 13);
+	Actor_Says(kActorDektora, 2670, 13); //03-2670.AUD	One of Sadik’s bombs.
 #if BLADERUNNER_ORIGINAL_BUGS
 	Actor_Says(kActorDektora, 2680, 17);
 #else
 	// Dektora is interrupted here
-	Actor_Says_With_Pause(kActorDektora, 2680, 0.0f, 17);
+	
+	Actor_Says_With_Pause(kActorDektora, 2680, 0.0f, 17); //03-2680.AUD	I stole it. If they want a fight--
 #endif // BLADERUNNER_ORIGINAL_BUGS
-	Actor_Says(kActorMcCoy, 8995, 14);
-	Actor_Says(kActorDektora, 2690, 15);
-	Actor_Says_With_Pause(kActorMcCoy, 9000, 1.0f, 16);
-	Actor_Says_With_Pause(kActorMcCoy, 9005, 1.0f, 19);
-	Actor_Says(kActorMcCoy, 1765, 17);
-	Actor_Says(kActorDektora, 160, 12);
-	Actor_Says(kActorMcCoy, 1770, 15);
-	Actor_Says(kActorMcCoy, 1775, kAnimationModeTalk);
-	Actor_Says(kActorDektora, 170, kAnimationModeTalk);
-	Actor_Says_With_Pause(kActorMcCoy, 1780, 1.0f, 18);
+	Actor_Says(kActorMcCoy, 8995, 14); //00-8995.AUD	No.
+	
+	if (_vm->_cutContent) {
+		if (!Game_Flag_Query(kFlagDektoraIsReplicant)) {
+			Actor_Says(kActorDektora, 140, 12); //03-0140.AUD	I’m not afraid to use it on them, Ray.
+		} else {
+			Actor_Says(kActorDektora, 2690, 15); //03-2690.AUD	They’re little people with small minds.
+		}
+	} else {
+		Actor_Says(kActorDektora, 2690, 15); //03-2690.AUD	They’re little people with small minds.
+	}
+	if (_vm->_cutContent) {
+		if (Game_Flag_Query(kFlagDektoraIsReplicant)) {
+	 		Actor_Says(kActorDektora, 1420, 15); //03-1420.AUD	This will be the first time I’ve killed a human without being ordered to do it by another human.
+			Actor_Says(kActorDektora, 1430, 12); //03-1430.AUD	It’s strangely liberating.
+		} 
+	}	
+	Actor_Says_With_Pause(kActorMcCoy, 9000, 1.0f, 16); //00-9000.AUD	No!
+	if (_vm->_cutContent) {
+		if (!Game_Flag_Query(kFlagDektoraIsReplicant)) {
+			Actor_Says(kActorDektora, 150, 12); //03-0150.AUD	We have no other choice.
+		}
+	}
+	Actor_Says_With_Pause(kActorMcCoy, 9005, 1.0f, 19); //00-9005.AUD	We'll find another way.
+	Actor_Says(kActorMcCoy, 1765, 17); //00-1765.AUD	Wait a minute. We’re right on top of the old subway system!
+	if (_vm->_cutContent) {
+		if (!Game_Flag_Query(kFlagDektoraIsReplicant)) {
+			Actor_Says(kActorDektora, 160, 12); //03-0160.AUD	But they’ll follow us.
+			Actor_Says(kActorMcCoy, 1770, 15); //00-1770.AUD	Not if we can get a ground car down there.
+		}
+	} else {
+		Actor_Says(kActorDektora, 160, 12); //03-0160.AUD	But they’ll follow us.
+		Actor_Says(kActorMcCoy, 1770, 15); //00-1770.AUD	Not if we can get a ground car down there.		
+	}
+	Actor_Says(kActorMcCoy, 1775, kAnimationModeTalk); //00-1775.AUD	Hell, we can drive right through that tunnel and disappear.
+	if (_vm->_cutContent) {
+		if (!Game_Flag_Query(kFlagDektoraIsReplicant)) {
+			Actor_Says(kActorDektora, 170, kAnimationModeTalk); //03-0170.AUD	What if it’s collapsed?
+		} else {
+			// If Dektora is a replicant she remains silent since she is sceptical of the plan.
+			Delay (2000);
+		}
+	} else {
+		Actor_Says(kActorDektora, 170, kAnimationModeTalk); //03-0170.AUD	What if it’s collapsed?
+	}
+	Actor_Says_With_Pause(kActorMcCoy, 1780, 1.0f, 18); //00-1780.AUD	It’s worth a shot.
+	// Added in a line for McCoy
+	if (_vm->_cutContent) {
+		Actor_Says(kActorMcCoy, 1810, 15); //00-1810.AUD	Come on, they’ll be coming through the door any second!
+	}
 }
 
 void SceneScriptHF05::talkWithLucy() {
@@ -814,7 +886,11 @@ void SceneScriptHF05::talkWithLucy() {
 	Actor_Says(kActorMcCoy, 1770, 15);
 	Actor_Says(kActorMcCoy, 1775, kAnimationModeTalk);
 	Actor_Says(kActorLucy, 450, 17);
-	Actor_Says_With_Pause(kActorMcCoy, 1780, 1.0f, 18);
+	Actor_Says_With_Pause(kActorMcCoy, 1780, 1.0f, 18); //00-1780.AUD	It’s worth a shot.
+	// Added in a line.
+	if (_vm->_cutContent) {
+		Actor_Says(kActorMcCoy, 1810, 15); //00-1810.AUD	Come on, they’ll be coming through the door any second!
+	}
 }
 
 void SceneScriptHF05::talkWithCrazylegs3(int affectionTowardsActor) {
