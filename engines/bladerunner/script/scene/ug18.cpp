@@ -509,7 +509,12 @@ void SceneScriptUG18::DialogueQueueFlushed(int a1) {
 		Actor_Set_Goal_Number(kActorSadik, kGoalSadikUG18Move);
 #else
 		// otherwise this gets repeated whenever dialogue queue re-empties
-		if (Actor_Query_Goal_Number(kActorSadik) == kGoalSadikUG18Wait) {
+		// This code will trigger a new goal which I have set for Sadik where he will actually run up to McCoy and try to shoot him.
+		if (_vm->_cutContent) {
+			if (Actor_Query_Goal_Number(kActorSadik) == kGoalSadikUG18Wait) {
+				Actor_Set_Goal_Number(kActorSadik, kGoalSadikAttackMcCoy);
+			}
+		} else if (Actor_Query_Goal_Number(kActorSadik) == kGoalSadikUG18Wait) {
 			Actor_Set_Goal_Number(kActorSadik, kGoalSadikUG18Move);
 		}
 #endif // BLADERUNNER_ORIGINAL_BUGS

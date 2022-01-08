@@ -255,9 +255,12 @@ void AIScriptSadik::Retired(int byActorId) {
 	}
 	// Made it so McCoy receives 200 chinyen when he retires Sadik when he is a replicant.
 	Actor_Set_Goal_Number(kActorSadik, kGoalSadikGone);
-	if (Game_Flag_Query(kFlagSadikIsReplicant)) {
-		if (Query_Difficulty_Level() != kGameDifficultyEasy) {
-			Global_Variable_Increment(kVariableChinyen, 200);
+	// Made it so you only receive the chinyen in cut content mode.
+	if (_vm->_cutContent) {
+		if (Game_Flag_Query(kFlagSadikIsReplicant)) {
+			if (Query_Difficulty_Level() != kGameDifficultyEasy) {
+				Global_Variable_Increment(kVariableChinyen, 200);	
+			}	
 		}
 	}
 	return; //false;
@@ -331,6 +334,14 @@ bool AIScriptSadik::GoalChanged(int currentGoalNumber, int newGoalNumber) {
 		Actor_Put_In_Set(kActorSadik, kSetUG18);
 		Actor_Set_At_XYZ(kActorSadik, 111.89f, 0.0f, 408.42f, 0);
 		Actor_Change_Animation_Mode(kActorSadik, kAnimationModeCombatIdle);
+		return true;
+
+	// Added in this goal because of a glitch where if you shoot Sadik during his goal SadikUG18Move Guzzas corpse will teleport to the top of the green ooze. I circumvented this
+	// this by making Sadik go into his combat mode at this point so he comes after you. So you can now not only shoot him but when he dies the glitch with Guzzas corpse does not happen.
+	case kGoalSadikAttackMcCoy:
+		Music_Play(kMusicMoraji, 71, 0, 0, -1, kMusicLoopPlayOnce, 2);
+		Actor_Set_Targetable(kActorSadik, true);
+		Non_Player_Actor_Combat_Mode_On(kActorSadik, kActorCombatStateIdle, true, kActorMcCoy, 9, kAnimationModeCombatIdle, kAnimationModeCombatWalk, kAnimationModeCombatRun, 0, -1, -1, 15, 300, false);
 		return true;
 
 	case kGoalSadikUG18Move:

@@ -3160,6 +3160,7 @@ enum GoalSadik {
 	kGoalSadikBB11KnockOutMcCoy             = 105,
 	kGoalSadikBB11KickMcCoy                 = 106,
 	kGoalSadikBB11TalkWithClovis            = 107,
+	kGoalSadikAttackMcCoy            		= 108,
 	kGoalSadikUG18Wait                      = 300,
 	kGoalSadikUG18Move                      = 301,
 	kGoalSadikUG18Decide                    = 302,

@@ -635,7 +635,14 @@ bool AIScriptMaggie::GoalChanged(int currentGoalNumber, int newGoalNumber) {
 			}
 			Delay(2000);
 			Actor_Says(kActorMcCoy, 2390, 13);
-			if (Actor_Query_Goal_Number(kActorSadik) == 411) {
+			// Altered code so if Sadik is dead Clovis will be the one who kills Maggie. His dialogue with McCoy is already fixed in Clovis ai sheet and this code this will trigger it. 
+			if (_vm->_cutContent) { 
+				if (Actor_Query_Goal_Number(kActorSadik) == kGoalSadikGone) {
+					Actor_Set_Goal_Number(kActorClovis, kGoalClovisKP06TalkToMcCoy);
+				} else if (Actor_Query_Goal_Number(kActorSadik) == 411) {
+					Actor_Set_Goal_Number(kActorSadik, 412);
+				}
+			} else if (Actor_Query_Goal_Number(kActorSadik) == 411) {
 				Actor_Set_Goal_Number(kActorSadik, 412);
 			} else { // there is no way how Maggie can explode and Sadik's goal is not 411
 				Actor_Set_Goal_Number(kActorClovis, kGoalClovisKP06TalkToMcCoy);
