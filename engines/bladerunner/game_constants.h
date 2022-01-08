@@ -1652,7 +1652,7 @@ enum GameItems {
 	kItemDNATyrell              =  83,
 	kItemDogCollar              =  84,
 	kItemRagDoll                =  85,
-	// 86 is never used
+	kItemPhoto					=  86, 
 	// 87 is never used
 	kItemRadiationGoogles       =  88,
 	kItemGordosLighterReplicant =  89,

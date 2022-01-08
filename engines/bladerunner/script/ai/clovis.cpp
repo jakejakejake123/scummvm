@@ -173,6 +173,12 @@ bool AIScriptClovis::ShotAtAndHit() {
 			Actor_Set_Targetable(kActorClovis, false);
 			ADQ_Add(kActorMcCoy, 2340, -1);
 			Music_Stop(3u);
+			// Made it so McCoy receives 200 chinyen when he retires Clovis.
+			if (Query_Difficulty_Level() != kGameDifficultyEasy) {
+				Global_Variable_Increment(kVariableChinyen, 200);
+			}
+			// Made it so the scene exits enable aftter Clovis dies.
+			Scene_Exits_Enable();		
 		} else if (Actor_Query_Goal_Number(kActorClovis) == kGoalClovisKP07Wait
 		        || Actor_Query_Goal_Number(kActorClovis) == kGoalClovisKP07LayDown
 		) {
@@ -181,8 +187,14 @@ bool AIScriptClovis::ShotAtAndHit() {
 			shotAnim();
 			Actor_Set_Targetable(kActorClovis, false);
 			Music_Stop(3u);
+			// Made it so McCoy receives 200 chinyen when he retires Clovis.
+			if (Query_Difficulty_Level() != kGameDifficultyEasy) {
+				Global_Variable_Increment(kVariableChinyen, 200);
+			}
+			// Made it so the scene exits enable aftter Clovis dies.
+			Scene_Exits_Enable();
 		}
-}
+	}
 	return false;
 }
 
@@ -443,14 +455,28 @@ bool AIScriptClovis::GoalChanged(int currentGoalNumber, int newGoalNumber) {
 		Actor_Says(kActorMcCoy, 2345, 16);
 		Actor_Says(kActorClovis, 170, -1);
 		Actor_Says(kActorClovis, 180, kAnimationModeTalk);
-		Actor_Says(kActorMcCoy, 2350, 17);
-		if (!Game_Flag_Query(kFlagMcCoyAttackedReplicants)) {
-			Actor_Says(kActorMcCoy, 2355, 11);
+		Actor_Says(kActorMcCoy, 2350, 17); //00-2350.AUD	You want me to feel sorry for you.
+		// Altered the dialogue between McCoy and dying Clovis. It will play out differently depending on McCoys agenda.
+		if (_vm->_cutContent) {
+			if (Player_Query_Agenda() == kPlayerAgendaSurly 
+				|| (Player_Query_Agenda() == kPlayerAgendaErratic)) {
+				Actor_Says(kActorMcCoy, 2355, 11); //00-2355.AUD	But after what you did to Maggie? No way.
+			}
+		} else if (!Game_Flag_Query(kFlagMcCoyAttackedReplicants)) {
+			Actor_Says(kActorMcCoy, 2355, 11); //00-2355.AUD	But after what you did to Maggie? No way.
 		}
-		Actor_Says(kActorClovis, 190, -1);
-		Actor_Says(kActorClovis, 200, kAnimationModeTalk);
-		Actor_Says(kActorMcCoy, 2360, 18);
-		Actor_Says(kActorClovis, 210, kAnimationModeTalk);
+		Actor_Says(kActorClovis, 190, -1); //05-0190.AUD	And what about you, Ray McCoy?(coughs) After what you did to my family.
+		Actor_Says(kActorClovis, 200, kAnimationModeTalk); //05-0200.AUD	To my friends. Do you not also seek forgiveness?
+		if (_vm->_cutContent) {
+			if (Player_Query_Agenda() == kPlayerAgendaSurly 
+			|| (Player_Query_Agenda() == kPlayerAgendaErratic)) {
+				Actor_Says(kActorMcCoy, 2360, 18); //00-2360.AUD	I don’t need to.
+			} else {
+				Delay (2000);
+				Actor_Says(kActorMcCoy, 2305, 17); //00-2305.AUD	I’m sorry.
+			}
+		}
+		Actor_Says(kActorClovis, 210, kAnimationModeTalk); //05-0210.AUD	(coughs) I thought I could cheat my destiny.
 		Actor_Says(kActorClovis, 220, -1);
 		Actor_Set_Goal_Number(kActorClovis, kGoalClovisKP07SayFinalWords);
 		return true;
@@ -473,17 +499,42 @@ bool AIScriptClovis::GoalChanged(int currentGoalNumber, int newGoalNumber) {
 		Actor_Face_Actor(kActorClovis, kActorMcCoy, true);
 #endif // BLADERUNNER_ORIGINAL_BUGS
 		Actor_Says(kActorClovis, 1260, kAnimationModeTalk);
-		Actor_Says(kActorMcCoy, 8502, kAnimationModeTalk);
-		Actor_Says(kActorClovis, 1270, kAnimationModeTalk);
-		Actor_Says(kActorMcCoy, 8504, kAnimationModeTalk);
-		Actor_Says(kActorClovis, 1290, kAnimationModeTalk);
-		Actor_Says(kActorMcCoy, 8505, kAnimationModeTalk);
-		Actor_Says(kActorClovis, 1300, kAnimationModeTalk);
+		// If you have some DNA data McCoy the dialogue will be different with McCoy hesitating to to hand over the data. If he doesn't have any he just
+		// says that he hopes that the data that Clovis already has is enough.
+		if (_vm->_cutContent) {
+			Delay (2000);
+			if (Actor_Clue_Query(kActorMcCoy, kClueDNATyrell)
+			|| Actor_Clue_Query(kActorMcCoy, kClueDNASebastian)
+			|| Actor_Clue_Query(kActorMcCoy, kClueDNAChew) 
+			|| Actor_Clue_Query(kActorMcCoy, kClueDNAMoraji) 
+			|| Actor_Clue_Query(kActorMcCoy, kClueDNALutherLance)
+			|| Actor_Clue_Query(kActorMcCoy, kClueDNAMarcus)) {
+				Actor_Says(kActorMcCoy, 8503, kAnimationModeTalk); //00-8503.AUD	I think I'll hold on to it for the moment.
+				Actor_Says(kActorClovis, 1280, kAnimationModeTalk); //05-1280.AUD	You are here. That’s enough for now. Perhaps trust will come later.
+			} 
+		} else {
+			Actor_Says(kActorMcCoy, 8502, kAnimationModeTalk); //00-8502.AUD	I hope it's enough.
+			Actor_Says(kActorClovis, 1270, kAnimationModeTalk); //05-1270.AUD	It will have to be.
+			Actor_Says(kActorMcCoy, 8504, kAnimationModeTalk); //00-8504.AUD	I've got questions of my own.
+			Actor_Says(kActorClovis, 1290, kAnimationModeTalk); //05-1290.AUD	No doubt. But answers will take time. And time is precious. To all of us.
+		}
+		// Added code so Clovis will only mention McCoy having the information from Tyrell if McCoy has the Tyrell DNA data.
+		if (_vm->_cutContent) {
+			if (Actor_Clue_Query(kActorMcCoy, kClueDNATyrell))  {
+				Actor_Says(kActorMcCoy, 8505, kAnimationModeTalk); //00-8505.AUD	It's true then. You've-- We've only got four years.
+				Actor_Says(kActorClovis, 1300, kAnimationModeTalk); //05-1300.AUD	Yes. Of course, I could be hit by lightning tomorrow but with the information 
+			}
+		} else {
+			Actor_Says(kActorMcCoy, 8505, kAnimationModeTalk); //
+			Actor_Says(kActorClovis, 1300, kAnimationModeTalk); //
+		}
 #if BLADERUNNER_ORIGINAL_BUGS
 #else
 		Actor_Face_Heading(kActorClovis, 780, true);
 #endif // BLADERUNNER_ORIGINAL_BUGS
-		Actor_Says(kActorClovis, 1310, kAnimationModeTalk);
+		Actor_Says(kActorClovis, 1310, kAnimationModeTalk); //05-1310.AUD	He’s a hunter no more. He has come home. It’s time to go, my friend.
+		// Added in a line.
+		Actor_Says(kActorMcCoy, 8506, kAnimationModeTalk); //00-8506.AUD	Where are we headed?
 		Ambient_Sounds_Remove_All_Non_Looping_Sounds(true);
 		Ambient_Sounds_Remove_All_Looping_Sounds(1u);
 		Outtake_Play(kOuttakeEnd4A, false, -1);

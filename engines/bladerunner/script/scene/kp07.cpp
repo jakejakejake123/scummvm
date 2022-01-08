@@ -145,6 +145,11 @@ void SceneScriptKP07::InitializeScene() {
 }
 
 void SceneScriptKP07::SceneLoaded() {
+	// Added the Clovis incept photo into the scene.
+	if (_vm->_cutContent &&
+		!Actor_Clue_Query(kActorMcCoy, kClueClovisIncept)) {
+		Item_Add_To_World(kItemPhoto, kModelAnimationPhoto, kSetKP07, 78.84, -41.37, -116.75, 0, 12, 12, false, true, false, true);
+	}
 	if (!Game_Flag_Query(kFlagMcCoyIsHelpingReplicants)) {
 		Music_Play(kMusicClovDie1, 25, 0, 0, -1, kMusicLoopRepeat, 0);
 	}
@@ -200,6 +205,16 @@ bool SceneScriptKP07::ClickedOnActor(int actorId) {
 }
 
 bool SceneScriptKP07::ClickedOnItem(int itemId, bool a2) {
+	// Code for picking up the Clovis incept photo.
+	if (_vm->_cutContent) {
+		if (itemId ==  kItemPhoto) {
+			Actor_Face_Item(kActorMcCoy,  kItemPhoto, true);
+			Actor_Clue_Acquire(kActorMcCoy, kClueClovisIncept, true, -1);
+			Item_Pickup_Spin_Effect(kModelAnimationPhoto, 83, 390);
+			Item_Remove_From_World(kItemPhoto);
+			return true;		
+		}	
+	}
 	return false;
 }
 
@@ -230,6 +245,28 @@ void SceneScriptKP07::PlayerWalkedIn() {
 	Loop_Actor_Walk_To_XYZ(kActorMcCoy, 9.0f, -41.88f, -81.0f, 0, false, false, false);
 	if (!Game_Flag_Query(kFlagKP07Entered)) {
 		if (Game_Flag_Query(kFlagMcCoyIsHelpingReplicants)) {
+			// Added in some dialogue for McCoy, Lucy and Dektora. If McCoy enters the moonbus and is helping the replicants and has an affection rating
+			// towards either Dektora or Lucy the will say I told you he'd come and McCoy will say I promised you didn't I.
+			if (_vm->_cutContent) {
+				if (Actor_Query_Is_In_Current_Set(kActorDektora) 
+					&& Global_Variable_Query(kVariableAffectionTowards) ==  kAffectionTowardsDektora) {
+					Actor_Face_Actor(kActorDektora, kActorMcCoy, true);
+					Actor_Says(kActorDektora, 2650, 3); //03-2650.AUD	I told you he’d come!
+					Actor_Face_Actor(kActorMcCoy, kActorDektora, true);
+					Actor_Says(kActorMcCoy, 1400, 18); //00-1400.AUD	I promised you, didn't I?
+					Delay (1000);
+					Actor_Face_Actor(kActorDektora, kActorClovis, true);
+				}
+				if (Actor_Query_Is_In_Current_Set(kActorLucy)
+				&& Global_Variable_Query(kVariableAffectionTowards) == kAffectionTowardsLucy) {
+					Actor_Face_Actor(kActorLucy, kActorMcCoy, true);
+					Actor_Says(kActorLucy, 3040, 3); //06-3040.AUD	I told you he’d come!
+					Actor_Face_Actor(kActorMcCoy, kActorLucy, true);
+					Actor_Says(kActorMcCoy, 1400, 18); //00-1400.AUD	I promised you, didn't I?
+					Delay (1000);
+					Actor_Face_Actor(kActorLucy, kActorClovis, true);
+				}
+			}
 			Actor_Face_Actor(kActorMcCoy, kActorClovis, true);
 			Actor_Says(kActorClovis, 1240, 3);
 			Actor_Says(kActorMcCoy, 8500, 3);
@@ -243,6 +280,11 @@ void SceneScriptKP07::PlayerWalkedIn() {
 		} else {
 			Actor_Face_Actor(kActorMcCoy, kActorClovis, true);
 			Actor_Says(kActorClovis, 160, 3);
+			//I disabled the exits when McCoy first enters the moonbus because it didn't feel right
+			// for McCoy to be able to leave before finishing his final encounter with Clovis.
+			if (_vm->_cutContent) {
+				Scene_Exits_Disable();
+			}
 			Actor_Retired_Here(kActorClovis, 72, 60, 0, -1);
 		}
 		Game_Flag_Set(kFlagKP07Entered);
