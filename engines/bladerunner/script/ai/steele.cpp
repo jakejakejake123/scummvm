@@ -322,7 +322,14 @@ void AIScriptSteele::CompletedMovementTrack() {
 		Actor_Says(kActorMcCoy, 2270, 12);
 		Actor_Says(kActorSteele, 650, 59);
 		Actor_Says(kActorMcCoy, 2275, 16);
-		Actor_Says(kActorMcCoy, 2280, 15);
+		Actor_Says(kActorMcCoy, 2280, 15); //00-2280.AUD	But I’m doing this one alone.
+		// Added in a line.
+		if (_vm->_cutContent) {
+			if (Player_Query_Agenda() == kPlayerAgendaSurly 
+			|| (Player_Query_Agenda() == kPlayerAgendaErratic)) {
+				Actor_Says(kActorMcCoy, 2285, 16);	//00-2285.AUD	All I need is one shot and it’ll all be over.
+			}
+		}
 		Actor_Says(kActorSteele, 660, 60);
 		Actor_Says(kActorSteele, 670, 59);
 		Actor_Set_Goal_Number(kActorSteele, kGoalSteeleKP06Leave);

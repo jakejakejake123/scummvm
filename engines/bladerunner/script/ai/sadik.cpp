@@ -253,9 +253,13 @@ void AIScriptSadik::Retired(int byActorId) {
 			return; //true;
 		}
 	}
-
+	// Made it so McCoy receives 200 chinyen when he retires Sadik when he is a replicant.
 	Actor_Set_Goal_Number(kActorSadik, kGoalSadikGone);
-
+	if (Game_Flag_Query(kFlagSadikIsReplicant)) {
+		if (Query_Difficulty_Level() != kGameDifficultyEasy) {
+			Global_Variable_Increment(kVariableChinyen, 200);
+		}
+	}
 	return; //false;
 }
 
@@ -416,6 +420,10 @@ bool AIScriptSadik::GoalChanged(int currentGoalNumber, int newGoalNumber) {
 		Actor_Says(kActorSadik, 90, 3);
 		Actor_Says(kActorSadik, 100, 3);
 		Actor_Says(kActorMcCoy, 2250, 3);
+		// Added in some action music for the final confrontation with Sadik.
+		if (_vm->_cutContent) {
+			Music_Play(kMusicMoraji, 71, 0, 0, -1, kMusicLoopPlayOnce, 2);
+		}
 		Actor_Set_Goal_Number(kActorSadik, 413);
 		return true;
 
@@ -433,8 +441,23 @@ bool AIScriptSadik::GoalChanged(int currentGoalNumber, int newGoalNumber) {
 		return true;
 
 	case 415:
-		Actor_Says(kActorSadik, 110, kAnimationModeTalk);
-		Actor_Says(kActorMcCoy, 2290, kAnimationModeTalk);
+	// Added in some extra dialogue for Sadik and McCoy. If McCoy betrayed Crystal this will be mentioned in the conversation.
+		if (_vm->_cutContent) {
+		Actor_Says(kActorMcCoy, 8480, kAnimationModeTalk); //00-8480.AUD	Anyone there?
+		}
+		Actor_Says(kActorSadik, 110, kAnimationModeTalk); //08-0110.AUD	Brother mon. Wondering when you’d make it out here.
+		Actor_Says(kActorMcCoy, 2290, kAnimationModeTalk); //00-2290.AUD	Took a little while to realize where I belonged.
+		if (_vm->_cutContent) {
+			if (Actor_Clue_Query(kActorSadik, kClueMcCoyBetrayal)) {
+				Actor_Says(kActorSadik, 120, kAnimationModeTalk); //08-0120.AUD	Heard one of the traps go off. Was afraid you was blown to bits.
+				Actor_Says(kActorMcCoy, 2295, kAnimationModeTalk); //00-2295.AUD	Steele was on the receiving end of that baby.
+				Actor_Says(kActorSadik, 130, kAnimationModeTalk); //08-0130.AUD	Heh, she was a killer. She richly deserved it.
+				if (Player_Query_Agenda() == kPlayerAgendaSurly 
+				|| Player_Query_Agenda() == kPlayerAgendaErratic) {
+					Actor_Says(kActorMcCoy, 8485, kAnimationModeTalk); //00-8485.AUD	One is a start.
+				} 
+			}
+		}
 		Actor_Says(kActorSadik, 310, kAnimationModeTalk);
 		Actor_Says(kActorMcCoy, 2300, kAnimationModeTalk);
 		if (Game_Flag_Query(kFlagSadikIsReplicant)) {
@@ -454,8 +477,12 @@ bool AIScriptSadik::GoalChanged(int currentGoalNumber, int newGoalNumber) {
 		Actor_Says(kActorSadik, 220, kAnimationModeTalk);
 		Actor_Says(kActorSadik, 230, kAnimationModeTalk);
 		Actor_Says(kActorSadik, 240, kAnimationModeTalk);
-		Actor_Says(kActorSadik, 250, kAnimationModeTalk);
-		Actor_Says(kActorSadik, 260, kAnimationModeTalk);
+		Actor_Says(kActorSadik, 250, kAnimationModeTalk); //08-0250.AUD	Old reactor cores. Anything still got a glow.
+		// Added in a line.
+		if (_vm->_cutContent) {
+			Actor_Says(kActorMcCoy, 6195, kAnimationModeTalk); //00-6195.AUD	I thought you said we came to earth in this thing.
+		}
+		Actor_Says(kActorSadik, 260, kAnimationModeTalk); //08-0260.AUD	The generator? It take almost anything.
 		Actor_Set_Goal_Number(kActorSadik, kGoalSadikKP06NeedsReactorCoreFromMcCoy);
 		return true;
 

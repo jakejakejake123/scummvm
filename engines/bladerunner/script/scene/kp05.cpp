@@ -79,6 +79,13 @@ bool SceneScriptKP05::ClickedOnItem(int itemId, bool a2) {
 	if (itemId == kItemPowerSource) {
 		if (!Loop_Actor_Walk_To_XYZ(kActorMcCoy, -1058.0f, 0.0f, 852.0f, 0, true, false, false)) {
 			Actor_Face_Item(kActorMcCoy, kItemPowerSource, true);
+			// Added in some lines for when McCoy finds the power source.
+			if (_vm->_cutContent) {
+				Actor_Says(kActorMcCoy, 8885, 13); //00-8885.AUD	A power source.
+				if (Actor_Query_Goal_Number(kActorSadik) == kGoalSadikKP06NeedsReactorCoreFromMcCoy) {
+					Actor_Says(kActorMcCoy, 8495, 15); //00-8495.AUD	This might work.
+				}
+			} 
 			Actor_Clue_Acquire(kActorMcCoy, kCluePowerSource, true, -1);
 			Item_Remove_From_World(kItemPowerSource);
 			Item_Pickup_Spin_Effect(kModelAnimationPowerSource, 58, 321);
@@ -167,6 +174,10 @@ void SceneScriptKP05::PlayerWalkedIn() {
 		Actor_Says(kActorMcCoy, 2220, 3);
 		Actor_Says(kActorSteele, 620, 15);
 		Actor_Says(kActorSteele, 630, 17);
+		// Added in some action music for your fight with Crystal.
+		if (_vm->_cutContent) {
+			Music_Play(kMusicMoraji, 71, 0, 0, -1, kMusicLoopPlayOnce, 2);
+		}
 		Non_Player_Actor_Combat_Mode_On(kActorSteele, kActorCombatStateIdle, true, kActorMcCoy, 9, kAnimationModeCombatIdle, kAnimationModeCombatWalk, kAnimationModeCombatRun, 0, -1, -1, 20, 240, false);
 	}
 }

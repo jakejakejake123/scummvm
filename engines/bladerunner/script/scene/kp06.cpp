@@ -83,8 +83,13 @@ bool SceneScriptKP06::ClickedOnActor(int actorId) {
 			Actor_Says(kActorMcCoy, 8610, 15);
 			Actor_Says(kActorSadik, 290, kAnimationModeTalk);
 		} else if (Actor_Clue_Query(kActorMcCoy, kCluePowerSource)) {
-			Actor_Says(kActorSadik, 280, kAnimationModeTalk);
-			Actor_Says(kActorSadik, 290, kAnimationModeTalk);
+			Actor_Says(kActorSadik, 280, kAnimationModeTalk); //08-0280.AUD	You for real I’m thinking.
+			// Added in some lines.
+			if (_vm->_cutContent) {
+				Actor_Says(kActorMcCoy, 2215, 15); //00-2215.AUD	That’s right.
+				Actor_Says(kActorSadik, 380, kAnimationModeTalk); //08-0380.AUD	You better than I thought, mon. 
+			}
+			Actor_Says(kActorSadik, 290, kAnimationModeTalk); //08-0290.AUD	Go in. You see Clovis. He not got too much time left.
 			Actor_Clue_Acquire(kActorSadik, kCluePowerSource, true, kActorMcCoy);
 		} else {
 			Actor_Says(kActorMcCoy, 2320, kAnimationModeTalk);
