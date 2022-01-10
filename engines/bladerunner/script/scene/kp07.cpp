@@ -50,6 +50,15 @@ void SceneScriptKP07::InitializeScene() {
 			Actor_Put_In_Set(kActorDektora, kSetKP07);
 			Actor_Set_At_XYZ(kActorDektora, -52.0f, -41.52f, -5.0f, 289);
 		}
+		// If McCoy got both Crystal and the reps to trust him Maggie will be alive and in the moonbus. The reps took her but instead wanted to take her with them along with McCoy.
+		if (_vm->_cutContent) {
+			if (Actor_Query_Goal_Number(kActorMaggie) < kGoalMaggieDead) {
+				if (Game_Flag_Query(kFlagMcCoyIsHelpingReplicants)) {
+					Actor_Put_In_Set(kActorMaggie, kSetKP07);
+					Actor_Set_At_XYZ(kActorMaggie, 19.85f, -42.80f, -152.90f, 659);	
+				}
+			}
+		}
 
 		if (Actor_Query_Goal_Number(kActorZuben) < kGoalZubenGone) {
 #if BLADERUNNER_ORIGINAL_BUGS
@@ -245,6 +254,14 @@ void SceneScriptKP07::PlayerWalkedIn() {
 	Loop_Actor_Walk_To_XYZ(kActorMcCoy, 9.0f, -41.88f, -81.0f, 0, false, false, false);
 	if (!Game_Flag_Query(kFlagKP07Entered)) {
 		if (Game_Flag_Query(kFlagMcCoyIsHelpingReplicants)) {
+			// If Maggie is alive and in the set McCoy will call her and Maggie will look at him.
+			if (_vm->_cutContent) {
+				if (Actor_Query_Is_In_Current_Set(kActorMaggie)) {
+					Actor_Face_Actor(kActorMcCoy, kActorMaggie, true);
+					Actor_Face_Actor(kActorMaggie, kActorMcCoy, true);
+					Actor_Says(kActorMcCoy, 2385, 14); //00-2385.AUD	Maggie! Come here girl.
+				}
+			}
 			// Added in some dialogue for McCoy, Lucy and Dektora. If McCoy enters the moonbus and is helping the replicants and has an affection rating
 			// towards either Dektora or Lucy the will say I told you he'd come and McCoy will say I promised you didn't I.
 			if (_vm->_cutContent) {

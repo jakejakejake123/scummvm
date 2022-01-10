@@ -170,7 +170,41 @@ void SceneScriptKP06::PlayerWalkedIn() {
 		Game_Flag_Reset(kFlagKP07toKP06);
 
 		// Ending - leave with Steele
-		if (Actor_Query_Goal_Number(kActorSteele) == kGoalSteeleWaitingForEnd) {
+		// Restored the Replicant betrayal ending where Crystal is alive. If you didn't retire a human and didn't warn Lucy Dektora or Izo, and you didn't turn in the Guzza evidence
+		// or got Crystal to trust you by not retiring enough reps you will not confront her in the kipple and she will appear here instead.
+		if (_vm->_cutContent) {
+			if (Actor_Query_Goal_Number(kActorSteele) !=  kGoalSteeleGone) {
+				if (Game_Flag_Query(kFlagMcCoyAttackedReplicants)) {
+					Actor_Put_In_Set(kActorSteele, kSetKP05_KP06);
+					Actor_Set_At_XYZ(kActorSteele, -782.15f, 8.26f, -263.64f, 52);
+					// If Maggie is alive she will be in the scene.
+					if	(Actor_Query_Goal_Number(kActorMaggie) < kGoalMaggieDead) {
+						Actor_Put_In_Set(kActorMaggie, kSetKP05_KP06);
+						Actor_Set_At_XYZ(kActorMaggie, -802.21, 3.74, -640.55, 659);
+						Actor_Face_Actor(kActorMaggie, kActorMcCoy, true);
+					}
+					Actor_Face_Actor(kActorSteele, kActorMcCoy, true);
+					Actor_Says(kActorSteele, 2560, 12); //01-2560.AUD	I gotta admit. I had my doubts about you.
+					Actor_Face_Actor(kActorMcCoy, kActorSteele, true);
+					Actor_Says(kActorMcCoy, 6210, 14); //00-6210.AUD	What are you saying, Steele? You still wanna put me on the Machine?
+					Actor_Says(kActorSteele, 2570, 13); //01-2570.AUD	Take it easy, will ya?
+					Actor_Says(kActorMcCoy, 6215, 14); //00-6215.AUD	I plan to. I’m going home.
+					Actor_Says(kActorSteele, 2580, 15); //01-2580.AUD	I gotta say, McCoy. You had me fooled. I thought for sure you were a Rep.
+					Actor_Says(kActorSteele, 2590, 12); //01-2590.AUD	Don’t get me wrong. I mean, you’re one crazy dude. But I like that.
+					Actor_Says(kActorSteele, 2550, 12); //01-2550.AUD	I think you got a promotion coming. Not to mention all those retirement bonuses.
+					Actor_Says(kActorMcCoy, 6205, 14); //00-6205.AUD	As long as I get something like… twenty hours of sleep in the process.
+					Async_Actor_Walk_To_Waypoint(kActorMcCoy, 551, 0, false);
+					Async_Actor_Walk_To_Waypoint(kActorMaggie, 551, 0, false);
+					Delay(1000);
+					Actor_Says(kActorMcCoy, 6220, -1); //00-6220.AUD	I’m going home, Steele. I’m finished.
+					Delay(3000);
+					Ambient_Sounds_Remove_All_Non_Looping_Sounds(true);
+					Ambient_Sounds_Remove_All_Looping_Sounds(1u);
+					Outtake_Play(kOuttakeEnd6, false, -1);
+					Game_Over();
+				}
+			}
+		} else if (Actor_Query_Goal_Number(kActorSteele) == kGoalSteeleWaitingForEnd) {
 			Actor_Face_Actor(kActorSteele, kActorMcCoy, true);
 			Actor_Says(kActorSteele, 2530, 13);
 			Actor_Face_Actor(kActorMcCoy, kActorSteele, true);
@@ -197,6 +231,14 @@ void SceneScriptKP06::PlayerWalkedIn() {
 		} else { // Ending - talk with Gaff and leaving alone
 			Actor_Set_Goal_Number(kActorGaff, kGoalGaffGone);
 			Actor_Face_Actor(kActorGaff, kActorMcCoy, true);
+			// If Maggie is alive she will be in the set.
+			if (_vm->_cutContent) {
+				if	(Actor_Query_Goal_Number(kActorMaggie) < kGoalMaggieDead) {
+					Actor_Put_In_Set(kActorMaggie, kSetKP05_KP06);
+					Actor_Set_At_XYZ(kActorMaggie, -802.21, 3.74, -640.55, 659);
+					Actor_Face_Actor(kActorMaggie, kActorMcCoy, true);
+				}
+			}
 			Actor_Says(kActorGaff, 220, 13);
 			Actor_Face_Actor(kActorMcCoy, kActorGaff, true);
 			Actor_Says(kActorMcCoy, 6245, 11);
@@ -212,14 +254,34 @@ void SceneScriptKP06::PlayerWalkedIn() {
 			Actor_Says(kActorGaff, 260, 12);
 			Actor_Says(kActorMcCoy, 6260, 15);
 			Actor_Says(kActorGaff, 270, 13);
-			Actor_Says(kActorGaff, 280, 15);
-			Actor_Says(kActorMcCoy, 6265, 14);
+			Actor_Says(kActorGaff, 280, 15); 
+			Actor_Says(kActorMcCoy, 6265, 14); //00-6265.AUD	How come I don’t feel good about it?
+			// If Maggie is alive Gaffs lines about getting a new animal will not play and instead McCoy will say the city is a cess pool instead.
+			if (_vm->_cutContent) {
+				if (Actor_Query_Goal_Number(kActorMaggie) < kGoalMaggieDead) {
+					Actor_Says(kActorGaff, 290, 14); //53-0290.AUD	Who knows?
+					Delay(2000);									
+					Actor_Says(kActorMcCoy, 8625, 14); //00-8625.AUD	This city is a cesspool.
+					Async_Actor_Walk_To_Waypoint(kActorMcCoy, 550, 0, false);
+					Async_Actor_Walk_To_Waypoint(kActorMaggie, 551, 0, false);
+					Async_Actor_Walk_To_Waypoint(kActorGaff, 551, 0, false);
+					Actor_Says(kActorGaff, 310, -1); //53-0310.AUD	Whatever you want to believe, McCoy.
+				} else if (Actor_Query_Goal_Number(kActorMaggie) > kGoalMaggieDead) {
+					Actor_Says(kActorGaff, 290, 14);
+					Actor_Says(kActorGaff, 300, 15);
+					Actor_Says(kActorMcCoy, 6270, 11);
+					Async_Actor_Walk_To_Waypoint(kActorMcCoy, 550, 0, false);
+					Async_Actor_Walk_To_Waypoint(kActorGaff, 551, 0, false);
+					Actor_Says(kActorGaff, 310, -1);
+				}
+			} else {
 			Actor_Says(kActorGaff, 290, 14);
 			Actor_Says(kActorGaff, 300, 15);
 			Actor_Says(kActorMcCoy, 6270, 11);
 			Async_Actor_Walk_To_Waypoint(kActorMcCoy, 550, 0, false);
 			Async_Actor_Walk_To_Waypoint(kActorGaff, 551, 0, false);
 			Actor_Says(kActorGaff, 310, -1);
+			}
 			Delay(3000);
 			Outtake_Play(kOuttakeEnd7, false, -1);
 #if BLADERUNNER_ORIGINAL_BUGS
