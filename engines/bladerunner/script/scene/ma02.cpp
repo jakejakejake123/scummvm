@@ -287,15 +287,16 @@ void SceneScriptMA02::PlayerWalkedIn() {
 					|| Global_Variable_Query(kVariableAffectionTowards) == kAffectionTowardsDektora
 					|| Global_Variable_Query(kVariableAffectionTowards) == kAffectionTowardsLucy
 					|| Game_Flag_Query(kFlagIzoWarned)) {
-					Actor_Says(kActorMcCoy, 2390, kAnimationModeIdle);
-				}	
+					// Made it so McCoy actually says the right line and the music now plays.
+						Actor_Says(kActorMcCoy, 2390, kAnimationModeIdle);
+					} else {
+						Actor_Says(kActorMcCoy, 2385,  kAnimationModeTalk);
+					}
 				if (_vm->_cutContent) {
 					Music_Play(kMusicBRBlues, 25, 0, 3, -1, kMusicLoopPlayOnceRandomStart, 0);
 				} else {
 					Music_Play(kMusicBRBlues, 25, 0, 3, -1, kMusicLoopPlayOnce, 0);
 				}
-			} else {
-				Actor_Says(kActorMcCoy, 2385,  kAnimationModeTalk);
 			}
 		} else if (Game_Flag_Query(kFlagMcCoyIsHelpingReplicants)) {
 			Actor_Says(kActorMcCoy, 2390, kAnimationModeIdle);

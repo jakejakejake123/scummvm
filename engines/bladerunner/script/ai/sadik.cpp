@@ -458,6 +458,7 @@ bool AIScriptSadik::GoalChanged(int currentGoalNumber, int newGoalNumber) {
 		}
 		Actor_Says(kActorSadik, 110, kAnimationModeTalk); //08-0110.AUD	Brother mon. Wondering when you’d make it out here.
 		Actor_Says(kActorMcCoy, 2290, kAnimationModeTalk); //00-2290.AUD	Took a little while to realize where I belonged.
+		Actor_Says(kActorSadik, 310, kAnimationModeTalk); //08-0310.AUD	The Maker built you right.
 		if (_vm->_cutContent) {
 			if (Actor_Clue_Query(kActorSadik, kClueMcCoyBetrayal)) {
 				Actor_Says(kActorSadik, 120, kAnimationModeTalk); //08-0120.AUD	Heard one of the traps go off. Was afraid you was blown to bits.
@@ -469,7 +470,7 @@ bool AIScriptSadik::GoalChanged(int currentGoalNumber, int newGoalNumber) {
 				} 
 			}
 		}
-		Actor_Says(kActorSadik, 310, kAnimationModeTalk);
+		// Moved the dialogue down one space so Sadik says the maker built you right, before mentioning the explosion.
 		Actor_Says(kActorMcCoy, 2300, kAnimationModeTalk);
 		if (Game_Flag_Query(kFlagSadikIsReplicant)) {
 			Actor_Says(kActorSadik, 180, kAnimationModeTalk);

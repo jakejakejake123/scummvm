@@ -294,6 +294,11 @@ void SceneScriptUG18::ActorChangedGoal(int actorId, int newGoal, int oldGoal, bo
 			if (Actor_Query_Friendliness_To_Other(kActorClovis, kActorMcCoy) > 55
 			 && Game_Flag_Query(kFlagMcCoyRetiredHuman)
 			) {
+				// Added in a couple of lines for Sadik.
+				if (_vm->_cutContent) {
+					Actor_Says(kActorSadik, 360, 14); // The Hunter, he do us a favor...
+					Actor_Says(kActorSadik, 380, 14); //08-0380.AUD	You better than I thought, mon. 
+				}
 				Actor_Says(kActorClovis, 660, 13); // Brother, you killed a human...
 				Actor_Says(kActorMcCoy, 5995, 13);
 				Actor_Says(kActorClovis, 670, 13);
@@ -444,7 +449,9 @@ void SceneScriptUG18::DialogueQueueFlushed(int a1) {
 		}
 		Player_Gains_Control();
 		ADQ_Add_Pause(2000);
+		if (!_vm->_cutContent) {
 		ADQ_Add(kActorSadik, 360, -1); // The Hunter, he do us a favor...
+		}
 		ADQ_Add_Pause(2000);
 		ADQ_Add(kActorClovis, 650, 14); // So, what should we do with this detective.
 		ADQ_Add(kActorSadik, 370, 14);

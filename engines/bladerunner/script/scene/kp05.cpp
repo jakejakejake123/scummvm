@@ -79,16 +79,17 @@ bool SceneScriptKP05::ClickedOnItem(int itemId, bool a2) {
 	if (itemId == kItemPowerSource) {
 		if (!Loop_Actor_Walk_To_XYZ(kActorMcCoy, -1058.0f, 0.0f, 852.0f, 0, true, false, false)) {
 			Actor_Face_Item(kActorMcCoy, kItemPowerSource, true);
+			Actor_Clue_Acquire(kActorMcCoy, kCluePowerSource, true, -1);
+			Item_Remove_From_World(kItemPowerSource);
+			Item_Pickup_Spin_Effect(kModelAnimationPowerSource, 58, 321);
 			// Added in some lines for when McCoy finds the power source.
+			// Made it so McCoy says these lines as he picks up the power source.
 			if (_vm->_cutContent) {
 				Actor_Says(kActorMcCoy, 8885, 13); //00-8885.AUD	A power source.
 				if (Actor_Query_Goal_Number(kActorSadik) == kGoalSadikKP06NeedsReactorCoreFromMcCoy) {
 					Actor_Says(kActorMcCoy, 8495, 15); //00-8495.AUD	This might work.
 				}
 			} 
-			Actor_Clue_Acquire(kActorMcCoy, kCluePowerSource, true, -1);
-			Item_Remove_From_World(kItemPowerSource);
-			Item_Pickup_Spin_Effect(kModelAnimationPowerSource, 58, 321);
 		}
 	}
 	return false;
