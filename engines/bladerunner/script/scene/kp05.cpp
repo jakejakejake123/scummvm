@@ -142,8 +142,16 @@ void SceneScriptKP05::PlayerWalkedIn() {
 	if (Game_Flag_Query(kFlagKP06toKP05)) {
 		Game_Flag_Reset(kFlagKP06toKP05);
 	} else if (Game_Flag_Query(kFlagKP04toKP05)) {
-		Loop_Actor_Walk_To_XYZ(kActorMcCoy, -1110.0f, 0.0f, 932.0f, 0, false, false, false);
-		Game_Flag_Reset(kFlagKP04toKP05);
+		// Made it so McCoy appears in the set instantly so when Steele confronts him in the Clovis ending she doesn't teleport into the set.
+		if (_vm->_cutContent) {
+			Actor_Set_At_XYZ(kActorMcCoy, -1110.0f, 0.0f, 932.0f, 0);
+			Game_Flag_Reset(kFlagKP04toKP05);
+		} else {
+			Loop_Actor_Walk_To_XYZ(kActorMcCoy, -1110.0f, 0.0f, 932.0f, 0, false, false, false);
+			Game_Flag_Reset(kFlagKP04toKP05);
+		}
+	} else if (_vm->_cutContent) {
+		Actor_Set_At_XYZ(kActorMcCoy, -846.0f, 0.0f, 972.0f, 0);
 	} else {
 		Loop_Actor_Walk_To_XYZ(kActorMcCoy, -846.0f, 0.0f, 972.0f, 0, false, false, false);
 		Game_Flag_Query(kFlagKP03toKP05); // bug in game?
@@ -152,8 +160,39 @@ void SceneScriptKP05::PlayerWalkedIn() {
 	if (Actor_Query_Goal_Number(kActorMaggie) == kGoalMaggieKP05Wait) {
 		Actor_Set_Goal_Number(kActorMaggie, kGoalMaggieKP05McCoyEntered);
 	}
-
-	if (Actor_Query_Goal_Number(kActorSteele) == 450) {
+	// Changed the conditions for which Steele will confront McCoy during the Clovis ending.
+	if (_vm->_cutContent) {
+		if (Game_Flag_Query(kFlagMcCoyRetiredHuman)
+			|| Global_Variable_Query(kVariableAffectionTowards) == kAffectionTowardsDektora
+			|| Global_Variable_Query(kVariableAffectionTowards) == kAffectionTowardsLucy
+			|| Game_Flag_Query(kFlagIzoWarned)) {
+			Scene_Exits_Disable();
+			Actor_Face_Actor(kActorSteele, kActorMcCoy, true);
+			Actor_Says(kActorSteele, 530, 15);
+			Actor_Says(kActorSteele, 540, 16);
+			Actor_Face_Actor(kActorMcCoy, kActorSteele, true);
+			Player_Set_Combat_Mode(true);
+			Actor_Says(kActorMcCoy, 2200, 3);
+			Actor_Says(kActorSteele, 550, 17);
+			Actor_Says(kActorMcCoy, 2205, 3);
+			Actor_Says(kActorSteele, 560, 15);
+			Actor_Says(kActorSteele, 570, 16);
+			Actor_Says(kActorSteele, 580, 13);
+			Actor_Says(kActorMcCoy, 2210, 3);
+			Actor_Says(kActorSteele, 590, 13);
+			Actor_Says(kActorMcCoy, 2215, 3);
+			Actor_Says(kActorSteele, 600, 16);
+			Actor_Says(kActorSteele, 610, 15);
+			Actor_Says(kActorMcCoy, 2220, 3);
+			Actor_Says(kActorSteele, 620, 15);
+			Actor_Says(kActorSteele, 630, 17);
+			// Added in some action music for your fight with Crystal.
+			if (_vm->_cutContent) {
+				Music_Play(kMusicMoraji, 71, 0, 0, -1, kMusicLoopPlayOnce, 2);
+			}
+			Non_Player_Actor_Combat_Mode_On(kActorSteele, kActorCombatStateIdle, true, kActorMcCoy, 9, kAnimationModeCombatIdle, kAnimationModeCombatWalk, kAnimationModeCombatRun, 0, -1, -1, 20, 240, false);
+		}
+	} else if (Actor_Query_Goal_Number(kActorSteele) == 450) {
 		Scene_Exits_Disable();
 		Actor_Face_Actor(kActorSteele, kActorMcCoy, true);
 		Actor_Says(kActorSteele, 530, 15);

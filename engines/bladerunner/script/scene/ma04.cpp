@@ -179,7 +179,31 @@ bool SceneScriptMA04::ClickedOn2DRegion(int region) {
 				Sound_Play(kSfxSPNBEEP9, 100, 0, 0, 50);
 				Overlay_Remove("MA04OVER");
 				Delay(500);
-				if (Game_Flag_Query(kFlagMcCoyIsHelpingReplicants)) {
+				// Altered the conditions for which McCoy receives the phone call from Crystal or Clovis.
+				// In oeder to get Crystal on your side it will not be dependent on whether or not you help the reps since you need to be able to
+				// help them and still get her to trust you so you can get the Crystal betrayal ending. In order to get Crystal on your side (including the true blade runner ending with Crystal) you have to
+				// 1. Not retire a human.
+				// 2. Do not warn Lucy, Dektora and Izo (restored) about Crystal by selecting the Crystal option.
+				// 3. In act 4 when meeting Crystal outside McCoys apartment in act 4 (restored). Have 60 friendliness with Crystal by retiring 2 reps and being
+				// nice to her by accepting her offer to exchange information. You can also get her to trust you by submitting the Guzza evidence to the police.  
+				if (_vm->_cutContent) {
+					if (!Game_Flag_Query(kFlagMcCoyRetiredHuman)
+					&& Global_Variable_Query(kVariableAffectionTowards) != kAffectionTowardsDektora
+					&& Global_Variable_Query(kVariableAffectionTowards) != kAffectionTowardsLucy
+					&& !Game_Flag_Query(kFlagIzoWarned)) {
+						if (Game_Flag_Query(kFlagMcCoyIsInnocent)
+						|| 	Game_Flag_Query(kFlagCrystalTrustsMcCoy)) {
+							phoneCallWithSteele();
+						}
+					} else if (Global_Variable_Query(kVariableAffectionTowards) == kAffectionTowardsDektora) {
+						phoneCallWithDektora();
+					} else if (Global_Variable_Query(kVariableAffectionTowards) == kAffectionTowardsLucy) {
+						phoneCallWithLucy();
+					} else {
+						phoneCallWithClovis();
+					}
+					Music_Play(kMusicBRBlues, 52, 0, 3, -1, kMusicLoopPlayOnceRandomStart, 0);
+					} else if (Game_Flag_Query(kFlagMcCoyIsHelpingReplicants)) {
 					if (Global_Variable_Query(kVariableAffectionTowards) == kAffectionTowardsDektora) {
 						phoneCallWithDektora();
 					} else if (Global_Variable_Query(kVariableAffectionTowards) == kAffectionTowardsLucy) {

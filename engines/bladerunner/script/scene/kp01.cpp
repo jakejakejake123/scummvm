@@ -161,9 +161,28 @@ void SceneScriptKP01::PlayerWalkedIn() {
 		Game_Flag_Reset(kFlagKP03toKP01);
 		return;
 	}
-
-	Loop_Actor_Walk_To_XYZ(kActorMcCoy, 211.0f, -12.2f, -146.0f, 0, false, false, false);
-	if (!Game_Flag_Query(kFlagMcCoyIsHelpingReplicants)
+	// Added code so McCoy appears immediately in the set and it won't look like Crystal teleports in.
+	if (_vm->_cutContent) {
+		Actor_Set_At_XYZ(kActorMcCoy, 211.0f, -12.2f, -146.0f, 0);
+	} else {
+		Loop_Actor_Walk_To_XYZ(kActorMcCoy, 211.0f, -12.2f, -146.0f, 0, false, false, false);
+	}
+	// Altered the conditions for Crystal meeting McCoy in the Kipple.
+	if (_vm->_cutContent) {
+		if (!Game_Flag_Query(kFlagMcCoyRetiredHuman)
+			&& Global_Variable_Query(kVariableAffectionTowards) != kAffectionTowardsDektora
+			&& Global_Variable_Query(kVariableAffectionTowards) != kAffectionTowardsLucy
+			&& !Game_Flag_Query(kFlagIzoWarned)) {
+				if (Game_Flag_Query(kFlagMcCoyIsInnocent)
+				|| 	Game_Flag_Query(kFlagCrystalTrustsMcCoy)) {
+					Actor_Put_In_Set(kActorSteele, kSetKP01);
+					Actor_Set_At_XYZ(kActorSteele, 20.0f, -12.2f, -97.0f, 907);
+					Actor_Change_Animation_Mode(kActorSteele, 43);
+					Player_Loses_Control();
+					Actor_Set_Goal_Number(kActorSteele, kGoalSteeleKP01TalkToMcCoy);
+				}
+			}
+		} else if (!Game_Flag_Query(kFlagMcCoyIsHelpingReplicants)
 	 && !Game_Flag_Query(kFlagMcCoyAttackedReplicants)
 	 &&  Actor_Query_Goal_Number(kActorSteele) == kGoalSteeleKP01Wait
 	 &&  Actor_Query_Goal_Number(kActorSteele) != kGoalSteeleGone

@@ -56,8 +56,23 @@ void SceneScriptKP03::InitializeScene() {
 		Scene_Loop_Set_Default(kKP03MainLoopBombActive);
 		Game_Flag_Set(kFlagKP03BombActive);
 	}
-
-	if (( Actor_Query_Goal_Number(kActorSteele) != kGoalSteeleGone
+// Alltered code so Crystal will appear in the set based on the new parameters.
+if (_vm->_cutContent) {
+	if ( Actor_Query_Goal_Number(kActorSteele) != kGoalSteeleGone
+	 && !Game_Flag_Query(kFlagKP03BombExploded)
+	 && !Game_Flag_Query(kFlagKP03BombDisarmed)) {
+ 		if (!Game_Flag_Query(kFlagMcCoyRetiredHuman)
+			&& Global_Variable_Query(kVariableAffectionTowards) != kAffectionTowardsDektora
+			&& Global_Variable_Query(kVariableAffectionTowards) != kAffectionTowardsLucy
+			&& !Game_Flag_Query(kFlagIzoWarned)) {
+				if (Game_Flag_Query(kFlagMcCoyIsInnocent)
+				|| 	Game_Flag_Query(kFlagCrystalTrustsMcCoy)) {
+					Actor_Put_In_Set(kActorSteele, kSetKP03);
+					Actor_Set_At_XYZ(kActorSteele, -300.0f, -36.55f, 26.0f, 350);
+				}
+			}
+		}
+	} else if (( Actor_Query_Goal_Number(kActorSteele) != kGoalSteeleGone
 	  && !Game_Flag_Query(kFlagKP03BombExploded)
 	  && !Game_Flag_Query(kFlagKP03BombDisarmed)
 	 )
@@ -208,9 +223,21 @@ void SceneScriptKP03::SceneFrameAdvanced(int frame) {
 		) {
 			bombTriggeredByActor = kActorMcCoy;
 		}
-
+// Altered conditions so the bomb doesn't immediately go off when McCoy and Crystal enter the set.	
 		Actor_Query_XYZ(kActorSteele, &x, &y, &z);
-		if (Game_Flag_Query(kFlagMcCoyIsHelpingReplicants)
+		if (_vm->_cutContent) {
+			if (Actor_Query_Which_Set_In(kActorSteele) == kSetKP03) {
+				 if ((Game_Flag_Query(kFlagKP01toKP03)
+		         && -130.0f < x
+		        )
+		        || (Game_Flag_Query(kFlagKP05toKP03)
+		         && -130.0f > x
+		        )
+				) {
+					bombTriggeredByActor = kActorSteele;
+				}
+			}
+		} else if (Game_Flag_Query(kFlagMcCoyIsHelpingReplicants)
 		 && Actor_Query_Which_Set_In(kActorSteele) == kSetKP03
 		) {
 			if ((Game_Flag_Query(kFlagKP01toKP03)
@@ -242,7 +269,14 @@ void SceneScriptKP03::SceneFrameAdvanced(int frame) {
 
 			if (bombTriggeredByActor == kActorSteele) {
 				Actor_Set_Goal_Number(kActorSteele, kGoalSteeleKP03Exploded);
+				// Made it so the Crystal dies music only plays if McCoy is not helping the replicants and doesn't betray her.
+				if (_vm->_cutContent) {
+					if (!Game_Flag_Query(kFlagMcCoyIsHelpingReplicants)) {
+					Music_Play(kMusicCrysDie1, 25, 0, 1, -1, kMusicLoopPlayOnce, 0);
+					}
+				} else {
 				Music_Play(kMusicCrysDie1, 25, 0, 1, -1, kMusicLoopPlayOnce, 0);
+				}
 				if (Actor_Query_Inch_Distance_From_Actor(kActorMcCoy, kActorSteele) <= 120) {
 					bombTriggeredByActor = kActorMcCoy;
 				}
@@ -270,7 +304,23 @@ void SceneScriptKP03::PlayerWalkedIn() {
 	if (Actor_Query_Is_In_Current_Set(kActorSteele)
 	 && Actor_Query_Goal_Number(kActorSteele) != kGoalSteeleKP03Dead
 	) {
-		if (Game_Flag_Query(kFlagMcCoyIsHelpingReplicants)) {
+		// Made it so the scene where Crystal starts walking into the bomb trap only commences under the new parameters.
+		if (_vm->_cutContent) {
+ 			if (!Game_Flag_Query(kFlagMcCoyRetiredHuman)
+			&& Global_Variable_Query(kVariableAffectionTowards) != kAffectionTowardsDektora
+			&& Global_Variable_Query(kVariableAffectionTowards) != kAffectionTowardsLucy
+			&& !Game_Flag_Query(kFlagIzoWarned)
+			&& !Game_Flag_Query(kFlagKP03BombExploded)
+			&& !Game_Flag_Query(kFlagKP03BombDisarmed)
+			&&  Game_Flag_Query(kFlagKP01toKP03)) {
+				if (Game_Flag_Query(kFlagMcCoyIsInnocent)
+				|| 	Game_Flag_Query(kFlagCrystalTrustsMcCoy)) {
+					Scene_Exits_Disable();
+					Delay(1000);
+					Actor_Set_Goal_Number(kActorSteele, kGoalSteeleKP03Walk);
+				}
+			}
+		} else if (Game_Flag_Query(kFlagMcCoyIsHelpingReplicants)) {
 			if (Game_Flag_Query(kFlagKP05toKP03)) {
 				Actor_Set_Goal_Number(kActorSteele, 410);
 			}

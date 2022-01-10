@@ -1528,6 +1528,10 @@ bool AIScriptSteele::GoalChanged(int currentGoalNumber, int newGoalNumber) {
 	case kGoalSteeleKP03Walk:
 		Actor_Face_Actor(kActorMcCoy, kActorSteele, true);
 		Actor_Says(kActorSteele, 430, 14);
+		// If McCoy is on the Crystal betrayal path he will automatically let Crystal trigger the bomb.
+		if (Game_Flag_Query(kFlagMcCoyIsHelpingReplicants)) {
+			Player_Loses_Control();
+		}
 		Actor_Change_Animation_Mode(kActorSteele, kAnimationModeCombatIdle);
 		Delay(4000);
 		Async_Actor_Walk_To_XYZ(kActorSteele, -109.0f, -36.55f, 26.0f, 0, false);
@@ -1555,8 +1559,12 @@ bool AIScriptSteele::GoalChanged(int currentGoalNumber, int newGoalNumber) {
 			Actor_Says(kActorSteele, 400, 3);
 			Actor_Says(kActorMcCoy, 2165, 14);
 			Actor_Says(kActorSteele, 410, 3);
-			Actor_Says(kActorMcCoy, 2170, 14);
+			// Removed this line because it makes no sense for Crystal to kill Maggie if she likes McCoy and legitimately trusted him.
 			Actor_Says(kActorSteele, 420, 3);
+			// Made it so Sadik receives this clue so when you talk with him next Crystal getting blown up is mentioned in the conversation.
+			// Also the player will now gain control.
+			Actor_Clue_Acquire(kActorSadik, kClueMcCoyBetrayal, true, kActorMcCoy);
+			Player_Gains_Control();
 		} else {
 			Actor_Says(kActorSteele, 440, 3);
 			Actor_Says(kActorMcCoy, 2175, 14);
@@ -1589,7 +1597,10 @@ bool AIScriptSteele::GoalChanged(int currentGoalNumber, int newGoalNumber) {
 
 	case kGoalSteeleKP01TalkToMcCoy:
 		Game_Flag_Reset(kFlagSteeleSmoking);
-		Delay(2000);
+		// Removed the delay so the conversation happens immediately.
+		if (!_vm->_cutContent) {
+			Delay(2000);
+		}
 		Actor_Face_Actor(kActorSteele, kActorMcCoy, true);
 		Actor_Says(kActorSteele, 360, -1);
 		Loop_Actor_Walk_To_Actor(kActorMcCoy, kActorSteele, 48, false, false);
