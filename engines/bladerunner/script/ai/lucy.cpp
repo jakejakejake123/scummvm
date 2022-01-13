@@ -321,6 +321,9 @@ void AIScriptLucy::Retired(int byActorId) {
 	Actor_Set_Goal_Number(kActorLucy, kGoalLucyGone);
 	// McCoy now makes a comment when retiring Lucy
 	if (_vm->_cutContent) {
+		// Sad music will play when Lucy dies.
+		Music_Stop(3u);
+		Music_Play(kMusicCrysDie1, 25, 0, 1, -1, kMusicLoopPlayOnce, 0);
 		if (Player_Query_Agenda() == kPlayerAgendaSurly 
 			|| Player_Query_Agenda() == kPlayerAgendaErratic) {
 			Actor_Voice_Over(920, kActorVoiceOver); // 99-0920.AUD	Easy money.

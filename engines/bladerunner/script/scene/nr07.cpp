@@ -272,6 +272,10 @@ void SceneScriptNR07::PlayerWalkedIn() {
 						dektoraRunAway();
 					}
 			} else if (!Game_Flag_Query(kFlagDektoraAssaulted)) {
+			// This exotic track fits Dektora perfectly.
+			if (_vm->_cutContent) {
+				Music_Play(kMusicTaffy3, 41, 0, 2, -1, kMusicLoopPlayOnce, 0);
+			}
 			Actor_Says(kActorDektora, 500, 30);
 			Actor_Says(kActorMcCoy, 3585, 14);
 			Actor_Says(kActorDektora, 510, 30);

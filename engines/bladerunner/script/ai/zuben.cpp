@@ -433,6 +433,10 @@ bool AIScriptZuben::GoalChanged(int currentGoalNumber, int newGoalNumber) {
 		AI_Countdown_Timer_Reset(kActorZuben, kActorTimerAIScriptCustomTask0);
 		Actor_Put_In_Set(kActorZuben, kSetCT06);
 		Actor_Set_At_XYZ(kActorZuben, 37.14f, -58.23f, 4.0f, 256);
+		//Added in some music for when Zuben jumps down from the roof.
+		if (_vm->_cutContent) {
+			Music_Play(kMusicBeating1, 71, 0, 0, -1, kMusicLoopPlayOnce, 2);
+		}
 		_animationFrame = 0;
 		_animationState = 28;
 		return false;

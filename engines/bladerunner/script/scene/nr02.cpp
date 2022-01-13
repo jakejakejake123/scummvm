@@ -224,6 +224,8 @@ void SceneScriptNR02::PlayerWalkedIn() {
 					}
 						Actor_Says(kActorMcCoy, 6535, 11); //00-6535.AUD	I need to see Clovis ASAP.
 						Actor_Says(kActorDektora, 1410, 12); //03-1410.AUD	You must be patient. He’ll find you, when he’s ready
+						Music_Stop(3u);
+						Music_Play(kMusicLoveSong, 35, 0, 3, -1, kMusicLoopPlayOnce, 0);
 						Actor_Says(kActorDektora, 1130, 13); //03-1130.AUD	He is very jealous. You don’t understand
 						Actor_Says(kActorMcCoy, 6365, 13); //00-6365.AUD	Jealous, huh? On top of everything else?
 						Actor_Says(kActorDektora, 1140, 13); //03-1140.AUD	He is a very complicated man. He wants so much. Things he just can’t have.

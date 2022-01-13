@@ -67,6 +67,10 @@ void SceneScriptBB12::InitializeScene() {
 	Ambient_Sounds_Add_Sound(kSfxTHNDER3, 5, 180, 25, 25, -100, 100, -101, -101, 0, 0);
 
 	if (!Game_Flag_Query(kFlagBB12Entered)) {
+		// Made it so the battle music plays when you walk in the room and see Sadiks shadow.
+		if (_vm->_cutContent) {
+			Music_Play(kMusicBatl226M, 50, 0, 2, -1, kMusicLoopPlayOnce, 0);
+		}
 		Overlay_Play("BB12OVER", 0, false, false, 0); // Sadik's shadow going left
 		Game_Flag_Set(kFlagBB12Entered);
 	}

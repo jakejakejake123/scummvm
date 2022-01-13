@@ -177,6 +177,10 @@ bool SceneScriptNR11::ClickedOn3DObject(const char *objectName, bool combatMode)
 					Actor_Set_Goal_Number(kActorMcCoy, kGoalMcCoyNR10Fall);
 				} else {
 					Actor_Says(kActorMcCoy, 3840, 18);
+					// Made it so this track plays when you talk to Dektora. This exotic track fits her character perfectly.
+					if (_vm->_cutContent) {
+						Music_Play(kMusicTaffy3, 41, 0, 2, -1, kMusicLoopPlayOnce, 0);
+					}
 					Delay(1000);
 					if (Actor_Query_Friendliness_To_Other(kActorDektora, kActorMcCoy) > 59
 					 && Global_Variable_Query(kVariableAffectionTowards) == kAffectionTowardsNone
@@ -290,6 +294,10 @@ bool SceneScriptNR11::ClickedOn2DRegion(int region) {
 }
 
 void SceneScriptNR11::SceneFrameAdvanced(int frame) {
+	//Made it so this soundtrack plays when McCoy shoots the place up.
+	if (_vm->_cutContent) {
+		Music_Play(kMusicMoraji, 71, 0, 0, -1, kMusicLoopPlayOnce, 2);
+	}
 	if (frame == 62) {
 		Ambient_Sounds_Play_Sound(kSfxMCGUN1,  40, 100, 100, 10);
 	}
@@ -369,6 +377,9 @@ void SceneScriptNR11::ActorChangedGoal(int actorId, int newGoal, int oldGoal, bo
 }
 
 void SceneScriptNR11::PlayerWalkedIn() {
+	if (_vm->_cutContent) {
+		Music_Stop(4u);
+	}
 	if (Actor_Query_Goal_Number(kActorDektora) == kGoalDektoraNR11Hiding) {
 		Player_Set_Combat_Mode(true);
 		if (Game_Flag_Query(kFlagDektoraIsReplicant)) {

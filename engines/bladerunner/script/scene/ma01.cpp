@@ -136,6 +136,10 @@ bool SceneScriptMA01::ClickedOnExit(int exitId) {
 		if (Actor_Query_Goal_Number(kActorZuben) == kGoalZubenFled) {
 			if (!Loop_Actor_Walk_To_XYZ(kActorMcCoy, 1446.0f, 0.0f, -725.0f, 72, true, false, false)) {
 				Actor_Set_Goal_Number(kActorZuben, kGoalZubenMA01AttackMcCoy);
+				// Music will play when Zuben confronts McCoy on the roof.
+				if (_vm->_cutContent) {
+					Music_Play(kMusicBeating1, 61, 0, 1, -1, kMusicLoopPlayOnce, 0);
+				}
 				Scene_Exits_Disable();
 			}
 		} else if (!Loop_Actor_Walk_To_XYZ(kActorMcCoy, 1446.0f, 0.0f, -725.0f, 12, true, false, false)) {

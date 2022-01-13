@@ -603,6 +603,10 @@ void SceneScriptHC01::takePhotoAndRunAway() {
 	Actor_Says_With_Pause(kActorMcCoy, 1050, 0.2f, kAnimationModeTalk);
 	Actor_Says(kActorIzo, 120, kAnimationModeTalk);
 	Actor_Set_Goal_Number(kActorIzo, kGoalIzoTakePhoto);
+	if (_vm->_cutContent) {
+		Music_Stop(3u);
+		Music_Play(kMusicBatl226M, 50, 0, 2, -1, kMusicLoopPlayOnce, 0);
+	}
 }
 
 } // End of namespace BladeRunner

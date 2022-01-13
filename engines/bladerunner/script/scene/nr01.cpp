@@ -327,6 +327,11 @@ void SceneScriptNR01::PlayerWalkedIn() {
 		Actor_Set_Goal_Number(kActorSteele, kGoalSteeleNR01TalkToGordo);
 		Scene_2D_Region_Add(0, 450, 316, 464, 333);
 		Scene_2D_Region_Add(1, 233, 321, 240, 362);
+		// Action music will play during the confrontation with Gordo.
+		if (_vm->_cutContent) {
+			Music_Stop(3u);
+			Music_Play(kMusicMoraji, 71, 0, 0, -1, kMusicLoopPlayOnce, 2);
+		}
 		ADQ_Add(kActorGordo, 70, 81);
 		ADQ_Add(kActorSteele, 990, kAnimationModeTalk);
 		ADQ_Add(kActorGordo, 80, 82);

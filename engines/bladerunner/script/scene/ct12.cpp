@@ -279,6 +279,10 @@ void SceneScriptCT12::PlayerWalkedIn() {
 		Global_Variable_Set(kVariableGenericWalkerConfig, -1);
 #endif // !BLADERUNNER_ORIGINAL_BUGS
 		Player_Loses_Control();
+		// Blade runner blues will play during the conversation with Gaff.
+		if (_vm->_cutContent) {
+			Music_Play(kMusicBRBlues, 52, 0, 2, -1, kMusicLoopPlayOnce, 0);
+		}
 		Loop_Actor_Walk_To_Actor(kActorGaff, kActorMcCoy, 48, false, false);
 		Actor_Face_Actor(kActorGaff, kActorMcCoy, true);
 		Actor_Face_Actor(kActorMcCoy, kActorGaff, true);

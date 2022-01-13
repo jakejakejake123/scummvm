@@ -318,6 +318,10 @@ void SceneScriptRC03::PlayerWalkedIn() {
 	if (Actor_Query_Goal_Number(kActorIzo) == kGoalIzoWaitingAtRC03) {
 		Scene_Exits_Disable();
 		if (Game_Flag_Query(kFlagUG01toRC03)) {
+			// Music will play during the confrontation with Izo.
+			if (_vm->_cutContent) {
+				Music_Play(kMusicBeating1, 71, 0, 0, -1, kMusicLoopPlayOnce, 2);
+			}
 			Player_Set_Combat_Mode(false);
 			Player_Loses_Control();
 			Actor_Set_At_XYZ(kActorMcCoy, 147.51f, -4.0f, 166.48f, 500);

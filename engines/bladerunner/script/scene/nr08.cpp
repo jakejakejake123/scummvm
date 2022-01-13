@@ -244,6 +244,7 @@ void SceneScriptNR08::PlayerWalkedIn() {
 		if (_vm->_cutContent) {
 			Actor_Says(kActorMcCoy, 6285, 14); //00-6285.AUD	Who made you Captain?
 			Actor_Says(kActorSteele, 1530, 15); //01-1530.AUD	Let’s attend to some business.
+			Music_Play(kMusicBatl226M, 50, 0, 2, -1, kMusicLoopPlayOnce, 0);
 		}
 		Actor_Set_Goal_Number(kActorSteele, kGoalSteeleNR08WalkOut);
 		return; // true;

@@ -123,6 +123,9 @@ bool SceneScriptUG07::ClickedOnExit(int exitId) {
 		) {
 			if (!Loop_Actor_Walk_To_XYZ(kActorMcCoy, 49.0f, -12.21f, -130.0f, 0, true, false, false)) {
 				Game_Flag_Set(kFlagUG07ClovisCaughtMcCoy);
+				if (_vm->_cutContent) {
+					Music_Play(kMusicBeating1, 71, 0, 0, -1, kMusicLoopPlayOnce, 2);
+				}
 				Actor_Put_In_Set(kActorClovis, kSetUG07);
 				Actor_Set_At_XYZ(kActorClovis, 118.02f, -12.21f, -154.0f, 768);
 				Player_Set_Combat_Mode(true);

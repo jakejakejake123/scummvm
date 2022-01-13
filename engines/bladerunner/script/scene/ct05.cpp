@@ -232,6 +232,9 @@ void SceneScriptCT05::ActorChangedGoal(int actorId, int newGoal, int oldGoal, bo
 }
 
 void SceneScriptCT05::PlayerWalkedIn() {
+	if (_vm->_cutContent) {
+		Music_Stop(3u);
+	}
 	if (Game_Flag_Query(kFlagCT04toCT05)) {
 		Player_Loses_Control();
 		Game_Flag_Reset(kFlagCT04toCT05);

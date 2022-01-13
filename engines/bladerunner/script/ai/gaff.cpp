@@ -256,6 +256,9 @@ bool AIScriptGaff::GoalChanged(int currentGoalNumber, int newGoalNumber) {
 
 	case kGoalGaffMA01ApproachMcCoy:
 		Player_Loses_Control();
+		if (_vm->_cutContent) {
+			Music_Play(kMusicBRBlues, 52, 0, 2, -1, kMusicLoopPlayOnce, 0);
+		}
 		AI_Movement_Track_Flush(kActorGaff);
 		AI_Movement_Track_Append(kActorGaff, 124, 0);
 		AI_Movement_Track_Append(kActorGaff, 126, 0);
@@ -328,6 +331,9 @@ bool AIScriptGaff::GoalChanged(int currentGoalNumber, int newGoalNumber) {
 		Player_Loses_Control();
 		Actor_Put_In_Set(kActorGaff, kSetMA07);
 		Actor_Set_At_XYZ(kActorGaff, -102.54f, -172.43f, 463.18f, 1015);
+		if (_vm->_cutContent) {
+			Music_Play(kMusicBRBlues, 52, 0, 2, -1, kMusicLoopPlayOnce, 0);
+		}
 		Actor_Set_Goal_Number(kActorGaff, kGoalGaffMA07TalkToMcCoy);
 		return true;
 

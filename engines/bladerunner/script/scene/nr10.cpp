@@ -144,6 +144,10 @@ bool SceneScriptNR10::ClickedOn2DRegion(int region) {
 void SceneScriptNR10::SceneFrameAdvanced(int frame) {
 	if (frame == 122) {
 		Game_Flag_Set(kFlagNR10McCoyBlinded);
+		// This track plays when McCoy is blinded.
+		if (_vm->_cutContent) {
+			Music_Play(kMusicBeating1, 61, 0, 1, -1, kMusicLoopPlayOnce, 0);
+		}
 		Actor_Set_Invisible(kActorMcCoy, true);
 		Actor_Set_Invisible(kActorDektora, true);
 		Combat_Target_Object("BOX18");

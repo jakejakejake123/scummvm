@@ -112,6 +112,9 @@ void SceneScriptNR09::PlayerWalkedIn() {
 	if (Game_Flag_Query(kFlagNR08toNR09)) {
 		Loop_Actor_Walk_To_XYZ(kActorMcCoy, -704.07f, 0.35f, 623.04f, 0, false, false, false);
 		Game_Flag_Reset(kFlagNR08toNR09);
+		if (_vm->_cutContent) {
+			Music_Stop(2u);
+		}
 	}
 	//return false;
 }

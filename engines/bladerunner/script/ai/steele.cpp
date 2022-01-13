@@ -1125,6 +1125,11 @@ bool AIScriptSteele::GoalChanged(int currentGoalNumber, int newGoalNumber) {
 		Actor_Change_Animation_Mode(kActorSteele, kAnimationModeCombatAttack);
 		Delay(500);
 		Actor_Change_Animation_Mode(kActorLucy, kAnimationModeDie);
+		//Sad music plays when Lucy dies.
+		if (_vm->_cutContent) {
+			Music_Stop(3u);
+			Music_Play(kMusicCrysDie1, 25, 0, 1, -1, kMusicLoopPlayOnce, 0);
+		}
 		Actor_Set_Targetable(kActorLucy, false);
 		Actor_Retired_Here(kActorLucy, 36, 18, true, -1);
 		Delay(1000);

@@ -121,6 +121,9 @@ void SceneScriptNR06::ActorChangedGoal(int actorId, int newGoal, int oldGoal, bo
 }
 
 void SceneScriptNR06::PlayerWalkedIn() {
+	if (_vm->_cutContent) {
+		Music_Stop(3u);
+	}
 	if (Game_Flag_Query(kFlagNR07toNR06)) {
 		Loop_Actor_Walk_To_XYZ(kActorMcCoy, -3.0f, -71.88f, -26.0f, 0, false, false, false);
 		Game_Flag_Reset(kFlagNR07toNR06);
