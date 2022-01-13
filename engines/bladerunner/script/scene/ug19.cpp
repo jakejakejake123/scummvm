@@ -124,10 +124,14 @@ void SceneScriptUG19::PlayerWalkedIn() {
 	if (Game_Flag_Query(kFlagUG14toUG19)) {
 		Game_Flag_Reset(kFlagUG14toUG19);
 		if (_vm->_cutContent) {
-		Actor_Set_At_XYZ(kActorMcCoy, 129.0f, 11.52f, -18.0f, 0);
-	} else {
-		Loop_Actor_Walk_To_XYZ(kActorMcCoy, 129.0f, 11.52f, -18.0f, 0, false, false, false);
-	}
+			if (Game_Flag_Query(kFlagGordoRanAway)) {
+				Actor_Set_At_XYZ(kActorMcCoy, 129.0f, 11.52f, -18.0f, 0);
+			} else {
+				Loop_Actor_Walk_To_XYZ(kActorMcCoy, 129.0f, 11.52f, -18.0f, 0, false, false, false);
+			}
+		} else {
+			Loop_Actor_Walk_To_XYZ(kActorMcCoy, 129.0f, 11.52f, -18.0f, 0, false, false, false);
+		}
 	} else {
 		Game_Flag_Reset(kFlagMA07toUG19);
 		Footstep_Sound_Override_On(3);

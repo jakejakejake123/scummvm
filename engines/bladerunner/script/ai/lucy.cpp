@@ -273,6 +273,10 @@ void AIScriptLucy::Retired(int byActorId) {
 		if (_vm->_cutContent) {
 			Actor_Clue_Acquire(kActorClovis, kClueMcCoyRetiredLucy, true, -1);
 			Actor_Modify_Friendliness_To_Other(kActorClovis, kActorMcCoy, -6);
+			Game_Flag_Reset(kFlagMcCoyIsHelpingReplicants);
+			Actor_Modify_Friendliness_To_Other(kActorSteele, kActorMcCoy, 5);
+			// Made it so you lose affection to both Lucy and Dektora if you retire Lucy.
+			Global_Variable_Set(kVariableAffectionTowards, kAffectionTowardsNone);
 		}
 	}
 
@@ -490,6 +494,10 @@ bool AIScriptLucy::GoalChanged(int currentGoalNumber, int newGoalNumber) {
 		}
 		Actor_Says(kActorLucy, 370, 14);
 		Actor_Set_Goal_Number(kActorLucy, kGoalLucyHF04WalkAway);
+		// McCoy is helping replicants flag is set when you warn Lucy about Crystal 
+		if (_vm->_cutContent) {
+			Game_Flag_Set(kFlagMcCoyIsHelpingReplicants);
+		}
 
 		if (Global_Variable_Query(kVariableHollowayArrest) == 3) {
 			Actor_Set_Goal_Number(kActorSteele, kGoalSteeleHF02LucyRanAway);

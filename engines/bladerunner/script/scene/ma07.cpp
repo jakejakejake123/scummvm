@@ -263,7 +263,8 @@ void SceneScriptMA07::PlayerWalkedIn() {
 				Actor_Says(kActorMcCoy, 6350, 16); //00-6350.AUD	What’s the point? You are not gonna believe a word I say.
 				Actor_Says(kActorSteele, 2780, 13); //01-2780.AUD	Do yourself a favor, Slim. Turn yourself in. Guzza will give you a fair shake.
 				Actor_Says(kActorMcCoy, 6355, 14); //00-6355.AUD	Like hell!
-				if (Actor_Query_Friendliness_To_Other(kActorRunciter, kActorMcCoy) > 50) {
+				// Made it so if McCoy has retired 4 replicants Steele is nicer to him.
+				if (Actor_Query_Friendliness_To_Other(kActorSteele, kActorMcCoy) > 68) {
 					Actor_Says(kActorSteele, 2790, 12); //01-2790.AUD	I guarantee it. I’ll put you on the Machine myself.
 					Actor_Says(kActorMcCoy, 6360, 13); //00-6360.AUD	Hey, you’re always crowing about the “magic”. What does it tell you now
 					Actor_Says(kActorSteele, 1390, 13); //01-1390.AUD	I ain’t sure yet. I like to be sure.
@@ -275,7 +276,7 @@ void SceneScriptMA07::PlayerWalkedIn() {
 				Actor_Says(kActorMcCoy, 6335, 13); //00-6335.AUD	Maybe he just doesn’t want to be found.
 				Actor_Says(kActorSteele, 2740, 14); //01-2740.AUD	That’s a big maybe.
 				Actor_Says(kActorMcCoy, 6340, 15); //00-6340.AUD	A likely maybe, don’t you think?
-				if (Actor_Query_Friendliness_To_Other(kActorRunciter, kActorMcCoy) < 51) {
+				if (Actor_Query_Friendliness_To_Other(kActorSteele, kActorMcCoy) < 68) {
 					Actor_Says(kActorSteele, 2800, 15); //01-2800.AUD	You don’t want to know what I think.
 					Actor_Says(kActorSteele, 2810, 15); //01-2810.AUD	Beat it, Slim. Take it on the heel. Before I regret this.
 				} else {

@@ -186,12 +186,14 @@ void SceneScriptNR02::PlayerWalkedIn() {
 		Actor_Set_Goal_Number(kActorGordo, kGoalGordoNR02NextAct);
 	}
 	if (_vm->_cutContent) {
-		Actor_Set_At_XYZ(kActorMcCoy, -203.0f, -24.0f, 334.0f, 0);
-	}else {
-
+		if (Global_Variable_Query(kVariableAffectionTowards) == kAffectionTowardsDektora) {
+			Actor_Set_At_XYZ(kActorMcCoy, -203.0f, -24.0f, 334.0f, 0);
+		}
+	} else {
+		Loop_Actor_Walk_To_XYZ(kActorMcCoy, -203.0f, -24.0f, 334.0f, 0, false, false, false);
+	}
 	Loop_Actor_Walk_To_XYZ(kActorMcCoy, -203.0f, -24.0f, 334.0f, 0, false, false, false);
 	//return false;
-	}
 	// Code for an encounter you can have with Dektora at Taffys in act 4 if Dektora is alive and you have global affection towards her.
 	if (_vm->_cutContent) {
 		if (Global_Variable_Query(kVariableChapter) == 4) {

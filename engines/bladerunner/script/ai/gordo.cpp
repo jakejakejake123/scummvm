@@ -304,10 +304,15 @@ void AIScriptGordo::Retired(int byActorId) {
 		Actor_Voice_Over(1410, kActorVoiceOver);
 		Actor_Voice_Over(1430, kActorVoiceOver);
 		Actor_Voice_Over(1440, kActorVoiceOver);
+		// Made it so blade runner blues plays when you retire Gordo.
+		Music_Play(kMusicBRBlues, 52, 0, 2, -1, kMusicLoopPlayOnce, 0);
 		if (Query_Difficulty_Level() > kGameDifficultyEasy) {
 			Global_Variable_Increment(kVariableChinyen, 200);
 		}
 		if (_vm->_cutContent) {
+			// Reset this flag and added friendliness with Crystal if you retired Gordo.
+			Game_Flag_Reset(kFlagMcCoyIsHelpingReplicants);
+			Actor_Modify_Friendliness_To_Other(kActorSteele, kActorMcCoy, 5);
 			Actor_Clue_Acquire(kActorMcCoy, kClueMcCoyRetiredGordo, true, -1);
 		}
 		Player_Gains_Control();

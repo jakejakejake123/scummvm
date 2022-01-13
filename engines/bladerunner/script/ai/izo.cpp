@@ -281,6 +281,10 @@ bool AIScriptIzo::ShotAtAndHit() {
 			_animationState = 19;
 			Actor_Retired_Here(kActorIzo, 36, 12, true, -1);
 			Actor_Set_Goal_Number(kActorIzo, kGoalIzoDie);
+			Actor_Modify_Friendliness_To_Other(kActorSteele, kActorMcCoy, 5);
+			Game_Flag_Reset(kFlagMcCoyIsHelpingReplicants);
+			Game_Flag_Reset(kFlagIzoWarnedAboutCrystal);
+			Music_Play(kMusicBRBlues, 52, 0, 2, -1, kMusicLoopPlayOnce, 0);
 			if (Game_Flag_Query(kFlagIzoIsReplicant)) {
 				Actor_Set_Goal_Number(kActorSteele, 200);
 				Actor_Put_In_Set(kActorSteele, kSetRC03);

@@ -398,6 +398,12 @@ bool SceneScriptMA04::isPhoneMessageWaiting() {
 
 void SceneScriptMA04::phoneCallWithDektora() {
 	int answer;
+	// Made it so this flag is set whenever Dektora Lucy or Clovis gives you a phone call.
+	// With the new requirements I've added it can be possible for the player to reach this part without having the flag set.
+	// So I have set it here and also for Clovis and Lucys phone calls just to be safe.
+	if (_vm->_cutContent) {
+		Game_Flag_Set(kFlagMcCoyIsHelpingReplicants);
+	}
 	Actor_Says(kActorDektora, 220, 3);
 	Actor_Says(kActorMcCoy, 2460, 0);
 	Actor_Says(kActorDektora, 230, 3);
@@ -472,6 +478,9 @@ void SceneScriptMA04::phoneCallWithDektora() {
 }
 
 void SceneScriptMA04::phoneCallWithLucy() {
+	if (_vm->_cutContent) {
+		Game_Flag_Set(kFlagMcCoyIsHelpingReplicants);
+	}
 	Actor_Says(kActorLucy, 530, 3);
 	Actor_Says(kActorMcCoy, 2545, 19);
 	Actor_Says(kActorLucy, 540, 3);
@@ -566,8 +575,10 @@ void SceneScriptMA04::phoneCallWithSteele() {
 }
 
 void SceneScriptMA04::phoneCallWithClovis() {
+	if (_vm->_cutContent) {
+		Game_Flag_Set(kFlagMcCoyIsHelpingReplicants);
+	}
 	Actor_Says(kActorClovis, 330, 3); //05-0330.AUD	I see you survived.
-
 	//Altered code so McCoy only gets angry at Clovis for trying to kill him if Clovis actually tried to kill McCoy in the sewers. If that didn't happen we skip straight to the part
 	//Where Clovis apologises to McCoy for the situation with Guzza.
 	if (_vm->_cutContent) {

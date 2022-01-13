@@ -227,6 +227,9 @@ bool AIScriptRunciter::ShotAtAndHit() {
 		Actor_Voice_Over(2090, kActorVoiceOver);
 	}
 	Actor_Modify_Friendliness_To_Other(kActorClovis, kActorMcCoy, 3);
+	if (_vm->_cutContent) {
+		Game_Flag_Set(kFlagMcCoyIsHelpingReplicants);
+	}
 	return false;
 }
 

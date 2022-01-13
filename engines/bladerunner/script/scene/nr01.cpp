@@ -384,7 +384,8 @@ void SceneScriptNR01::PlayerWalkedIn() {
 			Actor_Face_Actor(kActorSteele, kActorMcCoy, true);
 			// Changed a Steele line based on your friendliness with her.
 			if (_vm->_cutContent) {
-				if (Actor_Query_Friendliness_To_Other(kActorSteele, kActorMcCoy) > 50) {
+				// Steele will respond differently if McCoy retired a few reps.
+				if (Actor_Query_Friendliness_To_Other(kActorSteele, kActorMcCoy) > 60) {
 					Actor_Says(kActorSteele, 2600, 13); //01-2600.AUD	Hey, Slim!
 				} else {
 					Actor_Says(kActorSteele, 1440, 13);
@@ -471,12 +472,31 @@ void SceneScriptNR01::PlayerWalkedIn() {
 			}
 		}
 	} else if (Game_Flag_Query(kFlagNR02toNR01)) {
-		Loop_Actor_Walk_To_XYZ(kActorMcCoy, 239.0f, 31.66f, -901.0f, 0, false, false, false);
-		Game_Flag_Reset(kFlagNR02toNR01);
+		if (_vm->_cutContent) {
+			if (Actor_Query_Goal_Number(kActorGordo) == kGoalGordoNR01WaitAndAttack) {
+				Actor_Set_At_XYZ(kActorMcCoy, 239.0f, 31.66f, -901.0f, 0);
+				Game_Flag_Reset(kFlagNR02toNR01);
+			} else {
+				Loop_Actor_Walk_To_XYZ(kActorMcCoy, 239.0f, 31.66f, -901.0f, 0, false, false, false);
+				Game_Flag_Reset(kFlagNR02toNR01);
+			}
+		} else {
+			Loop_Actor_Walk_To_XYZ(kActorMcCoy, 239.0f, 31.66f, -901.0f, 0, false, false, false);
+			Game_Flag_Reset(kFlagNR02toNR01);
+		}
 		if (Actor_Query_Goal_Number(kActorGordo) == kGoalGordoNR01WaitAndAttack) {
 			Scene_Exits_Disable();
+			// Adjusted code so during the confrontation with Gordo action music plays, McCoy pulls out his gun and yells freeze and Gordo
+			// will immediately attack you instead of running away.
+			if (_vm->_cutContent) {
+				Music_Stop(2u);
+				Music_Play(kMusicMoraji, 71, 0, 0, -1, kMusicLoopPlayOnce, 2);
+				Player_Set_Combat_Mode(true);
+				Actor_Face_Actor(kActorMcCoy, kActorGordo, true);
+				Actor_Says(kActorMcCoy, 8945, 14); //00-8945.AUD	Freeze!
+			}
 			Actor_Set_Goal_Number(kActorGordo, kGoalGordoNR01Attack);
-			Non_Player_Actor_Combat_Mode_On(kActorGordo, kActorCombatStateIdle, true, kActorMcCoy, 3, kAnimationModeCombatIdle, kAnimationModeCombatWalk, kAnimationModeCombatRun, -1, -1, -1, 20, 300, false);
+			Non_Player_Actor_Combat_Mode_On(kActorGordo, kActorCombatStateIdle, true, kActorMcCoy, 3, kAnimationModeCombatIdle, kAnimationModeCombatWalk, kAnimationModeCombatRun, 0, -1, -1, 15, 300, false);
 		}
 	} else if (Game_Flag_Query(kFlagNotUsed545)) {
 		Game_Flag_Reset(kFlagNotUsed545);

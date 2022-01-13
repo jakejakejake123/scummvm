@@ -207,10 +207,18 @@ void SceneScriptUG01::ActorChangedGoal(int actorId, int newGoal, int oldGoal, bo
 }
 
 void SceneScriptUG01::PlayerWalkedIn() {
-	if (Game_Flag_Query(kFlagUG02toUG01)) {
-		// This is the code for the scene where if you warn Izo about Crystal and you catch him in the sewers.
-		Actor_Set_At_XYZ(kActorMcCoy, -71.76, -49.90, -256.69, 0);
-		Game_Flag_Reset(kFlagUG02toUG01);	
+	if (_vm->_cutContent) {
+		// Fixed code for McCoy entering the scene.
+		if (Game_Flag_Query(kFlagUG02toUG01)) {
+			if (Game_Flag_Query(kFlagIzoWarnedAboutCrystal)) {
+				// This is the code for the scene where if you warn Izo about Crystal and you catch him in the sewers.
+				Actor_Set_At_XYZ(kActorMcCoy, -71.76, -49.90, -256.69, 0);
+				Game_Flag_Reset(kFlagUG02toUG01);
+			} else {	
+				Loop_Actor_Walk_To_XYZ(kActorMcCoy, -55.0f, -50.13f, -288.0f, 12, false, false, false);
+				Game_Flag_Reset(kFlagUG02toUG01);
+			}
+		}
 	}
 	if (_vm->_cutContent) {
 		if (Game_Flag_Query(kFlagIzoWarnedAboutCrystal)) {
@@ -240,6 +248,8 @@ void SceneScriptUG01::PlayerWalkedIn() {
 			Game_Flag_Reset(kFlagIzoWarnedAboutCrystal);
 			Game_Flag_Set(kFlagIzoEscaped);
 			Game_Flag_Set(kFlagIzoGotAway);
+			// Flag for determining the ending added.
+			Game_Flag_Set(kFlagIzoWarned);
 			Game_Flag_Set(kFlagMcCoyIsHelpingReplicants);
 			Player_Loses_Control();
 			Loop_Actor_Walk_To_XYZ(kActorMcCoy, -70.0f, -50.13f, -500.0f, 0, true, false, false);

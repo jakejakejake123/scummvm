@@ -1330,6 +1330,11 @@ bool AIScriptSteele::GoalChanged(int currentGoalNumber, int newGoalNumber) {
 		Actor_Face_Actor(kActorSteele, kActorMcCoy, true);
 		Actor_Says(kActorSteele, 1130, 15);
 		Actor_Says(kActorSteele, 1140, 12);
+		// Flag is reset and friendliness towards Steele is altered when McCoy shoots Gordo.
+		if (_vm->_cutContent) {
+			Game_Flag_Reset(kFlagMcCoyIsHelpingReplicants);
+			Actor_Modify_Friendliness_To_Other(kActorSteele, kActorMcCoy, 5);
+		}
 		Player_Gains_Control();
 		Actor_Set_Goal_Number(kActorSteele, kGoalSteeleTalkAboutMissingSpinner);
 		return true;
@@ -1345,6 +1350,7 @@ bool AIScriptSteele::GoalChanged(int currentGoalNumber, int newGoalNumber) {
 		Game_Flag_Set(kFlagGordoRanAway);
 		if (_vm->_cutContent) {
 			Actor_Clue_Acquire(kActorGordo, kClueMcCoyHelpedGordo, true, -1);
+			Game_Flag_Set(kFlagMcCoyIsHelpingReplicants);
 		}
 		Actor_Set_Targetable(kActorSteele, false);
 		Player_Loses_Control();
