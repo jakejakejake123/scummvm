@@ -58,6 +58,9 @@ void SceneScriptBB09::InitializeScene() {
 	Ambient_Sounds_Add_Looping_Sound(kSfxCTRAIN1,  20, 100, 1);
 	Ambient_Sounds_Add_Looping_Sound(kSfxRAINAWN1, 40,   0, 1);
 	Ambient_Sounds_Add_Looping_Sound(kSfxCTRUNOFF, 50,  55, 1);
+	if (_vm->_cutContent) {
+		Ambient_Sounds_Add_Sound(kSfxRADIATR1, 5,  20, 20, 25, -100, -100, -101, -101, 0, 0);
+	}
 	Ambient_Sounds_Add_Sound(kSfxRADIATR2, 5,  20, 20, 25, -100, -100, -101, -101, 0, 0);
 	Ambient_Sounds_Add_Sound(kSfxRADIATR3, 5,  20, 20, 25, -100, -100, -101, -101, 0, 0);
 	Ambient_Sounds_Add_Sound(kSfxRADIATR4, 5,  20, 20, 25, -100, -100, -101, -101, 0, 0);

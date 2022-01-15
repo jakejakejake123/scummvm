@@ -30,6 +30,10 @@ void SceneScriptPS07::InitializeScene() {
 	Ambient_Sounds_Remove_All_Non_Looping_Sounds(false);
 	Ambient_Sounds_Add_Looping_Sound(kSfxLABAMB3, 80, 0, 1);
 	Ambient_Sounds_Add_Sound(kSfxTUBES1,   5, 20,  5, 10,  -70,  70, -101, -101, 0, 0);
+	if (_vm->_cutContent) {
+		Ambient_Sounds_Add_Sound(kSfxTUBES2,   5, 20,  5, 10,  -70,  70, -101, -101, 0, 0);
+		Ambient_Sounds_Add_Sound(kSfxTUBES3,   5, 20,  5, 10,  -70,  70, -101, -101, 0, 0);
+	}
 	Ambient_Sounds_Add_Sound(kSfxLABMISC1, 5, 30,  5, 10,  -70,  70, -101, -101, 0, 0);
 	Ambient_Sounds_Add_Sound(kSfxLABMISC2, 2, 20,  5, 10,  -70,  70, -101, -101, 0, 0);
 	Ambient_Sounds_Add_Sound(kSfxLABMISC3, 2, 10, 10, 20,  -70,  70, -101, -101, 0, 0);

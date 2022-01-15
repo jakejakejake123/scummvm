@@ -374,7 +374,7 @@ void SceneScriptUG13::PlayerWalkedIn() {
 		// there. Since this scene will always happen McCoys phone call with Guzza where he organises a meeting will always makes sense since McCoy will always 
 		// see the room by default.	
 		if (_vm->_cutContent && !Game_Flag_Query(kFlagUG13Entered)) {
-		Sound_Play(kSfxRICOCHT1, 50, 0, 0, 50);
+		Sound_Play(kSfxBANGDOOR, 50, 0, 0, 50);
 		Actor_Face_Heading(kActorMcCoy, 830, false);
 		Delay (1000);
 		Actor_Says(kActorMcCoy, 8525, 19); //00-8525.AUD	Hmph.

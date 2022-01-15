@@ -50,6 +50,7 @@ void SceneScriptDR06::InitializeScene() {
 	if (Game_Flag_Query(kFlagDR06JesterActive)) {
 		Overlay_Play("DR06over", 1, true, false, 0);
 		Ambient_Sounds_Add_Looping_Sound(kSfxJESTMOV1, 47, -75, 0);
+		Ambient_Sounds_Add_Looping_Sound(kSfxJESTMUS1, 47, -75, 0);
 	} else {
 		Overlay_Play("DR06over", 0, true, false, 0);
 	}
@@ -82,10 +83,16 @@ bool SceneScriptDR06::ClickedOn3DObject(const char *objectName, bool a2) {
 		if (!Game_Flag_Query(kFlagDR06JesterActive)) {
 			Overlay_Play("DR06over", 1, true, true, 0);
 			Ambient_Sounds_Add_Looping_Sound(kSfxJESTMOV1, 47, -75, 0);
+			if (_vm->_cutContent) {
+				Ambient_Sounds_Add_Looping_Sound(kSfxJESTMUS1, 47, -75, 0);
+			}
 			Game_Flag_Set(kFlagDR06JesterActive);
 		} else {
 			Overlay_Play("DR06over", 0, true, true, 0);
 			Ambient_Sounds_Remove_Looping_Sound(kSfxJESTMOV1, 0u);
+			if (_vm->_cutContent) {
+				Ambient_Sounds_Remove_Looping_Sound(kSfxJESTMUS1, 0u);
+			}
 			Game_Flag_Reset(kFlagDR06JesterActive);
 		}
 		return true;

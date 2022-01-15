@@ -71,6 +71,9 @@ void SceneScriptCT02::InitializeScene() {
 	Ambient_Sounds_Add_Sound(kSfxDISH2, 10, 30, 7, 7, 100, 100, -101, -101, 0, 0);
 	Ambient_Sounds_Add_Sound(kSfxDISH3, 10, 30, 8, 8, 100, 100, -101, -101, 0, 0);
 	Ambient_Sounds_Add_Sound(kSfxDISH4, 10, 30, 7, 7, 100, 100, -101, -101, 0, 0);
+	if (_vm->_cutContent) {
+		Ambient_Sounds_Add_Sound(kSfxDISH5, 10, 30, 7, 7, 100, 100, -101, -101, 0, 0);
+	}
 	Ambient_Sounds_Add_Speech_Sound(kActorBlimpGuy,  0, 10u, 260u, 17, 19, 100, 100, -101, -101, 1, 1);
 	Ambient_Sounds_Add_Speech_Sound(kActorBlimpGuy, 20, 10u, 260u, 17, 19, 100, 100, -101, -101, 1, 1);
 	Ambient_Sounds_Add_Speech_Sound(kActorBlimpGuy, 40, 10u, 260u, 17, 19, 100, 100, -101, -101, 1, 1);
@@ -371,6 +374,11 @@ void SceneScriptCT02::SceneFrameAdvanced(int frame) {
 	}
 	if (frame == 71) {
 		Sound_Play(kSfxBIGPOT3, 40, 0, 0, 50);
+	}
+	if (_vm->_cutContent) {
+		if (frame == 80) {
+			Sound_Play(kSfxPOTSPL4, 60, -20, 40, 50);
+		}
 	}
 	if (frame == 72) {
 		Sound_Play(kSfxPOTSPL5, 60, -20, 40, 50);

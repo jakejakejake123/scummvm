@@ -79,6 +79,11 @@ void SceneScriptRC01::InitializeScene() {
 	Ambient_Sounds_Add_Looping_Sound(kSfxCTRAIN1, 30, 0, 1);
 
 	if (!Game_Flag_Query(kFlagRC01PoliceDone)) {
+		if (_vm->_cutContent) {
+			Ambient_Sounds_Add_Looping_Sound(kSfxRCTALK1, 30, 0, 1);
+			Ambient_Sounds_Add_Looping_Sound(kSfxRCTALK2, 30, 0, 1);
+			Ambient_Sounds_Add_Looping_Sound(kSfxRCTALK3, 30, 0, 1);
+		}
 		Ambient_Sounds_Add_Sound(kSfx67_0470R, 5, 70, 12, 12, -100, 100, -101, -101, 0, 0);
 		Ambient_Sounds_Add_Sound(kSfx67_0480R, 5, 70, 12, 12, -100, 100, -101, -101, 0, 0);
 		Ambient_Sounds_Add_Sound(kSfx67_0500R, 5, 70, 12, 12, -100, 100, -101, -101, 0, 0);

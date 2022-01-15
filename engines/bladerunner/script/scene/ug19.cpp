@@ -94,6 +94,9 @@ bool SceneScriptUG19::ClickedOnExit(int exitId) {
 			Ambient_Sounds_Remove_All_Looping_Sounds(1u);
 			Game_Flag_Set(kFlagUG19toMA07);
 			Set_Enter(kSetMA07, kSceneMA07);
+			if (_vm->_cutContent) {
+				Sound_Play(kSfxMANHOLE1,  40, 0, 0, 50);
+			}
 		}
 		return true;
 	}

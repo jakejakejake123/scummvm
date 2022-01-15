@@ -53,6 +53,9 @@ void SceneScriptHC03::InitializeScene() {
 
 	Ambient_Sounds_Add_Looping_Sound(kSfxRAINAWN1, 50, 50, 0);
 	Ambient_Sounds_Add_Looping_Sound(kSfxHCLOOP1,  50, 50, 0);
+	if (_vm->_cutContent) {
+		Ambient_Sounds_Add_Looping_Sound(kSfxHCSING1,  50, 50, 0);
+	}
 	Ambient_Sounds_Add_Sound(kSfxHCANM8,   3, 30, 16, 16, -100, -70, -101, -101, 0, 0);
 	Ambient_Sounds_Add_Sound(kSfxHCANM2,   3, 30, 16, 16, -100, -70, -101, -101, 0, 0);
 	Ambient_Sounds_Add_Sound(kSfxHCANM3,   3, 30, 16, 16, -100, -70, -101, -101, 0, 0);
@@ -160,6 +163,9 @@ bool SceneScriptHC03::ClickedOnExit(int exitId) {
 			if (!Game_Flag_Query(kFlagHC03TrapDoorOpen)) {
 				Scene_Loop_Set_Default(kHC03LoopMainCageOpenTrapDoorOpen);
 				Scene_Loop_Start_Special(kSceneLoopModeOnce, kHC03LoopTrapDoorOpening, true);
+				if (_vm->_cutContent) {
+					Sound_Play(kSfxTRPDORO,  40, 0, 0, 50);
+				}
 				Game_Flag_Set(kFlagHC03TrapDoorOpen);
 			} else {
 				Game_Flag_Set(kFlagHC03toUG02);

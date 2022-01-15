@@ -48,9 +48,17 @@ void SceneScriptDR02::InitializeScene() {
 
 	Ambient_Sounds_Remove_All_Non_Looping_Sounds(false);
 	Ambient_Sounds_Remove_All_Looping_Sounds(0u);
-	Ambient_Sounds_Add_Looping_Sound(kSfxCTRAIN1, 50, 0, 1);
+	// Replaced China town rain with DNA row rain.
+	if (_vm->_cutContent) {
+		Ambient_Sounds_Add_Looping_Sound(kSfxDRRAIN1, 50,  0, 1);
+	} else {
+		Ambient_Sounds_Add_Looping_Sound(kSfxCTRAIN1, 50,  0, 1);
+	}
 	Ambient_Sounds_Add_Looping_Sound(kSfxHUMMER3, 27, 85, 1);
 	Ambient_Sounds_Add_Looping_Sound(kSfxBIGFAN2, 38, 85, 1);
+	if (_vm->_cutContent) {
+		Ambient_Sounds_Add_Looping_Sound(kSfxBIGFAN3, 38, 85, 1);
+	}
 	Ambient_Sounds_Add_Sound(kSfxTHNDR1, 2,  50, 33, 100, -100, 100, -101, -101, 0, 0);
 	Ambient_Sounds_Add_Sound(kSfxTHNDR2, 2,  50, 33, 100, -100, 100, -101, -101, 0, 0);
 	Ambient_Sounds_Add_Sound(kSfxTHNDR3, 2,  50, 33, 100, -100, 100, -101, -101, 0, 0);

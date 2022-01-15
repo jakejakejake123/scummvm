@@ -126,6 +126,10 @@ bool SceneScriptBB12::ClickedOnExit(int exitId) {
 			Ambient_Sounds_Remove_All_Looping_Sounds(1u);
 			Game_Flag_Set(kFlagBB12toBB08);
 			Set_Enter(kSetBB08, kSceneBB08);
+			// The trailing laughter of the toy monkey can be heard as you leave the room.
+			if (_vm->_cutContent) {
+				Sound_Play(kSfxMONKEY2,  40, 0, 0, 50);
+			}
 		}
 		return true;
 	}
@@ -136,6 +140,9 @@ bool SceneScriptBB12::ClickedOnExit(int exitId) {
 			Ambient_Sounds_Remove_All_Looping_Sounds(1u);
 			Game_Flag_Set(kFlagBB12toBB07);
 			Set_Enter(kSetBB07, kSceneBB07);
+			if (_vm->_cutContent) {
+				Sound_Play(kSfxMONKEY2,  40, 0, 0, 50);	
+			}
 		}
 		return true;
 	}
@@ -146,6 +153,9 @@ bool SceneScriptBB12::ClickedOnExit(int exitId) {
 			Ambient_Sounds_Remove_All_Looping_Sounds(1u);
 			Game_Flag_Set(kFlagBB12toBB05);
 			Set_Enter(kSetBB05, kSceneBB05);
+			if (_vm->_cutContent) {
+				Sound_Play(kSfxMONKEY2,  40, 0, 0, 50);
+			}
 		}
 		return true;
 	}

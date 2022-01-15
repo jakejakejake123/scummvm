@@ -41,6 +41,9 @@ void SceneScriptHC02::InitializeScene() {
 
 	Ambient_Sounds_Add_Looping_Sound(kSfxRAINAWN1, 50, 50, 0);
 	Ambient_Sounds_Add_Looping_Sound(kSfxBARAMB1,  50, 50, 0);
+	if (_vm->_cutContent) {
+		Ambient_Sounds_Add_Looping_Sound(kSfxHCSING1,  50, 50, 0);
+	}
 	Ambient_Sounds_Add_Sound(kSfxBARSFX1,  3, 60, 33, 33,  -60,   0, -101, -101, 0, 0);
 	Ambient_Sounds_Add_Sound(kSfxBARSFX3,  3, 60, 33, 33,  -60,   0, -101, -101, 0, 0);
 	Ambient_Sounds_Add_Sound(kSfxBARSFX4,  3, 60, 33, 33,  -60,   0, -101, -101, 0, 0);

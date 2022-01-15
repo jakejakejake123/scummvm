@@ -117,6 +117,9 @@ void SceneScriptCT01::InitializeScene() {
 	Ambient_Sounds_Add_Sound(kSfxDISH2,   10, 30, 16, 20,    0, 100, -101, -101, 0, 0);
 	Ambient_Sounds_Add_Sound(kSfxDISH3,   10, 30, 16, 20,    0, 100, -101, -101, 0, 0);
 	Ambient_Sounds_Add_Sound(kSfxDISH4,   10, 30, 16, 20,    0, 100, -101, -101, 0, 0);
+	if (_vm->_cutContent) {
+		Ambient_Sounds_Add_Sound(kSfxDISH5,   10, 30, 16, 20,    0, 100, -101, -101, 0, 0);
+	}
 	Ambient_Sounds_Add_Speech_Sound(kActorBlimpGuy,  0, 10u, 260u, 27, 47, -100, 100, -101, -101, 1, 1);
 	Ambient_Sounds_Add_Speech_Sound(kActorBlimpGuy, 20, 10u, 260u, 27, 47, -100, 100, -101, -101, 1, 1);
 	Ambient_Sounds_Add_Speech_Sound(kActorBlimpGuy, 40, 10u, 260u, 27, 47, -100, 100, -101, -101, 1, 1);

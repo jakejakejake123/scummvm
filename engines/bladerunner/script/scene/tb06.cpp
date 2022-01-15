@@ -182,7 +182,11 @@ void SceneScriptTB06::SceneFrameAdvanced(int frame) {
 		Sound_Play(kSfxLABMISC5, Random_Query(52, 52), 0, 0, 50);
 	}
 	if (frame == 63) {
-		Sound_Play(kSfxTBDOOR1,  Random_Query(55, 55), 0, 0, 50);
+		if (_vm->_cutContent) {
+			Sound_Play(kSfxTBDOOR2,  Random_Query(55, 55), 0, 0, 50);
+		} else {
+			Sound_Play(kSfxTBDOOR1,  Random_Query(55, 55), 0, 0, 50);
+		}
 	}
 	//return true;
 }

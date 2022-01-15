@@ -596,6 +596,9 @@ bool AIScriptMaggie::GoalChanged(int currentGoalNumber, int newGoalNumber) {
 		Loop_Actor_Walk_To_XYZ(kActorMaggie, -734.0, 0.0, -432.0, 0, false, false, false);
 		Actor_Face_Actor(kActorMaggie, kActorMcCoy, true);
 		Actor_Change_Animation_Mode(kActorMaggie, 56);
+		if (_vm->_cutContent) {
+			Sound_Play(kSfxDOGFAR1,  40, 0, 0, 50);
+		}
 		Actor_Face_Actor(kActorMcCoy, kActorMaggie, true);
 		Actor_Says(kActorMcCoy, 2225, kAnimationModeTalk);
 		Actor_Set_Goal_Number(kActorMaggie, kGoalMaggieKP05WalkToMcCoy);
@@ -604,6 +607,10 @@ bool AIScriptMaggie::GoalChanged(int currentGoalNumber, int newGoalNumber) {
 	case kGoalMaggieKP05WalkToMcCoy:
 		if (Actor_Query_Is_In_Current_Set(kActorSteele)) {
 			Actor_Says(kActorSteele, 3270, 59);
+		}
+		if (_vm->_cutContent) {
+			Delay(2000);
+			Sound_Play(kSfxDOGCRY1,  40, 0, 0, 50);
 		}
 		AI_Movement_Track_Flush(kActorMaggie);
 		AI_Movement_Track_Append(kActorMaggie, 540, 0);

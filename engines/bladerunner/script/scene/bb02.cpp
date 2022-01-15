@@ -155,6 +155,13 @@ void SceneScriptBB02::ActorChangedGoal(int actorId, int newGoal, int oldGoal, bo
 }
 
 void SceneScriptBB02::PlayerWalkedIn() {
+	// The sound of Sadik kicking Sebastians door down plays as you enter the Bradbury.
+	if (_vm->_cutContent) {
+		if (!Game_Flag_Query(kFlagBB02Visited)) {
+			Sound_Play(kSfxKICKDOOR, 40, 0, 0, 50);
+			Game_Flag_Set(kFlagBB02Visited);
+		}
+	}
 	if (Game_Flag_Query(kFlagBB03toBB02)) {
 		Loop_Actor_Walk_To_XYZ(kActorMcCoy, 86.0f, -415.06f, 174.0f, 0, false, false, false);
 		Game_Flag_Reset(kFlagBB03toBB02);

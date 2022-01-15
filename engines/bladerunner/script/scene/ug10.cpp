@@ -60,6 +60,10 @@ void SceneScriptUG10::InitializeScene() {
 	Ambient_Sounds_Add_Sound(kSfxSTEAM1,   5, 150, 47, 57, -100, 100, -101, -101, 0, 0);
 	Ambient_Sounds_Add_Sound(kSfxSTEAM6A,  5, 150, 17, 37, -100, 100, -101, -101, 0, 0);
 	Ambient_Sounds_Add_Sound(kSfxGLOOP1,   2,  20, 25, 32, -100, 100, -100,  100, 0, 0);
+	if (_vm->_cutContent) {
+		Ambient_Sounds_Add_Sound(kSfxGLOOP2,   2,  20, 25, 32, -100, 100, -100,  100, 0, 0);
+		Ambient_Sounds_Add_Sound(kSfxGLOOP3,   2,  20, 25, 32, -100, 100, -100,  100, 0, 0);
+	}
 	Ambient_Sounds_Add_Sound(kSfxGLOOP4,   2,  20, 25, 32, -100, 100, -100,  100, 0, 0);
 	Ambient_Sounds_Add_Sound(kSfxSQUEAK1,  2, 190, 12, 16, -100, 100, -100,  100, 0, 0);
 	Ambient_Sounds_Add_Sound(kSfxSQUEAK5,  2, 190, 12, 16, -100, 100, -100,  100, 0, 0);

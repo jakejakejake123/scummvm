@@ -45,6 +45,9 @@ void SceneScriptCT07::InitializeScene() {
 	Ambient_Sounds_Add_Sound(kSfxDISH2,   10,  30, 12,  14, 100, 100, -101, -101, 0, 0);
 	Ambient_Sounds_Add_Sound(kSfxDISH3,   10,  30, 12,  14, 100, 100, -101, -101, 0, 0);
 	Ambient_Sounds_Add_Sound(kSfxDISH4,   10,  30, 12,  14, 100, 100, -101, -101, 0, 0);
+	if (_vm->_cutContent) {
+		Ambient_Sounds_Add_Sound(kSfxDISH5,   10,  30, 12,  14, 100, 100, -101, -101, 0, 0);
+	}
 }
 
 void SceneScriptCT07::SceneLoaded() {
