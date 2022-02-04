@@ -217,20 +217,45 @@ bool SceneScriptRC02::ClickedOn3DObject(const char *objectName, bool a2) {
 
 void SceneScriptRC02::dialogueWithRunciter() {
 	Dialogue_Menu_Clear_List();
-	DM_Add_To_List_Never_Repeat_Once_Selected( 0, 5, 6, 2);     // MOTIVES
-	DM_Add_To_List_Never_Repeat_Once_Selected(10, 5, 4, 8);     // LUCY
-	if (Actor_Clue_Query(kActorMcCoy, kClueRunciterInterviewB1)
-	 || Actor_Clue_Query(kActorMcCoy, kClueRunciterInterviewB2)
-	) {
-		DM_Add_To_List_Never_Repeat_Once_Selected(20, 6, 4, 5); // REFERENCE
+	// Made it so no new topics will be available once you discover that Runciter is a replicant.
+	// It would make no sense for McCoy to discover that Runciter is a replicant, spare him and continue
+	// the conversation like nothing has happened.
+	if (_vm->_cutContent) {
+		if (!Game_Flag_Query(kFlagRunciterDiscovered)) {
+			DM_Add_To_List_Never_Repeat_Once_Selected( 0, 5, 6, 2);     // MOTIVES
+		}
+	} else {
+		DM_Add_To_List_Never_Repeat_Once_Selected( 0, 5, 6, 2);     // MOTIVES
+	}
+	if (_vm->_cutContent) {
+		if (!Game_Flag_Query(kFlagRunciterDiscovered)) {
+			DM_Add_To_List_Never_Repeat_Once_Selected(10, 5, 4, 8);     // LUCY
+		}
+	} else {
+		DM_Add_To_List_Never_Repeat_Once_Selected(10, 5, 4, 8);     // LUCY
+	}
+	if (_vm->_cutContent) {
+		if (!Game_Flag_Query(kFlagRunciterDiscovered)) {
+			if (Actor_Clue_Query(kActorMcCoy, kClueRunciterInterviewB1)
+			|| Actor_Clue_Query(kActorMcCoy, kClueRunciterInterviewB2)) {
+				DM_Add_To_List_Never_Repeat_Once_Selected(20, 6, 4, 5); // REFERENCE
+			}
+		}
+	} else if (Actor_Clue_Query(kActorMcCoy, kClueRunciterInterviewB1)
+		|| Actor_Clue_Query(kActorMcCoy, kClueRunciterInterviewB2)) {
+			DM_Add_To_List_Never_Repeat_Once_Selected(20, 6, 4, 5); // REFERENCE
 	}
 	if (_vm->_cutContent
-	     && (!Game_Flag_Query(kFlagRC02RunciterVKChosen)
-	         && (!Actor_Clue_Query(kActorMcCoy, kClueVKRunciterHuman) && !Actor_Clue_Query(kActorMcCoy, kClueVKRunciterReplicant)))
-	){
-		Dialogue_Menu_Clear_Never_Repeat_Was_Selected_Flag(200);
-		DM_Add_To_List_Never_Repeat_Once_Selected(200, -1, 3, 6); // VOIGT-KAMPFF
-	}
+	    && (!Game_Flag_Query(kFlagRC02RunciterVKChosen)
+	    && (!Actor_Clue_Query(kActorMcCoy, kClueVKRunciterHuman)
+		&& !Actor_Clue_Query(kActorMcCoy, kClueVKRunciterReplicant)))) {
+			Dialogue_Menu_Clear_Never_Repeat_Was_Selected_Flag(200);
+			// Made it so you can only VK Runciter after he gives you the video disc. This is to avoid a dead end
+			// since the video disc contains evidence necessary to proceed further into the game.
+			if (Actor_Clue_Query(kActorMcCoy, kClueRuncitersVideo)) {
+				DM_Add_To_List_Never_Repeat_Once_Selected(200, -1, 3, 6); // VOIGT-KAMPFF
+			}
+		}
 	Dialogue_Menu_Add_DONE_To_List(30); // DONE
 
 	Dialogue_Menu_Appear(320, 240);
@@ -252,8 +277,12 @@ void SceneScriptRC02::dialogueWithRunciter() {
 		// Runciter talk motives to be triggered when you ask him about the suspects motives. This will ensure that when McCoy exits the store he will only talk
 		// about the suspects motive if he learned from Runciter that nothing was stolen. Also McCoys friendliness towards Runciter now changes based on whether 
 		// he is surly or erratic.	
-
-		Actor_Says(kActorRunciter, 140, 16); // 15-0140.AUD	Who else would be capable of such barbaric acts?
+		// If Runciter is a replicant when McCoy asks him if replicants could have committed the crime, Runciter just says how would I know and the conversation 
+		// cuts off there.
+		if (Game_Flag_Query(kFlagRunciterIsReplicant)) {
+			Actor_Says(kActorRunciter, 1420, 19); //15-1420.AUD	How would I know?
+		} else {
+			Actor_Says(kActorRunciter, 140, 16); // 15-0140.AUD	Who else would be capable of such barbaric acts?
 		if (_vm->_cutContent) {
 			Actor_Says(kActorRunciter, 310, 18);  // 15-0310.AUD	They should have just killed me!
 			Actor_Says(kActorMcCoy, 8190, 0);	// 00-8190.AUD	Why?
@@ -272,6 +301,7 @@ void SceneScriptRC02::dialogueWithRunciter() {
 				Actor_Says(kActorMcCoy, 2305, 13); //00-2305.AUD	I’m sorry.
 				Actor_Modify_Friendliness_To_Other(kActorRunciter, kActorMcCoy, +5);
 			}	
+		}
 		}
 		Game_Flag_Set(kFlagRC02RunciterTalk1);		
 		break;
@@ -355,10 +385,41 @@ void SceneScriptRC02::dialogueWithRunciter() {
 				Actor_Says(kActorMcCoy, 400, 14); //00-0400.AUD	It won't take too long.
 				Actor_Modify_Friendliness_To_Other(kActorRunciter, kActorMcCoy, -2);
 			}
+			if (!Game_Flag_Query(kFlagRunciterIsReplicant)) {
 			Voight_Kampff_Activate(kActorRunciter, 20);
-			// Added in a line for when McCoy finishes giving Runciter the VK test. It seemed a bit odd where there was just silence
-			// after the test was finished.
-			if (!Actor_Clue_Query(kActorMcCoy, kClueVKRunciterReplicant)) {
+			}
+			// The dialogue that plays when the VK test confirms that Runciter is a replicant. McCoy pulls out his gun and
+			// the exits are disabled. The player must choose whether or not to shoot Runciter or spare him.
+			if (Game_Flag_Query(kFlagRunciterIsReplicant)) {
+				Actor_Face_Actor(kActorMcCoy, kActorRunciter, true);
+				Actor_Face_Actor(kActorRunciter, kActorMcCoy, true);
+				// Sadly I couldn't get the VK test to work properly so it confirms Runciter as a replicant if he is one, so
+				// I turned it into a simple cutscene instead. This is something that you could change since you understand the code 
+				// better than I do.
+				Actor_Says(kActorAnsweringMachine, 390, kAnimationModeTalk); // 39-0390.AUD	Begin test.
+				Ambient_Sounds_Play_Sound(kSfxDATALOAD, 50, 0, 0, 99);
+				Delay(2000);
+				Ambient_Sounds_Play_Sound(kSfxBEEPNEAT, 80, 0, 0, 99);
+				Actor_Says(kActorAnsweringMachine, 420, 19); //39-0420.AUD	Positive result.
+				Actor_Says(kActorAnsweringMachine, 430, 19); //39-0430.AUD	Subject is Replicant.
+				Actor_Says(kActorAnsweringMachine, 460, 19); //39-0460.AUD	Test terminated.
+				Actor_Says(kActorMcCoy, 6865, 14); //00-6865.AUD	You're a Replicant.
+				Actor_Says(kActorRunciter, 490, 13); //15-0490.AUD	No. You heard it wrong.
+				Actor_Says(kActorRunciter, 1070, 13); //15-1070.AUD	I'm not a Replicant for heaven's sakes.
+				Actor_Says(kActorMcCoy, 1610, 13); //00-1610.AUD	Yes. You are.
+				Actor_Says(kActorRunciter, 600, 13); //15-0600.AUD	That's ridiculous. I--.
+				Actor_Says(kActorRunciter, 720, 13); //15-0720.AUD	I have nothing more to say to you, detective.
+				Player_Set_Combat_Mode(true);
+				Actor_Set_Targetable(kActorRunciter, true);
+				Actor_Says(kActorRunciter, 420, 12); //15-0420.AUD	What? Why?
+				Game_Flag_Set(kFlagRunciterDiscovered);
+				Game_Flag_Set(kFlagRunciterConfronted);
+				// Added code so Runciters goal where he walks around changes to him standing still. This is to prevent him still walking around
+				// after you shoot him dead.
+				Actor_Set_Goal_Number(kActorRunciter, kGoalRunciterStill);
+				Player_Gains_Control();
+				Scene_Exits_Disable();
+			} else if (!Actor_Clue_Query(kActorMcCoy, kClueVKRunciterReplicant)) {
 				Actor_Says(kActorMcCoy, 6880, 14); //00-6880.AUD	The test says you're human.
 			}
 		}
@@ -366,7 +427,7 @@ void SceneScriptRC02::dialogueWithRunciter() {
 
 	case 30: // DONE
 		// Added in some banter dialogue for Runciter. It is also different based on your friendliness with Runcter.
-		if (_vm->_cutContent) {
+		if (_vm->_cutContent && Actor_Query_Goal_Number(kActorRunciter) != kGoalRunciterDead) {
 			Actor_Says(kActorMcCoy, 4600, 14); // A couple questions.
 			Actor_Face_Actor(kActorRunciter, kActorMcCoy, true);
 			if (Actor_Query_Friendliness_To_Other(kActorRunciter, kActorMcCoy) < 46) {
@@ -374,7 +435,7 @@ void SceneScriptRC02::dialogueWithRunciter() {
 			} else {
 				Actor_Says(kActorRunciter, 730, 13); //15-0730.AUD	Please. Just leave me alone.
 			}
-		} else {
+		} else if (Actor_Query_Goal_Number(kActorRunciter) != kGoalRunciterDead) {
 			Actor_Says(kActorMcCoy, 4595, 14);
 		}
 		break;
@@ -383,7 +444,11 @@ void SceneScriptRC02::dialogueWithRunciter() {
 
 bool SceneScriptRC02::ClickedOnActor(int actorId) {
 	if (actorId == kActorRunciter) {
-		if (Global_Variable_Query(kVariableChapter) == 4) {
+		if (Global_Variable_Query(kVariableChapter) == 1
+			&& Actor_Query_Goal_Number(kActorRunciter) == kGoalRunciterDead) {
+			Actor_Face_Actor(kActorMcCoy, kActorRunciter, true);
+			Actor_Says(kActorMcCoy, 8630, 12);  // What a waste
+		} else if (Global_Variable_Query(kVariableChapter) == 4) {
 			Actor_Face_Actor(kActorMcCoy, kActorRunciter, true);
 			if (Actor_Query_Goal_Number(kActorRunciter) == kGoalRunciterDead) {
 				if (_vm->_cutContent) {
@@ -513,11 +578,19 @@ bool SceneScriptRC02::ClickedOnActor(int actorId) {
 			// quite calm so it didn't make any sense to have it here.
 			Actor_Says(kActorMcCoy, 4610, 19);
 			Actor_Face_Actor(kActorRunciter, kActorMcCoy, true);
-			Actor_Says(kActorRunciter, 150, 15);
-			Actor_Says(kActorMcCoy, 4615, 13);
-			Actor_Says(kActorRunciter, 160, 14);
-			Actor_Says(kActorRunciter, 170, 15);
-			Actor_Says(kActorRunciter, 180, 13);
+			// Made it so the dialogue where Runciter mentions being friends with Governor Kolvig doesn't play if Runciter is a replicant.
+			// It would make no sense for a replicant to be friends with such a high ranking official, especially one that doesn't like replicants.
+			if (_vm->_cutContent && Game_Flag_Query(kFlagRunciterIsReplicant)) {
+				Actor_Says(kActorRunciter, 9000, 15); //15-9000.AUD	No!
+				Actor_Says(kActorMcCoy, 4615, 13); //00-4615.AUD	Just wondering.
+				Actor_Says(kActorRunciter, 180, 13); //15-0180.AUD	Do I look like I need to carry artificial product?
+			} else {
+				Actor_Says(kActorRunciter, 150, 15);
+				Actor_Says(kActorMcCoy, 4615, 13);
+				Actor_Says(kActorRunciter, 160, 14);
+				Actor_Says(kActorRunciter, 170, 15);
+				Actor_Says(kActorRunciter, 180, 13);
+			}
 			if (_vm->_cutContent) {
 				// Made it so McCoy talks about Runciters friends regardless of his agenda. McCoy doesn't really come of as a jerk here so
 				// it wouldn't make sense for these lines to play based on whether or not he is surly or erratic.

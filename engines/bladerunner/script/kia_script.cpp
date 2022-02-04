@@ -1996,6 +1996,23 @@ void KIAScript::SCRIPT_KIA_DLL_Play_Clue_Asset_Script(int notUsed, int clueId) {
 		KIA_Play_Actor_Dialogue(kActorSteele, 3020); //01-3020.AUD	Though knowing him, he might have been yanking my chain on purpose.
 		KIA_Play_Actor_Dialogue(kActorSteele, 3030); //01-3030.AUD	Either way he’s got some explaining to do.
 		break;
+	case kClueCrystalRetiredRunciter1:
+		KIA_Play_Actor_Dialogue(kActorSteele, 3210); //01-3210.AUD	The Runciter Rep went down nice and easy.
+		KIA_Play_Actor_Dialogue(kActorSteele, 3220); //01-3220.AUD	I’m tempted to split the bonus with McCoy since he did all the V-K work, but I’m getting real good at resisting temptation.
+		KIA_Play_Actor_Dialogue(kActorSteele, 3240); //01-3240.AUD	I just hope the lab boys don’t drag their feet on the bone marrow test.
+		KIA_Play_Actor_Dialogue(kActorSteele, 3250); //01-3250.AUD	I got an electric bill to pay.
+		break;
+	case kClueCrystalRetiredBob:
+		KIA_Play_Actor_Dialogue(kActorSteele, 3040); //01-3040.AUD	I took out the Bullet Bob Rep that ran the Gun Shop. Clean work. One shot and he dropped.
+		KIA_Play_Actor_Dialogue(kActorSteele, 3060); //01-3050.AUD	Beats me why McCoy didn’t retire it, but I ain’t gonna share the bonus.
+		KIA_Play_Actor_Dialogue(kActorSteele, 3060); //01-3060.AUD	Memo to the lieutenant. Try to hurry the lab boys along, will ya?
+		KIA_Play_Actor_Dialogue(kActorSteele, 3070); //01-3070.AUD	They take forever with the bone marrow tests and I just got my cable bill.
+		break;
+	case kClueCrystalRetiredCrazylegs:
+		KIA_Play_Actor_Dialogue(kActorSteele, 3110); //01-3110.AUD	Chalk one up for the good guys. The Crazylegs Larry Replicant was pretty clever.
+		KIA_Play_Actor_Dialogue(kActorSteele, 3130); //01-3130.AUD	The wheelchair almost had me fooled, but if there’s one thing the rookie knows how to do is spot a skin-job.
+		KIA_Play_Actor_Dialogue(kActorSteele, 3140); //01-3140.AUD	Let’s hope the lab boys don’t sit on the bone marrow test. My phone bill is due next week.
+		break;
 	case kClueDektoraConfession:
 		KIA_Play_Actor_Dialogue(kActorDektora, 1010); //03-1010.AUD	I’m not worried. She may kill some of us but not all of us. Clovis will see to that.
 		KIA_Play_Actor_Dialogue(kActorMcCoy, 3855); //00-3855.AUD	Is he the one that sent you the flowers?

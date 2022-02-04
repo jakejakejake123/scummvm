@@ -100,6 +100,18 @@ void InitScript::Init_Game_Flags() {
 	if (Random_Query(1, 2) == 1) {
 		Game_Flag_Set(kFlagLutherLanceIsReplicant);
 	}
+	// Added code so Runciter and Bob are randomized as potential replicants when the game starts.
+	if (_vm->_cutContent) {
+		if (Random_Query(1, 2) == 1) {
+			Game_Flag_Set(kFlagRunciterIsReplicant);
+		}
+	}
+
+	if (_vm->_cutContent) {
+		if (Random_Query(1, 2) == 1) {
+			Game_Flag_Set(kFlagBulletBobIsReplicant);
+		}
+	}
 
 	if (!Game_Flag_Query(kFlagGordoIsReplicant)
 	 && !Game_Flag_Query(kFlagLucyIsReplicant)
@@ -2972,6 +2984,9 @@ void InitScript::Init_CDB() {
 		CDB_Set_Clue_Asset_Type(kClueOriginalShippingForm, kClueTypeObject);
 		CDB_Set_Clue_Asset_Type(kClueMcCoyRetiredZuben, kClueTypeAudioRecording);
 		CDB_Set_Clue_Asset_Type(kClueMcCoysDescription, kClueTypeAudioRecording);
+		CDB_Set_Clue_Asset_Type(kClueCrystalTestedRunciter, kClueTypeAudioRecording);
+		CDB_Set_Clue_Asset_Type(kClueCrystalTestedBulletBob, kClueTypeAudioRecording);
+		CDB_Set_Clue_Asset_Type(kClueCrystalTestedCrazylegs, kClueTypeAudioRecording);
 	}
 }
 

@@ -911,23 +911,23 @@ enum Flags {
 	kFlagBB10Shelf4Available                  = 469,
 	kFlagBB10Shelf5Available                  = 470,
 	kFlagGaffChapter2Started                  = 471,
-	// 472 is never used
-	// 473 is never used
+	kFlagOfficerLearyShot					  = 472,	
+	kFlagOfficerGrayfordShot				  = 473,
 	kFlagUG10GateOpen                         = 474,
 	kFlagNR09toNR10                           = 475,
 	kFlagNR10toNR09                           = 476,
 	kFlagNR11toNR10                           = 477, // is never checked
 	kFlagMcCoyAtPS03                          = 478, // has no use
 	kFlagMcCoyInHawkersCircle                 = 479,
-	// 480 is never used
-	// 481 is never used
+	kFlagRunciterIsReplicant				  = 480,	
+	kFlagBulletBobIsReplicant				  = 481,	
 	kFlagSteeleSmoking                        = 482,
 	kFlagTB06Introduction                     = 483,
 	kFlagKP03BombDisarmed                     = 484,
 	kFlagTB06Photographer                     = 485,
 	kFlagDNARowAvailable                      = 486,
 	kFlagKIAPrivacyAddon                      = 487,
-	// 488 is never used
+	kFlagCrazylegsIsReplicant				  = 488,
 	kFlagDektoraChapter2Started               = 489,
 	kFlagEarlyQStartedChapter1                = 490,
 	kFlagEarlyQStartedChapter2                = 491,
@@ -939,9 +939,9 @@ enum Flags {
 	kFlagBB12Entered                          = 497,
 	kFlagUG02FromUG01                         = 498,
 	kFlagUG02Interactive                      = 499,
-	// 500 is never used
-	// 501 is never used
-	// 502 is never used
+	kFlagRunciterDiscovered            	      = 500,
+	kFlagRunciterConfronted 				  = 501,
+	kFlagBulletBobDiscovered				  = 502,
 	// 503 is never used
 	kFlagAR02DektoraWillBuyScorpions          = 504,
 	kFlagDR03ChewTalkExplosion                = 505,
@@ -3246,6 +3246,7 @@ enum GoalRunciter {
 	kGoalRunciterDefault        =   0,
 	kGoalRunciterRC02WalkAround =   1,
 	kGoalRunciterGoToFreeSlotGH =   2,
+	kGoalRunciterStill      	 = 3,
 	kGoalRunciterRC02Wait       = 300,
 	kGoalRunciterDead           = 599
 };

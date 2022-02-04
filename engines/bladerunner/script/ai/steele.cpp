@@ -437,9 +437,28 @@ void AIScriptSteele::EnteredSet(int setId) {
 			Game_Flag_Set(kFlagCrazylegsArrested);
 			return;	
 		}
+		// Added in code so if Steele receives the Runciter is replicant Vk result and Runciter is a replicant and alive she retires him
+		// and receives the Crystal retired Runciter clue. Also did the same for Bob.
 		if (Actor_Clue_Query(kActorSteele, kClueVKRunciterReplicant)) {
-			Actor_Clue_Acquire(kActorSteele, kClueCrystalTestedRunciter, true, kActorSteele);
-			Actor_Clue_Acquire(kActorSteele, kClueVKRunciterHuman, true, -1);
+			if (Game_Flag_Query(kFlagRunciterIsReplicant)
+			&& Actor_Query_Goal_Number(kActorRunciter) != kGoalRunciterDead)  {
+				Actor_Clue_Acquire(kActorSteele, kClueCrystalRetiredRunciter1, true, kActorSteele);
+				Actor_Set_Goal_Number(kActorRunciter, kGoalRunciterDead);
+			} else {
+				Actor_Clue_Acquire(kActorSteele, kClueCrystalTestedRunciter, true, kActorSteele);
+				Actor_Clue_Acquire(kActorSteele, kClueVKRunciterHuman, true, -1);
+			}
+			return;	
+		}
+		if (Actor_Clue_Query(kActorSteele, kClueVKBobGorskyReplicant)) {
+			if (Game_Flag_Query(kFlagBulletBobIsReplicant)
+			&& Actor_Query_Goal_Number(kActorBulletBob) != kGoalBulletBobDead)  {
+				Actor_Clue_Acquire(kActorSteele, kClueCrystalRetiredBob, true, kActorSteele);
+				Actor_Set_Goal_Number(kActorBulletBob, kGoalBulletBobDead);
+			} else {
+				Actor_Clue_Acquire(kActorSteele, kClueCrystalTestedBulletBob, true, kActorSteele);
+				Actor_Clue_Acquire(kActorSteele, kClueVKBobGorskyHuman, true, -1);
+			}
 			return;	
 		}
 		if (Game_Flag_Query(kFlagZubenSpared)) {

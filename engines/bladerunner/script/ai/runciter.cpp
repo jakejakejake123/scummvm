@@ -60,6 +60,9 @@ bool AIScriptRunciter::Update() {
 	}
 
 	if (Global_Variable_Query(kVariableChapter) == 4
+	// Made it so if McCoy found out that Runciter is a replicant and spared him, Runciter doesn't appear in act 4.
+	// He has fled and is never seen again.
+	 && !Game_Flag_Query(kFlagRunciterDiscovered)
 	 && Actor_Query_Goal_Number(kActorRunciter) < kGoalRunciterRC02Wait
 	) {
 		Actor_Set_Goal_Number(kActorRunciter, kGoalRunciterRC02Wait);
@@ -202,6 +205,27 @@ void AIScriptRunciter::OtherAgentEnteredCombatMode(int otherActorId, int combatM
 			}
 		}
 		Game_Flag_Set(kFlagRC02RunciterTalkWithGun);
+		// Code for when McCoy decides to spare replicant Runciter. The scene exits are enabled at the end of the scene.
+		} else if (otherActorId == kActorMcCoy
+	 && !combatMode
+	 &&  Game_Flag_Query(kFlagRunciterConfronted)
+	) {
+		Actor_Face_Actor(kActorMcCoy, kActorRunciter, true);
+		Actor_Says(kActorMcCoy, 455, 14); //00-0455.AUD	Relax. Nobody's gonna get retired. Okay?
+		Actor_Face_Heading(kActorRunciter, 1007, false);
+		Delay(2000);
+		Music_Play(kMusicCrysDie1, 25, 0, 1, -1, kMusicLoopPlayOnce, 0);
+		Actor_Says(kActorMcCoy, 5560, 14); //00-5560.AUD	Hey.
+		Delay(1000);
+		Actor_Says(kActorRunciter, 410, 13); //15-0410.AUD	My precious ones are gone. I cared for them. All of them.
+		Delay(2000);
+		Actor_Says(kActorMcCoy, 2305, 14); //00-2305.AUD	I’m sorry.
+		Delay(1000);
+		Actor_Face_Actor(kActorRunciter, kActorMcCoy, true);
+		Actor_Says(kActorRunciter, 730, 13); //15-0730.AUD	Please. Just leave me alone.
+		Actor_Set_Targetable(kActorRunciter, false);
+		Game_Flag_Reset(kFlagRunciterConfronted);
+		Scene_Exits_Enable();
 	}
 }
 
@@ -211,14 +235,25 @@ bool AIScriptRunciter::ShotAtAndHit() {
 	Actor_Set_Targetable(kActorRunciter, false);
 	// Jake - Restored Runciters death rattle. Achieved this so when he is shot the animation of his head tilting back plays
 	// and he falls to the ground. Also added in the McCoy retired Runciter flag which activates when you shoot Runciter.
-	if (_vm->_cutContent) {
+	if (_vm->_cutContent && !Game_Flag_Query(kFlagRunciterIsReplicant)) {
 		Game_Flag_Set(kFlagMcCoyRetiredHuman);	
-		ADQ_Add(kActorRunciter, 9020, 18); //15-9020.AUD	Argh!		
 	}
+	ADQ_Add(kActorRunciter, 9020, 18); //15-9020.AUD	Argh!		
 	Actor_Change_Animation_Mode(kActorRunciter, kAnimationModeDie);
 	Actor_Set_Goal_Number(kActorRunciter, kGoalRunciterDead);
 	Delay(2000);
-	if (Actor_Clue_Query(kActorMcCoy, kClueZubensMotive)) {
+	//Code for when McCoy shoots Runciter and he is a replicant.
+	if  (Game_Flag_Query(kFlagRunciterIsReplicant)
+	&&	Global_Variable_Query(kVariableChapter) == 1) {
+		Actor_Voice_Over(1410, kActorVoiceOver); //99-1410.AUD	I’d retired another Replicant so more money was headed my way but I didn’t feel so good about it.
+		Actor_Voice_Over(1670, kActorVoiceOver); //99-1670.AUD	Still it was a hell of a way to go.
+		Actor_Voice_Over(2090, kActorVoiceOver); //99-2090.AUD	And maybe I’d done him a favor too, since his animals were all dead.
+		Game_Flag_Reset(kFlagRunciterConfronted);
+		Scene_Exits_Enable();
+		if (Query_Difficulty_Level() != kGameDifficultyEasy) {
+			Global_Variable_Increment(kVariableChinyen, 200);
+		}
+	} else if (Actor_Clue_Query(kActorMcCoy, kClueZubensMotive)) {
 		Actor_Voice_Over(2050, kActorVoiceOver);
 		Actor_Voice_Over(2060, kActorVoiceOver);
 	} else {
@@ -278,6 +313,10 @@ bool AIScriptRunciter::GoalChanged(int currentGoalNumber, int newGoalNumber) {
 		Actor_Set_At_Waypoint(kActorRunciter, 93, 1007);
 		return false;
 	}
+	if (newGoalNumber == kGoalRunciterStill) {
+		AI_Movement_Track_Flush(kActorRunciter);
+	}
+	return false;
 	return false;
 }
 
