@@ -942,7 +942,7 @@ enum Flags {
 	kFlagRunciterDiscovered            	      = 500,
 	kFlagRunciterConfronted 				  = 501,
 	kFlagBulletBobDiscovered				  = 502,
-	// 503 is never used
+	kFlagCrystalRetiredRunciter				  = 503,
 	kFlagAR02DektoraWillBuyScorpions          = 504,
 	kFlagDR03ChewTalkExplosion                = 505,
 	kFlagBB08toBB12                           = 506,
@@ -951,8 +951,8 @@ enum Flags {
 	kFlagBB11SadikFight                       = 509,
 	kFlagNotUsed510                           = 510, // is never set
 	kFlagDR05ExplodedEntered                  = 511,
-	// 512 is never used
-	// 513 is never used
+	kFlagCrystalRetiredBulletBob			  = 512,
+	kFlagCrystalRetiredCrazylegs			  = 513,
 	// 514 is never used
 	kFlagDR05ViewExplosion                    = 515,
 	kFlagCT07ZubenAttack                      = 516,

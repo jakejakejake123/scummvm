@@ -234,19 +234,33 @@ void SceneScriptMA07::PlayerWalkedIn() {
 					Actor_Clue_Acquire(kActorMcCoy, kClueWarRecordsGordoFrizz, true, kActorSteele); 
 					Actor_Clue_Acquire(kActorMcCoy, kClueGordoIncept, true, kActorSteele);
 				}
-				if (Actor_Clue_Query(kActorSteele, kClueVKBobGorskyReplicant) && !Game_Flag_Query(kFlagSteeleKnowsBulletBobIsDead)) {
-					Actor_Clue_Acquire(kActorMcCoy, kClueCrystalTestedBulletBob, true, kActorSteele);
-					Actor_Clue_Acquire(kActorMcCoy, kClueVKBobGorskyHuman,  true, -1);
+				if (Actor_Clue_Query(kActorSteele, kClueVKBobGorskyReplicant)) {
+					if (Game_Flag_Query(kFlagBulletBobIsReplicant)
+						&& Actor_Query_Goal_Number(kActorBulletBob) != kGoalBulletBobDead)  {
+						Actor_Clue_Acquire(kActorMcCoy, kClueCrystalRetiredBob, true, kActorSteele);
+						Actor_Set_Goal_Number(kActorBulletBob, kGoalBulletBobDead);
+					} else {
+						Actor_Clue_Acquire(kActorMcCoy, kClueCrystalTestedBulletBob, true, kActorSteele);
+						Actor_Clue_Acquire(kActorMcCoy, kClueVKBobGorskyHuman, true, -1);
+					}
 				}
 				if (Actor_Clue_Query(kActorSteele, kClueCrazysInvolvement)) {
 					Actor_Clue_Acquire(kActorMcCoy, kClueCrystalTestedCrazylegs, true, kActorSteele);
 					Actor_Clue_Acquire(kActorMcCoy, kClueCrystalArrestedCrazylegs,  true, kActorSteele);
 					Actor_Clue_Acquire(kActorMcCoy, kClueVKCrazylegsHuman,  true, kActorSteele);
 					Game_Flag_Set(kFlagCrazylegsArrested);
+				} else if (Game_Flag_Query(kFlagCrystalRetiredCrazylegs)) {
+					Actor_Clue_Acquire(kActorMcCoy, kClueCrystalRetiredCrazylegs, true, kActorSteele);
 				}
 				if (Actor_Clue_Query(kActorSteele, kClueVKRunciterReplicant)) {
-					Actor_Clue_Acquire(kActorMcCoy, kClueCrystalTestedRunciter, true, kActorSteele);
-					Actor_Clue_Acquire(kActorMcCoy, kClueVKRunciterHuman, true, -1);
+					if (Game_Flag_Query(kFlagRunciterIsReplicant)
+						&& Actor_Query_Goal_Number(kActorRunciter) != kGoalRunciterDead)  {
+						Actor_Clue_Acquire(kActorSteele, kClueCrystalRetiredRunciter1, true, kActorSteele);
+						Actor_Set_Goal_Number(kActorRunciter, kGoalRunciterDead);
+					} else {
+						Actor_Clue_Acquire(kActorMcCoy, kClueCrystalTestedRunciter, true, kActorSteele);
+						Actor_Clue_Acquire(kActorMcCoy, kClueVKRunciterHuman, true, -1);
+					}
 				}
 				if (Game_Flag_Query(kFlagZubenSpared)) {
 					Actor_Clue_Acquire(kActorMcCoy, kClueSightingZuben, true, kActorSteele);

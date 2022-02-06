@@ -444,6 +444,7 @@ void AIScriptSteele::EnteredSet(int setId) {
 			&& Actor_Query_Goal_Number(kActorRunciter) != kGoalRunciterDead)  {
 				Actor_Clue_Acquire(kActorSteele, kClueCrystalRetiredRunciter1, true, kActorSteele);
 				Actor_Set_Goal_Number(kActorRunciter, kGoalRunciterDead);
+				Game_Flag_Set(kFlagCrystalRetiredRunciter);
 			} else {
 				Actor_Clue_Acquire(kActorSteele, kClueCrystalTestedRunciter, true, kActorSteele);
 				Actor_Clue_Acquire(kActorSteele, kClueVKRunciterHuman, true, -1);
@@ -455,6 +456,7 @@ void AIScriptSteele::EnteredSet(int setId) {
 			&& Actor_Query_Goal_Number(kActorBulletBob) != kGoalBulletBobDead)  {
 				Actor_Clue_Acquire(kActorSteele, kClueCrystalRetiredBob, true, kActorSteele);
 				Actor_Set_Goal_Number(kActorBulletBob, kGoalBulletBobDead);
+				Game_Flag_Set(kFlagCrystalRetiredBulletBob);
 			} else {
 				Actor_Clue_Acquire(kActorSteele, kClueCrystalTestedBulletBob, true, kActorSteele);
 				Actor_Clue_Acquire(kActorSteele, kClueVKBobGorskyHuman, true, -1);

@@ -123,6 +123,18 @@ void SceneScriptKP07::InitializeScene() {
 			Actor_Put_In_Set(kActorLuther, kSetKP07);
 			Actor_Set_At_XYZ(kActorLuther, -47.0f, 0.0f, 151.0f, 531);
 		}
+		// Made it so Bullet bob will now be in the moonbus if he is a replicant and is alive. He will be leaning against a slanted
+		// wall at the front of the moobus.
+		if (_vm->_cutContent) {
+			if (Game_Flag_Query(kFlagBulletBobIsReplicant)) {
+				if (Actor_Query_Goal_Number(kActorBulletBob) < kGoalBulletBobGone) {
+					AI_Movement_Track_Flush(kActorBulletBob);
+					Global_Variable_Increment(kVariableReplicantsSurvivorsAtMoonbus, 1);
+					Actor_Put_In_Set(kActorBulletBob, kSetKP07);
+					Actor_Set_At_XYZ(kActorBulletBob, -85.71f, -41.29f, 65.11f, 240);
+				}
+			}
+		}
 	}
 #if BLADERUNNER_ORIGINAL_BUGS
 #else
