@@ -333,8 +333,13 @@ void SceneScriptRC04::dialogueWithBulletBob() {
 			Actor_Says(kActorBulletBob, 560, 37);
 			Actor_Says(kActorMcCoy, 5070, 13);
 			Actor_Says(kActorBulletBob, 570, 36);
-			Actor_Says(kActorBulletBob, 580, 37);
-			Actor_Says(kActorBulletBob, 590, 31);
+			Actor_Says(kActorBulletBob, 580, 37); // //14-0580.AUD	The humans weren't allowed to get that close to the flash point. 
+			// Restored a line.
+			if (_vm->_cutContent) {
+				Actor_Says(kActorMcCoy, 8190, 0);	// 00-8190.AUD	Why?
+				Actor_Says(kActorBulletBob, 1800, 36); //14-1800.AUD	You're gonna love this, McCoy. I couldn't believe it when I heard.
+			}
+			Actor_Says(kActorBulletBob, 590, 31); //14-0590.AUD	U.N. Command figured it out, because the Rep skin held up...
 			Actor_Says(kActorBulletBob, 600, 32);
 			Actor_Says(kActorBulletBob, 610, 30);
 			Actor_Says(kActorMcCoy, 5050, 16);
@@ -632,7 +637,7 @@ bool SceneScriptRC04::ClickedOnActor(int actorId) {
 				Actor_Says(kActorBulletBob, 1890, 36);
 				Actor_Says(kActorBulletBob, 1900, 35);
 				Actor_Says(kActorMcCoy, 8965, 16);
-				Actor_Says(kActorBulletBob, 1920, 36);
+				Actor_Says(kActorBulletBob, 1920, 36); //14-1920.AUD	Hey, Ray, relax! I'm your pal, ain't I?
 				Actor_Says(kActorBulletBob, 1930, 33); //14-1930.AUD	You don't have to step soft around me.
 				//Added in some dialogue that plays if McCoy is surly or erratic.
 				if (_vm->_cutContent) {
@@ -642,9 +647,6 @@ bool SceneScriptRC04::ClickedOnActor(int actorId) {
 						Delay (500);
 						Actor_Says(kActorBulletBob, 1830, 33); //14-1830.AUD	I'm hurt, McCoy. Deeply hurt. After all I've done for you.
 						Actor_Says(kActorMcCoy, 8519, 14); //00-8519.AUD	What do you say we dish each other the straight goods.
-						Actor_Says(kActorBulletBob, 1840, 36); //14-1840.AUD	Okay, okay, look.
-						Actor_Says(kActorBulletBob, 1850, 35); //14-1850.AUD	I didn't want to get you riled up for no reason but here's the real skinny.
-						Delay (500);
 					}
 				}
 				Actor_Says(kActorBulletBob, 1940, 36); //14-1940.AUD	The department's been infiltrated, right?

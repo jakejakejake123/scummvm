@@ -205,18 +205,20 @@ bool AIScriptBulletBob::GoalChanged(int currentGoalNumber, int newGoalNumber) {
 					// If Bullet Bob is a replicant and McCoy has discovered this when McCoy pulls his gun out this exchange will happen.
 					if (Game_Flag_Query(kFlagBulletBobIsReplicant)) {
 						Actor_Says(kActorBulletBob, 1780, 37); //14-1780.AUD	That's supposed to scare me?
-						Actor_Says(kActorMcCoy, 2215, 13); //00-2215.AUD	That’s right.
 						Actor_Says(kActorBulletBob, 1610, 37); //14-1610.AUD	I've had enough McCoy.
-						Actor_Change_Animation_Mode(kActorMcCoy, 5);
-						Actor_Says(kActorMcCoy, 8950, 13); //00-8950.AUD	Hold it right there!
+						Actor_Change_Animation_Mode(kActorMcCoy, 5); // McCoy points his gun at Bob.
+						Actor_Says(kActorMcCoy, 8950, -1); //00-8950.AUD	Hold it right there!
 						Actor_Says(kActorBulletBob, 1840, 37); //14-1840.AUD	Okay, okay, look.
 						Actor_Says(kActorBulletBob, 1850, 37); //14-1850.AUD	I didn't want to get you riled up for no reason but here's the real skinny.
-						Actor_Says(kActorMcCoy, 4320, 13); //00-4320.AUD	Save the pitch for someone who gives a shit.
+						Actor_Says(kActorMcCoy, 4320, -1); //00-4320.AUD	Save the pitch for someone who gives a shit.
+						Actor_Says(kActorBulletBob, 1600, 37); //14-1600.AUD	Is that right?
+						Actor_Says(kActorMcCoy, 2215, -1); //00-2215.AUD	That’s right.
+						Delay (1000);
 						Actor_Says(kActorBulletBob, 1440, 37); //14-1440.AUD	Why?
 						Delay (1000);
-						Actor_Says(kActorMcCoy, 6865, 13); //00-6865.AUD	You're a Replicant.
+						Actor_Says(kActorMcCoy, 6865, -1); //00-6865.AUD	You're a Replicant.
 						Delay (2000);
-						Actor_Says(kActorMcCoy, 840, 13); //00-0840.AUD	Did you hear me?
+						Actor_Says(kActorMcCoy, 840, -1); //00-0840.AUD	Did you hear me?
 						Delay (2000);
 						Actor_Says(kActorMcCoy, 180, 13); //00-0180.AUD	Bob?
 						// The player will gain control and will have a brief moment to shoot Bob as he speaks before Bob shoots them.
