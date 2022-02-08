@@ -129,7 +129,6 @@ void SceneScriptKP07::InitializeScene() {
 			if (Game_Flag_Query(kFlagBulletBobIsReplicant)) {
 				if (Actor_Query_Goal_Number(kActorBulletBob) < kGoalBulletBobGone) {
 					AI_Movement_Track_Flush(kActorBulletBob);
-					Global_Variable_Increment(kVariableReplicantsSurvivorsAtMoonbus, 1);
 					Actor_Put_In_Set(kActorBulletBob, kSetKP07);
 					Actor_Set_At_XYZ(kActorBulletBob, -85.71f, -41.29f, 65.11f, 240);
 				}

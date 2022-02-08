@@ -237,8 +237,10 @@ bool AIScriptBulletBob::GoalChanged(int currentGoalNumber, int newGoalNumber) {
 	}
 	if (_vm->_cutContent) {
 		// If Bullet Bob is a replicant and you shoot him you gain 200 chinyen and McCoy says easy money.
+		// Made it so this interaction only happens when you shoot Bob in his shop and not on the moonbus.
 		if ( newGoalNumber == kGoalBulletBobDead
-		&& Game_Flag_Query(kFlagBulletBobIsReplicant)) {
+		&& Game_Flag_Query(kFlagBulletBobIsReplicant)
+		&& Player_Query_Current_Scene() == kSceneRC04) {
 			Player_Set_Combat_Mode (false);
 			Actor_Voice_Over(920, kActorVoiceOver); //99-0920.AUD	Easy money.
 			Loop_Actor_Walk_To_XYZ(kActorMcCoy, 28.04, 0.32, 7.86, 0, false, false, false);
