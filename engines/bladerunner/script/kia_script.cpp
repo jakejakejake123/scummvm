@@ -966,7 +966,11 @@ void KIAScript::SCRIPT_KIA_DLL_Play_Clue_Asset_Script(int notUsed, int clueId) {
 		KIA_Play_Actor_Dialogue(kActorCrazylegs, 680); //09-0680.AUD	I told them to check back in a couple of days.
 		KIA_Play_Actor_Dialogue(kActorCrazylegs, 690); //09-0690.AUD	So, then they got looking at that Sedan.
 		KIA_Play_Actor_Dialogue(kActorMcCoy, 2015); //00-2015.AUD	You know how many years mandatory you’d get for selling a police Spinner?
-		KIA_Play_Actor_Dialogue(kActorCrazylegs, 700); //09-0700.AUD	I was gonna report them, if they showed up again.
+		if (!Game_Flag_Query(kFlagCrazylegsIsReplicant)) {
+			KIA_Play_Actor_Dialogue(kActorCrazylegs, 700); //09-0700.AUD	I was gonna report them, if they showed up again.
+		} else {
+			KIA_Play_Actor_Dialogue(kActorCrazylegs, 1100);	//09-1100.AUD	Whatever happened I was ignorant, McCoy.
+		}
 		KIA_Play_Actor_Dialogue(kActorMcCoy, 2020); //00-2020.AUD	Sure you were.
 	} else {
 		KIA_Play_Actor_Dialogue(kActorCrazylegs, 830); //09-0830.AUD	Oh-- Ooh, that Sedan.

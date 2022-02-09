@@ -953,11 +953,11 @@ enum Flags {
 	kFlagDR05ExplodedEntered                  = 511,
 	kFlagCrystalRetiredBulletBob			  = 512,
 	kFlagCrystalRetiredCrazylegs			  = 513,
-	// 514 is never used
+	kFlagCrazylegsDiscovered				  = 514, 
 	kFlagDR05ViewExplosion                    = 515,
 	kFlagCT07ZubenAttack                      = 516,
-	// 517 is never used
-	// 518 is never used
+	kFlagCrazylegsDead						  = 517,
+	kFlagCrazylegsSpared					  = 518,
 	kFlagTB06DogCollarTaken                   = 519,
 	kFlagTB06KitchenBoxTaken                  = 520,
 	kFlagHC03TrapDoorOpened                   = 521,

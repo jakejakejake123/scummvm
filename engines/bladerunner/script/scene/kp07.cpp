@@ -134,6 +134,16 @@ void SceneScriptKP07::InitializeScene() {
 				}
 			}
 		}
+		// Made it so Crazylegs appears in the moonbus if he is a replicant and is alive.
+		if (_vm->_cutContent) {
+			if (Game_Flag_Query(kFlagCrazylegsIsReplicant)) {
+				if (!Game_Flag_Query(kFlagCrazylegsDead)) {
+					AI_Movement_Track_Flush(kActorCrazylegs);
+					Actor_Put_In_Set(kActorCrazylegs, kSetKP07);
+					Actor_Set_At_XYZ(kActorCrazylegs, 34.43f, -41.62f, 13.16f, 921);
+				}
+			}
+		}
 	}
 #if BLADERUNNER_ORIGINAL_BUGS
 #else

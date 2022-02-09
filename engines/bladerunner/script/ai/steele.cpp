@@ -431,10 +431,15 @@ void AIScriptSteele::EnteredSet(int setId) {
 			return; //true;
 		}
 		if (Actor_Clue_Query(kActorSteele, kClueCrazysInvolvement)) {
-			Actor_Clue_Acquire(kActorSteele, kClueCrystalTestedCrazylegs, true, kActorSteele);
-			Actor_Clue_Acquire(kActorSteele, kClueCrystalArrestedCrazylegs,  true, kActorSteele);
-			Actor_Clue_Acquire(kActorSteele, kClueVKCrazylegsHuman,  true, kActorSteele);
-			Game_Flag_Set(kFlagCrazylegsArrested);
+			if (!Game_Flag_Query(kFlagCrazylegsIsReplicant)) {
+				Actor_Clue_Acquire(kActorSteele, kClueCrystalTestedCrazylegs, true, kActorSteele);
+				Actor_Clue_Acquire(kActorSteele, kClueCrystalArrestedCrazylegs,  true, kActorSteele);
+				Actor_Clue_Acquire(kActorSteele, kClueVKCrazylegsHuman,  true, kActorSteele);
+				Game_Flag_Set(kFlagCrazylegsArrested); 
+			} else {
+				Actor_Clue_Acquire(kActorSteele, kClueCrystalRetiredCrazylegs, true, kActorSteele);
+				Actor_Set_Goal_Number(kActorCrazylegs, kGoalCrazyLegsLeavesShowroom);
+			}
 			return;	
 		}
 		// Added in code so if Steele receives the Runciter is replicant Vk result and Runciter is a replicant and alive she retires him

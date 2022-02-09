@@ -96,10 +96,33 @@ void AIScriptCrazylegs::OtherAgentEnteredCombatMode(int otherActorId, int combat
 			Actor_Says(kActorCrazylegs, 450, 3);
 			Actor_Set_Goal_Number(kActorCrazylegs, kGoalCrazyLegsMcCoyDrewHisGun);
 		} else if (Actor_Query_Goal_Number(kActorCrazylegs) == kGoalCrazyLegsMcCoyDrewHisGun) {
-			Actor_Face_Actor(kActorCrazylegs, kActorMcCoy, true);
-			Actor_Says(kActorCrazylegs, 460, 3);
-			Actor_Says(kActorCrazylegs, 470, 3);
-			Actor_Set_Goal_Number(kActorCrazylegs, kGoalCrazyLegsLeavesShowroom);
+			// Made it so McCoy can spare Crazylegs as he tries to flee by putting his gun away. Sadly I couldn't get this to work because when McCoy puts his gun away 
+			// the scene doesn't trigger, so maybe you could fix it.
+			if (_vm->_cutContent) {
+				if (Game_Flag_Query(kFlagCrazylegsDiscovered)) {
+					Actor_Set_Goal_Number(kActorCrazylegs, kGoalCrazyLegsDefault);
+					Actor_Face_Actor(kActorMcCoy, kActorCrazylegs, true);
+					Actor_Says(kActorMcCoy, 455, 13); //00-0455.AUD	Relax. Nobody's gonna get retired. Okay?
+					Actor_Face_Actor(kActorCrazylegs, kActorMcCoy, true);
+					Actor_Says(kActorCrazylegs, 40, 37); //09-0040.AUD	Ray, I-- I always liked you…
+					Actor_Says(kActorCrazylegs, 50, 37); //09-0050.AUD	True, I hardly know you. You seem like a stand up guy.
+					Actor_Says(kActorMcCoy, 2860, 14); //00-2860.AUD	You take care of yourself.
+					Game_Flag_Set(kFlagMcCoyIsHelpingReplicants);
+					Game_Flag_Reset(kFlagCrazylegsDiscovered);
+					Game_Flag_Set(kFlagCrazylegsSpared);
+					Actor_Set_Targetable(kActorCrazylegs, false);
+				} else {
+					Actor_Face_Actor(kActorCrazylegs, kActorMcCoy, true);
+					Actor_Says(kActorCrazylegs, 460, 3);
+					Actor_Says(kActorCrazylegs, 470, 3);
+					Actor_Set_Goal_Number(kActorCrazylegs, kGoalCrazyLegsLeavesShowroom);
+				}
+			} else {
+				Actor_Face_Actor(kActorCrazylegs, kActorMcCoy, true);
+				Actor_Says(kActorCrazylegs, 460, 3);
+				Actor_Says(kActorCrazylegs, 470, 3);
+				Actor_Set_Goal_Number(kActorCrazylegs, kGoalCrazyLegsLeavesShowroom);
+			}
 		}
 	}
 }
@@ -112,8 +135,15 @@ void AIScriptCrazylegs::ShotAtAndMissed() {
 }
 
 bool AIScriptCrazylegs::ShotAtAndHit() {
+	if (Player_Query_Current_Scene() == kSceneHF05) {
 	Actor_Set_Goal_Number(kActorCrazylegs, kGoalCrazyLegsShotAndHit);
-	Actor_Says(kActorMcCoy, 1875, 4);  // I wouldn't drag that bucket of bolts if you paid me.
+	// Made it so when you shoot Crazylegs McCoy immediately appears outside the shop. This is because Crazylegs has no death animation.
+	// McCoy will say a couple of things and the player will receive 200 chinyen.
+	Game_Flag_Set(kFlagCrazylegsDead);
+	Player_Set_Combat_Mode(false);
+	Game_Flag_Set(kFlagHF05toHF01);
+	Set_Enter(kSetHF01, kSceneHF01);
+	}
 	return false;
 }
 
