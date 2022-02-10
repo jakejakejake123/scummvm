@@ -140,6 +140,7 @@ bool AIScriptCrazylegs::ShotAtAndHit() {
 	// Made it so when you shoot Crazylegs McCoy immediately appears outside the shop. This is because Crazylegs has no death animation.
 	// McCoy will say a couple of things and the player will receive 200 chinyen.
 	Game_Flag_Set(kFlagCrazylegsDead);
+	Game_Flag_Set(kFlagCrazylegsShot);
 	Player_Set_Combat_Mode(false);
 	Game_Flag_Set(kFlagHF05toHF01);
 	Set_Enter(kSetHF01, kSceneHF01);

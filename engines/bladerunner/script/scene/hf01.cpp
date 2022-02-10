@@ -483,12 +483,13 @@ void SceneScriptHF01::PlayerWalkedIn() {
 	}
 	// After McCoy shoots Crazylegs and appears outside he will say a couple of things and receive 200 chinyen.
 	if (_vm->_cutContent) {
-		if (Game_Flag_Query(kFlagCrazylegsDead)) {
+		if (Game_Flag_Query(kFlagCrazylegsShot)) {
 			Game_Flag_Reset(kFlagCrazylegsArrestedTalk);
 			Actor_Voice_Over(1410, kActorVoiceOver); //99-1410.AUD	I’d retired another Replicant so more money was headed my way but I didn’t feel so good about it.
 			Actor_Voice_Over(1670, kActorVoiceOver); //99-1670.AUD	Still it was a hell of a way to go.
 			Music_Play(kMusicBRBlues, 52, 0, 2, -1, kMusicLoopPlayOnce, 0);
 			Actor_Set_Goal_Number(kActorCrazylegs, kGoalCrazyLegsLeavesShowroom);
+			Game_Flag_Reset(kFlagCrazylegsShot);
 			if (Query_Difficulty_Level() != kGameDifficultyEasy) {
 				Global_Variable_Increment (kVariableChinyen, 200);
 			}		

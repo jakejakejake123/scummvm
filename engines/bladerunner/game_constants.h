@@ -980,7 +980,7 @@ enum Flags {
 	kFlagCT09Entered                          = 538,
 	kFlagCT09LeonInterrupted                  = 539,
 	kFlagCT09DeskClerkTalk                    = 540,
-	// 541 is never used
+	kFlagCrazylegsShot						  = 541,
 	kFlagClovisChapter4Started                = 542,
 	kFlagGordoTalk1                           = 543,
 	kFlagGordoTalk2                           = 544,
