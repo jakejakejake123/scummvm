@@ -460,6 +460,9 @@ bool AIScriptOfficerGrayford::ShotAtAndHit() {
 void AIScriptOfficerGrayford::Retired(int byActorId) {
 	Actor_Set_Goal_Number(kActorOfficerGrayford, kGoalOfficerGrayfordDead);
 	Game_Flag_Set(kFlagMcCoyRetiredHuman);
+	if (_vm->_cutContent) {
+		Game_Flag_Set(kFlagOfficerGrayfordShot);
+	}
 }
 
 int AIScriptOfficerGrayford::GetFriendlinessModifierIfGetsClue(int otherActorId, int clueId) {

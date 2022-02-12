@@ -347,22 +347,58 @@ bool AIScriptGaff::GoalChanged(int currentGoalNumber, int newGoalNumber) {
 		Actor_Says(kActorGaff, 120, 16);
 		Actor_Says(kActorGaff, 130, 13);
 		Actor_Says(kActorMcCoy, 2950, kAnimationModeTalk);
-		Actor_Says(kActorMcCoy, 2955, 16);
-		Actor_Says_With_Pause(kActorGaff, 140, 1.0f, 14);
-		Loop_Actor_Walk_To_Actor(kActorMcCoy, kActorGaff, 36, false, false);
-		Actor_Says(kActorGaff, 150, kAnimationModeTalk);
-		Actor_Says(kActorMcCoy, 2960, 12);
-		Actor_Says_With_Pause(kActorGaff, 160, 1.0f, 16);
-		Actor_Says(kActorMcCoy, 2965, 13);
-		Actor_Says_With_Pause(kActorGaff, 170, 1.0f, kAnimationModeTalk);
-		Actor_Says_With_Pause(kActorGaff, 180, 1.0f, 12);
-		Actor_Says(kActorGaff, 190, 14);
-		Actor_Says(kActorGaff, 200, 15);
-		Async_Actor_Walk_To_XYZ(kActorGaff, -388.44f, -162.8f, 165.08f, false, false);
-		Delay(4000);
-		Player_Gains_Control();
-		Actor_Start_Speech_Sample(kActorGaff, 210);
-		Actor_Set_Goal_Number(kActorGaff, kGoalGaffMA07Left);
+		Actor_Says(kActorMcCoy, 2955, 16); //00-2955.AUD	You're looking for me, too, Gaff?
+		// Made it so Gaff shoots McCoy if McCoy killed either Leary or Grayford. I mean Gaff is in a good mood but not a ignoring the murder of two 
+		// police officers good mood. He will let the murder of Runciter and Guzza slide however.
+		if (_vm->_cutContent) {
+			if (Game_Flag_Query(kFlagOfficerGrayfordShot) 
+					|| Game_Flag_Query(kFlagOfficerLearyShot)) {
+				Actor_Says(kActorGaff, 190, kAnimationModeTalk); //53-0190.AUD	It's like I said before. You retire a human, your career is over.
+				Actor_Says(kActorGaff, 200, kAnimationModeTalk); //53-0200.AUD	Your life too, maybe.
+				Actor_Says(kActorMcCoy, 7835, 18); //00-7835.AUD	Is that so?
+				Delay (1000);
+				Actor_Says(kActorMcCoy, 8990, 14); //00-8990.AUD	What have you got there?
+				Delay (1000);
+				Actor_Says(kActorMcCoy, 1800, 15); //00-1800.AUD	No, wait!
+				Sound_Play(kSfxLGCAL1, 100, 0, 0, 50);
+				Actor_Force_Stop_Walking(kActorMcCoy);
+				Actor_Change_Animation_Mode(kActorMcCoy, kAnimationModeDie);
+				Player_Loses_Control();
+				Actor_Retired_Here(kActorMcCoy, 6, 6, true, kActorGaff);
+			} else {
+				Actor_Says_With_Pause(kActorGaff, 140, 1.0f, 14);
+				Loop_Actor_Walk_To_Actor(kActorMcCoy, kActorGaff, 36, false, false);
+				Actor_Says(kActorGaff, 150, kAnimationModeTalk);
+				Actor_Says(kActorMcCoy, 2960, 12);
+				Actor_Says_With_Pause(kActorGaff, 160, 1.0f, 16);
+				Actor_Says(kActorMcCoy, 2965, 13);
+				Actor_Says_With_Pause(kActorGaff, 170, 1.0f, kAnimationModeTalk);
+				Actor_Says_With_Pause(kActorGaff, 180, 1.0f, 12);
+				Actor_Says(kActorGaff, 190, 14);
+				Actor_Says(kActorGaff, 200, 15);
+				Async_Actor_Walk_To_XYZ(kActorGaff, -388.44f, -162.8f, 165.08f, false, false);
+				Delay(4000);
+				Player_Gains_Control();
+				Actor_Start_Speech_Sample(kActorGaff, 210);
+				Actor_Set_Goal_Number(kActorGaff, kGoalGaffMA07Left);
+			}
+		} else {
+			Actor_Says_With_Pause(kActorGaff, 140, 1.0f, 14);
+			Loop_Actor_Walk_To_Actor(kActorMcCoy, kActorGaff, 36, false, false);
+			Actor_Says(kActorGaff, 150, kAnimationModeTalk);
+			Actor_Says(kActorMcCoy, 2960, 12);
+			Actor_Says_With_Pause(kActorGaff, 160, 1.0f, 16);
+			Actor_Says(kActorMcCoy, 2965, 13);
+			Actor_Says_With_Pause(kActorGaff, 170, 1.0f, kAnimationModeTalk);
+			Actor_Says_With_Pause(kActorGaff, 180, 1.0f, 12);
+			Actor_Says(kActorGaff, 190, 14);
+			Actor_Says(kActorGaff, 200, 15);
+			Async_Actor_Walk_To_XYZ(kActorGaff, -388.44f, -162.8f, 165.08f, false, false);
+			Delay(4000);
+			Player_Gains_Control();
+			Actor_Start_Speech_Sample(kActorGaff, 210);
+			Actor_Set_Goal_Number(kActorGaff, kGoalGaffMA07Left);
+		}
 		return true;
 
 	case kGoalGaffMA07Left:
