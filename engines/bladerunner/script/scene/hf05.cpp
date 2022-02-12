@@ -581,9 +581,6 @@ void SceneScriptHF05::dialogueWithCrazylegs1() {
 			// CrazyLegs cuts his sentence short here. He is not interrupted.
 			Actor_Says(kActorCrazylegs, 560, 15); //09-0560.AUD	I didn’t know! I mean it. I was just trying to make a sale--
 			Actor_Says(kActorCrazylegs, 570, 16); //09-0570.AUD	Hey, they came to me first. I didn’t go to them.
-			// Added in some dialogue.
-			Actor_Says(kActorMcCoy, 3910, 16); //00-3910.AUD	You’re lying.
-			Actor_Says(kActorCrazylegs, 1170, 14); //09-1170.AUD	I might lie about a sticker price but not about this.
 		}
 		Delay (2000);
 		Actor_Says(kActorMcCoy, 1950, 17); //00-1950.AUD	Unscrupulous businessman, eh?
@@ -591,56 +588,57 @@ void SceneScriptHF05::dialogueWithCrazylegs1() {
 		break;
 
 	case 1190: // WOMAN
-		Actor_Says(kActorMcCoy, 1895, kAnimationModeIdle);
-		Actor_Says(kActorCrazylegs, 620, kAnimationModeTalk);
-		Actor_Says(kActorCrazylegs, 630, 12);
-		Actor_Says(kActorMcCoy, 2000, 13);
-		Actor_Says(kActorCrazylegs, 640, 14);
-		Actor_Says(kActorCrazylegs, 650, 15);
-		Actor_Says(kActorCrazylegs, 660, 16);
-		Actor_Says(kActorMcCoy, 2005, kAnimationModeIdle);
-		Actor_Says(kActorMcCoy, 2010, kAnimationModeTalk);
-		Actor_Says(kActorCrazylegs, 670, kAnimationModeTalk);
-		Actor_Says(kActorCrazylegs, 680, 12);
-		Actor_Says(kActorCrazylegs, 690, 14); //09-0690.AUD	So, then they got looking at that Sedan.
-		Actor_Says(kActorMcCoy, 2015, 14); //00-2015.AUD	You know how many years mandatory you’d get for selling a police Spinner?
-		// Made it so Crazylegs doesn't say he was going to report the reps if he is a rep himself.  
-		if (!Game_Flag_Query(kFlagCrazylegsIsReplicant)) {
-			Actor_Says(kActorCrazylegs, 700, 15); //09-0700.AUD	I was gonna report them, if they showed up again.
-		} else {
-			Actor_Says(kActorCrazylegs, 1100, 15);	//09-1100.AUD	Whatever happened I was ignorant, McCoy.
-		}
-		Actor_Says(kActorMcCoy, 2020, 18); //00-2020.AUD	Sure you were.
-		// Made it so the crazylegs interview 1 clue is for this dialogue instead. The reason is it contains a lot more information than the car registration topic.
-		// I mean not only does Crazy describe Dektora in this topic, but he also mentions Gordo and how they asked for a police spinner. Pretty relevant information.
+		Actor_Says(kActorMcCoy, 1895, kAnimationModeIdle); //00-1895.AUD	I gotta know more about the woman, Crazy.
+		// Made it so if Crazylegs is a replicant he will not tell you any further information about Dektora.
 		if (_vm->_cutContent) {
-			Actor_Clue_Acquire(kActorMcCoy, kClueCrazylegsInterview1, true, kActorCrazylegs);
+			if (Game_Flag_Query(kFlagCrazylegsIsReplicant)) {
+				Actor_Says(kActorCrazylegs, 1160, 16); //09-1160.AUD	Take a ride, McCoy. I already told you everything.
+				Actor_Says(kActorMcCoy, 5075, 18); //00-5075.AUD	Hey, pal.
+			} else {
+				Actor_Says(kActorCrazylegs, 620, kAnimationModeTalk); //09-0620.AUD	Like I said, she was tall and blonde. Real woo bait.
+				Actor_Says(kActorCrazylegs, 630, 12); //09-0630.AUD	She was tooling around with a short guy in a bow tie.
+				Actor_Says(kActorMcCoy, 2000, 13); //00-2000.AUD	And she wanted a car.
+				Actor_Says(kActorCrazylegs, 640, 14);
+				Actor_Says(kActorCrazylegs, 650, 15);
+				Actor_Says(kActorCrazylegs, 660, 16);
+				Actor_Says(kActorMcCoy, 2005, kAnimationModeIdle);
+				Actor_Says(kActorMcCoy, 2010, kAnimationModeTalk);
+				Actor_Says(kActorCrazylegs, 670, kAnimationModeTalk);
+				Actor_Says(kActorCrazylegs, 680, 12);
+				Actor_Says(kActorCrazylegs, 690, 14); //09-0690.AUD	So, then they got looking at that Sedan.
+				Actor_Says(kActorMcCoy, 2015, 14); //00-2015.AUD	You know how many years mandatory you’d get for selling a police Spinner?
+				Actor_Says(kActorCrazylegs, 700, 15); //09-0700.AUD	I was gonna report them, if they showed up again.
+				Actor_Says(kActorMcCoy, 2020, 18); //00-2020.AUD	Sure you were.
+				// Made it so the crazylegs interview 1 clue is for this dialogue instead. The reason is it contains a lot more information than the car registration topic.
+				// I mean not only does Crazy describe Dektora in this topic, but he also mentions Gordo and how they asked for a police spinner. Pretty relevant information.
+				Actor_Clue_Acquire(kActorMcCoy, kClueCrazylegsInterview1, true, kActorCrazylegs);
+				// Inserted a flag to make the womans photo option available.
+				Game_Flag_Set(kFlagCrazylegsTalkWoman);
+			} 
+		} else {
+			Actor_Says(kActorCrazylegs, 620, kAnimationModeTalk); //09-0620.AUD	Like I said, she was tall and blonde. Real woo bait.
+			Actor_Says(kActorCrazylegs, 630, 12); //09-0630.AUD	She was tooling around with a short guy in a bow tie.
+			Actor_Says(kActorMcCoy, 2000, 13); //00-2000.AUD	And she wanted a car.
+			Actor_Says(kActorCrazylegs, 640, 14);
+			Actor_Says(kActorCrazylegs, 650, 15);
+			Actor_Says(kActorCrazylegs, 660, 16);
+			Actor_Says(kActorMcCoy, 2005, kAnimationModeIdle);
+			Actor_Says(kActorMcCoy, 2010, kAnimationModeTalk);
+			Actor_Says(kActorCrazylegs, 670, kAnimationModeTalk);
+			Actor_Says(kActorCrazylegs, 680, 12);
+			Actor_Says(kActorCrazylegs, 690, 14); //09-0690.AUD	So, then they got looking at that Sedan.
+			Actor_Says(kActorMcCoy, 2015, 14); //00-2015.AUD	You know how many years mandatory you’d get for selling a police Spinner?
+			Actor_Says(kActorCrazylegs, 700, 15); //09-0700.AUD	I was gonna report them, if they showed up again.
+			Actor_Says(kActorMcCoy, 2020, 18); //00-2020.AUD	Sure you were.
 		}
-		// Inserted a flag to make the womans photo option available.
-		Game_Flag_Set(kFlagCrazylegsTalkWoman);
 		break;
 
 	case 1200: // WOMAN'S PHOTO
 		Actor_Says(kActorMcCoy, 1900, 23);
-		// Made it so Crazylegs doesn't tell McCoy he recognises Dektora if he is a rep. Being a replicant Crazylegs is way more protective of the reps.
-		if (_vm->_cutContent) {
-			if (Game_Flag_Query(kFlagCrazylegsIsReplicant)) {
-				Actor_Says(kActorCrazylegs, 750, 15); //09-0750.AUD	She looks kinda familiar.
-				Actor_Says(kActorMcCoy, 410, 18); //00-0410.AUD	Think hard.
-				Actor_Says(kActorCrazylegs, 1160, 16); //09-1160.AUD	Take a ride, McCoy. I already told you everything.
-				Actor_Says(kActorMcCoy, 5075, 18); //00-5075.AUD	Hey, pal.
-			} else {
-				Actor_Says(kActorCrazylegs, 710, 16);
-				Actor_Says(kActorMcCoy, 2025, kAnimationModeIdle);
-				Actor_Says(kActorCrazylegs, 720, kAnimationModeTalk);
-				Actor_Says(kActorCrazylegs, 730, 12);
-			}
-		} else {
-			Actor_Says(kActorCrazylegs, 710, 16);
-			Actor_Says(kActorMcCoy, 2025, kAnimationModeIdle);
-			Actor_Says(kActorCrazylegs, 720, kAnimationModeTalk);
-			Actor_Says(kActorCrazylegs, 730, 12);
-		}
+		Actor_Says(kActorCrazylegs, 710, 16);
+		Actor_Says(kActorMcCoy, 2025, kAnimationModeIdle);
+		Actor_Says(kActorCrazylegs, 720, kAnimationModeTalk);
+		Actor_Says(kActorCrazylegs, 730, 12);
 		break;
 
 	case 1210: // LUCY'S PHOTO
@@ -710,15 +708,13 @@ void SceneScriptHF05::dialogueWithCrazylegs1() {
 			Actor_Says(kActorCrazylegs, 820, kAnimationModeTalk);
 			Actor_Says(kActorMcCoy, 2075, 13); //00-2075.AUD	I’ve seen the registration. I know a woman bought it from you.
 			// Made it so Crazylegs is more resilient to answering McCoys question about the car registration if he is a replicant, but Crazylegs eventually relents
-			// when McCoy threatens him.
+			// when McCoy puts pressure on him.
 			if (_vm->_cutContent) {
 				if (Game_Flag_Query(kFlagCrazylegsIsReplicant)) {
 					Actor_Says(kActorCrazylegs, 1120, 15); //09-1120.AUD	I don’t know what you’re talking about.
 					Actor_Says(kActorMcCoy, 3910, 19); //00-3910.AUD	You’re lying. 
 					Actor_Says(kActorCrazylegs, 1170, 16); //09-1170.AUD	I might lie about a sticker price but not about this.
-					Actor_Says(kActorMcCoy, 5065, 14); //00-5065.AUD	Is that right?
-					Actor_Says(kActorCrazylegs, 720, kAnimationModeTalk); //09-0720.AUD	Uh-huh.
-					Actor_Says(kActorMcCoy, 8519, 14);//00-8519.AUD	What do you say we dish each other the straight goods.
+					Actor_Says(kActorMcCoy, 6985, 14);//00-6985.AUD	Got the straight scoop for me or what?
 					Delay (1000);
 				} 
 			}
@@ -752,7 +748,7 @@ void SceneScriptHF05::dialogueWithCrazylegs1() {
 					Actor_Says(kActorCrazylegs, 550, 15); //09-0550.AUD	That’s impossible.
 					Actor_Says(kActorMcCoy, 3910, 13);//00-3910.AUD	You’re lying.
 					Actor_Says(kActorCrazylegs, 1170, 16); //09-1170.AUD	I might lie about a sticker price but not about this.
-					Actor_Says(kActorMcCoy, 8519, 14);//00-8519.AUD	What do you say we dish each other the straight goods.
+					Actor_Says(kActorMcCoy, 6985, 14);//00-6985.AUD	Got the straight scoop for me or what?
 					Delay (1000);
 				}
 			}
