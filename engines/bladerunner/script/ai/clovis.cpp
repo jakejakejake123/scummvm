@@ -169,6 +169,12 @@ bool AIScriptClovis::ShotAtAndHit() {
 		if (Actor_Query_Goal_Number(kActorClovis) == kGoalClovisKP07SayFinalWords) {
 			ADQ_Flush();
 			Actor_Set_Goal_Number(kActorClovis, kGoalClovisGone);
+			// Added in some extra code here because I altered some other code which may have disabled these two lines in another code sheet,
+			// so I put these lines here just in case.
+			if (_vm->_cutContent) {
+				Actor_Change_Animation_Mode(kActorClovis, kAnimationModeHit);
+				Actor_Retired_Here(kActorClovis, 12, 48, true, -1);
+			}
 			shotAnim();
 			Actor_Set_Targetable(kActorClovis, false);
 			ADQ_Add(kActorMcCoy, 2340, -1);
@@ -481,7 +487,44 @@ bool AIScriptClovis::GoalChanged(int currentGoalNumber, int newGoalNumber) {
 		Actor_Set_Goal_Number(kActorClovis, kGoalClovisKP07SayFinalWords);
 		return true;
 
-	case kGoalClovisKP07SayFinalWords:
+	case kGoalClovisKP07SayFinalWords:	
+	// Made it so Clovis will shoot McCoy if he retired either Lucy or Dektora. If McCoy didn't retire them Clovis will let him live. Also made it so McCoy
+	// walks to the foot of Clovis' bed as he reads the poetry. This is so Clovis will be able to shoot McCoy and since I couldn't get the shooting animation to work
+	// for Clovis he is partially obscured by McCoy making it look like Clovis shot him dead with his final breath during his dying animation.	
+		if (_vm->_cutContent) {
+			Actor_Change_Animation_Mode(kActorClovis, 54);
+			Loop_Actor_Walk_To_XYZ(kActorMcCoy, 54.09, -42.70, -148.65, 0, false, false, false);
+			Actor_Face_Actor(kActorMcCoy, kActorClovis, true);
+			Actor_Says(kActorClovis, 240, -1);
+			Actor_Says(kActorClovis, 250, -1);
+			Actor_Says(kActorClovis, 260, -1);
+			Actor_Says(kActorClovis, 270, -1);
+			Delay (1000);
+			Actor_Says(kActorClovis, 280, -1);
+			Actor_Says(kActorClovis, 290, -1);
+			Actor_Says(kActorClovis, 300, -1);
+		if (Actor_Clue_Query(kActorClovis, kClueMcCoyRetiredLucy) 
+			|| Actor_Clue_Query(kActorClovis, kClueMcCoyRetiredDektora)) {
+			Actor_Change_Animation_Mode(kActorClovis, 54);
+			Loop_Actor_Walk_To_XYZ(kActorMcCoy, 54.09, -42.70, -148.65, 0, false, false, false);
+			Delay (1000);
+			Actor_Says(kActorMcCoy, 8990, 13); //00-8990.AUD	What have you got there?
+			Delay (1000);
+			Actor_Says(kActorMcCoy, 1800, 14); //00-1800.AUD	No, wait!
+			Sound_Play(kSfxLGCAL1, 100, 0, 0, 50);
+			Actor_Force_Stop_Walking(kActorMcCoy);
+			Actor_Change_Animation_Mode(kActorMcCoy, kAnimationModeDie);
+			Actor_Change_Animation_Mode(kActorClovis, 21);
+			Player_Loses_Control();
+			Actor_Retired_Here(kActorMcCoy, 6, 6, true, kActorClovis);
+			} else {
+			Actor_Set_Targetable(kActorClovis, false);
+			Actor_Change_Animation_Mode(kActorClovis, kAnimationModeHit);
+			Actor_Retired_Here(kActorClovis, 12, 48, true, -1);
+			Actor_Set_Goal_Number(kActorClovis, kGoalClovisGone);
+			Player_Gains_Control();
+			}
+		} else {
 		ADQ_Add(kActorClovis, 240, -1);
 		ADQ_Add(kActorClovis, 250, -1);
 		ADQ_Add(kActorClovis, 260, -1);
@@ -490,6 +533,7 @@ bool AIScriptClovis::GoalChanged(int currentGoalNumber, int newGoalNumber) {
 		ADQ_Add(kActorClovis, 280, -1);
 		ADQ_Add(kActorClovis, 290, -1);
 		ADQ_Add(kActorClovis, 300, -1);
+		}
 		return true;
 
 	case kGoalClovisKP07FlyAway:

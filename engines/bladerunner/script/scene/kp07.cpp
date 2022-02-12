@@ -344,11 +344,15 @@ void SceneScriptKP07::PlayerWalkedOut() {
 }
 
 void SceneScriptKP07::DialogueQueueFlushed(int a1) {
-	if (Actor_Query_Goal_Number(kActorClovis) == kGoalClovisKP07SayFinalWords) {
-		Actor_Set_Targetable(kActorClovis, false);
-		Actor_Change_Animation_Mode(kActorClovis, kAnimationModeHit);
-		Actor_Retired_Here(kActorClovis, 12, 48, true, -1);
-		Actor_Set_Goal_Number(kActorClovis, kGoalClovisGone);
+	// Made sure that this code only plays in the origianl mode since it interferes with the scene where Clovis shoots McCoy by making
+	// Clovis die before he has a chance to shoot.
+	if (!_vm->_cutContent) {
+		if (Actor_Query_Goal_Number(kActorClovis) == kGoalClovisKP07SayFinalWords) {
+			Actor_Set_Targetable(kActorClovis, false);
+			Actor_Change_Animation_Mode(kActorClovis, kAnimationModeHit);
+			Actor_Retired_Here(kActorClovis, 12, 48, true, -1);
+			Actor_Set_Goal_Number(kActorClovis, kGoalClovisGone);
+		}
 	}
 }
 
