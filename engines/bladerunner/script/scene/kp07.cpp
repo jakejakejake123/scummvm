@@ -144,6 +144,16 @@ void SceneScriptKP07::InitializeScene() {
 				}
 			}
 		}
+		// Made it so Early Q appears in the moonbus if he is a replicant and is alive.
+		if (_vm->_cutContent) {
+			if (Game_Flag_Query(kFlagEarlyQIsReplicant)) {
+				if (!Game_Flag_Query(kFlagEarlyQDead)) {
+					AI_Movement_Track_Flush(kActorEarlyQ);
+					Actor_Put_In_Set(kActorEarlyQ, kSetKP07);
+					Actor_Set_At_XYZ(kActorEarlyQ, -58.84f, -42.70f, -142.27f, 240);
+				}
+			}
+		}
 	}
 #if BLADERUNNER_ORIGINAL_BUGS
 #else

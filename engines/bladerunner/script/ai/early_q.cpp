@@ -347,16 +347,42 @@ bool AIScriptEarlyQ::GoalChanged(int currentGoalNumber, int newGoalNumber) {
 		Actor_Face_Actor(kActorMcCoy, kActorEarlyQ, true);
 		Actor_Change_Animation_Mode(kActorMcCoy, kAnimationModeCombatIdle);
 		_vm->_aiScripts->callChangeAnimationMode(kActorMcCoy, kAnimationModeCombatAim);
-		Actor_Says(kActorEarlyQ, 130, kAnimationModeTalk);
-		Actor_Says(kActorMcCoy, 3400, kAnimationModeCombatAim);
-		Actor_Says_With_Pause(kActorEarlyQ, 140, 1.0f, kAnimationModeTalk);
-		Actor_Says_With_Pause(kActorEarlyQ, 150, 1.0f, kAnimationModeTalk);
-		Actor_Says(kActorMcCoy, 3405, kAnimationModeCombatAim);
-		Actor_Says(kActorEarlyQ, 160, kAnimationModeTalk);
-		Actor_Says(kActorMcCoy, 3410, kAnimationModeCombatAim);
-		_vm->_aiScripts->callChangeAnimationMode(kActorMcCoy, kAnimationModeCombatIdle);
-		Loop_Actor_Walk_To_XYZ(kActorMcCoy, 31.22f, 0.0f, 267.51f, 0, true, false, false);
-		Actor_Set_Goal_Number(kActorEarlyQ, kGoalEarlyQNR04SitDown);
+		// Made it so when Early Q is a replicant and McCoy pulls his gun on Early Q he won't give up Dektora and the reps. Instead Early Q will remain calm and try to bargain with Mccoy.
+		if (_vm->_cutContent) {
+			if (Game_Flag_Query(kFlagEarlyQIsReplicant)) {		
+				Actor_Says(kActorMcCoy, 8950, kAnimationModeCombatAim); //00-8950.AUD	Hold it right there!
+				Delay (1000);
+				Actor_Says(kActorMcCoy, 3400, kAnimationModeCombatAim); //00-3400.AUD	Cough up some dirt, Early. Or I’m taking this disc downtown.
+				Actor_Says(kActorEarlyQ, 90, kAnimationModeTalk); //18-0090.AUD	Well, it’s your lucky day, McCoy. You’re in the garden of earthly delights. See, I bet we can find something to wet your wick.
+				Actor_Says(kActorMcCoy, 3405, kAnimationModeCombatAim); //00-3405.AUD	Sit down.
+				Actor_Says(kActorEarlyQ, 160, kAnimationModeTalk); //18-0160.AUD	I’ll throw in a night with one of my dancers.
+				Actor_Says(kActorMcCoy, 3410, kAnimationModeCombatAim); //00-3410.AUD	Sit down!
+				_vm->_aiScripts->callChangeAnimationMode(kActorMcCoy, kAnimationModeCombatIdle);
+				Loop_Actor_Walk_To_XYZ(kActorMcCoy, 31.22f, 0.0f, 267.51f, 0, true, false, false);
+				Actor_Set_Goal_Number(kActorEarlyQ, kGoalEarlyQNR04SitDown);
+			} else {
+				Actor_Says(kActorEarlyQ, 130, kAnimationModeTalk); //18-0130.AUD	(grunts) Whoa!
+				Actor_Says(kActorMcCoy, 3400, kAnimationModeCombatAim); ////00-3400.AUD	Cough up some dirt, Early. Or I’m taking this disc downtown.
+				Actor_Says_With_Pause(kActorEarlyQ, 140, 1.0f, kAnimationModeTalk); //18-0140.AUD	You want Dektora? Is that it? The girl with the Rep friends?
+				Actor_Says_With_Pause(kActorEarlyQ, 150, 1.0f, kAnimationModeTalk);
+				Actor_Says(kActorMcCoy, 3405, kAnimationModeCombatAim);
+				Actor_Says(kActorEarlyQ, 160, kAnimationModeTalk);
+				Actor_Says(kActorMcCoy, 3410, kAnimationModeCombatAim);
+				Actor_Clue_Acquire(kActorMcCoy, kClueEarlyQInterview, false, kActorEarlyQ);
+				_vm->_aiScripts->callChangeAnimationMode(kActorMcCoy, kAnimationModeCombatIdle);
+				Loop_Actor_Walk_To_XYZ(kActorMcCoy, 31.22f, 0.0f, 267.51f, 0, true, false, false);
+				Actor_Set_Goal_Number(kActorEarlyQ, kGoalEarlyQNR04SitDown);
+				}
+			} else {
+				Actor_Says_With_Pause(kActorEarlyQ, 140, 1.0f, kAnimationModeTalk);
+				Actor_Says_With_Pause(kActorEarlyQ, 150, 1.0f, kAnimationModeTalk);
+				Actor_Says(kActorMcCoy, 3405, kAnimationModeCombatAim);
+				Actor_Says(kActorEarlyQ, 160, kAnimationModeTalk);
+				Actor_Says(kActorMcCoy, 3410, kAnimationModeCombatAim);
+				_vm->_aiScripts->callChangeAnimationMode(kActorMcCoy, kAnimationModeCombatIdle);
+				Loop_Actor_Walk_To_XYZ(kActorMcCoy, 31.22f, 0.0f, 267.51f, 0, true, false, false);
+				Actor_Set_Goal_Number(kActorEarlyQ, kGoalEarlyQNR04SitDown);
+			}
 		break;
 
 	case kGoalEarlyQNR04ScorpionsCheck:
@@ -422,8 +448,23 @@ bool AIScriptEarlyQ::GoalChanged(int currentGoalNumber, int newGoalNumber) {
 		Actor_Change_Animation_Mode(kActorEarlyQ, kAnimationModeDie);
 		Delay(250);
 		Actor_Set_At_XYZ(kActorEarlyQ, 109.0, 0.0, 374.0, 0);
-		Actor_Set_Goal_Number(kActorHanoi, kGoalHanoiNR04Enter);
-		Player_Set_Combat_Mode(false);
+		// Made it so if McCoy shoots Early Q and he is a replicant Hanoi won't come in the room and shoot McCoy. Instead McCoy will say
+		// easy money and will receive 200 chinyen.
+		if (_vm->_cutContent) {
+			if (Game_Flag_Query(kFlagEarlyQIsReplicant)) {
+				Game_Flag_Set(kFlagEarlyQDead);
+				Player_Set_Combat_Mode (false);
+				Actor_Voice_Over(920, kActorVoiceOver); //99-0920.AUD	Easy money.
+				if (Query_Difficulty_Level() != kGameDifficultyEasy) {
+					Global_Variable_Increment (kVariableChinyen, 200);
+				}		
+			} else {
+				Actor_Set_Goal_Number(kActorHanoi, kGoalHanoiNR04Enter);
+			}
+		} else {
+			Actor_Set_Goal_Number(kActorHanoi, kGoalHanoiNR04Enter);
+			Player_Set_Combat_Mode(false);
+		}
 		break;
 
 	case kGoalEarlyQNR04Leave:

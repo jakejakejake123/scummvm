@@ -337,19 +337,23 @@ void SceneScriptNR05::talkToEarlyQ() {
 			DM_Add_To_List_Never_Repeat_Once_Selected(900, 5, 6, 5); // LUCY
 		}
 		// Made it so the blonde woman option is now available if you have either the China bar photo or the woman in animoid row photo.
+		// Also made it so this option is only available if you also talked to Early Q about the jewelry. This is because Early Q mentions giving the jewelry to 'Hecuba'
+		// in this conversation which is a follow up of the previous conversation where he mentions giving the jewelry to one of his dancers.
 			if (_vm->_cutContent) {
-				if (Actor_Clue_Query(kActorMcCoy, kClueChinaBar)
-				|| (Actor_Clue_Query(kActorMcCoy, kClueWomanInAnimoidRow))) {
-				// TODO A bug? kClueDektorasDressingRoom is acquired from EarlyQ
-				// at his office (nr04) while being threatened by McCoy.
-				// At which point EarlyQ already tells McCoy who the people on the photograph are.
-				// It makes no sense that McCoy will next find EarlyQ at the VIP area (this area, nr05)
-				// and casually ask him about who the woman is in this photo.
-				// (McCoy won't be able to even find EarlyQ there again).
-				// Maybe it's another photo of Dektora needed here
-				// --- Animoid Row? Why would McCoy suspect that woman?
-				// --- Hawker's Bar? Can we find a Dektora pic in SHP resources?
-				DM_Add_To_List_Never_Repeat_Once_Selected(910, 5, 5, 5); // BLOND WOMAN
+				if (Game_Flag_Query(kFlagEarlyQTalkJewelry)) {
+					if (Actor_Clue_Query(kActorMcCoy, kClueChinaBar)
+					|| Actor_Clue_Query(kActorMcCoy, kClueWomanInAnimoidRow)) {
+					// TODO A bug? kClueDektorasDressingRoom is acquired from EarlyQ
+					// at his office (nr04) while being threatened by McCoy.
+					// At which point EarlyQ already tells McCoy who the people on the photograph are.
+					// It makes no sense that McCoy will next find EarlyQ at the VIP area (this area, nr05)
+					// and casually ask him about who the woman is in this photo.
+					// (McCoy won't be able to even find EarlyQ there again).
+					// Maybe it's another photo of Dektora needed here
+					// --- Animoid Row? Why would McCoy suspect that woman?
+					// --- Hawker's Bar? Can we find a Dektora pic in SHP resources?
+					DM_Add_To_List_Never_Repeat_Once_Selected(910, 5, 5, 5); // BLOND WOMAN
+				}
 			}
 		}
 	}
@@ -378,37 +382,67 @@ void SceneScriptNR05::talkToEarlyQ() {
 	switch (answer) {
 	case 890: // JEWELRY
 		Actor_Says(kActorMcCoy, 3505, kAnimationModeTalk);
-		Actor_Modify_Friendliness_To_Other(kActorEarlyQ, kActorMcCoy, -1);
-		Actor_Says(kActorEarlyQ, 420, 12);
-		Actor_Says(kActorEarlyQ, 430, 13);
-		Actor_Says(kActorMcCoy, 3530, 15);
-		Actor_Says(kActorEarlyQ, 440, 15);
-		Actor_Says(kActorMcCoy, 3535, 13);
-		Actor_Says(kActorEarlyQ, 460, 16);
-		Actor_Says(kActorMcCoy, 3540, 15);
-		Actor_Says(kActorEarlyQ, 490, 16);
-		Actor_Says(kActorEarlyQ, 500, 13);
-		Actor_Says(kActorMcCoy, 3545, 15);
-		Actor_Says(kActorEarlyQ, 520, 12);
+		// Made it so Early Q will be resistant to answering McCoys question about the jewelry if he is a replicant. In fact Early Q won't answer the question at all if he is a rep.
+		// However if Early Q is human he will answer McCoys question about the jewelry, he won't even resist.
+		if (_vm->_cutContent) {
+			if (Game_Flag_Query(kFlagEarlyQIsReplicant)) { 
+				Actor_Modify_Friendliness_To_Other(kActorEarlyQ, kActorMcCoy, -1);
+				Actor_Says(kActorEarlyQ, 420, 12); //18-0420.AUD	Who’s asking?
+				Actor_Says(kActorEarlyQ, 430, 13); //18-0430.AUD	You ain’t with Robbery-Homicide.
+				Actor_Says(kActorMcCoy, 3530, 15); //00-3530.AUD	No, sir.
+				Actor_Says(kActorEarlyQ, 730, kAnimationModeTalk); //18-0730.AUD	I’m working right now, General. Ask me later.
+				Game_Flag_Set(kFlagEarlyQTalkJewelry);
+				Actor_Face_Heading(kActorEarlyQ, 849, false);
+			} else {
+				Actor_Says(kActorEarlyQ, 440, 15); //18-0440.AUD	Eh, those pieces ain’t hot. I got the papers to prove it. I picked them up at a legitimate auction. Cost me nearly a pound of flesh too.
+				Actor_Says(kActorMcCoy, 3535, 13);
+				Actor_Says(kActorEarlyQ, 460, 16); //18-0460.AUD	You kiddin’? I ain’t that stupid. No, no, no, no. I was letting one of my dancers use the stuff in her act. Kind of a tribute to the ancient swamp lands, you know what I mean?
+				Actor_Says(kActorMcCoy, 3540, 15);
+				Actor_Says(kActorEarlyQ, 490, 16); //18-0490.AUD	Hecuba. She’s going on in a few.
+				Actor_Says(kActorEarlyQ, 500, 13); //18-0500.AUD	She’s one of my biggest earners too. She ain’t in any trouble now, is she?
+				Actor_Says(kActorMcCoy, 3545, 15);
+				Actor_Says(kActorEarlyQ, 520, 12); //18-0520.AUD	(sighs) Good, good. Wouldn’t wanna slaughter the goose that lays them golden eggs.
+				Actor_Clue_Acquire(kActorMcCoy, kClueEarlyInterviewA, true, kActorEarlyQ);
+				Game_Flag_Set(kFlagEarlyQTalkJewelry);
+				Actor_Face_Heading(kActorEarlyQ, 849, false);
+			}
+		} else {
+			Actor_Modify_Friendliness_To_Other(kActorEarlyQ, kActorMcCoy, -1);
+			Actor_Says(kActorEarlyQ, 420, 12); //18-0420.AUD	Who’s asking?
+			Actor_Says(kActorEarlyQ, 430, 13); //18-0430.AUD	You ain’t with Robbery-Homicide.
+			Actor_Says(kActorMcCoy, 3530, 15); //00-3530.AUD	No, sir.
+			Actor_Says(kActorEarlyQ, 440, 15); //18-0440.AUD	Eh, those pieces ain’t hot. I got the papers to prove it. I picked them up at a legitimate auction. Cost me nearly a pound of flesh too.
+			Actor_Says(kActorMcCoy, 3535, 13);
+			Actor_Says(kActorEarlyQ, 460, 16); //18-0460.AUD	You kiddin’? I ain’t that stupid. No, no, no, no. I was letting one of my dancers use the stuff in her act. Kind of a tribute to the ancient swamp lands, you know what I mean?
+			Actor_Says(kActorMcCoy, 3540, 15);
+			Actor_Says(kActorEarlyQ, 490, 16); //18-0490.AUD	Hecuba. She’s going on in a few.
+			Actor_Says(kActorEarlyQ, 500, 13); //18-0500.AUD	She’s one of my biggest earners too. She ain’t in any trouble now, is she?
+			Actor_Says(kActorMcCoy, 3545, 15);
+			Actor_Says(kActorEarlyQ, 520, 12); //18-0520.AUD	(sighs) Good, good. Wouldn’t wanna slaughter the goose that lays them golden eggs.
 		// Added in this flag so when McCoy shows Early Q the photo of Dektora after talking to Early about the jewelry Early mentions Dektora being the one that he gave the jewelry to.
 		// Early slipped up by saying Hecuba was the one he gave the jewelry after looking at the photo of Dektora whereas if you did not ask him about the jewelry he does not
 		// mention that therefore McCoy has no reason not press him into telling the truth and Early outright denies knowing the woman in the photo.
 		//Added in a clue.
-		if (_vm->_cutContent) {
-		Actor_Clue_Acquire(kActorMcCoy, kClueEarlyInterviewA, true, kActorEarlyQ);
-			Game_Flag_Set(kFlagEarlyQTalkJewelry);
-		}
 		Actor_Face_Heading(kActorEarlyQ, 849, false);
+		}
 		break;
 
 	case 900: // LUCY
 		Actor_Says(kActorMcCoy, 3510, 15);
 		Actor_Modify_Friendliness_To_Other(kActorEarlyQ, kActorMcCoy, -1);
-		Actor_Says_With_Pause(kActorEarlyQ, 530, 1.2f, kAnimationModeTalk);
-		Actor_Says(kActorEarlyQ, 540, 15);
+		Actor_Says_With_Pause(kActorEarlyQ, 530, 1.2f, kAnimationModeTalk); //18-0530.AUD	This ain’t no daycare center, General.
+		// Made it so if Crazylegs is a rep he doesn't make those creepy comments about Lucy. If Early Q is a rep he actually cares about the reps and would never hurt Lucy
+		// who is someone that the reps really care about.
+		if (_vm->_cutContent) {
+			if (!Game_Flag_Query(kFlagEarlyQIsReplicant)) {
+				Actor_Says(kActorEarlyQ, 540, 15); //18-0540.AUD	Of course, she ain’t half bad looking. My pappy always used to say ‘if there’s grass on the field, it’s time to play ball’.
+			}
+		} else {
+			Actor_Says(kActorEarlyQ, 540, 15); //18-0540.AUD	Of course, she ain’t half bad looking. My pappy always used to say ‘if there’s grass on the field, it’s time to play ball’.
+		}
 		Actor_Says(kActorMcCoy, 3550, 13);
-		Actor_Says(kActorEarlyQ, 560, 14);
-		Actor_Says(kActorEarlyQ, 570, 13);
+		Actor_Says(kActorEarlyQ, 560, 14); //18-0560.AUD	Nah, she ain’t one of mine.
+		Actor_Says(kActorEarlyQ, 570, 13); //18-0570.AUD	Talk to Taffy. He gets most of the peddy business around here.
 		Actor_Says(kActorMcCoy, 3555, 12);
 		Actor_Face_Heading(kActorEarlyQ, 849, false);
 		break;
@@ -416,7 +450,8 @@ void SceneScriptNR05::talkToEarlyQ() {
 	case 910: // BLOND WOMAN
 		Actor_Says(kActorMcCoy, 3515, 14);
 		Actor_Modify_Friendliness_To_Other(kActorEarlyQ, kActorMcCoy, -1);
-		if (Game_Flag_Query(kFlagEarlyQTalkJewelry)) { 
+			// Made it so Early Q will only says that he recognises Dektora if he is a human. If he is a rep he will be protecting the reps so he will deny recognising Dektora.
+			if (!Game_Flag_Query(kFlagEarlyQIsReplicant)) { 
 			// A BUG?
 			// TODO why is Grigorian's Note needed here, for EarlyQ to reveal who Hecuba is?
 			// TODO could CrazysInvolvement also do here?
@@ -430,9 +465,9 @@ void SceneScriptNR05::talkToEarlyQ() {
 			// --- for this specific bit of dialogue which reveals Hecuba's identity.
 			// --- Otherwiase it would create inconsistency to what is known about Hecuba
 			// - Dektora/Hecuba has *not* performed her act yet
-			Actor_Says(kActorEarlyQ, 580, 12);
-			Actor_Says(kActorMcCoy, 3560, 13);
-			Actor_Says(kActorEarlyQ, 590, 16);
+			Actor_Says(kActorEarlyQ, 580, 12); //18-0580.AUD	Hey. That kinda looks like Hecuba. The one I lent the jewelry to?
+			Actor_Says(kActorMcCoy, 3560, 13); 
+			Actor_Says(kActorEarlyQ, 590, 16); //18-0590.AUD	That’s it.
 			Actor_Says(kActorMcCoy, 3565, 16);
 			Actor_Says(kActorEarlyQ, 600, 13);
 			Actor_Says(kActorMcCoy, 3570, 14);
@@ -444,9 +479,9 @@ void SceneScriptNR05::talkToEarlyQ() {
 			}
 		} else {
 			// Early Q denies recongnizing Dektora
-			Actor_Says(kActorEarlyQ, 640, 13);
-			Actor_Says(kActorMcCoy, 3580, 15);
-			Actor_Says(kActorEarlyQ, 660, 12);
+			Actor_Says(kActorEarlyQ, 640, 13); //18-0640.AUD	Gee, I don’t know. She looks kind of familiar but I got so many broads working here, they all get kinda jumbled in my brain.
+			Actor_Says(kActorMcCoy, 3580, 15); 
+			Actor_Says(kActorEarlyQ, 660, 12); //18-0660.AUD	Relax, have a drink, loosen up. You see her, you let me know.
 		}
 		Actor_Face_Heading(kActorEarlyQ, 849, false);
 		break;

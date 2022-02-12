@@ -118,6 +118,12 @@ void InitScript::Init_Game_Flags() {
 			Game_Flag_Set(kFlagCrazylegsIsReplicant);
 		}
 	}
+	// Added code so Early Q is randomized as a replicant.
+	if (_vm->_cutContent) {
+		if (Random_Query(1, 2) == 1) {
+			Game_Flag_Set(kFlagEarlyQIsReplicant);
+		}
+	}
 
 	if (!Game_Flag_Query(kFlagGordoIsReplicant)
 	 && !Game_Flag_Query(kFlagLucyIsReplicant)

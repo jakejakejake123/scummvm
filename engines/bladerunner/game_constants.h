@@ -965,7 +965,7 @@ enum Flags {
 	kFlagMutantsActive                        = 523,
 	kFlagUG06Chapter4Started                  = 524,
 	kFlagCT10Entered                          = 525,
-	// 526 is never used
+	kFlagEarlyQIsReplicant                    = 526,
 	kFlagHF02toHF03                           = 527,
 	kFlagHF03toHF02                           = 528,
 	kFlagHF05toHF06                           = 529, // is never checked
@@ -994,7 +994,7 @@ enum Flags {
 	kFlagDR06toUG16                           = 552,
 	kFlagUG13Entered                          = 553,
 	kFlagUG13HomelessTalk1                    = 554,
-	// 555 is never used
+	kFlagDiscoveredEarlyQsMonitors		      = 555,
 	kFlagUG16LutherLanceTalk1                 = 556,
 	kFlagNotUsed557                           = 557, // is never checked
 	kFlagDR01toCT11                           = 558,
@@ -1009,7 +1009,7 @@ enum Flags {
 	kFlagHF04toHF03                           = 567,
 	kFlagUG16ComputerOff                      = 568,
 	kFlagNR04EarlyQWalkedIn                   = 569,
-	// 570 is never used
+	kFlagEarlyQDead							  = 570,	
 	// 571 is never used
 	// 572 is never used
 	kFlagNR03Entered                          = 573,

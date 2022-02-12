@@ -407,8 +407,21 @@ bool AIScriptDektora::GoalChanged(int currentGoalNumber, int newGoalNumber) {
 		}
 
 		AI_Movement_Track_Append_With_Facing(kActorDektora, 288, 35, 528);
-
-		if (Random_Query(1, 2) == 1
+		// If Early Q is a replicant he actually cares about the other replicants and is helping them out. Because of this he never assaults Lucy 
+		// therefore Dektora never buys the scorpions since she has no reason to kill Early Q.
+		// Also removed the random chance of Dektora buying the scorpions since the random chance of Early Q being a replicant has been added to the equation.
+		if (_vm->_cutContent) {
+			if (!Game_Flag_Query(kFlagEarlyQIsReplicant)) { 
+				 if (Game_Flag_Query(kFlagAR02DektoraWillBuyScorpions)) {
+					AI_Movement_Track_Append(kActorDektora, 289, 0);
+					AI_Movement_Track_Append_With_Facing(kActorDektora, 290, 2, 979);
+					AI_Movement_Track_Append(kActorDektora, 289, 0);
+					AI_Movement_Track_Append(kActorDektora, 39, 120);
+				} else {
+					AI_Movement_Track_Append(kActorDektora, 39, 180);
+				}
+			}
+		} else if (Random_Query(1, 2) == 1
 		 && Game_Flag_Query(kFlagAR02DektoraWillBuyScorpions)
 		) {
 			AI_Movement_Track_Append(kActorDektora, 289, 0);

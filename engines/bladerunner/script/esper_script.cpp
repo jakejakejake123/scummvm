@@ -60,7 +60,32 @@ void ESPERScript::SCRIPT_ESPER_DLL_Initialize() {
 		}
 		ESPER_Add_Photo("RC02_RA.IMG", 1, 1);
 	}
-	if (Actor_Clue_Query(kActorMcCoy, kClueEarlyQsClub)) {
+	// When Early Q is a replicant he is not hiding a disc that contains an image of him assaulting Lucy since that event never happened. Since he is helping the reps 
+	// the image on the disc is of Dektoras dressing room where Clovis is giving Dektora flowers. Early Q is trying to cover for the other replicants by hiding 
+	// the video evidence of them being there.
+	if (_vm->_cutContent) {
+		if (Game_Flag_Query(kFlagEarlyQIsReplicant)) { 
+			if (Actor_Clue_Query(kActorMcCoy, kClueEarlyQsClub)) {
+				if (!Actor_Clue_Query(kActorMcCoy, kClueDektorasDressingRoom)) {
+					Actor_Says(kActorAnsweringMachine, 160, kAnimationModeTalk);
+					Actor_Says(kActorAnsweringMachine, 170, kAnimationModeTalk);
+					Actor_Clue_Acquire(kActorMcCoy, kClueDektorasDressingRoom, true, -1);
+					v0 = 1;
+				}
+				ESPER_Add_Photo("NR070000.IMG", 3, 3);
+			}
+		} else if (!Game_Flag_Query(kFlagEarlyQIsReplicant)) { 
+			if (Actor_Clue_Query(kActorMcCoy, kClueEarlyQsClub)) {
+				if (!Actor_Clue_Query(kActorMcCoy, kClueOuterDressingRoom)) {
+					Actor_Says(kActorAnsweringMachine, 160, kAnimationModeTalk);
+					Actor_Says(kActorAnsweringMachine, 170, kAnimationModeTalk);
+					Actor_Clue_Acquire(kActorMcCoy, kClueOuterDressingRoom, true, -1);
+					v0 = 1;
+				}
+				ESPER_Add_Photo("NR060000.IMG", 2, 2);
+			}
+		}
+	} else if (Actor_Clue_Query(kActorMcCoy, kClueEarlyQsClub)) {
 		if (!Actor_Clue_Query(kActorMcCoy, kClueOuterDressingRoom)) {
 			Actor_Says(kActorAnsweringMachine, 160, kAnimationModeTalk);
 			Actor_Says(kActorAnsweringMachine, 170, kAnimationModeTalk);
@@ -69,8 +94,15 @@ void ESPERScript::SCRIPT_ESPER_DLL_Initialize() {
 		}
 		ESPER_Add_Photo("NR060000.IMG", 2, 2);
 	}
-	if (Actor_Clue_Query(kActorMcCoy, kClueDektorasDressingRoom)) {
+	if (_vm->_cutContent) {
+		if (!Game_Flag_Query(kFlagEarlyQIsReplicant)) { 
+			if (Actor_Clue_Query(kActorMcCoy, kClueDektorasDressingRoom)) {
 		ESPER_Add_Photo("NR070000.IMG", 3, 3);
+			}
+		}
+	} else if (Actor_Clue_Query(kActorMcCoy, kClueDektorasDressingRoom)) {
+		ESPER_Add_Photo("NR070000.IMG", 3, 3);
+
 	}
 	if (Actor_Clue_Query(kActorMcCoy, kCluePhotoOfMcCoy1)) {
 		ESPER_Add_Photo("HC01AR11.IMG", 4, 4);

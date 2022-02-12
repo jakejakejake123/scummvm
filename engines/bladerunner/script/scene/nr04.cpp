@@ -90,7 +90,23 @@ bool SceneScriptNR04::ClickedOn3DObject(const char *objectName, bool a2) {
 		if (!Loop_Actor_Walk_To_Waypoint(kActorMcCoy, 546, 0, true, false)) {
 			if (Object_Query_Click("DESK", objectName)) {
 				Actor_Face_Object(kActorMcCoy, "DESK", true);
-				if (!Actor_Clue_Query(kActorMcCoy, kCluePeruvianLadyInterview)) {
+				// Made it so if Early Q is a rep the receipt for the dragonfly jewelry will not be on the desk. Instead Early Q will have it on him and this will
+				// be the evidence that he uses to bargain with McCoy in exchange for the disc.
+				if (_vm->_cutContent) {
+					if (Game_Flag_Query(kFlagEarlyQIsReplicant)) {
+						Actor_Says(kActorMcCoy, 8526, kAnimationModeTalk); //00-8526.AUD	Nothing.
+					} else if (!Game_Flag_Query(kFlagEarlyQTalkJewelry)) {
+						Actor_Voice_Over(1600, kActorVoiceOver);
+						Actor_Voice_Over(1610, kActorVoiceOver);
+					} else if (!Actor_Clue_Query(kActorMcCoy, kClueCollectionReceipt)) {
+						Actor_Clue_Acquire(kActorMcCoy, kClueCollectionReceipt, false, -1);
+						Item_Pickup_Spin_Effect(kModelAnimationCollectionReceipt, 247, 141);
+						Actor_Voice_Over(1560, kActorVoiceOver);
+						Actor_Voice_Over(1570, kActorVoiceOver);
+						Actor_Voice_Over(1580, kActorVoiceOver);
+						Actor_Voice_Over(1590, kActorVoiceOver); //99-1590.AUD	for more money than I’d see, if I retired a dozen Reps.
+					}
+				} else if (!Actor_Clue_Query(kActorMcCoy, kCluePeruvianLadyInterview)) {
 					Actor_Voice_Over(1600, kActorVoiceOver);
 					Actor_Voice_Over(1610, kActorVoiceOver);
 				} else if (!Actor_Clue_Query(kActorMcCoy, kClueCollectionReceipt)) {
@@ -100,11 +116,6 @@ bool SceneScriptNR04::ClickedOn3DObject(const char *objectName, bool a2) {
 					Actor_Voice_Over(1570, kActorVoiceOver);
 					Actor_Voice_Over(1580, kActorVoiceOver);
 					Actor_Voice_Over(1590, kActorVoiceOver); //99-1590.AUD	for more money than I’d see, if I retired a dozen Reps.
-					// Added in a couple of lines/
-					if (_vm->_cutContent) {
-						Actor_Voice_Over(1600, kActorVoiceOver); //99-1600.AUD	I was pretty sure Early kept at least two sets of books…
-						Actor_Voice_Over(1610, kActorVoiceOver); //99-1610.AUD	but I didn’t have time to go through it all.
-					}
 				} else {
 					Actor_Says(kActorMcCoy, 8580, kAnimationModeTalk);
 				}
@@ -237,14 +248,23 @@ void SceneScriptNR04::ActorChangedGoal(int actorId, int newGoal, int oldGoal, bo
 		case kGoalEarlyQNR04Talk1:
 			Actor_Face_Actor(kActorEarlyQ, kActorMcCoy, true);
 			Actor_Face_Actor(kActorMcCoy, kActorEarlyQ, true);
-			Actor_Says(kActorEarlyQ, 30, kAnimationModeTalk);
-			Actor_Says(kActorMcCoy, 3375, kAnimationModeTalk);
-			Actor_Says_With_Pause(kActorEarlyQ, 50, 1.5f, kAnimationModeTalk);
-			Actor_Says(kActorEarlyQ, 60, kAnimationModeTalk);
-			Actor_Says_With_Pause(kActorMcCoy, 3380, 1.0f, kAnimationModeTalk);
-			Actor_Says(kActorEarlyQ, 70, kAnimationModeTalk);
-			Actor_Says(kActorMcCoy, 3415, kAnimationModeTalk);
-			Actor_Says(kActorEarlyQ, 80, kAnimationModeTalk);
+			Actor_Says(kActorEarlyQ, 30, kAnimationModeTalk); 
+			Actor_Says(kActorMcCoy, 3375, kAnimationModeTalk); //00-3375.AUD	What’s on the disc, Early?
+			Actor_Says_With_Pause(kActorEarlyQ, 50, 1.5f, kAnimationModeTalk); //18-0050.AUD	Hey, hey, I don’t hassle you about your private life.
+			Actor_Says(kActorEarlyQ, 60, kAnimationModeTalk); //18-0060.AUD	Put it down, McCoy.
+			// Made it so McCoy only mentions Early Q spying on the women if he has seen the security monitors.
+			if (_vm->_cutContent) {
+				if (Game_Flag_Query(kFlagDiscoveredEarlyQsMonitors)) {
+					Actor_Says_With_Pause(kActorMcCoy, 3380, 1.0f, kAnimationModeTalk); //00-3380.AUD	Must be something pretty juicy. Your girls know about the cameras?
+				} else { 
+					Actor_Says(kActorMcCoy, 5855, kAnimationModeTalk); //00-5855.AUD	Not a chance.
+				}
+			} else {
+				Actor_Says_With_Pause(kActorMcCoy, 3380, 1.0f, kAnimationModeTalk); //00-3380.AUD	Must be something pretty juicy. Your girls know about the cameras?
+			}
+			Actor_Says(kActorEarlyQ, 70, kAnimationModeTalk);//18-0070.AUD	I got ya. You want a trade. The disc for… what?
+			Actor_Says(kActorMcCoy, 3415, kAnimationModeTalk); //00-3415.AUD	Let’s hear what you got.
+			Actor_Says(kActorEarlyQ, 80, kAnimationModeTalk); //
 			Player_Gains_Control();
 			Actor_Set_Goal_Number(kActorEarlyQ, kGoalEarlyQNR04GoToBar);
 			//return true;
@@ -272,7 +292,6 @@ void SceneScriptNR04::ActorChangedGoal(int actorId, int newGoal, int oldGoal, bo
 			// The quotes corresponding to this clue are from kGoalEarlyQNR04McCoyPulledGun (previous goal of EarlyQ)
 			// That goal leads to this one (if McCoy does not shoot Early Q that is)
 			// TODO maybe move acquiring the clue to the kGoalEarlyQNR04McCoyPulledGun?
-			Actor_Clue_Acquire(kActorMcCoy, kClueEarlyQInterview, false, kActorEarlyQ);
 			//return true;
 			break;
 
@@ -280,16 +299,52 @@ void SceneScriptNR04::ActorChangedGoal(int actorId, int newGoal, int oldGoal, bo
 			Actor_Face_Actor(kActorMcCoy, kActorEarlyQ, true);
 			Delay(3000);
 			Actor_Says(kActorEarlyQ, 170, 30);
-			Actor_Says(kActorMcCoy, 3415, kAnimationModeTalk);
+			Actor_Says(kActorMcCoy, 3415, kAnimationModeTalk); //00-3415.AUD	Let’s hear what you got.
 			Actor_Says(kActorEarlyQ, 180, 30);
 			Actor_Says_With_Pause(kActorMcCoy, 3420, 1.5f, kAnimationModeTalk);
-			Actor_Says(kActorEarlyQ, 190, 30);
+			Actor_Says(kActorEarlyQ, 190, 30); //18-0190.AUD	You’re cold, General.
+			// After Early Q says you're cold general, McCoy realizes that Early Q is a replicant.
+			if (_vm->_cutContent) {
+				if (Game_Flag_Query(kFlagEarlyQIsReplicant)) {
+					Delay (2000);
+					Actor_Says(kActorMcCoy, 6865, -1); //00-6865.AUD	You're a Replicant.
+					Actor_Says(kActorEarlyQ, 0, 30); //18-0000.AUD	Jeez Louise, McCoy. You look awful.
+					Actor_Says(kActorEarlyQ, 20, 30); //18-0020.AUD	Don’t worry about a thing, General. Old Early is going to stitch you right up.
+				}
+			}
 			Actor_Set_Goal_Number(kActorEarlyQ, kGoalEarlyQNR04WaitForPulledGun);
 			//return true;
 			break;
 
 		case kGoalEarlyQNR04Talk3:
-			Actor_Clue_Acquire(kActorMcCoy, kClueDektorasDressingRoom, false, kActorEarlyQ);
+		// If McCoy puts his gun away and spares Early Q this will result in Early Q giving McCoy the receipt for the dragonfly jewelry.
+			if (_vm->_cutContent) {
+				if (Game_Flag_Query(kFlagEarlyQIsReplicant)) {
+					Actor_Says(kActorMcCoy, 455, 13); //00-0455.AUD	Relax. Nobody's gonna get retired. Okay?
+					Actor_Says(kActorEarlyQ, 120, 30); //18-0120.AUD	You can have whatever you little heart desires, General.
+					Delay (1000);
+					Actor_Says(kActorMcCoy, 3385, 13); //00-3385.AUD	I want information.
+					Actor_Says(kActorEarlyQ, 700, 30); //18-0700.AUD	I heard some things, yeah. I’m the kind of guy people confide in, you know.
+					Actor_Says(kActorMcCoy, 150, 13); //00-0150.AUD	You know anything about insects?
+					Delay (1000);
+					Actor_Says(kActorMcCoy, 1110, 13); //00-1110.AUD	We're talking exceptionally fine jewelry in the shape of a dragonfly.
+					Delay (1000);
+					Actor_Says(kActorMcCoy, 8990, 13); //00-8990.AUD	What have you got there?
+					Delay (1000);
+					Actor_Clue_Acquire(kActorMcCoy, kClueCollectionReceipt, false, kActorEarlyQ);
+					Item_Pickup_Spin_Effect(kModelAnimationCollectionReceipt, 200, 160);
+					Actor_Says(kActorMcCoy, 8845, 13); //00-8845.AUD	A receipt.
+					Delay (1000);
+					Actor_Voice_Over(1570, kActorVoiceOver); //99-1570.AUD	There were three pieces. A belt, earrings and an anklet.
+					Actor_Voice_Over(1580, kActorVoiceOver); //99-1580.AUD	Early had bought them last month at an auction…
+					Actor_Voice_Over(1590, kActorVoiceOver); //99-1590.AUD	for more money than I’d see, if I retired a dozen Reps.
+					Delay (1000);
+					Actor_Says(kActorMcCoy, 4130, 18); //00-4130.AUD	Anything else?
+					Actor_Says(kActorEarlyQ, 280, 30); //18-0280.AUD	No, General. I ain’t the nosy type.
+					Actor_Says(kActorMcCoy, 3445, kAnimationModeTalk);
+					Actor_Set_Goal_Number(kActorEarlyQ, kGoalEarlyQNR04AskForDisk);
+				} else {
+					Actor_Clue_Acquire(kActorMcCoy, kClueDektorasDressingRoom, false, kActorEarlyQ);
 			Item_Pickup_Spin_Effect(kModelAnimationPhoto, 200, 160);
 			Actor_Says(kActorEarlyQ, 200, 30);
 			Actor_Says(kActorEarlyQ, 210, 30);
@@ -307,6 +362,23 @@ void SceneScriptNR04::ActorChangedGoal(int actorId, int newGoal, int oldGoal, bo
 				Actor_Clue_Acquire(kActorMcCoy, kClueEarlyInterviewB2, true, kActorEarlyQ);
 			}
 			Actor_Set_Goal_Number(kActorEarlyQ, kGoalEarlyQNR04AskForDisk);
+				}
+			} else { 
+				Actor_Clue_Acquire(kActorMcCoy, kClueDektorasDressingRoom, false, kActorEarlyQ);
+				Item_Pickup_Spin_Effect(kModelAnimationPhoto, 200, 160);
+				Actor_Says(kActorEarlyQ, 200, 30);
+				Actor_Says(kActorEarlyQ, 210, 30);
+				Actor_Says(kActorEarlyQ, 220, 30);
+				Actor_Says_With_Pause(kActorMcCoy, 3425, 1.5f, 23);
+				Actor_Says(kActorMcCoy, 3430, kAnimationModeTalk);
+				Actor_Says(kActorEarlyQ, 240, 30);
+				Actor_Says(kActorMcCoy, 3435, kAnimationModeTalk);
+				Actor_Says(kActorEarlyQ, 250, 30);
+				Actor_Says(kActorMcCoy, 3440, kAnimationModeTalk);
+				Actor_Says(kActorEarlyQ, 280, 30);
+				Actor_Says(kActorMcCoy, 3445, kAnimationModeTalk);
+				Actor_Set_Goal_Number(kActorEarlyQ, kGoalEarlyQNR04AskForDisk);
+			}
 			//return true;
 			break;
 
@@ -427,14 +499,23 @@ void SceneScriptNR04::dialogueWithEarlyQ() {
 		Actor_Clue_Lose(kActorMcCoy, kClueEarlyQsClub);
 		Scene_Exits_Enable();
 	} else if (answer == 1540) { // KEEP IT
-		Actor_Says(kActorMcCoy, 8512, 15);
-		Actor_Says(kActorEarlyQ, 320, 12);
-		Actor_Says(kActorMcCoy, 3455, 13);
-		Actor_Says(kActorEarlyQ, 330, 15);
-		Actor_Says(kActorMcCoy, 3460, 12);
-		Actor_Says(kActorEarlyQ, 340, 12);
-		Actor_Says(kActorMcCoy, 3465, 12);
-		Actor_Says(kActorEarlyQ, 350, 16);
+		Actor_Says(kActorMcCoy, 8512, 15); 
+		Actor_Says(kActorEarlyQ, 320, 12); 
+		Actor_Says(kActorMcCoy, 3455, 13); //00-3455.AUD	You’ll get it back, if you behave.
+		// Made it so these lines will only be played if Early Q is a human. After all it really doesn't make sense to blackmail a replicant
+		// since they already have no basic rights.
+		if (_vm->_cutContent) {
+			if (!Game_Flag_Query(kFlagEarlyQIsReplicant)) {
+				Actor_Says(kActorEarlyQ, 330, 15); //18-0330.AUD	Ah, so it’s blackmail.
+				Actor_Says(kActorMcCoy, 3460, 12); //00-3460.AUD	Insurance.
+			}
+		} else {
+			Actor_Says(kActorEarlyQ, 330, 15); //18-0330.AUD	Ah, so it’s blackmail.
+			Actor_Says(kActorMcCoy, 3460, 12); //00-3460.AUD	Insurance.
+		}
+		Actor_Says(kActorEarlyQ, 340, 12); //18-0340.AUD	No more free drinks for you, buddy boy.
+		Actor_Says(kActorMcCoy, 3465, 12); //00-3465.AUD	I didn’t get free drinks before.
+		Actor_Says(kActorEarlyQ, 350, 16); 
 		Actor_Set_Targetable(kActorEarlyQ, false);
 		Actor_Set_Goal_Number(kActorEarlyQ, kGoalEarlyQNR04Leave);
 		Scene_Exits_Enable();

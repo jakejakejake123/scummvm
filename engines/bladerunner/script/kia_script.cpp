@@ -822,12 +822,9 @@ void KIAScript::SCRIPT_KIA_DLL_Play_Clue_Asset_Script(int notUsed, int clueId) {
 	case kClueCollectionReceipt:
 		KIA_Play_Slice_Model(kModelAnimationCollectionReceipt);
 		if (_vm->_cutContent) {
-			KIA_Play_Actor_Dialogue(kActorVoiceOver, 1560); //99-1560.AUD	I lucked out. The receipt for the dragonfly collection was right on top of the pile.
 			KIA_Play_Actor_Dialogue(kActorVoiceOver, 1570); //99-1570.AUD	There were three pieces. A belt, earrings and an anklet.
 			KIA_Play_Actor_Dialogue(kActorVoiceOver, 1580); //99-1580.AUD	Early had bought them last month at an auction…
 			KIA_Play_Actor_Dialogue(kActorVoiceOver, 1590); //99-1590.AUD	for more money than I’d see, if I retired a dozen Reps.
-			KIA_Play_Actor_Dialogue(kActorVoiceOver, 1600); //999-1600.AUD	I was pretty sure Early kept at least two sets of books…
-			KIA_Play_Actor_Dialogue(kActorVoiceOver, 1610); //99-1610.AUD	but I didn’t have time to go through it all.
 		}
 		break;
 	case kClueSpecialIngredient:

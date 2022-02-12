@@ -117,7 +117,17 @@ bool SceneScriptNR07::ClickedOnActor(int actorId) {
 			Actor_Says(kActorDektora, 630, 30);
 #else
 			// Dektora is interrupted here
-			Actor_Says_With_Pause(kActorDektora, 630, 0.0f, 30);
+			// If Early Q is a rep Dektora says that he's always treated her well since he is now nice to the replicants. If he is human she aggressively says 
+			// that McCoy doesn't need to know that.
+			if (_vm->_cutContent) {
+				if (Game_Flag_Query(kFlagEarlyQIsReplicant)) {
+					Actor_Says(kActorDektora, 630, 31); //03-0630.AUD	He’s always treated me very well. I--
+				} else {
+					Actor_Says(kActorDektora, 1440, 31); //03-1440.AUD	I don't see why you need to know that.
+				}
+			} else {
+				Actor_Says_With_Pause(kActorDektora, 630, 0.0f, 30);
+			}
 #endif // BLADERUNNER_ORIGINAL_BUGS
 			Actor_Says(kActorMcCoy, 3655, 16);
 			Actor_Says(kActorDektora, 640, 31);
@@ -485,22 +495,51 @@ void SceneScriptNR07::talkAboutVoightKampff() {
 	Actor_Start_Speech_Sample(kActorMcCoy, 3660);
 	Loop_Actor_Walk_To_XYZ(kActorMcCoy, -109.0f, -73.0f, -89.0f, 0, false, false, false);
 	Actor_Face_Actor(kActorMcCoy, kActorDektora, true);
-	Actor_Says(kActorDektora, 650, 30);
-	Actor_Says(kActorDektora, 660, 31);
-	Actor_Says(kActorMcCoy, 3665, 18);
+	Actor_Says(kActorDektora, 650, 30); //03-0650.AUD	Do you think I’m a Replicant? Is that what this is about?
+	// Made it so if Early Q is a replicant Dektora will not go against him since he is now helping out the replicants.
+	if (_vm->_cutContent) {
+		if (!Game_Flag_Query(kFlagEarlyQIsReplicant)) {
+			Actor_Says(kActorDektora, 660, 31); //03-0660.AUD	If it’s Early Q, I’ll help you any way you want.
+		}
+	} else {
+		Actor_Says(kActorDektora, 660, 31); //03-0660.AUD	If it’s Early Q, I’ll help you any way you want.
+	}
+	Actor_Says(kActorMcCoy, 3665, 18); 
 	Actor_Face_Actor(kActorDektora, kActorMcCoy, true);
-	Actor_Says(kActorDektora, 670, 31);
-	Actor_Says(kActorDektora, 680, 30);
-	Actor_Says(kActorDektora, 690, 31);
-	Actor_Says(kActorMcCoy, 3670, 17);
-	Actor_Says(kActorDektora, 700, 30);
-	Actor_Says(kActorMcCoy, 3675, 19);
-	Actor_Says(kActorDektora, 710, 30);
-	Actor_Says(kActorMcCoy, 3680, 19);
-	Actor_Says(kActorDektora, 720, 30);
-	Actor_Says(kActorDektora, 730, 30);
-	Actor_Says(kActorMcCoy, 3685, 13);
+	Actor_Says(kActorDektora, 670, 31); //03-0670.AUD	This is insane. I have a family, a daughter for heaven’s sake.
+	// If Early Q is a rep Dektora won't say how she will testify against him which leads to her questioning if McCoy is a replicant. 
+	// Instead McCoy will just say the test won't take too long and the rest of the dialogue will be skipped.
+	if (_vm->_cutContent) {
+		if (Game_Flag_Query(kFlagEarlyQIsReplicant)) {
+			Delay (1000);
+			Actor_Says(kActorMcCoy, 400, 14); //00-0400.AUD	It won't take too long.
+			Voight_Kampff_Activate(kActorDektora, 40);
+		} else {
+			Actor_Says(kActorDektora, 680, 30); //03-0680.AUD	Look, I’m willing to testify against Early Q.
+			Actor_Says(kActorDektora, 690, 31); //03-0690.AUD	A Replicant wouldn’t do that, would it?
+			Actor_Says(kActorMcCoy, 3670, 17); 
+			Actor_Says(kActorDektora, 700, 30); //03-0700.AUD	Then, you must be a Replicant.
+			Actor_Says(kActorMcCoy, 3675, 19); 
+			Actor_Says(kActorDektora, 710, 30); 
+			Actor_Says(kActorMcCoy, 3680, 19); 
+			Actor_Says(kActorDektora, 720, 30); 
+			Actor_Says(kActorDektora, 730, 30); 
+			Actor_Says(kActorMcCoy, 3685, 13); 
+			Voight_Kampff_Activate(kActorDektora, 40);
+		}
+	} else {
+	Actor_Says(kActorDektora, 680, 30); //03-0680.AUD	Look, I’m willing to testify against Early Q.
+	Actor_Says(kActorDektora, 690, 31); //03-0690.AUD	A Replicant wouldn’t do that, would it?
+	Actor_Says(kActorMcCoy, 3670, 17); 
+	Actor_Says(kActorDektora, 700, 30); //03-0700.AUD	Then, you must be a Replicant.
+	Actor_Says(kActorMcCoy, 3675, 19); 
+	Actor_Says(kActorDektora, 710, 30); 
+	Actor_Says(kActorMcCoy, 3680, 19); 
+	Actor_Says(kActorDektora, 720, 30); 
+	Actor_Says(kActorDektora, 730, 30); 
+	Actor_Says(kActorMcCoy, 3685, 13); 
 	Voight_Kampff_Activate(kActorDektora, 40);
+	}
 
 	if (Game_Flag_Query(kFlagDektoraIsReplicant)) {
 		callHolloway();
@@ -551,37 +590,26 @@ void SceneScriptNR07::talkAboutMoonbus() {
 		// If Early Q is murdered and you have the purchased scorpions clue McCoy arrests Dektora fot the murder of Early Q. If you have the EarlyInterviewB2 clue where Early tells you about Dektora
 		// and other trying to help get the reps offworld McCoy arrests her for being a rep sympathizer.
 	} else if (!Game_Flag_Query(kFlagDektoraIsReplicant)) {
-		if (Game_Flag_Query(kFlagNR04EarlyQStungByScorpions)
-		&&  Actor_Clue_Query(kActorMcCoy, kCluePurchasedScorpions)) {
-			Actor_Modify_Friendliness_To_Other(kActorDektora, kActorMcCoy, -3);
-			Delay (2000);
-			Actor_Says(kActorMcCoy, 6985, 16); //00-6985.AUD	Got the straight scoop for me or what?
-			Actor_Says(kActorDektora, 620, 30); //03-0620.AUD	I’m sure I don’t know what you mean.
-			Actor_Says(kActorMcCoy, 6495, 15); //00-6495.AUD	Cut the shit. A man was killed back there.
-			Actor_Says(kActorDektora, 610, 31); //03-0610.AUD	Is this about Early Q? Because I could tell you--
-			Actor_Says(kActorMcCoy, 3095, 18); //00-3095.AUD	Now we’re gonna take a little ride downtown.
-			dektoraRunAway();
-			Actor_Face_Heading(kActorMcCoy, 0, false);
-			Actor_Says(kActorMcCoy, 460, 14); //00-0460.AUD	Hold it right there!
-			Delay (1000);
-			Actor_Put_In_Set(kActorDektora, kSetPS09);
-			Actor_Set_At_XYZ(kActorDektora, -330.0f, 0.33f, -270.0f, 583);
-			Game_Flag_Reset(kFlagSpinnerAtNR01);
-			Game_Flag_Reset(kFlagSpinnerAtHF01);
-			Game_Flag_Set(kFlagSpinnerAtPS01);
-			Scene_Exits_Enable();
-			Game_Flag_Reset(kFlagMcCoyInNightclubRow);
-			Game_Flag_Set(kFlagMcCoyInPoliceStation);
-			Set_Enter(kSetPS09, kScenePS09);
-		} else if (Actor_Clue_Query(kActorMcCoy, kClueEarlyInterviewB2)) {
+		// Removed code for arresting Dektora for the murder of Early Q since she only kills Early Q if she is a replicant, therefore she can't be arrested.
+		// Also expanded the scene of mcCoy arresting Dektora.
+		 if (Actor_Clue_Query(kActorMcCoy, kClueEarlyInterviewB2)) {
 			Actor_Modify_Friendliness_To_Other(kActorDektora, kActorMcCoy, -3);
 			Actor_Says(kActorDektora, 620, 30);	//03-0620.AUD	I’m sure I don’t know what you mean.
+			Delay (2000);
 			Actor_Says(kActorMcCoy, 3090, 14); //00-3090.AUD	You may not be a Rep but you’re a damn Rep sympathizer for sure.
-			Actor_Says(kActorDektora, 760, 30); //03-0760.AUD	Excuse me?
 			Actor_Says(kActorMcCoy, 3095, 18); //00-3095.AUD	Now we’re gonna take a little ride downtown.
 			dektoraRunAway();
 			Actor_Face_Heading(kActorMcCoy, 0, false);
-			Actor_Says(kActorMcCoy, 460, 14); //00-0460.AUD	Hold it right there!
+			Actor_Change_Animation_Mode(kActorMcCoy, 5); // McCoy points his gun at Dektora.
+			Actor_Says(kActorMcCoy, 8950, -1); //00-8950.AUD	Hold it right there!
+			// Dektora comes back into the room.
+			Actor_Put_In_Set(kActorDektora, kSetNR07);
+			Actor_Set_At_XYZ(kActorDektora, -102.0f, -73.5f, -233.0f, 0);
+			Loop_Actor_Walk_To_Actor(kActorDektora, kActorMcCoy, 108, false, false);
+			Actor_Face_Actor(kActorMcCoy, kActorDektora, true);
+			Actor_Face_Actor(kActorDektora, kActorMcCoy, true);
+			Delay (1000);
+			Actor_Says(kActorMcCoy, 1955, -1); //00-1955.AUD	We’re taking a little drive downtown.
 			Delay (1000);
 			Actor_Put_In_Set(kActorDektora, kSetPS09);
 			Actor_Set_At_XYZ(kActorDektora, -330.0f, 0.33f, -270.0f, 583);
