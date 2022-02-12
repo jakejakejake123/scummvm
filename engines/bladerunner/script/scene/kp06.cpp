@@ -168,6 +168,7 @@ void SceneScriptKP06::PlayerWalkedIn() {
 		// Ending - leave with Steele
 		// Restored the Replicant betrayal ending where Crystal is alive. If you didn't retire a human and didn't warn Lucy Dektora or Izo, and you didn't turn in the Guzza evidence
 		// or got Crystal to trust you by not retiring enough reps you will not confront her in the kipple and she will appear here instead.
+		// Fixed the code here. I accidentally made it so the Crystal ending where you betray the reps is the only ending the plays in retored content mode. This has been fixed and now all the different endings will play.
 		if (_vm->_cutContent) {
 			if (Actor_Query_Goal_Number(kActorSteele) !=  kGoalSteeleGone) {
 				if (Game_Flag_Query(kFlagMcCoyAttackedReplicants)) {
@@ -198,16 +199,14 @@ void SceneScriptKP06::PlayerWalkedIn() {
 					Ambient_Sounds_Remove_All_Looping_Sounds(1u);
 					Outtake_Play(kOuttakeEnd6, false, -1);
 					Game_Over();
-				}
-			}
-		} else if (Actor_Query_Goal_Number(kActorSteele) == kGoalSteeleWaitingForEnd) {
-			Actor_Face_Actor(kActorSteele, kActorMcCoy, true);
-			Actor_Says(kActorSteele, 2530, 13);
-			Actor_Face_Actor(kActorMcCoy, kActorSteele, true);
-			Actor_Says(kActorMcCoy, 6200, 11);
-			Actor_Says(kActorSteele, 2540, 15);
-			Actor_Says(kActorSteele, 2550, 12);
-			Actor_Says(kActorMcCoy, 6205, 14);
+				} else if (Actor_Query_Goal_Number(kActorSteele) == kGoalSteeleWaitingForEnd) {
+					Actor_Face_Actor(kActorSteele, kActorMcCoy, true);
+					Actor_Says(kActorSteele, 2530, 13);
+					Actor_Face_Actor(kActorMcCoy, kActorSteele, true);
+					Actor_Says(kActorMcCoy, 6200, 11);
+					Actor_Says(kActorSteele, 2540, 15);
+					Actor_Says(kActorSteele, 2550, 12);
+					Actor_Says(kActorMcCoy, 6205, 14);
 			if (Actor_Query_Friendliness_To_Other(kActorSteele, kActorMcCoy) < 50) {
 				Actor_Says(kActorSteele, 2560, 12);
 				Actor_Says(kActorMcCoy, 6210, 14);
@@ -224,7 +223,8 @@ void SceneScriptKP06::PlayerWalkedIn() {
 			Ambient_Sounds_Remove_All_Looping_Sounds(1u);
 			Outtake_Play(kOuttakeEnd6, false, -1);
 			Game_Over();
-		} else { // Ending - talk with Gaff and leaving alone
+			}
+			} else { // Ending - talk with Gaff and leaving alone
 			Actor_Set_Goal_Number(kActorGaff, kGoalGaffGone);
 			Actor_Face_Actor(kActorGaff, kActorMcCoy, true);
 			// If Maggie is alive she will be in the set.
@@ -278,6 +278,63 @@ void SceneScriptKP06::PlayerWalkedIn() {
 			Async_Actor_Walk_To_Waypoint(kActorGaff, 551, 0, false);
 			Actor_Says(kActorGaff, 310, -1);
 			}
+			Delay(3000);
+			Ambient_Sounds_Remove_All_Non_Looping_Sounds(true);
+			Ambient_Sounds_Remove_All_Looping_Sounds(1u);
+			Outtake_Play(kOuttakeEnd7, false, -1);
+			Game_Over();
+			}
+		} else if (Actor_Query_Goal_Number(kActorSteele) == kGoalSteeleWaitingForEnd) {
+			Actor_Face_Actor(kActorSteele, kActorMcCoy, true);
+			Actor_Says(kActorSteele, 2530, 13);
+			Actor_Face_Actor(kActorMcCoy, kActorSteele, true);
+			Actor_Says(kActorMcCoy, 6200, 11);
+			Actor_Says(kActorSteele, 2540, 15);
+			Actor_Says(kActorSteele, 2550, 12);
+			Actor_Says(kActorMcCoy, 6205, 14);
+			if (Actor_Query_Friendliness_To_Other(kActorSteele, kActorMcCoy) < 50) {
+				Actor_Says(kActorSteele, 2560, 12);
+				Actor_Says(kActorMcCoy, 6210, 14);
+				Actor_Says(kActorSteele, 2570, 13);
+				Actor_Says(kActorMcCoy, 6215, 14);
+				Actor_Says(kActorSteele, 2580, 15);
+				Actor_Says(kActorSteele, 2590, 12);
+			}
+			Async_Actor_Walk_To_Waypoint(kActorMcCoy, 551, 0, false);
+			Delay(1000);
+			Actor_Says(kActorMcCoy, 6220, -1);
+			Delay(3000);
+			Ambient_Sounds_Remove_All_Non_Looping_Sounds(true);
+			Ambient_Sounds_Remove_All_Looping_Sounds(1u);
+			Outtake_Play(kOuttakeEnd6, false, -1);
+			Game_Over();
+		} else { // Ending - talk with Gaff and leaving alone
+			Actor_Set_Goal_Number(kActorGaff, kGoalGaffGone);
+			Actor_Face_Actor(kActorGaff, kActorMcCoy, true);
+			// If Maggie is alive she will be in the set.
+			Actor_Says(kActorGaff, 220, 13);
+			Actor_Face_Actor(kActorMcCoy, kActorGaff, true);
+			Actor_Says(kActorMcCoy, 6245, 11);
+			Actor_Says(kActorGaff, 230, 14);
+			if (Game_Flag_Query(kFlagMcCoyAttackedReplicants)) {
+				Actor_Says(kActorMcCoy, 6250, 15);
+				Actor_Says(kActorGaff, 240, 13);
+				Delay(1000);
+				Actor_Says(kActorMcCoy, 6255, 17);
+				Actor_Says(kActorGaff, 250, 14);
+				Delay(1000);
+			}
+			Actor_Says(kActorGaff, 260, 12);
+			Actor_Says(kActorMcCoy, 6260, 15);
+			Actor_Says(kActorGaff, 270, 13);
+			Actor_Says(kActorGaff, 280, 15); 
+			Actor_Says(kActorMcCoy, 6265, 14); //00-6265.AUD	How come I don’t feel good about it?
+			Actor_Says(kActorGaff, 290, 14);
+			Actor_Says(kActorGaff, 300, 15);
+			Actor_Says(kActorMcCoy, 6270, 11);
+			Async_Actor_Walk_To_Waypoint(kActorMcCoy, 550, 0, false);
+			Async_Actor_Walk_To_Waypoint(kActorGaff, 551, 0, false);
+			Actor_Says(kActorGaff, 310, -1);
 			Delay(3000);
 			Outtake_Play(kOuttakeEnd7, false, -1);
 #if BLADERUNNER_ORIGINAL_BUGS

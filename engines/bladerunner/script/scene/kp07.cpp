@@ -324,6 +324,8 @@ void SceneScriptKP07::PlayerWalkedIn() {
 				Global_Variable_Increment(kVariableReplicantsSurvivorsAtMoonbus, 1);
 				Actor_Set_At_XYZ(kActorSadik, -12.0f, -41.58f, 72.0f, 0);
 				Actor_Face_Actor(kActorSadik, kActorClovis, true);
+				// Made it so Sadik is now targetable when he enters the moonbus.
+				Actor_Set_Targetable(kActorSadik, true);
 			}
 		} else {
 			Actor_Face_Actor(kActorMcCoy, kActorClovis, true);

@@ -496,6 +496,11 @@ bool AIScriptSadik::GoalChanged(int currentGoalNumber, int newGoalNumber) {
 		}
 		Actor_Says(kActorSadik, 260, kAnimationModeTalk); //08-0260.AUD	The generator? It take almost anything.
 		Actor_Set_Goal_Number(kActorSadik, kGoalSadikKP06NeedsReactorCoreFromMcCoy);
+		// Made it so you can't shoot Sadik when he is preparing the moonbus. This is to prevent several narrative inconsistencies such as all the replicants waiting for you on the
+		// moonbus disappearing because Sadik was killed.
+		if (_vm->_cutContent) {
+			Actor_Set_Targetable(kActorSadik, false);
+		}
 		return true;
 
 	case kGoalSadikKP06NeedsReactorCoreFromMcCoy:
