@@ -2179,6 +2179,83 @@ void KIAScript::SCRIPT_KIA_DLL_Play_Clue_Asset_Script(int notUsed, int clueId) {
 		KIA_Play_Slice_Model(kModelAnimationGrigoriansNote);
 		KIA_Play_Actor_Dialogue(kActorVoiceOver, 4080);	//99-4080.AUD	He looks familiar.
 		break;
+		// This clue uses dialogue that I put together for the Early Q earrest scene.
+	case kClueEarlyAttemptedToSeduceLucy:
+		KIA_Play_Actor_Dialogue(kActorMcCoy, 4760); // 00-4760.AUD	About the girl
+		KIA_Play_Actor_Dialogue(kActorMcCoy, 4765); // 00-4765.AUD	Lucy. I know what you did.
+		KIA_Play_Actor_Dialogue(kActorMcCoy, 840); //00-0840.AUD	Did you hear me?
+		KIA_Play_Actor_Dialogue(kActorEarlyQ, 540); //18-0540.AUD	Of course, she ain’t half bad looking. My pappy always used to say ‘if there’s grass on the field, it’s time to play ball’.
+		KIA_Play_Actor_Dialogue(kActorMcCoy, 4800); //00-4800.AUD	You son of a bitch she couldn't object.
+		KIA_Play_Actor_Dialogue(kActorEarlyQ, 50); //18-0050.AUD	Hey, hey, I don’t hassle you about your private life.
+		KIA_Play_Actor_Dialogue(kActorMcCoy, 2255); //00-2255.AUD	She was innocent, you bastard!
+		KIA_Play_Actor_Dialogue(kActorEarlyQ, 530); //18-0530.AUD	This ain’t no daycare center, General.
+		break;
+	case kClueMcCoyLetZubenEscape:
+		KIA_Play_Actor_Dialogue(kActorGaff, 80); //53-0080.AUD	Your target give you the slip?
+		KIA_Play_Actor_Dialogue(kActorGaff, 90); //53-0090.AUD	What happened, McCoy? You feel sorry for it?
+		KIA_Play_Actor_Dialogue(kActorMcCoy, 705); //00-0705.AUD	My game must have been off.
+		KIA_Play_Actor_Dialogue(kActorGaff, 100); //53-0100.AUD	Go home and get some rest. I'm sure you need it.
+		break;
+		// This clue uses dialogue that I put together for the Bullet Bob replicant path when he tries to shoot you.
+	case kClueBobShotInSelfDefense:
+		KIA_Play_Actor_Dialogue(kActorMcCoy, 6865); //00-6865.AUD	You're a Replicant.
+		KIA_Play_Actor_Dialogue(kActorMcCoy, 840); //00-0840.AUD	Did you hear me?
+		KIA_Play_Actor_Dialogue(kActorMcCoy, 180); //00-0180.AUD	Bob?
+		KIA_Play_Actor_Dialogue(kActorBulletBob, 1270); //14-1270.AUD	(Laughing) I guess I picked the right line of work.
+		KIA_Play_Actor_Dialogue(kActorVoiceOver, 920); //99-0920.AUD	Easy money.
+		KIA_Play_Actor_Dialogue(kActorMcCoy, 8600); //00-8600.AUD	You keeping busy, pal?
+		break;
+		// This clue is when McCoy catches Gordo in the warehouse in act 1. It is a suspicious encounter so McCoy should record it as a clue.
+	case kClueMcCoyPulledAGun:
+		KIA_Play_Actor_Dialogue(kActorMcCoy, 460); //00-0460.AUD	Hold it right there!
+		KIA_Play_Actor_Dialogue(kActorGordo, 50); //02-0050.AUD	Chill it, man. Just took a wrong turn back there. That's all.
+		KIA_Play_Actor_Dialogue(kActorMcCoy, 465); //00-0465.AUD	Take your business elsewhere.
+		KIA_Play_Actor_Dialogue(kActorGordo, 60); //002-0060.AUD	An excellent idea.
+		break;
+		// This clue uses the dialogue that I added in for when you find the form at the homeless mans place.
+	case kCluePoliceWeaponUsed:
+		KIA_Play_Actor_Dialogue(kActorVoiceOver, 3390); //99-3390.AUD	I used to think Guzza was a pretty smart guy…
+		KIA_Play_Actor_Dialogue(kActorVoiceOver, 3400); //99-3400.AUD	but letting Baker and Holloway work their bogus interrogation deal with all that LPD equipment was a suicide move.
+		KIA_Play_Actor_Dialogue(kActorVoiceOver, 3420); //99-3420.AUD	And those two morons weren’t sharp enough to keep the stuff out of my sight. 
+		break;
+		// These next set of clues may be incriminating but this is near the end of act 4 and in act 5 when McCoy is at the point of no return.
+	case kClueMcCoyKilledRunciter1:
+		KIA_Play_Actor_Dialogue(kActorVoiceOver, 2050); //99-2050.AUD	Clovis wanted Runciter to suffer, but I wanted him dead.
+		KIA_Play_Actor_Dialogue(kActorVoiceOver, 2060); //99-2060.AUD	If there was a Hell, maybe we both got what we wanted.
+		break;
+	case kClueMcCoyKilledRunciter2:
+		KIA_Play_Actor_Dialogue(kActorVoiceOver, 2070); //99-2070.AUD	Something about the bastard made my flesh crawl.
+		KIA_Play_Actor_Dialogue(kActorVoiceOver, 2080); //99-2080.AUD	I’d done the city a favor.
+		KIA_Play_Actor_Dialogue(kActorVoiceOver, 2090); //99-2090.AUD	And maybe I’d done him a favor too, since his animals were all dead.
+		break;
+	case kClueMcCoyBetrayal:
+		KIA_Play_Actor_Dialogue(kActorSteele, 400); //01-0400.AUD	How could you… double cross me?
+		KIA_Play_Actor_Dialogue(kActorMcCoy, 2165); //00-2165.AUD	You should have left them alone.
+		KIA_Play_Actor_Dialogue(kActorSteele, 410); //01-0410.AUD	My job… had my orders.
+		KIA_Play_Actor_Dialogue(kActorSteele, 420); //01-0420.AUD	Eat shit, Slim.
+		break;
+	case kClueMcCoyShotGuzza:
+		KIA_Play_Actor_Dialogue(kActorGuzza, 1220); //04-1220.AUD	Who the hell do you think you’re kidding, McCoy? You’re gonna fry!
+		KIA_Play_Actor_Dialogue(kActorSadik, 360); //08-0360.AUD	The Hunter? He do us a favor, mon. He bagged us a traitor.
+		KIA_Play_Actor_Dialogue(kActorSadik, 380); //08-0380.AUD	You better than I thought, mon.
+		KIA_Play_Actor_Dialogue(kActorClovis, 660); //05-0660.AUD	Brother! You’ve killed a human. There’s no going back now.
+		KIA_Play_Actor_Dialogue(kActorMcCoy, 5995); //00-5995.AUD	Come out and show yourselves!
+		KIA_Play_Actor_Dialogue(kActorClovis, 670); //05-0670.AUD	First things first. You must decide where you belong, brother.
+		KIA_Play_Actor_Dialogue(kActorMcCoy, 6000); //00-6000.AUD	Stop calling me that!
+		KIA_Play_Actor_Dialogue(kActorClovis, 680); //05-0680.AUD	You’ve wasted much precious time already.
+		KIA_Play_Actor_Dialogue(kActorClovis, 690); //05-0690.AUD	No more choices, Ray McCoy.
+		KIA_Play_Actor_Dialogue(kActorClovis, 700); //05-0700.AUD	Meet us at the moonbus and together we will face the tigers that wait in the night’s forest.
+		break;
+	case kClueMoonbusCloseup:
+		KIA_Play_Actor_Dialogue(kActorMcCoy, 2315); //00-2315.AUD	The moonbus up and running yet?
+		KIA_Play_Actor_Dialogue(kActorSadik, 210); //08-0210.AUD	All it needs is fuel.
+		KIA_Play_Actor_Dialogue(kActorSadik, 220); //08-0220.AUD	Clovis wants to see you. Bring you back into family.
+		KIA_Play_Actor_Dialogue(kActorSadik, 230); //08-0230.AUD	I say: he prove himself, welcome back. One happy family.
+		KIA_Play_Actor_Dialogue(kActorSadik, 240); //08-0240.AUD	There got to be something around here, mon.
+		KIA_Play_Actor_Dialogue(kActorSadik, 250); //08-0250.AUD	Old reactor cores. Anything still got a glow.
+		KIA_Play_Actor_Dialogue(kActorMcCoy, 6195); //00-6195.AUD	I thought you said we came to earth in this thing.
+		KIA_Play_Actor_Dialogue(kActorSadik, 260); //08-0260.AUD	The generator? It take almost anything.
+		break;
 	default:
 		break;
 	}

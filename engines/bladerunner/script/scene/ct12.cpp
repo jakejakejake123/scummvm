@@ -321,6 +321,9 @@ void SceneScriptCT12::PlayerWalkedIn() {
 			Actor_Says(kActorMcCoy, 705, kAnimationModeTalk);
 			Actor_Says(kActorGaff, 100, kAnimationModeTalk);
 			Actor_Clue_Acquire(kActorGaff, kClueMcCoyLetZubenEscape, true, -1);
+			if (_vm->_cutContent) {
+				Actor_Clue_Acquire(kActorMcCoy, kClueMcCoyLetZubenEscape, true, kActorGaff);
+			}
 		}
 
 #if !BLADERUNNER_ORIGINAL_BUGS

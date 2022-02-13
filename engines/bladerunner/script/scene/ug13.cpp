@@ -226,6 +226,7 @@ bool SceneScriptUG13::ClickedOnItem(int itemId, bool a2) {
 					Actor_Voice_Over(3400, kActorVoiceOver); //99-3400.AUD	but letting Baker and Holloway work their bogus interrogation deal with all that LPD equipment was a suicide move.
 					Actor_Voice_Over(3420, kActorVoiceOver); //99-3420.AUD	And those two morons weren’t sharp enough to keep the stuff out of my sight. 
 					Actor_Clue_Acquire(kActorMcCoy, kClueGuzzaFramedMcCoy, true, -1);
+					Actor_Clue_Acquire(kActorMcCoy, kCluePoliceWeaponUsed, true, -1);
 				}
 			}
 			return true;

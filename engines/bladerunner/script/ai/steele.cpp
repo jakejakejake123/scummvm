@@ -1592,16 +1592,27 @@ bool AIScriptSteele::GoalChanged(int currentGoalNumber, int newGoalNumber) {
 		Actor_Set_At_XYZ(kActorSteele, -48.83f, -36.55f, 69.98f, 280);
 		Loop_Actor_Walk_To_Actor(kActorMcCoy, kActorSteele, 36, false, true);
 		Actor_Face_Actor(kActorMcCoy, kActorSteele, true);
-		if (Game_Flag_Query(kFlagMcCoyIsHelpingReplicants)) {
-			Actor_Says(kActorSteele, 400, 3);
-			Actor_Says(kActorMcCoy, 2165, 14);
-			Actor_Says(kActorSteele, 410, 3);
-			// Removed this line because it makes no sense for Crystal to kill Maggie if she likes McCoy and legitimately trusted him.
-			Actor_Says(kActorSteele, 420, 3);
-			// Made it so Sadik receives this clue so when you talk with him next Crystal getting blown up is mentioned in the conversation.
-			// Also the player will now gain control.
-			Actor_Clue_Acquire(kActorSadik, kClueMcCoyBetrayal, true, kActorMcCoy);
-			Player_Gains_Control();
+		// Fixed the code here. I forgot to make sure the betrayal dialogue only plays in cut content mode.
+		// Also made it so McCoy receives the McCoy betrayal clue when he betrays Crystal.
+		if (_vm->_cutContent) {
+			if (Game_Flag_Query(kFlagMcCoyIsHelpingReplicants)) {
+				Actor_Says(kActorSteele, 400, 3);
+				Actor_Says(kActorMcCoy, 2165, 14);
+				Actor_Says(kActorSteele, 410, 3);
+				// Removed this line because it makes no sense for Crystal to kill Maggie if she likes McCoy and legitimately trusted him.
+				Actor_Says(kActorSteele, 420, 3);
+				// Made it so Sadik receives this clue so when you talk with him next Crystal getting blown up is mentioned in the conversation.
+				// Also the player will now gain control.
+				Actor_Clue_Acquire(kActorSadik, kClueMcCoyBetrayal, true, kActorSteele);
+				Actor_Clue_Acquire(kActorMcCoy, kClueMcCoyBetrayal, true, kActorSteele);
+				Player_Gains_Control();
+			} else {
+				Actor_Says(kActorSteele, 440, 3);
+				Actor_Says(kActorMcCoy, 2175, 14);
+				Actor_Says(kActorSteele, 450, 3);
+				Actor_Says(kActorSteele, 460, 3);
+				Actor_Says(kActorSteele, 470, 3);
+			}
 		} else {
 			Actor_Says(kActorSteele, 440, 3);
 			Actor_Says(kActorMcCoy, 2175, 14);

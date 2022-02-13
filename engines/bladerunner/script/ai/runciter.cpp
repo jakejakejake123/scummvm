@@ -256,10 +256,16 @@ bool AIScriptRunciter::ShotAtAndHit() {
 	} else if (Actor_Clue_Query(kActorMcCoy, kClueZubensMotive)) {
 		Actor_Voice_Over(2050, kActorVoiceOver);
 		Actor_Voice_Over(2060, kActorVoiceOver);
+		if (_vm->_cutContent) {
+			Actor_Clue_Acquire(kActorMcCoy, kClueMcCoyKilledRunciter1, true, kActorMcCoy);
+		}
 	} else {
 		Actor_Voice_Over(2070, kActorVoiceOver);
 		Actor_Voice_Over(2080, kActorVoiceOver);
 		Actor_Voice_Over(2090, kActorVoiceOver);
+		if (_vm->_cutContent) {
+			Actor_Clue_Acquire(kActorMcCoy, kClueMcCoyKilledRunciter2, true, kActorMcCoy);
+		}
 	}
 	Actor_Modify_Friendliness_To_Other(kActorClovis, kActorMcCoy, 3);
 	if (_vm->_cutContent) {

@@ -375,6 +375,9 @@ bool AIScriptGordo::GoalChanged(int currentGoalNumber, int newGoalNumber) {
 		AI_Movement_Track_Append(kActorGordo, 119, 0);
 		AI_Movement_Track_Append(kActorGordo, 33, 1);
 		AI_Movement_Track_Repeat(kActorGordo);
+		if (_vm->_cutContent) {
+			Actor_Clue_Acquire(kActorMcCoy, kClueMcCoyPulledAGun, true, -1);
+		}
 		break;
 
 	case kGoalGordoCT01StandUp:

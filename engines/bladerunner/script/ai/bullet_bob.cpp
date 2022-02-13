@@ -247,6 +247,7 @@ bool AIScriptBulletBob::GoalChanged(int currentGoalNumber, int newGoalNumber) {
 			Actor_Face_Actor(kActorMcCoy, kActorBulletBob, true);
 			Actor_Says(kActorMcCoy, 8600, 18); //00-8600.AUD	You keeping busy, pal?
 			Game_Flag_Reset (kFlagMcCoyIsHelpingReplicants);
+			Actor_Clue_Acquire(kActorMcCoy, kClueBobShotInSelfDefense, true, kActorBulletBob);
 			if (Query_Difficulty_Level() != kGameDifficultyEasy) {
 				Global_Variable_Increment (kVariableChinyen, 200);
 			}

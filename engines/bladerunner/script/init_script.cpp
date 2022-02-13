@@ -2999,6 +2999,15 @@ void InitScript::Init_CDB() {
 		CDB_Set_Clue_Asset_Type(kClueCrystalTestedRunciter, kClueTypeAudioRecording);
 		CDB_Set_Clue_Asset_Type(kClueCrystalTestedBulletBob, kClueTypeAudioRecording);
 		CDB_Set_Clue_Asset_Type(kClueCrystalTestedCrazylegs, kClueTypeAudioRecording);
+		CDB_Set_Clue_Asset_Type(kClueMcCoyPulledAGun, kClueTypeAudioRecording);
+		CDB_Set_Clue_Asset_Type(kClueMcCoyKilledRunciter1, kClueTypeAudioRecording);
+		CDB_Set_Clue_Asset_Type(kClueMcCoyKilledRunciter2, kClueTypeAudioRecording);
+		CDB_Set_Clue_Asset_Type(kClueMcCoyBetrayal, kClueTypeAudioRecording);
+		CDB_Set_Clue_Asset_Type(kClueMcCoyShotGuzza, kClueTypeAudioRecording);
+		CDB_Set_Clue_Asset_Type(kCluePoliceWeaponUsed, kClueTypeAudioRecording);
+		CDB_Set_Clue_Asset_Type(kClueMoonbusCloseup, kClueTypeAudioRecording);
+		CDB_Set_Clue_Asset_Type(kClueMcCoyLetZubenEscape, kClueTypeAudioRecording);
+		CDB_Set_Clue_Asset_Type(kClueBobShotInSelfDefense, kClueTypeAudioRecording);
 	}
 }
 

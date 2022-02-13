@@ -308,6 +308,9 @@ void SceneScriptUG18::ActorChangedGoal(int actorId, int newGoal, int oldGoal, bo
 				Actor_Says(kActorClovis, 700, 13);
 				Actor_Set_Goal_Number(kActorSadik, kGoalSadikUG18Leave);
 				Actor_Set_Goal_Number(kActorClovis, kGoalClovisUG18Leave);
+				if (_vm->_cutContent) {
+					Actor_Clue_Acquire(kActorMcCoy, kClueMcCoyShotGuzza, true, kActorSteele);
+				}
 			} else {
 				Actor_Set_Goal_Number(kActorSadik, kGoalSadikUG18PrepareShootMcCoy);
 				Actor_Set_Goal_Number(kActorClovis, kGoalClovisUG18Leave);

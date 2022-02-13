@@ -498,8 +498,10 @@ bool AIScriptSadik::GoalChanged(int currentGoalNumber, int newGoalNumber) {
 		Actor_Set_Goal_Number(kActorSadik, kGoalSadikKP06NeedsReactorCoreFromMcCoy);
 		// Made it so you can't shoot Sadik when he is preparing the moonbus. This is to prevent several narrative inconsistencies such as all the replicants waiting for you on the
 		// moonbus disappearing because Sadik was killed.
+		// Also added in a clue.
 		if (_vm->_cutContent) {
 			Actor_Set_Targetable(kActorSadik, false);
+			Actor_Clue_Acquire(kActorMcCoy, kClueMoonbusCloseup, true, kActorSadik);
 		}
 		return true;
 

@@ -426,7 +426,7 @@ if (_vm->_cutContent) {
 				Actor_Says(kActorEarlyQ, 700, 15); //18-0700.AUD	I heard some things, yeah. I’m the kind of guy people confide in, you know.
 				Actor_Says(kActorMcCoy, 4760, 12); // 00-4760.AUD	About the girl.
 				Actor_Says(kActorMcCoy, 4765, 15); // 00-4765.AUD	Lucy. I know what you did.
-				Actor_Says(kActorMcCoy, 4770, 14); //00-4770.AUD	You raped her.
+				// Removed a line for the sake of the clue that I added in.
 				Delay (2000);
 				Actor_Says(kActorMcCoy, 840, 14); //00-0840.AUD	Did you hear me?
 				Actor_Says(kActorEarlyQ, 540, 12); //18-0540.AUD	Of course, she ain’t half bad looking. My pappy always used to say ‘if there’s grass on the field, it’s time to play ball’.
@@ -434,6 +434,7 @@ if (_vm->_cutContent) {
 				Actor_Says(kActorEarlyQ, 50, 16); //18-0050.AUD	Hey, hey, I don’t hassle you about your private life.
 				Actor_Says(kActorMcCoy, 2255, 15); //00-2255.AUD	She was innocent, you bastard!
 				Actor_Says(kActorEarlyQ, 530, 12); //18-0530.AUD	This ain’t no daycare center, General.
+				Actor_Clue_Acquire(kActorMcCoy, kClueEarlyAttemptedToSeduceLucy, true, kActorEarlyQ);
 				Delay (1000);
 				Actor_Says(kActorMcCoy, 3405, 13); //00-3405.AUD	Sit down.
 				Actor_Says(kActorMcCoy, 4680, 15); // 00-4680.AUD	We're gonna have a little chat.
