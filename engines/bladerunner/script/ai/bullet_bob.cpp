@@ -262,6 +262,9 @@ bool AIScriptBulletBob::GoalChanged(int currentGoalNumber, int newGoalNumber) {
 		Actor_Voice_Over(2110, kActorVoiceOver);
 		Actor_Voice_Over(2120, kActorVoiceOver);
 		Actor_Voice_Over(2130, kActorVoiceOver);
+		if (_vm->_cutContent) {
+			Actor_Clue_Acquire(kActorMcCoy, kClueBobShotInColdBlood, true, kActorBulletBob);
+		}
 		return true;
 	}
 

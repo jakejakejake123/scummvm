@@ -1999,6 +1999,9 @@ void KIAScript::SCRIPT_KIA_DLL_Play_Clue_Asset_Script(int notUsed, int clueId) {
 		break;
 	case kClueCrystalRetiredRunciter1:
 		KIA_Play_Actor_Dialogue(kActorSteele, 3210); //01-3210.AUD	The Runciter Rep went down nice and easy.
+		break;
+		// Split this clue up into two pieces.
+	case kClueCrystalRetiredRunciter2:
 		KIA_Play_Actor_Dialogue(kActorSteele, 3220); //01-3220.AUD	I’m tempted to split the bonus with McCoy since he did all the V-K work, but I’m getting real good at resisting temptation.
 		KIA_Play_Actor_Dialogue(kActorSteele, 3240); //01-3240.AUD	I just hope the lab boys don’t drag their feet on the bone marrow test.
 		KIA_Play_Actor_Dialogue(kActorSteele, 3250); //01-3250.AUD	I got an electric bill to pay.
@@ -2255,6 +2258,108 @@ void KIAScript::SCRIPT_KIA_DLL_Play_Clue_Asset_Script(int notUsed, int clueId) {
 		KIA_Play_Actor_Dialogue(kActorSadik, 250); //08-0250.AUD	Old reactor cores. Anything still got a glow.
 		KIA_Play_Actor_Dialogue(kActorMcCoy, 6195); //00-6195.AUD	I thought you said we came to earth in this thing.
 		KIA_Play_Actor_Dialogue(kActorSadik, 260); //08-0260.AUD	The generator? It take almost anything.
+		break;
+		// This clue is the dialogue that McCoy says when you click on Zubens pot.
+	case kClueZubenRunsAway:
+		KIA_Play_Actor_Dialogue(kActorVoiceOver, 4270); //99-4270.AUD	The guy dumped nu-sooch all over my coat and didn't even stick around to apologize. Looked like someone with a guilty conscience to me.
+		break;
+		// This clue is the dialogue when Sadik shoots Guzza in the sewers.
+	case kClueSadiksGun:
+		KIA_Play_Actor_Dialogue(kActorGuzza, 1180); //04-1180.AUD	But you got to show yourself first. We-- we got to do this in person.
+		KIA_Play_Actor_Dialogue(kActorClovis, 610); //05-0610.AUD	(laughs) And if I told you that Sadik has a pulse rifle trained right at your heart?
+		KIA_Play_Actor_Dialogue(kActorGuzza, 1190); //04-1190.AUD	Without me, you for sure ain’t going nowhere.
+		KIA_Play_Actor_Dialogue(kActorClovis, 620); //05-0620.AUD	Lieutenant, we have everything we need. And that doesn’t include you.
+		KIA_Play_Actor_Dialogue(kActorGuzza, 1200); //04-1200.AUD	Too bad. We were becoming such good friends.
+		KIA_Play_Actor_Dialogue(kActorGuzza, 9000); //004-9000.AUD	Help!
+		KIA_Play_Actor_Dialogue(kActorClovis, 630); //05-0630.AUD	"Whatever is born of mortal birth, must be consumed with the earth."
+		KIA_Play_Actor_Dialogue(kActorClovis, 640); //05-0640.AUD	"To rise from Generation free, then what have I to do with thee?"
+		KIA_Play_Actor_Dialogue(kActorGuzza, 1210); //04-1210.AUD	Kiss… my… ass!
+		break;
+		// This is of some dialogue that I slightly modified where Runciters tells McCoy what the the suspects motives were and Runcitter confesses that he wsihed they killed him because
+		// his life is now ruined.
+	case kClueRunciterConfession1:
+		KIA_Play_Actor_Dialogue(kActorMcCoy, 4580); //00-4580.AUD	Can you think of anything they might have been after?
+		KIA_Play_Actor_Dialogue(kActorRunciter, 110); //15-0110.AUD	First I thought they wanted money but I don't keep any in the shop.
+		KIA_Play_Actor_Dialogue(kActorRunciter, 120); //15-0120.AUD	Then I thought they wanted to steal my animals but they started...
+		KIA_Play_Actor_Dialogue(kActorRunciter, 130); //15-0130.AUD	executing them.
+		KIA_Play_Actor_Dialogue(kActorMcCoy, 4605); //00-4605.AUD	Could they have been Replicants?
+		KIA_Play_Actor_Dialogue(kActorRunciter, 140); // 15-0140.AUD	Who else would be capable of such barbaric acts?
+		KIA_Play_Actor_Dialogue(kActorRunciter, 310);  // 15-0310.AUD	They should have just killed me!
+		KIA_Play_Actor_Dialogue(kActorMcCoy, 8190); //00-8190.AUD	Why?
+		KIA_Play_Actor_Dialogue(kActorRunciter, 300); // 15-0300.AUD	Do you have any idea how much this is going to cost me? I'm ruined!		
+		KIA_Play_Actor_Dialogue(kActorRunciter, 90); // 15-0090.AUD	That snow tiger alone was worth more than most people will ever see in a lifetime. 
+		KIA_Play_Actor_Dialogue(kActorRunciter, 540); // 15-0540.AUD	I sacrificed everything to get that tiger. And now she's dead.
+		break;
+		// This the dialogue where Runciter confesses that he has a couple of friends who are genetic designers.
+	case kClueRunciterConfession2:
+		KIA_Play_Actor_Dialogue(kActorMcCoy, 4620); //00-4620.AUD	So if we do the bone marrow on these animals, there won't be any surprises.
+		KIA_Play_Actor_Dialogue(kActorRunciter, 190); //15-0190.AUD	Don't you have anything better to do with the tax payers' money than perform superfluous autopsies?
+		KIA_Play_Actor_Dialogue(kActorMcCoy, 4625); //00-4625.AUD	Do you know anybody who works at Tyrell Corporation?
+		KIA_Play_Actor_Dialogue(kActorRunciter, 210); //15-0210.AUD	A couple of genetic designers are old friends of mine.
+		KIA_Play_Actor_Dialogue(kActorMcCoy, 4630); //00-4630.AUD	Such as?
+		KIA_Play_Actor_Dialogue(kActorRunciter, 220); //15-0220.AUD	Well, you know how tight security is there.
+		KIA_Play_Actor_Dialogue(kActorRunciter, 230);  //15-0230.AUD	It would be a betrayal of trusts to mention names. And they have nothing to do with this.
+		break;
+		// This clue is not a sighting OF Bullet Bob, but instead is a sighting MADE by Bullet Bob. Specifically his observations of Runciter and his possible
+		// illegal activities.
+	case kClueSightingBulletBob:
+		KIA_Play_Actor_Dialogue(kActorMcCoy, 4995); //00-4995.AUD	Somebody shot up Runciter's shop with one.
+		KIA_Play_Actor_Dialogue(kActorBulletBob, 1860); //14-1860.AUD	Runciter? You mean that animal dealer down the street?
+		KIA_Play_Actor_Dialogue(kActorMcCoy, 8535); //00-8535.AUD	Yeah.
+		KIA_Play_Actor_Dialogue(kActorBulletBob, 270); //14-0270.AUD	Sucker had it coming. I'm sure of that.
+		KIA_Play_Actor_Dialogue(kActorMcCoy, 5005); //00-5005.AUD	Why is that?
+		KIA_Play_Actor_Dialogue(kActorBulletBob, 280); //14-0280.AUD	Runciter is always putting on those airs like he's better than everybody else.
+		KIA_Play_Actor_Dialogue(kActorBulletBob, 290); //14-0290.AUD	But he'll do anything for a buck. Sell anything to anybody.
+		KIA_Play_Actor_Dialogue(kActorBulletBob, 300); //14-0300.AUD	That's where I draw the line. If it's suspicious
+		KIA_Play_Actor_Dialogue(kActorBulletBob, 310); //14-0310.AUD	it's out of here. Got no place at Bullet Bob's.
+		break;
+		// This a clue you receive if Zuben is spared and Crystal receives enough clues from you so she can track him down and retire him.
+	case kClueCrystalRetiredZuben:
+		KIA_Play_Actor_Dialogue(kActorSteele, 2820); //01-2820.AUD	I caught a glimpse of that big dumb log of a skin-job Zuben. The one that ditched McCoy.
+		KIA_Play_Actor_Dialogue(kActorSteele, 2880); //01-2880.AUD	You can bet he made a break for it as soon as he saw me.
+		KIA_Play_Actor_Dialogue(kActorSteele, 3050); //01-3050.AUD	Beats me why McCoy didn’t retire it, but I ain’t gonna share the bonus.
+		KIA_Play_Actor_Dialogue(kActorSteele, 3240); //01-3240.AUD	I just hope the lab boys don’t drag their feet on the bone marrow test.
+		KIA_Play_Actor_Dialogue(kActorSteele, 3070); //01-3070.AUD	They take forever with the bone marrow tests and I just got my cable bill.
+		break;
+		// Received if you shot Bob and he is a human. This is the point of no return since it will lead to Crystal arresting you and McCoy makes this clue out of guilt,
+		// almost like a confession.
+	case kClueBobShotInColdBlood:
+		KIA_Play_Actor_Dialogue(kActorVoiceOver, 2100); //99-2100.AUD	I'd crossed the line.
+		KIA_Play_Actor_Dialogue(kActorVoiceOver, 2110); //99-2110.AUD	Bob was a psychopath but I was almost sure he wasn't a Replicant.
+		KIA_Play_Actor_Dialogue(kActorVoiceOver, 2120); //99-2120.AUD	I didn't have a lot of time and my options were pretty lousy.
+		KIA_Play_Actor_Dialogue(kActorVoiceOver, 2130); //99-2130.AUD	Stay and face the music or take off and hope I didn't get caught.
+		break;
+		// This is when McCoy asks human Izo about Grigorian and Izo insults and threatens McCoy to which McCoy replies with a couple of warnings.
+	case kClueMcCoyWarnedIzo:
+		KIA_Play_Actor_Dialogue(kActorMcCoy, 1190); //00-1190.AUD	Grigorian said you were thrown out of C.A.R.S. for having violent tendencies.
+		KIA_Play_Actor_Dialogue(kActorIzo, 480); //07-0480.AUD	Whoever Grigorian is, he's lying.
+		KIA_Play_Actor_Dialogue(kActorMcCoy, 1195); //00-1195.AUD	He also said you were a borderline sociopath who ought to be locked up.
+		KIA_Play_Actor_Dialogue(kActorMcCoy, 1200); //00-1200.AUD	But I'm inclined to agree.
+		KIA_Play_Actor_Dialogue(kActorIzo, 490); //07-0490.AUD	Don't you wish I gave a damn about what you think?
+		KIA_Play_Actor_Dialogue(kActorMcCoy, 1205); //00-1205.AUD	I can make you give a damn..
+		KIA_Play_Actor_Dialogue(kActorIzo, 500); //07-0500.AUD	(snickers) Let me give you a little word of advice, detective.
+		KIA_Play_Actor_Dialogue(kActorIzo, 510); //07-0510.AUD	Stay out of my business.
+		KIA_Play_Actor_Dialogue(kActorIzo, 520); //07-0520.AUD	More importantly stay out of my face.
+		KIA_Play_Actor_Dialogue(kActorIzo, 530); //07-0530.AUD	All I'd have to do is make one vid-call and you would be shoveling shit Off-World for the rest of your career.
+		KIA_Play_Actor_Dialogue(kActorMcCoy, 1210); //00-1210.AUD	Talk to me like that some more and you'll be eating it.
+		break;
+		// The dialogue for when Sadik blows up Maggie.
+	case kClueMcCoyRetiredSadik: 
+		KIA_Play_Actor_Dialogue(kActorSadik, 60); //08-0060.AUD	You like my present, mon?
+		KIA_Play_Actor_Dialogue(kActorMcCoy, 2240); //00-2240.AUD	You bastard! She was an innocent!
+		KIA_Play_Actor_Dialogue(kActorSadik, 70); //08-0070.AUD	She a fake, mon. A machine. Like you!
+		KIA_Play_Actor_Dialogue(kActorSadik, 80); //08-0080.AUD	Tyrell? He make her more doggy than dog, ya know?
+		KIA_Play_Actor_Dialogue(kActorMcCoy, 2245); //00-2245.AUD	That-- that’s a lie!
+		KIA_Play_Actor_Dialogue(kActorSadik, 90); //08-0090.AUD	You don’t remember it I’m thinking.
+		KIA_Play_Actor_Dialogue(kActorSadik, 100); //08-0100.AUD	None of it. Them false memories. They really worked you good.
+		KIA_Play_Actor_Dialogue(kActorMcCoy, 2250); //00-2250.AUD	Come out and show yourself, you coward!
+		break; 
+		// The dialogue for when you pull your gun on the twins and shoot them when they are replicants.
+	case kClueMcCoyRetiredLutherLance:
+		KIA_Play_Actor_Dialogue(kActorMcCoy, 5720); //00-5720.AUD	Just a moment of your time, please.
+		KIA_Play_Actor_Dialogue(kActorLuther, 80); //10-0080.AUD	I am sick and tired of people waving those things around.
+		KIA_Play_Actor_Dialogue(kActorLance, 40); //13-0040.AUD	Just give it up. You got no jurisdiction down here.
+		KIA_Play_Actor_Dialogue(kActorMcCoy, 8508); //00-8508.AUD	No retirement swag.
 		break;
 	default:
 		break;

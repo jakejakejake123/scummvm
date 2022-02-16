@@ -434,6 +434,7 @@ bool AIScriptSadik::GoalChanged(int currentGoalNumber, int newGoalNumber) {
 		// Added in some action music for the final confrontation with Sadik.
 		if (_vm->_cutContent) {
 			Music_Play(kMusicMoraji, 71, 0, 0, -1, kMusicLoopPlayOnce, 2);
+			Actor_Clue_Acquire(kActorMcCoy, kClueMcCoyRetiredSadik, true, kActorSadik);
 		}
 		Actor_Set_Goal_Number(kActorSadik, 413);
 		return true;

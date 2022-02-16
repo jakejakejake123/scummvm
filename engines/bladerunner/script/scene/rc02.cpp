@@ -289,6 +289,7 @@ void SceneScriptRC02::dialogueWithRunciter() {
 			Actor_Says(kActorRunciter, 300, 16); // 15-0300.AUD	Do you have any idea how much this is going to cost me? I'm ruined!		
 			Actor_Says(kActorRunciter, 90, 17); // 15-0090.AUD	That snow tiger alone was worth more than most people will ever see in a lifetime. 
 			Actor_Says(kActorRunciter, 540, 19); // 15-0540.AUD	I sacrificed everything to get that tiger. And now she's dead.
+			Actor_Clue_Acquire(kActorMcCoy, kClueRunciterConfession1, true, kActorRunciter);
 			Game_Flag_Set(kFlagRunciterTalkMotives);
 			if (Player_Query_Agenda() == kPlayerAgendaSurly 
 					|| Player_Query_Agenda() == kPlayerAgendaErratic) {
@@ -619,6 +620,7 @@ bool SceneScriptRC02::ClickedOnActor(int actorId) {
 				Actor_Says(kActorMcCoy, 4630, 18);
 				Actor_Says(kActorRunciter, 220, 14);
 				Actor_Says(kActorRunciter, 230, 13);
+				Actor_Clue_Acquire(kActorMcCoy, kClueRunciterConfession2, true, kActorRunciter);
 				Game_Flag_Set(kFlagRunciterTalkFriends);
 				// These last few lines where McCoy calls the DNA row subcons freaks and sarcastically says sorry will only play if he is surly or erratic. It also results in
 				// a friendliness loss.

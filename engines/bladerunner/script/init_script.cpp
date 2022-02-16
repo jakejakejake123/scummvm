@@ -3008,6 +3008,16 @@ void InitScript::Init_CDB() {
 		CDB_Set_Clue_Asset_Type(kClueMoonbusCloseup, kClueTypeAudioRecording);
 		CDB_Set_Clue_Asset_Type(kClueMcCoyLetZubenEscape, kClueTypeAudioRecording);
 		CDB_Set_Clue_Asset_Type(kClueBobShotInSelfDefense, kClueTypeAudioRecording);
+		CDB_Set_Clue_Asset_Type(kClueZubenRunsAway, kClueTypeAudioRecording);
+		CDB_Set_Clue_Asset_Type(kClueSadiksGun, kClueTypeAudioRecording);
+		CDB_Set_Clue_Asset_Type(kClueRunciterConfession1, kClueTypeAudioRecording);
+		CDB_Set_Clue_Asset_Type(kClueRunciterConfession2, kClueTypeAudioRecording);
+		CDB_Set_Clue_Asset_Type(kClueSightingBulletBob, kClueTypeAudioRecording);
+		CDB_Set_Clue_Asset_Type(kClueCrystalRetiredZuben, kClueTypeAudioRecording);
+		CDB_Set_Clue_Asset_Type(kClueBobShotInColdBlood, kClueTypeAudioRecording);
+		CDB_Set_Clue_Asset_Type(kClueMcCoyWarnedIzo, kClueTypeAudioRecording);
+		CDB_Set_Clue_Asset_Type(kClueMcCoyRetiredSadik, kClueTypeAudioRecording);
+		CDB_Set_Clue_Asset_Type(kClueMcCoyRetiredLutherLance, kClueTypeAudioRecording);
 	}
 }
 

@@ -468,8 +468,19 @@ void AIScriptSteele::EnteredSet(int setId) {
 			}
 			return;	
 		}
+		// Made it so if Zuben escapes Crystal will track him down and retire him if she has enough clues. This will give you the Crystal retired Zuben clue. If she doesn't have enough clues
+		// she just finds Zuben by chance and doesn't have time to come up with a plan of attack so escapes into the sewers. This will give you the Zuben sighting clue.
 		if (Game_Flag_Query(kFlagZubenSpared)) {
-			Actor_Clue_Acquire(kActorSteele, kClueSightingZuben, true, kActorSteele);
+			if (Actor_Clue_Query(kActorSteele, kClueHowieLeeInterview)
+			&& Actor_Clue_Query(kActorSteele, kClueCrowdInterviewA) 
+			&& Actor_Clue_Query(kActorSteele, kClueLabCorpses) 
+			&& Actor_Clue_Query(kActorSteele, kClueZubenInterview)
+			&& Actor_Clue_Query(kActorSteele, kClueBigManLimping)) {
+				Actor_Set_Goal_Number(kActorZuben, kGoalZubenGone);
+				Actor_Clue_Acquire(kActorSteele, kClueCrystalRetiredZuben, true, kActorSteele);
+			} else {
+				Actor_Clue_Acquire(kActorSteele, kClueSightingZuben, true, kActorSteele);
+			}
 			return;
 		}
 		if (Game_Flag_Query(kFlagGordoIsReplicant) && Game_Flag_Query(kFlagGordoRanAway)) {

@@ -223,6 +223,9 @@ void SceneScriptRC04::dialogueWithBulletBob() {
 		Actor_Says(kActorBulletBob, 320, 37);
 		Actor_Says(kActorBulletBob, 330, 33);
 		Actor_Says(kActorBulletBob, 340, 11);
+		if (_vm->_cutContent) {
+			Actor_Clue_Acquire(kActorMcCoy, kClueSightingBulletBob, true, kActorBulletBob);
+		}
 		Actor_Says(kActorMcCoy, 5015, 16);
 		Actor_Modify_Friendliness_To_Other(kActorBulletBob, kActorMcCoy, 3);
 		if (Game_Flag_Query(kFlagIzoIsReplicant)) {

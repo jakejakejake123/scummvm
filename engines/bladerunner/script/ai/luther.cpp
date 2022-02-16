@@ -88,6 +88,19 @@ bool AIScriptLuther::Update() {
 		ChangeAnimationMode(kAnimationModeDie);
 		Actor_Set_Goal_Number(kActorLuther, kGoalLutherDie);
 		Actor_Set_Targetable(kActorLuther, false);
+		// Made it so if you retire the twins and they are replicantt you receive the McCoy retired Luther and Lance clue and McCoy will
+		// say no retirement swag since he is not working for the department at this point in time. If he retires the twins when they are human
+		// McCoy scolds himself saying that he has crossed the line. This will also set the McCoy retired human flag.
+		if (_vm->_cutContent) {
+			if (Game_Flag_Query(kFlagLutherLanceIsReplicant)) {
+				Actor_Says(kActorMcCoy, 8508, 12); //00-8508.AUD	No retirement swag.
+				Actor_Clue_Acquire(kActorMcCoy, kClueMcCoyRetiredLutherLance, true, -1);
+			} else {
+				Actor_Says(kActorVoiceOver, 2100, 12); //99-2100.AUD	I'd crossed the line.
+				Actor_Says(kActorMcCoy, 170, 14); //00-0170.AUD	Damn.
+				Game_Flag_Set(kFlagMcCoyRetiredHuman);
+			}
+		}
 		Scene_Loop_Set_Default(5); // UG16MainLoopNoComputerLight
 		Scene_Loop_Start_Special(kSceneLoopModeOnce, 4, true); // UG16SparkLoop
 		Ambient_Sounds_Play_Sound(kSfxCOMPDWN4, 50, 0, 0, 99);

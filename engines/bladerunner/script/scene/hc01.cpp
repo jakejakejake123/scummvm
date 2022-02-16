@@ -560,6 +560,9 @@ void SceneScriptHC01::dialogueWithIzo() {
 				Actor_Says(kActorIzo, 520, 16); //07-0520.AUD	More importantly stay out of my face.
 				Actor_Says(kActorIzo, 530, 15); //07-0530.AUD	All I'd have to do is make one vid-call and you would be shoveling shit Off-World for the rest of your career.
 				Actor_Says(kActorMcCoy, 1210, 16); //00-1210.AUD	Talk to me like that some more and you'll be eating it.
+				if (_vm->_cutContent) {
+					Actor_Clue_Acquire(kActorMcCoy, kClueMcCoyWarnedIzo, true, kActorIzo);
+				}
 				Actor_Modify_Friendliness_To_Other(kActorIzo, kActorMcCoy, -4);
 				if (Actor_Query_Friendliness_To_Other(kActorIzo, kActorMcCoy) < 60) {
 					takePhotoAndRunAway();
