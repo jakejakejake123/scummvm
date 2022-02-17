@@ -559,6 +559,9 @@ void SceneScriptPS09::dialogueWithGrigorian() {
 				Actor_Says_With_Pause(kActorGrigorian, 340, 0.0f, 14);
 			}
 			Actor_Clue_Acquire(kActorMcCoy, kClueGrigoriansResources, true, kActorGrigorian);
+			if (_vm->_cutContent) {
+				CDB_Set_Crime(kClueGrigoriansResources, kCrimeReplicantHarboring);
+			}
 #endif // BLADERUNNER_ORIGINAL_BUGS
 		//Altered code so McCoy can be nice.
 		if (_vm->_cutContent) {

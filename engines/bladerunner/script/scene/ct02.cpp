@@ -360,8 +360,7 @@ bool SceneScriptCT02::ClickedOn2DRegion(int region) {
 		Scene_2D_Region_Remove(0);
 		Scene_2D_Region_Remove(1);
 		Actor_Voice_Over(4270, kActorVoiceOver);
-		// Added in a clue.
-		Actor_Clue_Acquire(kActorMcCoy, kClueZubenRunsAway, true, -1); 
+		// Removed this clue due to bugs.
 		return true;
 	}
 	return false;

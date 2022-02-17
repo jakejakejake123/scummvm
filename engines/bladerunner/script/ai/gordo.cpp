@@ -1725,6 +1725,25 @@ void AIScriptGordo::talkToMcCoyInCity() {
 			Actor_Says(kActorGordo, 1020, 13);
 			Actor_Says(kActorMcCoy, 6500, 14);
 			Actor_Says(kActorGordo, 1030, 15);
+			// Made it so Gordo now asks for money for licehen dogs at this point in the conversation so the line now becomes part of the Gordo interview clue.
+			if (_vm->_cutContent) {
+				Actor_Says(kActorMcCoy, 1125, 12); //00-1125.AUD	Thanks a million.
+				Actor_Says(kActorGordo, 980, 15); //02-0980.AUD	Got any chinyen you can part with? Just so I can grab myself a couple of lichen-dogs.
+		  	if  (Player_Query_Agenda() == kPlayerAgendaSurly
+		   	|| Player_Query_Agenda() == kPlayerAgendaErratic) {  
+				Actor_Says(kActorMcCoy, 430, 14); //00-0430.AUD	Sorry, pal. All I got are hundreds.
+				Actor_Says(kActorGordo, 570, 15); //02-0570.AUD	Gotta go, daddy-o.
+				Actor_Modify_Friendliness_To_Other(kActorGordo, kActorMcCoy, -5);
+			} else {
+				Actor_Says(kActorMcCoy, 1025, 13); //00-1025.AUD	Absolutely.
+				Actor_Says(kActorGordo, 10, 15); //02-0010.AUD	Catch you later.
+				AI_Movement_Track_Unpause(kActorGordo);
+				Actor_Modify_Friendliness_To_Other(kActorGordo, kActorMcCoy, 5);
+				if (Query_Difficulty_Level() != kGameDifficultyEasy) {
+					Global_Variable_Decrement(kVariableChinyen, 10);
+				}
+			}
+		}
 			Actor_Clue_Acquire(kActorMcCoy, kClueGordoInterview1, false, kActorGordo);
 		} else {
 			Actor_Says(kActorGordo, 1040, 12);
@@ -1734,6 +1753,25 @@ void AIScriptGordo::talkToMcCoyInCity() {
 			Actor_Says(kActorGordo, 1070, 14);
 			Actor_Says(kActorMcCoy, 6510, 16);
 			Actor_Says(kActorGordo, 1080, 15);
+			// Made it so Gordo now asks for money for licehen dogs at this point in the conversation so the line now becomes part of the Gordo interview clue.
+			if (_vm->_cutContent) {
+				Actor_Says(kActorMcCoy, 1125, 12); //00-1125.AUD	Thanks a million.
+				Actor_Says(kActorGordo, 980, 15); //02-0980.AUD	Got any chinyen you can part with? Just so I can grab myself a couple of lichen-dogs.
+		  	if  (Player_Query_Agenda() == kPlayerAgendaSurly
+		   	|| Player_Query_Agenda() == kPlayerAgendaErratic) {  
+				Actor_Says(kActorMcCoy, 430, 14); //00-0430.AUD	Sorry, pal. All I got are hundreds.
+				Actor_Says(kActorGordo, 570, 15); //02-0570.AUD	Gotta go, daddy-o.
+				Actor_Modify_Friendliness_To_Other(kActorGordo, kActorMcCoy, -5);
+			} else {
+				Actor_Says(kActorMcCoy, 1025, 13); //00-1025.AUD	Absolutely.
+				Actor_Says(kActorGordo, 10, 15); //02-0010.AUD	Catch you later.
+				AI_Movement_Track_Unpause(kActorGordo);
+				Actor_Modify_Friendliness_To_Other(kActorGordo, kActorMcCoy, 5);
+				if (Query_Difficulty_Level() != kGameDifficultyEasy) {
+					Global_Variable_Decrement(kVariableChinyen, 10);
+				}
+			}
+		}
 			Actor_Clue_Acquire(kActorMcCoy, kClueGordoInterview2, false, kActorGordo);
 		}
 		AI_Movement_Track_Unpause(kActorGordo);
@@ -1757,24 +1795,6 @@ void AIScriptGordo::talkToMcCoyInCity() {
 		Actor_Says(kActorGordo, 990, 13);
 		Actor_Says(kActorGordo, 1000, 15);
 		// Added in an option to give Gordo money for lichen dogs.
-		if (_vm->_cutContent) {
-			Actor_Says(kActorMcCoy, 1125, 12); //00-1125.AUD	Thanks a million.
-			Actor_Says(kActorGordo, 980, 15); //02-0980.AUD	Got any chinyen you can part with? Just so I can grab myself a couple of lichen-dogs.
-		  	if  (Player_Query_Agenda() == kPlayerAgendaSurly
-		   	|| Player_Query_Agenda() == kPlayerAgendaErratic) {  
-				Actor_Says(kActorMcCoy, 430, 14); //00-0430.AUD	Sorry, pal. All I got are hundreds.
-				Actor_Says(kActorGordo, 570, 15); //02-0570.AUD	Gotta go, daddy-o.
-				Actor_Modify_Friendliness_To_Other(kActorGordo, kActorMcCoy, -5);
-			} else {
-				Actor_Says(kActorMcCoy, 1025, 13); //00-1025.AUD	Absolutely.
-				Actor_Says(kActorGordo, 10, 15); //02-0010.AUD	Catch you later.
-				AI_Movement_Track_Unpause(kActorGordo);
-				Actor_Modify_Friendliness_To_Other(kActorGordo, kActorMcCoy, 5);
-				if (Query_Difficulty_Level() != kGameDifficultyEasy) {
-					Global_Variable_Decrement(kVariableChinyen, 10);
-				}
-			}
-		}
 		Game_Flag_Set(kFlagGordoTalk2);
 		AI_Movement_Track_Unpause(kActorGordo);
 	} else {

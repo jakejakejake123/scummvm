@@ -2302,7 +2302,6 @@ void InitScript::Init_SDB() {
 		SDB_Add_Other_Clue(kSuspectSadik, kClueTyrellSalesPamphletEntertainModel);
 		SDB_Add_Other_Clue(kSuspectSadik, kClueTyrellSalesPamphletLolita);
 		SDB_Add_Other_Clue(kSuspectSadik, kClueCrimeSceneNotes);
-		SDB_Add_Other_Clue(kSuspectSadik, kClueLucyInterview);
 		SDB_Add_Other_Clue(kSuspectSadik, kClueTyrellGuardInterview);
 		SDB_Add_Other_Clue(kSuspectSadik, kClueTyrellSecurityPhoto);
 		SDB_Add_Other_Clue(kSuspectSadik, kClueKingstonKitchenBox2);
@@ -2314,6 +2313,11 @@ void InitScript::Init_SDB() {
 		SDB_Add_Other_Clue(kSuspectSadik, kClueClovisOrdersMcCoysDeath);
 		SDB_Add_Other_Clue(kSuspectSadik, kClueSightingSadikBradbury);
 		SDB_Add_Other_Clue(kSuspectSadik, kClueDoorForced1);
+		SDB_Add_Other_Clue(kSuspectSadik, kClueMcCoyShotGuzza);
+		SDB_Add_Other_Clue(kSuspectSadik, kClueGrigoriansResponse1);
+		SDB_Add_Other_Clue(kSuspectSadik, kClueMoonbusCloseup);
+		SDB_Add_Other_Clue(kSuspectSadik, kClueSadiksGun);
+		SDB_Add_Other_Clue(kSuspectSadik, kClueMcCoyRetiredSadik);
 	}
 	SDB_Add_Other_Clue(kSuspectSadik, kClueAct2Ended);
 	SDB_Add_Other_Clue(kSuspectSadik, kClueBombingSuspect);
@@ -2349,9 +2353,10 @@ void InitScript::Init_SDB() {
 	SDB_Add_Other_Clue(kSuspectClovis, kClueAnimalMurderSuspect);
 	SDB_Add_Other_Clue(kSuspectClovis, kClueIzosFriend);
 	if (_vm->_cutContent) {
-		SDB_Add_Other_Clue(kSuspectClovis, kClueChinaBarSecurityDisc);
 		SDB_Add_Other_Clue(kSuspectClovis, kClueDektorasCard);
 		SDB_Add_Other_Clue(kSuspectClovis, kClueGaffsInformation);
+		SDB_Add_Other_Clue(kSuspectClovis, kClueCarColorAndMake);
+		SDB_Add_Other_Clue(kSuspectClovis, kCluePartialLicenseNumber);
 		SDB_Add_Other_Clue(kSuspectClovis, kClueLucyInterview);
 		SDB_Add_Other_Clue(kSuspectClovis, kCluePhoneCallClovis);
 		SDB_Add_Other_Clue(kSuspectClovis, kCluePhoneCallLucy2);
@@ -2366,16 +2371,21 @@ void InitScript::Init_SDB() {
 		SDB_Add_Other_Clue(kSuspectClovis, kClueEarlyInterviewB2);
 		SDB_Add_Other_Clue(kSuspectClovis, kClueCrazylegsInterview2);
 		SDB_Add_Other_Clue(kSuspectClovis, kClueIzosWarning);
-		SDB_Add_Other_Clue(kSuspectClovis, kClueCarColorAndMake);
 		SDB_Add_Other_Clue(kSuspectClovis, kClueChinaBar);
 		SDB_Add_Other_Clue(kSuspectClovis, kClueClovisFlowers);
 		SDB_Add_Other_Clue(kSuspectClovis, kClueMoonbus1);
 		SDB_Add_Other_Clue(kSuspectClovis, kClueDektorasDressingRoom);
-		SDB_Add_Other_Clue(kSuspectClovis, kCluePartialLicenseNumber);
 		SDB_Add_Other_Clue(kSuspectClovis, kClueClovisOrdersMcCoysDeath);
 		SDB_Add_Other_Clue(kSuspectClovis, kClueSightingClovis);
 		SDB_Add_Other_Clue(kSuspectClovis, kClueDektoraConfession);
 		SDB_Add_Other_Clue(kSuspectClovis, kClueClovisIncept);
+		SDB_Add_Other_Clue(kSuspectClovis, kClueMcCoyShotGuzza);
+		SDB_Add_Other_Clue(kSuspectClovis, kClueMcCoyKilledRunciter1);
+		SDB_Add_Other_Clue(kSuspectClovis, kClueZubenTalksAboutLucy1);
+		SDB_Add_Other_Clue(kSuspectClovis, kClueZubenTalksAboutLucy2);
+		SDB_Add_Other_Clue(kSuspectClovis, kClueSightingClovis);
+		SDB_Add_Other_Clue(kSuspectClovis, kClueSadiksGun);
+
 	}
 	SDB_Add_Other_Clue(kSuspectClovis, kClueMilitaryBoots);
 	SDB_Add_Identity_Clue(kSuspectClovis, kClueIzosWarning);
@@ -2388,7 +2398,6 @@ void InitScript::Init_SDB() {
 		SDB_Add_Photo_Clue(kSuspectClovis, kClueMoonbus1, 34);
 	}
 	SDB_Add_Photo_Clue(kSuspectClovis, kClueIzosFriend, 25);
-	SDB_Add_Photo_Clue(kSuspectClovis, kClueMilitaryBoots, 8);
 	if (_vm->_cutContent) {
 		SDB_Add_Photo_Clue(kSuspectClovis, kClueChinaBar, 19);
 	}
@@ -2401,9 +2410,6 @@ void InitScript::Init_SDB() {
 	SDB_Add_Whereabouts_Clue(kSuspectZuben, kClueRuncitersViewB);
 	SDB_Add_Replicant_Clue(kSuspectZuben, kClueOfficersStatement);
 	SDB_Add_Replicant_Clue(kSuspectZuben, kClueDoorForced2);
-	if (_vm->_cutContent) {
-		SDB_Add_Replicant_Clue(kSuspectZuben, kClueDoorForced1);
-	}
 	SDB_Add_Replicant_Clue(kSuspectZuben, kClueHowieLeeInterview);
 	SDB_Add_Replicant_Clue(kSuspectZuben, kClueZubenRunsAway);
 	SDB_Add_Replicant_Clue(kSuspectZuben, kClueZubenSquadPhoto);
@@ -2419,18 +2425,22 @@ void InitScript::Init_SDB() {
 		SDB_Add_Other_Clue(kSuspectZuben, kClueGaffsInformation);
 		SDB_Add_Other_Clue(kSuspectZuben, kClueRunciterInterviewA);
 		SDB_Add_Other_Clue(kSuspectZuben, kClueRuncitersVideo);
-		SDB_Add_Other_Clue(kSuspectZuben, kClueLabPaintTransfer);
-		SDB_Add_Other_Clue(kSuspectZuben, kCluePaintTransfer);
-		SDB_Add_Other_Clue(kSuspectZuben, kClueChromeDebris);
 		SDB_Add_Other_Clue(kSuspectZuben, kClueIzosWarning);
-		SDB_Add_Other_Clue(kSuspectZuben, kClueLichenDogWrapper);
-		SDB_Add_Other_Clue(kSuspectZuben, kClueCarColorAndMake);
-		SDB_Add_Other_Clue(kSuspectZuben, kCluePartialLicenseNumber);
 		SDB_Add_Other_Clue(kSuspectZuben, kClueMcCoyRetiredZuben);
 		SDB_Add_Other_Clue(kSuspectZuben, kClueSightingZuben);
-		SDB_Add_Other_Clue(kSuspectZuben, kClueLicensePlate);
-		SDB_Add_Other_Clue(kSuspectZuben, kClueLicensePlateMatch);
+		SDB_Add_Other_Clue(kSuspectZuben, kCluePartialLicenseNumber);
+		SDB_Add_Other_Clue(kSuspectZuben, kClueCarColorAndMake);
+		SDB_Add_Other_Clue(kSuspectZuben, kClueCarIdentified);
+		// Made it so McCoy comes to the conclusion that Zuben ripped off the license plate and threw it in the dumpster if he found the license plate in the dumpster behind Howie Lees.
+		if (_vm->_cutContent) {
+			if (Actor_Clue_Query(kActorMcCoy, kClueLicensePlate)) {
+				SDB_Add_Other_Clue(kSuspectZuben, kClueCar);
+			}
+		}
 		SDB_Add_Other_Clue(kSuspectZuben, kClueZubenIncept);
+		SDB_Add_Other_Clue(kSuspectZuben, kClueMcCoyLetZubenEscape);
+		SDB_Add_Other_Clue(kSuspectZuben, kClueZubenRunsAway);
+		SDB_Add_Other_Clue(kSuspectZuben, kClueCrystalRetiredZuben);
 	}
 	SDB_Add_Other_Clue(kSuspectZuben, kClueLucyInterview);
 	SDB_Add_Identity_Clue(kSuspectZuben, kClueHowieLeeInterview);
@@ -2454,7 +2464,6 @@ void InitScript::Init_SDB() {
 	SDB_Add_Replicant_Clue(kSuspectLucy, kClueDektoraInterview4);
 	SDB_Add_Replicant_Clue(kSuspectLucy, kClueRuncitersConfession1);
 	if (_vm->_cutContent) {
-		SDB_Add_Replicant_Clue(kSuspectLucy, kClueTyrellSalesPamphletLolita);
 		SDB_Add_Replicant_Clue(kSuspectLucy, kClueLucyIncept);
 	}
 	SDB_Add_Non_Replicant_Clue(kSuspectLucy, kClueToyDog);
@@ -2467,16 +2476,18 @@ void InitScript::Init_SDB() {
 	}
 	SDB_Add_Other_Clue(kSuspectLucy, kClueLucy);
 	SDB_Add_Other_Clue(kSuspectLucy, kClueCrowdInterviewA);
-	SDB_Add_Identity_Clue(kSuspectLucy, kClueRunciterInterviewA);
-	SDB_Add_Identity_Clue(kSuspectLucy, kClueDektoraInterview4);
+	SDB_Add_Identity_Clue(kSuspectLucy, kClueDektoraInterview3);
 	if (_vm->_cutContent) {
-		SDB_Add_Other_Clue(kSuspectLucy, kClueDektorasDressingRoom);
 		SDB_Add_Other_Clue(kSuspectLucy, kClueEarlyQAndLucy);
 		SDB_Add_Other_Clue(kSuspectLucy, kClueLucyWithDektora);
 		SDB_Add_Other_Clue(kSuspectLucy, kClueOuterDressingRoom);
 		SDB_Add_Other_Clue(kSuspectLucy, kClueDragonflyAnklet);
 		SDB_Add_Other_Clue(kSuspectLucy, kClueMcCoyRetiredLucy);
-		SDB_Add_Other_Clue(kSuspectLucy, kClueOuterDressingRoom);
+		SDB_Add_Other_Clue(kSuspectLucy, kClueZubensMotive);
+		SDB_Add_Other_Clue(kSuspectLucy, kClueLucyInterview);
+		SDB_Add_Other_Clue(kSuspectLucy, kClueCandyWrapper);
+		SDB_Add_Other_Clue(kSuspectLucy, kCluePhoneCallLucy1);
+		SDB_Add_Other_Clue(kSuspectLucy, kClueEarlyAttemptedToSeduceLucy);
 	}
 	SDB_Add_Photo_Clue(kSuspectLucy, kClueLucy, 5);
 	if (_vm->_cutContent) {
@@ -2502,8 +2513,8 @@ void InitScript::Init_SDB() {
 	SDB_Add_Other_Clue(kSuspectDektora, kClueChinaBar);
 	if (_vm->_cutContent) {
 		SDB_Add_Other_Clue(kSuspectDektora, kClueDragonflyCollection);
-		SDB_Add_Other_Clue(kSuspectDektora, kClueEarlyQsClub);
 		SDB_Add_Other_Clue(kSuspectDektora, kCluePartialLicenseNumber);
+		SDB_Add_Other_Clue(kSuspectDektora, kClueCarColorAndMake);
 		SDB_Add_Other_Clue(kSuspectDektora, kClueDektoraConfession);
 		SDB_Add_Other_Clue(kSuspectDektora, kCluePhoneCallDektora1);
 		SDB_Add_Other_Clue(kSuspectDektora, kCluePhoneCallDektora2);
@@ -2513,14 +2524,15 @@ void InitScript::Init_SDB() {
 		SDB_Add_Other_Clue(kSuspectDektora, kClueOuterDressingRoom);
 		SDB_Add_Other_Clue(kSuspectDektora, kClueLucyWithDektora);
 		SDB_Add_Other_Clue(kSuspectDektora, kClueScorpionbox);
-		SDB_Add_Other_Clue(kSuspectDektora, kClueCarColorAndMake);
 		SDB_Add_Other_Clue(kSuspectDektora, kClueScorpions);
 		SDB_Add_Other_Clue(kSuspectDektora, kClueDektorasDressingRoom);
 		SDB_Add_Other_Clue(kSuspectDektora, kClueEarlyInterviewA);
 		SDB_Add_Other_Clue(kSuspectDektora, kClueSightingDektora);
+		SDB_Add_Other_Clue(kSuspectDektora, kClueDektorasCard);
 		SDB_Add_Other_Clue(kSuspectDektora, kClueSuspectDektora);
 		SDB_Add_Other_Clue(kSuspectDektora, kClueMcCoyRetiredDektora);
 		SDB_Add_Other_Clue(kSuspectDektora, kClueDektoraIncept);
+		SDB_Add_Other_Clue(kSuspectDektora, kClueCarWasStolen);
 	}
 	SDB_Add_Other_Clue(kSuspectDektora, kClueCarRegistration1);
 	SDB_Add_Identity_Clue(kSuspectDektora, kClueDektoraInterview2);
@@ -2538,9 +2550,43 @@ void InitScript::Init_SDB() {
 
 	SDB_Set_Actor(kSuspectGordo, kActorGordo);
 	SDB_Set_Sex(kSuspectGordo, 1);
-	SDB_Add_Whereabouts_Clue(kSuspectGordo, kClueStolenCheese);
-	SDB_Add_Identity_Clue(kSuspectGordo, kClueGordoInterview1);
-	SDB_Add_Identity_Clue(kSuspectGordo, kClueGordoInterview2);
+	SDB_Add_Replicant_Clue(kSuspectIzo, kClueGordosLighterReplicant);
+	SDB_Add_Replicant_Clue(kSuspectIzo, kClueWarRecordsGordoFrizz);
+	SDB_Add_Replicant_Clue(kSuspectGordo, kClueCarRegistration2);
+	SDB_Add_Identity_Clue(kSuspectGordo, kClueStolenCheese);
+	SDB_Add_Other_Clue(kSuspectGordo, kClueGordoInterview1);
+	SDB_Add_Other_Clue(kSuspectGordo, kClueGordoInterview2);
+	SDB_Add_Other_Clue(kSuspectGordo, kClueGordoInterview3);
+	SDB_Add_Other_Clue(kSuspectGordo, kClueGordoConfession);
+	SDB_Add_Other_Clue(kSuspectGordo, kClueGordoBlabs);
+	SDB_Add_Other_Clue(kSuspectGordo, kClueMcCoyPulledAGun);
+	SDB_Add_Other_Clue(kSuspectGordo, kClueGordosLighterHuman);
+	SDB_Add_Other_Clue(kSuspectGordo, kClueMcCoyRetiredGordo);
+	SDB_Add_Other_Clue(kSuspectGordo, kClueGordoIncept);
+	SDB_Add_Other_Clue(kSuspectGordo, kClueSightingGordo);
+	SDB_Add_Other_Clue(kSuspectGordo, kClueCrystalRetiredGordo);
+	SDB_Add_Other_Clue(kSuspectGordo, kClueGordosLighterReplicant);
+	SDB_Add_Other_Clue(kSuspectGordo, kClueCrazylegsInterview1);
+	SDB_Add_Other_Clue(kSuspectGordo, kClueLichenDogWrapper);
+	// Made it so McCoy comes to the conclusion that Gordo was the one that drove the car during the animal murder if he has found enough clues.
+	// This is due to an unused line that I restored as a part of Gordo interview 1 and 2 where Gordo asks for money for lichen dogs.
+	// When McCoy has the interview clue and has found the lichen dog wrapper inside the front of the car McCoy concludes that Gordo was the driver.
+	if (_vm->_cutContent) {
+		if (Actor_Clue_Query(kActorMcCoy, kClueGordoInterview1)
+		|| Actor_Clue_Query(kActorMcCoy, kClueGordoInterview2)) {
+			if (Actor_Clue_Query(kActorMcCoy, kClueLichenDogWrapper)) {
+				SDB_Add_Other_Clue(kSuspectGordo, kClueCarColorAndMake);
+				SDB_Add_Other_Clue(kSuspectGordo, kClueDispatchHitAndRun);
+				SDB_Add_Other_Clue(kSuspectGordo, kClueCrowdInterviewB);
+				SDB_Add_Other_Clue(kSuspectGordo, kCluePaintTransfer);
+				SDB_Add_Other_Clue(kSuspectGordo, kClueLabPaintTransfer);
+				SDB_Add_Other_Clue(kSuspectGordo, kClueChromeDebris);
+				SDB_Add_Other_Clue(kSuspectGordo, kClueCarIdentified);
+			}
+		}
+	}
+	SDB_Add_Other_Clue(kSuspectGordo, kClueKingstonKitchenBox1);
+	SDB_Add_Other_Clue(kSuspectGordo, kClueKingstonKitchenBox1);
 
 	SDB_Set_Actor(kSuspectIzo, kActorIzo);
 	SDB_Set_Sex(kSuspectIzo, 1);
@@ -2549,6 +2595,13 @@ void InitScript::Init_SDB() {
 	SDB_Add_Whereabouts_Clue(kSuspectIzo, kClueGrigorianInterviewB2);
 	SDB_Add_Whereabouts_Clue(kSuspectIzo, kClueHomelessManInterview1);
 	SDB_Add_Replicant_Clue(kSuspectIzo, kClueGogglesReplicantIssue);
+	// Made it so McCoy comes to the conclusion that Izo supplied the weapons for the animal murder when he comes across Izos weapons stash.
+	if (_vm->_cutContent) {
+		if (Actor_Clue_Query(kActorMcCoy, kClueWeaponsCache)) {
+			SDB_Add_Other_Clue(kSuspectIzo, kClueLabShellCasings);
+			SDB_Add_Other_Clue(kSuspectIzo, kClueShellCasings);
+		}
+	}
 	SDB_Add_Other_Clue(kSuspectIzo, kClueGrigorianInterviewB1);
 	SDB_Add_Other_Clue(kSuspectIzo, kClueWeaponsCache);
 	SDB_Add_Other_Clue(kSuspectIzo, kClueFolder);
@@ -2559,8 +2612,7 @@ void InitScript::Init_SDB() {
 	SDB_Add_Other_Clue(kSuspectIzo, kClueRadiationGoggles);
 	if (_vm->_cutContent) {
 		SDB_Add_Other_Clue(kSuspectIzo, kClueChinaBarSecurityDisc);
-		SDB_Add_Other_Clue(kSuspectIzo, kClueLabShellCasings);
-		SDB_Add_Other_Clue(kSuspectIzo, kClueShellCasings);
+		SDB_Add_Other_Clue(kSuspectIzo, kClueOriginalShippingForm);
 		SDB_Add_Other_Clue(kSuspectIzo, kClueOriginalRequisitionForm);
 		SDB_Add_Other_Clue(kSuspectIzo, kClueIzosWarning);
 		SDB_Add_Other_Clue(kSuspectIzo, kClueGrigoriansResponse1);
@@ -2574,6 +2626,7 @@ void InitScript::Init_SDB() {
 		SDB_Add_Other_Clue(kSuspectIzo, kClueIzosFriend);	
 		SDB_Add_Other_Clue(kSuspectIzo, kClueCrystalRetiredIzo);
 		SDB_Add_Other_Clue(kSuspectIzo, kClueIzoIncept);
+		SDB_Add_Other_Clue(kSuspectIzo, kClueMcCoyWarnedIzo);
 		}
 	SDB_Add_Other_Clue(kSuspectIzo, kClueIzoInterview);
 	SDB_Add_Identity_Clue(kSuspectIzo, kClueGrigorianInterviewB2);
@@ -2593,13 +2646,11 @@ void InitScript::Init_SDB() {
 	if (_vm->_cutContent) {
 		SDB_Add_Other_Clue(kSuspectMcCoy, kClueGuzzaFramedMcCoy);
 		SDB_Add_Other_Clue(kSuspectMcCoy, kClueBriefcase);
-		SDB_Add_Other_Clue(kSuspectMcCoy, kClueHomelessManKid);
 		SDB_Add_Other_Clue(kSuspectMcCoy, kClueHollowayInterview);
 		SDB_Add_Other_Clue(kSuspectMcCoy, kClueMcCoyIncept);
 		SDB_Add_Other_Clue(kSuspectMcCoy, kClueMoonbus1);
 		SDB_Add_Other_Clue(kSuspectMcCoy, kClueMoonbusReflection);
 		SDB_Add_Other_Clue(kSuspectMcCoy, kClueMcCoysDescription);
-		SDB_Add_Other_Clue(kSuspectGuzza, kClueGuzzaAgreesToMeet);
 	}
 	SDB_Add_Photo_Clue(kSuspectMcCoy, kClueMcCoyAtMoonbus, 36);
 	SDB_Add_Photo_Clue(kSuspectMcCoy, kCluePhotoOfMcCoy1, 17);
@@ -2625,17 +2676,82 @@ void InitScript::Init_SDB() {
 		SDB_Add_Other_Clue(kSuspectGuzza, kClueGordoBlabs);
 		SDB_Add_Other_Clue(kSuspectGuzza, kClueSuspectDektora);
 		SDB_Add_Other_Clue(kSuspectGuzza, kClueChinaBarSecurityPhoto);
+		SDB_Add_Other_Clue(kSuspectGuzza, kCluePoliceWeaponUsed);
+		SDB_Add_Other_Clue(kSuspectGuzza, kClueMcCoyShotGuzza);
+		SDB_Add_Other_Clue(kSuspectGuzza, kClueSadiksGun);
 	}
 	SDB_Add_Other_Clue(kSuspectGuzza, kClueGuzzaFramedMcCoy);
 	SDB_Add_Identity_Clue(kSuspectGuzza, kClueGuzza);
 	SDB_Add_Identity_Clue(kSuspectGuzza, kClueGuzzaFramedMcCoy);
 	SDB_Add_Identity_Clue(kSuspectGuzza, kClueFolder);
 	SDB_Add_Photo_Clue(kSuspectGuzza, kClueGuzza, 27);
+
+	//Added in Crazylegs as a suspect since he is helping harbor the replicants.
+	if (_vm->_cutContent) {
+		SDB_Set_Actor(kSuspectCrazylegs, kActorCrazylegs);
+		SDB_Set_Sex(kSuspectCrazylegs, 1);
+		SDB_Add_Identity_Clue(kSuspectCrazylegs, kClueGrigoriansNote);
+		SDB_Add_Identity_Clue(kSuspectCrazylegs, kClueCrazysInvolvement);
+		SDB_Add_Other_Clue(kSuspectCrazylegs, kClueCrazylegsInterview1);
+		SDB_Add_Other_Clue(kSuspectCrazylegs, kClueCrazylegsInterview2);
+		SDB_Add_Other_Clue(kSuspectCrazylegs, kClueCrazylegsInterview3);
+		SDB_Add_Other_Clue(kSuspectCrazylegs, kCluePhoneCallLucy1);
+		SDB_Add_Other_Clue(kSuspectCrazylegs, kCluePhoneCallDektora1);
+		SDB_Add_Other_Clue(kSuspectCrazylegs, kClueCarRegistration1);
+		SDB_Add_Other_Clue(kSuspectCrazylegs, kClueCarRegistration3);
+		SDB_Add_Other_Clue(kSuspectCrazylegs, kClueSpinnerKeys);
+		SDB_Add_Other_Clue(kSuspectCrazylegs, kClueCrazylegGrovels);
+		SDB_Add_Other_Clue(kSuspectCrazylegs, kClueGrigoriansResources);
+		SDB_Add_Other_Clue(kSuspectCrazylegs, kClueGrigoriansResponse2);
+		SDB_Add_Other_Clue(kSuspectCrazylegs, kClueCrazysInvolvement);
+		SDB_Add_Other_Clue(kSuspectCrazylegs, kClueVKCrazylegsHuman);
+		SDB_Add_Other_Clue(kSuspectCrazylegs, kClueVKCrazylegsReplicant);
+		SDB_Add_Other_Clue(kSuspectCrazylegs, kClueCrazysInvolvement);
+	}
+	//Added in Early Q as a suspect since he is helping harbor the replicants like when he initially conceals what he knows about he reps and only only confesses when McCoy threatens him.
+	if (_vm->_cutContent) {
+		SDB_Set_Actor(kSuspectEarlyQ, kActorEarlyQ);
+		SDB_Set_Sex(kSuspectEarlyQ, 1);
+		SDB_Add_Identity_Clue(kSuspectEarlyQ, kClueDektorasDressingRoom);
+		SDB_Add_Other_Clue(kSuspectEarlyQ, kClueEarlyQAndLucy);
+		SDB_Add_Other_Clue(kSuspectEarlyQ, kClueCollectionReceipt);
+		SDB_Add_Other_Clue(kSuspectEarlyQ, kClueDragonflyCollection);
+		SDB_Add_Other_Clue(kSuspectEarlyQ, kClueDragonflyBelt);
+		SDB_Add_Other_Clue(kSuspectEarlyQ, kClueEarlyInterviewA);
+		SDB_Add_Other_Clue(kSuspectEarlyQ, kClueEarlyInterviewB1);
+		SDB_Add_Other_Clue(kSuspectEarlyQ, kClueEarlyInterviewB2);
+		SDB_Add_Other_Clue(kSuspectEarlyQ, kClueEarlyQsClub);
+		SDB_Add_Other_Clue(kSuspectEarlyQ, kClueOuterDressingRoom);
+		SDB_Add_Other_Clue(kSuspectEarlyQ, kClueVKEarlyQHuman);
+		SDB_Add_Other_Clue(kSuspectEarlyQ, kClueVKEarlyQReplicant);
+		SDB_Add_Photo_Clue(kSuspectEarlyQ, kClueEarlyQAndLucy, 1);
+		SDB_Add_Photo_Clue(kSuspectEarlyQ, kClueOuterDressingRoom, 16);
+	}
+	//Added in Grigorian as a suspect since he is helping harbor the replicants.
+	if (_vm->_cutContent) {
+		SDB_Set_Actor(kSuspectGrigorian, kActorGrigorian);
+		SDB_Set_Sex(kSuspectGrigorian, 1);
+		SDB_Add_Identity_Clue(kSuspectGrigorian, kClueGrigoriansResources);
+		SDB_Add_Identity_Clue(kSuspectGrigorian, kClueGrigoriansNote);
+		SDB_Add_Other_Clue(kSuspectGrigorian, kClueVKGrigorianHuman);
+		SDB_Add_Other_Clue(kSuspectGrigorian, kClueVKGrigorianReplicant);
+		SDB_Add_Other_Clue(kSuspectGrigorian, kClueCrimeSceneNotes);
+		SDB_Add_Other_Clue(kSuspectGrigorian, kClueGrigorianInterviewA);
+		SDB_Add_Other_Clue(kSuspectGrigorian, kClueGrigorianInterviewB1);
+		SDB_Add_Other_Clue(kSuspectGrigorian, kClueGrigorianInterviewB2);
+		SDB_Add_Other_Clue(kSuspectGrigorian, kClueGrigoriansResponse1);
+		SDB_Add_Other_Clue(kSuspectGrigorian, kClueGrigoriansResponse2);
+		SDB_Add_Other_Clue(kSuspectGrigorian, kClueCrazylegsInterview3);
+		SDB_Add_Other_Clue(kSuspectGrigorian, kClueEarlyInterviewB2);
+		SDB_Add_Other_Clue(kSuspectGrigorian, kClueMcCoyWarnedIzo);
+	}
 }
 
 void InitScript::Init_CDB() {
 	CDB_Set_Crime(kClueOfficersStatement, kCrimeAnimalMurder);
-	CDB_Set_Crime(kClueDoorForced1, kCrimeAnimalMurder);
+	if (!_vm->_cutContent) {
+		CDB_Set_Crime(kClueDoorForced1, kCrimeAnimalMurder);
+	}
 	CDB_Set_Crime(kClueDoorForced2, kCrimeAnimalMurder);
 	CDB_Set_Crime(kClueLimpingFootprints, kCrimeAnimalMurder);
 	CDB_Set_Crime(kClueGracefulFootprints, kCrimeAnimalMurder);
@@ -2670,6 +2786,21 @@ void InitScript::Init_CDB() {
 	CDB_Set_Crime(kClueZubenInterview, kCrimeAnimalMurder);
 	CDB_Set_Crime(kClueLucy, kCrimeAnimalMurder);
 	CDB_Set_Crime(kClueDragonflyAnklet, kCrimeAnimalMurder);
+	// TODO Eevn though I have added in extra clues for the crimes within the KIA these clues do not seem to appear in the KIA in game. It works for the suspects but not the crimes.
+	// The game still reads these clues because it is cross referencing them with the suspects to connect them with certain crimes but the clues won't appear within the KIA.
+	// This could be something that you could look into and fix.
+	if (_vm->_cutContent) {
+		CDB_Set_Crime(kClueBigManLimping, kCrimeAnimalMurder);
+		CDB_Set_Crime(kClueHowieLeeInterview, kCrimeAnimalMurder);
+		CDB_Set_Crime(kClueCandyWrapper, kCrimeAnimalMurder);
+		CDB_Set_Crime(kClueMcCoyRetiredZuben, kCrimeAnimalMurder);
+		CDB_Set_Crime(kClueMcCoyLetZubenEscape, kCrimeAnimalMurder);
+		CDB_Set_Crime(kClueDispatchHitAndRun, kCrimeAnimalMurder);
+		CDB_Set_Crime(kClueLichenDogWrapper, kCrimeAnimalMurder);
+		CDB_Set_Crime(kClueSightingZuben, kCrimeAnimalMurder);
+		CDB_Set_Crime(kClueCrystalRetiredZuben, kCrimeAnimalMurder);
+		CDB_Set_Crime(kClueZubenRunsAway, kCrimeAnimalMurder);
+	}
 	CDB_Set_Crime(kClueZubenSquadPhoto, kCrimeAnimalMurder);
 
 	CDB_Set_Crime(kCluePhoneCallGuzza, kCrimeEisendullerMurder);
@@ -2689,6 +2820,16 @@ void InitScript::Init_CDB() {
 	CDB_Set_Crime(kClueDogCollar2, kCrimeEisendullerMurder);
 	CDB_Set_Crime(kClueKingstonKitchenBox2, kCrimeEisendullerMurder);
 	CDB_Set_Crime(kCluePlasticExplosive, kCrimeEisendullerMurder);
+	if (_vm->_cutContent) {
+		CDB_Set_Crime(kClueLabAnalysisGoldChain, kCrimeEisendullerMurder);
+		CDB_Set_Crime(kClueStolenCheese, kCrimeEisendullerMurder);
+		CDB_Set_Crime(kClueGordoConfession, kCrimeEisendullerMurder);
+		CDB_Set_Crime(kClueDNAMarcus, kCrimeEisendullerMurder);
+		CDB_Set_Crime(kCluePeruvianLadyInterview, kCrimeEisendullerMurder);
+		CDB_Set_Crime(kClueIzoInterview, kCrimeEisendullerMurder);
+		CDB_Set_Crime(kClueDragonflyCollection, kCrimeEisendullerMurder);
+		CDB_Set_Crime(kClueCollectionReceipt, kCrimeEisendullerMurder);
+	}
 	CDB_Set_Crime(kClueTyrellSecurityPhoto, kCrimeEisendullerMurder);
 
 	CDB_Set_Crime(kClueGaffsInformation, kCrimeMoonbusHijacking);
@@ -2696,17 +2837,36 @@ void InitScript::Init_CDB() {
 	CDB_Set_Crime(kClueMcCoyAtMoonbus, kCrimeMoonbusHijacking);
 	CDB_Set_Crime(kClueClovisAtMoonbus, kCrimeMoonbusHijacking);
 	CDB_Set_Crime(kClueSadikAtMoonbus, kCrimeMoonbusHijacking);
-	CDB_Set_Crime(kClueVKLucyReplicant, kCrimeMoonbusHijacking);
 	CDB_Set_Crime(kClueCrystalsCase, kCrimeMoonbusHijacking);
+	if (_vm->_cutContent) {
+		CDB_Set_Crime(kClueMoonbus2, kCrimeMoonbusHijacking);
+		CDB_Set_Crime(kClueMoonbusCloseup, kCrimeMoonbusHijacking);
+		CDB_Set_Crime(kClueMoonbusReflection, kCrimeMoonbusHijacking);
+		CDB_Set_Crime(kCluePhoneCallClovis, kCrimeMoonbusHijacking);
+	}
 	CDB_Set_Crime(kCluePhoneCallCrystal, kCrimeMoonbusHijacking);
 
 	CDB_Set_Crime(kClueCrimeSceneNotes, kCrimeFactoryBombing);
 	CDB_Set_Crime(kClueGrigorianInterviewA, kCrimeFactoryBombing);
 	CDB_Set_Crime(kClueGrigorianInterviewB1, kCrimeFactoryBombing);
+	if (_vm->_cutContent) {
+		CDB_Set_Crime(kClueIzosWarning, kCrimeFactoryBombing);
+		CDB_Set_Crime(kClueGrigoriansResponse1, kCrimeFactoryBombing);
+		CDB_Set_Crime(kClueBombingSuspect, kCrimeFactoryBombing);
+		CDB_Set_Crime(kClueMorajiInterview, kCrimeFactoryBombing);
+		CDB_Set_Crime(kClueExpertBomber, kCrimeFactoryBombing);
+		CDB_Set_Crime(kClueAmateurBomber, kCrimeFactoryBombing);
+	}
 	CDB_Set_Crime(kClueGrigorianInterviewB2, kCrimeFactoryBombing);
 
 	CDB_Set_Crime(kClueMorajiInterview, kCrimeMorajiMurder);
 	CDB_Set_Crime(kClueExpertBomber, kCrimeMorajiMurder);
+	if (_vm->_cutContent) {
+		CDB_Set_Crime(kClueChewInterview, kCrimeMorajiMurder);
+		CDB_Set_Crime(kClueGordoInterview1, kCrimeMorajiMurder);
+		CDB_Set_Crime(kClueGordoInterview1, kCrimeMorajiMurder);
+		CDB_Set_Crime(kClueDNAMoraji, kCrimeMorajiMurder);
+	}
 	CDB_Set_Crime(kClueAmateurBomber, kCrimeMorajiMurder);
 
 	CDB_Set_Crime(kClueWeaponsCache, kCrimeArmsDealing);
@@ -2717,11 +2877,66 @@ void InitScript::Init_CDB() {
 	CDB_Set_Crime(kClueHomelessManKid, kCrimeArmsDealing);
 	CDB_Set_Crime(kClueOriginalRequisitionForm, kCrimeArmsDealing);
 	CDB_Set_Crime(kCluePoliceIssueWeapons, kCrimeArmsDealing);
-	CDB_Set_Crime(kClueFolder, kCrimeArmsDealing);
-	CDB_Set_Crime(kClueGuzzaFramedMcCoy, kCrimeArmsDealing);
+	if (_vm->_cutContent) {
+		CDB_Set_Crime(kClueGuzza, kCrimeArmsDealing);
+		CDB_Set_Crime(kClueOriginalShippingForm, kCrimeArmsDealing);
+		CDB_Set_Crime(kClueRequisitionForm, kCrimeArmsDealing);
+		CDB_Set_Crime(kClueWeaponsOrderForm, kCrimeArmsDealing);
+		CDB_Set_Crime(kClueShippingForm, kCrimeArmsDealing);
+		CDB_Set_Crime(kClueGuzzasCash, kCrimeArmsDealing);
+		CDB_Set_Crime(kClueBobInterview1, kCrimeArmsDealing);
+		CDB_Set_Crime(kClueBobInterview2, kCrimeArmsDealing);
+		CDB_Set_Crime(kClueLabShellCasings, kCrimeArmsDealing);
+		CDB_Set_Crime(kCluePoliceWeaponUsed, kCrimeArmsDealing);
+		CDB_Set_Crime(kClueGrigoriansResponse1, kCrimeArmsDealing);
+	}
 
 	CDB_Set_Crime(kClueStaggeredbyPunches, kCrimeBradburyAssault);
+	if (_vm->_cutContent) {
+		CDB_Set_Crime(kClueDoorForced1, kCrimeBradburyAssault);
+		CDB_Set_Crime(kClueSightingSadikBradbury, kCrimeBradburyAssault);
+		CDB_Set_Crime(kClueDNASebastian, kCrimeBradburyAssault);
+		CDB_Set_Crime(kClueChessTable, kCrimeBradburyAssault);
+		CDB_Set_Crime(kClueSadikIncept, kCrimeBradburyAssault);
+	}
 	CDB_Set_Crime(kClueAct2Ended, kCrimeBradburyAssault);
+
+	// Added in a new crime replicant harboring. This crime focuses on Grigorian, C.A.R.S. and the underground railroad which is helping replicants escape the city.
+	// It starts off with either McCoy learning about Grigorians resources or finding his note in the car. He then tracks the car to Crazylegs who is also helping out the underground railroad.
+	// McCoy then goes to Early Qs club where he finds out that Early Q is harboring replicants by giving them jobs and gifts and hiding them from the police. After Early Q is threatened he spills the beans and reveal
+	// Dektora is working with some people which are I assume are working for Grigorian to help the reps escape offworld.	
+	if (_vm->_cutContent) {
+		CDB_Set_Crime(kClueGrigoriansNote, kCrimeReplicantHarboring);
+		CDB_Set_Crime(kClueGrigoriansResponse1, kCrimeReplicantHarboring);
+		CDB_Set_Crime(kClueGrigoriansResponse2, kCrimeReplicantHarboring);
+		CDB_Set_Crime(kClueGrigoriansResources, kCrimeReplicantHarboring);
+		CDB_Set_Crime(kClueCrazylegGrovels, kCrimeReplicantHarboring);
+		CDB_Set_Crime(kClueCrazylegsInterview1, kCrimeReplicantHarboring);
+		CDB_Set_Crime(kClueCrazylegsInterview2, kCrimeReplicantHarboring);
+		CDB_Set_Crime(kClueCrazylegsInterview3, kCrimeReplicantHarboring);
+		CDB_Set_Crime(kClueCrazysInvolvement, kCrimeReplicantHarboring);
+		CDB_Set_Crime(kClueCar, kCrimeReplicantHarboring);
+		CDB_Set_Crime(kClueCarIdentified, kCrimeReplicantHarboring);
+		CDB_Set_Crime(kClueCarColorAndMake, kCrimeReplicantHarboring);
+		CDB_Set_Crime(kClueLicensePlate, kCrimeReplicantHarboring);
+		CDB_Set_Crime(kCluePartialLicenseNumber, kCrimeReplicantHarboring);
+		CDB_Set_Crime(kClueLicensePlateMatch, kCrimeReplicantHarboring);
+		CDB_Set_Crime(kClueEarlyQInterview, kCrimeReplicantHarboring);
+		CDB_Set_Crime(kClueEarlyInterviewB2, kCrimeReplicantHarboring);	
+		CDB_Set_Crime(kClueDektorasDressingRoom, kCrimeReplicantHarboring);
+		CDB_Set_Crime(kClueCarWasStolen, kCrimeReplicantHarboring);
+		CDB_Set_Crime(kClueDektoraConfession, kCrimeReplicantHarboring);
+		CDB_Set_Crime(kClueDektoraInterview1, kCrimeReplicantHarboring);
+	}
+	// This crime I added in revolves around Gordo stealing the cheese from kingston kitchens.
+	if (_vm->_cutContent) {
+		CDB_Set_Crime(kClueSpecialIngredient, kCrimeCheeseTheft);
+		CDB_Set_Crime(kClueStolenCheese, kCrimeCheeseTheft);
+		CDB_Set_Crime(kClueGordoConfession, kCrimeCheeseTheft);
+		CDB_Set_Crime(kClueCheese, kCrimeCheeseTheft);
+		CDB_Set_Crime(kClueKingstonKitchenBox1, kCrimeCheeseTheft);
+		CDB_Set_Crime(kClueKingstonKitchenBox2, kCrimeCheeseTheft);
+	}
 
 	for (int i = 0; i != 288; ++i) {
 		CDB_Set_Clue_Asset_Type(i, kClueTypeIntangible);
@@ -3008,7 +3223,6 @@ void InitScript::Init_CDB() {
 		CDB_Set_Clue_Asset_Type(kClueMoonbusCloseup, kClueTypeAudioRecording);
 		CDB_Set_Clue_Asset_Type(kClueMcCoyLetZubenEscape, kClueTypeAudioRecording);
 		CDB_Set_Clue_Asset_Type(kClueBobShotInSelfDefense, kClueTypeAudioRecording);
-		CDB_Set_Clue_Asset_Type(kClueZubenRunsAway, kClueTypeAudioRecording);
 		CDB_Set_Clue_Asset_Type(kClueSadiksGun, kClueTypeAudioRecording);
 		CDB_Set_Clue_Asset_Type(kClueRunciterConfession1, kClueTypeAudioRecording);
 		CDB_Set_Clue_Asset_Type(kClueRunciterConfession2, kClueTypeAudioRecording);

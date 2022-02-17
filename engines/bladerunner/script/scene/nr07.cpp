@@ -226,6 +226,9 @@ bool SceneScriptNR07::ClickedOn2DRegion(int region) {
 						Item_Pickup_Spin_Effect(kModelAnimationPhoto, 508, 401);
 						Actor_Clue_Acquire(kActorMcCoy, kClueDektoraIncept, false, -1);
 						Actor_Says(kActorMcCoy, 6975, 12); // Interesting
+						if (_vm->_cutContent) {
+							CDB_Set_Crime(kClueCrazysInvolvement, kCrimeReplicantHarboring);
+						}
 						// We don't remove the region after picking the clue
 						// McCoy will just point out that there's nothing more there to find.
 						// (Saves us from using up a flag and having to write extra code)

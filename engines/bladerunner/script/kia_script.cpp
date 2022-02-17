@@ -616,6 +616,8 @@ void KIAScript::SCRIPT_KIA_DLL_Play_Clue_Asset_Script(int notUsed, int clueId) {
 		KIA_Play_Actor_Dialogue(kActorGordo, 1020);
 		KIA_Play_Actor_Dialogue(kActorMcCoy, 6500);
 		KIA_Play_Actor_Dialogue(kActorGordo, 1030);
+		KIA_Play_Actor_Dialogue(kActorMcCoy, 1125); //00-1125.AUD	Thanks a million.
+		KIA_Play_Actor_Dialogue(kActorGordo, 980); //02-0980.AUD	Got any chinyen you can part with? Just so I can grab myself a couple of lichen-dogs.
 		break;
 	case kClueGordoInterview2:
 		if (_vm->_cutContent) {
@@ -628,6 +630,8 @@ void KIAScript::SCRIPT_KIA_DLL_Play_Clue_Asset_Script(int notUsed, int clueId) {
 		KIA_Play_Actor_Dialogue(kActorGordo, 1070);
 		KIA_Play_Actor_Dialogue(kActorMcCoy, 6510);
 		KIA_Play_Actor_Dialogue(kActorGordo, 1080);
+		KIA_Play_Actor_Dialogue(kActorMcCoy, 1125); //00-1125.AUD	Thanks a million.
+		KIA_Play_Actor_Dialogue(kActorGordo, 980); //02-0980.AUD	Got any chinyen you can part with? Just so I can grab myself a couple of lichen-dogs.
 		break;
 	case kClueAnsweringMachineMessage:
 		KIA_Play_Actor_Dialogue(kActorSebastian, 0);
@@ -2258,10 +2262,6 @@ void KIAScript::SCRIPT_KIA_DLL_Play_Clue_Asset_Script(int notUsed, int clueId) {
 		KIA_Play_Actor_Dialogue(kActorSadik, 250); //08-0250.AUD	Old reactor cores. Anything still got a glow.
 		KIA_Play_Actor_Dialogue(kActorMcCoy, 6195); //00-6195.AUD	I thought you said we came to earth in this thing.
 		KIA_Play_Actor_Dialogue(kActorSadik, 260); //08-0260.AUD	The generator? It take almost anything.
-		break;
-		// This clue is the dialogue that McCoy says when you click on Zubens pot.
-	case kClueZubenRunsAway:
-		KIA_Play_Actor_Dialogue(kActorVoiceOver, 4270); //99-4270.AUD	The guy dumped nu-sooch all over my coat and didn't even stick around to apologize. Looked like someone with a guilty conscience to me.
 		break;
 		// This clue is the dialogue when Sadik shoots Guzza in the sewers.
 	case kClueSadiksGun:

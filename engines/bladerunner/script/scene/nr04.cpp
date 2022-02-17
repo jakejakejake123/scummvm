@@ -360,6 +360,7 @@ void SceneScriptNR04::ActorChangedGoal(int actorId, int newGoal, int oldGoal, bo
 			// Added in a clue.
 			if (_vm->_cutContent) {
 				Actor_Clue_Acquire(kActorMcCoy, kClueEarlyInterviewB2, true, kActorEarlyQ);
+				CDB_Set_Crime(kClueDektorasDressingRoom, kCrimeReplicantHarboring);
 			}
 			Actor_Set_Goal_Number(kActorEarlyQ, kGoalEarlyQNR04AskForDisk);
 				}

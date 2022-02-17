@@ -301,6 +301,9 @@ void SceneScriptHC04::dialogueWithIsabella() {
 			Actor_Says(kActorIsabella, 330, kAnimationModeTalk); //59-0330.AUD	You bet, mon. That cheese’s been nothing but trouble for Mama Isabella.
 		}
 		Actor_Clue_Acquire(kActorMcCoy, kClueStolenCheese, false, kActorIsabella);
+		if (_vm->_cutContent) {
+			CDB_Set_Crime(kClueStolenCheese, kCrimeCheeseTheft);
+		}
 		break;
 
 	case 390: // BUY STEW

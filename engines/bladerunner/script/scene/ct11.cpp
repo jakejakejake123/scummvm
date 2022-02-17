@@ -205,6 +205,9 @@ bool SceneScriptCT11::ClickedOn2DRegion(int region) {
 			Item_Pickup_Spin_Effect(kModelAnimationGrigoriansNote, 512, 326);
 			Actor_Voice_Over(8840, kActorMcCoy);
 			Scene_2D_Region_Remove(2);
+			if (_vm->_cutContent) {
+				CDB_Set_Crime(kClueGrigoriansNote, kCrimeReplicantHarboring);
+			}
 		}
 		return true;
 	}

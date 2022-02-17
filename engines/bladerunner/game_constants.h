@@ -410,7 +410,11 @@ enum Suspects {
 	kSuspectGordo           = 5,
 	kSuspectIzo             = 6,
 	kSuspectMcCoy           = 7,
-	kSuspectGuzza           = 8
+	kSuspectGuzza           = 8,
+	// Affter multiple test runs I have figured out there are 3 extra slots were suspects can be inserted without the game crashing.
+	kSuspectCrazylegs       = 9,
+	kSuspectGrigorian       = 10,
+	kSuspectEarlyQ          = 11
 };
 
 enum Crimes {
@@ -420,8 +424,8 @@ enum Crimes {
 	kCrimeMorajiMurder      = 3,
 	kCrimeBradburyAssault   = 4,
 	kCrimeFactoryBombing    = 5,
-	kCrimeBobMurder         = 6, // Unused
-	kCrimeRunciterMurder    = 7, // Unused
+	kCrimeReplicantHarboring = 6, // TODO Name still appears as Bobs murder in game. The name has to be changed to replicant harboring within the games files.
+	kCrimeCheeseTheft       = 7, // TODO Name still appears as Runciters murder in game. The name has to be changed to cheese theft within the games files.
 	kCrimeMoonbusHijacking  = 8
 };
 
