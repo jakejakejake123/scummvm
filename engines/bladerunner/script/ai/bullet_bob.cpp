@@ -151,11 +151,40 @@ bool AIScriptBulletBob::ShotAtAndHit() {
 		//Made it so the clickable 2D region for the bullet proof vest is removed after you shoot Bob.
 		Scene_2D_Region_Remove(0);
 	}
+	if (_vm->_cutContent) {
+		if (Actor_Query_In_Set(kActorBulletBob, kSetKP07)) {
+			AI_Movement_Track_Flush(kActorBulletBob);
+			Actor_Retired_Here(kActorBulletBob, 6, 6, true, kActorMcCoy);
+			Actor_Set_Goal_Number(kActorBulletBob, kGoalBulletBobGone);
+			return true;
+		}
+	}
 
 	return false;
 }
 
 void AIScriptBulletBob::Retired(int byActorId) {
+	Actor_Set_Goal_Number(kActorBulletBob, kGoalBulletBobGone);
+	// Made it so the replicant survivors at moonbus variable goes up when Bob is at the moonbus and then goes down when he is retired..
+	if (_vm->_cutContent) {
+		if (Actor_Query_In_Set(kActorBulletBob, kSetKP07)) {
+			Global_Variable_Decrement(kVariableReplicantsSurvivorsAtMoonbus, 1);
+			Actor_Set_Goal_Number(kActorBulletBob, kGoalBulletBobGone);
+
+			if (Global_Variable_Query(kVariableReplicantsSurvivorsAtMoonbus) == 0) {
+				Player_Loses_Control();
+				Delay(2000);
+				Player_Set_Combat_Mode(false);
+				Loop_Actor_Walk_To_XYZ(kActorMcCoy, -12.0f, -41.58f, 72.0f, 0, true, false, false);
+				Ambient_Sounds_Remove_All_Non_Looping_Sounds(true);
+				Ambient_Sounds_Remove_All_Looping_Sounds(1u);
+				Game_Flag_Set(kFlagKP07toKP06);
+				Game_Flag_Reset(kFlagMcCoyIsHelpingReplicants);
+				Set_Enter(kSetKP05_KP06, kSceneKP06);
+				return; //true;
+			}
+		}
+	}
 	// return false;
 }
 

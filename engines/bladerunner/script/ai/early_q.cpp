@@ -242,13 +242,40 @@ bool AIScriptEarlyQ::ShotAtAndHit() {
 	 && Actor_Query_Goal_Number(kActorEarlyQ) <= 217
 	) {
 		Actor_Set_Goal_Number(kActorEarlyQ, kGoalEarlyQNR04GetShot);
-		return true;
+	}
+	if (_vm->_cutContent) {
+		if (Actor_Query_In_Set(kActorEarlyQ, kSetKP07)) {
+			AI_Movement_Track_Flush(kActorEarlyQ);
+			Actor_Retired_Here(kActorEarlyQ, 6, 6, true, kActorMcCoy);
+			Actor_Set_Goal_Number(kActorEarlyQ, kGoalEarlyQNR04GetShot);
+			Actor_Set_At_XYZ(kActorEarlyQ, -58.84f, -42.70f, -142.27f, 0);
+			return true;
+		}
 	}
 
 	return false;
 }
 
 void AIScriptEarlyQ::Retired(int byActorId) {
+	// Made it so the replicant survivors at moonbus variable goes up when Early Q is at the moonbus and then goes down when he is retired.
+	if (_vm->_cutContent) {
+		if (Actor_Query_In_Set(kActorEarlyQ, kSetKP07)) {
+			Global_Variable_Decrement(kVariableReplicantsSurvivorsAtMoonbus, 1);
+			Actor_Set_Goal_Number(kActorEarlyQ, kGoalEarlyQNR04GetShot);
+
+			if (Global_Variable_Query(kVariableReplicantsSurvivorsAtMoonbus) == 0) {
+				Player_Loses_Control();
+				Delay(2000);
+				Player_Set_Combat_Mode(false);
+				Loop_Actor_Walk_To_XYZ(kActorMcCoy, -12.0f, -41.58f, 72.0f, 0, true, false, false);
+				Ambient_Sounds_Remove_All_Non_Looping_Sounds(true);
+				Ambient_Sounds_Remove_All_Looping_Sounds(1u);
+				Game_Flag_Set(kFlagKP07toKP06);
+				Game_Flag_Reset(kFlagMcCoyIsHelpingReplicants);
+				Set_Enter(kSetKP05_KP06, kSceneKP06);
+			}
+		}
+	}
 	// return false;
 }
 
@@ -450,13 +477,17 @@ bool AIScriptEarlyQ::GoalChanged(int currentGoalNumber, int newGoalNumber) {
 		Actor_Set_At_XYZ(kActorEarlyQ, 109.0, 0.0, 374.0, 0);
 		// Made it so if McCoy shoots Early Q and he is a replicant Hanoi won't come in the room and shoot McCoy. Instead McCoy will say
 		// easy money and will receive 200 chinyen.
+		// Made it so this code only activates in set NR04 and not in the moonbus.
 		if (_vm->_cutContent) {
-			if (Game_Flag_Query(kFlagEarlyQIsReplicant)) {
-				Game_Flag_Set(kFlagEarlyQDead);
-				Player_Set_Combat_Mode (false);
-				Actor_Voice_Over(920, kActorVoiceOver); //99-0920.AUD	Easy money.
-				if (Query_Difficulty_Level() != kGameDifficultyEasy) {
-					Global_Variable_Increment (kVariableChinyen, 200);
+			if (Actor_Query_In_Set(kActorEarlyQ, kSetNR04)) {
+				if (Game_Flag_Query(kFlagEarlyQIsReplicant)) {
+					Game_Flag_Set(kFlagEarlyQDead);
+					Player_Set_Combat_Mode (false);
+					Actor_Voice_Over(920, kActorVoiceOver); //99-0920.AUD	Easy money.
+					Actor_Modify_Friendliness_To_Other(kActorSteele, kActorMcCoy, 3);
+					if (Query_Difficulty_Level() != kGameDifficultyEasy) {
+						Global_Variable_Increment (kVariableChinyen, 200);
+					}
 				}		
 			} else {
 				Actor_Set_Goal_Number(kActorHanoi, kGoalHanoiNR04Enter);

@@ -129,6 +129,8 @@ void SceneScriptKP07::InitializeScene() {
 			if (Game_Flag_Query(kFlagBulletBobIsReplicant)) {
 				if (Actor_Query_Goal_Number(kActorBulletBob) < kGoalBulletBobGone) {
 					AI_Movement_Track_Flush(kActorBulletBob);
+					Global_Variable_Increment(kVariableReplicantsSurvivorsAtMoonbus, 1);
+					Actor_Set_Targetable(kActorBulletBob, true);
 					Actor_Put_In_Set(kActorBulletBob, kSetKP07);
 					Actor_Set_At_XYZ(kActorBulletBob, -85.71f, -41.29f, 65.11f, 240);
 				}
@@ -149,8 +151,10 @@ void SceneScriptKP07::InitializeScene() {
 			if (Game_Flag_Query(kFlagEarlyQIsReplicant)) {
 				if (!Game_Flag_Query(kFlagEarlyQDead)) {
 					AI_Movement_Track_Flush(kActorEarlyQ);
+					Global_Variable_Increment(kVariableReplicantsSurvivorsAtMoonbus, 1);
+					Actor_Set_Targetable(kActorEarlyQ, true);
 					Actor_Put_In_Set(kActorEarlyQ, kSetKP07);
-					Actor_Set_At_XYZ(kActorEarlyQ, -58.84f, -42.70f, -142.27f, 240);
+					Actor_Set_At_XYZ(kActorEarlyQ, -58.84f, -42.70f, -142.27f, 0);
 				}
 			}
 		}
