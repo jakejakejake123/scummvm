@@ -180,15 +180,15 @@ void SceneScriptMA07::PlayerWalkedIn() {
 	// Code for an encounter that you can have with Crystal in act 4 if McCoy didn't retire a human or is not on his
 	// way to the car ending.
 	if (_vm->_cutContent) {
-		if (!Game_Flag_Query(kFlagCrystalTalkAct4
+		if (!Game_Flag_Query(kFlagCrystalTalkAct4)
 		// Made it so whether of not you have affection towards Dektora or Lucy this will determine whether or not you will meet Crystal here.
 		&& (Global_Variable_Query(kVariableAffectionTowards) != kAffectionTowardsDektora
 		&& Global_Variable_Query(kVariableAffectionTowards) != kAffectionTowardsLucy
 		&& !Game_Flag_Query(kFlagMcCoyRetiredHuman)
 		// Made it so McCoy has to retire at least 3 replicants for Steele to like him enough to meet him. 3 friendliness points per replicant. Starting friendliness 50.
 		// In the cut content mode there are around 10 potential replicants up until this point so this should be achieveable.
-		&& Actor_Query_Friendliness_To_Other(kActorSteele, kActorMcCoy) > 58) 
-		&&	Global_Variable_Query(kVariableChapter) == 4)) {
+		&& Actor_Query_Friendliness_To_Other(kActorSteele, kActorMcCoy) > 58)
+		&&	Global_Variable_Query(kVariableChapter) == 4) {
 			Actor_Put_In_Set(kActorSteele, kSetMA07);
 			Actor_Set_At_XYZ(kActorSteele, -68.06, -171.95, 393.86, 0);
 			Actor_Face_Actor(kActorSteele, kActorMcCoy, true);
