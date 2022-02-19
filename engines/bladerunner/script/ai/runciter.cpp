@@ -238,7 +238,8 @@ bool AIScriptRunciter::ShotAtAndHit() {
 	if (_vm->_cutContent && !Game_Flag_Query(kFlagRunciterIsReplicant)) {
 		Game_Flag_Set(kFlagMcCoyRetiredHuman);	
 	}
-	ADQ_Add(kActorRunciter, 9020, 18); //15-9020.AUD	Argh!		
+	// Fixed Runciter anaimation. His head now tilts back when he is shot.
+	Actor_Says(kActorRunciter, 9020, 18); //15-9020.AUD	Argh!		
 	Actor_Change_Animation_Mode(kActorRunciter, kAnimationModeDie);
 	Actor_Set_Goal_Number(kActorRunciter, kGoalRunciterDead);
 	Delay(2000);

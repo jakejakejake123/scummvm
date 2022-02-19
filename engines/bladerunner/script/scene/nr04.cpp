@@ -326,15 +326,13 @@ void SceneScriptNR04::ActorChangedGoal(int actorId, int newGoal, int oldGoal, bo
 					Actor_Says(kActorMcCoy, 3385, 13); //00-3385.AUD	I want information.
 					Actor_Says(kActorEarlyQ, 700, 30); //18-0700.AUD	I heard some things, yeah. I’m the kind of guy people confide in, you know.
 					Actor_Says(kActorMcCoy, 150, 13); //00-0150.AUD	You know anything about insects?
-					Delay (1000);
+					// Fixed the conversation so it flows better.
 					Actor_Says(kActorMcCoy, 1110, 13); //00-1110.AUD	We're talking exceptionally fine jewelry in the shape of a dragonfly.
 					Delay (1000);
 					Actor_Says(kActorMcCoy, 8990, 13); //00-8990.AUD	What have you got there?
-					Delay (1000);
 					Actor_Clue_Acquire(kActorMcCoy, kClueCollectionReceipt, false, kActorEarlyQ);
 					Item_Pickup_Spin_Effect(kModelAnimationCollectionReceipt, 200, 160);
 					Actor_Says(kActorMcCoy, 8845, 13); //00-8845.AUD	A receipt.
-					Delay (1000);
 					Actor_Voice_Over(1570, kActorVoiceOver); //99-1570.AUD	There were three pieces. A belt, earrings and an anklet.
 					Actor_Voice_Over(1580, kActorVoiceOver); //99-1580.AUD	Early had bought them last month at an auction…
 					Actor_Voice_Over(1590, kActorVoiceOver); //99-1590.AUD	for more money than I’d see, if I retired a dozen Reps.

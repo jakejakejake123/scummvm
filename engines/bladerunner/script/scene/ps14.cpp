@@ -137,7 +137,13 @@ void SceneScriptPS14::PlayerWalkedIn() {
 			&& (Global_Variable_Query(kVariableChapter) == 4)) {  
 				Actor_Put_In_Set(kActorOfficerGrayford, kSetPS14);
 				Actor_Set_At_XYZ(kActorOfficerGrayford, -879.97, 507.86, -1132.41, 0);
-				Actor_Face_Heading(kActorOfficerGrayford, 511, false);
+				// Added in some lines and music for this encounter. TODO I couldn't get Grayford to face Leary properly for the first couple of lines.
+				Actor_Face_Actor(kActorOfficerGrayford, kActorOfficerLeary, true); 
+				Actor_Says(kActorOfficerLeary, 280, kAnimationModeTalk); //23-0280.AUD	Sounds like another nutcase overdosed on too many lichen-dogs.
+				Actor_Face_Actor(kActorOfficerGrayford, kActorOfficerLeary, true); 
+				Actor_Says(kActorOfficerGrayford, 460, kAnimationModeTalk); //24-0460.AUD	Either that or another street punk that sucked one too many sugar cubes.
+				Actor_Says(kActorMcCoy, 3970, 15); //00-3970.AUD	Hey.
+				Music_Play(kMusicBatl226M, 50, 0, 2, -1, kMusicLoopPlayOnce, 0);
 				Actor_Face_Actor(kActorMcCoy, kActorOfficerGrayford, true);
 				Actor_Face_Actor(kActorOfficerGrayford, kActorMcCoy, true);
 				Actor_Face_Actor(kActorOfficerLeary, kActorMcCoy, true);

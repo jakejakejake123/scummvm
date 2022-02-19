@@ -203,8 +203,15 @@ bool SceneScriptDR06::ClickedOn3DObject(const char *objectName, bool a2) {
 					Actor_Voice_Over(850, kActorVoiceOver);
 					Item_Pickup_Spin_Effect(kModelAnimationEnvelope, 171, 280);
 					Actor_Voice_Over(860, kActorVoiceOver);
-					Actor_Voice_Over(870, kActorVoiceOver);
-					Actor_Voice_Over(880, kActorVoiceOver);
+					Actor_Voice_Over(870, kActorVoiceOver); //99-0870.AUD	But I didn't expect to find hundreds of chinyen inside.
+					// Made it so McCoy only he didn't know what the money in the envelope was for he has not found out that Runciter was selling fake animals.
+					if (_vm->_cutContent) {
+						if (!Actor_Clue_Query(kActorMcCoy, kClueLabCorpses)) {			
+						Actor_Voice_Over(880, kActorVoiceOver); //99-0880.AUD	I didn't know what it was for but I'd bet the farm it wasn't on Runciter's books.
+						}
+					} else {
+						Actor_Voice_Over(880, kActorVoiceOver); //99-0880.AUD	I didn't know what it was for but I'd bet the farm it wasn't on Runciter's books.
+					}
 					Actor_Clue_Acquire(kActorMcCoy, kClueEnvelope, true, kActorLance);
 					if (Query_Difficulty_Level() != kGameDifficultyEasy) {
 						Global_Variable_Increment(kVariableChinyen, 200);

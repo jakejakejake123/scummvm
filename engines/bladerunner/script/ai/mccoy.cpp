@@ -431,10 +431,15 @@ bool AIScriptMcCoy::GoalChanged(int currentGoalNumber, int newGoalNumber) {
 	case kGoalMcCoyNR01GetUp:
 		Actor_Face_Heading(kActorMcCoy, 512, false);
 		Actor_Face_Heading(kActorMcCoy, 768, true);
-		if (Random_Query(0, 1)) {
-			Actor_Change_Animation_Mode(kActorMcCoy, 18);
-		} else {
-			Actor_Change_Animation_Mode(kActorMcCoy, 16);
+		// Added in some dialogue for McCoy when he is thrown out of Early Qs club.
+		if (_vm->_cutContent) {
+			if (Random_Query(0, 1)) {
+				Player_Set_Combat_Mode(false);
+				ADQ_Add(kActorMcCoy, 1275, 18);//00-1275.AUD	A real pacifist that guy.
+			} else {
+				Player_Set_Combat_Mode(false);
+				ADQ_Add(kActorMcCoy, 8595, 16);//00-8595.AUD	Hmm. He's damn unfriendly.
+			}
 		}
 		Delay(150);
 		Actor_Change_Animation_Mode(kActorMcCoy, kAnimationModeIdle);

@@ -187,13 +187,23 @@ void AIScriptHanoi::OtherAgentEnteredCombatMode(int otherActorId, int combatMode
 	) {
 		// Added in some dialogue where Hanoi makes some comments on McCoy pulling out his gun and then Hanoi approaches him.
 		// I wanted to have Hanoi grab McCoy and McCoy says let go you lug but I couldn't get it to work. Maybe you could add this in?
-		Actor_Face_Actor(kActorHanoi, kActorMcCoy, true);
-		Actor_Face_Actor(kActorMcCoy, kActorHanoi, true);
-		Actor_Says(kActorHanoi, 160, 13); //25-0160.AUD	Here, what’s this then?
-		Actor_Says(kActorHanoi, 170, 14); //25-0170.AUD	You’re bomb mate waving your piece around in here like this.
-		Actor_Says(kActorHanoi, 180, 13); //25-0180.AUD	Early Q's is for lovers, not fighters.
-		Loop_Actor_Walk_To_Actor(kActorHanoi, kActorMcCoy, 48, true, false); 
-		Player_Set_Combat_Mode(false);
+		// Update: I got the scene where Hanoi grabs McCoy to work, however McCoy teleports slightly when Hanoi is in front of him so he can be grabbed properly.
+		// Maybe you could find a way to fix this?
+		if (_vm->_cutContent) {
+			Actor_Face_Actor(kActorHanoi, kActorMcCoy, true);
+			Actor_Face_Actor(kActorMcCoy, kActorHanoi, true);
+			Actor_Says(kActorHanoi, 160, 13); //25-0160.AUD	Here, what’s this then?
+			Actor_Says(kActorHanoi, 170, 14); //25-0170.AUD	You’re bomb mate waving your piece around in here like this.
+			Actor_Says(kActorHanoi, 180, 13); //25-0180.AUD	Early Q's is for lovers, not fighters.
+			Player_Set_Combat_Mode(false);
+			Loop_Actor_Walk_To_Actor(kActorHanoi, kActorMcCoy, 48, true, false); 
+			Actor_Face_Actor(kActorHanoi, kActorMcCoy, true);
+			Actor_Face_Actor(kActorMcCoy, kActorHanoi, true);
+			Actor_Change_Animation_Mode(kActorHanoi, 23);
+			Actor_Set_Invisible(kActorMcCoy, true);
+			Actor_Says(kActorMcCoy, 3595, kAnimationModeTalk);
+			Actor_Says(kActorMcCoy, 3785, kAnimationModeTalk); //00-3785.AUD	Let go, you lug. I gotta-- (grunts)
+		}
 #if BLADERUNNER_ORIGINAL_BUGS
 		// redundant call to lose control here
 		Player_Loses_Control();
@@ -201,6 +211,20 @@ void AIScriptHanoi::OtherAgentEnteredCombatMode(int otherActorId, int combatMode
 		Actor_Set_Goal_Number(kActorHanoi, kGoalHanoiThrowOutMcCoy);
 		return; //true;
 	}
+		if (_vm->_cutContent) {
+			if (Player_Query_Current_Scene() == kSceneNR08
+			&& otherActorId == kActorMcCoy
+			&& combatMode
+			) {
+				// Also made it the same thing happen in set NR08 where Hanoi is guarding the stairs.
+				Actor_Face_Actor(kActorHanoi, kActorMcCoy, true);
+				Actor_Face_Actor(kActorMcCoy, kActorHanoi, true);
+				Actor_Says(kActorHanoi, 160, 13); //25-0160.AUD	Here, what’s this then?
+				Actor_Says(kActorHanoi, 170, 14); //25-0170.AUD	You’re bomb mate waving your piece around in here like this.
+				Actor_Says(kActorHanoi, 180, 13); //25-0180.AUD	Early Q's is for lovers, not fighters.
+				Actor_Set_Goal_Number(kActorHanoi, kGoalHanoiThrowOutMcCoy);
+			}
+		}
 	return; //false;
 }
 

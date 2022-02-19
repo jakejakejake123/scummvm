@@ -242,11 +242,20 @@ bool AIScriptLeon::GoalChanged(int currentGoalNumber, int newGoalNumber) {
 		return true;
 
 	case kGoalLeonPunchMcCoy:
+	// Made it so Leon now punches McCoy twice. McCoy seems to struggle a bit when he says 'I'm thinking of changing jobs' so it makes sense for
+	// him to be hit here. Also made other improvements to this encounter.
 		Player_Loses_Control();
-		Actor_Says(kActorLeon, 40, kAnimationModeTalk);
-		Actor_Says(kActorMcCoy, 510, kAnimationModeTalk);
-		Actor_Says(kActorLeon, 50, kAnimationModeTalk);
+		Actor_Says(kActorLeon, 40, kAnimationModeTalk); //62-0040.AUD	LPD, huh? You wouldn't be a Blade Runner would ya?
+		Actor_Says(kActorMcCoy, 7895, kAnimationModeTalk); //00-7895.AUD	No. I--
 		Actor_Change_Animation_Mode(kActorLeon, kAnimationModeCombatAttack);
+		Actor_Says(kActorMcCoy, 8670, 21); //00-8670.AUD	(grunts)
+		Delay (1000);
+		Actor_Says(kActorMcCoy, 510, kAnimationModeTalk); //00-0510.AUD	I'm thinking of changing jobs.
+		Actor_Says(kActorLeon, 50, kAnimationModeTalk); //62-0050.AUD	You should have done it long ago. Now you're out of time, LPD. Good night!
+		Actor_Change_Animation_Mode(kActorLeon, kAnimationModeCombatAttack);
+		Actor_Says(kActorMcCoy, 255, 21); //00-0255.AUD	Wait, I just-- Argh!
+		Actor_Change_Animation_Mode(kActorMcCoy, kAnimationModeDie);
+		Actor_Retired_Here(kActorMcCoy, 12, 12, true, -1);
 		return false;
 
 	case kGoalLeonLeave:
@@ -377,11 +386,6 @@ bool AIScriptLeon::UpdateAnimation(int *animation, int *frame) {
 	case 10:
 		*animation = kModelLeonPunchAttack;
 		++_animationFrame;
-		if (_animationFrame == 6) {
-			Actor_Change_Animation_Mode(kActorMcCoy, kAnimationModeDie);
-			Actor_Retired_Here(kActorMcCoy, 12, 12, true, -1);
-		}
-
 		if (_animationFrame >= Slice_Animation_Query_Number_Of_Frames(*animation)) {
 			*animation = kModelLeonIdle;
 			_animationFrame = 0;

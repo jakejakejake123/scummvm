@@ -1904,12 +1904,26 @@ void AIScriptGordo::dialogue1() {
 	Dialogue_Menu_Clear_List();
 	DM_Add_To_List_Never_Repeat_Once_Selected(760, 2, 5, 6); // ZUBEN
 	DM_Add_To_List_Never_Repeat_Once_Selected(770, 6, 3, 1); // JOB
-	if (Actor_Clue_Query(kActorMcCoy, kClueDektorasDressingRoom)
+	// Made it so the topics for Lucy and blonde woman activate when you have certain photo clues.
+	if (_vm->_cutContent) {
+		if (Actor_Clue_Query(kActorMcCoy, kClueDektorasDressingRoom)
+		 || Actor_Clue_Query(kActorMcCoy, kClueWomanInAnimoidRow)
+		 || Actor_Clue_Query(kActorMcCoy, kClueChinaBar)
+		 || Actor_Clue_Query(kActorMcCoy, kClueLucyWithDektora)
+		 || Actor_Clue_Query(kActorMcCoy, kClueOuterDressingRoom)) {
+			DM_Add_To_List_Never_Repeat_Once_Selected(780, 5, 5, 5); // BLOND WOMAN
+		}
+	} else if (Actor_Clue_Query(kActorMcCoy, kClueDektorasDressingRoom)
 	 || Actor_Clue_Query(kActorMcCoy, kClueWomanInAnimoidRow)
 	) {
 		DM_Add_To_List_Never_Repeat_Once_Selected(780, 5, 5, 5); // BLOND WOMAN
 	}
-	if (Actor_Clue_Query(kActorMcCoy, kClueLucy)) {
+	if (_vm->_cutContent) {
+		if (Actor_Clue_Query(kActorMcCoy, kClueLucy) 
+		|| Actor_Clue_Query(kActorMcCoy, kClueLucyWithDektora)) {
+			DM_Add_To_List_Never_Repeat_Once_Selected(790, 5, 5, 5); // LUCY
+		}
+	} else if (Actor_Clue_Query(kActorMcCoy, kClueLucy)) {
 		DM_Add_To_List_Never_Repeat_Once_Selected(790, 5, 5, 5); // LUCY
 	}
 	if (Actor_Clue_Query(kActorMcCoy, kClueStolenCheese)) {

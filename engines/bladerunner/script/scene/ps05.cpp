@@ -272,9 +272,9 @@ void SceneScriptPS05::turnOnTV() {
 				ADQ_Add(kActorGuzza, 1550, kAnimationModeTalk);
 				ADQ_Add(kActorGuzza, 1560, kAnimationModeTalk);
 				//Jake - Added in a line for Guzza when he is being interviewed by the news.
+				// Removed delay code so the player doesn't lose control for a second.
 				if (_vm->_cutContent) {
-					Delay (1000);
-					ADQ_Add(kActorGuzza, 1600, kAnimationModeTalk); //-	04-1600.AUD	No comment.
+					ADQ_Add(kActorGuzza, 1600, kAnimationModeTalk); //	04-1600.AUD	No comment.
 				}
 
 			}

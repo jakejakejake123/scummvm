@@ -182,7 +182,9 @@ void SceneScriptUG09::PlayerWalkedIn() {
 			Actor_Says(kActorMcCoy, 6775, 15); //00-6775.AUD	I don’t know. Why don’t you tell me?
 			Actor_Says(kActorIzo, 960, 17); //07-0960.AUD	I’m sorry to say you and I are on the same boat. Beholden to the same person.
 			Actor_Says(kActorMcCoy, 6780, 18); //00-6780.AUD	Don’t jump to any conclusions.
-			if (Game_Flag_Query(kFlagZubenRetired)) {
+			// Made it so this dialogue only plays if McCoy retired Zuben AND he received the crimes scene notes clue about the factory bombing.
+			if (Game_Flag_Query(kFlagZubenRetired) 
+			&& Actor_Clue_Query (kActorMcCoy, kClueCrimeSceneNotes)) {
 				Actor_Says(kActorIzo, 750, 17); //07-0750.AUD	Clovis is looking for you, McCoy.
 				Actor_Says(kActorMcCoy, 6755, 13); //00-6755.AUD	He wants to talk to me?!
 				Actor_Says(kActorIzo, 910, 17); //07-0910.AUD	He would have made that clear.

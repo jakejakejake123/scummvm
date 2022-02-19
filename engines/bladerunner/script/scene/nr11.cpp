@@ -295,11 +295,11 @@ bool SceneScriptNR11::ClickedOn2DRegion(int region) {
 
 void SceneScriptNR11::SceneFrameAdvanced(int frame) {
 	//Made it so this soundtrack plays when McCoy shoots the place up.
-	if (_vm->_cutContent) {
-		Music_Play(kMusicMoraji, 71, 0, 0, -1, kMusicLoopPlayOnce, 2);
-	}
 	if (frame == 62) {
 		Ambient_Sounds_Play_Sound(kSfxMCGUN1,  40, 100, 100, 10);
+		if (_vm->_cutContent) {
+			Music_Play(kMusicMoraji, 71, 0, 0, -1, kMusicLoopPlayOnce, 2);
+		}
 	}
 
 	if (frame == 67) {

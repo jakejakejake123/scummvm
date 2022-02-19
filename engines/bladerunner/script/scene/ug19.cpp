@@ -160,7 +160,10 @@ void SceneScriptUG19::PlayerWalkedIn() {
 					Actor_Says(kActorMcCoy, 6520, 14); //00-6520.AUD	You’re alive, aren’t ya?
 					Actor_Says(kActorGordo, 1320, 16); //02-1320.AUD	Pretty astute, my man.
 				} 
-				if (Actor_Clue_Query(kActorMcCoy, kClueStolenCheese)) {
+				// Made it so McCoy only asks if Gordo stole the cheese if he has the stolen chesse clue and Gordo didn't confess to stealing the cheese in act 3.
+				// It would make no sense for McCoy to ask if Gordo stole the cheese if he already confessed.
+				if (Actor_Clue_Query(kActorMcCoy, kClueStolenCheese)
+				&& !Actor_Clue_Query(kActorMcCoy, kClueGordoConfession)) {
 					Actor_Says(kActorMcCoy, 6540, 15); //00-6540.AUD	Did you steal this cheese from Kingston Kitchen?	
 					Actor_Says(kActorGordo, 1280, 13); //02-1280.AUD	Hey, baby. I may steal a line or two. But I’d never steal some cheese. I don’t do dairy.
 					Actor_Says(kActorMcCoy, 6590, 15); //00-6590.AUD	The owner described you to a tee. Even down to that rotten bow tie you always wear. 	

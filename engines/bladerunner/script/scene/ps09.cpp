@@ -258,6 +258,25 @@ bool SceneScriptPS09::ClickedOnActor(int actorId) {
 		}
 	}
 	return false;
+
+	if (actorId == kActorEarlyQ) {
+		if (!Loop_Actor_Walk_To_XYZ(kActorMcCoy, -381.11f, 0.0f, -135.55f, 0, true, false, false)) {
+			Actor_Face_Actor(kActorMcCoy, kActorEarlyQ, true);
+			Actor_Face_Actor(kActorEarlyQ, kActorMcCoy, true);
+			Actor_Says(kActorMcCoy, 8513, 18); //00-8513.AUD	Early, how's it hanging?
+			Actor_Says(kActorEarlyQ, 340, kAnimationModeTalk); //18-0340.AUD	No more free drinks for you, buddy boy.
+			return true;
+		}
+	}
+	if (actorId == kActorDektora) {
+		if (!Loop_Actor_Walk_To_XYZ(kActorMcCoy, -295.0f, 0.34f, -193.0f, 12, true, false, false)) {
+			Actor_Face_Actor(kActorMcCoy, kActorDektora, true);
+			Actor_Face_Actor(kActorDektora, kActorMcCoy, true);
+			Actor_Says(kActorMcCoy, 6985, 16); //00-6985.AUD	Got the straight scoop for me or what?
+			Actor_Says(kActorDektora, 620, kAnimationModeTalk); //03-0620.AUD	I’m sure I don’t know what you mean.
+			return true;
+		}
+	}
 }
 
 bool SceneScriptPS09::ClickedOnItem(int itemId, bool a2) {

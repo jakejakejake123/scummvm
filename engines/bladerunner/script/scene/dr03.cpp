@@ -47,6 +47,11 @@ void SceneScriptDR03::InitializeScene() {
 	Ambient_Sounds_Remove_All_Looping_Sounds(1u);
 	Ambient_Sounds_Add_Looping_Sound(kSfxRESPRTR1,  7,  0, 1);
 	Ambient_Sounds_Add_Looping_Sound(kSfxBRBED3,   50,  0, 1);
+	// Added in some some effects for Chews lab.
+	if (_vm->_cutContent) {
+		Ambient_Sounds_Add_Looping_Sound(kSfxLABAMB1,  20, 70, 1);
+		Ambient_Sounds_Add_Looping_Sound(kSfxLABAMB2,  20, 70, 1);
+	}
 	Ambient_Sounds_Add_Looping_Sound(kSfxBOILPOT2, 20, 70, 1);
 }
 

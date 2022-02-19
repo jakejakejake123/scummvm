@@ -495,8 +495,14 @@ void AIScriptSteele::EnteredSet(int setId) {
 			Actor_Clue_Acquire(kActorSteele, kClueVKIzoHuman, true, kActorSteele);
 			return;
 		}
-		if (Actor_Clue_Query(kActorSteele, kClueEarlyQAndLucy)) {
-			Actor_Clue_Acquire(kActorSteele, kClueVKEarlyQHuman, true, kActorSteele);
+		// Added in these clues in regards to replicant Early Q.
+		if  (Actor_Clue_Query(kActorSteele, kClueDektorasDressingRoom)) {
+			if (Game_Flag_Query(kFlagEarlyQIsReplicant) && !Game_Flag_Query(kFlagEarlyQDead))  {
+				Actor_Clue_Acquire(kActorSteele, kClueVKEarlyQReplicant, true, kActorSteele);
+				Game_Flag_Set(kFlagEarlyQDead);
+			} else {
+				Actor_Clue_Acquire(kActorSteele, kClueVKEarlyQHuman, true, kActorSteele);
+			}
 			return;
 		}
 	}

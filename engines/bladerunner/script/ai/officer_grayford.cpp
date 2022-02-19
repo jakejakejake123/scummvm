@@ -1166,6 +1166,14 @@ bool AIScriptOfficerGrayford::UpdateAnimation(int *animation, int *frame) {
 		++_animationFrame;
 		if (_animationFrame >= Slice_Animation_Query_Number_Of_Frames(kModelAnimationOfficerGrayfordCombatIdle)) {
 			_animationFrame = 0;
+			// Added in some dialogue for Grayford.
+			if (_vm->_cutContent) {
+				if (Random_Query(1, 2) == 1) {
+					ADQ_Add(kActorOfficerGrayford, 290, 19); //24-0290.AUD	There’s the son of a bitch! Kill it!
+				} else {
+					ADQ_Add(kActorOfficerGrayford, 270, 0); //24-0270.AUD	There it is! Take it out!
+				}
+			}
 		}
 		break;
 
@@ -1241,6 +1249,7 @@ bool AIScriptOfficerGrayford::UpdateAnimation(int *animation, int *frame) {
 			_animationFrame = 0;
 			_animationState = 19;
 			*animation = kModelAnimationOfficerGrayfordOscillateIdle;
+			ADQ_Add(kActorOfficerGrayford, 250, 19); //24-0250.AUD	Ah, I’m hit!	
 			Actor_Change_Animation_Mode(kActorOfficerGrayford, kAnimationModeCombatIdle);
 		}
 		break;
@@ -1252,6 +1261,7 @@ bool AIScriptOfficerGrayford::UpdateAnimation(int *animation, int *frame) {
 			_animationFrame = 0;
 			_animationState = 19;
 			*animation = kModelAnimationOfficerGrayfordOscillateIdle;
+			ADQ_Add(kActorOfficerGrayford, 250, 19); //24-0250.AUD	Ah, I’m hit!
 			Actor_Change_Animation_Mode(kActorOfficerGrayford, kAnimationModeCombatIdle);
 		}
 		break;

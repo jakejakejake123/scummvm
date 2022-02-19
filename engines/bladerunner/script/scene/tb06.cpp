@@ -144,6 +144,10 @@ bool SceneScriptTB06::ClickedOnItem(int itemId, bool a2) {
 				Actor_Face_Actor(kActorPhotographer, kActorMcCoy, true);
 				Actor_Says(kActorMcCoy, 8516, kAnimationModeTalk); //00-8516.AUD	Any idea if they were real dogs?
 				Actor_Says(kActorPhotographer, 60, kAnimationModeTalk); //37-0060.AUD	I've hit a brick, McCoy. You're running this investigation, right?
+				// Added in a line, McCoy is perplexed by the fact the photographer knows he's running the investigation. McCoy question him on this but receives no answer.
+				Actor_Says(kActorMcCoy, 8517, kAnimationModeTalk); //00-8517.AUD	But how do you know?
+				Delay (1000);
+				Actor_Says(kActorMcCoy, 440, kAnimationModeTalk); //00-0440.AUD	Forget it.
 			}
 			return true;
 		}
