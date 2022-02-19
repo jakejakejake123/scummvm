@@ -295,8 +295,8 @@ bool AIScriptIzo::ShotAtAndHit() {
 				Loop_Actor_Walk_To_Actor(kActorSteele, kActorMcCoy, 60, false, true);
 				Actor_Face_Actor(kActorMcCoy, kActorSteele, true);
 				Actor_Face_Actor(kActorSteele, kActorMcCoy, true);
-				Actor_Modify_Friendliness_To_Other(kActorSteele, kActorMcCoy, 5);
-				if (Actor_Query_Friendliness_To_Other(kActorRunciter, kActorMcCoy) < 56) {
+				Actor_Modify_Friendliness_To_Other(kActorSteele, kActorMcCoy, 3);
+				if (Actor_Query_Friendliness_To_Other(kActorSteele, kActorMcCoy) < 55) {
 					Actor_Says(kActorSteele, 2710, 59); //01-2710.AUD	You must be in better shape that I thought.
 					Actor_Says(kActorSteele, 2720, 59); //01-2720.AUD	You’re still alive.			
 					Actor_Says(kActorMcCoy, 1025, 12); //00-1025.AUD	Absolutely.

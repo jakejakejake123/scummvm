@@ -407,7 +407,7 @@ bool AIScriptZuben::GoalChanged(int currentGoalNumber, int newGoalNumber) {
 		}
 		// Made it so you gain five friendliness points with Crystal when you retire Zuben.
 		if (_vm->_cutContent) {
-			Actor_Modify_Friendliness_To_Other(kActorSteele, kActorMcCoy, 5);
+			Actor_Modify_Friendliness_To_Other(kActorSteele, kActorMcCoy, 3);
 		}
 		Actor_Set_Goal_Number(kActorZuben, kGoalZubenGone);		
 		return false;
@@ -481,7 +481,7 @@ bool AIScriptZuben::GoalChanged(int currentGoalNumber, int newGoalNumber) {
 	case kGoalZubenWaitAtHF01:
 		AI_Movement_Track_Flush(kActorZuben);
 		Actor_Put_In_Set(kActorZuben, kSetHF01);
-		Actor_Set_At_XYZ(kActorZuben, 566.07f, -0.01f, -205.43f, 271);
+		Actor_Set_At_XYZ(kActorZuben, 566.07f, -0.01f, -205.43f, 0);
 		return false;
 
 	case 22: // is never set

@@ -274,7 +274,7 @@ void AIScriptLucy::Retired(int byActorId) {
 			Actor_Clue_Acquire(kActorClovis, kClueMcCoyRetiredLucy, true, -1);
 			Actor_Modify_Friendliness_To_Other(kActorClovis, kActorMcCoy, -6);
 			Game_Flag_Reset(kFlagMcCoyIsHelpingReplicants);
-			Actor_Modify_Friendliness_To_Other(kActorSteele, kActorMcCoy, 5);
+			Actor_Modify_Friendliness_To_Other(kActorSteele, kActorMcCoy, 3);
 			// Made it so you lose affection to both Lucy and Dektora if you retire Lucy.
 			Global_Variable_Set(kVariableAffectionTowards, kAffectionTowardsNone);
 		}

@@ -490,6 +490,7 @@ void SceneScriptHF01::PlayerWalkedIn() {
 			Music_Play(kMusicBRBlues, 52, 0, 2, -1, kMusicLoopPlayOnce, 0);
 			Actor_Set_Goal_Number(kActorCrazylegs, kGoalCrazyLegsLeavesShowroom);
 			Game_Flag_Reset(kFlagCrazylegsShot);
+			Actor_Modify_Friendliness_To_Other(kActorSteele, kActorMcCoy, 3);
 			if (Query_Difficulty_Level() != kGameDifficultyEasy) {
 				Global_Variable_Increment (kVariableChinyen, 200);
 			}		

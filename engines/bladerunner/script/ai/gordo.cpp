@@ -304,6 +304,7 @@ void AIScriptGordo::Retired(int byActorId) {
 		Actor_Voice_Over(1410, kActorVoiceOver);
 		Actor_Voice_Over(1430, kActorVoiceOver);
 		Actor_Voice_Over(1440, kActorVoiceOver);
+		Actor_Modify_Friendliness_To_Other(kActorSteele, kActorMcCoy, 3);
 		// Made it so blade runner blues plays when you retire Gordo.
 		if (_vm->_cutContent) {
 			Music_Stop(2u);

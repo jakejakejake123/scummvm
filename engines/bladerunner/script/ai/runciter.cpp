@@ -249,6 +249,7 @@ bool AIScriptRunciter::ShotAtAndHit() {
 		Actor_Voice_Over(1410, kActorVoiceOver); //99-1410.AUD	I’d retired another Replicant so more money was headed my way but I didn’t feel so good about it.
 		Actor_Voice_Over(1670, kActorVoiceOver); //99-1670.AUD	Still it was a hell of a way to go.
 		Actor_Voice_Over(2090, kActorVoiceOver); //99-2090.AUD	And maybe I’d done him a favor too, since his animals were all dead.
+		Actor_Modify_Friendliness_To_Other(kActorSteele, kActorMcCoy, 3);
 		Game_Flag_Reset(kFlagRunciterConfronted);
 		Scene_Exits_Enable();
 		if (Query_Difficulty_Level() != kGameDifficultyEasy) {

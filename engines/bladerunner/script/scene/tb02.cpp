@@ -439,7 +439,7 @@ void SceneScriptTB02::PlayerWalkedIn() {
 			// Made it so Crystal is a 'little' nicer to you if you have high friendliness with her. The friendliness increase will be a result of you retiring Zuben
 			// which will be added into his script page.
 			if (_vm->_cutContent) {
-				if (Actor_Query_Friendliness_To_Other(kActorRunciter, kActorMcCoy) > 49) {
+				if (Actor_Query_Friendliness_To_Other(kActorSteele, kActorMcCoy) > 50) {
 					Actor_Says(kActorSteele, 2030, 14); //	01-2030.AUD	Been keeping yourself busy?
 					Actor_Says(kActorMcCoy, 5245, 13); //00-5245.AUD	Guzza didn't say anything about me working with a partner.
 					Actor_Says(kActorSteele, 2230, 12); //01-2230.AUD	(laughs) Oh, in a pig's ass, Slim. No, I'm following up on my own.
@@ -617,7 +617,7 @@ void SceneScriptTB02::dialogueWithSteele() {
 			Actor_Says(kActorSteele, 2290, 14);
 			// Added in some dialogue for when you have high friendliness with Steele.
 			if (_vm->_cutContent) {
-				if (Actor_Query_Friendliness_To_Other(kActorRunciter, kActorMcCoy) > 49) {
+				if (Actor_Query_Friendliness_To_Other(kActorSteele, kActorMcCoy) > 50) {
 					Actor_Says(kActorMcCoy, 5260, 18); //00-5260.AUD	Happy trails, Steele.
 					Actor_Says(kActorSteele, 2350, 12);  //01-2350.AUD	Ditto.
 				} else {

@@ -180,19 +180,24 @@ void SceneScriptMA07::PlayerWalkedIn() {
 	// Code for an encounter that you can have with Crystal in act 4 if McCoy didn't retire a human or is not on his
 	// way to the car ending.
 	if (_vm->_cutContent) {
-		if (!Game_Flag_Query(kFlagCrystalTalkAct4)
+		if (!Game_Flag_Query(kFlagCrystalTalkAct4
 		// Made it so whether of not you have affection towards Dektora or Lucy this will determine whether or not you will meet Crystal here.
-		&& (Global_Variable_Query(kVariableAffectionTowards) != kAffectionTowardsDektora) 
-		&& (Global_Variable_Query(kVariableAffectionTowards) != kAffectionTowardsLucy) 
+		&& (Global_Variable_Query(kVariableAffectionTowards) != kAffectionTowardsDektora
+		&& Global_Variable_Query(kVariableAffectionTowards) != kAffectionTowardsLucy
 		&& !Game_Flag_Query(kFlagMcCoyRetiredHuman)
-		&&	(Global_Variable_Query(kVariableChapter) == 4)) {
+		// Made it so McCoy has to retire at least 3 replicants for Steele to like him enough to meet him. 3 friendliness points per replicant. Starting friendliness 50.
+		// In the cut content mode there are around 10 potential replicants up until this point so this should be achieveable.
+		&& Actor_Query_Friendliness_To_Other(kActorSteele, kActorMcCoy) > 58) 
+		&&	Global_Variable_Query(kVariableChapter) == 4)) {
 			Actor_Put_In_Set(kActorSteele, kSetMA07);
 			Actor_Set_At_XYZ(kActorSteele, -68.06, -171.95, 393.86, 0);
 			Actor_Face_Actor(kActorSteele, kActorMcCoy, true);
 			Actor_Says(kActorSteele, 2640, 12); //01-2640.AUD	Killing time again, Slim?
+			Music_Play(kMusicBRBlues, 52, 0, 2, -1, kMusicLoopPlayOnce, 0);
 			Actor_Face_Actor(kActorMcCoy, kActorSteele, true);
 			Actor_Says(kActorMcCoy, 6215, 13); //00-6215.AUD	I plan to. I’m going home.
-			if (Actor_Query_Friendliness_To_Other(kActorRunciter, kActorMcCoy) < 51) {
+			// If McCoy doesn't retire at least 6 reps Crystal teases him.
+			if (Actor_Query_Friendliness_To_Other(kActorRunciter, kActorMcCoy) > 67) {
 				Actor_Says(kActorSteele, 2650, 14); //01-2650.AUD	No wonder you can’t afford a better suit.
 				Actor_Says(kActorSteele, 2660, 15); //01-2660.AUD	Ever think of a new line of work?
 				Actor_Says(kActorSteele, 2670, 13); //01-2670.AUD	Maybe you’ll have better luck finding that than all those skin-jobs that are running roughshod over you.
@@ -271,8 +276,15 @@ void SceneScriptMA07::PlayerWalkedIn() {
 				if (!Game_Flag_Query(kFlagIzoIsReplicant) && Game_Flag_Query(kFlagIzoArrested)) {
 					Actor_Clue_Acquire(kActorMcCoy, kClueVKIzoHuman, true, kActorSteele);
 				}
-				if (Actor_Clue_Query(kActorSteele, kClueEarlyQAndLucy) && !Game_Flag_Query(kFlagLucyIsReplicant)) {
-					Actor_Clue_Acquire(kActorMcCoy, kClueVKEarlyQHuman, true, kActorSteele);
+				if  (Actor_Clue_Query(kActorSteele, kClueDektorasDressingRoom)) {
+					if (Game_Flag_Query(kFlagEarlyQIsReplicant) && !Game_Flag_Query(kFlagEarlyQDead))  {
+						Actor_Clue_Acquire(kActorMcCoy, kClueVKEarlyQReplicant, true, kActorSteele);
+					} else {
+						Actor_Clue_Acquire(kActorMcCoy, kClueVKEarlyQHuman, true, kActorSteele);
+					}
+				}
+				if (Actor_Clue_Query(kActorSteele, kClueCrystalRetiredZuben)) { 
+					Actor_Clue_Acquire(kActorMcCoy, kClueCrystalRetiredZuben, true, kActorSteele);
 				}
 				Actor_Says(kActorSteele, 2760, 13); //01-2760.AUD	What’s the latest?
 				Actor_Says(kActorMcCoy, 6345, 15); //00-6345.AUD	I think you already know the answer to that question

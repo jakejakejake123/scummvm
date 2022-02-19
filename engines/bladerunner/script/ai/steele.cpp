@@ -867,9 +867,9 @@ bool AIScriptSteele::GoalChanged(int currentGoalNumber, int newGoalNumber) {
 		Actor_Change_Animation_Mode(kActorMcCoy, kAnimationModeIdle);
 		Actor_Face_Actor(kActorMcCoy, kActorSteele, true);
 		Loop_Actor_Walk_To_Actor(kActorSteele, 0, 48, false, true);
-		// Made it so Crystal is a 'liitle' nicer to McCoy if you have high friendliness with her.
+		// Made it so Crystal is a 'little' nicer to McCoy if you have high friendliness with her.
 		if (_vm->_cutContent) {
-			if (Actor_Query_Friendliness_To_Other(kActorRunciter, kActorMcCoy) > 50) {
+			if (Actor_Query_Friendliness_To_Other(kActorSteele, kActorMcCoy) > 50) {
 				Actor_Says(kActorSteele, 2600, kAnimationModeTalk); //-	01-2600.AUD	Hey, Slim!
 			} else {
 				Actor_Says(kActorSteele, 1860, kAnimationModeTalk); //01-1860.AUD	You blew your retirement loot this time, Slim.	
@@ -884,7 +884,7 @@ bool AIScriptSteele::GoalChanged(int currentGoalNumber, int newGoalNumber) {
 		Actor_Says(kActorSteele, 1880, kAnimationModeTalk); //01-1880.AUD	What are you doing here besides putting your nuts on the chopping block?
 		Actor_Says(kActorMcCoy, 4830, 13); //00-4830.AUD	Investigating Izo. Maybe we should compare notes.
 		if (_vm->_cutContent) {
-			if (Actor_Query_Friendliness_To_Other(kActorRunciter, kActorMcCoy) > 50) {
+			if (Actor_Query_Friendliness_To_Other(kActorSteele, kActorMcCoy) > 50) {
 				Actor_Says(kActorSteele, 1870, kAnimationModeTalk); //-	01-2620.AUD	There’s a first for everything.
 			} else {
 				Actor_Says(kActorSteele, 1890, kAnimationModeTalk); //01-1890.AUD	Maybe you should find another line of work.
@@ -896,7 +896,7 @@ bool AIScriptSteele::GoalChanged(int currentGoalNumber, int newGoalNumber) {
 		}
 		Actor_Says(kActorSteele, 1910, kAnimationModeTalk); //01-1910.AUD	I'll wait for the uniforms. Why don't you grab yourself a slice of quiche or something.
 		if (_vm->_cutContent) {
-			if (Actor_Query_Friendliness_To_Other(kActorRunciter, kActorMcCoy) > 50) {
+			if (Actor_Query_Friendliness_To_Other(kActorSteele, kActorMcCoy) > 50) {
 				Actor_Face_Actor(kActorMcCoy, kActorIzo, true);
 				Actor_Face_Actor(kActorSteele, kActorIzo, true);
 				Actor_Says(kActorSteele, 1870, kAnimationModeTalk); //01-0090.AUD	Just another stroll in the park.
@@ -1381,7 +1381,7 @@ bool AIScriptSteele::GoalChanged(int currentGoalNumber, int newGoalNumber) {
 		// Flag is reset and friendliness towards Steele is altered when McCoy shoots Gordo.
 		if (_vm->_cutContent) {
 			Game_Flag_Reset(kFlagMcCoyIsHelpingReplicants);
-			Actor_Modify_Friendliness_To_Other(kActorSteele, kActorMcCoy, 5);
+			Actor_Modify_Friendliness_To_Other(kActorSteele, kActorMcCoy, 3);
 		}
 		Player_Gains_Control();
 		Actor_Set_Goal_Number(kActorSteele, kGoalSteeleTalkAboutMissingSpinner);
