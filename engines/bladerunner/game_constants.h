@@ -1014,8 +1014,8 @@ enum Flags {
 	kFlagUG16ComputerOff                      = 568,
 	kFlagNR04EarlyQWalkedIn                   = 569,
 	kFlagEarlyQDead							  = 570,	
-	// 571 is never used
-	// 572 is never used
+	kFlagSebastianKnockedOut				  = 571,
+	//
 	kFlagNR03Entered                          = 573,
 	kFlagKP04toKP05                           = 574,
 	kFlagKP05toKP04                           = 575,
