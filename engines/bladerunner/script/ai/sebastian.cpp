@@ -495,7 +495,12 @@ void AIScriptSebastian::dialogue() {
 void AIScriptSebastian::setMcCoyIsABladeRunner() {
 	Actor_Clue_Acquire(kActorSebastian, kClueMcCoyIsABladeRunner, true, kActorMcCoy);
 	Actor_Modify_Friendliness_To_Other(kActorSebastian, kActorMcCoy, -5);
-	Actor_Says(kActorSebastian, 560, 15);
+	// Restored an animation where Sebastian takes a step back when he realizes that McCoy is a blade runner.
+	if (_vm->_cutContent) {
+		Actor_Says(kActorSebastian, 560, 20);
+	} else {
+		Actor_Says(kActorSebastian, 560, 15);
+	}
 	Actor_Says(kActorMcCoy, 7200, 14);
 	Actor_Says(kActorSebastian, 570, 16);
 	Actor_Says(kActorMcCoy, 7205, 17);

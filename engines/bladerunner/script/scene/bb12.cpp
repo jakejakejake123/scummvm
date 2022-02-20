@@ -40,9 +40,12 @@ void SceneScriptBB12::InitializeScene() {
 	// Made it so Dektora (Pris) and Sebastian appears in the set after you go to the roof.
 	// Dektora will be placed at the back of the room and her face will be obscured by a ceiling ornament so the player won't
 	// know it's her and will assume it's Pris.
+	// Made it so Sebastian has to be conscious and not know that McCoy is a blade runner so he will appear and talk to McCoy about the doll.
 	if (_vm->_cutContent) {
-		if  (Game_Flag_Query(kFlagBB11Visited) &&
-			(Global_Variable_Query(kVariableChapter) == 3)) {
+		if  (Game_Flag_Query(kFlagBB11Visited) 
+			&& !Game_Flag_Query(kFlagSebastianKnockedOut) 
+			&& !Actor_Clue_Query(kActorSebastian, kClueMcCoyIsABladeRunner)
+			&& Global_Variable_Query(kVariableChapter) == 3) {
 			Actor_Put_In_Set(kActorDektora, kSetBB12);
 			Actor_Set_At_XYZ(kActorDektora, 39.97, 0.31, -56.65, 180);
 			Actor_Put_In_Set(kActorSebastian, kSetBB12);
