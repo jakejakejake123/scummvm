@@ -154,7 +154,19 @@ void SceneScriptKP07::InitializeScene() {
 					Global_Variable_Increment(kVariableReplicantsSurvivorsAtMoonbus, 1);
 					Actor_Set_Targetable(kActorEarlyQ, true);
 					Actor_Put_In_Set(kActorEarlyQ, kSetKP07);
-					Actor_Set_At_XYZ(kActorEarlyQ, -58.84f, -42.70f, -142.27f, 0);
+					Actor_Set_At_XYZ(kActorEarlyQ, -58.84f, -42.70f, -142.27f, 240);
+				}
+			}
+		}
+		// Made it so Hanoi appears in the moonbus if he is a replicant and is alive.
+		if (_vm->_cutContent) {
+			if (Game_Flag_Query(kFlagHanoiIsReplicant)) {
+				if (!Game_Flag_Query(kFlagHanoiDead)) {
+					AI_Movement_Track_Flush(kActorHanoi);
+					Global_Variable_Increment(kVariableReplicantsSurvivorsAtMoonbus, 1);
+					Actor_Set_Targetable(kActorHanoi, true);
+					Actor_Put_In_Set(kActorHanoi, kSetKP07);
+					Actor_Set_At_XYZ(kActorHanoi, 50.69f, -41.28f, 62.09f, 0);
 				}
 			}
 		}

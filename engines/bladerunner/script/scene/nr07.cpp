@@ -271,21 +271,8 @@ void SceneScriptNR07::PlayerWalkedIn() {
 			) {
 				Actor_Modify_Friendliness_To_Other(kActorDektora, kActorMcCoy, 10);
 			}
-			// Made it so if McCoy touches Dektora when McCoy enters her dressing room she will immediately either run away or call Holloway.
-			// It doesn't make any sense for Dektora to be so calm and have aconversation with someon who just assaulted her.
-			if (_vm->_cutContent) {
-				if (Game_Flag_Query(kFlagDektoraAssaulted)) {
-					Loop_Actor_Walk_To_XYZ(kActorMcCoy, -112.51, -73.26, -129.17, 525, false, false, false);
-					Actor_Face_Actor(kActorDektora, kActorMcCoy, true);	
-					Actor_Says(kActorMcCoy, 940, 13);
-					if (Game_Flag_Query(kFlagDektoraIsReplicant)) {
-						Actor_Face_Actor(kActorDektora, kActorMcCoy, true);
-						callHolloway();
-					} else {
-						dektoraRunAway();
-					}
-			} else if (!Game_Flag_Query(kFlagDektoraAssaulted)) {
-			// This exotic track fits Dektora perfectly.
+			// Removed code where McCoy assaults Dektora.
+			Actor_Says(kActorDektora, 500, 30);
 			if (_vm->_cutContent) {
 				Music_Play(kMusicTaffy3, 41, 0, 2, -1, kMusicLoopPlayOnce, 0);
 			}
@@ -295,15 +282,6 @@ void SceneScriptNR07::PlayerWalkedIn() {
 			Actor_Start_Speech_Sample(kActorMcCoy, 3590);
 			Loop_Actor_Walk_To_XYZ(kActorMcCoy, -112.0f, -73.0f, -89.0f, 525, false, false, false);
 			Actor_Says(kActorDektora, 520, kAnimationModeSit);
-			}
-		} else {
-			Actor_Says(kActorDektora, 500, 30);
-			Actor_Says(kActorMcCoy, 3585, 14);
-			Actor_Says(kActorDektora, 510, 30);
-			Actor_Start_Speech_Sample(kActorMcCoy, 3590);
-			Loop_Actor_Walk_To_XYZ(kActorMcCoy, -112.0f, -73.0f, -89.0f, 525, false, false, false);
-			Actor_Says(kActorDektora, 520, kAnimationModeSit);
-			}
 		} else {
 			Actor_Modify_Friendliness_To_Other(kActorDektora, kActorMcCoy, -2);
 			Actor_Face_Actor(kActorDektora, kActorMcCoy, true);

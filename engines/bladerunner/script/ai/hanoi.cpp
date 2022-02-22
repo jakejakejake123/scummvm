@@ -160,10 +160,28 @@ void AIScriptHanoi::ClickedByPlayer() {
 	 || Actor_Query_Goal_Number(kActorHanoi) == kGoalHanoiNR08Leave
 	) {
 		Actor_Face_Actor(kActorMcCoy, kActorHanoi, true);
-		Actor_Says(kActorMcCoy, 8915, 11);
+		// Made it so if Hanoi is human McCoy is more casual with him since thay are on better terms and Hanoi doesn't mind McCoy being there because Hanoi was simply doing his job before.
+		if (_vm->_cutContent) {
+			if (Game_Flag_Query(kFlagHanoiIsReplicant)) {
+				Actor_Says(kActorMcCoy, 8915, 11); //00-8915.AUD	You got a minute, pal?
+			} else {
+				Actor_Says(kActorMcCoy, 3210, kAnimationModeTalk); //00-3210.AUD	Hey, man.
+			}		
+		} else {
+			Actor_Says(kActorMcCoy, 8915, 11); //00-8915.AUD	You got a minute, pal?
+		}
 
 		if (Actor_Query_Goal_Number(kActorHanoi) == kGoalHanoiNR08WatchShow) {
-			Actor_Says(kActorHanoi, 210, kAnimationModeTalk);
+			// Made it so if Hanoi is a replicant he is more protective of Dektora and contantly tells him to look but don't touch.
+			if (_vm->_cutContent) {
+					if (Game_Flag_Query(kFlagHanoiIsReplicant)) {
+						Actor_Says(kActorHanoi, 120, kAnimationModeTalk); //25-0120.AUD	Look but don’t touch, boy-o.
+						Actor_Says(kActorMcCoy, 940, 13); //00-0940.AUD	I need to ask you--
+						Actor_Says(kActorHanoi, 150, kAnimationModeTalk); //25-0150.AUD	Look but don’t touch!
+					}
+				} else {
+					Actor_Says(kActorHanoi, 210, kAnimationModeTalk); //25-0210.AUD	Sod off, McCoy. I got no time for you.
+			}
 		}
 	}
 }
@@ -189,26 +207,38 @@ void AIScriptHanoi::OtherAgentEnteredCombatMode(int otherActorId, int combatMode
 		// I wanted to have Hanoi grab McCoy and McCoy says let go you lug but I couldn't get it to work. Maybe you could add this in?
 		// Update: I got the scene where Hanoi grabs McCoy to work, however McCoy teleports slightly when Hanoi is in front of him so he can be grabbed properly.
 		// Maybe you could find a way to fix this?
+		// Made it so if Hanoi is human he doesn't throw McCoy out of the club when McCoy draws his gun. Instead he warns him and this warning will differ slightly based on Hanois status. McCoy complies and puts the gun away.
+		// Hanoi never throws McCoy out if he is human since he is less aggressive, however when he is a replicant he always throws McCoy out.
 		if (_vm->_cutContent) {
 			Actor_Face_Actor(kActorHanoi, kActorMcCoy, true);
 			Actor_Face_Actor(kActorMcCoy, kActorHanoi, true);
 			Actor_Says(kActorHanoi, 160, 13); //25-0160.AUD	Here, what’s this then?
-			Actor_Says(kActorHanoi, 170, 14); //25-0170.AUD	You’re bomb mate waving your piece around in here like this.
-			Actor_Says(kActorHanoi, 180, 13); //25-0180.AUD	Early Q's is for lovers, not fighters.
-			Player_Set_Combat_Mode(false);
-			Loop_Actor_Walk_To_Actor(kActorHanoi, kActorMcCoy, 48, true, false); 
-			Actor_Face_Actor(kActorHanoi, kActorMcCoy, true);
-			Actor_Face_Actor(kActorMcCoy, kActorHanoi, true);
-			Actor_Change_Animation_Mode(kActorHanoi, 23);
-			Actor_Set_Invisible(kActorMcCoy, true);
-			Actor_Says(kActorMcCoy, 3595, kAnimationModeTalk);
-			Actor_Says(kActorMcCoy, 3785, kAnimationModeTalk); //00-3785.AUD	Let go, you lug. I gotta-- (grunts)
-		}
+			if (Game_Flag_Query(kFlagHanoiIsReplicant)) {
+					Actor_Says(kActorHanoi, 170, 14); //25-0170.AUD	You’re bomb mate waving your piece around in here like this.
+				} else {
+					Actor_Says(kActorHanoi, 180, 13); //25-0180.AUD	Early Q's is for lovers, not fighters.
+
+				}
+			 if (!Game_Flag_Query(kFlagHanoiIsReplicant)) {
+					Actor_Says(kActorMcCoy, 725, kAnimationModeTalk); //00-0725.AUD	Relax! I hear ya.
+					Player_Set_Combat_Mode(false);
+			} else {
+				Loop_Actor_Walk_To_Actor(kActorHanoi, kActorMcCoy, 48, true, false); 
+				Actor_Face_Actor(kActorHanoi, kActorMcCoy, true);
+				Actor_Face_Actor(kActorMcCoy, kActorHanoi, true);
+				Actor_Change_Animation_Mode(kActorHanoi, 23);
+				Actor_Set_Invisible(kActorMcCoy, true);
+				Actor_Says(kActorMcCoy, 3595, kAnimationModeTalk);
+				Actor_Says(kActorMcCoy, 3785, kAnimationModeTalk); //00-3785.AUD	Let go, you lug. I gotta-- (grunts)
+				Actor_Set_Goal_Number(kActorHanoi, kGoalHanoiThrowOutMcCoy);
+			}
+		} else {
 #if BLADERUNNER_ORIGINAL_BUGS
 		// redundant call to lose control here
 		Player_Loses_Control();
 #endif
 		Actor_Set_Goal_Number(kActorHanoi, kGoalHanoiThrowOutMcCoy);
+		}
 		return; //true;
 	}
 		if (_vm->_cutContent) {
@@ -216,13 +246,22 @@ void AIScriptHanoi::OtherAgentEnteredCombatMode(int otherActorId, int combatMode
 			&& otherActorId == kActorMcCoy
 			&& combatMode
 			) {
-				// Also made it the same thing happen in set NR08 where Hanoi is guarding the stairs.
+				// Also made it the same thing happens in set NR08 when Hanoi is guarding the stairs.
 				Actor_Face_Actor(kActorHanoi, kActorMcCoy, true);
 				Actor_Face_Actor(kActorMcCoy, kActorHanoi, true);
 				Actor_Says(kActorHanoi, 160, 13); //25-0160.AUD	Here, what’s this then?
-				Actor_Says(kActorHanoi, 170, 14); //25-0170.AUD	You’re bomb mate waving your piece around in here like this.
-				Actor_Says(kActorHanoi, 180, 13); //25-0180.AUD	Early Q's is for lovers, not fighters.
-				Actor_Set_Goal_Number(kActorHanoi, kGoalHanoiThrowOutMcCoy);
+				if (Game_Flag_Query(kFlagHanoiIsReplicant)) {
+					Actor_Says(kActorHanoi, 170, 14); //25-0170.AUD	You’re bomb mate waving your piece around in here like this.
+				} else {
+					Actor_Says(kActorHanoi, 180, 13); //25-0180.AUD	Early Q's is for lovers, not fighters.
+					Player_Set_Combat_Mode(false);
+				}	
+				if (!Game_Flag_Query(kFlagHanoiIsReplicant)) {
+					Actor_Says(kActorMcCoy, 725, kAnimationModeTalk); //00-0725.AUD	Relax! I hear ya.
+					Player_Set_Combat_Mode(false);
+				} else {
+					Actor_Set_Goal_Number(kActorHanoi, kGoalHanoiThrowOutMcCoy);
+				}
 			}
 		}
 	return; //false;
@@ -237,6 +276,26 @@ bool AIScriptHanoi::ShotAtAndHit() {
 }
 
 void AIScriptHanoi::Retired(int byActorId) {
+	// Code for retiring Hanoi on the moonbus.
+	if (_vm->_cutContent) {
+		if (Actor_Query_In_Set(kActorHanoi, kSetKP07)) {
+			Global_Variable_Decrement(kVariableReplicantsSurvivorsAtMoonbus, 1);
+			Actor_Change_Animation_Mode(kActorHanoi, 48);
+			Game_Flag_Set(kFlagHanoiDead);
+
+			if (Global_Variable_Query(kVariableReplicantsSurvivorsAtMoonbus) == 0) {
+				Player_Loses_Control();
+				Delay(2000);
+				Player_Set_Combat_Mode(false);
+				Loop_Actor_Walk_To_XYZ(kActorMcCoy, -12.0f, -41.58f, 72.0f, 0, true, false, false);
+				Ambient_Sounds_Remove_All_Non_Looping_Sounds(true);
+				Ambient_Sounds_Remove_All_Looping_Sounds(1u);
+				Game_Flag_Set(kFlagKP07toKP06);
+				Game_Flag_Reset(kFlagMcCoyIsHelpingReplicants);
+				Set_Enter(kSetKP05_KP06, kSceneKP06);
+			}
+		}
+	}
 	// return false;
 }
 
@@ -255,7 +314,15 @@ bool AIScriptHanoi::GoalChanged(int currentGoalNumber, int newGoalNumber) {
 
 	switch (newGoalNumber) {
 	case kGoalHanoiDefault:
-		AI_Countdown_Timer_Start(kActorHanoi, kActorTimerAIScriptCustomTask0, 45);
+	// Made it so Hanois timer for entering Dektoras room only starts if he is a replicant. When he is a replicant he is more protective of the reps 
+	// and their helpers and will resort to violence to protect them.
+		if (_vm->_cutContent) {
+			if (Game_Flag_Query(kFlagHanoiIsReplicant)) {
+				AI_Countdown_Timer_Start(kActorHanoi, kActorTimerAIScriptCustomTask0, 45);
+			}
+		} else {
+			AI_Countdown_Timer_Start(kActorHanoi, kActorTimerAIScriptCustomTask0, 45);
+		}
 		break;
 
 	case kGoalHanoiResetTimer:
@@ -363,16 +430,38 @@ bool AIScriptHanoi::GoalChanged(int currentGoalNumber, int newGoalNumber) {
 
 	case kGoalHanoiNR04Enter:
 		Actor_Put_In_Set(kActorHanoi, kSetNR04);
-		Actor_Set_At_XYZ(kActorHanoi, -47.0f, 0.0f, 334.0f, 535);
+		Actor_Set_At_XYZ(kActorHanoi, -70.0f, 0.0f, 334.0f, 535);
+		Sound_Play(kSfxKICKDOOR, 100, 0, 0, 50);
 		AI_Movement_Track_Flush(kActorHanoi);
 		AI_Movement_Track_Append(kActorHanoi, 549, 0);
 		AI_Movement_Track_Repeat(kActorHanoi);
 		break;
 
 	case kGoalHanoiNR04ShootMcCoy:
-		Actor_Face_Actor(kActorHanoi, kActorMcCoy, true);
-		Actor_Change_Animation_Mode(kActorHanoi, kAnimationModeCombatAttack);
-		Actor_Retired_Here(kActorMcCoy, 12, 12, true, -1);
+		// The new code for when replicant Hanoi tries to shoot McCoy. This time around McCoy is faster on the draw
+		// and shoots Hanoi dead before he has a chance to fire his shotgun.
+		if (_vm->_cutContent) {
+			if (Game_Flag_Query(kFlagHanoiIsReplicant)) {
+				Actor_Change_Animation_Mode(kActorHanoi, 4);
+				Sound_Play(kSfxSHOTCOK1, 77, 0, 0, 20);
+				Actor_Face_Actor(kActorHanoi, kActorMcCoy, true);
+				Actor_Face_Actor(kActorMcCoy, kActorHanoi, true);
+				Delay (2000);
+				ADQ_Add(kActorMcCoy, 490, kAnimationModeTalk); //00-0490.AUD	Suck on this, skin-job!
+				Actor_Change_Animation_Mode(kActorMcCoy, 6);
+				Sound_Play(kSfxGUNH1A, 100, 0, 0, 50);
+				Actor_Change_Animation_Mode(kActorHanoi, 48);
+				Game_Flag_Set(kFlagHanoiDead);
+				Player_Gains_Control();
+				if (Query_Difficulty_Level() != kGameDifficultyEasy) {
+					Global_Variable_Increment (kVariableChinyen, 200);
+				}
+			}
+		} else {
+			Actor_Face_Actor(kActorHanoi, kActorMcCoy, true);
+			Actor_Change_Animation_Mode(kActorHanoi, kAnimationModeCombatAttack);
+			Actor_Retired_Here(kActorMcCoy, 12, 12, true, -1);
+		}
 		break;
 
 	case 9999:

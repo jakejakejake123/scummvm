@@ -228,19 +228,18 @@ void AIScriptDektora::ClickedByPlayer() {
 	}
 
 	if (Actor_Query_Goal_Number(kActorDektora) == kGoalDektoraNR08Dance) {
-		Game_Flag_Set(kFlagNR08TouchedDektora);
-		if (_vm->_cutContent) {
-			Game_Flag_Set(kFlagDektoraAssaulted);
-			Actor_Face_Actor(kActorHanoi, kActorMcCoy, true);
-			Actor_Says(kActorHanoi, 120, 12); //25-0120.AUD	Look but don’t touch, boy-o.
-		}
-		AI_Movement_Track_Flush(kActorHanoi);
-		Actor_Force_Stop_Walking(kActorMcCoy);
+		// Made it so this option is only available in vanilla mode. It makes no sense for McCoy to be able to touch Dektora when she is 30 feet in the air.
+		// Not to mention the fact that there is no dialogue that references this act of assault that McCoy commited.
+		if (!_vm->_cutContent) {
+			Game_Flag_Set(kFlagNR08TouchedDektora);
+			AI_Movement_Track_Flush(kActorHanoi);
+			Actor_Force_Stop_Walking(kActorMcCoy);
 #if BLADERUNNER_ORIGINAL_BUGS
 		// this is a redundant call
 		Player_Loses_Control();
 #endif
-		Actor_Set_Goal_Number(kActorHanoi, kGoalHanoiThrowOutMcCoy);
+			Actor_Set_Goal_Number(kActorHanoi, kGoalHanoiThrowOutMcCoy);
+		}
 		return; //true;
 	}
 

@@ -478,19 +478,33 @@ bool AIScriptEarlyQ::GoalChanged(int currentGoalNumber, int newGoalNumber) {
 		// Made it so if McCoy shoots Early Q and he is a replicant Hanoi won't come in the room and shoot McCoy. Instead McCoy will say
 		// easy money and will receive 200 chinyen.
 		// Made it so this code only activates in set NR04 and not in the moonbus.
+		// Made it so if McCoy chooses to shoot Early Q the scene will play out in several different ways depending on Early and Hanois replicant status.
+		// If Early is a replicant  say easy money and receive 200 chinyen. 
+		// If Early is a human McCoy says he did the city a favour and the McCoy retired a human flag will activate.
+		// Hanoi will show up to shoot McCoy after these two scenarios if he is a replicant and if he is human he will not show up at all.
 		if (_vm->_cutContent) {
 			if (Actor_Query_In_Set(kActorEarlyQ, kSetNR04)) {
 				if (Game_Flag_Query(kFlagEarlyQIsReplicant)) {
 					Game_Flag_Set(kFlagEarlyQDead);
-					Player_Set_Combat_Mode (false);
 					Actor_Voice_Over(920, kActorVoiceOver); //99-0920.AUD	Easy money.
 					Actor_Modify_Friendliness_To_Other(kActorSteele, kActorMcCoy, 3);
+					Actor_Set_Targetable(kActorEarlyQ, false);
 					if (Query_Difficulty_Level() != kGameDifficultyEasy) {
 						Global_Variable_Increment (kVariableChinyen, 200);
 					}
-				}		
-			} else {
-				Actor_Set_Goal_Number(kActorHanoi, kGoalHanoiNR04Enter);
+					if (Game_Flag_Query(kFlagHanoiIsReplicant)) {
+						Actor_Set_Goal_Number(kActorHanoi, kGoalHanoiNR04Enter);
+					}
+				} else if (!Game_Flag_Query(kFlagEarlyQIsReplicant)) {
+					Delay (2000);	
+					Actor_Says(kActorMcCoy, 2080, kAnimationModeTalk); //99-2080.AUD	I’d done the city a favor.
+					Game_Flag_Set(kFlagEarlyQDead);
+					Game_Flag_Set(kFlagMcCoyRetiredHuman);
+					Actor_Set_Targetable(kActorEarlyQ, false);
+					if (Game_Flag_Query(kFlagHanoiIsReplicant)) {
+						Actor_Set_Goal_Number(kActorHanoi, kGoalHanoiNR04Enter);
+					}
+				}
 			}
 		} else {
 			Actor_Set_Goal_Number(kActorHanoi, kGoalHanoiNR04Enter);

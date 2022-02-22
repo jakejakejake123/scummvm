@@ -119,43 +119,80 @@ bool SceneScriptNR03::ClickedOnActor(int actorId) {
 			AI_Movement_Track_Pause(kActorHanoi);
 			Actor_Face_Actor(kActorMcCoy, kActorHanoi, true);
 			if (!Game_Flag_Query(kFlagNR03HanoiTalk)) {
-				Game_Flag_Set(kFlagNR03HanoiTalk);
-				Actor_Says(kActorMcCoy, 3340, kAnimationModeTalk);
-				Actor_Face_Actor(kActorHanoi, kActorMcCoy, true);
-				Actor_Says(kActorHanoi, 30, 13);
-				Actor_Says(kActorMcCoy, 3345, 14);
-				Actor_Says(kActorHanoi, 40, 14); //25-0040.AUD	No, it’s true. Mr. Q sent me a vid just yesterday. Getting a hell of a tan he is.
-				// Restored dialogue for Hanoi
 				if (_vm->_cutContent) {
-					Actor_Says(kActorMcCoy, 3350, 14); //00-3350.AUD	Early’s waiting on me.
-					Actor_Says(kActorMcCoy, 3360, 15); //00-3360.AUD	It’s a social visit.
-					Actor_Says(kActorHanoi, 60, 13); //25-0060.AUD	Dirty old geezer blow me. There’s nothing social about the cops.
-					Actor_Says(kActorMcCoy, 3365, 16); //00-3365.AUD	You and I both know he ain’t at any spa, Hanoi.
-					Actor_Says(kActorHanoi, 70, 13); //25-0070.AUD	He ring you from the spa or what?
-					Actor_Says(kActorMcCoy, 2215, 18); //00-2215.AUD	That’s right.
-					Actor_Says(kActorHanoi, 80, 13); //25-0080.AUD	Listen good, boy-o.
-					Actor_Says(kActorHanoi, 90, 14); //25-0090.AUD	You can sit in here and do whatever you want.
-					Actor_Says(kActorHanoi, 100, 13); //25-0100.AUD	Drink, shoot some pocket nine ball. Whatever cops like to do in joints like this.
-					Actor_Says(kActorHanoi, 110, 14); //25-0110.AUD	Or you can take a flying leap through the front door. Are we clear?
-					Actor_Says(kActorMcCoy, 3370, 13); //00-3370.AUD	As the banks of the LA river.
-					Delay (1000);
-					Actor_Says(kActorMcCoy, 8615, 13); //00-8615.AUD	Heard anything on the street?
-					Actor_Says(kActorHanoi, 190, 14); //25-0190.AUD	I heard something, yeah. Maybe I’ll even tell it to you, mate.
-					Actor_Says(kActorMcCoy, 8320, 15); //00-8320.AUD	Really?
-					Actor_Says(kActorHanoi, 240, 13); //25-0240.AUD	I’ll give it to you straight, then you’re gone, right?
-					Actor_Says(kActorMcCoy, 2635, 18); //00-2635.AUD	I’m all ears.
-					Actor_Says(kActorHanoi, 200, 14); //25-0200.AUD	Mostly I’ve been hearing about you, McCoy. And what a piss-ant little wanker you are.
-					Actor_Says(kActorMcCoy, 665, 16); //00-0665.AUD	Real funny, pal.
-					Game_Flag_Set(kFlagHanoiTalk);
+					// When Hanoi is a replicant he came down in the moonbus. That means he doesn't know McCoy and only refers to him by name because McCoy introduces himself when they first meet.
+					// Hanoi is a lot more aggressive to McCoy. Hanoi threatens him, insults him and throws him out of the club when he causes trouble.
+					// However if Hanoi is human he knows McCoy and they are actually quite pleasant with each other...... for the most part. Hanoi won't insult, threaten or even throw McCoy out of the club
+					// no matter how much trouble he causes. However he will still warn McCoy and will impede his progress when trying to access the sanctuary.
+					// Also McCoy mentions that Hanoi looks familliar. This is because he saw
+					// an incept photo of Hanoi but doesn't recognise him because of his punk attire and hairstyle.
+					if (!Game_Flag_Query(kFlagHanoiIsReplicant)) {
+						Game_Flag_Set(kFlagNR03HanoiTalk);
+						// Hanoi is human: McCoy and Hanoi know each other and have a pleasant exchange
+						Actor_Says(kActorMcCoy, 3340, kAnimationModeTalk); //00-3340.AUD	Hey, Hanoi. Where’s Early?
+						Actor_Face_Actor(kActorHanoi, kActorMcCoy, true);
+						Actor_Says(kActorHanoi, 30, 13); //
+						Actor_Says(kActorMcCoy, 3345, 14); //00-3345.AUD	(scoffs) You can do better than that.
+						Actor_Says(kActorHanoi, 40, 14); //25-0040.AUD	No, it’s true. Mr. Q sent me a vid just yesterday. Getting a hell of a tan he is.
+						Actor_Says(kActorMcCoy, 3365, 16); //00-3365.AUD	You and I both know he ain’t at any spa, Hanoi.
+						Actor_Says(kActorHanoi, 70, 13); //25-0070.AUD	He ring you from the spa or what?
+						Actor_Says(kActorMcCoy, 3530, 15); //00-3530.AUD	No, sir.
+						Delay (1000);
+						Actor_Says(kActorMcCoy, 8615, 13); //00-8615.AUD	Heard anything on the street?
+						Actor_Says(kActorHanoi, 190, 14); //25-0190.AUD	I heard something, yeah. Maybe I’ll even tell it to you, mate.
+						Actor_Says(kActorMcCoy, 7835, 13); //00-7835.AUD	Is that so?
+					} else {
+						Game_Flag_Set(kFlagHanoiTalk);
+						Game_Flag_Set(kFlagNR03HanoiTalk);
+						// Hanoi is a replicant. They don't know each other and Hanoi treats McCoy badly. The fact that McCoy is a blade runner and introduces himself as such,
+						// certainly doesn't help the situation.
+						Actor_Says(kActorMcCoy, 4870, 23); //00-4870.AUD	Ray McCoy, Rep Detect.
+						Actor_Says(kActorMcCoy, 3350, 14); //00-3350.AUD	Early’s waiting on me.
+						Actor_Says(kActorMcCoy, 3360, 15); //00-3360.AUD	It’s a social visit.
+						Actor_Says(kActorHanoi, 60, 13); //25-0060.AUD	Dirty old geezer blow me. There’s nothing social about the cops.
+						Actor_Says(kActorHanoi, 80, 13); //25-0080.AUD	Listen good, boy-o.
+						Actor_Says(kActorHanoi, 90, 14); //25-0090.AUD	You can sit in here and do whatever you want.
+						Actor_Says(kActorHanoi, 100, 13); //25-0100.AUD	Drink, shoot some pocket nine ball. Whatever cops like to do in joints like this.
+						Actor_Says(kActorHanoi, 110, 14); //25-0110.AUD	Or you can take a flying leap through the front door. Are we clear?
+						Actor_Says(kActorMcCoy, 3370, 13); //00-3370.AUD	As the banks of the LA river.
+						Delay (1000);
+						Actor_Says(kActorMcCoy, 8615, 13); //00-8615.AUD	Heard anything on the street?
+						Actor_Says(kActorHanoi, 190, 14); //25-0190.AUD	I heard something, yeah. Maybe I’ll even tell it to you, mate.
+						Actor_Says(kActorMcCoy, 8320, 15); //00-8320.AUD	Really?
+						Actor_Says(kActorHanoi, 240, 13); //25-0240.AUD	I’ll give it to you straight, then you’re gone, right?
+						Actor_Says(kActorMcCoy, 2635, 18); //00-2635.AUD	I’m all ears.
+						Actor_Says(kActorHanoi, 200, 14); //25-0200.AUD	Mostly I’ve been hearing about you, McCoy. And what a piss-ant little wanker you are.
+						Actor_Says(kActorMcCoy, 665, 16); //00-0665.AUD	Real funny, pal.
+						Delay(1000);
+						Actor_Says(kActorMcCoy, 8930, 16); //00-8930.AUD	Haven't I seen you around here before?
+						Actor_Says(kActorHanoi, 210, 17); //25-0210.AUD	Sod off, McCoy. I got no time for you.
+					}
+				} else {
+					Game_Flag_Set(kFlagNR03HanoiTalk);
+					Actor_Says(kActorMcCoy, 3340, kAnimationModeTalk);
+					Actor_Face_Actor(kActorHanoi, kActorMcCoy, true);
+					Actor_Says(kActorHanoi, 30, 13);
+					Actor_Says(kActorMcCoy, 3345, 14);
+					Actor_Says(kActorHanoi, 40, 14); //25-0040.AUD	No, it’s true. Mr. Q sent me a vid just yesterday. Getting a hell of a tan he is.
 				}
 			} else {
 				if (_vm->_cutContent) {
-				Actor_Says(kActorMcCoy, 3355, 15); //00-3355.AUD	Early told me the real party is in the back room.
-				Actor_Says(kActorHanoi, 220, 13); //25-0220.AUD	You got nothing, McCoy. Nothing!
-				Actor_Says(kActorHanoi, 230, 14); //25-0230.AUD	Bent the truth a little is all. Look, Mr. Q don’t want no trouble of you lads.
+					if (!Game_Flag_Query(kFlagHanoiIsReplicant)) {
+						// Hanoi is a human, he calls McCoys bluff.
+						Actor_Says(kActorMcCoy, 3355, 15); //00-3355.AUD	Early told me the real party is in the back room.
+						Actor_Says(kActorHanoi, 220, 13); //25-0220.AUD	You got nothing, McCoy. Nothing!
+						Actor_Says(kActorHanoi, 230, 14); //25-0230.AUD	Bent the truth a little is all. Look, Mr. Q don’t want no trouble of you lads.
+						Actor_Says(kActorMcCoy, 1535, 16); //00-1535.AUD	Ah, never mind.
+					} else { 
+						// Hanoi is a replicant, he tells McCoy to get lost. 
+						Actor_Says(kActorMcCoy, 3350, 16); //00-3350.AUD	Early’s waiting on me.
+						Actor_Says(kActorHanoi, 50, 17); //25-0050.AUD	Sod off. You got no appointment and you got no warrant.
+					}
+				} else {
+					Actor_Says(kActorMcCoy, 3350, 16); //00-3350.AUD	Early’s waiting on me.
+					Actor_Says(kActorHanoi, 50, 17);
 				}
-				Actor_Says(kActorMcCoy, 3350, 16); //00-3350.AUD	Early’s waiting on me.
-				Actor_Says(kActorHanoi, 50, 17);
+
 			}
 			AI_Movement_Track_Unpause(kActorHanoi);
 			return true;
@@ -187,7 +224,20 @@ bool SceneScriptNR03::ClickedOnExit(int exitId) {
 				Actor_Face_Actor(kActorMcCoy, kActorHanoi, true);
 				switch (Global_Variable_Query(kVariableHanoiNR04Warnings)) {
 				case 0:
-					Actor_Says(kActorHanoi, 50, 13);
+					if (_vm->_cutContent) {
+						if (!Game_Flag_Query(kFlagHanoiIsReplicant)) {
+							Actor_Face_Actor(kActorHanoi, kActorMcCoy, true);
+							Actor_Face_Actor(kActorMcCoy, kActorHanoi, true);
+							// Human - gentle warning.
+							Actor_Says(kActorHanoi, 80, 13); // 25-0080.AUD	Listen good, boy-o.
+							Actor_Says(kActorMcCoy, 1510, 16); // 00-1510.AUD	Okay, okay. Just forget it.
+						} else {
+							// Replicant - Tells McCoy to get lost
+							Actor_Says(kActorHanoi, 50, 13); //25-0050.AUD	Sod off. You got no appointment and you got no warrant.
+						}
+					} else {
+						Actor_Says(kActorHanoi, 50, 13); //25-0050.AUD	Sod off. You got no appointment and you got no warrant.
+					}
 					AI_Movement_Track_Unpause(kActorHanoi);
 					// Added in this flag so if McCoy got into the hidden sanctuary without interacting with Hanoi McCoy won't mention to Early Q that Hanoi
 					// gave him a hard time.
@@ -196,7 +246,7 @@ bool SceneScriptNR03::ClickedOnExit(int exitId) {
 					}
 					break;
 				case 1:
-					Actor_Says(kActorHanoi, 210, 15);
+					Actor_Says(kActorHanoi, 210, 15); //25-0210.AUD	Sod off, McCoy. I got no time for you.
 					AI_Movement_Track_Unpause(kActorHanoi);
 					if (_vm->_cutContent) {
 						Game_Flag_Set(kFlagHanoiTalk);
@@ -242,10 +292,23 @@ bool SceneScriptNR03::ClickedOnExit(int exitId) {
 				Actor_Face_Actor(kActorHanoi, kActorMcCoy, true);
 				switch (Global_Variable_Query(kVariableHanoiNR05Warnings)) {
 				case 0:
-					Actor_Says(kActorHanoi, 0, 15);
-					Actor_Face_Actor(kActorMcCoy, kActorHanoi, true);
-					Actor_Says(kActorMcCoy, 3335, 13);
-					Actor_Says(kActorHanoi, 10, 16);
+					Actor_Says(kActorHanoi, 0, 15); //25-0000.AUD	This here is reserved for VIPs.
+					if (_vm->_cutContent) {
+						// Hanoi is a relicant - Tells McCoy to get lost.
+						if (Game_Flag_Query(kFlagHanoiIsReplicant)) {
+							Actor_Face_Actor(kActorMcCoy, kActorHanoi, true);
+							Actor_Says(kActorMcCoy, 3335, 13); //00-3335.AUD	But that’s my name. Vip.
+							Actor_Says(kActorHanoi, 10, 16); //25-0010.AUD	You’re real cute, boy-o.
+							Actor_Says(kActorHanoi, 20, 16); //25-0020.AUD	Take a hike, boy-o. Mr. Q don’t like interlopers in the sanctuary.
+							Actor_Face_Actor(kActorMcCoy, kActorHanoi, true);
+						// Human - McCoy immediately complies since they are on better terms.
+						} else {
+							Actor_Says(kActorMcCoy, 1825, 13);	//00-1825.AUD	Okay.
+						}
+					} else {
+						Actor_Says(kActorMcCoy, 3335, 13);
+						Actor_Says(kActorHanoi, 10, 16); //25-0010.AUD	You’re real cute, boy-o.
+					}
 					AI_Movement_Track_Unpause(kActorHanoi);
 					if (_vm->_cutContent) {
 						Game_Flag_Set(kFlagHanoiTalk);
@@ -253,7 +316,7 @@ bool SceneScriptNR03::ClickedOnExit(int exitId) {
 					break;
 				case 1:
 					Actor_Face_Actor(kActorMcCoy, kActorHanoi, true);
-					Actor_Says(kActorHanoi, 210, 12);
+					Actor_Says(kActorHanoi, 210, 12); //25-0210.AUD	Sod off, McCoy. I got no time for you.
 					AI_Movement_Track_Unpause(kActorHanoi);
 					if (_vm->_cutContent) {
 						Game_Flag_Set(kFlagHanoiTalk);
@@ -262,7 +325,14 @@ bool SceneScriptNR03::ClickedOnExit(int exitId) {
 				case 2:
 					// fall through
 				default:
+				// Hanoi will only throw McCoy out of the club if he is a replicant.
+				if (_vm->_cutContent) {
+					if (Game_Flag_Query(kFlagHanoiIsReplicant)) {
+						Actor_Set_Goal_Number(kActorHanoi, kGoalHanoiThrowOutMcCoy);
+					}
+				} else {
 					Actor_Set_Goal_Number(kActorHanoi, kGoalHanoiThrowOutMcCoy);
+				}
 					break;
 				}
 				Global_Variable_Increment(kVariableHanoiNR05Warnings, 1);

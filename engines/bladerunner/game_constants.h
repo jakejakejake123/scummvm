@@ -1023,8 +1023,8 @@ enum Flags {
 	kFlagKP06toKP05                           = 577, // has no use
 	kFlagKP06toKP07                           = 578,
 	kFlagKP07toKP06                           = 579,
-	// 580 is never used
-	// 581 is never used
+	kFlagHanoiIsReplicant			          = 580,
+	kFlagHanoiDead							  = 581,
 	kFlagKP07BusActive                        = 582, // is never set
 	// 583 is never used
 	kFlagHF04DoorsClosed                      = 584,
