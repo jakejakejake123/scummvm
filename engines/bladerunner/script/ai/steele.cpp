@@ -500,6 +500,10 @@ void AIScriptSteele::EnteredSet(int setId) {
 			if (Game_Flag_Query(kFlagEarlyQIsReplicant) && !Game_Flag_Query(kFlagEarlyQDead))  {
 				Actor_Clue_Acquire(kActorSteele, kClueVKEarlyQReplicant, true, kActorSteele);
 				Game_Flag_Set(kFlagEarlyQDead);
+				// Made it so if Hanoi is a replicant Crystal also kills him.
+				if (Game_Flag_Query(kFlagHanoiIsReplicant)) {
+					Game_Flag_Set(kFlagHanoiDead);
+				}
 			} else {
 				Actor_Clue_Acquire(kActorSteele, kClueVKEarlyQHuman, true, kActorSteele);
 			}
