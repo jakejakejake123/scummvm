@@ -179,21 +179,15 @@ bool AIScriptGeneralDoll::ShotAtAndHit() {
 			Actor_Face_Actor(kActorMcCoy, kActorGeneralDoll, true);
 			Actor_Face_Actor(kActorSebastian, kActorMcCoy, true);
 			Actor_Modify_Friendliness_To_Other(kActorSebastian, kActorMcCoy, -10);
-			Actor_Says(kActorSebastian, 710, 20); //56-0710.AUD	Stop! Please! Why are you doing all these terrible things?
-			Actor_Face_Actor(kActorMcCoy, kActorSebastian, true);
+			Actor_Says(kActorSebastian, 710, 31); //56-0710.AUD	Stop! Please! Why are you doing all these terrible things?
 			Actor_Says(kActorMcCoy, 7275, 19); //  00-7275.AUD	Sometimes I just can't help myself.
 			// Added in an animation where Sebastian tries to run away from McCoy but accidentally hits his head on the vase knocking himself out.
-			if (Player_Query_Current_Scene() == kSceneBB05) {
-				Actor_Face_Heading(kActorSebastian, 310, true);
-				Actor_Change_Animation_Mode(kActorSebastian, 48);
-				Delay (500);
-				Sound_Play(kSfxBIGPOT4, 50, 0, 0, 50);
-				Player_Loses_Control();
-				Loop_Actor_Walk_To_Actor(kActorMcCoy, kActorSebastian, 24, true, false);
-				Actor_Says(kActorMcCoy, 8600, 15);
-				Game_Flag_Set(kFlagSebastianKnockedOut);
-				Player_Gains_Control();
-			}
+			Actor_Face_Heading(kActorSebastian, 310, true);
+			Actor_Change_Animation_Mode(kActorSebastian, 48);
+			Delay (500);
+			Sound_Play(kSfxBIGPOT4, 50, 0, 0, 50);
+			Game_Flag_Set(kFlagSebastianKnockedOut);
+			Player_Gains_Control();
 		} else {	
 			Player_Set_Combat_Mode(false);	
 			Delay (2000);
