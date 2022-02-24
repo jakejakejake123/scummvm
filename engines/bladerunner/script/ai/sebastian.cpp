@@ -93,6 +93,7 @@ void AIScriptSebastian::OtherAgentExitedThisSet(int otherActorId) {
 
 void AIScriptSebastian::OtherAgentEnteredCombatMode(int otherActorId, int combatMode) {
 	if (otherActorId == kActorMcCoy
+	&& !Game_Flag_Query(kFlagSebastianKnockedOut)
 	 && combatMode
 	) {
 		Global_Variable_Increment(kVariableGunPulledInFrontOfSebastian, 1);

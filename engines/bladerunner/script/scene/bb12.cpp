@@ -95,22 +95,30 @@ bool SceneScriptBB12::ClickedOn3DObject(const char *objectName, bool a2) {
 bool SceneScriptBB12::ClickedOnActor(int actorId) {
 	// Code for when you click on Dektora (Pris).
 	if (_vm->_cutContent) {
-		if (actorId == kActorDektora && !Game_Flag_Query(kFlagNewDoll)) {
+		if (actorId == kActorDektora && !Game_Flag_Query(kFlagNewDoll)
+		&& !Loop_Actor_Walk_To_XYZ(kActorMcCoy, -2.55, 0.29, -32.66, 0, true, false, false)) {
 			Actor_Face_Actor(kActorMcCoy, kActorDektora, true);
 			Actor_Face_Actor(kActorSebastian, kActorDektora, true);
 			Actor_Says(kActorMcCoy, 7230, 13); //00-7230.AUD	That's a real pretty design. I don't remember seeing it before.
+			Loop_Actor_Walk_To_XYZ(kActorSebastian, -29.21, 0.28, -14.91, 0, true, false, false);
+			Actor_Face_Actor(kActorSebastian, kActorDektora, true);
 			Actor_Says(kActorSebastian, 620, 16); //56-0620.AUD	She is new.
+			Actor_Face_Actor(kActorMcCoy, kActorSebastian, true);
 			Actor_Says(kActorMcCoy, 7235, 18); //00-7235.AUD	You make her, too?
+			Actor_Face_Actor(kActorSebastian, kActorMcCoy, true);
 			Actor_Says(kActorSebastian, 630, 13); //56-0630.AUD	I-- I found her. On the street.
 			Actor_Says(kActorSebastian, 640, 13); //56-0640.AUD	But she's mine now.
 			Actor_Says(kActorMcCoy, 7240, 18); //00-7240.AUD	Easy boy, I'm not gonna take her away from ya.
+			Actor_Face_Actor(kActorMcCoy, kActorDektora, true);
 			Actor_Says(kActorMcCoy, 7245, 15); //00-7245.AUD	The detail! She's a real beauty, ain't she?
 			Actor_Says(kActorSebastian, 650, 14); //56-0650.AUD	I haven't named her yet.
 			Actor_Says(kActorMcCoy, 7250, 13); //00-7250.AUD	She almost looks real.
 			Actor_Says(kActorSebastian, 660, 14); //56-0660.AUD	She isn't. Believe you me.
 			Actor_Says(kActorMcCoy, 7255, 15); //00-7255.AUD	You know, I can't place her for sure but she looks familiar.
+			Actor_Face_Actor(kActorSebastian, kActorMcCoy, true);
 			Actor_Says(kActorSebastian, 670, 14); //56-0670.AUD	Familiar to what?
 			Delay(1000);
+			Actor_Face_Actor(kActorMcCoy, kActorSebastian, true);
 			Actor_Says(kActorMcCoy, 1535, 16); //00-1535.AUD	Ah, never mind.
 			Game_Flag_Set(kFlagNewDoll);
 		}

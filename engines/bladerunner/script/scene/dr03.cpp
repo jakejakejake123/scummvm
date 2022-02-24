@@ -236,6 +236,10 @@ void SceneScriptDR03::PlayerWalkedIn() {
 			if (!Game_Flag_Query(kFlagChewTalkGiveData)
 			&& (Global_Variable_Query(kVariableChapter) == 3))	
 				{	
+				// Inserted the homeless guy into the set offscreen so when Chew has a panic attack and collapses on the ground we can use the homeless guys snoring sounds to show 
+				// that Chew isn't dead but is just sleeping.	
+				Actor_Put_In_Set(kActorTransient, kSetDR03);
+				Actor_Set_At_XYZ(kActorTransient, -310.0, 55.0, -350.0, 400);
 				Actor_Face_Actor(kActorMcCoy, kActorChew, true);
 				Actor_Face_Actor(kActorChew, kActorMcCoy, true);
 				Actor_Says(kActorChew, 510, 15); //52-0510.AUD	Oh, what, what, what? Oh, LPD. You late. Too late.
@@ -275,7 +279,10 @@ void SceneScriptDR03::PlayerWalkedIn() {
 					Actor_Says(kActorMcCoy, 6985, 18); //00-6985.AUD	Got the straight scoop for me or what?
 					Delay (2000);
 				}
-				Item_Pickup_Spin_Effect(kModelAnimationDNADataDisc, 131, 184);
+				Loop_Actor_Walk_To_Actor(kActorChew, kActorMcCoy, 24, true, false);
+				Actor_Face_Actor(kActorMcCoy, kActorChew, true);
+				Actor_Face_Actor(kActorChew, kActorMcCoy, true);
+				Item_Pickup_Spin_Effect(kModelAnimationDNADataDisc, 350, 194);
 				Actor_Clue_Acquire(kActorMcCoy, kClueDNAChew, true, kActorChew);
 				Actor_Says(kActorChew, 670, 14); // 52-0670.AUD	Hmph.  [mumbles in Chinese]
 				Actor_Says(kActorMcCoy, 905, 18); //00-0905.AUD	You light up my life too, pal. That's all you have?
@@ -298,10 +305,20 @@ void SceneScriptDR03::PlayerWalkedIn() {
 				Actor_Says(kActorChew, 500, 18); //52-0500.AUD	No, no no. No, no, you please go. I give you all I have. Ah, no more. See, see? No more.
 				Actor_Says(kActorMcCoy, 815, 14); //00-0815.AUD	Listen to me!
 				Actor_Says(kActorChew, 640, 14); //52-0640.AUD	[speaks in Chinese] You! You bad.
-				Actor_Says(kActorChew, 650, 15); //	52-0650.AUD	You go away! Never come back.	
-				Actor_Says(kActorChew, 610, 18); //52-0610.AUD	(whimpers) My eyes! They fog. Eyes melting, getting slimy. Oh, please eye! Oh, you so mushy!
+				Actor_Says(kActorChew, 650, 15); //	52-0650.AUD	You go away! Never come back.			
 				Actor_Says(kActorMcCoy, 5150, 14); //00-5150.AUD	One more thing.
 				Actor_Says(kActorChew, 630, 15); //52-0630.AUD	No, no, no, no, no, no, no.
+				Actor_Face_Heading(kActorChew, 310, true);
+				Actor_Says(kActorChew, 610, 14); //52-0610.AUD	(whimpers) My eyes! They fog. Eyes melting, getting slimy. Oh, please eye! Oh, you so mushy!
+				Actor_Says(kActorChew, 660, 15); //52-0660.AUD	(yells) Ah!
+				Actor_Change_Animation_Mode(kActorChew, 48);
+				Delay(2000);
+				Actor_Says(kActorMcCoy, 3970, 14); //00-3970.AUD	Hey.
+				Delay (1000);
+				Actor_Says(kActorTransient, 400, 15); //12-0400.AUD	Zzz…
+				Actor_Says(kActorTransient, 410, 15); //12-0410.AUD	Zzz…
+				Actor_Says(kActorMcCoy, 8527, 14); //00-8527.AUD	Strange.
+				Actor_Says(kActorTransient, 40, 15); //12-0040.AUD	Zzz…
 				Delay (1000);
 				Game_Flag_Set(kFlagChewTalkGiveData);	
 				Game_Flag_Set(kFlagDR03toDR02);
