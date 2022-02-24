@@ -1773,7 +1773,11 @@ void AIScriptGordo::talkToMcCoyInCity() {
 				}
 			}
 		}
+		if (_vm->_cutContent) {
+			Actor_Clue_Acquire(kActorMcCoy, kClueGordoInterview1, false, kActorGordo);
+		} else {
 			Actor_Clue_Acquire(kActorMcCoy, kClueGordoInterview2, false, kActorGordo);
+		}
 		}
 		AI_Movement_Track_Unpause(kActorGordo);
 	} else if (!Game_Flag_Query(kFlagGordoTalk2)

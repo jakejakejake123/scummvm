@@ -183,19 +183,20 @@ void SceneScriptUG09::PlayerWalkedIn() {
 			Actor_Says(kActorIzo, 960, 17); //07-0960.AUD	I’m sorry to say you and I are on the same boat. Beholden to the same person.
 			Actor_Says(kActorMcCoy, 6780, 18); //00-6780.AUD	Don’t jump to any conclusions.
 			// Made it so this dialogue only plays if McCoy retired Zuben AND he received the crimes scene notes clue about the factory bombing.
-			if (Game_Flag_Query(kFlagZubenRetired) 
-			&& Actor_Clue_Query (kActorMcCoy, kClueCrimeSceneNotes)) {
+			if (Game_Flag_Query(kFlagZubenRetired)) {
 				Actor_Says(kActorIzo, 750, 17); //07-0750.AUD	Clovis is looking for you, McCoy.
 				Actor_Says(kActorMcCoy, 6755, 13); //00-6755.AUD	He wants to talk to me?!
 				Actor_Says(kActorIzo, 910, 17); //07-0910.AUD	He would have made that clear.
 				Actor_Says(kActorIzo, 760, 17); //07-0760.AUD	He knows all about you. Knows what happened with Zuben.
-				Actor_Says(kActorMcCoy, 5500, 18); //00-5500.AUD	Is Clovis the Tyrell bomber?
-				Actor_Says(kActorIzo, 770, 17); //07-0770.AUD	You really are groping in the dark.
-				Actor_Says(kActorIzo, 780, 17); //07-0780.AUD	No. The bomb belonged to Sadik. It was his signature.
-				Actor_Clue_Acquire(kActorMcCoy, kClueIzosWarning, true, kActorIzo);
-			} 
+				if	(Actor_Clue_Query(kActorMcCoy, kClueCrimeSceneNotes)) {
+					Actor_Says(kActorMcCoy, 5500, 18); //00-5500.AUD	Is Clovis the Tyrell bomber?
+					Actor_Says(kActorIzo, 770, 17); //07-0770.AUD	You really are groping in the dark.
+					Actor_Says(kActorIzo, 780, 17); //07-0780.AUD	No. The bomb belonged to Sadik. It was his signature.
+				} 
 			Actor_Says(kActorMcCoy, 5505, 13); //00-5505.AUD	I need to talk to Clovis.
 			Actor_Says(kActorIzo, 790, 17); //07-0790.AUD	I’ll tell him you helped me. That’s as much as I can do.
+			Actor_Clue_Acquire(kActorMcCoy, kClueIzosWarning, true, kActorIzo);
+			}
 			Actor_Says(kActorMcCoy, 6730, 15); //00-6730.AUD	I’ll do you a good turn, if you hook me up with Clovis.
 			Actor_Says(kActorIzo, 880, 17); //07-0880.AUD	Good turns are meaningless to me, if I go against Clovis’ wishes.
 			Actor_Says(kActorMcCoy, 6750, 18); //00-6750.AUD	You’re afraid of him?

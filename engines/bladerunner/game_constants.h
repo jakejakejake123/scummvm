@@ -1026,7 +1026,7 @@ enum Flags {
 	kFlagHanoiIsReplicant			          = 580,
 	kFlagHanoiDead							  = 581,
 	kFlagKP07BusActive                        = 582, // is never set
-	// 583 is never used
+	kFlagMcCoyShotGordoHostage				  = 583,
 	kFlagHF04DoorsClosed                      = 584,
 	kFlagHF04CloseDoors                       = 585,
 	kFlagHF04OpenDoors                        = 586,

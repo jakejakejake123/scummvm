@@ -1363,15 +1363,28 @@ void AIScriptZuben::dialogue() {
 		break;
 
 	case 1510:
-		Actor_Says(kActorMcCoy, 7300, 13);
-		Actor_Says(kActorZuben, 280, 12);
-		Actor_Says(kActorMcCoy, 7355, 14);
-		Actor_Says(kActorZuben, 290, 15);
-		Actor_Says(kActorMcCoy, 7360, 14);
-		Actor_Says(kActorZuben, 300, 14);
-		Actor_Says(kActorZuben, 310, 13);
+		Actor_Says(kActorMcCoy, 7300, 13); //00-7300.AUD	Did you kill the animals?
+		if (_vm->_cutContent) {
+			Actor_Says(kActorZuben, 270, 12); //19-0270.AUD	Because he bad.
+			Actor_Says(kActorMcCoy, 7300, 13); //00-7350.AUD	Runciter?
+		}
+		Actor_Says(kActorZuben, 280, 12); //19-0280.AUD	He not pay. Bad to Lucy. Bad to everybody. Make people starve.
+		Actor_Says(kActorMcCoy, 7355, 14); //00-7355.AUD	All those animals died.
+		Actor_Says(kActorZuben, 290, 15); //19-0290.AUD	He made Lucy do bad things. Lucy hurt. Clovis more angry.
+		Actor_Says(kActorMcCoy, 7360, 14); //00-7360.AUD	Did he do things to Lucy?
+		Actor_Says(kActorZuben, 300, 14); //19-0300.AUD	Girl was forced to do bad things Off-World. Clovis thought Terra better.
+		Actor_Says(kActorZuben, 310, 13); //19-0310.AUD	But Terra's no better for young girls. Runciter bad to Lucy.
 		Delay(2000);
-		Actor_Says(kActorMcCoy, 7360, 11);
+		if (_vm->_cutContent) {
+			if (Player_Query_Agenda() == kPlayerAgendaSurly 
+				|| Player_Query_Agenda() == kPlayerAgendaErratic) {
+				Actor_Says(kActorMcCoy, 7365, 14); //00-7365.AUD	You should have killed him.
+			} else {
+				Actor_Says(kActorMcCoy, 7360, 14); //00-7360.AUD	Did he do things to Lucy?
+			}
+		} else {
+			Actor_Says(kActorMcCoy, 7360, 11); ////00-7360.AUD	Did he do things to Lucy?
+		}
 		Actor_Says(kActorZuben, 320, 12);
 		Actor_Says(kActorZuben, 330, 12);
 		Actor_Clue_Acquire(kActorMcCoy, kClueZubensMotive, false, kActorZuben);

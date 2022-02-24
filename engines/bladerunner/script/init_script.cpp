@@ -2381,8 +2381,8 @@ void InitScript::Init_SDB() {
 		SDB_Add_Replicant_Clue(kSuspectClovis, kClueClovisIncept);
 		SDB_Add_MO_Clue(kSuspectClovis, kClueMcCoyShotGuzza);
 		SDB_Add_MO_Clue(kSuspectClovis, kClueMcCoyKilledRunciter1);
-		SDB_Add_Non_Replicant_Clue(kSuspectClovis, kClueZubenTalksAboutLucy1);
-		SDB_Add_Replicant_Clue(kSuspectClovis, kClueZubenTalksAboutLucy2);
+		SDB_Add_Replicant_Clue(kSuspectClovis, kClueZubenTalksAboutLucy1);
+		SDB_Add_Non_Replicant_Clue(kSuspectClovis, kClueZubenTalksAboutLucy2);
 		SDB_Add_Whereabouts_Clue(kSuspectClovis, kClueSightingClovis);
 		SDB_Add_MO_Clue(kSuspectClovis, kClueSadiksGun);
 
@@ -2656,6 +2656,7 @@ void InitScript::Init_SDB() {
 		SDB_Add_Other_Clue(kSuspectMcCoy, kClueMoonbus1);
 		SDB_Add_Non_Replicant_Clue(kSuspectMcCoy, kClueMoonbusReflection);
 		SDB_Add_Other_Clue(kSuspectMcCoy, kClueMcCoysDescription);
+		SDB_Add_Other_Clue(kSuspectMcCoy, kClueDektoraInterview1);
 	}
 	SDB_Add_Photo_Clue(kSuspectMcCoy, kClueMcCoyAtMoonbus, 36);
 	SDB_Add_Photo_Clue(kSuspectMcCoy, kCluePhotoOfMcCoy1, 17);
@@ -2934,6 +2935,7 @@ void InitScript::Init_CDB() {
 		CDB_Set_Crime(kClueCheese, kCrimeCheeseTheft);
 		CDB_Set_Crime(kClueKingstonKitchenBox1, kCrimeCheeseTheft);
 		CDB_Set_Crime(kClueKingstonKitchenBox2, kCrimeCheeseTheft);
+		CDB_Set_Crime(kClueGordoInterview2, kCrimeCheeseTheft);
 	}
 
 	for (int i = 0; i != 288; ++i) {

@@ -448,6 +448,7 @@ void AIScriptSteele::EnteredSet(int setId) {
 			if (Game_Flag_Query(kFlagRunciterIsReplicant)
 			&& Actor_Query_Goal_Number(kActorRunciter) != kGoalRunciterDead)  {
 				Actor_Clue_Acquire(kActorSteele, kClueCrystalRetiredRunciter1, true, kActorSteele);
+				Actor_Clue_Acquire(kActorSteele, kClueCrystalRetiredRunciter2, true, kActorSteele);
 				Actor_Set_Goal_Number(kActorRunciter, kGoalRunciterDead);
 				Game_Flag_Set(kFlagCrystalRetiredRunciter);
 			} else {
@@ -1361,6 +1362,9 @@ bool AIScriptSteele::GoalChanged(int currentGoalNumber, int newGoalNumber) {
 		Game_Flag_Reset(kFlagSteeleAimingAtGordo);
 		ADQ_Flush();
 		Game_Flag_Set(kFlagGordoRanAway);
+		if (_vm->_cutContent) {
+			Game_Flag_Set(kFlagMcCoyShotGordoHostage);
+		}
 		Actor_Set_Targetable(kActorSteele, false);
 		Delay(1000);
 		Player_Set_Combat_Mode(false);
@@ -1385,6 +1389,7 @@ bool AIScriptSteele::GoalChanged(int currentGoalNumber, int newGoalNumber) {
 		// Flag is reset and friendliness towards Steele is altered when McCoy shoots Gordo.
 		if (_vm->_cutContent) {
 			Game_Flag_Reset(kFlagMcCoyIsHelpingReplicants);
+			Actor_Clue_Acquire(kActorMcCoy, kClueMcCoyRetiredGordo, true, kActorSteele);
 			Actor_Modify_Friendliness_To_Other(kActorSteele, kActorMcCoy, 3);
 		}
 		Player_Gains_Control();

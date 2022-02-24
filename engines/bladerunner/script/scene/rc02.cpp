@@ -317,7 +317,9 @@ void SceneScriptRC02::dialogueWithRunciter() {
 		} else {
 			Actor_Says(kActorRunciter, 260, 14);
 			Actor_Says(kActorRunciter, 270, 13);
-			Actor_Clue_Acquire(kActorMcCoy, kClueRunciterInterviewB2, true, kActorRunciter);
+			if (!_vm->_cutContent) {
+				Actor_Clue_Acquire(kActorMcCoy, kClueRunciterInterviewB2, true, kActorRunciter);
+			}
 		}
 		Actor_Says(kActorMcCoy, 4645, 13);
 		Actor_Says(kActorRunciter, 280, 13);
@@ -591,6 +593,9 @@ bool SceneScriptRC02::ClickedOnActor(int actorId) {
 				Actor_Says(kActorRunciter, 160, 14);
 				Actor_Says(kActorRunciter, 170, 15);
 				Actor_Says(kActorRunciter, 180, 13);
+				if (_vm->_cutContent) {
+					Actor_Clue_Acquire(kActorMcCoy, kClueRunciterInterviewB2, true, kActorRunciter);
+				}
 			}
 			if (_vm->_cutContent) {
 				// Made it so McCoy talks about Runciters friends regardless of his agenda. McCoy doesn't really come of as a jerk here so
