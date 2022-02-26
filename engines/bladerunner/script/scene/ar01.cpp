@@ -185,26 +185,28 @@ bool SceneScriptAR01::ClickedOnActor(int actorId) {
 					// Added in a line.
 					if (_vm->_cutContent) {
 						Actor_Says(kActorFishDealer, 200, 14); //29-0200.AUD	Oh, all right. Where my head today?
+						// If McCoy is surly or erratic their friendliness will lower and this will effect the coversation later on.
+						// It will also result in the fish lady not helping when trying to find the insect dealer and whne you ask her about the strange scale.
+						if (Player_Query_Agenda() == kPlayerAgendaSurly 
+						|| Player_Query_Agenda() == kPlayerAgendaErratic) {
+							Actor_Says(kActorMcCoy, 8519, 14); //00-8519.AUD	What do you say we dish each other the straight goods.
+							Actor_Modify_Friendliness_To_Other(kActorFishDealer, kActorMcCoy, -5);
+							Actor_Says(kActorFishDealer, 180, 14); //29-0180.AUD	I can't stand all day gabbing away. My fish require attention.
+							Game_Flag_Set(kFlagAR01FishDealerTalk);
+							Actor_Set_Goal_Number(kActorFishDealer, 1);
+						} else {
+							Actor_Says(kActorMcCoy, 7985, 17); //00-7985.AUD	It's okay.
+							Actor_Says(kActorFishDealer, 60, 14); //29-0060.AUD	Ah! Down that end of Animal Row. You see big green sign?
+							Actor_Says(kActorFishDealer, 70, 14);
+							Actor_Says(kActorFishDealer, 80, 14);
+							Actor_Says(kActorFishDealer, 90, 14);
+							Actor_Says(kActorMcCoy, 25, 13);
+							// This new flag is put in so some restored dialogue later on will play if the fish lady gave you some information about the Peruvian woman.
+							Game_Flag_Set(kFlagAR01FishDealerTalk);
+							Actor_Set_Goal_Number(kActorFishDealer, 1);
+							Actor_Modify_Friendliness_To_Other(kActorFishDealer, kActorMcCoy, 5);
+						}
 					}
-					// If McCoy is surly or erratic their friendliness will lower and this will effect the coversation later on.
-					if (Player_Query_Agenda() == kPlayerAgendaSurly 
-					|| Player_Query_Agenda() == kPlayerAgendaErratic) {
-						Actor_Says(kActorMcCoy, 8519, 14); //00-8519.AUD	What do you say we dish each other the straight goods.
-						Actor_Modify_Friendliness_To_Other(kActorFishDealer, kActorMcCoy, -5);
-					} else {
-						Actor_Says(kActorMcCoy, 7985, 17); //00-7985.AUD	It's okay.
-						Actor_Modify_Friendliness_To_Other(kActorFishDealer, kActorMcCoy, 5);
-					}
-						Actor_Says(kActorFishDealer, 60, 14); //29-0060.AUD	Ah! Down that end of Animal Row. You see big green sign?
-						Actor_Says(kActorFishDealer, 70, 14);
-						Actor_Says(kActorFishDealer, 80, 14);
-						Actor_Says(kActorFishDealer, 90, 14);
-						Actor_Says(kActorMcCoy, 25, 13);
-						// This new flag is put in so some restored dialogue later on will play if the fish lady gave you some information about the Peruvian woman.
-						Game_Flag_Set(kFlagAR01FishDealerTalkInsects);
-						Game_Flag_Set(kFlagAR01FishDealerTalk);
-						Actor_Set_Goal_Number(kActorFishDealer, 1);
-						// This amusing dialogue will play if McCoy has already talked to the Peruvian woman and this is the first time he talks to the fish lady.
 					} else {
 						Actor_Says(kActorMcCoy, 8615, 13);  //00-8615.AUD	Heard anything on the street?
 						Actor_Says(kActorFishDealer, 160, 14); //29-0160.AUD	I heard something, yeah. I tell it to you, if you like.
@@ -219,6 +221,8 @@ bool SceneScriptAR01::ClickedOnActor(int actorId) {
 						Actor_Says(kActorFishDealer, 40, 14); //29-0040.AUD	Fish just as good as dog.
 						Actor_Says(kActorMcCoy, 10, 13); //00-0010.AUD	No, my dog is real.
 						Actor_Says(kActorFishDealer, 50, 14); //29-0050.AUD	Real?! Oh, you must make lots of money.
+						Actor_Says(kActorFishDealer, 230, 14); // 29-0230.AUD	You buy fish? Highest quality.
+						Delay (500);
 						if (Player_Query_Agenda() == kPlayerAgendaSurly 
 						|| Player_Query_Agenda() == kPlayerAgendaErratic) {
 						Actor_Says(kActorMcCoy, 8519, 14); //00-8519.AUD	What do you say we dish each other the straight goods.
@@ -229,11 +233,11 @@ bool SceneScriptAR01::ClickedOnActor(int actorId) {
 					}
 					Delay (1000);
 					Actor_Says(kActorFishDealer, 230, 14); // 29-0230.AUD	You buy fish? Highest quality.
-					Delay (1000);										
+					Delay (2000);										
 					Actor_Says(kActorMcCoy, 1535, 16); //00-1535.AUD	Ah, never mind.
-					Delay (2000);
+					Delay (3000);
 					Actor_Says(kActorFishDealer, 230, 14); // 29-0230.AUD	You buy fish? Highest quality.
-					Delay (1000);	
+					Delay (2000);	
 					Game_Flag_Set(kFlagAR01FishDealerTalk);
 					Actor_Set_Goal_Number(kActorFishDealer, 1);
 				} 
@@ -262,13 +266,23 @@ bool SceneScriptAR01::ClickedOnActor(int actorId) {
 				) {
 					Actor_Says(kActorMcCoy, 40, 11);
 					Actor_Says(kActorFishDealer, 120, 14);
-					Actor_Says(kActorMcCoy, 45, 17);
-					// The fish lady will say this extra line if she told you about the Peruvian woman before.
+					Actor_Says(kActorMcCoy, 45, 17); //00-0045.AUD	What other one?
 					if (_vm->_cutContent) {
-						if  (Game_Flag_Query(kFlagAR01FishDealerTalkInsects)) {
-							Actor_Says(kActorFishDealer, 210, 14); //29-0210.AUD	What I said before. That yesterdays news. Here real fact of it.
+						// Depending on your friendliness with the fish lady she may or may not give you some useful information.
+						if (Actor_Query_Friendliness_To_Other(kActorFishDealer, kActorMcCoy) > 49) {
+						// The fish lady will say this extra line if she told you about the Peruvian woman before.
+							if  (Game_Flag_Query(kFlagAR01FishDealerTalkInsects)) {
+								Actor_Says(kActorFishDealer, 210, 14); //29-0210.AUD	What I said before. That yesterdays news. Here real fact of it.
+							}
+							Actor_Says(kActorFishDealer, 130, 14); //29-0130.AUD	Other police show me scale from same snake.
+							Actor_Says(kActorFishDealer, 140, 14);
+							Actor_Says(kActorMcCoy, 50, 13);
+							Actor_Says(kActorFishDealer, 150, 14);
+							Actor_Clue_Acquire(kActorMcCoy, kClueFishLadyInterview, true, kActorFishDealer);
+						} else {
+							Actor_Says(kActorFishDealer, 180, 14); //29-0180.AUD	I can't stand all day gabbing away. My fish require attention.
 						}
-					}
+					} else {
 					Actor_Says(kActorFishDealer, 130, 14); //29-0130.AUD	Other police show me scale from same snake.
 					Actor_Says(kActorFishDealer, 140, 14);
 					Actor_Says(kActorMcCoy, 50, 13);
@@ -277,6 +291,7 @@ bool SceneScriptAR01::ClickedOnActor(int actorId) {
 					Actor_Clue_Acquire(kActorMcCoy, kClueFishLadyInterview, true, kActorMcCoy); // A bug? Shouldn't the last argument be -1 or kActorFishDealer here?
 #else
 					Actor_Clue_Acquire(kActorMcCoy, kClueFishLadyInterview, true, kActorFishDealer);
+					}
 #endif // BLADERUNNER_ORIGINAL_BUGS
 				} else {
 					if (_vm->_cutContent) {

@@ -172,16 +172,29 @@ void SceneScriptHC04::dialogueWithIsabella() {
 		// It makes no sense for the option to be labelled Sadik photo because in act 2 McCoy hasn't 
 		// learned Sadiks name. Instead McCoy will now first ask about the delivery men and when he has no luck with that
 		// he shows Isabella the photo.
+		// Made it if McCoy hreatens Isabella with jail time none of the other options are available.
+		// Also made it so if you have the stolen cheese clue the deliverymen and Eisenduller options disappear since McCoy now knows that it was
+		// Gordo who stole that takeout boxes and not Sadik who was delivring them.
 		if (_vm->_cutContent) {
-			if (Actor_Clue_Query(kActorMcCoy, kClueBombingSuspect)) {
-				DM_Add_To_List_Never_Repeat_Once_Selected(350, 5, 6, 5); // DELIVERYMEN
+			if (Actor_Query_Friendliness_To_Other(kActorIsabella, kActorMcCoy) > 46) {
+				if (Actor_Clue_Query(kActorMcCoy, kClueBombingSuspect)
+				&& !Actor_Clue_Query(kActorMcCoy, kClueStolenCheese)) {
+					DM_Add_To_List_Never_Repeat_Once_Selected(350, 5, 6, 5); // DELIVERYMEN
+				}
 			}
 		} else if (Actor_Clue_Query(kActorMcCoy, kClueBombingSuspect)) {
 			DM_Add_To_List_Never_Repeat_Once_Selected(340, 5, 6, 5); // SADIK PHOTO
 		} else if (Actor_Clue_Query(kActorMcCoy, kClueTyrellSecurityPhoto)) {
 			DM_Add_To_List_Never_Repeat_Once_Selected(350, 5, 6, 5); // DELIVERYMEN
 		}
-		DM_Add_To_List_Never_Repeat_Once_Selected(360, 6, 4, 3); // MARCUS EISENDULLER
+		if (_vm->_cutContent) {
+			if  (!Actor_Clue_Query(kActorMcCoy, kClueStolenCheese)
+			&& Actor_Query_Friendliness_To_Other(kActorIsabella, kActorMcCoy) > 46) {
+				DM_Add_To_List_Never_Repeat_Once_Selected(360, 6, 4, 3); // MARCUS EISENDULLER
+			}		
+		} else {
+			DM_Add_To_List_Never_Repeat_Once_Selected(360, 6, 4, 3); // MARCUS EISENDULLER
+		}
 	}
 	if ( Actor_Clue_Query(kActorMcCoy, kClueCheese)
 	 && !Actor_Clue_Query(kActorMcCoy, kClueSpecialIngredient)
@@ -194,8 +207,10 @@ void SceneScriptHC04::dialogueWithIsabella() {
 	// Made it so McCoy doesn't have the option to buy the stew if he found out about the special ingredient.
 	// It would make no sense for McCoy to ask what's in the stew and then buy some of it knowing it contains illegal ingredients.
 	if (_vm->_cutContent) {
-		if (!Actor_Clue_Query(kActorMcCoy, kClueSpecialIngredient)) {
-			DM_Add_To_List_Never_Repeat_Once_Selected(390, 7, 5, -1); // BUY STEW
+		if (Actor_Query_Friendliness_To_Other(kActorIsabella, kActorMcCoy) > 46) {
+			if (!Actor_Clue_Query(kActorMcCoy, kClueSpecialIngredient)) {
+				DM_Add_To_List_Never_Repeat_Once_Selected(390, 7, 5, -1); // BUY STEW
+			}
 		}
 	} else {
 		DM_Add_To_List_Never_Repeat_Once_Selected(390, 7, 5, -1); // BUY STEW	
@@ -263,46 +278,49 @@ void SceneScriptHC04::dialogueWithIsabella() {
 		Actor_Says(kActorMcCoy, 1370, kAnimationModeTalk);
 		Actor_Says(kActorIsabella, 170, kAnimationModeTalk); //59-0170.AUD	Why you pick on Mama Isabella? I never do you no harm.
 		// Added in some dialogue and made the conversation play out differently based on whether McCoy is surly or erratic.
+		// If McCoy is mean Mama Isabella denies all involvement but if McCoy is nice to her she reluctantly tells him the truth.
 		if (_vm->_cutContent) {
 			Actor_Says(kActorMcCoy, 1365, kAnimationModeTalk); //00-1365.AUD	I'm not looking to bust the dealer. I just want to know who bought it.
-			Actor_Says(kActorIsabella, 150, kAnimationModeTalk); //59-0150.AUD	This is a clean place man. Mama Isabella law-abiding soul.
 			Delay (1000);
 			if (Player_Query_Agenda() == kPlayerAgendaSurly 
 					|| Player_Query_Agenda() == kPlayerAgendaErratic) {
 				Actor_Says(kActorMcCoy, 4360, 16); //00-4360.AUD	Tell it straight or I'm gonna make sure you get the same as he gets. Full conspiracy, payable for 25.
 				Actor_Modify_Friendliness_To_Other(kActorIsabella, kActorMcCoy, -10);
+				Actor_Says(kActorIsabella, 150, kAnimationModeTalk); //59-0150.AUD	This is a clean place man. Mama Isabella law-abiding soul.
 			} else {
 				Actor_Says(kActorMcCoy, 1375, kAnimationModeTalk); //00-1375.AUD	Where did you get it?
+				Actor_Says(kActorIsabella, 180, kAnimationModeTalk); //59-0180.AUD	My sister. She got connections.
+				Actor_Says(kActorMcCoy, 1380, kAnimationModeTalk);
+				Actor_Says(kActorIsabella, 190, kAnimationModeTalk);
+				Actor_Says(kActorIsabella, 210, kAnimationModeTalk);
+				Actor_Says(kActorIsabella, 240, kAnimationModeTalk);
+				Actor_Says(kActorMcCoy, 1385, kAnimationModeTalk);
+				Actor_Says(kActorIsabella, 260, kAnimationModeTalk);
+				Actor_Says(kActorMcCoy, 1390, kAnimationModeTalk);
+				Actor_Says(kActorIsabella, 300, kAnimationModeTalk);
+				Actor_Says(kActorIsabella, 310, kAnimationModeTalk);
+				Actor_Says(kActorIsabella, 320, kAnimationModeTalk); 
+				Actor_Says(kActorMcCoy, 1395, kAnimationModeTalk); //00-1395.AUD	You're right. But I still think you ought to get yourself a different secret ingredient.
+				Actor_Says(kActorIsabella, 330, kAnimationModeTalk); //59-0330.AUD	You bet, mon. That cheese’s been nothing but trouble for Mama Isabella.
+				Actor_Clue_Acquire(kActorMcCoy, kClueStolenCheese, false, kActorIsabella);
+				CDB_Set_Crime(kClueStolenCheese, kCrimeCheeseTheft);
 			}
 		} else {
 			Actor_Says(kActorMcCoy, 1375, kAnimationModeTalk); //00-1375.AUD	Where did you get it?
-		}
-		Actor_Says(kActorIsabella, 180, kAnimationModeTalk); //59-0180.AUD	My sister. She got connections.
-		Actor_Says(kActorMcCoy, 1380, kAnimationModeTalk);
-		Actor_Says(kActorIsabella, 190, kAnimationModeTalk);
-		Actor_Says(kActorIsabella, 210, kAnimationModeTalk);
-		Actor_Says(kActorIsabella, 240, kAnimationModeTalk);
-		Actor_Says(kActorMcCoy, 1385, kAnimationModeTalk);
-		Actor_Says(kActorIsabella, 260, kAnimationModeTalk);
-		Actor_Says(kActorMcCoy, 1390, kAnimationModeTalk);
-		Actor_Says(kActorIsabella, 300, kAnimationModeTalk);
-		Actor_Says(kActorIsabella, 310, kAnimationModeTalk);
-		Actor_Says(kActorIsabella, 320, kAnimationModeTalk); //59-0320.AUD	I'm thinking you not really care about the cheese.
-		// If McCoy has low friendliness with Isabella he is indifferent to her, if not he gives her some advice about finding a new ingredient.
-		if (_vm->_cutContent) {
-			if (Actor_Query_Friendliness_To_Other(kActorIsabella, kActorMcCoy) < 50) {
-				Actor_Says(kActorMcCoy, 5430, kAnimationModeTalk); //00-5430.AUD	Not really, no.
-			} else {
-				Actor_Says(kActorMcCoy, 1395, kAnimationModeTalk); //00-1395.AUD	You're right. But I still think you ought to get yourself a different secret ingredient.
-				Actor_Says(kActorIsabella, 330, kAnimationModeTalk); //59-0330.AUD	You bet, mon. That cheese’s been nothing but trouble for Mama Isabella.
-			}
-		} else {
+			Actor_Says(kActorIsabella, 180, kAnimationModeTalk); //59-0180.AUD	My sister. She got connections.
+			Actor_Says(kActorMcCoy, 1380, kAnimationModeTalk);
+			Actor_Says(kActorIsabella, 190, kAnimationModeTalk);
+			Actor_Says(kActorIsabella, 210, kAnimationModeTalk);
+			Actor_Says(kActorIsabella, 240, kAnimationModeTalk);
+			Actor_Says(kActorMcCoy, 1385, kAnimationModeTalk);
+			Actor_Says(kActorIsabella, 260, kAnimationModeTalk);
+			Actor_Says(kActorMcCoy, 1390, kAnimationModeTalk);
+			Actor_Says(kActorIsabella, 300, kAnimationModeTalk);
+			Actor_Says(kActorIsabella, 310, kAnimationModeTalk);
+			Actor_Says(kActorIsabella, 320, kAnimationModeTalk); //59-0320.AUD	I'm thinking you not really care about the cheese.
 			Actor_Says(kActorMcCoy, 1395, kAnimationModeTalk); //00-1395.AUD	You're right. But I still think you ought to get yourself a different secret ingredient.
 			Actor_Says(kActorIsabella, 330, kAnimationModeTalk); //59-0330.AUD	You bet, mon. That cheese’s been nothing but trouble for Mama Isabella.
-		}
-		Actor_Clue_Acquire(kActorMcCoy, kClueStolenCheese, false, kActorIsabella);
-		if (_vm->_cutContent) {
-			CDB_Set_Crime(kClueStolenCheese, kCrimeCheeseTheft);
+			Actor_Clue_Acquire(kActorMcCoy, kClueStolenCheese, false, kActorIsabella);
 		}
 		break;
 

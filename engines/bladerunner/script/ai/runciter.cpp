@@ -225,6 +225,7 @@ void AIScriptRunciter::OtherAgentEnteredCombatMode(int otherActorId, int combatM
 		Actor_Says(kActorRunciter, 730, 13); //15-0730.AUD	Please. Just leave me alone.
 		Actor_Set_Targetable(kActorRunciter, false);
 		Game_Flag_Reset(kFlagRunciterConfronted);
+		Actor_Modify_Friendliness_To_Other(kActorRunciter, kActorMcCoy, 20);
 		Scene_Exits_Enable();
 	}
 }

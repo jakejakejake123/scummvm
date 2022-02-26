@@ -599,13 +599,13 @@ void SceneScriptAR02::dialogueWithHassan() {
 				Actor_Says(kActorHasan, 250, 11);  //20-0250.AUD	I'm afraid not, noble one. But you shall surely be the first to know, if I do hear something.
 				Actor_Says(kActorMcCoy, 3910, 16); //00-3910.AUD	You’re lying.
 				Actor_Says(kActorHasan, 270, 11); //20-0270.AUD	You sully my good name with such accusations. I speak only the truth, I swear!
-					if (Player_Query_Agenda() == kPlayerAgendaSurly 
-							|| Player_Query_Agenda() == kPlayerAgendaErratic) {
-						Actor_Says(kActorMcCoy, 8519, 14);//00-8519.AUD	What do you say we dish each other the straight goods.
-						Actor_Modify_Friendliness_To_Other(kActorHasan, kActorMcCoy, -2);
-					} else { 
-						Actor_Says(kActorMcCoy, 6985, 11);	//-	00-6985.AUD	Got the straight scoop for me or what?
-					}
+				if (Player_Query_Agenda() == kPlayerAgendaSurly 
+						|| Player_Query_Agenda() == kPlayerAgendaErratic) {
+					Actor_Says(kActorMcCoy, 8519, 14);//00-8519.AUD	What do you say we dish each other the straight goods.
+					Actor_Modify_Friendliness_To_Other(kActorHasan, kActorMcCoy, -2);
+				} else { 
+					Actor_Says(kActorMcCoy, 6985, 11);	//-	00-6985.AUD	Got the straight scoop for me or what?
+				}
 				Delay (500);
 				Actor_Says(kActorHasan, 280, 11); //20-0280.AUD	Oh, yes, now I remember. I misspoke before, that is all. Here's the truth of it.
 				Actor_Says(kActorMcCoy, 2635, 18); //00-2635.AUD	I’m all ears.
@@ -616,7 +616,7 @@ void SceneScriptAR02::dialogueWithHassan() {
 		// If you have high friendliness with Hasan he tells you the detectives name was Deckard.
 		if (_vm->_cutContent) {
 			Delay (500);
-			if (Actor_Query_Friendliness_To_Other(kActorHasan, kActorMcCoy) >= 50) {
+			if (Actor_Query_Friendliness_To_Other(kActorHasan, kActorMcCoy) > 49) {
 				Actor_Says(kActorMcCoy, 4130, kAnimationModeTalk); //00-4130.AUD	Anything else?
 				Actor_Says(kActorHasan, 240, 11); //20-0240.AUD	In truth this humble merchant has discovered a fact surely to be of interest to you.
 				Actor_Says(kActorHasan, 50, 11); //20-0050.AUD	His name was Deckard.

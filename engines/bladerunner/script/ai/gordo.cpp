@@ -1739,7 +1739,7 @@ void AIScriptGordo::talkToMcCoyInCity() {
 				Actor_Says(kActorMcCoy, 1025, 13); //00-1025.AUD	Absolutely.
 				Actor_Says(kActorGordo, 10, 15); //02-0010.AUD	Catch you later.
 				AI_Movement_Track_Unpause(kActorGordo);
-				Actor_Modify_Friendliness_To_Other(kActorGordo, kActorMcCoy, 5);
+				Actor_Modify_Friendliness_To_Other(kActorGordo, kActorMcCoy, 10);
 				if (Query_Difficulty_Level() != kGameDifficultyEasy) {
 					Global_Variable_Decrement(kVariableChinyen, 10);
 				}
@@ -1767,7 +1767,7 @@ void AIScriptGordo::talkToMcCoyInCity() {
 				Actor_Says(kActorMcCoy, 1025, 13); //00-1025.AUD	Absolutely.
 				Actor_Says(kActorGordo, 10, 15); //02-0010.AUD	Catch you later.
 				AI_Movement_Track_Unpause(kActorGordo);
-				Actor_Modify_Friendliness_To_Other(kActorGordo, kActorMcCoy, 5);
+				Actor_Modify_Friendliness_To_Other(kActorGordo, kActorMcCoy, 10);
 				if (Query_Difficulty_Level() != kGameDifficultyEasy) {
 					Global_Variable_Decrement(kVariableChinyen, 10);
 				}
@@ -1836,10 +1836,19 @@ void AIScriptGordo::talkToMcCoyAtNR02() {
 	Actor_Says(kActorGordo, 310, 12);
 	Actor_Says(kActorGordo, 320, 15);
 	Actor_Says(kActorMcCoy, 3215, kAnimationModeTalk);
-	Actor_Says(kActorMcCoy, 3220, 12);
-	Actor_Says(kActorGordo, 330, 17);
-	Actor_Says(kActorGordo, 350, 13);
-	Actor_Says(kActorMcCoy, 3225, 18);
+	Actor_Says(kActorMcCoy, 3220, 12); //00-3220.AUD	I’m gonna ask you a few questions.
+	// If you gave money to Gordo for lichen dogs he will not be annoyed at McCoy asking him questions.
+	if (_vm->_cutContent) {
+		if (Actor_Query_Friendliness_To_Other(kActorGordo, kActorMcCoy) > 49) {
+			Actor_Says(kActorGordo, 330, 17); //02-0330.AUD	Man, don’t you got anything better to do than hassle innocent people at their place of work?
+			Actor_Says(kActorGordo, 350, 13); //02-0350.AUD	Make it snappy, okay?
+			Actor_Says(kActorMcCoy, 3225, 18); //00-3225.AUD	I really appreciate your patience.
+		}
+	} else {
+		Actor_Says(kActorGordo, 330, 17);
+		Actor_Says(kActorGordo, 350, 13);
+		Actor_Says(kActorMcCoy, 3225, 18);
+	}
 	Player_Gains_Control();
 	dialogue1();
 	Player_Loses_Control();

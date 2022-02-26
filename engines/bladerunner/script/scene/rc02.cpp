@@ -356,20 +356,43 @@ void SceneScriptRC02::dialogueWithRunciter() {
 	case 20: // REFERENCE
 		Actor_Says(kActorMcCoy, 4590, 19);
 		Actor_Face_Actor(kActorRunciter, kActorMcCoy, true);
-		Actor_Says(kActorRunciter, 360, 13);
-		Loop_Actor_Walk_To_Waypoint(kActorRunciter, 89, 0, false, false);
-		Loop_Actor_Walk_To_Waypoint(kActorRunciter, 102, 0, false, false);
-		Actor_Face_Actor(kActorMcCoy, kActorRunciter, true);
-		Actor_Face_Heading(kActorRunciter, 539, false);
-		Delay(2000);
-		Loop_Actor_Walk_To_Waypoint(kActorRunciter, 89, 0, false, false);
-		Actor_Face_Actor(kActorMcCoy, kActorRunciter, true);
-		Loop_Actor_Walk_To_Actor(kActorRunciter, kActorMcCoy, 24, false, false);
-		Actor_Face_Actor(kActorRunciter, kActorMcCoy, true);
-		Actor_Face_Actor(kActorMcCoy, kActorRunciter, true);
-		Item_Pickup_Spin_Effect(kModelAnimationReferenceLetter, 357, 228);
-		Actor_Says(kActorRunciter, 1700, 13);
-		Actor_Clue_Acquire(kActorMcCoy, kClueReferenceLetter, true, kActorRunciter);
+		// Made it so Runciter only gives McCoy the letter if McCoy wasn't a jerk towards him. If McCoy treated him badly Runciter has had enough
+		// and tells McCoy to get lost.
+		if (_vm->_cutContent) {
+			if (Actor_Query_Friendliness_To_Other(kActorRunciter, kActorMcCoy) <= 46) {
+				Actor_Says(kActorRunciter, 720, 13); //15-0720.AUD	I have nothing more to say to you, detective.
+			} else if (Actor_Query_Friendliness_To_Other(kActorRunciter, kActorMcCoy) > 46) {
+				Actor_Says(kActorRunciter, 360, 13);
+				Loop_Actor_Walk_To_Waypoint(kActorRunciter, 89, 0, false, false);
+				Loop_Actor_Walk_To_Waypoint(kActorRunciter, 102, 0, false, false);
+				Actor_Face_Actor(kActorMcCoy, kActorRunciter, true);
+				Actor_Face_Heading(kActorRunciter, 539, false);
+				Delay(2000);
+				Loop_Actor_Walk_To_Waypoint(kActorRunciter, 89, 0, false, false);
+				Actor_Face_Actor(kActorMcCoy, kActorRunciter, true);
+				Loop_Actor_Walk_To_Actor(kActorRunciter, kActorMcCoy, 24, false, false);
+				Actor_Face_Actor(kActorRunciter, kActorMcCoy, true);
+				Actor_Face_Actor(kActorMcCoy, kActorRunciter, true);
+				Item_Pickup_Spin_Effect(kModelAnimationReferenceLetter, 357, 228);
+				Actor_Says(kActorRunciter, 1700, 13);
+				Actor_Clue_Acquire(kActorMcCoy, kClueReferenceLetter, true, kActorRunciter);
+			}
+		} else {
+			Actor_Says(kActorRunciter, 360, 13);
+			Loop_Actor_Walk_To_Waypoint(kActorRunciter, 89, 0, false, false);
+			Loop_Actor_Walk_To_Waypoint(kActorRunciter, 102, 0, false, false);
+			Actor_Face_Actor(kActorMcCoy, kActorRunciter, true);
+			Actor_Face_Heading(kActorRunciter, 539, false);
+			Delay(2000);
+			Loop_Actor_Walk_To_Waypoint(kActorRunciter, 89, 0, false, false);
+			Actor_Face_Actor(kActorMcCoy, kActorRunciter, true);
+			Loop_Actor_Walk_To_Actor(kActorRunciter, kActorMcCoy, 24, false, false);
+			Actor_Face_Actor(kActorRunciter, kActorMcCoy, true);
+			Actor_Face_Actor(kActorMcCoy, kActorRunciter, true);
+			Item_Pickup_Spin_Effect(kModelAnimationReferenceLetter, 357, 228);
+			Actor_Says(kActorRunciter, 1700, 13);
+			Actor_Clue_Acquire(kActorMcCoy, kClueReferenceLetter, true, kActorRunciter);
+		}
 		break;
 
 	case 200:
@@ -378,18 +401,17 @@ void SceneScriptRC02::dialogueWithRunciter() {
 			Actor_Face_Actor(kActorMcCoy, kActorRunciter, true);
 			Actor_Says(kActorMcCoy, 395, 14);
 			Actor_Face_Actor(kActorRunciter, kActorMcCoy, true);
-			// Changed code so Runciter is less resistent to being VKed if he has high friendliness with McCoy. Also you now lose less friendliness if this is the case
-			// because Runciter is still a little annoyed but not as much if you are friendly with him.
-			if (Actor_Query_Friendliness_To_Other(kActorRunciter, kActorMcCoy) < 46) {
+			// Changed code so Runciter is more resistant to being VKed if he is a replicant or has low friendliness with McCoy
+			if (!Game_Flag_Query(kFlagRunciterIsReplicant)
+			|| Actor_Query_Friendliness_To_Other(kActorRunciter, kActorMcCoy) < 46) {
 				Actor_Says(kActorRunciter, 1680, 13); //15-1680.AUD	No. I have a lot of cleaning up to do.
 				Actor_Says(kActorMcCoy, 400, 14); //00-0400.AUD	It won't take too long.
 				Actor_Modify_Friendliness_To_Other(kActorRunciter, kActorMcCoy, -5);
+				Voight_Kampff_Activate(kActorRunciter, 20);
 			} else {
 				Actor_Says(kActorMcCoy, 400, 14); //00-0400.AUD	It won't take too long.
-				Actor_Modify_Friendliness_To_Other(kActorRunciter, kActorMcCoy, -2);
-			}
-			if (!Game_Flag_Query(kFlagRunciterIsReplicant)) {
-			Voight_Kampff_Activate(kActorRunciter, 20);
+				Actor_Modify_Friendliness_To_Other(kActorRunciter, kActorMcCoy, -3);
+				Voight_Kampff_Activate(kActorRunciter, 20);
 			}
 			// The dialogue that plays when the VK test confirms that Runciter is a replicant. McCoy pulls out his gun and
 			// the exits are disabled. The player must choose whether or not to shoot Runciter or spare him.
@@ -603,10 +625,9 @@ bool SceneScriptRC02::ClickedOnActor(int actorId) {
 				Actor_Says(kActorMcCoy, 4620, 19);
 				Actor_Says(kActorRunciter, 190, 14);
 				Actor_Says(kActorMcCoy, 4625, 13); // 00-4625.AUD	Do you know anybody who works at Tyrell Corporation? 
-
-				// Added in some extra lines for Runciter where he first denies knowing any genetiscists and depending on McCoys agenda he is calm or aggressive 
-				// when trying to get the truth out of him. Also this bit of dialogue where Runcter lies to you only plays if you have low friendliness with him. 
-				if (Actor_Query_Friendliness_To_Other(kActorRunciter, kActorMcCoy) < 46) {
+				// Made it so Runciter will tell you immediately about his friends if you have high friendliness with him. If not he will deny it and will only tell McCoy
+				// if he is surly or erratic.
+				if (Actor_Query_Friendliness_To_Other(kActorRunciter, kActorMcCoy) < 49) {
 					Actor_Says(kActorRunciter, 9000, 14); //15-9000.AUD	No! 
 					Delay (1000);
 					Actor_Says(kActorMcCoy, 4685, 15); //00-4685.AUD	You're sure there's nothing else you wanna tell me?
@@ -614,19 +635,26 @@ bool SceneScriptRC02::ClickedOnActor(int actorId) {
 					if (Player_Query_Agenda() == kPlayerAgendaSurly 
 							|| Player_Query_Agenda() == kPlayerAgendaErratic) {
 						Actor_Says(kActorMcCoy, 8519, 14);//00-8519.AUD	What do you say we dish each other the straight goods.
-						Actor_Modify_Friendliness_To_Other(kActorRunciter, kActorMcCoy, -2);
-					} else { 
-						Actor_Says(kActorMcCoy, 3910, 13);//00-3910.AUD	You’re lying.
+						Actor_Modify_Friendliness_To_Other(kActorRunciter, kActorMcCoy, -3);
+						Actor_Says(kActorRunciter, 1640, 14); //15-1640.AUD	Ah...well, yes. I suppose that isn't the whole truth but...
+						Actor_Says(kActorRunciter, 1650, 16); //15-1650.AUD	All right, all right. Here's the real truth.
+						Actor_Says(kActorRunciter, 210, 13);
+						Actor_Says(kActorMcCoy, 4630, 18);
+						Actor_Says(kActorRunciter, 220, 14);
+						Actor_Says(kActorRunciter, 230, 13);
+						Actor_Says(kActorMcCoy, 4635, 19); // 00-4635.AUD	I assume you're talking about some of those fruitcakes on DNA Row.
+						Actor_Says(kActorRunciter, 240, 16); // 15-0240.AUD	That's a horrible thing to say about people, detective.
+						Actor_Says(kActorMcCoy, 4640, 17); // 00-4640.AUD	Sorry.
+						Actor_Clue_Acquire(kActorMcCoy, kClueRunciterConfession2, true, kActorRunciter);
+						Game_Flag_Set(kFlagRunciterTalkFriends);
 					}
-					Actor_Says(kActorRunciter, 1640, 14); //15-1640.AUD	Ah...well, yes. I suppose that isn't the whole truth but...
-					Actor_Says(kActorRunciter, 1650, 16); //15-1650.AUD	All right, all right. Here's the real truth.
-				}
-				Actor_Says(kActorRunciter, 210, 13);
-				Actor_Says(kActorMcCoy, 4630, 18);
-				Actor_Says(kActorRunciter, 220, 14);
-				Actor_Says(kActorRunciter, 230, 13);
-				Actor_Clue_Acquire(kActorMcCoy, kClueRunciterConfession2, true, kActorRunciter);
-				Game_Flag_Set(kFlagRunciterTalkFriends);
+				} else if (Actor_Query_Friendliness_To_Other(kActorRunciter, kActorMcCoy) > 49) {
+					Actor_Says(kActorRunciter, 210, 13);
+					Actor_Says(kActorMcCoy, 4630, 18);
+					Actor_Says(kActorRunciter, 220, 14);
+					Actor_Says(kActorRunciter, 230, 13);
+					Actor_Clue_Acquire(kActorMcCoy, kClueRunciterConfession2, true, kActorRunciter);
+					Game_Flag_Set(kFlagRunciterTalkFriends);
 				// These last few lines where McCoy calls the DNA row subcons freaks and sarcastically says sorry will only play if he is surly or erratic. It also results in
 				// a friendliness loss.
 				if (Player_Query_Agenda() == kPlayerAgendaSurly 
@@ -634,8 +662,9 @@ bool SceneScriptRC02::ClickedOnActor(int actorId) {
 					Actor_Says(kActorMcCoy, 4635, 19); // 00-4635.AUD	I assume you're talking about some of those fruitcakes on DNA Row.
 					Actor_Says(kActorRunciter, 240, 16); // 15-0240.AUD	That's a horrible thing to say about people, detective.
 					Actor_Says(kActorMcCoy, 4640, 17); // 00-4640.AUD	Sorry.
-					Actor_Modify_Friendliness_To_Other(kActorRunciter, kActorMcCoy, -2);
+					Actor_Modify_Friendliness_To_Other(kActorRunciter, kActorMcCoy, -3);
 				} 
+			}
 				// Original behaviour without cut content.
 			} else if (Player_Query_Agenda() == kPlayerAgendaSurly) {
 				Actor_Says(kActorMcCoy, 4620, 19);

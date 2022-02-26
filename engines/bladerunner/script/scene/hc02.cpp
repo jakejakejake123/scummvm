@@ -120,17 +120,19 @@ bool SceneScriptHC02::ClickedOnActor(int actorId) {
 					Actor_Says(kActorHawkersBarkeep, 130, 13); //32-0130.AUD	I don't pay a whole lot attention to what goes on around here. Nor do I want to.
 					if (Player_Query_Agenda() == kPlayerAgendaSurly 
 						|| Player_Query_Agenda() == kPlayerAgendaErratic) {
-					Actor_Says(kActorMcCoy, 8445, 14); //00-8445.AUD	Cough it up!
+						Actor_Says(kActorMcCoy, 8445, 14); //00-8445.AUD	Cough it up!
+						Delay (1000);
+						Actor_Says(kActorHawkersBarkeep, 160, 12); //32-0160.AUD	Listen close, cause I'm only gonna say this once. I was trying to protect you, all right?
+						Actor_Says(kActorHawkersBarkeep, 170, 13); //32-0170.AUD	The truth ain't gonna do you no good.
+						Actor_Says(kActorHawkersBarkeep, 180, 13); //32-0180.AUD	But if you're gonna sit there until I cough it up, well, here it is.
+						Actor_Clue_Acquire(kActorMcCoy, kClueChinaBarSecurityDisc, true, kActorHawkersBarkeep);
+						Item_Pickup_Spin_Effect(kModelAnimationVideoDisc, 229, 215);
+					}
 				} else {
-					Actor_Says(kActorMcCoy, 3910, 14); //00-3910.AUD	You’re lying.
+					Actor_Says(kActorHawkersBarkeep, 180, 13); //32-0180.AUD	But if you're gonna sit there until I cough it up, well, here it is.
+					Actor_Clue_Acquire(kActorMcCoy, kClueChinaBarSecurityDisc, true, kActorHawkersBarkeep);
+					Item_Pickup_Spin_Effect(kModelAnimationVideoDisc, 229, 215);
 				}
-				Delay (1000);
-				Actor_Says(kActorHawkersBarkeep, 160, 12); //32-0160.AUD	Listen close, cause I'm only gonna say this once. I was trying to protect you, all right?
-				Actor_Says(kActorHawkersBarkeep, 170, 13); //32-0170.AUD	The truth ain't gonna do you no good.
-				}
-				Actor_Says(kActorHawkersBarkeep, 180, 13); //32-0180.AUD	But if you're gonna sit there until I cough it up, well, here it is.
-				Actor_Clue_Acquire(kActorMcCoy, kClueChinaBarSecurityDisc, true, kActorHawkersBarkeep);
-				Item_Pickup_Spin_Effect(kModelAnimationVideoDisc, 229, 215);
 			} else if (Actor_Clue_Query(kActorMcCoy, kClueHomelessManInterview1)
 			           && !Actor_Clue_Query(kActorMcCoy, kClueFlaskOfAbsinthe)
 #if !BLADERUNNER_ORIGINAL_BUGS

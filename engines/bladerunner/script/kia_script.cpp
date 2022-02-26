@@ -399,6 +399,8 @@ void KIAScript::SCRIPT_KIA_DLL_Play_Clue_Asset_Script(int notUsed, int clueId) {
 		if (_vm->_cutContent) {
 			KIA_Play_Actor_Dialogue(kActorMcCoy, 5190); //00-5190.AUD	Smart. What was his job?
 			KIA_Play_Actor_Dialogue(kActorTyrellGuard, 140); //17-0140.AUD	Grav Test Chief Engineer.
+			KIA_Play_Actor_Dialogue(kActorMcCoy, 8320); //	00-8320.AUD	Really?
+			KIA_Play_Actor_Dialogue(kActorTyrellGuard, 430); ////17-0430.AUD	Here's what I heard just a little while ago.
 			KIA_Play_Actor_Dialogue(kActorTyrellGuard, 150); //17-0150.AUD	The lab runs tests to see how a Replicant would perform in different planetary gravitational fields. That kind of thing.
 			KIA_Play_Actor_Dialogue(kActorTyrellGuard, 170); //17-0170.AUD	One of the other engineers could tell you more.
 		}
