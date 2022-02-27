@@ -285,6 +285,16 @@ void AIScriptLucy::Retired(int byActorId) {
 	if (Actor_Query_In_Set(kActorLucy, kSetKP07)) {
 		Global_Variable_Decrement(kVariableReplicantsSurvivorsAtMoonbus, 1);
 		Actor_Set_Goal_Number(kActorLucy, kGoalLucyGone);
+		if (_vm->_cutContent) {
+			if (Actor_Query_Goal_Number(kActorMaggie) < kGoalMaggieDead) {
+				Async_Actor_Walk_To_Waypoint(kActorMcCoy, 312, 308, false);
+				Async_Actor_Walk_To_Waypoint(kActorMaggie, 312, 308, false);
+			} else {
+				Loop_Actor_Walk_To_XYZ(kActorMcCoy, -12.0f, -41.58f, 72.0f, 0, true, false, false);
+			}
+		} else {
+			Loop_Actor_Walk_To_XYZ(kActorMcCoy, -12.0f, -41.58f, 72.0f, 0, true, false, false);			
+		}
 
 		if (Global_Variable_Query(kVariableReplicantsSurvivorsAtMoonbus) == 0) {
 			Player_Loses_Control();

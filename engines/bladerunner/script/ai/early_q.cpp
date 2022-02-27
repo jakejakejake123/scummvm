@@ -248,7 +248,8 @@ bool AIScriptEarlyQ::ShotAtAndHit() {
 			AI_Movement_Track_Flush(kActorEarlyQ);
 			Actor_Retired_Here(kActorEarlyQ, 6, 6, true, kActorMcCoy);
 			Actor_Set_Goal_Number(kActorEarlyQ, kGoalEarlyQNR04GetShot);
-			Actor_Set_At_XYZ(kActorEarlyQ, -58.84f, -42.70f, -142.27f, 0);
+			Actor_Face_Heading(kActorEarlyQ, 760, false);
+			Actor_Set_At_XYZ(kActorEarlyQ, -58.84f, -42.70f, -142.27f, 760);
 			return true;
 		}
 	}
@@ -262,11 +263,26 @@ void AIScriptEarlyQ::Retired(int byActorId) {
 		if (Actor_Query_In_Set(kActorEarlyQ, kSetKP07)) {
 			Global_Variable_Decrement(kVariableReplicantsSurvivorsAtMoonbus, 1);
 			Actor_Set_Goal_Number(kActorEarlyQ, kGoalEarlyQNR04GetShot);
+			if (_vm->_cutContent) {
+				if (Query_Difficulty_Level() != kGameDifficultyEasy) {
+					Global_Variable_Increment (kVariableChinyen, 200);
+				}
+			}
 
 			if (Global_Variable_Query(kVariableReplicantsSurvivorsAtMoonbus) == 0) {
 				Player_Loses_Control();
 				Delay(2000);
 				Player_Set_Combat_Mode(false);
+				if (_vm->_cutContent) {
+					if (Actor_Query_Goal_Number(kActorMaggie) < kGoalMaggieDead) {
+						Async_Actor_Walk_To_Waypoint(kActorMcCoy, 312, 308, false);
+						Async_Actor_Walk_To_Waypoint(kActorMaggie, 312, 308, false);
+					} else {
+						Loop_Actor_Walk_To_XYZ(kActorMcCoy, -12.0f, -41.58f, 72.0f, 0, true, false, false);
+					}
+				} else {
+					Loop_Actor_Walk_To_XYZ(kActorMcCoy, -12.0f, -41.58f, 72.0f, 0, true, false, false);			
+				}
 				Loop_Actor_Walk_To_XYZ(kActorMcCoy, -12.0f, -41.58f, 72.0f, 0, true, false, false);
 				Ambient_Sounds_Remove_All_Non_Looping_Sounds(true);
 				Ambient_Sounds_Remove_All_Looping_Sounds(1u);

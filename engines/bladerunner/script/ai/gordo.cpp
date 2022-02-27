@@ -326,6 +326,11 @@ void AIScriptGordo::Retired(int byActorId) {
 	if (Actor_Query_In_Set(kActorGordo, kSetKP07)) {
 		Global_Variable_Decrement(kVariableReplicantsSurvivorsAtMoonbus, 1);
 		Actor_Set_Goal_Number(kActorGordo, kGoalGordoGone);
+		if (_vm->_cutContent) {
+			if (Query_Difficulty_Level() != kGameDifficultyEasy) {
+				Global_Variable_Increment (kVariableChinyen, 200);
+			}
+		}
 		if (Global_Variable_Query(kVariableReplicantsSurvivorsAtMoonbus) == 0) {
 			Player_Loses_Control();
 			Delay(2000);
@@ -333,6 +338,16 @@ void AIScriptGordo::Retired(int byActorId) {
 #if BLADERUNNER_ORIGINAL_BUGS
 			Player_Gains_Control();
 #endif // BLADERUNNER_ORIGINAL_BUGS
+			if (_vm->_cutContent) {
+				if (Actor_Query_Goal_Number(kActorMaggie) < kGoalMaggieDead) {
+					Async_Actor_Walk_To_Waypoint(kActorMcCoy, 312, 308, false);
+					Async_Actor_Walk_To_Waypoint(kActorMaggie, 312, 308, false);
+				} else {
+					Loop_Actor_Walk_To_XYZ(kActorMcCoy, -12.0f, -41.58f, 72.0f, 0, true, false, false);
+				}
+			} else {
+				Loop_Actor_Walk_To_XYZ(kActorMcCoy, -12.0f, -41.58f, 72.0f, 0, true, false, false);			
+			}
 			Loop_Actor_Walk_To_XYZ(kActorMcCoy, -12.0f, -41.58f, 72.0f, 0, true, false, false);
 			Ambient_Sounds_Remove_All_Non_Looping_Sounds(true);
 			Ambient_Sounds_Remove_All_Looping_Sounds(1u);

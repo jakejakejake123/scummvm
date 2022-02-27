@@ -154,7 +154,7 @@ void SceneScriptKP07::InitializeScene() {
 					Global_Variable_Increment(kVariableReplicantsSurvivorsAtMoonbus, 1);
 					Actor_Set_Targetable(kActorEarlyQ, true);
 					Actor_Put_In_Set(kActorEarlyQ, kSetKP07);
-					Actor_Set_At_XYZ(kActorEarlyQ, -58.84f, -42.70f, -142.27f, 240);
+					Actor_Set_At_XYZ(kActorEarlyQ, -59.70, -42.72, -156.90, 760);
 				}
 			}
 		}

@@ -209,11 +209,26 @@ void AIScriptClovis::Retired(int byActorId) {
 		if (Actor_Query_In_Set(kActorClovis, kSetKP07)) {
 			Global_Variable_Decrement(kVariableReplicantsSurvivorsAtMoonbus, 1);
 			Actor_Set_Goal_Number(kActorClovis, kGoalClovisGone);
+			if (_vm->_cutContent) {
+				if (Query_Difficulty_Level() != kGameDifficultyEasy) {
+					Global_Variable_Increment (kVariableChinyen, 200);
+				}
+			}
 
 			if (Global_Variable_Query(kVariableReplicantsSurvivorsAtMoonbus) == 0) {
 				Player_Loses_Control();
 				Delay(2000);
 				Player_Set_Combat_Mode(false);
+				if (_vm->_cutContent) {
+					if (Actor_Query_Goal_Number(kActorMaggie) < kGoalMaggieDead) {
+						Async_Actor_Walk_To_Waypoint(kActorMcCoy, 312, 308, false);
+						Async_Actor_Walk_To_Waypoint(kActorMaggie, 312, 308, false);
+					} else {
+						Loop_Actor_Walk_To_XYZ(kActorMcCoy, -12.0f, -41.58f, 72.0f, 0, true, false, false);
+					}
+				} else {
+					Loop_Actor_Walk_To_XYZ(kActorMcCoy, -12.0f, -41.58f, 72.0f, 0, true, false, false);			
+				}
 				Loop_Actor_Walk_To_XYZ(kActorMcCoy, -12.0f, -41.58f, 72.0f, 0, true, false, false);
 				Ambient_Sounds_Remove_All_Non_Looping_Sounds(true);
 				Ambient_Sounds_Remove_All_Looping_Sounds(1u);
@@ -517,14 +532,15 @@ bool AIScriptClovis::GoalChanged(int currentGoalNumber, int newGoalNumber) {
 			Actor_Change_Animation_Mode(kActorClovis, 21);
 			Player_Loses_Control();
 			Actor_Retired_Here(kActorMcCoy, 6, 6, true, kActorClovis);
-			} else {
+			Actor_Set_Goal_Number(kActorClovis, kGoalClovisGone);
+		} else {
 			Actor_Set_Targetable(kActorClovis, false);
 			Actor_Change_Animation_Mode(kActorClovis, kAnimationModeHit);
 			Actor_Retired_Here(kActorClovis, 12, 48, true, -1);
 			Actor_Set_Goal_Number(kActorClovis, kGoalClovisGone);
 			Player_Gains_Control();
-			}
-		} else {
+		}
+	} else {
 		ADQ_Add(kActorClovis, 240, -1);
 		ADQ_Add(kActorClovis, 250, -1);
 		ADQ_Add(kActorClovis, 260, -1);
