@@ -169,12 +169,30 @@ bool SceneScriptUG13::ClickedOnActor(int actorId) {
 				if (!Game_Flag_Query(kFlagUG13HomelessTalk1)) {
 					Actor_Face_Actor(kActorMcCoy, kActorTransient, true);
 					Game_Flag_Set(kFlagUG13HomelessTalk1);
-					Actor_Says(kActorMcCoy, 5560, 13); // hey
-					Actor_Says_With_Pause(kActorMcCoy, 5565, 3.0f, 18); // haven't i seen...?
-					Actor_Says(kActorTransient, 70, 31); // Ah, always chasing.
-					Actor_Says(kActorTransient, 80, 32); // Got that big dumb lox...
-					Actor_Says(kActorMcCoy, 5570, kAnimationModeTalk); // small world...
-					Actor_Says(kActorTransient, 90, 32); // Hm, guess so
+					// Made it so McCoy and the homeless man only recognise each other if they had a conversation behind Howie Lees when McCoy was chasing Zuben.
+					// It would make no sense for them to recognise each other if McCoy just ran past the homeless guy without talking to him, especially when the homeless guy
+					// had his face buried in the dumpster while searching through the trash.
+					if (_vm->_cutContent) {
+						if (Game_Flag_Query(kFlagCT04HomelessTalk)) {
+							Actor_Says(kActorMcCoy, 5560, 13); // hey
+							Actor_Says_With_Pause(kActorMcCoy, 5565, 3.0f, 18); // haven't i seen...?
+							Actor_Says(kActorTransient, 70, 31); // Ah, always chasing.
+							Actor_Says(kActorTransient, 80, 32); // Got that big dumb lox...
+							Actor_Says(kActorMcCoy, 5570, kAnimationModeTalk); // small world...
+							Actor_Says(kActorTransient, 90, 32); // Hm, guess so
+						 } else {
+							Actor_Says(kActorMcCoy, 5560, 13); // hey
+							Actor_Says(kActorMcCoy, 8920, 13); // 00-8920.AUD	I gotta ask you a question.
+							Actor_Says(kActorTransient, 130, 31); // You got something...?
+						 }
+					} else {
+						Actor_Says(kActorMcCoy, 5560, 13); // hey
+						Actor_Says_With_Pause(kActorMcCoy, 5565, 3.0f, 18); // haven't i seen...?
+						Actor_Says(kActorTransient, 70, 31); // Ah, always chasing.
+						Actor_Says(kActorTransient, 80, 32); // Got that big dumb lox...
+						Actor_Says(kActorMcCoy, 5570, kAnimationModeTalk); // small world...
+						Actor_Says(kActorTransient, 90, 32); // Hm, guess so
+					}
 				} else if (!Actor_Clue_Query(kActorMcCoy, kClueHomelessManInterview1) || !Actor_Clue_Query(kActorMcCoy, kClueHomelessManInterview2)) {
 					dialogueWithHomeless1();
 				} else {
@@ -466,7 +484,6 @@ void SceneScriptUG13::dialogueWithHomeless1() {
 		Actor_Modify_Friendliness_To_Other(kActorTransient, kActorMcCoy, -5);
 		Actor_Says(kActorMcCoy, 5575, 16); // You said another one...
 		if (_vm->_cutContent) {
-			Actor_Says(kActorTransient, 130, 31); // You got something...?
 			Actor_Says(kActorMcCoy, 5580, 14); // A lot of people...?
 		}
 		Actor_Says(kActorTransient, 120, 31); // None of that are people...

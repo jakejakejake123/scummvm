@@ -252,6 +252,7 @@ bool AIScriptRunciter::ShotAtAndHit() {
 		Actor_Voice_Over(2090, kActorVoiceOver); //99-2090.AUD	And maybe I’d done him a favor too, since his animals were all dead.
 		Actor_Modify_Friendliness_To_Other(kActorSteele, kActorMcCoy, 3);
 		Game_Flag_Reset(kFlagRunciterConfronted);
+		Game_Flag_Set(kFlagMcCoyRetiredRunciter);
 		Scene_Exits_Enable();
 		if (Query_Difficulty_Level() != kGameDifficultyEasy) {
 			Global_Variable_Increment(kVariableChinyen, 200);

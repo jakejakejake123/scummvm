@@ -453,7 +453,13 @@ void SceneScriptNR07::talkAboutBelt2() {
 	Actor_Says_With_Pause(kActorDektora, 610, 0.0f, 31);
 #endif // BLADERUNNER_ORIGINAL_BUGS
 	Actor_Says(kActorMcCoy, 3645, 12);
-	Actor_Says(kActorDektora, 620, 30);
+	Actor_Says(kActorDektora, 620, 30); //03-0620.AUD	I’m sure I don’t know what you mean.
+	// Made it so Dektora mentons her name when you first meet her. In the original game McCoy would always know Dektoras name despite not receiving any clues that refer to her by name,
+	// so this fixes that.
+	if (_vm->_cutContent) {
+		Actor_Says(kActorMcCoy, 7395, 12); //00-7395.AUD	What's your name?
+		Actor_Says(kActorDektora, 1470, 30); //03-1470.AUD	Dektora.
+	}
 
 	int friendliness = Actor_Query_Friendliness_To_Other(kActorDektora, kActorMcCoy);
 	if (!Game_Flag_Query(kFlagDektoraIsReplicant)

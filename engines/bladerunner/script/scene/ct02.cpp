@@ -283,14 +283,19 @@ bool SceneScriptCT02::ClickedOnActor(int actorId) {
 					} else {
 						Actor_Says(kActorMcCoy, 355, 10); //00-0355.AUD	Hey, big guy.
 					}
+					// Made it Zuben mentions his name when McCoy firsts talks to him. In the original game it was possible for McCoy to mis the Howie Lee interview clue
+					// where he mentions Zuben by name yet somehow McCoy would still know Zubens name anyway. This change fixes that.
+					Actor_Says(kActorZuben, 20, 19); //19-0020.AUD	You not come back here. Air bad.
+					Actor_Says(kActorMcCoy, 4880, 18); // 00-4880.AUD	Is that right?
+					Actor_Says(kActorZuben, 100, 19); //19-0100.AUD	What do you want from Zuben?
+					Actor_Says(kActorMcCoy, 8225, 14); //00-8225.AUD	Just relax.
+					Actor_Says(kActorMcCoy, 375, 13); //00-0375.AUD	This will only take a minute.
+					Game_Flag_Set(kFlagCT02ZubenTalk);
 				} else {
-					Actor_Says(kActorMcCoy, 370, 10);  
-				Actor_Says(kActorMcCoy, 370, 10);
-					Actor_Says(kActorMcCoy, 370, 10);  
-				}	
-				Actor_Says(kActorZuben, 20, 19);
-				Actor_Says(kActorMcCoy, 375, 9);
-				Game_Flag_Set(kFlagCT02ZubenTalk);
+					Actor_Says(kActorZuben, 20, 19);
+					Actor_Says(kActorMcCoy, 375, 9);
+					Game_Flag_Set(kFlagCT02ZubenTalk);
+				}
 			}
 			dialogueWithZuben();
 			return true;

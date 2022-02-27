@@ -228,8 +228,16 @@ bool AIScriptLeon::GoalChanged(int currentGoalNumber, int newGoalNumber) {
 			Actor_Says(kActorMcCoy, 565, 18);
 			Actor_Face_Actor(kActorMcCoy, kActorLeon, true);
 			Actor_Says(kActorLeon, 140, 12);
-			Actor_Says_With_Pause(kActorMcCoy, 570, 0.0f, 17);
-			Actor_Says_With_Pause(kActorMcCoy, 575, 1.2f, 13);
+			Actor_Says_With_Pause(kActorMcCoy, 570, 0.0f, 17); //00-0570.AUD	Just help me out here a little more. You seen a big Rasta guy around here?
+			// Made it so McCoy only mentions Clovis' description if he has a clue which gave him that information.
+			if (_vm->_cutContent) {
+				if (Actor_Clue_Query(kActorMcCoy, kClueAnimalMurderSuspect)
+				|| Actor_Clue_Query(kActorMcCoy, kClueMorajiInterview)) {
+					Actor_Says_With_Pause(kActorMcCoy, 575, 1.2f, 13); //00-0575.AUD	Or a guy with a beard and dark eyes?
+				}
+			} else {
+				Actor_Says_With_Pause(kActorMcCoy, 575, 1.2f, 13); //00-0575.AUD	Or a guy with a beard and dark eyes?
+			}
 			Actor_Says(kActorLeon, 150, kAnimationModeTalk);
 			Actor_Says(kActorMcCoy, 580, kAnimationModeTalk);
 			Actor_Says(kActorLeon, 160, 13);

@@ -61,7 +61,15 @@ bool SceneScriptPS06::ClickedOn3DObject(const char *objectName, bool a2) {
 		) {
 			Delay(2000);
 			Actor_Voice_Over(3780, kActorVoiceOver);
-			Actor_Voice_Over(3790, kActorVoiceOver);
+			if (_vm->_cutContent) {
+				Delay(1000);
+				// Made it so McCoy only says this line if he found the black paint on the hydrant at Runciters.
+				if (Actor_Clue_Query(kActorMcCoy, kCluePaintTransfer)) {
+					Actor_Voice_Over(3790, kActorVoiceOver); //99-3790.AUD	The car from Chinatown was the same vehicle that had smacked the hydrant at Runciter's. 
+				}
+			} else {
+				Actor_Voice_Over(3790, kActorVoiceOver); //99-3790.AUD	The car from Chinatown was the same vehicle that had smacked the hydrant at Runciter's. {	
+			}
 			if (Game_Flag_Query(kFlagDektoraIsReplicant)) {
 				Actor_Voice_Over(3800, kActorVoiceOver);
 				Actor_Voice_Over(3810, kActorVoiceOver);

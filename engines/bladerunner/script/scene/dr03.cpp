@@ -246,12 +246,25 @@ void SceneScriptDR03::PlayerWalkedIn() {
 				Actor_Says(kActorMcCoy, 910, 15); //00-0910.AUD	Okay, Chew.
 				Actor_Says(kActorMcCoy, 915, 13); //00-0915.AUD	What happened?
 				Actor_Says(kActorChew, 520, 13); //52-0520.AUD	Two Nexus-6 break in here. They harass me.
-				Actor_Says(kActorMcCoy, 920, 13); //00-0920.AUD	A tall Rastafarian and a guy with a beard?
-				Actor_Says(kActorChew, 530, 18); //52-0530.AUD	No, no! One with white hair, cruel face.
-				Actor_Says(kActorChew, 540, 13); //52-0540.AUD	Other stupid looking. Mustache.
+				// Made it McCoy only mentions Clovis' description if he has a clue which gave him information on what Clovis looked like. McCoy never actually sees Clovis on the Bradbury roof since he was knocked out
+				// by Sadik so he should only mention Clovis' description if he has clue that gave him said information.
+				if (Actor_Clue_Query(kActorMcCoy, kClueAnimalMurderSuspect)
+				|| Actor_Clue_Query(kActorMcCoy, kClueMorajiInterview)
+				|| Actor_Clue_Query(kActorMcCoy, kClueMoonbus1)
+				|| Actor_Clue_Query(kActorMcCoy, kClueDektorasDressingRoom)) {
+					Actor_Says(kActorMcCoy, 920, 13); //00-0920.AUD	A tall Rastafarian and a guy with a beard?
+					Actor_Says(kActorChew, 530, 18); //52-0530.AUD	No, no! One with white hair, cruel face.
+					Actor_Says(kActorChew, 540, 13); //52-0540.AUD	Other stupid looking. Mustache.
+				}
 				Actor_Says(kActorChew, 550, 12); //52-0550.AUD	They touch eyes, destroy coat. Have to start all over.
-				Actor_Says(kActorMcCoy, 925, 18); //00-0925.AUD	You sure about the descriptions?
-				Actor_Says(kActorChew, 560, 13); //52-0560.AUD	Hey! I got eyes.
+				if (Actor_Clue_Query(kActorMcCoy, kClueAnimalMurderSuspect)
+				|| Actor_Clue_Query(kActorMcCoy, kClueMorajiInterview)
+				|| Actor_Clue_Query(kActorMcCoy, kClueIzosFriend)
+				|| Actor_Clue_Query(kActorMcCoy, kClueMoonbus1)
+				|| Actor_Clue_Query(kActorMcCoy, kClueDektorasDressingRoom)) {
+					Actor_Says(kActorMcCoy, 925, 18); //00-0925.AUD	You sure about the descriptions?
+					Actor_Says(kActorChew, 560, 13); //52-0560.AUD	Hey! I got eyes.
+				}
 				Actor_Says(kActorMcCoy, 930, 13); //00-0930.AUD	What did they want?
 				Actor_Says(kActorChew, 700, 14); //52-0700.AUD	I not know. Feet hurt.
 				Actor_Says(kActorMcCoy, 3910, 14); // 00-3910.AUD	You’re lying.

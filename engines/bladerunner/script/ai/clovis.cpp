@@ -346,8 +346,14 @@ bool AIScriptClovis::GoalChanged(int currentGoalNumber, int newGoalNumber) {
 		Actor_Says(kActorClovis, 70, 30);
 		Actor_Says(kActorClovis, 80, 30);
 		Actor_Change_Animation_Mode(kActorClovis, 29);
-		Actor_Says(kActorSadik, 40, kAnimationModeTalk);
-		Actor_Says(kActorSadik, 50, kAnimationModeTalk);
+		// Made it so Sadik has a line where he mentions Clovis' name. In the origianl game McCoy somehow knows Clovis' name even though he never hears it mentioned.
+		// Adding in this line here recifies that.
+		if (_vm->_cutContent) {
+			Actor_Says(kActorSadik, 220, kAnimationModeTalk);//08-0220.AUD	Clovis wants to see you. Bring you back into family.
+			Delay (1000);
+		}	
+		Actor_Says(kActorSadik, 40, kAnimationModeTalk); //08-0040.AUD	You ready to give up fruitless nightmare, mon?
+		Actor_Says(kActorSadik, 50, kAnimationModeTalk); //08-0050.AUD	Come back to family?
 		Actor_Says(kActorClovis, 90, 13);
 		Actor_Face_Current_Camera(5, true);
 		Actor_Says(kActorClovis, 100, 17);

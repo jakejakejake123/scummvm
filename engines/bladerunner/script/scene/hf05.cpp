@@ -760,13 +760,22 @@ void SceneScriptHF05::dialogueWithCrazylegs1() {
 			Actor_Says(kActorMcCoy, 2100, 15);
 			Actor_Says(kActorCrazylegs, 930, 12);
 			Actor_Says(kActorCrazylegs, 940, 14);
-			Actor_Says(kActorMcCoy, 2105, kAnimationModeTalk);
-			Actor_Says(kActorCrazylegs, 950, 15);
-			Actor_Says(kActorMcCoy, 2110, kAnimationModeIdle);
-			Actor_Says(kActorCrazylegs, 960, 16); //09-0960.AUD	Yeah. Pretty scary. But, heck, I never turn away a customer.
-			// Made it so you receive the Crazylegs interview 2 clue if Clovis bought the car. 
+			Actor_Says(kActorMcCoy, 2105, kAnimationModeTalk); //00-2105.AUD	What did this guy look like?
+			// Made it so the part of the conversation where Crazy and McCoy talk about Clovis and his piercing eyes only plays if McCoy has a close up photo of Clovis or Morajis description.
 			if (_vm->_cutContent) {
+				if (Actor_Clue_Query(kActorMcCoy, kClueAnimalMurderSuspect)
+					|| Actor_Clue_Query(kActorMcCoy, kClueMorajiInterview)
+					|| Actor_Clue_Query(kActorMcCoy, kClueClovisAtMoonbus)) {
+						Actor_Says(kActorCrazylegs, 950, 15); //09-0950.AUD	Nothing special. Beard, dark hair. Had these eyes, kinda…
+						Actor_Says(kActorMcCoy, 2110, kAnimationModeIdle); //00-2110.AUD	Piercing?	
+				} 
+				Actor_Says(kActorCrazylegs, 960, 16); //09-0960.AUD	Yeah. Pretty scary. But, heck, I never turn away a customer.
+				// Made it so you receive the Crazylegs interview 2 clue if Clovis bought the car. 
 				Actor_Clue_Acquire(kActorMcCoy, kClueCrazylegsInterview2, true, kActorCrazylegs);
+			} else {
+				Actor_Says(kActorCrazylegs, 950, 15); //09-0950.AUD	Nothing special. Beard, dark hair. Had these eyes, kinda…
+				Actor_Says(kActorMcCoy, 2110, kAnimationModeIdle); //00-2110.AUD	Piercing?
+				Actor_Says(kActorCrazylegs, 960, 16); //09-0960.AUD	Yeah. Pretty scary. But, heck, I never turn away a customer.
 			}
 		}
 		break;

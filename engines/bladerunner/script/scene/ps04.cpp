@@ -308,24 +308,27 @@ void SceneScriptPS04::dialogueWithGuzza() {
 				// Lowered friendlines towards Guzza and McCoy so a conversation where Guzza tells you to go away will now play.
 				Actor_Modify_Friendliness_To_Other(kActorGuzza, kActorMcCoy, -5);
 				Game_Flag_Set(kFlagPS04GuzzaTalkIsFurious);
+				// Made so Guzza will also not get angry with McCoy if he at least retired Izo or Runciter.
 			} else if 
-				(Game_Flag_Query(kFlagZubenRetired)
+				((Game_Flag_Query(kFlagZubenRetired)
+				|| Game_Flag_Query(kFlagMcCoyRetiredIzo)
+				|| Game_Flag_Query(kFlagMcCoyRetiredRunciter))
 				&& !Game_Flag_Query(kFlagPS04GuzzaTalkIsFurious)
 				&& !Game_Flag_Query(kFlagPS04GuzzaTalkZubenRetired)
-			) {
-				Actor_Says(kActorMcCoy, 3920, 13);
-				Actor_Says(kActorGuzza, 140, 30);
-				Actor_Face_Current_Camera(kActorGuzza, true);
-				Actor_Says(kActorGuzza, 150, 31);
-				Actor_Says(kActorGuzza, 160, 32);
-				Actor_Says(kActorMcCoy, 3925, 18);
-				Actor_Face_Actor(kActorGuzza, kActorMcCoy, true);
-				Actor_Says(kActorGuzza, 170, 33);
-				Loop_Actor_Walk_To_XYZ(kActorMcCoy, -716.0f, -354.85f, 1042.0f, 0, false, false, false);
-				Actor_Face_Actor(kActorMcCoy, kActorGuzza, true);
-				Actor_Says(kActorMcCoy, 3930, 13);
-				Actor_Modify_Friendliness_To_Other(kActorGuzza, kActorMcCoy, 5);
-				Actor_Face_Actor(kActorGuzza, kActorMcCoy, true);
+				) {
+					Actor_Says(kActorMcCoy, 3920, 13);
+					Actor_Says(kActorGuzza, 140, 30);
+					Actor_Face_Current_Camera(kActorGuzza, true);
+					Actor_Says(kActorGuzza, 150, 31);
+					Actor_Says(kActorGuzza, 160, 32);
+					Actor_Says(kActorMcCoy, 3925, 18);
+					Actor_Face_Actor(kActorGuzza, kActorMcCoy, true);
+					Actor_Says(kActorGuzza, 170, 33);
+					Loop_Actor_Walk_To_XYZ(kActorMcCoy, -716.0f, -354.85f, 1042.0f, 0, false, false, false);
+					Actor_Face_Actor(kActorMcCoy, kActorGuzza, true);
+					Actor_Says(kActorMcCoy, 3930, 13);
+					Actor_Modify_Friendliness_To_Other(kActorGuzza, kActorMcCoy, 5);
+					Actor_Face_Actor(kActorGuzza, kActorMcCoy, true);
 #if BLADERUNNER_ORIGINAL_BUGS
 			Actor_Says(kActorGuzza, 180, 34);	// But I'm proud of you McCoy. Why don't you take the rest of the day off?
 			Actor_Says(kActorMcCoy, 3935, 13);	// Thanks.

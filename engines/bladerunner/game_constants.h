@@ -1015,7 +1015,7 @@ enum Flags {
 	kFlagNR04EarlyQWalkedIn                   = 569,
 	kFlagEarlyQDead							  = 570,	
 	kFlagSebastianKnockedOut				  = 571,
-	//
+	kFlagMcCoyRetiredIzo		   		      = 572,
 	kFlagNR03Entered                          = 573,
 	kFlagKP04toKP05                           = 574,
 	kFlagKP05toKP04                           = 575,
@@ -1045,7 +1045,7 @@ enum Flags {
 	kFlagKIAPrivacyAddonIntro                 = 599,
 	kFlagUG16LutherLanceTalkReplicants        = 600,
 	kFlagUG16LutherLanceTalkHumans            = 601,
-	// 602 is never used
+	kFlagMcCoyRetiredRunciter				  = 602,	
 	kFlagSteeleAimingAtGordo                  = 603,
 	kFlagNR03McCoyThrownOut                   = 604,
 	kFlagNR04DiscFound                        = 605,

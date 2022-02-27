@@ -1941,8 +1941,10 @@ void KIAScript::SCRIPT_KIA_DLL_Play_Clue_Asset_Script(int notUsed, int clueId) {
 		KIA_Play_Actor_Dialogue(kActorCrazylegs, 930); //09-0930.AUD	In this neighborhood every hour is more like it.
 		KIA_Play_Actor_Dialogue(kActorCrazylegs, 940); //09-0940.AUD	But then again I do have the best selection in town.
 		KIA_Play_Actor_Dialogue(kActorMcCoy, 2105); //00-2105.AUD	What did this guy look like?
-	 	KIA_Play_Actor_Dialogue(kActorCrazylegs, 950); //09-0950.AUD	Nothing special. Beard, dark hair. Had these eyes, kinda…
-		KIA_Play_Actor_Dialogue(kActorMcCoy, 2110); //00-2110.AUD	Piercing?
+		if (Actor_Clue_Query(kActorMcCoy, kClueMorajiInterview)) {
+			KIA_Play_Actor_Dialogue(kActorCrazylegs, 950); //09-0950.AUD	Nothing special. Beard, dark hair. Had these eyes, kinda…
+			KIA_Play_Actor_Dialogue(kActorMcCoy, 2110); //00-2110.AUD	Piercing?
+		}
 		KIA_Play_Actor_Dialogue(kActorCrazylegs, 960); //09-0960.AUD	Yeah. Pretty scary. But, heck, I never turn away a customer.
 		break;
 	case kClueGordoBlabs:
@@ -2197,6 +2199,7 @@ void KIAScript::SCRIPT_KIA_DLL_Play_Clue_Asset_Script(int notUsed, int clueId) {
 		KIA_Play_Actor_Dialogue(kActorSadik, 30); //08-0030.AUD	I'm thinkin' our brother not hearin' too good.
 		KIA_Play_Actor_Dialogue(kActorClovis, 70); //05-0070.AUD	Oh, he hears us.
 		KIA_Play_Actor_Dialogue(kActorClovis, 80); //05-0080.AUD	Isn't that right, McCoy?
+		KIA_Play_Actor_Dialogue(kActorSadik, 220); ////08-0220.AUD	Clovis wants to see you. Bring you back into family.
 		KIA_Play_Actor_Dialogue(kActorSadik, 40); //08-0040.AUD	You ready to give up fruitless nightmare, mon?
 		KIA_Play_Actor_Dialogue(kActorSadik, 50); //08-0050.AUD	Come back to family?
 		KIA_Play_Actor_Dialogue(kActorClovis, 90); //05-0090.AUD	He doesn't have a choice.
