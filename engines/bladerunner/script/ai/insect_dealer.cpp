@@ -50,7 +50,11 @@ void AIScriptInsectDealer::Initialize() {
 }
 
 bool AIScriptInsectDealer::Update() {
-	if (Global_Variable_Query(kVariableChapter) == 5
+	if (_vm->_cutContent) {
+		if (Global_Variable_Query(kVariableChapter) >= 4
+	 	&& Actor_Query_Goal_Number(kActorInsectDealer) < 400)
+		Actor_Set_Goal_Number(kActorInsectDealer, 400);
+	} else if (Global_Variable_Query(kVariableChapter) == 5
 	 && Actor_Query_Goal_Number(kActorInsectDealer) < 400
 	)
 		Actor_Set_Goal_Number(kActorInsectDealer, 400);

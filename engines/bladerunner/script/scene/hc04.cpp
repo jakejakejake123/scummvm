@@ -37,8 +37,17 @@ void SceneScriptHC04::InitializeScene() {
 	}
 	Music_Play(kMusicOneTime, 14, -90, 1, -1, loop, 2);
 
-	Actor_Put_In_Set(kActorIsabella, kSetHC01_HC02_HC03_HC04);
-	Actor_Set_At_XYZ(kActorIsabella, -210.0f, 0.0f, -445.0f, 250);
+	if (_vm->_cutContent) {
+		if (Global_Variable_Query(kVariableChapter) < 4) {
+			Actor_Put_In_Set(kActorIsabella, kSetHC01_HC02_HC03_HC04);
+			Actor_Set_At_XYZ(kActorIsabella, -210.0f, 0.0f, -445.0f, 250);
+		} else {
+			Actor_Set_At_XYZ(kActorIsabella, 360.77f, 4.4f, -806.67f, 126);
+		}
+	} else {
+		Actor_Put_In_Set(kActorIsabella, kSetHC01_HC02_HC03_HC04);
+		Actor_Set_At_XYZ(kActorIsabella, -210.0f, 0.0f, -445.0f, 250);
+	}
 
 	Scene_Exit_Add_2D_Exit(0, 539,  51, 639, 309, 0);
 	Scene_Exit_Add_2D_Exit(1,   0, 456, 639, 479, 2);
