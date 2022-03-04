@@ -218,17 +218,23 @@ void KIAScript::SCRIPT_KIA_DLL_Play_Clue_Asset_Script(int notUsed, int clueId) {
 		if (_vm->_cutContent) {
 		 	KIA_Play_Actor_Dialogue(kActorMcCoy, 4570); //00-4570.AUD	Obviously. What did they look like?
 			KIA_Play_Actor_Dialogue(kActorRunciter, 70); //15-0070.AUD	Big and scary and absolutely malevolent.
+			KIA_Play_Actor_Dialogue(kActorMcCoy, 4585); //00-4585.AUD	Tell me about this Lucy.
+			KIA_Play_Actor_Dialogue(kActorRunciter, 270); //15-0270.AUD	She's about fourteen years old with pink hair. A very attractive young thing.
+			KIA_Play_Actor_Dialogue(kActorMcCoy, 4665); //00-4665.AUD	She got a desk or some place where she worked?
+			KIA_Play_Actor_Dialogue(kActorRunciter, 350); //15-0350.AUD	She used to eat over there.
 		}
 		break;
 	case kClueRunciterInterviewB1:
 		if (_vm->_cutContent) {
-			KIA_Play_Actor_Dialogue(kActorMcCoy, 4585); //00-4585.AUD	Tell me about this Lucy.
+			KIA_Play_Actor_Dialogue(kActorMcCoy, 4760); //00-4760.AUD	About the girl.
+			KIA_Play_Actor_Dialogue(kActorRunciter, 590); //15-0590.AUD	What? Who?
+			KIA_Play_Actor_Dialogue(kActorMcCoy, 4775); //00-4775.AUD	Lucy.
+			KIA_Play_Actor_Dialogue(kActorMcCoy, 8514); //00-8514.AUD	Got anything new to tell me?
 			if (Game_Flag_Query(kFlagLucyIsReplicant)) {
 				KIA_Play_Actor_Dialogue(kActorRunciter, 250); //15-0250.AUD	There's not a lot I can tell you. She's only worked for me for about a month.
 			} else {
 				KIA_Play_Actor_Dialogue(kActorRunciter, 260); //15-0260.AUD	There's not a lot I can tell you. She's only worked for me for a short while.
 			}
-			KIA_Play_Actor_Dialogue(kActorRunciter, 270); //15-0270.AUD	She's about fourteen years old with pink hair. A very attractive young thing.
 			KIA_Play_Actor_Dialogue(kActorMcCoy, 4645); //00-4645.AUD	How did you find her? 
 			KIA_Play_Actor_Dialogue(kActorRunciter, 280); //15-0280.AUD	She came to me with a reference from Ogilvies in the North West Zone.
 			KIA_Play_Actor_Dialogue(kActorRunciter, 290); //15-0290.AUD	And he's a very reputable wholesaler.
@@ -240,8 +246,6 @@ void KIAScript::SCRIPT_KIA_DLL_Play_Clue_Asset_Script(int notUsed, int clueId) {
 				KIA_Play_Actor_Dialogue(kActorMcCoy, 4660); //00-4660.AUD	So what did she do?
 				KIA_Play_Actor_Dialogue(kActorRunciter, 340); //15-0340.AUD	Unskilled labor, mostly. She was perfect for that. As if she were made for it.
 			}
-			KIA_Play_Actor_Dialogue(kActorMcCoy, 4665); //00-4665.AUD	She got a desk or some place where she worked?
-			KIA_Play_Actor_Dialogue(kActorRunciter, 350); //15-0350.AUD	She used to eat over there.
 		} else {
 			KIA_Play_Actor_Dialogue(kActorRunciter, 250); //15-0250.AUD	There's not a lot I can tell you. She's only worked for me for about a month.
 			KIA_Play_Actor_Dialogue(kActorRunciter, 270); //15-0270.AUD	She's about fourteen years old with pink hair. A very attractive young thing.
@@ -481,38 +485,63 @@ void KIAScript::SCRIPT_KIA_DLL_Play_Clue_Asset_Script(int notUsed, int clueId) {
 		}
 		break;
 	case kClueBobInterview1:
-		if (_vm->_cutContent) {
-			KIA_Play_Actor_Dialogue(kActorMcCoy, 5010); //00-5010.AUD	You know anyone who might sell Ender rifles?
+	if (_vm->_cutContent) {
+		KIA_Play_Actor_Dialogue(kActorMcCoy, 4995); //00-4995.AUD	Somebody shot up Runciter's shop with one.
+		KIA_Play_Actor_Dialogue(kActorBulletBob, 1860); //14-1860.AUD	Runciter? You mean that animal dealer down the street?
+		KIA_Play_Actor_Dialogue(kActorMcCoy, 8535);	//00-8535.AUD	Yeah.
+		KIA_Play_Actor_Dialogue(kActorBulletBob, 270); //14-0270.AUD	Sucker had it coming. I'm sure of that.
+		KIA_Play_Actor_Dialogue(kActorMcCoy, 5005); //00-5005.AUD	Why is that?
+		KIA_Play_Actor_Dialogue(kActorBulletBob, 280); //14-0280.AUD	Runciter is always putting on those airs like he's better than everybody else.
+		KIA_Play_Actor_Dialogue(kActorBulletBob, 290); //14-0290.AUD	But he'll do anything for a buck. Sell anything to anybody.
+		KIA_Play_Actor_Dialogue(kActorBulletBob, 300); //14-0300.AUD	That's where I draw the line. If it's suspicious
+		KIA_Play_Actor_Dialogue(kActorBulletBob, 310); //14-0310.AUD	it's out of here. Got no place at Bullet Bob's.
+		KIA_Play_Actor_Dialogue(kActorMcCoy, 5010); //00-5010.AUD	You know anyone who might sell Ender rifles?
 		}
 		KIA_Play_Actor_Dialogue(kActorBulletBob, 320); //14-0320.AUD	There's one other guy around here who dips into that stuff.
 		KIA_Play_Actor_Dialogue(kActorBulletBob, 330); //14-0330.AUD	Got a pawn shop down the street. Goes by the name of Izo.
 		if (_vm->_cutContent) {
 			KIA_Play_Actor_Dialogue(kActorBulletBob, 340); //14-0340.AUD	But who knows what the real title is.
 			KIA_Play_Actor_Dialogue(kActorMcCoy, 5015); //00-5015.AUD	Izo, huh. Sounds like you don't like him.
+			if (!Game_Flag_Query(kFlagBulletBobIsReplicant)) {
+				KIA_Play_Actor_Dialogue(kActorBulletBob, 350); //14-0350.AUD	I've been around here a long time, Ray.
+				KIA_Play_Actor_Dialogue(kActorBulletBob, 360); 
+				KIA_Play_Actor_Dialogue(kActorBulletBob, 370);
+				KIA_Play_Actor_Dialogue(kActorMcCoy, 5020);	
+				KIA_Play_Actor_Dialogue(kActorBulletBob, 380);
+				KIA_Play_Actor_Dialogue(kActorBulletBob, 390);
+				KIA_Play_Actor_Dialogue(kActorBulletBob, 400);
+			} else {
+				KIA_Play_Actor_Dialogue(kActorBulletBob, 410); //14-0410.AUD	Izo is okay. He's run the Green Pawn for a while.
+				KIA_Play_Actor_Dialogue(kActorBulletBob, 420); //14-0420.AUD	We're friendly competitors, I guess. But I don't appreciate his politics.
+				KIA_Play_Actor_Dialogue(kActorMcCoy, 5025); //00-5025.AUD	Yeah?
+				KIA_Play_Actor_Dialogue(kActorBulletBob, 430); //14-0430.AUD	Rumors that's all they are.
+				KIA_Play_Actor_Dialogue(kActorBulletBob, 440);
+				KIA_Play_Actor_Dialogue(kActorBulletBob, 450);
+			}
+		} else {
+			KIA_Play_Actor_Dialogue(kActorBulletBob, 350); //14-0350.AUD	I've been around here a long time, Ray.
+			KIA_Play_Actor_Dialogue(kActorBulletBob, 360); 
+			KIA_Play_Actor_Dialogue(kActorBulletBob, 370);
+			KIA_Play_Actor_Dialogue(kActorMcCoy, 5020);	
+			KIA_Play_Actor_Dialogue(kActorBulletBob, 380);
+			KIA_Play_Actor_Dialogue(kActorBulletBob, 390);
+			KIA_Play_Actor_Dialogue(kActorBulletBob, 400);
 		}
-		KIA_Play_Actor_Dialogue(kActorBulletBob, 350); //14-0350.AUD	I've been around here a long time, Ray.
-		KIA_Play_Actor_Dialogue(kActorBulletBob, 360); 
-		KIA_Play_Actor_Dialogue(kActorBulletBob, 370);
-		KIA_Play_Actor_Dialogue(kActorMcCoy, 5020);	
-		KIA_Play_Actor_Dialogue(kActorBulletBob, 380);
-		KIA_Play_Actor_Dialogue(kActorBulletBob, 390);
-		KIA_Play_Actor_Dialogue(kActorBulletBob, 400);
 		break;
 	case kClueBobInterview2:
 		if (_vm->_cutContent) {
-			KIA_Play_Actor_Dialogue(kActorMcCoy, 5010); //00-5010.AUD	You know anyone who might sell Ender rifles?
-		}
-		KIA_Play_Actor_Dialogue(kActorBulletBob, 320); //14-0320.AUD	There's one other guy around here who dips into that stuff.
-		KIA_Play_Actor_Dialogue(kActorBulletBob, 330); //14-0330.AUD	Got a pawn shop down the street. Goes by the name of Izo.
-		if (_vm->_cutContent) {
-			KIA_Play_Actor_Dialogue(kActorBulletBob, 340); //14-0340.AUD	But who knows what the real title is.
-			KIA_Play_Actor_Dialogue(kActorMcCoy, 5015); //00-5015.AUD	Izo, huh. Sounds like you don't like him.
-		}
-		KIA_Play_Actor_Dialogue(kActorBulletBob, 410); //14-0410.AUD	Izo is okay. He's run the Green Pawn for a while.
-		KIA_Play_Actor_Dialogue(kActorBulletBob, 420); //14-0420.AUD	We're friendly competitors, I guess. But I don't appreciate his politics.
-		if (_vm->_cutContent) {
-			KIA_Play_Actor_Dialogue(kActorMcCoy, 5025); //00-5025.AUD	Yeah?
-			KIA_Play_Actor_Dialogue(kActorBulletBob, 430); //14-0430.AUD	Rumors that's all they are.
+			KIA_Play_Actor_Dialogue(kActorBulletBob, 1940); //14-1940.AUD	The department's been infiltrated, right?
+			KIA_Play_Actor_Dialogue(kActorBulletBob, 1950); //14-1950.AUD	That's the only way Davy could have been taken out like he was.
+			KIA_Play_Actor_Dialogue(kActorMcCoy, 8970); //00-8970.AUD	Holden is good. No question.
+			KIA_Play_Actor_Dialogue(kActorBulletBob, 1960);	//14-1960.AUD	When you hook into the mainframe you always give them everything.
+			KIA_Play_Actor_Dialogue(kActorBulletBob, 1970);
+			KIA_Play_Actor_Dialogue(kActorBulletBob, 1980);
+			KIA_Play_Actor_Dialogue(kActorBulletBob, 1990);
+		} else {
+			KIA_Play_Actor_Dialogue(kActorBulletBob, 320); //14-0320.AUD	There's one other guy around here who dips into that stuff.
+			KIA_Play_Actor_Dialogue(kActorBulletBob, 330); //14-0330.AUD	Got a pawn shop down the street. Goes by the name of Izo.
+			KIA_Play_Actor_Dialogue(kActorBulletBob, 410); //14-0410.AUD	Izo is okay. He's run the Green Pawn for a while.
+			KIA_Play_Actor_Dialogue(kActorBulletBob, 420); //14-0420.AUD	We're friendly competitors, I guess. But I don't appreciate his politics.
 		}
 		break;
 	case kClueIzoInterview:
@@ -561,6 +590,15 @@ void KIAScript::SCRIPT_KIA_DLL_Play_Clue_Asset_Script(int notUsed, int clueId) {
 			KIA_Play_Actor_Dialogue(kActorBulletBob, 1800); //14-1800.AUD	You're gonna love this, McCoy. I couldn't believe it when I heard.
 			KIA_Play_Actor_Dialogue(kActorBulletBob, 590); //14-0590.AUD	U.N. Command figured it out, because the Rep skin held up...
 			KIA_Play_Actor_Dialogue(kActorBulletBob, 600); //14-0600.AUD	but their eyes melted inside two kilometers from Ground Zero.
+			KIA_Play_Actor_Dialogue(kActorBulletBob, 610); //14-0610.AUD	Where did you get them from?
+			KIA_Play_Actor_Dialogue(kActorMcCoy, 5050);	//00-5050.AUD	Izo.
+			KIA_Play_Actor_Dialogue(kActorBulletBob, 620); //14-0620.AUD	I knew it! I knew that son of a bitch was dirty as soon as he moved in.
+			KIA_Play_Actor_Dialogue(kActorBulletBob, 630); //14-0630.AUD	He's got that cold Rep way about him. You know what I mean?
+			KIA_Play_Actor_Dialogue(kActorMcCoy, 5055); //00-5055.AUD	Don't jump to conclusions.
+			KIA_Play_Actor_Dialogue(kActorBulletBob, 640); //14-0640.AUD	Sure, sure. Hey, I'd love to be there when you take him down.
+			KIA_Play_Actor_Dialogue(kActorBulletBob, 650); //14-0650.AUD	I could get a photo of it. Put it up on my Wall of Fame.
+			KIA_Play_Actor_Dialogue(kActorBulletBob, 660); //14-0660.AUD	Davy is up there. So is Gaff. Want to see?
+			KIA_Play_Actor_Dialogue(kActorMcCoy, 5060); //00-5060.AUD	Some other time.
 		}
 		break;
 	case kClueFishLadyInterview:
@@ -1731,14 +1769,16 @@ void KIAScript::SCRIPT_KIA_DLL_Play_Clue_Asset_Script(int notUsed, int clueId) {
 		KIA_Play_Actor_Dialogue(kActorLucy, 260); //06-0260.AUD	It’s so funny. I’m worth less than those animals.
 		KIA_Play_Actor_Dialogue(kActorLucy, 270); //06-0270.AUD	I guess I should hate them. But I don’t.
 		if (_vm->_cutContent) {
-			KIA_Play_Actor_Dialogue(kActorMcCoy, 1665); //00-1665.AUD	So, all the animals were real?
-			KIA_Play_Actor_Dialogue(kActorLucy, 280); //06-0280.AUD	Mr. Runciter also used to buy some of the… others.
-			KIA_Play_Actor_Dialogue(kActorMcCoy, 1670); //00-1670.AUD	Artificial?
-			KIA_Play_Actor_Dialogue(kActorLucy, 290); //06-0290.AUD	He used to tell me that he was protected.
-			KIA_Play_Actor_Dialogue(kActorLucy, 300); //06-0300.AUD	That they came from somebody close to the source.
-			KIA_Play_Actor_Dialogue(kActorMcCoy, 1675); //00-1675.AUD	Who else was there that night?
-			KIA_Play_Actor_Dialogue(kActorLucy, 310); //06-0310.AUD	Father and uncle Zuben.
+			if (!Actor_Clue_Query(kActorMcCoy, kClueLabCorpses)) {
+				KIA_Play_Actor_Dialogue(kActorMcCoy, 1665); //00-1665.AUD	So, all the animals were real?
+				KIA_Play_Actor_Dialogue(kActorLucy, 280); //06-0280.AUD	Mr. Runciter also used to buy some of the… others.
+				KIA_Play_Actor_Dialogue(kActorMcCoy, 1670); //00-1670.AUD	Artificial?
+				KIA_Play_Actor_Dialogue(kActorLucy, 290); //06-0290.AUD	He used to tell me that he was protected.
+				KIA_Play_Actor_Dialogue(kActorLucy, 300); //06-0300.AUD	That they came from somebody close to the source.
+			}
 		}
+		KIA_Play_Actor_Dialogue(kActorMcCoy, 1675); //00-1675.AUD	Who else was there that night?
+		KIA_Play_Actor_Dialogue(kActorLucy, 310); //06-0310.AUD	Father and uncle Zuben.
 		break;
 	case kClueMoonbusReflection:
 		KIA_Play_Photograph(35);
@@ -2390,6 +2430,7 @@ void KIAScript::SCRIPT_KIA_DLL_Play_Clue_Asset_Script(int notUsed, int clueId) {
 		KIA_Play_Actor_Dialogue(kActorRunciter, 300); // 15-0300.AUD	Do you have any idea how much this is going to cost me? I'm ruined!		
 		KIA_Play_Actor_Dialogue(kActorRunciter, 90); // 15-0090.AUD	That snow tiger alone was worth more than most people will ever see in a lifetime. 
 		KIA_Play_Actor_Dialogue(kActorRunciter, 540); // 15-0540.AUD	I sacrificed everything to get that tiger. And now she's dead.
+		KIA_Play_Actor_Dialogue(kActorRunciter, 530); //15-0530.AUD	My precious one. She was my baby.
 		break;
 		// This the dialogue where Runciter confesses that he has a couple of friends who are genetic designers.
 	case kClueRunciterConfession2:
@@ -2404,15 +2445,33 @@ void KIAScript::SCRIPT_KIA_DLL_Play_Clue_Asset_Script(int notUsed, int clueId) {
 		// This clue is not a sighting OF Bullet Bob, but instead is a sighting MADE by Bullet Bob. Specifically his observations of Runciter and his possible
 		// illegal activities.
 	case kClueSightingBulletBob:
-		KIA_Play_Actor_Dialogue(kActorMcCoy, 4995); //00-4995.AUD	Somebody shot up Runciter's shop with one.
-		KIA_Play_Actor_Dialogue(kActorBulletBob, 1860); //14-1860.AUD	Runciter? You mean that animal dealer down the street?
-		KIA_Play_Actor_Dialogue(kActorMcCoy, 8535); //00-8535.AUD	Yeah.
-		KIA_Play_Actor_Dialogue(kActorBulletBob, 270); //14-0270.AUD	Sucker had it coming. I'm sure of that.
-		KIA_Play_Actor_Dialogue(kActorMcCoy, 5005); //00-5005.AUD	Why is that?
-		KIA_Play_Actor_Dialogue(kActorBulletBob, 280); //14-0280.AUD	Runciter is always putting on those airs like he's better than everybody else.
-		KIA_Play_Actor_Dialogue(kActorBulletBob, 290); //14-0290.AUD	But he'll do anything for a buck. Sell anything to anybody.
-		KIA_Play_Actor_Dialogue(kActorBulletBob, 300); //14-0300.AUD	That's where I draw the line. If it's suspicious
-		KIA_Play_Actor_Dialogue(kActorBulletBob, 310); //14-0310.AUD	it's out of here. Got no place at Bullet Bob's.
+		KIA_Play_Actor_Dialogue(kActorBulletBob, 0); //14-0000.AUD	That a .45 blaster under your coat or you're just happy to be here?
+		KIA_Play_Actor_Dialogue(kActorMcCoy, 4865); //00-4865.AUD	You got good eyes.
+		KIA_Play_Actor_Dialogue(kActorBulletBob, 10); //14-0010.AUD	They ought to be they're the only organs of mine that survived the Phobos wars intact.
+		KIA_Play_Actor_Dialogue(kActorMcCoy, 4870); //00-4870.AUD	Ray McCoy, Rep Detect.
+		KIA_Play_Actor_Dialogue(kActorBulletBob, 20); //14-0020.AUD	Blade Runner, huh?
+		if (Game_Flag_Query(kFlagBulletBobIsReplicant)) {
+			KIA_Play_Actor_Dialogue(kActorBulletBob, 40); //14-0040.AUD	I heard of you.
+			KIA_Play_Actor_Dialogue(kActorMcCoy, 4880); //00-4880.AUD	Is that right?
+			KIA_Play_Actor_Dialogue(kActorBulletBob, 50); //14-0050.AUD	You ain't done much.
+			KIA_Play_Actor_Dialogue(kActorMcCoy, 4875); //00-4875.AUD	I just got assigned.
+			KIA_Play_Actor_Dialogue(kActorBulletBob, 60); //14-0060.AUD	Guys like you get hurt real easy.
+			KIA_Play_Actor_Dialogue(kActorMcCoy, 4890); //00-4890.AUD	Meaning what exactly?
+			KIA_Play_Actor_Dialogue(kActorBulletBob, 70); //14-0070.AUD	It ain't like you're a real Blade Runner. Not like Steele or Gaff.
+			KIA_Play_Actor_Dialogue(kActorMcCoy, 4895); //00-4895.AUD	They get hurt sometimes too. It's a dangerous business.
+		} else {
+			KIA_Play_Actor_Dialogue(kActorBulletBob, 30); //14-0030.AUD	How come I never heard of you?
+			KIA_Play_Actor_Dialogue(kActorMcCoy, 4875); //00-4875.AUD	I just got assigned.
+			KIA_Play_Actor_Dialogue(kActorBulletBob, 80); //14-0080.AUD	Yeah, I'm kind of buddies with Davy Holden. How's he doing?
+			KIA_Play_Actor_Dialogue(kActorMcCoy, 4900); //00-4900.AUD	Word is he's gonna be okay.
+			KIA_Play_Actor_Dialogue(kActorBulletBob, 90); //14-0090.AUD	That skin-job must have been pretty damn quick getting by Davy like that.
+			KIA_Play_Actor_Dialogue(kActorBulletBob, 100); //14-0100.AUD	He's the best in the business.
+			KIA_Play_Actor_Dialogue(kActorMcCoy, 4905); //00-4905.AUD	He'll be back on the job soon.
+			KIA_Play_Actor_Dialogue(kActorMcCoy, 4920); //00-4920.AUD	You got some nice pieces here.
+			KIA_Play_Actor_Dialogue(kActorBulletBob, 110); //14-0110.AUD	Take your time, Ray. Enjoy the goods. I got the best in the city right here.
+			KIA_Play_Actor_Dialogue(kActorBulletBob, 130); //14-0130.AUD	Anything you want and you don't see, just ask.
+			KIA_Play_Actor_Dialogue(kActorMcCoy, 4910); //00-4910.AUD	Thanks
+		}
 		break;
 		// This a clue you receive if Zuben is spared and Crystal receives enough clues from you so she can track him down and retire him.
 	case kClueCrystalRetiredZuben:

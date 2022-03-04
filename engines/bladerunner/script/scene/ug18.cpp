@@ -574,8 +574,14 @@ void SceneScriptUG18::talkWithGuzza() {
 	Actor_Says(kActorGuzza, 880, 13);
 	Actor_Says(kActorMcCoy, 5905, 9);
 	Actor_Says(kActorMcCoy, 5910, 12);
-	Actor_Says(kActorMcCoy, 5915, 13);
-	Actor_Says(kActorGuzza, 890, 16);
+	if (_vm->_cutContent) {
+		// Made it so McCoy only mentions what Guzza did to the pimps if Walls told him about it. It could have been mentioned in the folder but since Walls mentions it so casually
+		// it doesn't exactly seem to be hidden. 
+		if (Game_Flag_Query(kFlagWallsUpset)) {
+			Actor_Says(kActorMcCoy, 5915, 13); //00-5915.AUD	Torching two pimps who wouldn’t pay you off when you were working Vice?
+			Actor_Says(kActorGuzza, 890, 16); //04-0890.AUD	Hey! Those two had it coming.
+		}
+	}
 	Actor_Says(kActorMcCoy, 5920, 14);
 	Loop_Actor_Walk_To_XYZ(kActorGuzza, -57.21f, 0.0f, -334.17f, 0, false, false, false);
 	Actor_Face_Actor(kActorGuzza, kActorMcCoy, true);

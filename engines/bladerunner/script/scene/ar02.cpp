@@ -253,7 +253,8 @@ bool SceneScriptAR02::ClickedOnActor(int actorId) {
 	}
 
 	if (actorId == kActorHasan
-	    && Global_Variable_Query(kVariableChapter) == 2
+	// Made it so the intro convesation with Hasan always plays regardless of act. Also McCoy will now introduce himself as a cop immediately as to avoid inconsistencies with Hasan knowing that McCoy is a cop.
+	    && Global_Variable_Query(kVariableChapter) >= 2
 	) {
 		if (!Loop_Actor_Walk_To_XYZ(kActorMcCoy, -240.79f, 0.0f, -1328.89f, 12, true, false, false)) {
 			Actor_Face_Actor(kActorMcCoy, kActorHasan, true);
@@ -261,7 +262,13 @@ bool SceneScriptAR02::ClickedOnActor(int actorId) {
 			if (!Game_Flag_Query(kFlagAR02HassanTalk)) {
 				Actor_Says(kActorHasan, 0, 14);
 				Actor_Says(kActorMcCoy, 140, 18);
-				Game_Flag_Set(kFlagAR02HassanTalk);
+				if (_vm->_cutContent) {
+					Actor_Says(kActorMcCoy, 505, 23); //00-0505.AUD	McCoy, LPD.
+					Actor_Says(kActorHasan, 30, 11);//20-0030.AUD	Oh, you're a policeman.	
+					Actor_Says(kActorMcCoy, 7200, 14); //00-7200.AUD	Bingo.
+					Actor_Says(kActorMcCoy, 8925, 15); //00-8925.AUD	You got a few minutes, buddy?
+					Game_Flag_Set(kFlagAR02HassanTalk);
+				}
 				return true;
 			}
 			dialogueWithHassan();
@@ -580,18 +587,6 @@ void SceneScriptAR02::dialogueWithHassan() {
 	switch (answerValue) {
 	case 550: // SCALE
 		Actor_Says(kActorMcCoy, 145, 11); // This your work?
-		// It never made any sense that Hasan is surprised that McCoy is a policeman even though he reffered to him as being part of the LPD earlier on.
-		// I have rectified this by having Hasan say this only if you have not received the Hasan interview clue where he says this. 
-		if (_vm->_cutContent) {
-			if (!Actor_Clue_Query(kActorMcCoy, kClueHasanInterview)) {
-				Actor_Says(kActorHasan, 30, 11); //20-0030.AUD	Oh, you're a policeman.
-				Actor_Modify_Friendliness_To_Other(kActorHasan, kActorMcCoy, -1);
-				Actor_Says(kActorMcCoy, 160, 11); //00-0160.AUD	That's right, McCoy, LPD.
-			}
-		} else {
-			Actor_Says(kActorHasan, 30, 11); //20-0030.AUD	Oh, you're a policeman.
-			Actor_Says(kActorMcCoy, 160, 11); //00-0160.AUD	That's right, McCoy, LPD.
-		}
 		// Made it so the conversation with Hasan will play out differently depending on your friendliness with him.
 		// Firstly if you have low friendliness towards Hasan he lies to you and says he knows nothing.
 		if (_vm->_cutContent) {
@@ -676,19 +671,6 @@ void SceneScriptAR02::dialogueWithHassan() {
 
 	case 570: // DONE
 		if (!Actor_Clue_Query(kActorMcCoy, kClueHasanInterview)) {
-			// It never made any sense that Hasan seemed to know McCoy was a policemen but seemed to be surprised by this when you show him the scale later on.
-			// I fixed this by having Hasan be a little resistant to McCoy which leads McCoy to reveal that he is a police officer. This only happens if McCoy has not shown 
-			// Hasan the scale and he already found out.
-			if (_vm->_cutContent &&
-			 !Game_Flag_Query(kFlagWrongInvestigation)) {
-				Actor_Says(kActorMcCoy, 8615, 13); // Heard anything on the street?
-				Actor_Says(kActorHasan, 290, 11);  //20-0290.AUD	I have heard nothing of late, noble one.
-				Actor_Says(kActorMcCoy, 505, 23); //00-0505.AUD	McCoy, LPD.
-				Actor_Says(kActorHasan, 30, 11);//20-0030.AUD	Oh, you're a policeman.	
-				Actor_Modify_Friendliness_To_Other(kActorHasan, kActorMcCoy, -1);
-				Actor_Says(kActorMcCoy, 7200, 14); //00-7200.AUD	Bingo.
-				Delay (500);
-			 }
 			Actor_Says(kActorMcCoy, 940, 13);
 			// Quote 80 is *boop* in ENG and DEU versions
 			// In FRA, ITA versions it is identical to the second half of quote 70, and thus redundant

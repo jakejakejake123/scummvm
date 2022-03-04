@@ -127,7 +127,7 @@ bool SceneScriptPS07::ClickedOnActor(int actorId) {
 				Actor_Set_Goal_Number(kActorKlein, kGoalKleinMovingInLab01);
 				return true;
 			}
-
+			// Made it so Klein only talks about the animal corpses if McCoy has already seen them and he can talk about the wounds.
 			if (((_vm->_cutContent && Actor_Clue_Query(kActorKlein, kClueOfficersStatement))
 			      || (!_vm->_cutContent && Game_Flag_Query(kFlagMcCoyHasOfficersStatement)))
 			    && !Game_Flag_Query(kFlagPS07KleinTalkOfficersStatement)
@@ -243,24 +243,22 @@ bool SceneScriptPS07::ClickedOnActor(int actorId) {
 				Actor_Says(kActorKlein, 220, 12);
 				Actor_Says(kActorMcCoy, 4190, 13);
 				Actor_Says(kActorKlein, 230, 14);
-				// Made it so McCoy won't ask Dino how to locate the car if he has already found it.
-				if (_vm->_cutContent) {
-					if (!Actor_Clue_Query(kActorMcCoy, kClueCar)) {
-						Actor_Says(kActorMcCoy, 4195, 13);
-						Actor_Says(kActorKlein, 240, 16); 
-					}
-					// Car VIN
-					// quote 250 is *boop* in ENG version
-					// it is redundant in DEU and FRA versions (identical to second half of quote 240)
-					// it is required in ESP and ITA versions. It is the missing second half of quote 240.
-					if (_vm->_language == Common::ES_ESP
-					    || _vm->_language == Common::IT_ITA
-					) {
-						Actor_Says(kActorKlein, 250, kAnimationModeTalk);
-					}
+				// Added flag so McCoy will only use the vehicle identification number of the black sedan to track it if Klein tells him how to do that.
+				Actor_Says(kActorMcCoy, 4195, 13);
+				Actor_Says(kActorKlein, 240, 16); 
+				Game_Flag_Set(kFlagKleinCarIdentityTalk);
+				// Car VIN
+				// quote 250 is *boop* in ENG version
+				// it is redundant in DEU and FRA versions (identical to second half of quote 240)
+				// it is required in ESP and ITA versions. It is the missing second half of quote 240.
+				if (_vm->_language == Common::ES_ESP
+					|| _vm->_language == Common::IT_ITA
+				) {
+					Actor_Says(kActorKlein, 250, kAnimationModeTalk);
+					Game_Flag_Set(kFlagKleinCarIdentityTalk);
 				}
-				Actor_Set_Goal_Number(kActorKlein, kGoalKleinMovingInLab01);
-				return true;
+			Actor_Set_Goal_Number(kActorKlein, kGoalKleinMovingInLab01);
+			return true;
 			}
 			// Restored the lab analysis gold chain clue. In place of the gold chain will be the Maggie bracelet and you will only
 			// receive it from Klein if you have seen the Tyrell security photo. This is because the chain belongs to Sadik and McCoy

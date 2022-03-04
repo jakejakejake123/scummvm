@@ -97,6 +97,9 @@ bool AIScriptLuther::Update() {
 				Actor_Clue_Acquire(kActorMcCoy, kClueMcCoyRetiredLutherLance, true, -1);
 			} else {
 				Actor_Says(kActorVoiceOver, 2100, 12); //99-2100.AUD	I'd crossed the line.
+				Player_Set_Combat_Mode(false);
+				Delay(1000);
+				Actor_Says(kActorVoiceOver, 300, 12); //99-0300.AUD	I'd screwed up. Plain and simple.
 				Actor_Says(kActorMcCoy, 170, 14); //00-0170.AUD	Damn.
 				Game_Flag_Set(kFlagMcCoyRetiredHuman);
 			}

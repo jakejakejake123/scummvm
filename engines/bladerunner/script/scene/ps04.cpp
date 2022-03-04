@@ -523,6 +523,7 @@ void SceneScriptPS04::dialogueWithGuzza() {
 		//and to also have the option to give it to Bob so it looks like he found it. Also added in the McCoy recovered Holdens badge clue.
 		if (_vm->_cutContent) {
 			Actor_Clue_Acquire(kActorMcCoy, kClueMcCoyRecoveredHoldensBadge, true, kActorGuzza);
+			Actor_Clue_Lose(kActorMcCoy, kClueHoldensBadge);
 			Actor_Clue_Acquire(kActorGuzza, kClueHoldensBadge, true, kActorMcCoy);
 			Actor_Modify_Friendliness_To_Other(kActorGuzza, kActorMcCoy, 8);
 		}

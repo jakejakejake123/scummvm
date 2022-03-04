@@ -463,9 +463,13 @@ void SceneScriptHF05::dialogueWithCrazylegs1() {
 	// Added in flag so this topic will activate after you talk to Crazy about the car registration. The reason for this is because I made the Crazylegs interview 1 
 	// clue feature the dialogue of this topic since it not only includes that facts mentioned in car registration but also some extra facts that are also relevant such as mentioning 
 	// Gordo being with Dektora and saying that they were after a police spinner.
+	// Made it so McCoy can only ask about clues in regards to the car in act 3 since in act 4 he is too busy getting to the bottom of the conspiracy to have time to be investigating
+	// the animal murder case.
 	if (_vm->_cutContent) {
 		if (Game_Flag_Query(kFlagCrazylegsTalkCarRegistration)) {
-			DM_Add_To_List_Never_Repeat_Once_Selected(1190, 2, 7, 4); // WOMAN
+			if (Global_Variable_Query(kVariableChapter) == 3) {
+				DM_Add_To_List_Never_Repeat_Once_Selected(1190, 2, 7, 4); // WOMAN
+			}
 		}
 	} else if (Actor_Clue_Query(kActorMcCoy, kClueCrazylegsInterview1)) {
 		// kClueCrazylegsInterview1 is acquired (after bug fix)
@@ -482,13 +486,15 @@ void SceneScriptHF05::dialogueWithCrazylegs1() {
 // if you seleced the woman option earlier since Crazylegs describes Dektora in that option and it would make no sense for him to do that if you showed him the photo.
 	if (_vm->_cutContent) {
 		if (Game_Flag_Query(kFlagCrazylegsTalkWoman)) {
-			if (Actor_Clue_Query(kActorMcCoy, kClueChinaBar)
-				|| Actor_Clue_Query(kActorMcCoy, kClueDektorasDressingRoom)
-				|| Actor_Clue_Query(kActorMcCoy, kClueWomanInAnimoidRow)
-				|| Actor_Clue_Query(kActorMcCoy, kClueLucyWithDektora)
-				|| Actor_Clue_Query(kActorMcCoy, kClueOuterDressingRoom)
-				) {
-				DM_Add_To_List_Never_Repeat_Once_Selected(1200, 5, 5, 3); // WOMAN'S PHOTO
+			if (Global_Variable_Query(kVariableChapter) == 3) {
+				if (Actor_Clue_Query(kActorMcCoy, kClueChinaBar)
+					|| Actor_Clue_Query(kActorMcCoy, kClueDektorasDressingRoom)
+					|| Actor_Clue_Query(kActorMcCoy, kClueWomanInAnimoidRow)
+					|| Actor_Clue_Query(kActorMcCoy, kClueLucyWithDektora)
+					|| Actor_Clue_Query(kActorMcCoy, kClueOuterDressingRoom)
+					) {
+					DM_Add_To_List_Never_Repeat_Once_Selected(1200, 5, 5, 3); // WOMAN'S PHOTO
+				}
 			}
 		}
 	} else if ((Actor_Clue_Query(kActorMcCoy, kClueDektorasDressingRoom)
@@ -506,6 +512,14 @@ void SceneScriptHF05::dialogueWithCrazylegs1() {
 	 && Actor_Query_Goal_Number(kActorLucy) != kGoalLucyGone
 	) {
 		DM_Add_To_List_Never_Repeat_Once_Selected(1210, 4, 6, 2); // LUCY'S PHOTO
+	}
+	// Option is only available now if Lucy is alive.
+	if (_vm->_cutContent) {
+		if (!Actor_Clue_Query(kActorMcCoy, kClueLucy)
+		&& Actor_Query_Goal_Number(kActorLucy) != kGoalLucyGone
+		) {
+			DM_Add_To_List_Never_Repeat_Once_Selected(450, 7, 6, 3); // LUCY
+		}
 	}
 #if BLADERUNNER_ORIGINAL_BUGS
 	if (Actor_Clue_Query(kActorMcCoy, kClueGrigoriansResources) // it is impossible to obtain this clue
@@ -528,7 +542,17 @@ void SceneScriptHF05::dialogueWithCrazylegs1() {
 		DM_Add_To_List_Never_Repeat_Once_Selected(1220, -1, 2, 8); // GRIGORIAN
 	}
 #endif
-	if (Actor_Clue_Query(kActorMcCoy, kClueCarRegistration1)
+	if (_vm->_cutContent) {
+		if (Global_Variable_Query(kVariableChapter) == 3) {
+			if (Actor_Clue_Query(kActorMcCoy, kClueCarRegistration1)
+			|| Actor_Clue_Query(kActorMcCoy, kClueCarRegistration3)
+	) {
+		// Dektora bought the car or Blake Williams (which is an alias, that Clovis used)
+		// Gordo is with Dektora when making the car purchase (as revealed by CrazyLegs in the "WOMAN" question).
+		DM_Add_To_List_Never_Repeat_Once_Selected(1230, 4, 7, -1); // CAR REGISTRATION
+			}
+		}
+	} else if (Actor_Clue_Query(kActorMcCoy, kClueCarRegistration1)
 	 || Actor_Clue_Query(kActorMcCoy, kClueCarRegistration3)
 	) {
 		// Dektora bought the car or Blake Williams (which is an alias, that Clovis used)
@@ -640,6 +664,26 @@ void SceneScriptHF05::dialogueWithCrazylegs1() {
 		Actor_Says(kActorCrazylegs, 720, kAnimationModeTalk);
 		Actor_Says(kActorCrazylegs, 730, 12);
 		break;
+	// Added in an option where you can ask about Lucy even if you don't have her photo. If it is done with Mia and Murray it is only fair if it is done here.
+	case 450: // Lucy	
+		Actor_Says(kActorMcCoy, 5600, 13); //00-5600.AUD	Let me ask you something.
+		Actor_Says(kActorCrazylegs, 1140, 14); //09-1140.AUD	You can bet I’ve heard something you might be interested in.
+		Actor_Says(kActorMcCoy, 385, 9); //00-0385.AUD	I'm looking for a girl about 14 years old with pink hair. You seen her?
+		Actor_Says(kActorCrazylegs, 740, 14); //09-0740.AUD	You kidding? She ain’t old enough to drive.
+		Actor_Says(kActorMcCoy, 2030, 13); //00-2030.AUD	You’ve never seen her?
+		if (Game_Flag_Query(kFlagCrazylegsIsReplicant)) {
+				Actor_Says(kActorCrazylegs, 1150, 14); //09-1150.AUD	Only thing I know is that the best deals you can make are right in this showroom.
+				Actor_Says(kActorMcCoy, 8565, 13); //00-8565.AUD	Really?
+				Actor_Says(kActorCrazylegs, 1180, 15); //09-1180.AUD	What do you expect? I sell cars for a living.
+		} else {	
+			Actor_Says(kActorCrazylegs, 760, 16); //09-0760.AUD	Maybe you should try that arcade next door. 
+			Actor_Says(kActorCrazylegs, 770, kAnimationModeTalk); //09-0770.AUD	She looks like the kind of girl you see there all the time.
+			if (Player_Query_Agenda() == kPlayerAgendaSurly 
+			|| Player_Query_Agenda() == kPlayerAgendaErratic) {
+				Actor_Says(kActorMcCoy, 8640, 18); //00-8640.AUD	That's useless.
+				Actor_Says(kActorCrazylegs, 1180, kAnimationModeTalk);	//	09-1180.AUD	What do you expect? I sell cars for a living.
+			}
+		}
 
 	case 1210: // LUCY'S PHOTO
 		// Added in some dialogue.

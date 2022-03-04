@@ -333,7 +333,13 @@ void SceneScriptNR05::talkToEarlyQ() {
 		) {
 			DM_Add_To_List_Never_Repeat_Once_Selected(890, -1, 4, 8); // JEWELRY
 		}
-		if (Actor_Clue_Query(kActorMcCoy, kClueLucy)) {
+		// Made it you can now ask Early Q about Lucy even if you don't have her photo.
+		if (_vm->_cutContent) {
+			if (Actor_Query_Goal_Number(kActorLucy) != kGoalLucyGone) {
+				DM_Add_To_List_Never_Repeat_Once_Selected(900, 5, 6, 5); // LUCY
+			}
+		} else if (Actor_Clue_Query(kActorMcCoy, kClueLucy)
+		&& Actor_Query_Goal_Number(kActorLucy) != kGoalLucyGone) {
 			DM_Add_To_List_Never_Repeat_Once_Selected(900, 5, 6, 5); // LUCY
 		}
 		// Made it so the blonde woman option is now available if you have either the China bar photo or the woman in animoid row photo.
@@ -428,14 +434,24 @@ void SceneScriptNR05::talkToEarlyQ() {
 		break;
 
 	case 900: // LUCY
-		Actor_Says(kActorMcCoy, 3510, 15);
+		if (_vm->_cutContent) {
+			if (!Actor_Clue_Query(kActorMcCoy, kClueLucy)) {
+			Actor_Says(kActorMcCoy, 385, 9); //00-0385.AUD	I'm looking for a girl about 14 years old with pink hair. You seen her?
+		} else {
+			Actor_Says(kActorMcCoy, 3510, 15);
+		}
+		} else {
+			Actor_Says(kActorMcCoy, 3510, 15);
+		}
 		Actor_Modify_Friendliness_To_Other(kActorEarlyQ, kActorMcCoy, -1);
 		Actor_Says_With_Pause(kActorEarlyQ, 530, 1.2f, kAnimationModeTalk); //18-0530.AUD	This ain’t no daycare center, General.
 		// Made it so if Crazylegs is a rep he doesn't make those creepy comments about Lucy. If Early Q is a rep he actually cares about the reps and would never hurt Lucy
 		// who is someone that the reps really care about.
 		if (_vm->_cutContent) {
 			if (!Game_Flag_Query(kFlagEarlyQIsReplicant)) {
-				Actor_Says(kActorEarlyQ, 540, 15); //18-0540.AUD	Of course, she ain’t half bad looking. My pappy always used to say ‘if there’s grass on the field, it’s time to play ball’.
+				if (Actor_Clue_Query(kActorMcCoy, kClueLucy)) {
+					Actor_Says(kActorEarlyQ, 540, 15); //18-0540.AUD	Of course, she ain’t half bad looking. My pappy always used to say ‘if there’s grass on the field, it’s time to play ball’.
+				}
 			}
 		} else {
 			Actor_Says(kActorEarlyQ, 540, 15); //18-0540.AUD	Of course, she ain’t half bad looking. My pappy always used to say ‘if there’s grass on the field, it’s time to play ball’.

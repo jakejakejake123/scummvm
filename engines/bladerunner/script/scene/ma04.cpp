@@ -563,9 +563,12 @@ void SceneScriptMA04::phoneCallWithSteele() {
 	if (_vm->_cutContent) {
 		Actor_Says(kActorSteele, 770, 3); //01-0770.AUD	That son of a bitch, Clovis, was climbing in and out of a manhole right next to the police station and nobody ever noticed.
 		Actor_Says(kActorMcCoy, 2655, 16); //00-2655.AUD	Figures. With incompetents like Guzza at the helm.
-		Actor_Says(kActorSteele, 790, 3); //01-0790.AUD	I think we can forget about Guzza. That guy’s gonna be fed to the barracudas.
-		Actor_Says(kActorMcCoy, 2660, 18); //00-2660.AUD	That breaks my heart.
-		Actor_Says(kActorSteele, 800, 3); //01-0800.AUD	I knew it would.
+		// Made it so Crystal only says Guzza is going to be fed to the barracudas if McCoy didn't tell Bryant that Guzza is dead when he submitted the evidence.
+		if (!Game_Flag_Query(kFlagMcCoyIsInnocent)) {
+			Actor_Says(kActorSteele, 790, 3); //01-0790.AUD	I think we can forget about Guzza. That guy’s gonna be fed to the barracudas.
+			Actor_Says(kActorMcCoy, 2660, 18); //00-2660.AUD	That breaks my heart.
+			Actor_Says(kActorSteele, 800, 3); //01-0800.AUD	I knew it would.
+		}
 	}
 	Actor_Says(kActorMcCoy, 2665, 13); //00-2665.AUD	We’re gonna air out the Reps together or what?
 	Actor_Says(kActorSteele, 810, 3);

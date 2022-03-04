@@ -38,7 +38,8 @@ void AIScriptKlein::Initialize() {
 
 bool AIScriptKlein::Update() {
 	if (_vm->_cutContent) {
-		if (Global_Variable_Query(kVariableChapter) > 3 && Actor_Query_Goal_Number(kActorKlein) < kGoalKleinAwayAtEndOfActThree) {
+		// Made it so Dino doesn't appear in act 3 since he has nothing else to give you at this point. In act 2 he can give you the lab analysis gold chain clue.
+		if (Global_Variable_Query(kVariableChapter) > 2 && Actor_Query_Goal_Number(kActorKlein) < kGoalKleinAwayAtEndOfActThree) {
 			Actor_Set_Goal_Number(kActorKlein, kGoalKleinAwayAtEndOfActThree);
 			return true;
 		}

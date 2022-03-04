@@ -347,7 +347,16 @@ void SceneScriptNR04::ActorChangedGoal(int actorId, int newGoal, int oldGoal, bo
 			Actor_Says(kActorEarlyQ, 200, 30);
 			Actor_Says(kActorEarlyQ, 210, 30);
 			Actor_Says(kActorEarlyQ, 220, 30);
-			Actor_Says_With_Pause(kActorMcCoy, 3425, 1.5f, 23);
+			// McCoy will only say that he has seen Clovis before if he has a clue which tells him of Clovis' appearance.
+			if (_vm->_cutContent) {
+				if (Actor_Clue_Query(kActorMcCoy, kClueAnimalMurderSuspect)
+					|| Actor_Clue_Query(kActorMcCoy, kClueMorajiInterview)
+					|| Actor_Clue_Query(kActorMcCoy, kClueClovisAtMoonbus)) {
+					Actor_Says_With_Pause(kActorMcCoy, 3425, 1.5f, 23); //00-3425.AUD	I’ve seen them before.
+					}
+			} else {
+				Actor_Says_With_Pause(kActorMcCoy, 3425, 1.5f, 23);
+			}
 			Actor_Says(kActorMcCoy, 3430, kAnimationModeTalk);
 			Actor_Says(kActorEarlyQ, 240, 30);
 			Actor_Says(kActorMcCoy, 3435, kAnimationModeTalk);

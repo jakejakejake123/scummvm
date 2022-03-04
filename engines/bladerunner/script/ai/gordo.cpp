@@ -1947,9 +1947,9 @@ void AIScriptGordo::dialogue1() {
 	) {
 		DM_Add_To_List_Never_Repeat_Once_Selected(780, 5, 5, 5); // BLOND WOMAN
 	}
+	// Made it so McCoy can only ask about Lucy if she is still alive.
 	if (_vm->_cutContent) {
-		if (Actor_Clue_Query(kActorMcCoy, kClueLucy) 
-		|| Actor_Clue_Query(kActorMcCoy, kClueLucyWithDektora)) {
+		if (Actor_Query_Goal_Number(kActorLucy) != kGoalLucyGone) {
 			DM_Add_To_List_Never_Repeat_Once_Selected(790, 5, 5, 5); // LUCY
 		}
 	} else if (Actor_Clue_Query(kActorMcCoy, kClueLucy)) {
@@ -2017,21 +2017,39 @@ void AIScriptGordo::dialogue1() {
 		break;
 
 	case 790: // LUCY
-		Actor_Says(kActorMcCoy, 3245, kAnimationModeTalk);
-		Actor_Says(kActorGordo, 470, 17);
-		Actor_Says(kActorMcCoy, 3285, 16);
-		Actor_Says(kActorGordo, 480, 13);
-		Actor_Says(kActorGordo, 490, 12);
-		Actor_Says(kActorGordo, 500, 13);
-		Actor_Says(kActorMcCoy, 3290, 16);
-		Actor_Says(kActorGordo, 510, 15);
+	// Gordo says the same dialogue about Lucy that he says about Dektora. This is a problem since he calls Lucy 'a woman and a babe' and that he will 'keep her for himself' and it comes off as not only inconsistent but also creepy.
+	// If Clovis heard Gordo say this or there was a hint of it, Gordo would not only not be helping the reps but Clovis would probably kill him so these lines will be removed for consistency  
+	if (_vm->_cutContent) {
+		if (Actor_Clue_Query(kActorMcCoy, kClueLucy) 
+			|| Actor_Clue_Query(kActorMcCoy, kClueLucyWithDektora)) {
+				Actor_Says(kActorMcCoy, 3245, kAnimationModeTalk);
+			} else {
+				Actor_Says(kActorMcCoy, 385, 9); //00-0385.AUD	I'm looking for a girl about 14 years old with pink hair. You seen her?
+			}
+		} else {
+			Actor_Says(kActorMcCoy, 3245, kAnimationModeTalk);
+		}
+		if (_vm->_cutContent) {
+			Actor_Says(kActorGordo, 470, 17); //02-0470.AUD	I think I slept with her just last night!
+			Actor_Says(kActorMcCoy, 3285, 16);
+			Actor_Says(kActorGordo, 480, 13); //02-0480.AUD	Just kidding, baby. Tell you the truth
+			Actor_Says(kActorMcCoy, 380, 16); //02-0380.AUD	You are one hell of a suspicious cat, McCoy.
+		} else {
+			Actor_Says(kActorGordo, 470, 17);
+			Actor_Says(kActorMcCoy, 3285, 16);
+			Actor_Says(kActorGordo, 480, 13);
+			Actor_Says(kActorGordo, 490, 12);
+			Actor_Says(kActorGordo, 500, 13);
+			Actor_Says(kActorMcCoy, 3290, 16);
+			Actor_Says(kActorGordo, 510, 15);
 #if BLADERUNNER_ORIGINAL_BUGS
 		Actor_Says(kActorMcCoy, 3295, 14);
 #else
 		// McCoy is kind of interrupted here
-		Actor_Says_With_Pause(kActorMcCoy, 3295, 0.0f, 14);
+			Actor_Says_With_Pause(kActorMcCoy, 3295, 0.0f, 14);
 #endif // BLADERUNNER_ORIGINAL_BUGS
-		Actor_Says(kActorGordo, 520, 12);
+			Actor_Says(kActorGordo, 520, 12);
+		}
 		Actor_Modify_Friendliness_To_Other(kActorGordo, kActorMcCoy, -1);
 		break;
 

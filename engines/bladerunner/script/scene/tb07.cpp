@@ -277,20 +277,40 @@ void SceneScriptTB07::McCoyTalkWithRachaelAndTyrell() {
 	Actor_Says_With_Pause(kActorMcCoy, 5350, 0.0f, 18);
 	Actor_Says(kActorRachael, 580, 16);
 	Actor_Says(kActorMcCoy, 5355, 16);
-	Actor_Says(kActorRachael, 590, 17);
-	Actor_Says(kActorMcCoy, 5360, 17);
-	Actor_Says(kActorMcCoy, 5365, 13);
-	Actor_Says_With_Pause(kActorRachael, 600, 1.0f, 12);
-	Actor_Says(kActorMcCoy, 5370, kAnimationModeTalk);
-	Loop_Actor_Walk_To_XYZ(kActorRachael, -24.15f, 12.0f, -10.84f, 0, false, false, false);
-	Actor_Says(kActorRachael, 610, 13);
-	Actor_Face_Actor(kActorMcCoy, kActorRachael, true);
-	Actor_Says(kActorMcCoy, 5375, 18);
-	Actor_Says(kActorMcCoy, 5380, 19);
-	Actor_Face_Actor(kActorRachael, kActorMcCoy, true);
-	Actor_Says(kActorRachael, 620, 18);
-	Actor_Says_With_Pause(kActorMcCoy, 5385, 2.0f, 12);
-	Actor_Says_With_Pause(kActorMcCoy, 5390, 2.0f, 14);
+	Actor_Says(kActorRachael, 590, 17); //57-0590.AUD	I can't tell you who killed him, if that's what you're asking.
+	Actor_Says(kActorMcCoy, 5360, 17); //00-5360.AUD	We've already got a suspect.
+	// Made it so McCoy only asks Rachel about why the suspect tried to access replicant DNA information if he has the attempted file acess clue.
+	if (_vm->_cutContent) {
+		if (!Actor_Clue_Query(kActorMcCoy, kClueAttemptedFileAccess)) {
+			Actor_Says(kActorRachael, 470, 16);//57-0470.AUD	I hope you get the answers you're looking for, McCoy.
+			Actor_Says(kActorMcCoy, 4270, 18); // 00-4270.AUD	I got some more questions for you.
+		} else {
+			Actor_Says(kActorMcCoy, 5365, 13);  //00-5365.AUD	What I want to know is why the killer would be interested in Replicant DNA information.
+			Actor_Says_With_Pause(kActorRachael, 600, 1.0f, 12); //57-0600.AUD	That's a stupid question.
+			Actor_Says(kActorMcCoy, 5370, kAnimationModeTalk); //00-5370.AUD	Oh, yeah? Why is that?
+			Loop_Actor_Walk_To_XYZ(kActorRachael, -24.15f, 12.0f, -10.84f, 0, false, false, false);
+			Actor_Says(kActorRachael, 610, 13); //57-0610.AUD	Your suspect is obviously a Replicant. A very dangerous one.
+			Actor_Face_Actor(kActorMcCoy, kActorRachael, true);
+			Actor_Says(kActorMcCoy, 5375, 18); //00-5375.AUD	I thought Replicants were safe! “More human than human”.
+			Actor_Says(kActorMcCoy, 5380, 19); //00-5380.AUD	Isn't Dr. Tyrell pushing to make it legal to use Rep labor to clean up the Kipple?
+			Actor_Face_Actor(kActorRachael, kActorMcCoy, true);
+			Actor_Says(kActorRachael, 620, 18); //57-0620.AUD	Are we here to discuss corporate policy or Marcus Eisenduller's murder?
+			Actor_Says_With_Pause(kActorMcCoy, 5385, 2.0f, 12); //00-5385.AUD	A little of both.
+		}
+	} else {
+		Actor_Says(kActorMcCoy, 5365, 13);  //00-5365.AUD	What I want to know is why the killer would be interested in Replicant DNA information.
+		Actor_Says_With_Pause(kActorRachael, 600, 1.0f, 12); //57-0600.AUD	That's a stupid question.
+		Actor_Says(kActorMcCoy, 5370, kAnimationModeTalk); //00-5370.AUD	Oh, yeah? Why is that?
+		Loop_Actor_Walk_To_XYZ(kActorRachael, -24.15f, 12.0f, -10.84f, 0, false, false, false);
+		Actor_Says(kActorRachael, 610, 13); //57-0610.AUD	Your suspect is obviously a Replicant. A very dangerous one.
+		Actor_Face_Actor(kActorMcCoy, kActorRachael, true);
+		Actor_Says(kActorMcCoy, 5375, 18); //00-5375.AUD	I thought Replicants were safe! “More human than human”.
+		Actor_Says(kActorMcCoy, 5380, 19); //00-5380.AUD	Isn't Dr. Tyrell pushing to make it legal to use Rep labor to clean up the Kipple?
+		Actor_Face_Actor(kActorRachael, kActorMcCoy, true);
+		Actor_Says(kActorRachael, 620, 18); //57-0620.AUD	Are we here to discuss corporate policy or Marcus Eisenduller's murder?
+		Actor_Says_With_Pause(kActorMcCoy, 5385, 2.0f, 12); //00-5385.AUD	A little of both.
+	}
+	Actor_Says_With_Pause(kActorMcCoy, 5390, 2.0f, 14); //00-5390.AUD	You heard about the moonbus hijacking?
 	Actor_Says(kActorMcCoy, 5395, 15);
 	Actor_Says_With_Pause(kActorRachael, 630, 0.0f, 14);
 	Actor_Says(kActorMcCoy, 5400, 18); //00-5400.AUD	I'm surprised you are not doing spin control.

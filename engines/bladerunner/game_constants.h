@@ -1061,13 +1061,13 @@ enum Flags {
 	kFlagNR09toNR08                           = 615,
 	kFlagMcCoyCapturedByHolloway              = 616,
 	kFlagSpinnerMissing                       = 617,
-	// 618 is never used
-	// 619 is never used
+	//
+	//
 	kFlagNR08Available                        = 620,
-	// 621 is never used
+	//	
 	kFlagNR08TouchedDektora                   = 622,
 	kFlagUG07Empty                            = 623,
-	// 624 is never used
+	kFlagKleinCarIdentityTalk				  = 624,	
 	kFlagTB07TyrellMeeting                    = 625,
 	// 626 is never used
 	kFlagNR01McCoyIsDrugged                   = 627,

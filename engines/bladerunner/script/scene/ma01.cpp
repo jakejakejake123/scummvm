@@ -142,6 +142,12 @@ bool SceneScriptMA01::ClickedOnExit(int exitId) {
 				}
 				Scene_Exits_Disable();
 			}
+			// Made it so if McCoy retired Zuben and exited the warehouse through the back skipping the conversation with McCoy Gaff will meet McCoy on the roof.
+		} else if (_vm->_cutContent 
+		&& Game_Flag_Query(kFlagZubenRetired)
+		&& !Actor_Clue_Query(kActorMcCoy, kClueGaffsInformation)
+		&& !Loop_Actor_Walk_To_XYZ(kActorMcCoy, 1446.0f, 0.0f, -725.0f, 72, true, false, false)) {
+			Actor_Set_Goal_Number(kActorGaff, kGoalGaffMA07Wait);
 		} else if (!Loop_Actor_Walk_To_XYZ(kActorMcCoy, 1446.0f, 0.0f, -725.0f, 12, true, false, false)) {
 			Ambient_Sounds_Remove_All_Non_Looping_Sounds(true);
 			Ambient_Sounds_Remove_All_Looping_Sounds(1u);

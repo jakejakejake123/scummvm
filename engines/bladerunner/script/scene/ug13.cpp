@@ -281,7 +281,8 @@ bool SceneScriptUG13::ClickedOnExit(int exitId) {
 			Footstep_Sound_Override_Off();
 			// This path is unreachable in the original game
 			// Restore this condition only for hard mode. Probably occurs before meeting with Guzza is set
-			if (_vm->_cutContent && Query_Difficulty_Level() == kGameDifficultyHard) {
+			// Since this situation always now happens in cut content mode it will only play in hard mode for the original game.
+			if (!_vm->_cutContent && Query_Difficulty_Level() == kGameDifficultyHard) {
 				if (!Game_Flag_Query(kFlagCallWithGuzza)) {
 					// Passage to UG18 is locked
 					// These lines of dialogue are not in the code of the original game
@@ -505,7 +506,12 @@ void SceneScriptUG13::dialogueWithHomeless1() {
 		Actor_Says(kActorTransient, 180, 32); // Yeah! And the guy with the muscles and the funny hair.
 		Actor_Says(kActorMcCoy, 5630, 18); // Dreadlocks?
 		Actor_Says(kActorTransient, 190, 32); // Right! Seen them twice. And a two headed guy and a fat man.
-		Actor_Says(kActorMcCoy, 5635, 15); // Fat man?
+		// Made it so if McCoy never interacted with the homeless man in act 1 he doesn't mention chasing Zuben since the homeless man wouldn't know. McCoy now simply asks if he knows him.
+		if (_vm->_cutContent) {
+			Actor_Says(kActorMcCoy, 3230, 15); //00-3230.AUD	You know the chef at Howie’s?
+		} else {
+			Actor_Says(kActorMcCoy, 5635, 15); //00-5635.AUD	Fat man? The one I was chasing from the sushi bar.
+		} 
 		Actor_Says(kActorTransient, 200, 31); // Nah, the other fat man. You know him.
 		if (_vm->_cutContent) {
 			Actor_Says(kActorTransient, 210, 31); // Saw him wail...

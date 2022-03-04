@@ -243,11 +243,22 @@ bool SceneScriptCT11::ClickedOn2DRegion(int region) {
 			 && !Actor_Clue_Query(kActorMcCoy, kClueCar)
 			) {
 				Actor_Voice_Over(510, kActorVoiceOver);
-				Actor_Voice_Over(520, kActorVoiceOver);
-				Actor_Voice_Over(530, kActorVoiceOver);
-				Actor_Voice_Over(540, kActorVoiceOver);
-				Actor_Clue_Acquire(kActorMcCoy, kClueCar, false, -1);
-				Scene_2D_Region_Remove(1);
+				// Made it so McCoy only gets the car identity clue if he was told by Dino how to identify the car by using the vehicle identification number.
+				if (_vm->_cutContent) {
+					if (Game_Flag_Query(kFlagKleinCarIdentityTalk)) {
+						Actor_Voice_Over(520, kActorVoiceOver);
+						Actor_Voice_Over(530, kActorVoiceOver);
+						Actor_Voice_Over(540, kActorVoiceOver);
+						Actor_Clue_Acquire(kActorMcCoy, kClueCar, false, -1);
+						Scene_2D_Region_Remove(1);
+					}
+				} else {
+					Actor_Voice_Over(520, kActorVoiceOver);
+					Actor_Voice_Over(530, kActorVoiceOver);
+					Actor_Voice_Over(540, kActorVoiceOver);
+					Actor_Clue_Acquire(kActorMcCoy, kClueCar, false, -1);
+					Scene_2D_Region_Remove(1);
+				}
 #if !BLADERUNNER_ORIGINAL_BUGS
 				Scene_2D_Region_Remove(3);
 				Scene_2D_Region_Remove(4);

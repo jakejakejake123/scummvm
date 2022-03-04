@@ -173,6 +173,14 @@ void SceneScriptMA07::PlayerWalkedIn() {
 		Actor_Voice_Over(1400, kActorVoiceOver);
 		Delay(1000);
 		Game_Flag_Reset(kFlagMcCoyFreedOfAccusations);
+		// If McCoy retired Luther and Lance in act 4 and he cleared his name he will receive 400 chinyen at the start of act 5.
+		if (_vm->_cutContent) {
+			if (Actor_Query_Goal_Number(kActorLuther) > kGoalLutherGone) {
+				if (Query_Difficulty_Level() != kGameDifficultyEasy) {
+				Global_Variable_Increment (kVariableChinyen, 400);
+				}
+			}
+		}
 		Game_Flag_Set(kFlagMA06ToMA02);
 		Set_Enter(kSetMA02_MA04, kSceneMA02);
 	}
@@ -196,8 +204,8 @@ void SceneScriptMA07::PlayerWalkedIn() {
 			Music_Play(kMusicBRBlues, 52, 0, 2, -1, kMusicLoopPlayOnce, 0);
 			Actor_Face_Actor(kActorMcCoy, kActorSteele, true);
 			Actor_Says(kActorMcCoy, 6215, 13); //00-6215.AUD	I plan to. I’m going home.
-			// If McCoy doesn't retire at least 6 reps Crystal teases him.
-			if (Actor_Query_Friendliness_To_Other(kActorRunciter, kActorMcCoy) > 67) {
+			// If McCoy doesn't retire at least 5 reps Crystal teases him.
+			if (Actor_Query_Friendliness_To_Other(kActorRunciter, kActorMcCoy) > 64) {
 				Actor_Says(kActorSteele, 2650, 14); //01-2650.AUD	No wonder you can’t afford a better suit.
 				Actor_Says(kActorSteele, 2660, 15); //01-2660.AUD	Ever think of a new line of work?
 				Actor_Says(kActorSteele, 2670, 13); //01-2670.AUD	Maybe you’ll have better luck finding that than all those skin-jobs that are running roughshod over you.
@@ -292,8 +300,8 @@ void SceneScriptMA07::PlayerWalkedIn() {
 				Actor_Says(kActorMcCoy, 6350, 16); //00-6350.AUD	What’s the point? You are not gonna believe a word I say.
 				Actor_Says(kActorSteele, 2780, 13); //01-2780.AUD	Do yourself a favor, Slim. Turn yourself in. Guzza will give you a fair shake.
 				Actor_Says(kActorMcCoy, 6355, 14); //00-6355.AUD	Like hell!
-				// Made it so if McCoy has retired 4 replicants Steele is nicer to him.
-				if (Actor_Query_Friendliness_To_Other(kActorSteele, kActorMcCoy) > 68) {
+				// Made it so if McCoy has retired 5 replicants Steele is nicer to him.
+				if (Actor_Query_Friendliness_To_Other(kActorSteele, kActorMcCoy) > 64) {
 					Actor_Says(kActorSteele, 2790, 12); //01-2790.AUD	I guarantee it. I’ll put you on the Machine myself.
 					Actor_Says(kActorMcCoy, 6360, 13); //00-6360.AUD	Hey, you’re always crowing about the “magic”. What does it tell you now
 					Actor_Says(kActorSteele, 1390, 13); //01-1390.AUD	I ain’t sure yet. I like to be sure.
@@ -305,7 +313,7 @@ void SceneScriptMA07::PlayerWalkedIn() {
 				Actor_Says(kActorMcCoy, 6335, 13); //00-6335.AUD	Maybe he just doesn’t want to be found.
 				Actor_Says(kActorSteele, 2740, 14); //01-2740.AUD	That’s a big maybe.
 				Actor_Says(kActorMcCoy, 6340, 15); //00-6340.AUD	A likely maybe, don’t you think?
-				if (Actor_Query_Friendliness_To_Other(kActorSteele, kActorMcCoy) < 68) {
+				if (Actor_Query_Friendliness_To_Other(kActorSteele, kActorMcCoy) < 64) {
 					Actor_Says(kActorSteele, 2800, 15); //01-2800.AUD	You don’t want to know what I think.
 					Actor_Says(kActorSteele, 2810, 15); //01-2810.AUD	Beat it, Slim. Take it on the heel. Before I regret this.
 				} else {

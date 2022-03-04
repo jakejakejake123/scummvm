@@ -300,7 +300,7 @@ void SceneScriptRC02::dialogueWithRunciter() {
 				Actor_Says(kActorMcCoy, 4575, kAnimationModeTalk); //	00-4575.AUD	I can tell you're crushed.
 				Actor_Says(kActorRunciter, 530, 17); //15-0530.AUD	My precious one. She was my baby.
 				Actor_Says(kActorMcCoy, 2305, 13); //00-2305.AUD	I’m sorry.
-				Actor_Modify_Friendliness_To_Other(kActorRunciter, kActorMcCoy, +5);
+				Actor_Modify_Friendliness_To_Other(kActorRunciter, kActorMcCoy, 5);
 			}	
 		}
 		}
@@ -308,15 +308,31 @@ void SceneScriptRC02::dialogueWithRunciter() {
 		break;
 
 	case 10: // LUCY
+	// In the cutscene at the beginning of act 3 McCoy talks to Lucy. He recognises her and mentions that he saw her things at Runciters. However it is possible that the player never went to the back area of Runciters where her things are
+	// or received any clues that described Lucys appearance so this scene will not make sense to some players. I have corrected this by making sure when the player first clicks on Runciter which they must do to advance the game
+	// McCoy automatically asks Runciter about Lucys appearance and where her desks is which he then he automatically walks over to. The Lucy topic will also play out a little differently because of this with Runciter not showing you Lucys 
+	// desks and certain parts of the conversation not playing out because they have been said already.
+	if (_vm->_cutContent) {
+		Actor_Says(kActorMcCoy, 4760, 13);//00-4760.AUD	About the girl.
+		Actor_Face_Actor(kActorRunciter, kActorMcCoy, true);
+		Actor_Says(kActorRunciter, 590, 14); //15-0590.AUD	What? Who?
+		Actor_Says(kActorMcCoy, 4775, 14);//00-4775.AUD	Lucy.
+		Actor_Says(kActorMcCoy, 8514, 15);//00-8514.AUD	Got anything new to tell me?
+	} else {
 		Actor_Says(kActorMcCoy, 4585, 13);
+	}
 		Actor_Face_Actor(kActorRunciter, kActorMcCoy, true);
 		if (Game_Flag_Query(kFlagLucyIsReplicant)) {
 			Actor_Says(kActorRunciter, 250, 13);
-			Actor_Says(kActorRunciter, 270, 13);
+			if (!_vm->_cutContent) {
+				Actor_Says(kActorRunciter, 270, 13); //15-0270.AUD	She's about fourteen years old with pink hair. A very attractive young thing.
+			}
 			Actor_Clue_Acquire(kActorMcCoy, kClueRunciterInterviewB1, true, kActorRunciter);
 		} else {
 			Actor_Says(kActorRunciter, 260, 14);
-			Actor_Says(kActorRunciter, 270, 13);
+			if (!_vm->_cutContent) {
+				Actor_Says(kActorRunciter, 270, 13); //15-0270.AUD	She's about fourteen years old with pink hair. A very attractive young thing.
+			}
 			if (!_vm->_cutContent) {
 				Actor_Clue_Acquire(kActorMcCoy, kClueRunciterInterviewB2, true, kActorRunciter);
 			}
@@ -324,16 +340,8 @@ void SceneScriptRC02::dialogueWithRunciter() {
 		Actor_Says(kActorMcCoy, 4645, 13);
 		Actor_Says(kActorRunciter, 280, 13);
 		Actor_Says(kActorRunciter, 290, 13);
-		// Added in some code so McCoy only asks Runciter if he treated Lucy well depending on their friendliness status. 
-		if (_vm->_cutContent) {
-			if (Actor_Query_Friendliness_To_Other(kActorRunciter, kActorMcCoy) < 50) {
-				Actor_Says(kActorMcCoy, 4650, 18);
-				Actor_Says(kActorRunciter, 320, 13);
-			}
-		} else {
-			Actor_Says(kActorMcCoy, 4650, 18);
-			Actor_Says(kActorRunciter, 320, 13);
-		}
+		Actor_Says(kActorMcCoy, 4650, 18);
+		Actor_Says(kActorRunciter, 320, 13);
 		if (_vm->_cutContent) {
 			Actor_Says(kActorMcCoy, 4655, 15);
 			Actor_Says(kActorRunciter, 330, 13); // 15-0330.AUD	I'm the only one who handles my animals, detective.
@@ -345,12 +353,14 @@ void SceneScriptRC02::dialogueWithRunciter() {
 				Actor_Says(kActorRunciter, 340, 14); // 15-0340.AUD	Unskilled labor, mostly. She was perfect for that. As if she were made for it.
 			}
 		}
-		Actor_Says(kActorMcCoy, 4665, 13);
-		Actor_Face_Object(kActorRunciter, "CURTAIN", true);
-		Actor_Says(kActorRunciter, 350, 13);
-		Actor_Face_Actor(kActorRunciter, kActorMcCoy, true);
-		Scene_Exit_Add_2D_Exit(kRC02ExitRC51, 265, 58, 346, 154, 0);
-		Game_Flag_Set(kFlagRC51Available);
+		if (!_vm->_cutContent) {
+			Actor_Says(kActorMcCoy, 4665, 13);
+			Actor_Face_Object(kActorRunciter, "CURTAIN", true);
+			Actor_Says(kActorRunciter, 350, 13);
+			Actor_Face_Actor(kActorRunciter, kActorMcCoy, true);
+			Scene_Exit_Add_2D_Exit(kRC02ExitRC51, 265, 58, 346, 154, 0);
+			Game_Flag_Set(kFlagRC51Available);
+		}
 		break;
 
 	case 20: // REFERENCE
@@ -376,6 +386,28 @@ void SceneScriptRC02::dialogueWithRunciter() {
 				Item_Pickup_Spin_Effect(kModelAnimationReferenceLetter, 357, 228);
 				Actor_Says(kActorRunciter, 1700, 13);
 				Actor_Clue_Acquire(kActorMcCoy, kClueReferenceLetter, true, kActorRunciter);
+				// If McCoy doesn't have the shell casings yet and Runciter likes him Runciter will show McCoy where the shell casings are and give them to him.
+				Actor_Says(kActorMcCoy, 3935, 14);	// 00-3935.AUD	Thanks.
+				Actor_Says(kActorMcCoy, 4130, 13); //00-4130.AUD	Anything else?
+				if (Actor_Clue_Query(kActorMcCoy, kClueShellCasings)) {
+					Actor_Says(kActorRunciter, 960, 13); //15-0960.AUD	No.
+				} else {
+					Actor_Says(kActorRunciter, 1600, 13); //15-1600.AUD	There is one thing, yes. I don't know if it's important but here it is.
+					Player_Loses_Control();
+					Loop_Actor_Walk_To_XYZ(kActorRunciter, -45.61, -1238.70, 108445.07, 0, true, false, false);
+					Actor_Face_Actor(kActorRunciter, kActorMcCoy, true);
+					Loop_Actor_Walk_To_Actor(kActorMcCoy, kActorRunciter, 24, true, false);
+					Actor_Face_Actor(kActorMcCoy, kActorRunciter, true);
+					Actor_Clue_Acquire(kActorMcCoy, kClueShellCasings, true, kActorRunciter);
+					Game_Flag_Set(kFlagRC02ShellCasingsTaken);
+					Item_Remove_From_World(kItemShellCasingA);
+					Item_Remove_From_World(kItemShellCasingB);
+					Item_Remove_From_World(kItemShellCasingC);
+					Item_Pickup_Spin_Effect(kModelAnimationShellCasings, 395, 352);
+					Actor_Says(kActorRunciter, 1700, 13); //15-1700.AUD	Here you are.
+					Actor_Voice_Over(1960, kActorVoiceOver); //99-1960.AUD	Big caliber. Possibly Off-World combat weaponry. Ballistics might give me a fix on it.
+					Player_Gains_Control();
+				}				
 			}
 		} else {
 			Actor_Says(kActorRunciter, 360, 13);
@@ -585,10 +617,26 @@ bool SceneScriptRC02::ClickedOnActor(int actorId) {
 			Actor_Says(kActorMcCoy, 4565, 13);
 			Actor_Says(kActorRunciter, 60, 14);
 			Actor_Says(kActorMcCoy, 4570, 18);
-			Actor_Says(kActorRunciter, 70, 13);
-			Game_Flag_Set(kFlagRC02RunciterInterview);
-			Actor_Clue_Acquire(kActorMcCoy, kClueRunciterInterviewA, true, kActorRunciter);
-			AI_Movement_Track_Unpause(kActorRunciter);
+			Actor_Says(kActorRunciter, 70, 13); //15-0070.AUD	Big and scary and absolutely malevolent.
+			// The altered part of the conversation that I mentioned above when you first click on Runciter.
+			if (_vm->_cutContent) {
+				Actor_Says(kActorMcCoy, 4585, 13); //00-4585.AUD	Tell me about this Lucy.
+				Actor_Says(kActorRunciter, 270, 13); //15-0270.AUD	She's about fourteen years old with pink hair. A very attractive young thing.
+				Actor_Says(kActorMcCoy, 4665, 13); //00-4665.AUD	She got a desk or some place where she worked?
+				Actor_Face_Object(kActorRunciter, "CURTAIN", true);
+				Actor_Says(kActorRunciter, 350, 13); //15-0350.AUD	She used to eat over there.
+				Actor_Face_Actor(kActorRunciter, kActorMcCoy, true);
+				Scene_Exit_Add_2D_Exit(kRC02ExitRC51, 265, 58, 346, 154, 0);
+				Game_Flag_Set(kFlagRC51Available);
+				Game_Flag_Set(kFlagRC02RunciterInterview);
+				Actor_Clue_Acquire(kActorMcCoy, kClueRunciterInterviewA, true, kActorRunciter);
+				AI_Movement_Track_Unpause(kActorRunciter);
+				Player_Loses_Control();
+				Loop_Actor_Walk_To_XYZ(kActorMcCoy, -20.2f, -1238.73f, 108152.73f, 0, true, false, false);
+				Async_Actor_Walk_To_XYZ(kActorMcCoy, -8.87f, -1238.89f, 108076.27f, 0, false);
+				Set_Enter(kSetRC02_RC51, kSceneRC51);
+				Player_Gains_Control();
+			}
 			return true;
 		}
 

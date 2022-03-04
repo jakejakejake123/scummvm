@@ -73,6 +73,12 @@ void AIScriptGaff::CompletedMovementTrack() {
 		Actor_Says(kActorMcCoy, 670, kAnimationModeTalk);
 		Actor_Says(kActorGaff, 10, kAnimationModeTalk);
 		Actor_Says(kActorMcCoy, 675, kAnimationModeTalk);
+		Actor_Says(kActorGaff, 20, kAnimationModeTalk);
+		Actor_Says(kActorMcCoy, 680, kAnimationModeTalk);
+		Actor_Says(kActorGaff, 30, kAnimationModeTalk);
+		Actor_Says(kActorMcCoy, 685, kAnimationModeTalk);
+		Actor_Says(kActorGaff, 40, kAnimationModeTalk);
+		Actor_Says(kActorMcCoy, 690, kAnimationModeTalk);
 		if (Game_Flag_Query(kFlagZubenRetired)) {
 			Actor_Says(kActorGaff, 50, kAnimationModeTalk);
 			Actor_Says(kActorMcCoy, 695, kAnimationModeTalk);
@@ -90,16 +96,12 @@ void AIScriptGaff::CompletedMovementTrack() {
 			Actor_Says(kActorMcCoy, 705, kAnimationModeTalk);
 			Actor_Says(kActorGaff, 100, kAnimationModeTalk);
 			Actor_Clue_Acquire(kActorGaff, kClueMcCoyLetZubenEscape, true, -1);
+			if (_vm->_cutContent) {
+				Actor_Clue_Acquire(kActorMcCoy, kClueMcCoyLetZubenEscape, true, kActorGaff);
+			}
 		}
-		Actor_Says(kActorGaff, 20, kAnimationModeTalk);
-		Actor_Says(kActorMcCoy, 680, kAnimationModeTalk);
-		Actor_Says(kActorGaff, 30, kAnimationModeTalk);
-		Actor_Says(kActorMcCoy, 685, kAnimationModeTalk);
-		Actor_Says(kActorGaff, 40, kAnimationModeTalk);
-		Actor_Says(kActorMcCoy, 690, kAnimationModeTalk);
 		Actor_Clue_Acquire(kActorMcCoy, kClueGaffsInformation, true, kActorGaff);
 		CDB_Set_Crime(kClueZubenSquadPhoto, kCrimeMoonbusHijacking);
-		Actor_Clue_Acquire(kActorGaff, kClueMcCoyRetiredZuben, true, -1);
 		Game_Flag_Set(kFlagGaffApproachedMcCoyAboutZuben);
 		Player_Gains_Control();
 		Actor_Set_Goal_Number(kActorGaff, kGoalGaffMA01Leave);
@@ -360,11 +362,11 @@ bool AIScriptGaff::GoalChanged(int currentGoalNumber, int newGoalNumber) {
 				Actor_Says(kActorMcCoy, 8990, 14); //00-8990.AUD	What have you got there?
 				Delay (1000);
 				Actor_Says(kActorMcCoy, 1800, 15); //00-1800.AUD	No, wait!
-				Sound_Play(kSfxLGCAL1, 100, 0, 0, 50);
-				Actor_Force_Stop_Walking(kActorMcCoy);
+				Actor_Face_Actor(kActorGaff, kActorMcCoy, true);
+				Actor_Change_Animation_Mode(kActorGaff, kAnimationModeCombatAttack);
+				Sound_Play(kSfxSMCAL3, 100, 0, 0, 50);
 				Actor_Change_Animation_Mode(kActorMcCoy, kAnimationModeDie);
-				Player_Loses_Control();
-				Actor_Retired_Here(kActorMcCoy, 6, 6, true, kActorGaff);
+				Actor_Retired_Here(kActorMcCoy, 12, 12, true, -1);
 			} else {
 				Actor_Says_With_Pause(kActorGaff, 140, 1.0f, 14);
 				Loop_Actor_Walk_To_Actor(kActorMcCoy, kActorGaff, 36, false, false);

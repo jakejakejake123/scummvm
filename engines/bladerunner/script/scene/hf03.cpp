@@ -143,13 +143,24 @@ void SceneScriptHF03::dialogueWithLucy() {
 		Actor_Says(kActorLucy, 250, 12);
 		Actor_Says(kActorLucy, 260, 13);
 		Actor_Says(kActorLucy, 270, 19);
-		Actor_Says(kActorMcCoy, 1665, 18);
-		Actor_Says(kActorLucy, 280, 13);
-		Actor_Says(kActorMcCoy, 1670, 12);
-		Actor_Says(kActorLucy, 290, 14);
-		Actor_Says(kActorLucy, 300, 16);
-		Actor_Says(kActorMcCoy, 1675, 12);
-		Actor_Says(kActorLucy, 310, 13);
+		// Made it so McCoy only asks Lucy if all the animals were real if he hasn't received the lab results which confirms that some of the animals were fake.
+		if (_vm->_cutContent) {
+			if (!Actor_Clue_Query(kActorMcCoy, kClueLabCorpses)) {
+				Actor_Says(kActorMcCoy, 1665, 18); //00-1665.AUD	So, all the animals were real?
+				Actor_Says(kActorLucy, 280, 13); //06-0280.AUD	Mr. Runciter also used to buy some of the… others.
+				Actor_Says(kActorMcCoy, 1670, 12); //00-1670.AUD	Artificial?
+				Actor_Says(kActorLucy, 290, 14); //06-0290.AUD	He used to tell me that he was protected.
+				Actor_Says(kActorLucy, 300, 16); //06-0300.AUD	That they came from somebody close to the source.
+			}
+		} else {
+			Actor_Says(kActorMcCoy, 1665, 18); //00-1665.AUD	So, all the animals were real?
+			Actor_Says(kActorLucy, 280, 13); //06-0280.AUD	Mr. Runciter also used to buy some of the… others.
+			Actor_Says(kActorMcCoy, 1670, 12); //00-1670.AUD	Artificial?
+			Actor_Says(kActorLucy, 290, 14); //06-0290.AUD	He used to tell me that he was protected.
+			Actor_Says(kActorLucy, 300, 16); //06-0300.AUD	That they came from somebody close to the source.
+		}
+		Actor_Says(kActorMcCoy, 1675, 12); 
+		Actor_Says(kActorLucy, 310, 13);//06-0310.AUD	Father and uncle Zuben.
 		Actor_Clue_Acquire(kActorMcCoy, kClueLucyInterview, false, kActorLucy);
 		break;
 
@@ -170,7 +181,17 @@ bool SceneScriptHF03::ClickedOnActor(int actorId) {
 			Actor_Face_Actor(kActorMcCoy, kActorLucy, true);
 			if (!Game_Flag_Query(kFlagHF03LucyTalk)) {
 				Game_Flag_Set(kFlagHF03LucyTalk);
-				if (Game_Flag_Query(kFlagLucyIsReplicant)) {
+				// Made it so McCoy will only point out that Lucy is a replicant by saying she's sick if he found her incept photo at the twins place.
+				if (_vm->_cutContent) {
+					if (Actor_Clue_Query(kActorMcCoy, kClueLucyIncept)) {
+						Actor_Says(kActorMcCoy, 1605, 15);
+						Actor_Says(kActorLucy, 100, 12);
+						Actor_Says(kActorMcCoy, 1610, 14);
+					} else {
+						Actor_Says(kActorMcCoy, 1615, 16);
+						Actor_Says(kActorLucy, 110, 13);
+					}
+				} else if (Game_Flag_Query(kFlagLucyIsReplicant)) {
 					Actor_Says(kActorMcCoy, 1605, 15);
 					Actor_Says(kActorLucy, 100, 12);
 					Actor_Says(kActorMcCoy, 1610, 14);

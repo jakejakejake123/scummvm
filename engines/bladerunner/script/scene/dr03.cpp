@@ -379,7 +379,15 @@ void SceneScriptDR03::dialogueWithChew() {
 	if (Actor_Clue_Query(kActorMcCoy, kClueChewInterview)) {
 		DM_Add_To_List_Never_Repeat_Once_Selected(660, 5, 5, 5); // MORAJI
 	}
-	if (Actor_Clue_Query(kActorMcCoy, kClueTyrellInterview)) {
+	// Made it so McCoy only warns Chew about the reps if he is not surly or erratic.
+	if (_vm->_cutContent) {
+		if (Actor_Clue_Query(kActorMcCoy, kClueTyrellInterview)) {
+			if (Player_Query_Agenda() != kPlayerAgendaSurly 
+			|| Player_Query_Agenda() != kPlayerAgendaErratic) {
+				DM_Add_To_List_Never_Repeat_Once_Selected(670, 6, 5, 2); // TYRELL
+			}
+		}
+	} else if (Actor_Clue_Query(kActorMcCoy, kClueTyrellInterview)) {
 		DM_Add_To_List_Never_Repeat_Once_Selected(670, 6, 5, 2); // TYRELL
 	}
 	if (Game_Flag_Query(kFlagDR03ChewTalkExplosion)) {
@@ -452,6 +460,14 @@ void SceneScriptDR03::dialogueWithChew() {
 		Actor_Says(kActorMcCoy, 765, 12);
 		if (_vm->_cutContent) {
 			Actor_Says_With_Pause(kActorMcCoy, 785, 0.80f, 18);
+		}
+		if (_vm->_cutContent) {
+			if (Player_Query_Agenda() != kPlayerAgendaSurly 
+				|| Player_Query_Agenda() != kPlayerAgendaErratic) {
+				Actor_Says(kActorMcCoy, 790, 13);//00-0790.AUD	You might consider knocking off work early.
+			}
+		} else {
+			Actor_Says(kActorMcCoy, 790, 13);
 		}
 		Actor_Says(kActorMcCoy, 790, 13);
 		Actor_Says(kActorChew, 310, 12);

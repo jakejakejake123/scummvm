@@ -263,18 +263,21 @@ void SceneScriptUG16::dialogueWithLuther() {
 	DM_Add_To_List_Never_Repeat_Once_Selected(1400, 5, 6, 2); // REPLICANTS
 	// Made it so the lifespan option is only available when you ask the twins about their work and they mention that they are
 	// trying to extend the replicant lifespan.
+	// Made it so this option is only available if you had the interview with Tyrell. When you pick this option McCoy mentions that Tyrell said the 4 year lifespan for reps can not be extended, 
+	// which he would only know if he talked to Tyrell about it.
 	if (_vm->_cutContent) {
 		if (Game_Flag_Query(kFlagLutherLanceTalkWork)) {
-			DM_Add_To_List_Never_Repeat_Once_Selected(1420, 6, 4, 5); // LIFESPAN
+			if (Actor_Clue_Query(kActorMcCoy, kClueTyrellInterview)) {
+				DM_Add_To_List_Never_Repeat_Once_Selected(1420, 6, 4, 5); // LIFESPAN
+			}
 		}
+	} else {
+		DM_Add_To_List_Never_Repeat_Once_Selected(1420, 6, 4, 5); // LIFESPAN
 	}
 	DM_Add_To_List_Never_Repeat_Once_Selected(1410, 5, 4, 8); // WORK
 	if (Game_Flag_Query(kFlagUG16LutherLanceTalkReplicants)
 	 || Game_Flag_Query(kFlagUG16LutherLanceTalkHumans)
 	) {
-		if (!_vm->_cutContent) {
-			DM_Add_To_List_Never_Repeat_Once_Selected(1420, 6, 4, 5); // LIFESPAN
-		}
 		DM_Add_To_List_Never_Repeat_Once_Selected(1430, 6, 4, 5); // CLOVIS
 		DM_Add_To_List_Never_Repeat_Once_Selected(1440, 6, 4, 5); // VOIGT-KAMPFF
 	}
@@ -300,7 +303,20 @@ void SceneScriptUG16::dialogueWithLuther() {
 
 	switch (answer) {
 	case 1400: // REPLICANTS
-		Actor_Says(kActorMcCoy, 5730, 13);
+	// If Moraji is alive McCoy won't mention that the reps killed him.
+	if (_vm->_cutContent) {
+		if (Game_Flag_Query(kFlagMorajiAlive)) { 
+			Actor_Says(kActorMcCoy, 785, 13);//00-0785.AUD	There could be a group of Nexus-6s tracking down genetic designers.
+			if (Player_Query_Agenda() != kPlayerAgendaSurly 
+			|| Player_Query_Agenda() != kPlayerAgendaErratic) {
+				Actor_Says(kActorMcCoy, 790, 13);//00-0790.AUD	You might consider knocking off work early.
+			}
+		} else {
+			Actor_Says(kActorMcCoy, 5730, 13); //00-5730.AUD	The Reps that killed Marcus and Moraji. They’ll be looking for you.
+		}
+	} else {
+		Actor_Says(kActorMcCoy, 5730, 13); //00-5730.AUD	The Reps that killed Marcus and Moraji. They’ll be looking for you.
+	}
 		Actor_Face_Actor(kActorMcCoy, kActorLuther, true);
 		Actor_Says(kActorLuther, 100, 18);
 		Actor_Says(kActorMcCoy, 5775, 13);
@@ -356,7 +372,7 @@ void SceneScriptUG16::dialogueWithLuther() {
 		break;
 
 	case 1420: // LIFESPAN
-		Actor_Says(kActorMcCoy, 5740, 13);
+		Actor_Says(kActorMcCoy, 5740, 13); //00-5740.AUD	Tyrell says the four year lifespan can’t be extended.
 		Actor_Face_Actor(kActorMcCoy, kActorLuther, true);
 		Actor_Says(kActorLance, 180, 15);
 		Actor_Says(kActorLuther, 220, 13);
@@ -387,9 +403,21 @@ void SceneScriptUG16::dialogueWithLuther() {
 			Actor_Says(kActorLuther, 280, 15); //10-0280.AUD	We showed him how to get in through the basement.
 		}
 		Actor_Says(kActorMcCoy, 5815, 13); //00-5815.AUD	He’ll kill Tyrell, if he gets to him.
-		Actor_Says(kActorLance, 250, 16);
-		Actor_Says(kActorLuther, 290, 15);
-		Actor_Says(kActorLance, 260, 15);
+		// Made it so if the twins are replicants the have no remorse in regards to Clovis trying to kill Tyrell. If they are human Clovis' lied about his intentions and the twins believe
+		// that Clovis won't kill Tyrell.
+		if (_vm->_cutContent) {
+			if (Game_Flag_Query(kFlagLutherLanceIsReplicant)) {
+				Actor_Says(kActorLance, 250, 16);
+				Actor_Says(kActorLuther, 290, 15);
+				Actor_Says(kActorLance, 260, 15);
+			} else {
+				Actor_Says(kActorLuther, 190, 15);	//10-0190.AUD	Clovis said you’d say that.
+			}
+		} else {
+			Actor_Says(kActorLance, 250, 16);
+			Actor_Says(kActorLuther, 290, 15);
+			Actor_Says(kActorLance, 260, 15);
+		}
 		if (_vm->_cutContent) {
 			Actor_Clue_Acquire(kActorMcCoy, kClueSightingClovis, true, kActorLuther);
 		}

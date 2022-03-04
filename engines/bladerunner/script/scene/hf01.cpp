@@ -446,13 +446,20 @@ void SceneScriptHF01::PlayerWalkedIn() {
 
 	if (Game_Flag_Query(kFlagHF05PoliceArrived)) {
 		ADQ_Flush();
-		ADQ_Add(kActorOfficerGrayford, 280, kAnimationModeTalk);
+		// Made it so Grayford doesn't appear outside of Crazlegs place and only Leary will appear. Grayford is already waiting for McCoy in the sewers so it wouldn't make sense for Grayford to be in two places at once. 
+		if (!_vm->_cutContent) {
+			ADQ_Add(kActorOfficerGrayford, 280, kAnimationModeTalk);
+		}
 		Actor_Put_In_Set(kActorOfficerLeary, kSetHF01);
 		Actor_Set_At_XYZ(kActorOfficerLeary, 8.2f, 8.0f, -346.67f, 1021);
-		Actor_Put_In_Set(kActorOfficerGrayford, kSetHF01);
-		Actor_Set_At_XYZ(kActorOfficerGrayford, 51.21f, 8.0f, -540.78f, 796);
+		if (!_vm->_cutContent) {
+			Actor_Put_In_Set(kActorOfficerGrayford, kSetHF01);
+			Actor_Set_At_XYZ(kActorOfficerGrayford, 51.21f, 8.0f, -540.78f, 796);
+		}
 		Non_Player_Actor_Combat_Mode_On(kActorOfficerLeary, kActorCombatStateUncover, true, kActorMcCoy, 4, kAnimationModeCombatIdle, kAnimationModeCombatWalk, kAnimationModeCombatRun, 0, 0, 0, 100, 300, false);
-		Non_Player_Actor_Combat_Mode_On(kActorOfficerGrayford, kActorCombatStateUncover, true, kActorMcCoy, 4, kAnimationModeCombatIdle, kAnimationModeCombatWalk, kAnimationModeCombatRun, 0, 0, 0, 100, 300, false);
+		if (!_vm->_cutContent) {
+			Non_Player_Actor_Combat_Mode_On(kActorOfficerGrayford, kActorCombatStateUncover, true, kActorMcCoy, 4, kAnimationModeCombatIdle, kAnimationModeCombatWalk, kAnimationModeCombatRun, 0, 0, 0, 100, 300, false);
+		}
 	}
 
 	if (!Game_Flag_Query(kFlagCrazylegsArrested)
@@ -585,7 +592,7 @@ void SceneScriptHF01::dialogueWithMiaAndMurray() {
 	if (_vm->_cutContent) {
 		if (Actor_Query_Friendliness_To_Other(kActorMurray, kActorMcCoy) > 46) {
 			if (!Actor_Clue_Query(kActorMcCoy, kClueLucy)
-			 &&  Actor_Clue_Query(kActorMcCoy, kClueRunciterInterviewA)) {
+			&& Actor_Query_Goal_Number(kActorLucy) != kGoalLucyGone) {
 				 DM_Add_To_List_Never_Repeat_Once_Selected(450, 7, 6, 3); // LUCY
 			 }
 		}
@@ -600,6 +607,7 @@ void SceneScriptHF01::dialogueWithMiaAndMurray() {
 	if (_vm->_cutContent) {
 		if (Actor_Query_Friendliness_To_Other(kActorMurray, kActorMcCoy) > 46) {
 			if (Actor_Clue_Query(kActorMcCoy, kClueCarRegistration1)
+			|| Actor_Clue_Query(kActorMcCoy, kClueCarRegistration2)
 			|| Actor_Clue_Query(kActorMcCoy, kClueCarRegistration3)) {
 				DM_Add_To_List_Never_Repeat_Once_Selected(1130, -1, 3, 8); // BLACK SEDAN
 			}
@@ -657,7 +665,7 @@ void SceneScriptHF01::dialogueWithMiaAndMurray() {
 			Actor_Face_Actor(kActorMurray, kActorMcCoy, true);
 			Actor_Face_Actor(kActorMia, kActorMcCoy, true);
 		}
-		Actor_Says(kActorMcCoy, 1485, 16);
+		Actor_Says(kActorMcCoy, 1485, 16); //00-1485.AUD	You seen a girl around here? About fourteen with pink hair... Maybe in the arcade?
 		Actor_Says(kActorMia, 100, kAnimationModeTalk);
 		if (_vm->_cutContent) {
 			Actor_Face_Actor(kActorMurray, kActorMia, true);

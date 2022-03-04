@@ -223,9 +223,6 @@ void SceneScriptRC04::dialogueWithBulletBob() {
 		Actor_Says(kActorBulletBob, 320, 37);
 		Actor_Says(kActorBulletBob, 330, 33);
 		Actor_Says(kActorBulletBob, 340, 11);
-		if (_vm->_cutContent) {
-			Actor_Clue_Acquire(kActorMcCoy, kClueSightingBulletBob, true, kActorBulletBob);
-		}
 		Actor_Says(kActorMcCoy, 5015, 16);
 		Actor_Modify_Friendliness_To_Other(kActorBulletBob, kActorMcCoy, 3);
 		if (Game_Flag_Query(kFlagIzoIsReplicant)) {
@@ -584,6 +581,7 @@ bool SceneScriptRC04::ClickedOnActor(int actorId) {
 				Actor_Says(kActorMcCoy, 4890, 13); //00-4890.AUD	Meaning what exactly?
 				Actor_Says(kActorBulletBob, 70, 33); //14-0070.AUD	It ain't like you're a real Blade Runner. Not like Steele or Gaff.
 				Actor_Says(kActorMcCoy, 4895, 16); //00-4895.AUD	They get hurt sometimes too. It's a dangerous business.
+				Actor_Clue_Acquire(kActorMcCoy, kClueSightingBulletBob, true, kActorBulletBob);
 				Actor_Modify_Friendliness_To_Other(kActorBulletBob, kActorMcCoy, -5);
 				Game_Flag_Set(kFlagRC04BobTalk2);
 			 } else {
@@ -602,6 +600,7 @@ bool SceneScriptRC04::ClickedOnActor(int actorId) {
 				Actor_Face_Actor(kActorMcCoy, kActorBulletBob, true);
 				Actor_Face_Actor(kActorBulletBob, kActorMcCoy, true);
 				Actor_Says(kActorMcCoy, 4910, 15); //00-4910.AUD	Thanks.
+				Actor_Clue_Acquire(kActorMcCoy, kClueSightingBulletBob, true, kActorBulletBob);
 				Game_Flag_Set(kFlagRC04BobTalk2);
 			 }
 		} else if ( Game_Flag_Query(kFlagRC04Entered)
@@ -663,6 +662,9 @@ bool SceneScriptRC04::ClickedOnActor(int actorId) {
 				Actor_Says(kActorBulletBob, 1960, 33); //14-1960.AUD	When you hook into the mainframe you always give them everything.
 				Actor_Says(kActorBulletBob, 1970, 30);
 				Actor_Says(kActorBulletBob, 1980, 36);
+				if (_vm->_cutContent) {
+					Actor_Clue_Acquire(kActorMcCoy, kClueBobInterview2, true, kActorBulletBob);
+				}
 				Delay(1000);
 				Actor_Says(kActorBulletBob, 2010, 35);
 				// Added in some dialogue. Changed the price of the KIA upgrade from 50 chinyen to 100 chinyen so it matches the dialogue.

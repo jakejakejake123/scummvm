@@ -159,7 +159,13 @@ void SceneScriptCT02::dialogueWithZuben() {
 	if (Actor_Clue_Query(kActorMcCoy, kClueLucy)) {
 		DM_Add_To_List_Never_Repeat_Once_Selected(270, 8, 5, 3); // LUCY PHOTO
 	}
-	if ( Actor_Clue_Query(kActorMcCoy, kClueRunciterInterviewA)
+	// Made it so McCoy always asks Zuben about Lucy since he always receives Lucys description by default.
+	if (_vm->_cutContent) {
+		if (!Actor_Clue_Query(kActorMcCoy, kClueLucy)
+	) {
+		DM_Add_To_List_Never_Repeat_Once_Selected(280, 8, 5, 3); // LUCY
+	}
+	} else if ( Actor_Clue_Query(kActorMcCoy, kClueRunciterInterviewA)
 	 && !Actor_Clue_Query(kActorMcCoy, kClueLucy)
 	) {
 		DM_Add_To_List_Never_Repeat_Once_Selected(280, 8, 5, 3); // LUCY

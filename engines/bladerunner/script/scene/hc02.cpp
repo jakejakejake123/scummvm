@@ -168,6 +168,8 @@ bool SceneScriptHC02::ClickedOnActor(int actorId) {
 					Actor_Says(kActorHawkersBarkeep, 80, 16);
 					Actor_Says(kActorMcCoy, 1265, 13);
 					Actor_Says(kActorHawkersBarkeep, 90, 13);
+					Actor_Says(kActorMcCoy, 700, 14); //00-0700.AUD	I'm starting to understand.
+					Delay (3000);
 					// Added in some dialogue.
 					if (_vm->_cutContent)  {
 						Actor_Says(kActorMcCoy, 8615, 13); //00-8615.AUD	Heard anything on the street?
