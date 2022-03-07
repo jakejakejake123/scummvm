@@ -510,7 +510,7 @@ enum Flags {
 	kFlagGaffApproachedMcCoyAboutZuben        =  64,
 	kFlagMcCoyCommentsOnTB05Monitors          =  65, // Re-purposed. Original: 65 is never used
 	kFlagRunciterTalkMotives				   = 66,
-	kFlagRunciterTalkFriends 				   = 67,
+	kFlagTransientDead		 				   = 67,
 	kFlagCT02toCT01                           =  68,
 	kFlagCT02toCT03                           =  69,
 	kFlagCT03toCT02                           =  70,
@@ -1061,17 +1061,17 @@ enum Flags {
 	kFlagNR09toNR08                           = 615,
 	kFlagMcCoyCapturedByHolloway              = 616,
 	kFlagSpinnerMissing                       = 617,
-	//
-	//
+	kFlagOfficerLearyKilledByBob			  = 618,
+	kFlagGuzzaSaved							  = 619,
 	kFlagNR08Available                        = 620,
-	//	
+	//				  	
 	kFlagNR08TouchedDektora                   = 622,
 	kFlagUG07Empty                            = 623,
 	kFlagKleinCarIdentityTalk				  = 624,	
 	kFlagTB07TyrellMeeting                    = 625,
-	// 626 is never used
+	kFlagLearyKilledAtBobs					  = 626,
 	kFlagNR01McCoyIsDrugged                   = 627,
-	// 628 is never used
+	kFlagGuzzaKilledTransient				  = 628,
 	kFlagUnpauseGenWalkers                    = 629,
 	kFlagMutantsPaused                        = 630,
 	kFlagRatWalkingAround                     = 631,
@@ -3206,6 +3206,7 @@ enum GoalHowieLee {
 
 enum GoalTransient {
 	kGoalTransientDefault   = 0,
+	kGoalGuzzaShootsTransient   = 1,
 	kGoalTransientCT04Leave = 2
 };
 

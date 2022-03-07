@@ -375,6 +375,23 @@ void SceneScriptUG18::PlayerWalkedIn() {
 		Player_Set_Combat_Mode(false);
 		Player_Gains_Control();
 		Game_Flag_Set(kFlagUG18Visited);
+		}
+		// This is the code for the scene where McCoy chases Guzza into the set but he gets away. Also during this whole scenario Guzza is offscreen and we never see him.
+		if (Game_Flag_Query(kFlagGuzzaKilledTransient)
+		&& !Game_Flag_Query(kFlagCallWithGuzza)) {
+			Actor_Change_Animation_Mode(kActorMcCoy, 5);
+			Delay(500);
+			Actor_Says(kActorMcCoy, 2250, -1); //00-2250.AUD	Come out and show yourself, you coward!
+			Delay(1000);
+			Actor_Says(kActorMcCoy, 170, -1); //00-0170.AUD	Damn.
+			Delay(1000);
+			Player_Loses_Control();
+			Loop_Actor_Walk_To_XYZ(kActorMcCoy, -684.71f, 0.0f, 171.59f, 0, true, false, false);
+			Player_Gains_Control();
+			Ambient_Sounds_Remove_All_Non_Looping_Sounds(true);
+			Ambient_Sounds_Remove_All_Looping_Sounds(1u);
+			Game_Flag_Set(kFlagUG18toUG13);
+			Set_Enter(kSetUG13, kSceneUG13);
 	}
 
 	if ( Game_Flag_Query(kFlagCallWithGuzza)

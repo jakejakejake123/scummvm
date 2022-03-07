@@ -136,7 +136,7 @@ bool SceneScriptHC02::ClickedOnActor(int actorId) {
 					Actor_Clue_Acquire(kActorMcCoy, kClueChinaBarSecurityDisc, true, kActorHawkersBarkeep);
 					Item_Pickup_Spin_Effect(kModelAnimationVideoDisc, 229, 215);
 				}
-			} else if (Actor_Clue_Query(kActorMcCoy, kClueHomelessManInterview1)
+			} else if (Actor_Clue_Query(kActorMcCoy, kClueHomelessManInterview2)
 			           && !Actor_Clue_Query(kActorMcCoy, kClueFlaskOfAbsinthe)
 #if !BLADERUNNER_ORIGINAL_BUGS
 			           // don't re-get the flask if McCoy already gave it to the transient (he loses the kClueFlaskOfAbsinthe clue when he does)

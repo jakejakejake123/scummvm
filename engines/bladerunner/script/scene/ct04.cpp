@@ -176,7 +176,7 @@ void SceneScriptCT04::dialogueWithHomeless() {
 
 	switch (answer) {
 	case 410: // YES
-		Actor_Says(kActorTransient, 10, 14); // Thanks. The big man. He kind of limping.
+		Actor_Says(kActorTransient, 10, 13); // Thanks. The big man. He kind of limping.
 		Actor_Says(kActorTransient, 20, 14); // That way.
 		//Restored the big man limping clue.
 		if (_vm->_cutContent) {

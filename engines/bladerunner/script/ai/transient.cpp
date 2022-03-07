@@ -173,8 +173,10 @@ bool AIScriptTransient::ShotAtAndHit() {
 void AIScriptTransient::Retired(int byActorId) {
 	Actor_Set_Goal_Number(kActorTransient, 599);
 
-	if (Global_Variable_Query(kVariableChapter) == 4) {
-		Game_Flag_Set(kFlagMcCoyRetiredHuman);
+	if (!_vm->_cutContent) {
+		if (Global_Variable_Query(kVariableChapter) == 4) {
+			Game_Flag_Set(kFlagMcCoyRetiredHuman);
+		}
 	}
 }
 
@@ -225,6 +227,17 @@ bool AIScriptTransient::GoalChanged(int currentGoalNumber, int newGoalNumber) {
 
 	case 599:
 		AI_Countdown_Timer_Reset(kActorTransient, kActorTimerAIScriptCustomTask0);
+		return true;
+	// Added in a scene where Guzza shoots the transient dead while McCoy is talking to him.
+	case kGoalGuzzaShootsTransient:
+		Actor_Set_Frame_Rate_FPS(kActorTransient, 8);
+		if (Game_Flag_Query(kFlagUG13HomelessLayingdown)) {
+			_animationState = 11;
+		} else {
+			_animationState = 14;
+		}
+		_animationFrame = 0;
+		Actor_Set_Goal_Number(kActorTransient, 599);
 		return true;
 	}
 	return false;

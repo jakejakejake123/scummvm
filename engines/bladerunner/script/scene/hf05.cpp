@@ -684,7 +684,7 @@ void SceneScriptHF05::dialogueWithCrazylegs1() {
 				Actor_Says(kActorCrazylegs, 1180, kAnimationModeTalk);	//	09-1180.AUD	What do you expect? I sell cars for a living.
 			}
 		}
-
+	break;
 	case 1210: // LUCY'S PHOTO
 		// Added in some dialogue.
 		if (_vm->_cutContent) {

@@ -281,6 +281,7 @@ void SceneScriptRC02::dialogueWithRunciter() {
 		// cuts off there.
 		if (Game_Flag_Query(kFlagRunciterIsReplicant)) {
 			Actor_Says(kActorRunciter, 1420, 19); //15-1420.AUD	How would I know?
+			Game_Flag_Set(kFlagRunciterTalkMotives);
 		} else {
 			Actor_Says(kActorRunciter, 140, 16); // 15-0140.AUD	Who else would be capable of such barbaric acts?
 		if (_vm->_cutContent) {
@@ -537,7 +538,7 @@ bool SceneScriptRC02::ClickedOnActor(int actorId) {
 				// to talk about his friends again even if he did not talk about them before so this flag will fix that. Also made it so McCoy only says
 				// aggresively says we're going to have a little chat if he has the Zubens motive clue.
 				if (_vm->_cutContent) {
-					if (Game_Flag_Query(kFlagRunciterTalkFriends) && Actor_Clue_Query(kActorMcCoy, kClueEnvelope)) {
+					if (Actor_Clue_Query(kActorMcCoy, kClueRunciterConfession2) && Actor_Clue_Query(kActorMcCoy, kClueEnvelope)) {
 						Actor_Says(kActorMcCoy, 4690, 11); // 00-4690.AUD	I wanted to ask you about the Tyrell subcontractors again.
 						Actor_Says(kActorMcCoy, 4695, 13); // 00-4695.AUD	The ones down on DNA Row.
 					} else if (Actor_Clue_Query(kActorMcCoy, kClueZubensMotive))	{
@@ -551,7 +552,7 @@ bool SceneScriptRC02::ClickedOnActor(int actorId) {
 				}
 				Actor_Face_Actor(kActorRunciter, kActorMcCoy, true);
 				if (_vm->_cutContent) {
-					if (Game_Flag_Query(kFlagRunciterTalkFriends)) {
+					if (Actor_Clue_Query(kActorMcCoy, kClueRunciterConfession2)) {
 						Actor_Says(kActorRunciter, 1670, 14); // 15-1670.AUD	Haven't we been already through this? Why would I have any dealings with those people?
 					} else {
 						Actor_Says(kActorRunciter, 1610, 11); // 15-1610.AUD	Detective, if I knew something you can be sure I'd tell you.	 		
@@ -694,7 +695,6 @@ bool SceneScriptRC02::ClickedOnActor(int actorId) {
 						Actor_Says(kActorRunciter, 240, 16); // 15-0240.AUD	That's a horrible thing to say about people, detective.
 						Actor_Says(kActorMcCoy, 4640, 17); // 00-4640.AUD	Sorry.
 						Actor_Clue_Acquire(kActorMcCoy, kClueRunciterConfession2, true, kActorRunciter);
-						Game_Flag_Set(kFlagRunciterTalkFriends);
 					}
 				} else if (Actor_Query_Friendliness_To_Other(kActorRunciter, kActorMcCoy) > 49) {
 					Actor_Says(kActorRunciter, 210, 13);
@@ -702,7 +702,6 @@ bool SceneScriptRC02::ClickedOnActor(int actorId) {
 					Actor_Says(kActorRunciter, 220, 14);
 					Actor_Says(kActorRunciter, 230, 13);
 					Actor_Clue_Acquire(kActorMcCoy, kClueRunciterConfession2, true, kActorRunciter);
-					Game_Flag_Set(kFlagRunciterTalkFriends);
 				// These last few lines where McCoy calls the DNA row subcons freaks and sarcastically says sorry will only play if he is surly or erratic. It also results in
 				// a friendliness loss.
 				if (Player_Query_Agenda() == kPlayerAgendaSurly 
