@@ -41,6 +41,15 @@ void SceneScriptRC04::InitializeScene() {
 	if (Game_Flag_Query(kFlagRC04McCoyShotBob)) {
 		Actor_Change_Animation_Mode(kActorBulletBob, 88);
 	}
+	if (_vm->_cutContent) {
+		if (Game_Flag_Query(kFlagBulletBobIsReplicant)
+		&& Actor_Query_Goal_Number(kActorBulletBob) < kGoalBulletBobGone 
+		&& Global_Variable_Query(kVariableChapter) == 4) {
+			AI_Movement_Track_Flush(kActorOfficerLeary);
+			Actor_Put_In_Set(kActorOfficerLeary, kSetRC04);
+			Actor_Set_At_XYZ(kActorOfficerLeary, 21.82f, 0.25f, -91.65f, 760);
+		}
+	}
 
 	Ambient_Sounds_Add_Looping_Sound(kSfxRAIN10, 100, 1, 1);
 	Ambient_Sounds_Add_Sound(kSfxRCCARBY1, 5, 30, 10, 20, -100, 100, -101, -101, 0, 0);
@@ -813,8 +822,14 @@ void SceneScriptRC04::PlayerWalkedIn() {
 	// Made it so McCoy has his gun holstered when he enters the shop.
 	if (_vm->_cutContent) {
 		Player_Set_Combat_Mode(false);
+		if ( Global_Variable_Query(kVariableChapter) <= 3) {
+			Loop_Actor_Walk_To_Waypoint(kActorMcCoy, 103, 0, false, false);
+		} else {
+			Actor_Set_At_XYZ(kActorMcCoy,  33.55, 0.32, 9.41, 0);
+		}
+	} else {
+		Loop_Actor_Walk_To_Waypoint(kActorMcCoy, 103, 0, false, false);
 	}
-	Loop_Actor_Walk_To_Waypoint(kActorMcCoy, 103, 0, false, false);
 
 	if ( Global_Variable_Query(kVariableChapter) >= 2
 	 && !Game_Flag_Query(kFlagRC04Entered)
@@ -843,23 +858,93 @@ void SceneScriptRC04::PlayerWalkedIn() {
 	 && !Game_Flag_Query(kFlagRC04McCoyShotBob)
 	 && !Game_Flag_Query(kFlagNotUsed306)
 	) {
-		Actor_Says(kActorDispatcher, 40, 3);
-		// Made it so if Bob is a replicant and you enter his shop in act 4 he doesn't try to shoot you and is in fact quite pleasant towards you believeing you are both fellow replicants.
+		// Code for the scene between McCoy and Leary at Bullet Bobs shop. After Leary is shot by Bobs tracking gun McCoy shoots it several time and disables it.
 		if (_vm->_cutContent) {
-			if (Game_Flag_Query(kFlagBulletBobIsReplicant)) {
-				Actor_Face_Actor(kActorBulletBob, kActorMcCoy, true);
-				Actor_Says(kActorBulletBob, 1680, 31); //14-1680.AUD	Is that right?
-				Actor_Face_Actor(kActorMcCoy, kActorBulletBob, true);
-				Actor_Says(kActorMcCoy, 7895, 15); //00-7895.AUD	No. I--
-				Actor_Says(kActorBulletBob, 1920, 34); //14-1920.AUD	Hey, Ray, relax! I'm your pal, ain't I?
-				Actor_Says(kActorBulletBob, 1930, 34); //14-1930.AUD	You don't have to step soft around me.
-				Actor_Says(kActorBulletBob, 130, 34); //14-0130.AUD	Anything you want and you don't see, just ask.
-				Actor_Says(kActorMcCoy, 4910, 15); //00-4910.AUD	Thanks.
-		} else {
+			if (Game_Flag_Query(kFlagBulletBobIsReplicant)
+			   && !Game_Flag_Query(kFlagOfficerLearyKilledByBob)
+				&& Actor_Query_Goal_Number(kActorBulletBob) < kGoalBulletBobGone
+				) {
+					Actor_Set_Goal_Number(kActorOfficerLeary, kGoalOfficerLearyAtBulletBobs);
+					Actor_Set_At_XYZ(kActorBulletBob, -85.71f, -41.29f, 65.11f, 240);
+					AI_Movement_Track_Flush(kActorOfficerLeary);
+					Actor_Put_In_Set(kActorOfficerLeary, kSetRC04);
+					Actor_Set_At_XYZ(kActorOfficerLeary, 21.82, 0.25, -91.65, 760);
+					Actor_Face_Actor(kActorMcCoy, kActorOfficerLeary, true);
+					Actor_Face_Actor(kActorOfficerLeary, kActorMcCoy, true);
+					Actor_Change_Animation_Mode(kActorOfficerLeary, kAnimationModeCombatIdle);
+					Music_Play(kMusicBatl226M, 50, 0, 2, -1, kMusicLoopPlayOnce, 0);
+					Delay(500);
+					Actor_Says(kActorMcCoy, 170, kAnimationModeIdle); //00-0170.AUD	Damn.
+					Delay(1000);
+					Actor_Says(kActorMcCoy, 3005, kAnimationModeIdle); //00-3005.AUD	What are you gonna do? Take me in?
+					Sound_Play(kSfxSHOTCOK1, 100, 0, 100, 50);
+					Delay(500);
+					Actor_Says(kActorMcCoy, 2380, 14); //00-2380.AUD	Wait a minute!
+					Delay(1000);
+					Sound_Play(kSfxGUNAIM1, 100, 0, 0, 50);
+					Delay(500);
+					Actor_Says(kActorMcCoy, 2980, 19); //00-2980.AUD	What the hell is that?
+					Sound_Play(kSfxGUNAIM1, 100, 0, 0, 50);
+					Actor_Face_Actor(kActorMcCoy, kActorGenwalkerA, true);
+					Delay(1000);	
+					Actor_Face_Actor(kActorMcCoy, kActorOfficerLeary, true);									
+					Actor_Says(kActorMcCoy, 2180, 14);	// 00-2180.AUD	Look out!
+					Actor_Face_Actor(kActorMcCoy, kActorGenwalkerA, true);
+					Actor_Says(kActorMcCoy, 2185, 14);	//00-2185.AUD	There’s a trigger there. See it? And what’s that blinking? 
+					Music_Stop(3u);
+					Sound_Play(kSfxBARSFX2, 100, 0, 0, 50);
+					Actor_Says(kActorOfficerLeary, 170, 4); //23-0170.AUD	You ain't talking to some flunky, McCoy.	
+					Sound_Play(kSfxLGCAL3, 100, 0, 0, 50);
+					Music_Play(kMusicMoraji, 71, 0, 0, -1, kMusicLoopPlayOnce, 2);
+					Actor_Change_Animation_Mode(kActorOfficerLeary, 48);
+					Actor_Change_Animation_Mode(kActorMcCoy, 21);
+					Delay(1200);
+					Player_Set_Combat_Mode(true);
+					Actor_Change_Animation_Mode(kActorMcCoy, 6);
+					Sound_Play(kSfxGUNH1A, 100, 0, 0, 50);
+					Player_Loses_Control();
+					Delay(1000);
+					Loop_Actor_Walk_To_Actor(kActorMcCoy, kActorOfficerLeary, 36, false, true);
+					Actor_Face_Actor(kActorMcCoy, kActorGenwalkerA, true);
+					Actor_Change_Animation_Mode(kActorMcCoy, 6);
+					Sound_Play(kSfxGUNH1A, 100, 0, 0, 50);
+					Delay(1000);
+					Loop_Actor_Walk_To_XYZ(kActorMcCoy, 76.40, 0.26, -97.51, 0, true, false, false);
+					Actor_Face_Actor(kActorMcCoy, kActorGenwalkerA, true);
+					Actor_Change_Animation_Mode(kActorMcCoy, 6);
+					Sound_Play(kSfxGUNH1A, 100, 0, 0, 50);
+					Sound_Play(kSfxSERVOD1, 100, 0, 0, 50);
+					Game_Flag_Set(kFlagOfficerLearyKilledByBob);
+					Delay(2000);
+					Music_Stop(3u);
+					Player_Set_Combat_Mode(false);
+					Actor_Face_Actor(kActorMcCoy, kActorOfficerLeary, true);
+					if (Player_Query_Agenda() != kPlayerAgendaSurly 
+						|| Player_Query_Agenda() != kPlayerAgendaErratic) {
+						Actor_Says(kActorMcCoy, 2390, kAnimationModeIdle); //00-2390.AUD	Oh, God. No.
+					} else {
+						Actor_Says(kActorMcCoy, 170, -1); //00-0170.AUD	Damn.
+					}
+					if (Player_Query_Agenda() != kPlayerAgendaSurly 
+						|| Player_Query_Agenda() != kPlayerAgendaErratic) { 
+						Delay(2000);
+						Actor_Says(kActorMcCoy, 2305, 13); //00-2305.AUD	I’m sorry.
+						Delay(2000);
+					} 
+					Player_Gains_Control();
+					Scene_2D_Region_Remove(0);
+				} else if (Game_Flag_Query(kFlagOfficerLearyKilledByBob)) {
+					Scene_2D_Region_Remove(0);
+					Actor_Set_At_XYZ(kActorBulletBob, -85.71f, -41.29f, 65.11f, 240);
+					Actor_Set_At_XYZ(kActorOfficerLeary, -80.71f, -45.29f, 62.11f, 240);
+		// Made it so if Bob is a replicant and you enter his shop in act 4 he doesn't try to shoot you and is in fact quite pleasant towards you believeing you are both fellow replicants.
+		} else if (!Game_Flag_Query(kFlagOfficerLearyKilledByBob)) {
+			Actor_Says(kActorDispatcher, 40, 3);
 			Actor_Says(kActorBulletBob, 890, 37);
 			Actor_Set_Goal_Number(kActorBulletBob, kGoalBulletBobShootMcCoy);
 		}
 		} else {
+			Actor_Says(kActorDispatcher, 40, 3);
 			Actor_Says(kActorBulletBob, 890, 37);
 			Actor_Set_Goal_Number(kActorBulletBob, kGoalBulletBobShootMcCoy);
 		}

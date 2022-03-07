@@ -46,7 +46,14 @@ void AIScriptOfficerLeary::Initialize() {
 }
 
 bool AIScriptOfficerLeary::Update() {
-	if (Game_Flag_Query(kFlagUG18GuzzaScene)) {
+	// Added in code so Leary will appear in Bobs shop if Bob is alive and he is a replicant.
+	// When McCoy enters Bob shop Bob has fled and Leary is there. Leary is killed by Bobs tracking gun
+	// which Bob set up as a trap.
+	if (Game_Flag_Query(kFlagBulletBobIsReplicant)
+	&& Actor_Query_Goal_Number(kActorBulletBob) < kGoalBulletBobGone 
+	&& Global_Variable_Query(kVariableChapter) == 4) {
+		Actor_Set_Goal_Number(kActorOfficerLeary, kGoalOfficerLearyAtBulletBobs);	
+	} else if (Game_Flag_Query(kFlagUG18GuzzaScene)) {
 		Actor_Set_Goal_Number(kActorOfficerLeary, kGoalOfficerLearyAtPS14);
 	} else if (Global_Variable_Query(kVariableChapter) == 4
 	 && Actor_Query_Goal_Number(kActorOfficerLeary) < kGoalOfficerLearyStartOfAct4
@@ -111,14 +118,16 @@ bool AIScriptOfficerLeary::Update() {
 		Actor_Set_Goal_Number(kActorOfficerLeary, kGoalOfficerLearyHuntingAroundAct4);
 		return false;
 	}
-
-	if (Actor_Query_Goal_Number(kActorOfficerLeary) == kGoalOfficerLearyDead
-	 && Actor_Query_Which_Set_In(kActorOfficerLeary) != Player_Query_Current_Set()
-	) {
-		// dead officer gets revived and re-used
-		Actor_Set_Health(kActorOfficerLeary, 40, 40);
-		Actor_Set_Goal_Number(kActorOfficerLeary, kGoalOfficerLearyHuntingAroundAct4);
-		return false;
+	// Made it so Leary doesn't come back to life if he dies. I mean..... that reeeaaaallly makes no sense.
+	if (!_vm->_cutContent) {
+		if (Actor_Query_Goal_Number(kActorOfficerLeary) == kGoalOfficerLearyDead
+		&& Actor_Query_Which_Set_In(kActorOfficerLeary) != Player_Query_Current_Set()
+		) {
+			// dead officer gets revived and re-used
+			Actor_Set_Health(kActorOfficerLeary, 40, 40);
+			Actor_Set_Goal_Number(kActorOfficerLeary, kGoalOfficerLearyHuntingAroundAct4);
+			return false;
+		}
 	}
 
 	if (Actor_Query_Goal_Number(kActorOfficerLeary) == kGoalOfficerLearyHuntingAroundAct4) {
@@ -300,11 +309,13 @@ bool AIScriptOfficerLeary::ShotAtAndHit() {
 }
 
 void AIScriptOfficerLeary::Retired(int byActorId) {
-	Actor_Set_Goal_Number(kActorOfficerLeary, kGoalOfficerLearyDead);
-	Game_Flag_Set(kFlagMcCoyRetiredHuman);
 	if (_vm->_cutContent) {
-		Game_Flag_Set(kFlagOfficerLearyShot);
+		if (byActorId == kActorMcCoy) {
+			Game_Flag_Set(kFlagMcCoyRetiredHuman);
+			Game_Flag_Set(kFlagOfficerLearyShot);
+		}
 	}
+	Actor_Set_Goal_Number(kActorOfficerLeary, kGoalOfficerLearyDead);
 }
 
 int AIScriptOfficerLeary::GetFriendlinessModifierIfGetsClue(int otherActorId, int clueId) {
@@ -726,7 +737,13 @@ bool AIScriptOfficerLeary::GoalChanged(int currentGoalNumber, int newGoalNumber)
 		Actor_Set_Goal_Number(kActorOfficerLeary, kGoalOfficerLearyDummyGoalAct5);
 		Actor_Set_Goal_Number(kActorOfficerGrayford, kGoalOfficerGrayfordDummyGoalAct5);
 		return false;
-
+	// Officer Learys goal for appearing in Bobs shop.
+	case kGoalOfficerLearyAtBulletBobs:
+		AI_Movement_Track_Flush(kActorOfficerLeary);
+		Actor_Put_In_Set(kActorOfficerLeary, kSetRC04);
+		Actor_Set_At_XYZ(kActorOfficerLeary, 21.82, 0.25, -91.65, 760);
+		Actor_Change_Animation_Mode(kActorOfficerLeary, kAnimationModeCombatIdle);
+		return false;
 	default:
 		return false;
 	}

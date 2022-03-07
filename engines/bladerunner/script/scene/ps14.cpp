@@ -134,6 +134,7 @@ void SceneScriptPS14::PlayerWalkedIn() {
 		if (Game_Flag_Query(kFlagUG18GuzzaScene)
 			&& Actor_Query_Goal_Number(kActorOfficerGrayford) != kGoalOfficerGrayfordDead
 			&& Actor_Query_Goal_Number(kActorOfficerLeary) != kGoalOfficerLearyDead
+			&& !Game_Flag_Query(kFlagOfficerLearyKilledByBob)
 			&& (Global_Variable_Query(kVariableChapter) == 4)) {  
 				Actor_Put_In_Set(kActorOfficerGrayford, kSetPS14);
 				Actor_Set_At_XYZ(kActorOfficerGrayford, -879.97, 507.86, -1132.41, 0);
@@ -162,7 +163,8 @@ void SceneScriptPS14::PlayerWalkedIn() {
 					Actor_Says(kActorOfficerGrayford, 30, kAnimationModeTalk); //24-0030.AUD	Let’s get the bomb squad out here!
 					//The Crystal will vouch for me line will only play if you are on good terms with Crystal meaning not having Lucy and Dektoras global affection goals activated.
 					if (Global_Variable_Query(kVariableAffectionTowards) != kAffectionTowardsDektora 	 
-					|| Global_Variable_Query(kVariableAffectionTowards) != kAffectionTowardsLucy) {
+					&& Global_Variable_Query(kVariableAffectionTowards) != kAffectionTowardsLucy
+					&& !Game_Flag_Query(kFlagIzoWarned)) {
 						Actor_Says(kActorMcCoy, 720, kAnimationModeTalk); //00-0720.AUD	Talk to Crystal Steele, she'll vouch for me.
 					}
 					Actor_Says(kActorOfficerGrayford, 40, kAnimationModeTalk); //24-0040.AUD	Drop your gun, put your hands in the air and then we’ll talk.

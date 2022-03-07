@@ -69,7 +69,14 @@ bool AIScriptGenericWalkerA::Update() {
 			break;
 
 		case kGoalGenwalkerABulletBobsTrackGun: // Automatic gun at Bullet Bob
+		// Made it so Bobs tracking gun stops following McCoy once he shoots and disables it.
+		if (_vm->_cutContent) {
+			if (!Game_Flag_Query(kFlagOfficerLearyKilledByBob)) {
+				Actor_Face_Actor(kActorGenwalkerA, kActorMcCoy, true);
+			}
+		} else {
 			Actor_Face_Actor(kActorGenwalkerA, kActorMcCoy, true);
+		}
 			break;
 	}
 	return false;

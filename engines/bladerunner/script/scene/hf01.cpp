@@ -450,13 +450,29 @@ void SceneScriptHF01::PlayerWalkedIn() {
 		if (!_vm->_cutContent) {
 			ADQ_Add(kActorOfficerGrayford, 280, kAnimationModeTalk);
 		}
-		Actor_Put_In_Set(kActorOfficerLeary, kSetHF01);
-		Actor_Set_At_XYZ(kActorOfficerLeary, 8.2f, 8.0f, -346.67f, 1021);
+		// Made it so Leary only appears in this scene if he is not dead.
+		if (_vm->_cutContent) {
+			if (Actor_Query_Goal_Number(kActorOfficerLeary) != kGoalOfficerLearyDead
+			&& !Game_Flag_Query(kFlagOfficerLearyKilledByBob)) {
+				Actor_Put_In_Set(kActorOfficerLeary, kSetHF01);
+				Actor_Set_At_XYZ(kActorOfficerLeary, 8.2f, 8.0f, -346.67f, 1021);
+			}
+		} else {
+			Actor_Put_In_Set(kActorOfficerLeary, kSetHF01);
+			Actor_Set_At_XYZ(kActorOfficerLeary, 8.2f, 8.0f, -346.67f, 1021);
+		}
 		if (!_vm->_cutContent) {
 			Actor_Put_In_Set(kActorOfficerGrayford, kSetHF01);
 			Actor_Set_At_XYZ(kActorOfficerGrayford, 51.21f, 8.0f, -540.78f, 796);
 		}
-		Non_Player_Actor_Combat_Mode_On(kActorOfficerLeary, kActorCombatStateUncover, true, kActorMcCoy, 4, kAnimationModeCombatIdle, kAnimationModeCombatWalk, kAnimationModeCombatRun, 0, 0, 0, 100, 300, false);
+		if (_vm->_cutContent) {
+			if (Actor_Query_Goal_Number(kActorOfficerLeary) != kGoalOfficerLearyDead
+			&& !Game_Flag_Query(kFlagOfficerLearyKilledByBob)) {
+				Non_Player_Actor_Combat_Mode_On(kActorOfficerLeary, kActorCombatStateUncover, true, kActorMcCoy, 4, kAnimationModeCombatIdle, kAnimationModeCombatWalk, kAnimationModeCombatRun, 0, 0, 0, 100, 300, false);
+			}
+		} else {
+			Non_Player_Actor_Combat_Mode_On(kActorOfficerLeary, kActorCombatStateUncover, true, kActorMcCoy, 4, kAnimationModeCombatIdle, kAnimationModeCombatWalk, kAnimationModeCombatRun, 0, 0, 0, 100, 300, false);
+		}
 		if (!_vm->_cutContent) {
 			Non_Player_Actor_Combat_Mode_On(kActorOfficerGrayford, kActorCombatStateUncover, true, kActorMcCoy, 4, kAnimationModeCombatIdle, kAnimationModeCombatWalk, kAnimationModeCombatRun, 0, 0, 0, 100, 300, false);
 		}

@@ -102,14 +102,16 @@ bool AIScriptOfficerGrayford::Update() {
 		Actor_Set_Goal_Number(kActorOfficerGrayford, kGoalOfficerGrayfordHuntingAroundAct4);
 		return false;
 	}
-
-	if (Actor_Query_Goal_Number(kActorOfficerGrayford) == kGoalOfficerGrayfordDead
-	 && Actor_Query_Which_Set_In(kActorOfficerGrayford) != Player_Query_Current_Set()
-	) {
-		// dead officer gets revived and re-used
-		Actor_Set_Health(kActorOfficerGrayford, 50, 50);
-		Actor_Set_Goal_Number(kActorOfficerGrayford, kGoalOfficerGrayfordHuntingAroundAct4);
-		return false;
+	// Made it so Grayford doesn't come back to life if he dies. I mean..... that makes no sense.
+	if (!_vm->_cutContent) {
+		if (Actor_Query_Goal_Number(kActorOfficerGrayford) == kGoalOfficerGrayfordDead
+		&& Actor_Query_Which_Set_In(kActorOfficerGrayford) != Player_Query_Current_Set()
+		) {
+			// dead officer gets revived and re-used
+			Actor_Set_Health(kActorOfficerGrayford, 50, 50);
+			Actor_Set_Goal_Number(kActorOfficerGrayford, kGoalOfficerGrayfordHuntingAroundAct4);
+			return false;
+		}
 	}
 
 	if (Actor_Query_Goal_Number(kActorOfficerGrayford) == kGoalOfficerGrayfordHuntingAroundAct4) {

@@ -3336,6 +3336,7 @@ enum GoalOfficerLeary {
 	kGoalOfficerLearyRC01ResumeWalkToCrowd            =   4, // added OfficerLeary goal
 #endif // BLADERUNNER_ORIGINAL_BUGS
 	kGoalOfficerLearyPoliceDoneFromRC01               =   3,
+	kGoalOfficerLearyAtBulletBobs					  = 5,
 	kGoalOfficerLearyAtPS14							  = 10,	
 	kGoalOfficerLearyEndOfAct1                        =  99,
 	kGoalOfficerLearyVisitsBulletBob                  = 102, // un-triggered
