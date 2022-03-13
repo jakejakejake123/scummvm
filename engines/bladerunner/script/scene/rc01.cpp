@@ -417,7 +417,9 @@ bool SceneScriptRC01::ClickedOnActor(int actorId) {
 				I_Sez("MG: Hey, leave that officer alone. Can't you see he's busy?");
 				I_Sez("JM: (...mmm, donuts...)");
 				Game_Flag_Set(kFlagRC01GotOfficersStatement);
-				Actor_Clue_Acquire(kActorMcCoy, kClueOfficersStatement, true, kActorOfficerLeary);
+				if (!_vm->_cutContent) {
+					Actor_Clue_Acquire(kActorMcCoy, kClueOfficersStatement, true, kActorOfficerLeary);
+				}
 				Actor_Says(kActorMcCoy, 4515, 13);
 				Game_Flag_Set(kFlagRC01McCoyAndOfficerLearyTalking);
 				Actor_Says(kActorOfficerLeary, 40, 13);
@@ -430,6 +432,9 @@ bool SceneScriptRC01::ClickedOnActor(int actorId) {
 					Actor_Says(kActorMcCoy, 4525, 14);
 					Actor_Says(kActorOfficerLeary, 80, 18);
 					Actor_Says(kActorMcCoy, 4530, 15);
+					if (_vm->_cutContent) {
+						Actor_Clue_Acquire(kActorMcCoy, kClueOfficersStatement, true, kActorOfficerLeary);
+					}
 				}
 				Game_Flag_Reset(kFlagRC01McCoyAndOfficerLearyTalking);
 			}
@@ -458,6 +463,9 @@ bool SceneScriptRC01::ClickedOnItem(int itemId, bool a2) {
 			Actor_Face_Item(kActorMcCoy, kItemChromeDebris, true);
 			Actor_Clue_Acquire(kActorMcCoy, kClueChromeDebris, true, -1);
 			Actor_Face_Actor(kActorOfficerLeary, kActorMcCoy, true);
+			if (_vm->_cutContent) {
+				Actor_Says(kActorMcCoy, 8755, 13); //00-8755.AUD	A piece of chrome.
+			}
 			Actor_Says(kActorOfficerLeary, 20, 12);
 			Game_Flag_Set(kFlagRC01ChromeDebrisTaken);
 			Item_Remove_From_World(kItemChromeDebris);

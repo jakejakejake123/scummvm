@@ -69,6 +69,11 @@ void SceneScriptHF05::SceneLoaded() {
 		Unobstacle_Object("OBSTACLE_HOLE", true);
 	}
 	Clickable_Object("TOP CON");
+	// If Crystal retired Crazylegs she will leave a cigarette on the floor.
+	if (_vm->_cutContent &&
+		(Game_Flag_Query(kFlagCrystalRetiredCrazylegs))) { 
+		Item_Add_To_World(kItemCigarette, kModelAnimationCrystalsCigarette, kSetHF05, 275.38, 40.86, 349.42, 0, 12, 12, false, true, false, true);
+	}
 }
 
 bool SceneScriptHF05::MouseClick(int x, int y) {
@@ -201,6 +206,15 @@ bool SceneScriptHF05::ClickedOnActor(int actorId) {
 }
 
 bool SceneScriptHF05::ClickedOnItem(int itemId, bool a2) {
+	if (_vm->_cutContent) {
+		if (itemId == kItemCigarette) { 
+			if (!Loop_Actor_Walk_To_Item(kActorMcCoy, kItemCigarette, 12, true, false)) {
+				Actor_Face_Item(kActorMcCoy, kItemCigarette, true);
+				Actor_Voice_Over(1770, kActorVoiceOver); //99-1770.AUD	Lucky Strikes. Crystal's brand.
+				return true;
+			}
+		}
+	}
 	return false;
 }
 

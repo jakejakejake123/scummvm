@@ -122,7 +122,7 @@ void SceneScriptCT02::SceneLoaded() {
 	Unclickable_Object("BACK-DOOR");
 	//Added in the candy wrapper clue. It is near McCoys feet when he enters the kitchen.
 	if (_vm->_cutContent &&
-		!Game_Flag_Query(kFlagCandyWrapperTaken)) {
+		!Actor_Clue_Query(kActorMcCoy, kClueCandyWrapper)) {
 		Item_Add_To_World(kItemChopstickWrapper, kModelAnimationCandyWrapper, kSetCT02, -144.69, -145.51, 195.58, 0, 12, 12, false, true, false, true);
 	}
 	if (!Game_Flag_Query(kFlagCT02PotTipped)) {
@@ -319,7 +319,6 @@ bool SceneScriptCT02::ClickedOnItem(int itemId, bool a2) {
 			Actor_Clue_Acquire(kActorMcCoy, kClueCandyWrapper, true, -1);
 			Item_Pickup_Spin_Effect(kModelAnimationCandyWrapper, 434, 388);
 			Item_Remove_From_World(kItemChopstickWrapper);
-			Game_Flag_Set(kFlagCandyWrapperTaken);
 			Actor_Says(kActorMcCoy, 8875, 13); //00-8875.AUD	A brown cow candy wrapper.
 				if ( Actor_Clue_Query(kActorMcCoy, kClueCandy)) {
 					Actor_Voice_Over(3300, kActorVoiceOver); //99-3300.AUD	I recognized the wrapper.

@@ -105,6 +105,9 @@ bool SceneScriptTB06::ClickedOnItem(int itemId, bool a2) {
 			Actor_Clue_Acquire(kActorMcCoy, kClueDogCollar1, true, -1);
 			Item_Pickup_Spin_Effect(kModelAnimationDogCollar, 341, 368);
 			Item_Remove_From_World(kItemDogCollar);
+			if (_vm->_cutContent) {
+				Actor_Says(kActorMcCoy, 8790, 13); //00-8790.AUD	A dog collar.
+			}
 			Actor_Voice_Over(4160, kActorVoiceOver);
 			Game_Flag_Set(kFlagTB06DogCollarTaken);
 			return true;

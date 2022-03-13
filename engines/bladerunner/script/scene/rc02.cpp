@@ -105,6 +105,11 @@ void SceneScriptRC02::SceneLoaded() {
 			Unclickable_Object("DRAPE06");
 			Unclickable_Object("DRAPE07");
 		}
+		// If Crystal retired Runciter she leaves a cigarette on the floor.
+		if (_vm->_cutContent &&
+			(Game_Flag_Query(kFlagCrystalRetiredRunciter))) { 
+			Item_Add_To_World(kItemCigarette, kModelAnimationCrystalsCigarette, kSetRC02_RC51, -88.19, -1238.74, 108483.28, 0, 12, 12, false, true, false, true);
+		}
 	} else {
 		// original code
 		Unclickable_Object("DRAPE01");
@@ -406,6 +411,7 @@ void SceneScriptRC02::dialogueWithRunciter() {
 					Item_Remove_From_World(kItemShellCasingC);
 					Item_Pickup_Spin_Effect(kModelAnimationShellCasings, 395, 352);
 					Actor_Says(kActorRunciter, 1700, 13); //15-1700.AUD	Here you are.
+					Actor_Says(kActorMcCoy, 8730, 13); //00-8730.AUD	Shell casings.
 					Actor_Voice_Over(1960, kActorVoiceOver); //99-1960.AUD	Big caliber. Possibly Off-World combat weaponry. Ballistics might give me a fix on it.
 					Player_Gains_Control();
 				}				
@@ -440,7 +446,6 @@ void SceneScriptRC02::dialogueWithRunciter() {
 				Actor_Says(kActorRunciter, 1680, 13); //15-1680.AUD	No. I have a lot of cleaning up to do.
 				Actor_Says(kActorMcCoy, 400, 14); //00-0400.AUD	It won't take too long.
 				Actor_Modify_Friendliness_To_Other(kActorRunciter, kActorMcCoy, -5);
-				Voight_Kampff_Activate(kActorRunciter, 20);
 			} else {
 				Actor_Says(kActorMcCoy, 400, 14); //00-0400.AUD	It won't take too long.
 				Actor_Modify_Friendliness_To_Other(kActorRunciter, kActorMcCoy, -3);
@@ -737,6 +742,15 @@ bool SceneScriptRC02::ClickedOnActor(int actorId) {
 }
 
 bool SceneScriptRC02::ClickedOnItem(int itemId, bool a2) {
+	if (_vm->_cutContent) {
+		if (itemId == kItemCigarette) { 
+			if (!Loop_Actor_Walk_To_Item(kActorMcCoy, kItemCigarette, 12, true, false)) {
+				Actor_Face_Item(kActorMcCoy, kItemCigarette, true);
+				Actor_Voice_Over(1770, kActorVoiceOver); //99-1770.AUD	Lucky Strikes. Crystal's brand.
+				return true;
+			}
+		}
+	}
 	if (itemId == kItemShellCasingA
 	 || itemId == kItemShellCasingB
 	 || itemId == kItemShellCasingC
@@ -749,6 +763,9 @@ bool SceneScriptRC02::ClickedOnItem(int itemId, bool a2) {
 			Item_Remove_From_World(kItemShellCasingB);
 			Item_Remove_From_World(kItemShellCasingC);
 			Item_Pickup_Spin_Effect(kModelAnimationShellCasings, 395, 352);
+			if (_vm->_cutContent) {
+				Actor_Says(kActorMcCoy, 8730, 13); //00-8730.AUD	Shell casings.
+			}
 			Actor_Voice_Over(1960, kActorVoiceOver);
 		}
 		return true;

@@ -41,6 +41,15 @@ void KIAScript::SCRIPT_KIA_DLL_Play_Clue_Asset_Script(int notUsed, int clueId) {
 	switch (clueId) {
 	case kClueOfficersStatement:
 		KIA_Play_Actor_Dialogue(kActorOfficerLeary, 40);
+		if (_vm->_cutContent) {
+			KIA_Play_Actor_Dialogue(kActorOfficerLeary, 50); //23-0050.AUD	The shop's been thrashed. You ought to see this tiger cub they got in there.
+			KIA_Play_Actor_Dialogue(kActorOfficerLeary, 60); //23-0060.AUD	It's a goddamn tragedy.
+			KIA_Play_Actor_Dialogue(kActorMcCoy, 4520); //00-4520.AUD	How's old man Runciter holding up?
+			KIA_Play_Actor_Dialogue(kActorOfficerLeary, 70); //23-0070.AUD	State of shock. He's been moaning and complaining about his world caving in.
+			KIA_Play_Actor_Dialogue(kActorMcCoy, 4525); //00-4525.AUD	You'd feel the same way, if they were your animals. How many perps?
+			KIA_Play_Actor_Dialogue(kActorOfficerLeary,80); //23-0080.AUD	At least two. Bloody footprints all over the scene.
+			KIA_Play_Actor_Dialogue(kActorMcCoy, 4530); //00-4530.AUD	Must be a delightful sight.
+		}
 		break;
 	case kClueDoorForced2:
 		// Made it so the door forced 2 contains the entire dialogue for both door force clues. It makes no sense for the player to check the door later to inspect the broken lock because
@@ -1939,8 +1948,6 @@ void KIAScript::SCRIPT_KIA_DLL_Play_Clue_Asset_Script(int notUsed, int clueId) {
 		KIA_Play_Actor_Dialogue(kActorMcCoy, 3720); //00-3720.AUD	Buying the car isn’t. Using the car in an animal murder, well...
 		KIA_Play_Actor_Dialogue(kActorDektora, 780); //03-0780.AUD	Animal murder? That’s horrible.
 		KIA_Play_Actor_Dialogue(kActorDektora, 790); //03-0790.AUD	I haven’t seen the car for two days. It was stolen the day after I bought it.
-		KIA_Play_Actor_Dialogue(kActorMcCoy, 3725); //00-3725.AUD	Is that right? Any reason you didn’t tell me that right off?
-		KIA_Play_Actor_Dialogue(kActorDektora, 800); //03-0800.AUD	You didn’t ask.
 		KIA_Play_Actor_Dialogue(kActorMcCoy, 3730); //00-3730.AUD	Animal murder is pretty horrible.
 		KIA_Play_Actor_Dialogue(kActorDektora, 810); //03-0810.AUD	Yes.
 		KIA_Play_Actor_Dialogue(kActorDektora, 820); //03-0820.AUD	Any murder is horrible. And unfortunate.

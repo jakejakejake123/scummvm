@@ -155,6 +155,9 @@ void AIScriptClovis::OtherAgentEnteredCombatMode(int otherActorId, int combatMod
 	) {
 		Game_Flag_Set(kFlagKP07McCoyPulledGun);
 		Game_Flag_Set(kFlagMcCoyAttackedReplicants);
+		if (_vm->_cutContent) {
+			Music_Play(kMusicMoraji, 71, 0, 0, -1, kMusicLoopPlayOnce, 2);
+		}
 		// return true;
 	}
 	// return false;
@@ -217,19 +220,17 @@ void AIScriptClovis::Retired(int byActorId) {
 
 			if (Global_Variable_Query(kVariableReplicantsSurvivorsAtMoonbus) == 0) {
 				Player_Loses_Control();
-				Delay(2000);
-				Player_Set_Combat_Mode(false);
 				if (_vm->_cutContent) {
-					if (Actor_Query_Goal_Number(kActorMaggie) < kGoalMaggieDead) {
-						Async_Actor_Walk_To_Waypoint(kActorMcCoy, 312, 308, false);
-						Async_Actor_Walk_To_Waypoint(kActorMaggie, 312, 308, false);
-					} else {
-						Loop_Actor_Walk_To_XYZ(kActorMcCoy, -12.0f, -41.58f, 72.0f, 0, true, false, false);
+					if (Game_Flag_Query(kFlagCrazylegsIsReplicant)) {
+						if (!Game_Flag_Query(kFlagCrazylegsDead)) {
+							Loop_Actor_Walk_To_XYZ(kActorCrazylegs, -12.0f, -41.58f, 72.0f, 0, true, false, false);
+							Actor_Put_In_Set(kActorCrazylegs, kSceneKP06);
+						}
 					}
-				} else {
-					Loop_Actor_Walk_To_XYZ(kActorMcCoy, -12.0f, -41.58f, 72.0f, 0, true, false, false);			
+					Delay(3000);
+					Player_Set_Combat_Mode(false);
+					Delay(1000); 
 				}
-				Loop_Actor_Walk_To_XYZ(kActorMcCoy, -12.0f, -41.58f, 72.0f, 0, true, false, false);
 				Ambient_Sounds_Remove_All_Non_Looping_Sounds(true);
 				Ambient_Sounds_Remove_All_Looping_Sounds(1u);
 				Game_Flag_Set(kFlagKP07toKP06);

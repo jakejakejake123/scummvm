@@ -102,6 +102,9 @@ bool SceneScriptRC51::ClickedOnItem(int itemId, bool a2) {
 			Actor_Clue_Acquire(kActorMcCoy, kClueChopstickWrapper, true, -1);
 			Item_Remove_From_World(kItemChopstickWrapper);
 			Item_Pickup_Spin_Effect(kModelAnimationChopstickWrapper, 437, 407);
+			if (_vm->_cutContent) {
+				Actor_Says(kActorMcCoy, 8745, 13); //00-8745.AUD	A chopstick wrapper.
+			}
 			Actor_Voice_Over(2010, kActorVoiceOver);
 			Game_Flag_Set(kFlagRC51ChopstickWrapperTaken);
 			return true;

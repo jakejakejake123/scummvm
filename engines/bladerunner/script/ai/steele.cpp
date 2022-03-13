@@ -475,8 +475,7 @@ void AIScriptSteele::EnteredSet(int setId) {
 			if (Actor_Clue_Query(kActorSteele, kClueHowieLeeInterview)
 			&& Actor_Clue_Query(kActorSteele, kClueCrowdInterviewA) 
 			&& Actor_Clue_Query(kActorSteele, kClueLabCorpses) 
-			&& Actor_Clue_Query(kActorSteele, kClueZubenInterview)
-			&& Actor_Clue_Query(kActorSteele, kClueBigManLimping)) {
+			&& Actor_Clue_Query(kActorSteele, kClueZubenInterview)) {
 				Actor_Set_Goal_Number(kActorZuben, kGoalZubenGone);
 				Actor_Clue_Acquire(kActorSteele, kClueCrystalRetiredZuben, true, kActorSteele);
 			} else {
@@ -505,7 +504,7 @@ void AIScriptSteele::EnteredSet(int setId) {
 				if (Game_Flag_Query(kFlagHanoiIsReplicant)) {
 					Game_Flag_Set(kFlagHanoiDead);
 				}
-			} else {
+			} else if (!Game_Flag_Query(kFlagEarlyQIsReplicant) && !Game_Flag_Query(kFlagEarlyQDead))  {
 				Actor_Clue_Acquire(kActorSteele, kClueVKEarlyQHuman, true, kActorSteele);
 			}
 			return;
@@ -1407,6 +1406,7 @@ bool AIScriptSteele::GoalChanged(int currentGoalNumber, int newGoalNumber) {
 		Game_Flag_Set(kFlagGordoRanAway);
 		if (_vm->_cutContent) {
 			Actor_Clue_Acquire(kActorGordo, kClueMcCoyHelpedGordo, true, -1);
+			Actor_Clue_Acquire(kActorSteele, kClueMcCoyHelpedGordo, true, -1);
 			Game_Flag_Set(kFlagMcCoyIsHelpingReplicants);
 		}
 		Actor_Set_Targetable(kActorSteele, false);

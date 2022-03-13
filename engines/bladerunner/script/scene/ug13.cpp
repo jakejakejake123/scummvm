@@ -665,6 +665,12 @@ void SceneScriptUG13::dialogueWithHomeless2() {
 			Delay(500);
 			Player_Set_Combat_Mode(true);
 			Delay(1000);
+			Sound_Play(kSfxLGCAL3, 100, 0, 0, 50);
+			Actor_Change_Animation_Mode(kActorMcCoy, 21);
+			Delay(1000);
+			Actor_Change_Animation_Mode(kActorMcCoy, 6);
+			Sound_Play(kSfxGUNH1A, 100, 0, 0, 50);
+			Delay(1000);
 			Loop_Actor_Walk_To_Actor(kActorMcCoy, kActorTransient, 36, false, true);
 			Loop_Actor_Walk_To_XYZ(kActorMcCoy, -267.0f, 44.0f, -795.0f, 0, true, false, false);
 			Actor_Face_Heading(kActorMcCoy, 830, false);
@@ -719,6 +725,12 @@ void SceneScriptUG13::dialogueWithHomeless2() {
 					Actor_Set_Goal_Number(kActorTransient, kGoalGuzzaShootsTransient);
 					Delay(500);
 					Player_Set_Combat_Mode(true);
+					Delay(1000);
+					Sound_Play(kSfxLGCAL3, 100, 0, 0, 50);
+					Actor_Change_Animation_Mode(kActorMcCoy, 21);
+					Delay(1000);
+					Actor_Change_Animation_Mode(kActorMcCoy, 6);
+					Sound_Play(kSfxGUNH1A, 100, 0, 0, 50);
 					Delay(1000);
 					Loop_Actor_Walk_To_Actor(kActorMcCoy, kActorTransient, 36, false, true);
 					Loop_Actor_Walk_To_XYZ(kActorMcCoy, -267.0f, 44.0f, -795.0f, 0, true, false, false);
@@ -825,6 +837,12 @@ void SceneScriptUG13::dialogueWithHomeless2() {
 			Actor_Set_Goal_Number(kActorTransient, kGoalGuzzaShootsTransient);
 			Delay(500);
 			Player_Set_Combat_Mode(true);
+			Delay(1000);
+			Sound_Play(kSfxLGCAL3, 100, 0, 0, 50);
+			Actor_Change_Animation_Mode(kActorMcCoy, 21);
+			Delay(1000);
+			Actor_Change_Animation_Mode(kActorMcCoy, 6);
+			Sound_Play(kSfxGUNH1A, 100, 0, 0, 50);
 			Delay(1000);
 			Loop_Actor_Walk_To_Actor(kActorMcCoy, kActorTransient, 36, false, true);
 			Loop_Actor_Walk_To_XYZ(kActorMcCoy, -267.0f, 44.0f, -795.0f, 0, true, false, false);

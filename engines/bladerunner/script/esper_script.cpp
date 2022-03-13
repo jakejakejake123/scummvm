@@ -415,6 +415,9 @@ bool ESPERScript::SCRIPT_ESPER_DLL_Special_Region_Selected(int photo, int region
 			break;
 
 		case 19:
+			if (_vm->_cutContent) {
+				Actor_Says(kActorMcCoy, 8790, 3); //00-8790.AUD	A dog collar.
+			}
 			Actor_Voice_Over(4160, kActorVoiceOver);
 			if (!Actor_Clue_Query(kActorMcCoy, kClueDogCollar2)) {
 				Actor_Says(kActorMcCoy, 6945, 3);

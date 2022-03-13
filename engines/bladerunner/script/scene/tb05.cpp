@@ -163,6 +163,9 @@ bool SceneScriptTB05::ClickedOnItem(int itemId, bool a2) {
 			Actor_Face_Heading(kActorMcCoy, 126, false);
 			Item_Remove_From_World(kItemDragonflyEarring);
 			Item_Pickup_Spin_Effect(kModelAnimationDragonflyEarring, 295, 408);
+			if (_vm->_cutContent) {
+				Actor_Says(kActorMcCoy, 8765, 13); //00-8765.AUD	An earring.
+			}
 			Actor_Voice_Over(2140, kActorVoiceOver);
 			Actor_Voice_Over(2150, kActorVoiceOver);
 			Actor_Voice_Over(2160, kActorVoiceOver);
@@ -176,6 +179,9 @@ bool SceneScriptTB05::ClickedOnItem(int itemId, bool a2) {
 			Actor_Face_Heading(kActorMcCoy, 126, false);
 			Item_Remove_From_World(kItemTyrellSalesPamphlet);
 			Item_Pickup_Spin_Effect(kModelAnimationTyrellSalesPamphlet, 449, 431);
+			if (_vm->_cutContent) {
+				Actor_Says(kActorMcCoy, 8780, 13); //00-8780.AUD	A sales pamphlet.
+			}
 			Actor_Voice_Over(4280, kActorVoiceOver);
 			if (Game_Flag_Query(kFlagGordoIsReplicant)) {
 				Actor_Voice_Over(4290, kActorVoiceOver);

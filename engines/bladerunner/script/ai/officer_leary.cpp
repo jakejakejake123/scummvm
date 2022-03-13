@@ -741,7 +741,7 @@ bool AIScriptOfficerLeary::GoalChanged(int currentGoalNumber, int newGoalNumber)
 	case kGoalOfficerLearyAtBulletBobs:
 		AI_Movement_Track_Flush(kActorOfficerLeary);
 		Actor_Put_In_Set(kActorOfficerLeary, kSetRC04);
-		Actor_Set_At_XYZ(kActorOfficerLeary, 21.82, 0.25, -91.65, 760);
+		Actor_Set_At_XYZ(kActorOfficerLeary, 69.31, 0.25, -109.61, 12);
 		Actor_Change_Animation_Mode(kActorOfficerLeary, kAnimationModeCombatIdle);
 		return false;
 	default:

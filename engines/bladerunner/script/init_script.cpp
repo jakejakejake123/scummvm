@@ -2672,12 +2672,14 @@ void InitScript::Init_SDB() {
 		SDB_Add_Whereabouts_Clue(kSuspectGuzza, kClueHomelessManInterview2);
 		SDB_Add_Other_Clue(kSuspectGuzza, kClueHomelessManKid);
 		SDB_Add_Other_Clue(kSuspectGuzza, kClueIzosStashRaided);
-		if (Actor_Clue_Query(kActorMcCoy, kClueIzosStashRaided)
-		|| Actor_Clue_Query(kActorMcCoy, kClueFolder)) {
+		if (Actor_Clue_Query(kActorMcCoy, kClueFolder)) {
 			SDB_Add_Other_Clue(kSuspectGuzza, kClueWeaponsCache);
 			SDB_Add_MO_Clue(kSuspectGuzza, kClueShippingForm);
 			SDB_Add_MO_Clue(kSuspectGuzza, kClueWeaponsOrderForm);
 			SDB_Add_MO_Clue(kSuspectGuzza, kClueRequisitionForm);
+			SDB_Add_MO_Clue(kSuspectGuzza, kClueWantedPoster);
+			SDB_Add_MO_Clue(kSuspectGuzza, kClueBobInterview2);
+			SDB_Add_MO_Clue(kSuspectGuzza, kClueSightingDektora);
 		}
 		SDB_Add_Other_Clue(kSuspectGuzza, kClueOriginalRequisitionForm);
 		SDB_Add_Other_Clue(kSuspectGuzza, kClueOriginalShippingForm);

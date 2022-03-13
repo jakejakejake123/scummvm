@@ -181,6 +181,9 @@ bool SceneScriptCT11::ClickedOn2DRegion(int region) {
 			Item_Pickup_Spin_Effect(kModelAnimationLichenDogWrapper, 510, 319);
 			Game_Flag_Reset(kFlagCT11DogWrapperAvailable);
 			Game_Flag_Set(kFlagCT11DogWrapperTaken);
+			if (_vm->_cutContent) {
+				Actor_Says(kActorMcCoy, 8865, 13); //00-8865.AUD	A lichen-dog wrapper.
+			}
 			Actor_Voice_Over(550, kActorVoiceOver);
 			Actor_Voice_Over(560, kActorVoiceOver);
 			Actor_Voice_Over(570, kActorVoiceOver);

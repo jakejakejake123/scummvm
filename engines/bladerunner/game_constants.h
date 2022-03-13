@@ -631,7 +631,7 @@ enum Flags {
 	kFlagSteeleInPoliceStation                = 185,
 	kFlagRC01PoliceDone                       = 186,
 	kFlagRC02RunciterTalk1                    = 187,
-	kFlagCandyWrapperTaken					  = 188,
+	kFlagMiaMurrayAnnoyedTalk				  = 188,						  
 	kFlagMcCoyCommentsOnBurnMarks			  = 189,
 	kFlagRC02ShellCasingsTaken                = 190,
 	kFlagBuzzerPressed						  = 191,
@@ -1064,7 +1064,7 @@ enum Flags {
 	kFlagOfficerLearyKilledByBob			  = 618,
 	kFlagGuzzaSaved							  = 619,
 	kFlagNR08Available                        = 620,
-	//				  	
+	kFlagInsectDealerTalkMerchandise		  = 621,				  	
 	kFlagNR08TouchedDektora                   = 622,
 	kFlagUG07Empty                            = 623,
 	kFlagKleinCarIdentityTalk				  = 624,	
@@ -1657,7 +1657,7 @@ enum GameItems {
 	kItemDogCollar              =  84,
 	kItemRagDoll                =  85,
 	kItemPhoto					=  86, 
-	// 87 is never used
+	kItemCigarette				=  87,
 	kItemRadiationGoogles       =  88,
 	kItemGordosLighterReplicant =  89,
 	kItemGordosLighterHuman     =  90,

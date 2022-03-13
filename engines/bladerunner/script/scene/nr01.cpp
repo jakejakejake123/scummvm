@@ -498,7 +498,7 @@ void SceneScriptNR01::PlayerWalkedIn() {
 			// will immediately attack you instead of running away.
 			if (_vm->_cutContent) {
 				Music_Stop(2u);
-				Music_Play(kMusicMoraji, 71, 0, 0, -1, kMusicLoopPlayOnce, 2);
+				Music_Play(kMusicBeating1, 71, 0, 0, -1, kMusicLoopPlayOnce, 2);
 				Player_Set_Combat_Mode(true);
 				Actor_Face_Actor(kActorMcCoy, kActorGordo, true);
 				Actor_Says(kActorMcCoy, 8945, 14); //00-8945.AUD	Freeze!

@@ -143,11 +143,12 @@ void SceneScriptPS14::PlayerWalkedIn() {
 				Actor_Says(kActorOfficerLeary, 280, kAnimationModeTalk); //23-0280.AUD	Sounds like another nutcase overdosed on too many lichen-dogs.
 				Actor_Face_Actor(kActorOfficerGrayford, kActorOfficerLeary, true); 
 				Actor_Says(kActorOfficerGrayford, 460, kAnimationModeTalk); //24-0460.AUD	Either that or another street punk that sucked one too many sugar cubes.
-				Actor_Says(kActorMcCoy, 3970, 15); //00-3970.AUD	Hey.
-				Music_Play(kMusicBatl226M, 50, 0, 2, -1, kMusicLoopPlayOnce, 0);
 				Actor_Face_Actor(kActorMcCoy, kActorOfficerGrayford, true);
 				Actor_Face_Actor(kActorOfficerGrayford, kActorMcCoy, true);
 				Actor_Face_Actor(kActorOfficerLeary, kActorMcCoy, true);
+				Actor_Says(kActorMcCoy, 3970, 15); //00-3970.AUD	Hey.
+				Music_Play(kMusicBatl226M, 50, 0, 2, -1, kMusicLoopPlayOnce, 0);
+				Actor_Change_Animation_Mode(kActorOfficerLeary, kAnimationModeCombatIdle);
 				Actor_Says(kActorOfficerGrayford, 300, kAnimationModeTalk); //24-0300.AUD	Over there!
 				Actor_Says(kActorOfficerGrayford, 0, kAnimationModeTalk); //24-0000.AUD	It’s that Rep McCoy! Take it down!
 				Actor_Says(kActorOfficerGrayford, 10, kAnimationModeTalk); //24-0010.AUD	Get Guzza on the horn ASAP. We got him cornered.
@@ -164,10 +165,14 @@ void SceneScriptPS14::PlayerWalkedIn() {
 					//The Crystal will vouch for me line will only play if you are on good terms with Crystal meaning not having Lucy and Dektoras global affection goals activated.
 					if (Global_Variable_Query(kVariableAffectionTowards) != kAffectionTowardsDektora 	 
 					&& Global_Variable_Query(kVariableAffectionTowards) != kAffectionTowardsLucy
+					&& !Actor_Clue_Query(kActorSteele, kClueMcCoyHelpedGordo)
 					&& !Game_Flag_Query(kFlagIzoWarned)) {
 						Actor_Says(kActorMcCoy, 720, kAnimationModeTalk); //00-0720.AUD	Talk to Crystal Steele, she'll vouch for me.
 					}
 					Actor_Says(kActorOfficerGrayford, 40, kAnimationModeTalk); //24-0040.AUD	Drop your gun, put your hands in the air and then we’ll talk.
+					Actor_Change_Animation_Mode(kActorMcCoy, 4);
+					Delay(400);
+					Actor_Change_Animation_Mode(kActorMcCoy, 0);
 					Actor_Says(kActorOfficerGrayford, 50, kAnimationModeTalk); //24-0050.AUD	Okay. Come on out!
 					//McCoy walks up to Grayford
 					Player_Loses_Control();

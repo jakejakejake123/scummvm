@@ -868,21 +868,21 @@ void SceneScriptRC04::PlayerWalkedIn() {
 					Actor_Set_At_XYZ(kActorBulletBob, -85.71f, -41.29f, 65.11f, 240);
 					AI_Movement_Track_Flush(kActorOfficerLeary);
 					Actor_Put_In_Set(kActorOfficerLeary, kSetRC04);
-					Actor_Set_At_XYZ(kActorOfficerLeary, 21.82, 0.25, -91.65, 760);
+					Actor_Set_At_XYZ(kActorOfficerLeary, 69.31, 0.25, -109.61, 12);
 					Actor_Face_Actor(kActorMcCoy, kActorOfficerLeary, true);
-					Actor_Face_Actor(kActorOfficerLeary, kActorMcCoy, true);
 					Actor_Change_Animation_Mode(kActorOfficerLeary, kAnimationModeCombatIdle);
 					Music_Play(kMusicBatl226M, 50, 0, 2, -1, kMusicLoopPlayOnce, 0);
-					Delay(500);
-					Actor_Says(kActorMcCoy, 170, kAnimationModeIdle); //00-0170.AUD	Damn.
+					Actor_Face_Actor(kActorOfficerLeary, kActorMcCoy, true);
 					Delay(1000);
-					Actor_Says(kActorMcCoy, 3005, kAnimationModeIdle); //00-3005.AUD	What are you gonna do? Take me in?
+					Actor_Says(kActorMcCoy, 170, 15); //00-0170.AUD	Damn.
+					Delay(1000);
+					Actor_Says(kActorMcCoy, 3005, 13); //00-3005.AUD	What are you gonna do? Take me in?
 					Sound_Play(kSfxSHOTCOK1, 100, 0, 100, 50);
 					Delay(500);
 					Actor_Says(kActorMcCoy, 2380, 14); //00-2380.AUD	Wait a minute!
 					Delay(1000);
 					Sound_Play(kSfxGUNAIM1, 100, 0, 0, 50);
-					Delay(500);
+					Delay(1000);
 					Actor_Says(kActorMcCoy, 2980, 19); //00-2980.AUD	What the hell is that?
 					Sound_Play(kSfxGUNAIM1, 100, 0, 0, 50);
 					Actor_Face_Actor(kActorMcCoy, kActorGenwalkerA, true);
@@ -892,8 +892,13 @@ void SceneScriptRC04::PlayerWalkedIn() {
 					Actor_Face_Actor(kActorMcCoy, kActorGenwalkerA, true);
 					Actor_Says(kActorMcCoy, 2185, 14);	//00-2185.AUD	There’s a trigger there. See it? And what’s that blinking? 
 					Music_Stop(3u);
-					Sound_Play(kSfxBARSFX2, 100, 0, 0, 50);
+					Actor_Face_Actor(kActorMcCoy, kActorOfficerLeary, true);	
 					Actor_Says(kActorOfficerLeary, 170, 4); //23-0170.AUD	You ain't talking to some flunky, McCoy.	
+					Sound_Play(kSfxBARSFX2, 100, 0, 0, 50);
+					Loop_Actor_Walk_To_XYZ(kActorOfficerLeary, 21.82, 0.25, -91.65, 0, true, false, false);
+					Actor_Face_Actor(kActorMcCoy, kActorOfficerLeary, true);
+					Actor_Face_Actor(kActorOfficerLeary, kActorMcCoy, true);
+					Actor_Says(kActorMcCoy, 1800, 15); //00-1800.AUD	No, wait!
 					Sound_Play(kSfxLGCAL3, 100, 0, 0, 50);
 					Music_Play(kMusicMoraji, 71, 0, 0, -1, kMusicLoopPlayOnce, 2);
 					Actor_Change_Animation_Mode(kActorOfficerLeary, 48);
@@ -919,16 +924,23 @@ void SceneScriptRC04::PlayerWalkedIn() {
 					Music_Stop(3u);
 					Player_Set_Combat_Mode(false);
 					Actor_Face_Actor(kActorMcCoy, kActorOfficerLeary, true);
+					Delay(1000);
 					if (Player_Query_Agenda() != kPlayerAgendaSurly 
-						|| Player_Query_Agenda() != kPlayerAgendaErratic) {
-						Actor_Says(kActorMcCoy, 2390, kAnimationModeIdle); //00-2390.AUD	Oh, God. No.
+					|| Player_Query_Agenda() != kPlayerAgendaErratic) {
+						Music_Play(kMusicBRBlues, 52, 0, 2, -1, kMusicLoopPlayOnce, 1);
+						Actor_Says(kActorMcCoy, 2235, 11); //00-2235.AUD	How could they?
 					} else {
 						Actor_Says(kActorMcCoy, 170, -1); //00-0170.AUD	Damn.
 					}
+					Delay(1000);
 					if (Player_Query_Agenda() != kPlayerAgendaSurly 
 						|| Player_Query_Agenda() != kPlayerAgendaErratic) { 
+						Loop_Actor_Walk_To_XYZ(kActorMcCoy, 27.12, 0.29, -47.35, 0, true, false, false);
+						Actor_Face_Actor(kActorMcCoy, kActorOfficerLeary, true);
+						Delay(1000);
+						Actor_Says(kActorMcCoy, 2390, 14); //00-2390.AUD	Oh, God. No.
 						Delay(2000);
-						Actor_Says(kActorMcCoy, 2305, 13); //00-2305.AUD	I’m sorry.
+						Actor_Says(kActorMcCoy, 2305, 19); //00-2305.AUD	I’m sorry.
 						Delay(2000);
 					} 
 					Player_Gains_Control();

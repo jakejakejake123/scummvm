@@ -446,10 +446,19 @@ void AIScriptSebastian::dialogue() {
 			Actor_Says(kActorMcCoy, 7090, 17);
 			Actor_Says(kActorSebastian, 440, 14);
 			Actor_Says(kActorSebastian, 450, 13);
-			Actor_Says(kActorMcCoy, 7155, 13);
-			Actor_Says(kActorSebastian, 460, 17);
-			Actor_Says(kActorSebastian, 470, 12);
-			Actor_Says(kActorSebastian, 480, 13);
+			Actor_Says(kActorMcCoy, 7155, 13); //00-7155.AUD	You think they'd hold a grudge against Tyrell?
+			// What Sebastian says about the twins now changes based on their replicant status.
+			if (_vm->_cutContent) {
+				if (Game_Flag_Query(kFlagLutherLanceIsReplicant)) {
+					Actor_Says(kActorSebastian, 460, 17); //56-0460.AUD	Maybe. But they're decent fellows Mr. McCoy.
+				} else {
+					Actor_Says(kActorSebastian, 470, 12); //56-0470.AUD	I don't think they'd ever do a mean thing to anybody.
+				}
+			} else {
+				Actor_Says(kActorSebastian, 460, 17); //56-0460.AUD	Maybe. But they're decent fellows Mr. McCoy.
+				Actor_Says(kActorSebastian, 470, 12); //56-0470.AUD	I don't think they'd ever do a mean thing to anybody.
+			}
+			Actor_Says(kActorSebastian, 480, 13); //00-7160.AUD	Maybe they're too smart to keep around. Too much competition for the old man.
 			Actor_Says(kActorMcCoy, 7160, 18);
 			Actor_Says(kActorSebastian, 490, 14);
 			Actor_Says(kActorMcCoy, 7165, 14);

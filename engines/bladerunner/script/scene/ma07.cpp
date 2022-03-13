@@ -192,6 +192,8 @@ void SceneScriptMA07::PlayerWalkedIn() {
 		// Made it so whether of not you have affection towards Dektora or Lucy this will determine whether or not you will meet Crystal here.
 		&& (Global_Variable_Query(kVariableAffectionTowards) != kAffectionTowardsDektora
 		&& Global_Variable_Query(kVariableAffectionTowards) != kAffectionTowardsLucy
+		&& !Actor_Clue_Query(kActorSteele, kClueMcCoyHelpedGordo)
+		&& !Game_Flag_Query(kFlagIzoWarned)
 		&& !Game_Flag_Query(kFlagMcCoyRetiredHuman)
 		// Made it so McCoy has to retire at least 3 replicants for Steele to like him enough to meet him. 3 friendliness points per replicant. Starting friendliness 50.
 		// In the cut content mode there are around 10 potential replicants up until this point so this should be achieveable.
@@ -276,7 +278,15 @@ void SceneScriptMA07::PlayerWalkedIn() {
 					}
 				}
 				if (Game_Flag_Query(kFlagZubenSpared)) {
-					Actor_Clue_Acquire(kActorMcCoy, kClueSightingZuben, true, kActorSteele);
+					if (Actor_Clue_Query(kActorSteele, kClueHowieLeeInterview)
+					&& Actor_Clue_Query(kActorSteele, kClueCrowdInterviewA) 
+					&& Actor_Clue_Query(kActorSteele, kClueLabCorpses) 
+					&& Actor_Clue_Query(kActorSteele, kClueZubenInterview)) {
+						Actor_Set_Goal_Number(kActorZuben, kGoalZubenGone);
+						Actor_Clue_Acquire(kActorSteele, kClueCrystalRetiredZuben, true, kActorSteele);
+					} else {
+						Actor_Clue_Acquire(kActorSteele, kClueSightingZuben, true, kActorSteele);
+					}
 				}
 				if (Game_Flag_Query(kFlagGordoIsReplicant) && Game_Flag_Query(kFlagGordoRanAway)) {
 					Actor_Clue_Acquire(kActorMcCoy, kClueSightingGordo, true, kActorSteele);
@@ -287,7 +297,7 @@ void SceneScriptMA07::PlayerWalkedIn() {
 				if  (Actor_Clue_Query(kActorSteele, kClueDektorasDressingRoom)) {
 					if (Game_Flag_Query(kFlagEarlyQIsReplicant) && !Game_Flag_Query(kFlagEarlyQDead))  {
 						Actor_Clue_Acquire(kActorMcCoy, kClueVKEarlyQReplicant, true, kActorSteele);
-					} else {
+					} else if (!Game_Flag_Query(kFlagEarlyQIsReplicant) && !Game_Flag_Query(kFlagEarlyQDead)) {
 						Actor_Clue_Acquire(kActorMcCoy, kClueVKEarlyQHuman, true, kActorSteele);
 					}
 				}

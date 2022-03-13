@@ -616,8 +616,17 @@ void SceneScriptUG18::talkWithGuzza() {
 		Actor_Modify_Friendliness_To_Other(kActorSadik, kActorMcCoy, 5);
 		Loop_Actor_Walk_To_XYZ(kActorMcCoy, -117.13f, 0.0f, -284.47f, 0, false, false, false);
 		Actor_Face_Actor(kActorMcCoy, kActorGuzza, true);
-		Actor_Says(kActorMcCoy, 5960, 9);
-		Actor_Says(kActorMcCoy, 5965, 14);
+		Actor_Says(kActorMcCoy, 5960, 9); 
+		// Made it so if McCoy retired Izo a different line will play in regards to McCoy shooting a human.
+		if (_vm->_cutContent) {
+			if (Game_Flag_Query(kFlagMcCoyRetiredIzo)) {
+				Actor_Says(kActorMcCoy, 4010, 12); //00-4010.AUD	Lieutenant, I-- I shot a guy. Down in Chinatown.
+			} else {
+				Actor_Says(kActorMcCoy, 5965, 14); //00-5965.AUD	I didn’t do Izo. But I’m pretty sure I retired a human a while back.
+			}
+		} else {
+			Actor_Says(kActorMcCoy, 5965, 14); //00-5965.AUD	I didn’t do Izo. But I’m pretty sure I retired a human a while back.
+		}
 		Actor_Says(kActorGuzza, 980, 15);
 		Actor_Says(kActorGuzza, 990, 13);
 		Actor_Says(kActorMcCoy, 5970, 14);

@@ -61,6 +61,9 @@ void SceneScriptBB05::InitializeScene() {
 	Ambient_Sounds_Add_Sound(kSfxSWEEP4,  5,  80, 14, 14, -100, 100, -101, -101, 0, 0);
 
 	if (!Game_Flag_Query(kFlagBB05Entered)) {
+		if (_vm->_cutContent) {
+			Music_Play(kMusicBatl226M, 50, 0, 2, -1, kMusicLoopPlayOnce, 0);
+		}
 		Overlay_Play("BB05OVER", 0, false, false, 0); // Sadik's shadow in lower left corner
 		Game_Flag_Set(kFlagBB05Entered);
 	}

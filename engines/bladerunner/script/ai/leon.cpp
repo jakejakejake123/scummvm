@@ -255,6 +255,7 @@ bool AIScriptLeon::GoalChanged(int currentGoalNumber, int newGoalNumber) {
 		Player_Loses_Control();
 		Actor_Says(kActorLeon, 40, kAnimationModeTalk); //62-0040.AUD	LPD, huh? You wouldn't be a Blade Runner would ya?
 		Actor_Says(kActorMcCoy, 7895, kAnimationModeTalk); //00-7895.AUD	No. I--
+		Music_Play(kMusicBeating1, 71, 0, 0, -1, kMusicLoopPlayOnce, 2);
 		Actor_Change_Animation_Mode(kActorLeon, kAnimationModeCombatAttack);
 		Actor_Says(kActorMcCoy, 8670, 21); //00-8670.AUD	(grunts)
 		Delay (1000);

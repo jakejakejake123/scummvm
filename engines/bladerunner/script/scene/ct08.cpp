@@ -115,6 +115,9 @@ bool SceneScriptCT08::ClickedOnItem(int itemId, bool a2) {
 				Actor_Clue_Acquire(kActorMcCoy, kClueCheese, true, -1);
 				Item_Pickup_Spin_Effect(kModelAnimationCheese, 266, 328);
 				Item_Remove_From_World(kItemCheese);
+				if (_vm->_cutContent) {
+					Actor_Says(kActorMcCoy, 8820, 14);	//00-8820.AUD	A piece of cheese.
+				}
 				Actor_Voice_Over(480, kActorVoiceOver);
 				Actor_Voice_Over(490, kActorVoiceOver);
 				Actor_Voice_Over(500, kActorVoiceOver);

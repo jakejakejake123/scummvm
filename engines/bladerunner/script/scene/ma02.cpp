@@ -49,6 +49,7 @@ void SceneScriptMA02::InitializeScene() {
 			if (Game_Flag_Query(kFlagMcCoyRetiredHuman)
 			|| Global_Variable_Query(kVariableAffectionTowards) == kAffectionTowardsDektora
 			|| Global_Variable_Query(kVariableAffectionTowards) == kAffectionTowardsLucy
+			|| Actor_Clue_Query(kActorSteele, kClueMcCoyHelpedGordo)
 			|| Game_Flag_Query(kFlagIzoWarned))	{
 				Actor_Set_Goal_Number(kActorMaggie, kGoalMaggieDead);
 				Actor_Change_Animation_Mode(kActorMaggie, 88);
@@ -88,6 +89,7 @@ void SceneScriptMA02::InitializeScene() {
 			if (Game_Flag_Query(kFlagMcCoyRetiredHuman)
 			|| Global_Variable_Query(kVariableAffectionTowards) == kAffectionTowardsDektora
 			|| Global_Variable_Query(kVariableAffectionTowards) == kAffectionTowardsLucy
+			|| Actor_Clue_Query(kActorSteele, kClueMcCoyHelpedGordo)
 			|| Game_Flag_Query(kFlagIzoWarned)) {
 				Overlay_Play("MA02OVER", 0, true, false, 0);
 			}
@@ -130,6 +132,7 @@ bool SceneScriptMA02::ClickedOn3DObject(const char *objectName, bool a2) {
 						if (Game_Flag_Query(kFlagMcCoyRetiredHuman)
 						|| Global_Variable_Query(kVariableAffectionTowards) == kAffectionTowardsDektora
 						|| Global_Variable_Query(kVariableAffectionTowards) == kAffectionTowardsLucy
+						|| Actor_Clue_Query(kActorSteele, kClueMcCoyHelpedGordo)
 						|| Game_Flag_Query(kFlagIzoWarned)) {
 						Overlay_Remove("MA02OVER");
 						Item_Pickup_Spin_Effect(kModelAnimationCrystalsCigarette, 480, 240);
@@ -286,6 +289,7 @@ void SceneScriptMA02::PlayerWalkedIn() {
 					if (Game_Flag_Query(kFlagMcCoyRetiredHuman)
 					|| Global_Variable_Query(kVariableAffectionTowards) == kAffectionTowardsDektora
 					|| Global_Variable_Query(kVariableAffectionTowards) == kAffectionTowardsLucy
+					|| Actor_Clue_Query(kActorSteele, kClueMcCoyHelpedGordo)
 					|| Game_Flag_Query(kFlagIzoWarned)) {
 					// Made it so McCoy actually says the right line and the music now plays.
 						Actor_Says(kActorMcCoy, 2390, kAnimationModeIdle);

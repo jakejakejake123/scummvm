@@ -395,6 +395,9 @@ void SceneScriptNR07::clickedOnVase() {
 		Loop_Actor_Walk_To_Scene_Object(kActorMcCoy, "VASE", 100, true, false);
 		Actor_Change_Animation_Mode(kActorMcCoy, 23);
 		Item_Pickup_Spin_Effect(kModelAnimationDektorasCard, 526, 268);
+		if (_vm->_cutContent) {
+			Actor_Says(kActorMcCoy, 8835, 14);	//00-8835.AUD	A card.
+		}
 		Actor_Voice_Over(1690, kActorVoiceOver);
 		Actor_Voice_Over(1700, kActorVoiceOver);
 	} else {
@@ -531,7 +534,38 @@ void SceneScriptNR07::talkAboutVoightKampff() {
 	if (Game_Flag_Query(kFlagDektoraIsReplicant)) {
 		callHolloway();
 	} else {
-		dektoraRunAway();
+		// Made it so if Dektora is human and Hanoi is a replicant Hanoi will enter the room and attack McCoy.
+		// The scene will be slightly different depending on if you warned Dektora about Crystal or VKed with her being more sympathetic if you warned her
+		// or not caring at all if you VKed her. 
+		if (_vm->_cutContent) {
+			if (Game_Flag_Query(kFlagHanoiIsReplicant)) {
+				Player_Loses_Control();
+				Actor_Put_In_Set(kActorHanoi, kSetNR07);
+				Actor_Set_At_XYZ(kActorHanoi, -102.0f, -73.5f, -233.0f, 0);
+				Actor_Face_Actor(kActorHanoi, kActorDektora, true);
+				Actor_Face_Actor(kActorDektora, kActorHanoi, true);
+				Async_Actor_Walk_To_Waypoint(kActorMcCoy, 338, 0, false);
+				Actor_Says(kActorHanoi, 130, 3);
+				Actor_Face_Actor(kActorMcCoy, kActorHanoi, true);
+				Actor_Says(kActorDektora, 540, 30);	
+				Actor_Says(kActorHanoi, 140, kAnimationModeTalk);
+				AI_Movement_Track_Flush(kActorHanoi);
+				AI_Movement_Track_Append(kActorHanoi, 337, 0);
+				AI_Movement_Track_Repeat(kActorHanoi); 
+				Delay (6000);
+				Actor_Face_Actor(kActorHanoi, kActorMcCoy, true);
+				Actor_Face_Actor(kActorMcCoy, kActorHanoi, true);
+				Actor_Change_Animation_Mode(kActorHanoi, 23);
+				Actor_Set_Invisible(kActorMcCoy, true);
+				Actor_Face_Actor(kActorDektora, kActorHanoi, true);
+				Actor_Says(kActorMcCoy, 3595, kAnimationModeTalk);
+				dektoraRunAway();
+				Actor_Says(kActorMcCoy, 3785, kAnimationModeTalk); //00-3785.AUD	Let go, you lug. I gotta-- (grunts)
+				Actor_Set_Goal_Number(kActorHanoi, kGoalHanoiThrowOutMcCoy);
+			}
+		} else {
+			dektoraRunAway();
+		}
 	}
 }
 
@@ -555,7 +589,36 @@ void SceneScriptNR07::talkAboutSteele() {
 	if (Game_Flag_Query(kFlagDektoraIsReplicant)) {
 		callHolloway();
 	} else {
-		dektoraRunAway();
+		if (_vm->_cutContent) {
+			if (Game_Flag_Query(kFlagHanoiIsReplicant)) {
+				Player_Loses_Control();
+				Actor_Put_In_Set(kActorHanoi, kSetNR07);
+				Actor_Set_At_XYZ(kActorHanoi, -102.0f, -73.5f, -233.0f, 0);
+				Actor_Face_Actor(kActorHanoi, kActorDektora, true);
+				Actor_Face_Actor(kActorDektora, kActorHanoi, true);
+				Async_Actor_Walk_To_Waypoint(kActorMcCoy, 338, 0, false);
+				Actor_Says(kActorHanoi, 130, 3);
+				Actor_Face_Actor(kActorMcCoy, kActorHanoi, true);
+				Actor_Says(kActorDektora, 2360, 30);	//03-2360.AUD	Of course not.
+				Actor_Says(kActorHanoi, 140, kAnimationModeTalk);
+				AI_Movement_Track_Flush(kActorHanoi);
+				AI_Movement_Track_Append(kActorHanoi, 337, 0);
+				AI_Movement_Track_Repeat(kActorHanoi); 
+				Delay (6000);
+				Actor_Face_Actor(kActorHanoi, kActorMcCoy, true);
+				Actor_Face_Actor(kActorMcCoy, kActorHanoi, true);
+				Actor_Change_Animation_Mode(kActorHanoi, 23);
+				Actor_Set_Invisible(kActorMcCoy, true);
+				Actor_Face_Actor(kActorDektora, kActorHanoi, true);
+				Actor_Says(kActorMcCoy, 3595, kAnimationModeTalk);
+				Actor_Says(kActorDektora, 2610, 30);//03-2610.AUD	I… I've got to get out of here.
+				dektoraRunAway();
+				Actor_Says(kActorMcCoy, 3785, kAnimationModeTalk); //00-3785.AUD	Let go, you lug. I gotta-- (grunts)
+				Actor_Set_Goal_Number(kActorHanoi, kGoalHanoiThrowOutMcCoy);
+			}
+		} else {
+			dektoraRunAway();
+		}
 	}
 }
 
@@ -620,9 +683,17 @@ void SceneScriptNR07::talkAboutBlackSedan() {
 	Actor_Says(kActorMcCoy, 3720, 15);
 	Actor_Says_With_Pause(kActorDektora, 780, 2.0f, 30);
 	Actor_Says(kActorDektora, 790, 31);
-	Actor_Says(kActorMcCoy, 3725, 18);
-	Actor_Says(kActorDektora, 800, 30);
-	Actor_Says_With_Pause(kActorMcCoy, 3730, 2.0f, 13);
+	if (_vm->_cutContent) {
+		if (Player_Query_Agenda() == kPlayerAgendaSurly 
+			|| Player_Query_Agenda() == kPlayerAgendaErratic) {
+		Actor_Says(kActorMcCoy, 3725, 18); //00-3725.AUD	Is that right? Any reason you didn’t tell me that right off?
+		Actor_Says(kActorDektora, 800, 30);
+		}
+	} else {
+		Actor_Says(kActorMcCoy, 3725, 18); //00-3725.AUD	Is that right? Any reason you didn’t tell me that right off?
+		Actor_Says(kActorDektora, 800, 30);
+	}
+	Actor_Says_With_Pause(kActorMcCoy, 3730, 2.0f, 13); //
 	Actor_Says_With_Pause(kActorDektora, 810, 1.0f, kAnimationModeSit);
 	Actor_Says(kActorDektora, 820, 30);
 	Actor_Says(kActorMcCoy, 3735, 14);

@@ -174,13 +174,15 @@ void AIScriptHanoi::ClickedByPlayer() {
 		if (Actor_Query_Goal_Number(kActorHanoi) == kGoalHanoiNR08WatchShow) {
 			// Made it so if Hanoi is a replicant he is more protective of Dektora and contantly tells him to look but don't touch.
 			if (_vm->_cutContent) {
-					if (Game_Flag_Query(kFlagHanoiIsReplicant)) {
-						Actor_Says(kActorHanoi, 120, kAnimationModeTalk); //25-0120.AUD	Look but don’t touch, boy-o.
-						Actor_Says(kActorMcCoy, 940, 13); //00-0940.AUD	I need to ask you--
-						Actor_Says(kActorHanoi, 150, kAnimationModeTalk); //25-0150.AUD	Look but don’t touch!
-					}
-				} else {
+				if (Game_Flag_Query(kFlagHanoiIsReplicant)) {
+					Actor_Says(kActorHanoi, 120, kAnimationModeTalk); //25-0120.AUD	Look but don’t touch, boy-o.
+					Actor_Says(kActorMcCoy, 940, 13); //00-0940.AUD	I need to ask you--
+					Actor_Says(kActorHanoi, 150, kAnimationModeTalk); //25-0150.AUD	Look but don’t touch!
+					Actor_Says(kActorMcCoy, 5075, 18); //00-5075.AUD	Hey, pal.
 					Actor_Says(kActorHanoi, 210, kAnimationModeTalk); //25-0210.AUD	Sod off, McCoy. I got no time for you.
+				}
+			} else {
+				Actor_Says(kActorHanoi, 210, kAnimationModeTalk); //25-0210.AUD	Sod off, McCoy. I got no time for you.
 			}
 		}
 	}
@@ -224,12 +226,6 @@ void AIScriptHanoi::OtherAgentEnteredCombatMode(int otherActorId, int combatMode
 					Player_Set_Combat_Mode(false);
 			} else {
 				Loop_Actor_Walk_To_Actor(kActorHanoi, kActorMcCoy, 48, true, false); 
-				Actor_Face_Actor(kActorHanoi, kActorMcCoy, true);
-				Actor_Face_Actor(kActorMcCoy, kActorHanoi, true);
-				Actor_Change_Animation_Mode(kActorHanoi, 23);
-				Actor_Set_Invisible(kActorMcCoy, true);
-				Actor_Says(kActorMcCoy, 3595, kAnimationModeTalk);
-				Actor_Says(kActorMcCoy, 3785, kAnimationModeTalk); //00-3785.AUD	Let go, you lug. I gotta-- (grunts)
 				Actor_Set_Goal_Number(kActorHanoi, kGoalHanoiThrowOutMcCoy);
 			}
 		} else {
@@ -241,29 +237,6 @@ void AIScriptHanoi::OtherAgentEnteredCombatMode(int otherActorId, int combatMode
 		}
 		return; //true;
 	}
-		if (_vm->_cutContent) {
-			if (Player_Query_Current_Scene() == kSceneNR08
-			&& otherActorId == kActorMcCoy
-			&& combatMode
-			) {
-				// Also made it the same thing happens in set NR08 when Hanoi is guarding the stairs.
-				Actor_Face_Actor(kActorHanoi, kActorMcCoy, true);
-				Actor_Face_Actor(kActorMcCoy, kActorHanoi, true);
-				Actor_Says(kActorHanoi, 160, 13); //25-0160.AUD	Here, what’s this then?
-				if (Game_Flag_Query(kFlagHanoiIsReplicant)) {
-					Actor_Says(kActorHanoi, 170, 14); //25-0170.AUD	You’re bomb mate waving your piece around in here like this.
-				} else {
-					Actor_Says(kActorHanoi, 180, 13); //25-0180.AUD	Early Q's is for lovers, not fighters.
-					Player_Set_Combat_Mode(false);
-				}	
-				if (!Game_Flag_Query(kFlagHanoiIsReplicant)) {
-					Actor_Says(kActorMcCoy, 725, kAnimationModeTalk); //00-0725.AUD	Relax! I hear ya.
-					Player_Set_Combat_Mode(false);
-				} else {
-					Actor_Set_Goal_Number(kActorHanoi, kGoalHanoiThrowOutMcCoy);
-				}
-			}
-		}
 	return; //false;
 }
 
@@ -290,19 +263,15 @@ void AIScriptHanoi::Retired(int byActorId) {
 
 			if (Global_Variable_Query(kVariableReplicantsSurvivorsAtMoonbus) == 0) {
 				Player_Loses_Control();
-				Delay(2000);
-				Player_Set_Combat_Mode(false);
-				Loop_Actor_Walk_To_XYZ(kActorMcCoy, -12.0f, -41.58f, 72.0f, 0, true, false, false);
-				if (_vm->_cutContent) {
-					if (Actor_Query_Goal_Number(kActorMaggie) < kGoalMaggieDead) {
-						Async_Actor_Walk_To_Waypoint(kActorMcCoy, 312, 308, false);
-						Async_Actor_Walk_To_Waypoint(kActorMaggie, 312, 308, false);
-					} else {
-						Loop_Actor_Walk_To_XYZ(kActorMcCoy, -12.0f, -41.58f, 72.0f, 0, true, false, false);
+				if (Game_Flag_Query(kFlagCrazylegsIsReplicant)) {
+					if (!Game_Flag_Query(kFlagCrazylegsDead)) {
+						Loop_Actor_Walk_To_XYZ(kActorCrazylegs, -12.0f, -41.58f, 72.0f, 0, true, false, false);
+						Actor_Put_In_Set(kActorCrazylegs, kSceneKP06);
 					}
-				} else {
-					Loop_Actor_Walk_To_XYZ(kActorMcCoy, -12.0f, -41.58f, 72.0f, 0, true, false, false);			
 				}
+				Delay(3000);
+				Player_Set_Combat_Mode(false);
+				Delay(1000); 
 				Ambient_Sounds_Remove_All_Non_Looping_Sounds(true);
 				Ambient_Sounds_Remove_All_Looping_Sounds(1u);
 				Game_Flag_Set(kFlagKP07toKP06);
@@ -461,7 +430,8 @@ bool AIScriptHanoi::GoalChanged(int currentGoalNumber, int newGoalNumber) {
 				Sound_Play(kSfxSHOTCOK1, 77, 0, 0, 20);
 				Actor_Face_Actor(kActorHanoi, kActorMcCoy, true);
 				Actor_Face_Actor(kActorMcCoy, kActorHanoi, true);
-				Delay (2000);
+				Delay (1000);
+				Actor_Says(kActorHanoi, 160, 4); //25-0160.AUD	Here, what’s this then?
 				ADQ_Add(kActorMcCoy, 490, kAnimationModeTalk); //00-0490.AUD	Suck on this, skin-job!
 				Actor_Change_Animation_Mode(kActorMcCoy, 6);
 				Sound_Play(kSfxGUNH1A, 100, 0, 0, 50);

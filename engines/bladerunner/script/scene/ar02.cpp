@@ -126,6 +126,20 @@ bool SceneScriptAR02::ClickedOnActor(int actorId) {
 		if (!Loop_Actor_Walk_To_XYZ(kActorMcCoy, -386.96f, 0.0f, -1078.45f, 12, true, false, false)) {
 			Actor_Face_Actor(kActorMcCoy, kActorInsectDealer, true);
 			Actor_Face_Actor(kActorInsectDealer, kActorMcCoy, true);
+			if (_vm->_cutContent) {
+				if (Global_Variable_Query(kVariableChapter) == 2) {
+					if (!Game_Flag_Query(kFlagAR02InsectDealerInterviewed)
+					&& !Game_Flag_Query(kFlagAR02InsectDealerTalk)
+					&& !Game_Flag_Query(kFlagInsectDealerTalkMerchandise)
+					) {
+						Actor_Says(kActorMcCoy, 8475, 12);
+						Actor_Says(kActorInsectDealer, 190, 12);
+						Actor_Says(kActorMcCoy, 105, 15);
+						Actor_Says(kActorInsectDealer, 200, 14);
+						Game_Flag_Set(kFlagInsectDealerTalkMerchandise);
+					}
+				}
+			}
 			if (Global_Variable_Query(kVariableChapter) == 2) {
 				if (Game_Flag_Query(kFlagAR02InsectDealerInterviewed)
 				    && !Game_Flag_Query(kFlagAR02InsectDealerTalk)
@@ -139,9 +153,9 @@ bool SceneScriptAR02::ClickedOnActor(int actorId) {
 					if (_vm->_cutContent) {
 						Actor_Says(kActorInsectDealer, 220, 14); // Doesn't she deserve a gift?
 					}
-					Actor_Says(kActorMcCoy, 110, 18);
+					Actor_Says(kActorMcCoy, 110, 18); //00-0110.AUD	All my girl cares about is food and love.
 					Actor_Says(kActorInsectDealer, 230, 14);
-					Actor_Says(kActorMcCoy, 115, 18);
+					Actor_Says(kActorMcCoy, 115, 18); //
 					Actor_Says(kActorInsectDealer, 240, 14);
 					Item_Pickup_Spin_Effect(kModelAnimationMaggieBracelet, 288, 257);
 					Actor_Says(kActorInsectDealer, 250, 14);
@@ -447,7 +461,9 @@ void SceneScriptAR02::dialogueWithInsectDealer1() {
 	) {
 		DM_Add_To_List_Never_Repeat_Once_Selected(500, 3, 5, 5); // ANKLET
 	}
-	DM_Add_To_List_Never_Repeat_Once_Selected(510, 8, 3, -1); // MERCHANDISE
+	if (!_vm->_cutContent) {
+		DM_Add_To_List_Never_Repeat_Once_Selected(510, 8, 3, -1); // MERCHANDISE
+	}
 	Dialogue_Menu_Add_DONE_To_List(520); // DONE
 
 	Dialogue_Menu_Appear(320, 240);

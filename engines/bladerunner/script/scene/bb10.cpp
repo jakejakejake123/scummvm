@@ -54,6 +54,9 @@ void SceneScriptBB10::InitializeScene() {
 	Ambient_Sounds_Add_Sound(kSfxBBMOVE3, 5,  50, 17, 27, -100, 100, -101, -101, 0, 0);
 	Ambient_Sounds_Add_Sound(kSfxHAUNT1,  5,  50, 17, 27, -100, 100, -101, -101, 0, 0);
 	Ambient_Sounds_Add_Sound(kSfxHAUNT2,  5,  50, 17, 27, -100, 100, -101, -101, 0, 0);
+	if (_vm->_cutContent) {
+		Music_Stop(3u);
+	}
 
 	if (!Game_Flag_Query(kFlagBB10Shelf1Available)) {
 		Scene_2D_Region_Add(0, 458, 99, 522, 133);

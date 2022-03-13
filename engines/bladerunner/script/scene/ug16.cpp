@@ -86,11 +86,21 @@ bool SceneScriptUG16::ClickedOn3DObject(const char *objectName, bool a2) {
 			) {
 				Game_Flag_Set(kFlagUG16FolderFound);
 				Delay(1000);
-				Actor_Voice_Over(3480, kActorVoiceOver);
-				Actor_Change_Animation_Mode(kActorMcCoy, 38);
-				Sound_Play(kSfxDRAWER1, 100, 0, 0, 50);
-				Delay(1000);
-				Item_Pickup_Spin_Effect(kModelAnimationFolder, 460, 287);
+				// Altered the scene where McCoy finds the folder in Luther and Lances chest of drawers. He now describes the folder and also doesn't say 'what a
+				// difference a day makes' and until realizes what he has found.
+				if (_vm->_cutContent) {
+					Actor_Change_Animation_Mode(kActorMcCoy, 38);
+					Sound_Play(kSfxDRAWER1, 100, 0, 0, 50);
+					Item_Pickup_Spin_Effect(kModelAnimationFolder, 460, 287);
+					Actor_Says(kActorMcCoy, 8870, 13); //00-8870.AUD	A folder with information about Guzza.
+					Actor_Voice_Over(3480, kActorVoiceOver);
+				} else {
+					Actor_Voice_Over(3480, kActorVoiceOver);
+					Actor_Change_Animation_Mode(kActorMcCoy, 38);
+					Sound_Play(kSfxDRAWER1, 100, 0, 0, 50);
+					Delay(1000);
+					Item_Pickup_Spin_Effect(kModelAnimationFolder, 460, 287);
+				}
 				Actor_Voice_Over(2740, kActorVoiceOver);
 				Actor_Voice_Over(2750, kActorVoiceOver);
 				Actor_Voice_Over(2760, kActorVoiceOver);
@@ -219,24 +229,45 @@ void SceneScriptUG16::PlayerWalkedIn() {
 		Actor_Says(kActorLuther, 0, 6);
 		Actor_Says(kActorLuther, 30, 13);
 		Actor_Change_Animation_Mode(kActorLuther, 17);
-		Actor_Says(kActorLance, 0, 17);
+		Actor_Says(kActorLance, 0, 17); //13-0000.AUD	Hey, it’s about time you showed up.
 		Actor_Says(kActorMcCoy, 5710, 14);
-		Actor_Says(kActorLuther, 40, 13); //10-0040.AUD	Detective Ray McCoy.
+		// Altered the dialogue between McCoy and Luther and Lance so if they are human they don't act like sarcastic jerks to him and they also don't want Tyrell dead despite
+		// their anger towards him. If they are Replicants they treat McCoy badly and want Clovis to kill Tyrell/
+		if (_vm->_cutContent) {
+			if (Game_Flag_Query(kFlagLutherLanceIsReplicant)) {
+				Actor_Says(kActorLance, 10, 13); //13-0010.AUD	Detective Ray McCoy.
+			} else {
+				Actor_Says(kActorLuther, 40, 13); //10-0040.AUD	Detective Ray McCoy.
+			}
+		} else {
+			Actor_Says(kActorLuther, 40, 13); //10-0040.AUD	Detective Ray McCoy.
+		}
 		// Made it so Luther and Lance only mention Morajis death if Moraji died.
 		if (_vm->_cutContent) {
 			if (!Game_Flag_Query(kFlagMorajiAlive)) { 
 				Actor_Says(kActorLuther, 50, 15); //10-0050.AUD	You’re investigating Moraji’s death.
 				Actor_Says(kActorLance, 20, 12); //13-0020.AUD	And Eisenduller’s.
-				Actor_Says(kActorLuther, 60, 23); //10-0060.AUD	Having any luck?
+				if (Game_Flag_Query(kFlagLutherLanceIsReplicant)) {
+					Actor_Says(kActorLuther, 60, 23); //10-0060.AUD	Having any luck?
+				}
 			}
 		} else {
 			Actor_Says(kActorLuther, 50, 15);
 			Actor_Says(kActorLance, 20, 12);
 			Actor_Says(kActorLuther, 60, 23);
 		}
-		Actor_Says(kActorMcCoy, 5715, 14);
-		Actor_Says(kActorLance, 30, 16);
-		Actor_Says(kActorLuther, 70, 6);
+		Actor_Says(kActorMcCoy, 5715, 14); //00-5715.AUD	You’re Luther and Lance?
+		if (_vm->_cutContent) {
+			if (!Game_Flag_Query(kFlagLutherLanceIsReplicant)) {
+				Actor_Says(kActorLuther, 320, 6); //10-0320.AUD	No question.
+			} else {
+				Actor_Says(kActorLance, 30, 16); //13-0030.AUD	Hell of a smart cookie there.
+				Actor_Says(kActorLuther, 70, 6); //10-0070.AUD	Take your guns and your violence elsewhere. We’ve got important work to do.
+			}
+		} else {
+			Actor_Says(kActorLance, 30, 16); //13-0030.AUD	Hell of a smart cookie there.
+			Actor_Says(kActorLuther, 70, 6); //10-0070.AUD	Take your guns and your violence elsewhere. We’ve got important work to do.
+		}
 		// Made it so you can not shoot Luther and Lance at first. Doesn't make sense for McCoy to shoot two random strangers in the back.
 		// This will change when Luther and Lance reveal that they are reps.
 		if (_vm->_cutContent) {
@@ -311,8 +342,14 @@ void SceneScriptUG16::dialogueWithLuther() {
 			|| Player_Query_Agenda() != kPlayerAgendaErratic) {
 				Actor_Says(kActorMcCoy, 790, 13);//00-0790.AUD	You might consider knocking off work early.
 			}
+			// Made it so McCoy will not mention the reps killing Eisenduller and Moraji if Moraji survived the explosion.
+			// Also McCoy will only warn Luther and Lance if he is not surly or erratic.
 		} else {
 			Actor_Says(kActorMcCoy, 5730, 13); //00-5730.AUD	The Reps that killed Marcus and Moraji. They’ll be looking for you.
+			if (Player_Query_Agenda() != kPlayerAgendaSurly 
+			|| Player_Query_Agenda() != kPlayerAgendaErratic) {
+				Actor_Says(kActorMcCoy, 790, 13);//00-0790.AUD	You might consider knocking off work early.
+			}
 		}
 	} else {
 		Actor_Says(kActorMcCoy, 5730, 13); //00-5730.AUD	The Reps that killed Marcus and Moraji. They’ll be looking for you.
@@ -320,10 +357,17 @@ void SceneScriptUG16::dialogueWithLuther() {
 		Actor_Face_Actor(kActorMcCoy, kActorLuther, true);
 		Actor_Says(kActorLuther, 100, 18);
 		Actor_Says(kActorMcCoy, 5775, 13);
-		Actor_Says(kActorLance, 70, 17);
-		Actor_Says(kActorLuther, 110, 16);
-		Actor_Says(kActorLance, 80, 6);
-		Actor_Says(kActorMcCoy, 5780, 13);
+		Actor_Says(kActorLance, 70, 17); //13-0070.AUD	Cause we’re all part of the same suit of cards, you know what I mean?
+		if (_vm->_cutContent) {
+			if (Game_Flag_Query(kFlagLutherLanceIsReplicant)) {		
+				Actor_Says(kActorLuther, 110, 16); //10-0110.AUD	Eldon makes mistakes just like any other… human. The difference is…
+				Actor_Says(kActorLance, 80, 6); //13-0080.AUD	The difference is the old bastard doesn’t like to admit it. No, he-- he covers them up, pretends they’re human, gives them a job at his stinking corporation. And when they actually produce original work he boots them out on the street.
+			} 
+		} else {
+			Actor_Says(kActorLuther, 110, 16); //10-0110.AUD	Eldon makes mistakes just like any other… human. The difference is…
+			Actor_Says(kActorLance, 80, 6); //13-0080.AUD	The difference is the old bastard doesn’t like to admit it. No, he-- he covers them up, pretends they’re human, gives them a job at his stinking corporation. And when they actually produce original work he boots them out on the street.
+		}
+		Actor_Says(kActorMcCoy, 5780, 13); //00-5780.AUD	You’re saying you are Replicants?
 		Actor_Says(kActorLuther, 120, 16);
 		Actor_Says(kActorLance, 120, 13);
 		Actor_Says(kActorMcCoy, 5785, 13);
@@ -358,14 +402,20 @@ void SceneScriptUG16::dialogueWithLuther() {
 		break;
 
 	case 1410: // WORK
-		Actor_Says(kActorMcCoy, 5735, 13);
+		Actor_Says(kActorMcCoy, 5735, 13); //00-5735.AUD	What are you doing down here?
 		Actor_Face_Actor(kActorMcCoy, kActorLuther, true);
-		Actor_Says(kActorLance, 160, 17);
+		if (_vm->_cutContent) {
+			if (Game_Flag_Query(kFlagLutherLanceIsReplicant)) {
+				Actor_Says(kActorLance, 160, 17); //13-0160.AUD	Eldon shafted us. So, now we’re returning the favor.
+			}
+		} else {
+			Actor_Says(kActorLance, 160, 17); //13-0160.AUD	Eldon shafted us. So, now we’re returning the favor.
+		}
 		// Added in a line and a flag which triggers the lifespan option to appear.
 		if (_vm->_cutContent) {
 			Actor_Says(kActorLance, 170, 17); //13-0170.AUD	We’re gonna figure out a way to beat that four year lifespan if it kills us.
 		}
-		Actor_Says(kActorLuther, 200, 14);
+		Actor_Says(kActorLuther, 200, 14); //10-0200.AUD	We promised Clovis we’d be finished with this by the time he got back, so if you don’t mind…
 		if (_vm->_cutContent) {
 			Game_Flag_Set(kFlagLutherLanceTalkWork);
 		}
@@ -395,10 +445,14 @@ void SceneScriptUG16::dialogueWithLuther() {
 		Actor_Face_Actor(kActorMcCoy, kActorLuther, true);
 		// Added in some lines and a clue.
 		if (_vm->_cutContent) {
-			Actor_Says(kActorLuther, 340, 15); //10-0340.AUD	Clovis has gone to see Eldon.
-			Actor_Says(kActorMcCoy, 8965, 14); //00-8965.AUD	What for?
+			if (!Game_Flag_Query(kFlagLutherLanceIsReplicant)) {
+				Actor_Says(kActorLuther, 340, 15); //10-0340.AUD	Clovis has gone to see Eldon.
+			} else {
+				Actor_Says(kActorLance, 240, 15); //13-0240.AUD	Gone to have a little heart to heart with Eldon.
+			}
+		} else {
+			Actor_Says(kActorLance, 240, 15); //13-0240.AUD	Gone to have a little heart to heart with Eldon.
 		}
-		Actor_Says(kActorLance, 240, 15); //13-0240.AUD	Gone to have a little heart to heart with Eldon.
 		if (_vm->_cutContent) {
 			Actor_Says(kActorLuther, 280, 15); //10-0280.AUD	We showed him how to get in through the basement.
 		}
@@ -426,25 +480,48 @@ void SceneScriptUG16::dialogueWithLuther() {
 	case 1440: // VOIGT-KAMPFF
 		Actor_Says(kActorMcCoy, 5750, 13);
 		Actor_Face_Actor(kActorMcCoy, kActorLuther, true);
-		Actor_Says(kActorLance, 280, 6);
-		Actor_Says(kActorLuther, 300, 14);
-		Actor_Says(kActorLuther, 310, 15);
+		if (_vm->_cutContent) {
+			if (Game_Flag_Query(kFlagLutherLanceIsReplicant)) {
+				Actor_Says(kActorLance, 280, 6); //13-0280.AUD	(scoffs) Do you believe this clown? He wants to Voigt Kampff us.
+				Actor_Says(kActorLuther, 300, 14); //10-0300.AUD	Sorry, McCoy. Shoot us or leave us alone.
+				Actor_Says(kActorLuther, 310, 15); //10-0310.AUD	Let’s get back to work.
+			} else {
+				Actor_Says(kActorLuther, 90, 15); //10-0090.AUD	Can’t talk now.
+				Actor_Says(kActorLuther, 310, 15); //10-0310.AUD	Let’s get back to work.
+			}
+		} else {
+			Actor_Says(kActorLance, 280, 6); //13-0280.AUD	(scoffs) Do you believe this clown? He wants to Voigt Kampff us.
+			Actor_Says(kActorLuther, 300, 14); //10-0300.AUD	Sorry, McCoy. Shoot us or leave us alone.
+		}
 		Actor_Modify_Friendliness_To_Other(kActorLuther, kActorMcCoy, -5);
 		break;
 
 	case 1450: // GUZZA
-		Actor_Says(kActorMcCoy, 5755, 13);
+		Actor_Says(kActorMcCoy, 5755, 13); //00-5755.AUD	Clovis set me up, didn’t he? And he used my boss to do it.
 		Actor_Face_Actor(kActorMcCoy, kActorLuther, true);
-		Actor_Says(kActorLance, 290, 17);
-		Actor_Says(kActorLuther, 320, 16);
-		Actor_Says(kActorMcCoy, 5820, 13);
+		if (_vm->_cutContent) {
+			if (Game_Flag_Query(kFlagLutherLanceIsReplicant)) {
+				Actor_Says(kActorLance, 290, 17); //13-0290.AUD	He’s sharp this one.
+				Actor_Says(kActorLuther, 320, 16); //10-0320.AUD	No question.
+			}
+		} else {
+			Actor_Says(kActorLance, 290, 17); //13-0290.AUD	He’s sharp this one.
+			Actor_Says(kActorLuther, 320, 16); //10-0320.AUD	No question.
+		}
+		Actor_Says(kActorMcCoy, 5820, 13); //00-5820.AUD	Tell me what you know.
 		Actor_Says(kActorLance, 300, 17);
 		Actor_Says(kActorLuther, 330, 14);
 		Actor_Says(kActorMcCoy, 5825, 13);
-		Actor_Says(kActorLuther, 340, 13);
-		Actor_Says(kActorLance, 310, 13);
-		Actor_Says(kActorLuther, 350, 13);
-		Actor_Says(kActorLuther, 360, 15);
+		Actor_Says(kActorLuther, 340, 13); //10-0340.AUD	Clovis has gone to see Eldon.
+		Actor_Says(kActorLance, 310, 13); //13-0310.AUD	But he might not make it.
+		if (_vm->_cutContent) {
+			if (Game_Flag_Query(kFlagLutherLanceIsReplicant)) {
+				Actor_Says(kActorLuther, 350, 13); //10-0350.AUD	Still the work will go on with or without Clovis.
+			}
+		} else {
+			Actor_Says(kActorLuther, 350, 13); //10-0350.AUD	Still the work will go on with or without Clovis.
+		}
+		Actor_Says(kActorLuther, 360, 15); //10-0360.AUD	Get us Tyrell’s files. The rest of the DNA data. And we will help you.
 		Actor_Says(kActorMcCoy, 5830, 13);
 		Actor_Says(kActorLance, 320, 16);
 		Actor_Says(kActorLance, 330, 15);
@@ -462,8 +539,14 @@ void SceneScriptUG16::dialogueWithLuther() {
 			Actor_Says(kActorLance, 360, 14); //13-0360.AUD	He was going to pawn them off as real.
 		}
 		Actor_Says(kActorMcCoy, 5835, 13); //00-5835.AUD	That probably had something to do with you guys getting fired.
-		Actor_Says(kActorLuther, 380, 15);
-		Actor_Says(kActorLance, 370, 6);
+		Actor_Says(kActorLuther, 380, 15); //10-0380.AUD	I’m sure he wasn’t too pleased.
+		if (_vm->_cutContent) {
+			if (Game_Flag_Query(kFlagLutherLanceIsReplicant)) {
+				Actor_Says(kActorLance, 370, 6); //13-0370.AUD	Since Eldon is such a pain in the ass control freak…
+			}
+		} else {
+			Actor_Says(kActorLance, 370, 6); //13-0370.AUD	Since Eldon is such a pain in the ass control freak…
+		}
 		Actor_Says(kActorMcCoy, 5840, 13);
 		Actor_Says(kActorLance, 380, 13); //13-0380.AUD	It was all just a coincidence.
 		if (_vm->_cutContent) {
@@ -474,11 +557,17 @@ void SceneScriptUG16::dialogueWithLuther() {
 	case 1470: // TRADE
 		Actor_Says(kActorMcCoy, 5765, 13);
 		Actor_Face_Actor(kActorMcCoy, kActorLuther, true);
-		Actor_Says(kActorLance, 400, 15);
+		if (_vm->_cutContent) {
+			if (Game_Flag_Query(kFlagLutherLanceIsReplicant)) {
+				Actor_Says(kActorLance, 400, 15); //13-0400.AUD	Check it out, bro. The little man with the big gun did good.
+			}
+		} else {
+			Actor_Says(kActorLance, 400, 15); //13-0400.AUD	Check it out, bro. The little man with the big gun did good.
+		}
 		Actor_Says(kActorMcCoy, 5845, 13);
 		Actor_Says(kActorLuther, 390, 23);
 		Actor_Says(kActorLance, 410, 14);
-		Actor_Says(kActorLance, 420, 17);
+		Actor_Says(kActorLance, 420, 17); 
 #if BLADERUNNER_ORIGINAL_BUGS
 		// This quote is repeated (also used in RUNCITER question
 		// "That probably had something to do with you guys getting fired."
@@ -497,11 +586,22 @@ void SceneScriptUG16::dialogueWithLuther() {
 		Actor_Voice_Over(2750, kActorVoiceOver);
 		Actor_Voice_Over(2760, kActorVoiceOver);
 		Actor_Voice_Over(2770, kActorVoiceOver);
-		Actor_Says(kActorMcCoy, 5850, 13);
-		Actor_Says(kActorLuther, 400, 15);
-		Actor_Says(kActorLance, 430, 6);
-		Actor_Says(kActorMcCoy, 5855, 13);
-		Actor_Says(kActorLuther, 410, 14);
+		Actor_Says(kActorMcCoy, 5850, 13); 
+		Actor_Says(kActorLuther, 400, 15); //10-0400.AUD	From Clovis. He told us to hold it for him.
+		if (_vm->_cutContent) {
+			if (Game_Flag_Query(kFlagLutherLanceIsReplicant)) {
+				Actor_Says(kActorLance, 430, 6); //13-0430.AUD	Come to think of it I’m not sure you’re supposed to see it. You wanna give it back now?
+				Actor_Says(kActorMcCoy, 5855, 13);
+				Actor_Says(kActorLuther, 410, 14); //10-0410.AUD	Let him have it. Clovis said he was finished with the policemen anyway.
+			} else {
+				Actor_Says(kActorMcCoy, 7835, 13); //00-7835.AUD	Is that so?
+				Actor_Says(kActorLuther, 310, 14); //10-0310.AUD	Let’s get back to work.
+			}
+		} else {
+			Actor_Says(kActorLance, 430, 6); //13-0430.AUD	Come to think of it I’m not sure you’re supposed to see it. You wanna give it back now?
+			Actor_Says(kActorMcCoy, 5855, 13);
+			Actor_Says(kActorLuther, 410, 14); //10-0410.AUD	Let him have it. Clovis said he was finished with the policemen anyway.
+		}
 		Game_Flag_Set(kFlagUG16FolderFound);
 		Actor_Clue_Acquire(kActorMcCoy, kClueFolder, true, kActorLuther);
 		break;

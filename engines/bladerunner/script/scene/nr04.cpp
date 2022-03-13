@@ -101,6 +101,7 @@ bool SceneScriptNR04::ClickedOn3DObject(const char *objectName, bool a2) {
 					} else if (!Actor_Clue_Query(kActorMcCoy, kClueCollectionReceipt)) {
 						Actor_Clue_Acquire(kActorMcCoy, kClueCollectionReceipt, false, -1);
 						Item_Pickup_Spin_Effect(kModelAnimationCollectionReceipt, 247, 141);
+						Actor_Says(kActorMcCoy, 8845, 13); //00-8845.AUD	A receipt.
 						Actor_Voice_Over(1560, kActorVoiceOver);
 						Actor_Voice_Over(1570, kActorVoiceOver);
 						Actor_Voice_Over(1580, kActorVoiceOver);

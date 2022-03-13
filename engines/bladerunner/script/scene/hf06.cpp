@@ -216,6 +216,9 @@ void SceneScriptHF06::ActorChangedGoal(int actorId, int newGoal, int oldGoal, bo
 			Actor_Voice_Over(1010, kActorVoiceOver);
 			Loop_Actor_Walk_To_Actor(kActorMcCoy, otherActorId, 24, false, false);
 			Item_Pickup_Spin_Effect(kModelAnimationBomb, 355, 200);
+			if (_vm->_cutContent) {
+				Actor_Says(kActorMcCoy, 8890, 13); //00-8890.AUD	A bomb.
+			}
 			Actor_Voice_Over(1020, kActorVoiceOver);
 			Actor_Voice_Over(1030, kActorVoiceOver);
 			Actor_Voice_Over(1040, kActorVoiceOver);

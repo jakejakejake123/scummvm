@@ -66,6 +66,9 @@ bool SceneScriptCT51::ClickedOn3DObject(const char *objectName, bool a2) {
 		if (!Actor_Clue_Query(kActorMcCoy, kClueHysteriaToken)) {
 			Item_Pickup_Spin_Effect(kModelAnimationHysteriaToken, 203, 200);
 			Actor_Clue_Acquire(kActorMcCoy, kClueHysteriaToken, true, -1);
+			if (_vm->_cutContent) {
+				Actor_Says(kActorMcCoy, 8810, 14);	//00-8810.AUD	An arcade token.
+			}
 			Actor_Voice_Over(420, kActorVoiceOver);
 			return true;
 		}
