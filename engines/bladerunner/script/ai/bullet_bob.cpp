@@ -213,25 +213,7 @@ bool AIScriptBulletBob::GoalChanged(int currentGoalNumber, int newGoalNumber) {
 	 && Game_Flag_Query(kFlagRC04McCoyWarned)
 	 && Player_Query_Current_Scene() == kSceneRC04
 	) {
-		if (_vm->_cutContent) {
-			if (Game_Flag_Query(kFlagBulletBobIsReplicant)) {
-				// This is what happens if you pull your gun out when Bob is a replicant and then decide to put it away.
-				// Sadly I couldn't get this to work and even when McCoy puts his gun away this interaction would not occur.
-				// Maybe you could fix it? Thankfully the next sequence below where McCoy pulls out his gun and confronts replicant Bob works
-				// so there is that.
-				Actor_Says(kActorMcCoy, 455, 13); //00-0455.AUD	Relax. Nobody's gonna get retired. Okay?
-				Actor_Says(kActorBulletBob, 860, 37); //14-0860.AUD	And what's in it for you?
-				Delay (1000);
-				Actor_Says(kActorMcCoy, 3460, 13); //00-3460.AUD	Insurance.
-				Actor_Says(kActorBulletBob, 880, 37); //14-0880.AUD	They really ought to pay you guys better.
-				Game_Flag_Set(kFlagMcCoyIsHelpingReplicants);
-				Game_Flag_Reset(kFlagBulletBobDiscovered);
-			} else {
-				Actor_Says(kActorBulletBob, 140, 16); //14-0140.AUD	Little boys shouldn't play with guns.
-			}
-		} else {
-			Actor_Says(kActorBulletBob, 140, 16); //14-0140.AUD	Little boys shouldn't play with guns.
-		}
+		Actor_Says(kActorBulletBob, 140, 16); //14-0140.AUD	Little boys shouldn't play with guns.
 		return true;
 	}
 
@@ -249,6 +231,7 @@ bool AIScriptBulletBob::GoalChanged(int currentGoalNumber, int newGoalNumber) {
 					Actor_Set_Targetable(kActorBulletBob, true);
 					// If Bullet Bob is a replicant and McCoy has discovered this when McCoy pulls his gun out this exchange will happen.
 					if (Game_Flag_Query(kFlagBulletBobIsReplicant)) {
+						Music_Play(kMusicBatl226M, 50, 0, 2, -1, kMusicLoopPlayOnce, 0);
 						Actor_Says(kActorBulletBob, 1780, 37); //14-1780.AUD	That's supposed to scare me?
 						Actor_Says(kActorBulletBob, 1610, 37); //14-1610.AUD	I've had enough McCoy.
 						Actor_Change_Animation_Mode(kActorMcCoy, 5); // McCoy points his gun at Bob.

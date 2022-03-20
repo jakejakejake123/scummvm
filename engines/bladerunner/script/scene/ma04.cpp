@@ -187,11 +187,9 @@ bool SceneScriptMA04::ClickedOn2DRegion(int region) {
 				// 3. In act 4 when meeting Crystal outside McCoys apartment in act 4 (restored). Have 60 friendliness with Crystal by retiring 2 reps and being
 				// nice to her by accepting her offer to exchange information. You can also get her to trust you by submitting the Guzza evidence to the police.  
 				if (_vm->_cutContent) {
-					if (!Game_Flag_Query(kFlagMcCoyRetiredHuman)
-					&& Global_Variable_Query(kVariableAffectionTowards) != kAffectionTowardsDektora
-					&& Global_Variable_Query(kVariableAffectionTowards) != kAffectionTowardsLucy
-					&& !Actor_Clue_Query(kActorSteele, kClueMcCoyHelpedGordo)
-					&& !Game_Flag_Query(kFlagIzoWarned)) {
+					if (!Game_Flag_Query(kFlagMcCoyRetiredHuman)) {
+					if (Global_Variable_Query(kVariableAffectionTowards) != kAffectionTowardsDektora
+					&& Global_Variable_Query(kVariableAffectionTowards) != kAffectionTowardsLucy) {
 						if (Game_Flag_Query(kFlagMcCoyIsInnocent)
 						|| 	Game_Flag_Query(kFlagCrystalTrustsMcCoy)) {
 							phoneCallWithSteele();
@@ -200,6 +198,7 @@ bool SceneScriptMA04::ClickedOn2DRegion(int region) {
 						phoneCallWithDektora();
 					} else if (Global_Variable_Query(kVariableAffectionTowards) == kAffectionTowardsLucy) {
 						phoneCallWithLucy();
+					}
 					} else {
 						phoneCallWithClovis();
 					}
@@ -566,11 +565,13 @@ void SceneScriptMA04::phoneCallWithSteele() {
 	if (_vm->_cutContent) {
 		Actor_Says(kActorSteele, 770, 3); //01-0770.AUD	That son of a bitch, Clovis, was climbing in and out of a manhole right next to the police station and nobody ever noticed.
 		Actor_Says(kActorMcCoy, 2655, 16); //00-2655.AUD	Figures. With incompetents like Guzza at the helm.
-		// Made it so Crystal only says Guzza is going to be fed to the barracudas if McCoy didn't tell Bryant that Guzza is dead when he submitted the evidence.
-		if (!Game_Flag_Query(kFlagMcCoyIsInnocent)) {
-			Actor_Says(kActorSteele, 790, 3); //01-0790.AUD	I think we can forget about Guzza. That guy’s gonna be fed to the barracudas.
-			Actor_Says(kActorMcCoy, 2660, 18); //00-2660.AUD	That breaks my heart.
-			Actor_Says(kActorSteele, 800, 3); //01-0800.AUD	I knew it would.
+		// Made it so Crystal only says Guzza is going to be fed to the barracudas if McCoy saved Guzza and arrested him.
+		if (Game_Flag_Query(kFlagGuzzaSaved)) {
+			if (Actor_Clue_Query(kActorMcCoy, kClueFolder)) {
+				Actor_Says(kActorSteele, 790, 3); //01-0790.AUD	I think we can forget about Guzza. That guy’s gonna be fed to the barracudas.
+				Actor_Says(kActorMcCoy, 2660, 18); //00-2660.AUD	That breaks my heart.
+				Actor_Says(kActorSteele, 800, 3); //01-0800.AUD	I knew it would.
+			}
 		}
 	}
 	Actor_Says(kActorMcCoy, 2665, 13); //00-2665.AUD	We’re gonna air out the Reps together or what?
@@ -587,37 +588,59 @@ void SceneScriptMA04::phoneCallWithClovis() {
 	Actor_Says(kActorClovis, 330, 3); //05-0330.AUD	I see you survived.
 	//Altered code so McCoy only gets angry at Clovis for trying to kill him if Clovis actually tried to kill McCoy in the sewers. If that didn't happen we skip straight to the part
 	//Where Clovis apologises to McCoy for the situation with Guzza.
+	// Altered code so Clovis and McCoy will be angry with each other if McCoy retired Dektora Lucy or Zuben or he didn't kill Guzza.
+	// If he didn't do any of that Clovis is nicer to him.
 	if (_vm->_cutContent) {
-		if (Actor_Clue_Query(kActorMcCoy, kClueClovisOrdersMcCoysDeath)) {
+		if (Game_Flag_Query(kFlagGuzzaSaved)
+		|| Actor_Clue_Query(kActorMcCoy, kClueClovisOrdersMcCoysDeath)
+		|| Actor_Clue_Query(kActorClovis, kClueMcCoyRetiredLucy) 
+		|| Actor_Clue_Query(kActorClovis, kClueMcCoyRetiredDektora)
+		|| Actor_Clue_Query(kActorMcCoy, kClueMcCoyRetiredZuben)) {
 			Actor_Says(kActorMcCoy, 2580, 14); //00-2580.AUD	No thanks to you.
 			Actor_Says(kActorClovis, 340, 3); //05-0340.AUD	Don’t you think you’d already be dead, if that’s what I so desired?
 			Actor_Says(kActorMcCoy, 2585, 19); //00-2585.AUD	Talking like a god, Clovis. Isn’t that a little over the top? Even for you?
 			Actor_Says(kActorClovis, 350, 3); //05-0350.AUD	Prometheus was chained to a rock and vultures pecked at his liver.
 			Actor_Says(kActorClovis, 360, 3); //05-0360.AUD	I haven’t quite had to suffer such ordeals literally speaking of course.
 			Actor_Says(kActorMcCoy, 2590, 18); //00-2590.AUD	Well, there’s still time.
+			Actor_Says_With_Pause(kActorClovis, 420, 1.5f, 3); //05-0420.AUD	Is something the matter, brother?
 		} else {
 			Actor_Says(kActorMcCoy, 8305, 18); //00-8305.AUD	I think so.
+			Actor_Says(kActorClovis, 370, 3); //05-0370.AUD	(laughs) I’m calling to apologize, brother. I should have never recruited Guzza against you. I just had to make sure that you weren’t going to betray us.
+			Actor_Says(kActorMcCoy, 2595, 15); //00-2595.AUD	Guzza probably thought that he recruited you.
+			Actor_Says(kActorClovis, 390, 3); 
+			Actor_Says(kActorClovis, 400, 3); 
+			Actor_Says(kActorClovis, 410, 3); //05-0410.AUD	But he was never to be trusted. Unlike you.
+			Actor_Says(kActorMcCoy, 2600, 15); //00-2600.AUD	I appreciate that.
+			Actor_Says_With_Pause(kActorClovis, 420, 1.5f, 3); //05-0420.AUD	Is something the matter, brother?
 		}
 	} else {
-	Actor_Says(kActorMcCoy, 2580, 14); //05-0370.AUD	(laughs) I’m calling to apologize, brother. I should have never recruited Guzza against you. I just had to make sure that you weren’t going to betray us.
-	Actor_Says(kActorClovis, 340, 3);
-	Actor_Says(kActorMcCoy, 2585, 19);
-	Actor_Says(kActorClovis, 350, 3);
-	Actor_Says(kActorClovis, 360, 3);
-	Actor_Says(kActorMcCoy, 2590, 18);
+		Actor_Says(kActorMcCoy, 2580, 14); 
+		Actor_Says(kActorClovis, 340, 3);
+		Actor_Says(kActorMcCoy, 2585, 19);
+		Actor_Says(kActorClovis, 350, 3);
+		Actor_Says(kActorClovis, 360, 3);
+		Actor_Says(kActorMcCoy, 2590, 18);
+		Actor_Says(kActorClovis, 370, 3); //05-0370.AUD	(laughs) I’m calling to apologize, brother. I should have never recruited Guzza against you. I just had to make sure that you weren’t going to betray us.
+		Actor_Says(kActorMcCoy, 2595, 15); //00-2595.AUD	Guzza probably thought that he recruited you.
+		Actor_Says(kActorClovis, 390, 3); 
+		Actor_Says(kActorClovis, 400, 3); 
+		Actor_Says(kActorClovis, 410, 3); //05-0410.AUD	But he was never to be trusted. Unlike you.
+		Actor_Says(kActorMcCoy, 2600, 15); //00-2600.AUD	I appreciate that.
+		Actor_Says_With_Pause(kActorClovis, 420, 1.5f, 3); //05-0420.AUD	Is something the matter, brother?
 	}
-	Actor_Says(kActorClovis, 370, 3);
-	Actor_Says(kActorMcCoy, 2595, 15);
-	Actor_Says(kActorClovis, 390, 3);
-	Actor_Says(kActorClovis, 400, 3);
-	Actor_Says(kActorClovis, 410, 3);
-	Actor_Says(kActorMcCoy, 2600, 15);
-	Actor_Says_With_Pause(kActorClovis, 420, 1.5f, 3);
-	Actor_Says(kActorMcCoy, 2605, 17);
-	Actor_Says(kActorClovis, 430, 3);
-	Actor_Says(kActorClovis, 440, 3);
-	Actor_Says(kActorMcCoy, 2610, 3);
-	Actor_Says(kActorClovis, 450, 3);
+	if (_vm->_cutContent) {
+		if (Actor_Query_Goal_Number(kActorMaggie) == kGoalMaggieDead) {
+			Actor_Says(kActorMcCoy, 2605, 17); //00-2605.AUD	My dog’s been murdered.
+			Actor_Says(kActorClovis, 430, 3); //05-0430.AUD	And does that not wet your thirst for vengeance?
+			Actor_Says(kActorClovis, 440, 3); //05-0440.AUD	Come back home to us. We’ll demand justice and receive it!
+		}
+	} else {
+		Actor_Says(kActorMcCoy, 2605, 17); //00-2605.AUD	My dog’s been murdered.
+		Actor_Says(kActorClovis, 430, 3); //05-0430.AUD	And does that not wet your thirst for vengeance?
+		Actor_Says(kActorClovis, 440, 3); //05-0440.AUD	Come back home to us. We’ll demand justice and receive it!
+	}
+	Actor_Says(kActorMcCoy, 2610, 3); //00-2610.AUD	How do I know who I really am?
+	Actor_Says(kActorClovis, 450, 3); //05-0450.AUD	Guzza must have programmed you as an experiment.
 	Actor_Says(kActorClovis, 460, 3);
 	Actor_Says(kActorClovis, 470, 3);
 	Actor_Says(kActorClovis, 480, 3);

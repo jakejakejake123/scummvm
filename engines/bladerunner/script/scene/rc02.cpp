@@ -441,7 +441,7 @@ void SceneScriptRC02::dialogueWithRunciter() {
 			Actor_Says(kActorMcCoy, 395, 14);
 			Actor_Face_Actor(kActorRunciter, kActorMcCoy, true);
 			// Changed code so Runciter is more resistant to being VKed if he is a replicant or has low friendliness with McCoy
-			if (!Game_Flag_Query(kFlagRunciterIsReplicant)
+			if (Game_Flag_Query(kFlagRunciterIsReplicant)
 			|| Actor_Query_Friendliness_To_Other(kActorRunciter, kActorMcCoy) < 46) {
 				Actor_Says(kActorRunciter, 1680, 13); //15-1680.AUD	No. I have a lot of cleaning up to do.
 				Actor_Says(kActorMcCoy, 400, 14); //00-0400.AUD	It won't take too long.

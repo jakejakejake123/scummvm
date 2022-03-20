@@ -210,6 +210,7 @@ bool AIScriptLeon::GoalChanged(int currentGoalNumber, int newGoalNumber) {
 		Actor_Face_Actor(kActorLeon, kActorMcCoy, true);
 		Actor_Face_Actor(kActorMcCoy, kActorLeon, true);
 		if (Actor_Clue_Query(kActorMcCoy, kClueWantedPoster)) { // there is no way how to obtain this poster
+			Music_Play(kMusicBatl226M, 50, 0, 2, -1, kMusicLoopPlayOnce, 0);
 			Actor_Says_With_Pause(kActorMcCoy, 525, 0.2f, 14);
 			Actor_Says(kActorLeon, 90, 13);
 			Actor_Says(kActorMcCoy, 530, 16);
@@ -253,6 +254,7 @@ bool AIScriptLeon::GoalChanged(int currentGoalNumber, int newGoalNumber) {
 	// Made it so Leon now punches McCoy twice. McCoy seems to struggle a bit when he says 'I'm thinking of changing jobs' so it makes sense for
 	// him to be hit here. Also made other improvements to this encounter.
 		Player_Loses_Control();
+		Music_Stop(3u);
 		Actor_Says(kActorLeon, 40, kAnimationModeTalk); //62-0040.AUD	LPD, huh? You wouldn't be a Blade Runner would ya?
 		Actor_Says(kActorMcCoy, 7895, kAnimationModeTalk); //00-7895.AUD	No. I--
 		Music_Play(kMusicBeating1, 71, 0, 0, -1, kMusicLoopPlayOnce, 2);

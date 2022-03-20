@@ -1080,14 +1080,35 @@ bool AIScriptSteele::GoalChanged(int currentGoalNumber, int newGoalNumber) {
 			break;
 
 		case kGoalDektoraNR11FallThroughWindow:
-			Actor_Modify_Friendliness_To_Other(kActorSteele, kActorMcCoy, 6);
+			if (_vm->_cutContent) {
+				Actor_Modify_Friendliness_To_Other(kActorSteele, kActorMcCoy, 3);
+				Music_Stop(3u);
+			} else {
+				Actor_Modify_Friendliness_To_Other(kActorSteele, kActorMcCoy, 6);
+			}
 			Actor_Says(kActorSteele, 1750, 12);
-			Actor_Says(kActorMcCoy, 3815, 19);
-			Actor_Says(kActorSteele, 1760, 13);
+			if (_vm->_cutContent) {
+				if (Player_Query_Agenda() == kPlayerAgendaSurly 
+				|| Player_Query_Agenda() == kPlayerAgendaErratic) {
+					Actor_Says(kActorMcCoy, 3815, 19); //00-3815.AUD	I think we can safely say that one’s in bio-mechanical purgatory.
+				} else {
+					Music_Play(kMusicBRBlues, 52, 0, 2, -1, kMusicLoopPlayOnce, 0);
+				}
+			} else {
+				Actor_Says(kActorMcCoy, 3815, 19);
+			}
+			Actor_Says(kActorSteele, 1760, 13); //01-1760.AUD	You had to clear out everything else up here too.
 			Actor_Says(kActorMcCoy, 3820, 18);
 			Actor_Says(kActorSteele, 1770, 14);
 			Actor_Says(kActorSteele, 1780, 15);
-			Actor_Says(kActorMcCoy, 3825, 14);
+			if (_vm->_cutContent) {
+				if (Player_Query_Agenda() == kPlayerAgendaSurly 
+				|| Player_Query_Agenda() == kPlayerAgendaErratic) {
+					Actor_Says(kActorMcCoy, 3825, 14); //00-3825.AUD	Next time.
+				}
+			} else {
+				Actor_Says(kActorMcCoy, 3825, 14);		
+			}
 			Game_Flag_Set(kFlagDektoraRanAway);
 			Actor_Set_Goal_Number(kActorDektora, kGoalDektoraGone);
 			Actor_Set_Goal_Number(kActorSteele, kGoalSteeleNRxxGoToSpinner);

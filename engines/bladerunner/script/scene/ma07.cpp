@@ -166,24 +166,45 @@ void SceneScriptMA07::PlayerWalkedIn() {
 	}
 
 	if (Game_Flag_Query(kFlagMcCoyFreedOfAccusations)) {
-		Actor_Voice_Over(1360, kActorVoiceOver);
-		Actor_Voice_Over(1370, kActorVoiceOver);
-		Actor_Voice_Over(1380, kActorVoiceOver);
-		Actor_Voice_Over(1390, kActorVoiceOver);
-		Actor_Voice_Over(1400, kActorVoiceOver);
-		Delay(1000);
-		Game_Flag_Reset(kFlagMcCoyFreedOfAccusations);
-		// If McCoy retired Luther and Lance in act 4 and he cleared his name he will receive 400 chinyen at the start of act 5.
+		// Made it so McCoy receives 400 chinyen if he retired replicant Luther and Lance and he is found to be innocent.
 		if (_vm->_cutContent) {
-			if (Actor_Query_Goal_Number(kActorLuther) > kGoalLutherGone) {
+			if (Game_Flag_Query(kFlagLutherLanceIsReplicant)
+			&& Actor_Query_Goal_Number(kActorLuther) > kGoalLutherGone) {
 				if (Query_Difficulty_Level() != kGameDifficultyEasy) {
-				Global_Variable_Increment (kVariableChinyen, 400);
+					Global_Variable_Increment (kVariableChinyen, 400);			
 				}
 			}
 		}
+		Actor_Voice_Over(1360, kActorVoiceOver); //99-1360.AUD	They didn’t even put me on the Machine.
+		Actor_Voice_Over(1370, kActorVoiceOver); //99-1370.AUD	The evidence Guzza coughed up was all I’d needed to convince them I wasn’t a Rep.
+		// Made it so McCoys comments are different here depending on whether or not he saved Guzza.
+		if (_vm->_cutContent) {
+			if (Game_Flag_Query(kFlagGuzzaSaved)
+			&& !Actor_Clue_Query(kActorMcCoy, kClueFolder)) {
+				Actor_Voice_Over(4410, kActorVoiceOver); //99-4410.AUD	Guzza must have a little something going on the side.
+				Delay(1000);
+				Player_Gains_Control();
+				Game_Flag_Reset(kFlagMcCoyFreedOfAccusations);
+			} else {
+				Actor_Voice_Over(1380, kActorVoiceOver); //99-1380.AUD	Bryant chewed me out for letting the Reps kill him…
+				Actor_Voice_Over(1390, kActorVoiceOver);
+				Actor_Voice_Over(1400, kActorVoiceOver);
+				Delay(1000);
+				Player_Gains_Control();
+				Game_Flag_Reset(kFlagMcCoyFreedOfAccusations);
+			}
+		} else {
+			Actor_Voice_Over(1380, kActorVoiceOver); //99-1380.AUD	Bryant chewed me out for letting the Reps kill him…
+			Actor_Voice_Over(1390, kActorVoiceOver);
+			Actor_Voice_Over(1400, kActorVoiceOver);
+			Delay(1000);
+			Game_Flag_Reset(kFlagMcCoyFreedOfAccusations);
+		}
+	}
+		// If McCoy retired Luther and Lance in act 4 and he cleared his name he will receive 400 chinyen at the start of act 5.
+		
 		Game_Flag_Set(kFlagMA06ToMA02);
 		Set_Enter(kSetMA02_MA04, kSceneMA02);
-	}
 	//return false;
 	// Code for an encounter that you can have with Crystal in act 4 if McCoy didn't retire a human or is not on his
 	// way to the car ending.
@@ -221,7 +242,6 @@ void SceneScriptMA07::PlayerWalkedIn() {
 				Actor_Says(kActorMcCoy, 5495, 15); //00-5495.AUD	Oh, yeah?
 				Actor_Says(kActorSteele, 2810, 15); //01-2810.AUD	Beat it, Slim. Take it on the heel. Before I regret this.
 				Loop_Actor_Walk_To_XYZ(kActorSteele, -270.65, -162.25, 276.32, 0, true, false, false);
-				Actor_Set_Invisible(kActorSteele, true);
 				Player_Gains_Control();
 				Game_Flag_Set(kFlagCrystalTalkAct4);
 			} else {
@@ -335,13 +355,109 @@ void SceneScriptMA07::PlayerWalkedIn() {
 					Game_Flag_Set(kFlagCrystalTrustsMcCoy);
 				}
 				// Removed invisibility line code.
-				Loop_Actor_Walk_To_XYZ(kActorSteele, -250.65, -162.25, 276.32, 0, true, false, false);
+				Loop_Actor_Walk_To_XYZ(kActorSteele, -270.65, -162.25, 276.32, 0, true, false, false);
 				Player_Gains_Control();
 				Game_Flag_Set(kFlagCrystalTalkAct4);
 			}
 		}
 	}
-}
+	// Made it so if you saved Guzza you will meet him here instead of Gaff and the conversation will play out differently depending on whether McCoy retired a human
+	// and has the briefcase of evidence.
+	if (_vm->_cutContent) {
+		if (Global_Variable_Query(kVariableChapter) == 4) {
+			if (Game_Flag_Query(kFlagGuzzaSaved)) {
+				Actor_Put_In_Set(kActorGuzza, kSetMA07);
+				Actor_Set_At_XYZ(kActorGuzza, 184.49, -162.24, 215.34, 0);
+				Actor_Face_Actor(kActorGuzza, kActorMcCoy, true);
+				Actor_Says(kActorGuzza, 9005, 14); //04-9005.AUD	Hey.
+				Actor_Face_Actor(kActorMcCoy, kActorGuzza, true);
+				Actor_Says(kActorGuzza, 420, 13); //04-0420.AUD	Keeping out of trouble, kid?
+				Actor_Face_Actor(kActorMcCoy, kActorGuzza, true);
+				Actor_Says(kActorMcCoy, 9045, 15); //00-9045.AUD	Not these days.
+				Music_Play(kMusicBRBlues, 52, 0, 2, -1, kMusicLoopPlayOnce, 0);
+				Player_Loses_Control();
+				Loop_Actor_Walk_To_Actor(kActorMcCoy, kActorGuzza, 24, true, false);
+				Actor_Face_Actor(kActorMcCoy, kActorGuzza, true);
+				Actor_Face_Actor(kActorGuzza, kActorMcCoy, true);
+				Actor_Says(kActorMcCoy, 6610, 14); //00-6610.AUD	Been messing with peoples’ lives lately?
+				Delay(2000);
+				Actor_Says(kActorMcCoy, 8395, 18); //00-8395.AUD	You don't have anything to say?
+				Delay(1000);
+				Actor_Says(kActorGuzza, 1530, 15); //04-1530.AUD	I must have made a mistake or something. Truly, an honest mistake.
+				Actor_Says(kActorMcCoy, 3910, 15); //00-3910.AUD	You’re lying.
+				Actor_Says(kActorGuzza, 1520, 14); //04-1520.AUD	Everything I say is as true as holy writ.
+				Delay(1000);
+				Actor_Says(kActorMcCoy, 2130, 15); //00-2130.AUD	You’re the coldest person I’ve ever seen when it comes to killing.
+				Delay(500);
+				Actor_Says(kActorMcCoy, 6645, 18); //00-6645.AUD	You were raking in the chinyen selling LPD wares to scumbags and Reps.
+				Actor_Says(kActorGuzza, 540, 14); //04-0540.AUD	Trust me. Ain't nobody getting rich unless they're sneaking some on the side.
+				Actor_Says(kActorMcCoy, 8345, 18); //00-8345.AUD	I wouldn't know.
+				Delay(1000);
+				Actor_Says(kActorGuzza, 260, 13);//04-0260.AUD	Once you start carving up that juicy bacon kid, the taste never goes away.
+				Actor_Says(kActorGuzza, 270, 15);//04-0270.AUD	The great things in life...? Believe me you'll just be wanting more and more.
+				if (!Game_Flag_Query(kFlagMcCoyRetiredHuman)
+				&& Actor_Clue_Query(kActorMcCoy, kClueBriefcase)) {
+					Actor_Says(kActorMcCoy, 6630, 15); //00-6630.AUD	I’m through listening, Guzza. Now it’s your turn.
+					Player_Set_Combat_Mode(true);
+					Actor_Change_Animation_Mode(kActorMcCoy, 5);
+					Player_Loses_Control();
+					Delay(1000);
+					Actor_Says(kActorGuzza, 410, 15); //04-0410.AUD	Jesus.
+					Actor_Says(kActorMcCoy, 3095, -1); //00-3095.AUD	Now we’re gonna take a little ride downtown.	
+					Actor_Says(kActorGuzza, 600, 15);	// 04-0600.AUD	You what? Damn it, wha-- what are you telling me? I don't need this. Not today.
+					Actor_Says(kActorMcCoy, 4205, -1); //00-4205.AUD	I'll bet. But this is only the beginning.
+					Delay(1000);
+					Actor_Says(kActorGuzza, 120, 15); // 04-0120.AUD	I don't want to ever see your sorry ass again.
+					Actor_Says(kActorMcCoy, 4070, -1); //00-4070.AUD	You got it.
+					Loop_Actor_Walk_To_XYZ(kActorGuzza, 127.63, -162.26, 252.58, 0, true, false, false);
+					Async_Actor_Walk_To_Waypoint(kActorMcCoy, 100, 0, false);
+					Async_Actor_Walk_To_Waypoint(kActorGuzza, 101, 0, false);
+					Delay(4000);
+					Actor_Force_Stop_Walking(kActorMcCoy);
+					Actor_Put_In_Set(kActorGuzza, kSetPS09);
+					Player_Gains_Control();
+					Player_Set_Combat_Mode(false);
+					Game_Flag_Set(kFlagMcCoyFreedOfAccusations);
+					Game_Flag_Set(kFlagMcCoyIsInnocent);
+					Actor_Set_Goal_Number(kActorMcCoy, kGoalMcCoyStartChapter5);
+				} else {
+					Actor_Says(kActorMcCoy, 8519, 14); // 00-8519.AUD	What do you say we dish each other the straight goods.
+					Delay(500);
+					Actor_Says(kActorMcCoy, 6675, 18); //00-6675.AUD	I want my life back.
+					Delay(1000);
+					Actor_Says(kActorGuzza, 620, 13); //04-0620.AUD	I'm gonna have to call in some favors.
+					Actor_Says(kActorMcCoy, 8320, 18); //00-8320.AUD	Really?
+					Delay(500);
+					Actor_Says(kActorGuzza, 450, 15); //04-0450.AUD	Yeah, I'll give it a try, kid. And I'll have to pull some strings, so don't go in there half-assed.
+					Actor_Says(kActorMcCoy, 8502, 14); //00-8502.AUD	I hope it's enough.
+					Actor_Says(kActorGuzza, 230, 14); //04-0230.AUD	Hey, don't worry. The boys upstairs want to keep our best and brightest happy.
+					Delay(1000);
+					Item_Pickup_Spin_Effect(kModelAnimationFolder, 391, 343);
+					Actor_Clue_Lose(kActorMcCoy, kClueFolder);
+					Actor_Says(kActorMcCoy, 4055, 13); // 00-4055.AUD	Thanks, Lieutenant.
+					Loop_Actor_Walk_To_XYZ(kActorMcCoy, 110.71, -162.25, 261.82, 0, true, false, false);
+					Actor_Face_Actor(kActorGuzza, kActorMcCoy, true);
+					Actor_Says(kActorGuzza, 740, 15); //04-0740.AUD	Look, McCoy. I know how it is on the street.
+					Actor_Says(kActorGuzza, 750, 14); //04-0750.AUD	It's easy for a Blade Runner to step over the line.
+					Actor_Face_Actor(kActorMcCoy, kActorGuzza, true);
+					Delay(1000);
+					Actor_Says(kActorMcCoy, 7980, 19); //00-7980.AUD	Yeah. Maybe.
+					Async_Actor_Walk_To_Waypoint(kActorMcCoy, 100, 0, false);
+					Async_Actor_Walk_To_Waypoint(kActorGuzza, 101, 0, false);
+					Delay(4000);
+					Actor_Force_Stop_Walking(kActorMcCoy);
+					Actor_Put_In_Set(kActorGuzza, kSetPS04);
+					Player_Gains_Control();
+					Global_Variable_Set(kVariableAffectionTowards, kAffectionTowardsNone);
+					Game_Flag_Set(kFlagMcCoyFreedOfAccusations);
+					Game_Flag_Set(kFlagMcCoyIsInnocent);
+					Game_Flag_Reset(kFlagMcCoyRetiredHuman);
+					Actor_Set_Goal_Number(kActorMcCoy, kGoalMcCoyStartChapter5);
+				}	
+			}
+		}
+	}	
+}	
 
 void SceneScriptMA07::PlayerWalkedOut() {
 	if (_vm->_cutContent) {

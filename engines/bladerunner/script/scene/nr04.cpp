@@ -424,6 +424,7 @@ if (_vm->_cutContent) {
 	if (_vm->_cutContent) {
 		if (Actor_Clue_Query(kActorMcCoy, kClueEarlyQAndLucy)) {
 			if (!Game_Flag_Query(kFlagNR04EarlyQStungByScorpions)) {
+				if (!Game_Flag_Query(kFlagEarlyQDead)) {
 				Actor_Put_In_Set(kActorEarlyQ, kSetNR04);
 				Actor_Set_At_XYZ(kActorEarlyQ,  48.79, 0.32, 34.30, 126);
 				Actor_Face_Actor(kActorMcCoy, kActorEarlyQ, true);
@@ -466,6 +467,7 @@ if (_vm->_cutContent) {
 				Game_Flag_Reset(kFlagMcCoyInNightclubRow);
 				Game_Flag_Set(kFlagMcCoyInPoliceStation);
 				Set_Enter(kSetPS09, kScenePS09);
+				}
 			}
 		}
 	}

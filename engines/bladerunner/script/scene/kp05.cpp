@@ -165,8 +165,7 @@ void SceneScriptKP05::PlayerWalkedIn() {
 	if (_vm->_cutContent) {
 		if (Game_Flag_Query(kFlagMcCoyRetiredHuman)
 			|| Global_Variable_Query(kVariableAffectionTowards) == kAffectionTowardsDektora
-			|| Global_Variable_Query(kVariableAffectionTowards) == kAffectionTowardsLucy
-			|| Game_Flag_Query(kFlagIzoWarned)) {
+			|| Global_Variable_Query(kVariableAffectionTowards) == kAffectionTowardsLucy) {
 			Scene_Exits_Disable();
 			Actor_Face_Actor(kActorSteele, kActorMcCoy, true);
 			Actor_Says(kActorSteele, 530, 15);

@@ -204,6 +204,11 @@ bool AIScriptClovis::ShotAtAndHit() {
 			Scene_Exits_Enable();
 		}
 	}
+	if (Actor_Query_Goal_Number(kActorClovis) == kGoalClovisUG18Wait) {
+		Game_Flag_Set(kFlagGuzzaSaved);
+		ADQ_Flush();
+		Actor_Set_Goal_Number(kActorClovis, kGoalClovisUG18HitByMcCoy);
+	}
 	return false;
 }
 
@@ -480,7 +485,41 @@ bool AIScriptClovis::GoalChanged(int currentGoalNumber, int newGoalNumber) {
 		return true;
 
 	case kGoalClovisKP07TalkToMcCoy:
+	// Made it so McCoy only says that all the reps are dead besides Clovis if that is the case.
+	if (_vm->_cutContent) {
+		if ((((((((((Actor_Query_Goal_Number(kActorZuben) == kGoalZubenGone)))))))))) {
+			if (((((((((Game_Flag_Query(kFlagLucyIsReplicant)
+			&& Actor_Query_Goal_Number(kActorLucy) == kGoalLucyGone))))))))) {
+				if ((((((((Game_Flag_Query(kFlagDektoraIsReplicant) 
+				&& Actor_Query_Goal_Number(kActorDektora) == kGoalDektoraGone)))))))) {
+					if (((((((Game_Flag_Query(kFlagIzoIsReplicant) 
+					&& Actor_Query_Goal_Number(kActorIzo) == kGoalIzoGone))))))) {
+						if ((((((Game_Flag_Query(kFlagGordoIsReplicant) 
+						&& Actor_Query_Goal_Number(kActorGordo) == kGoalGordoGone)))))) {
+							if (((((Game_Flag_Query(kFlagLutherLanceIsReplicant) 
+							&& Actor_Query_Goal_Number(kActorLuther) == kGoalLutherGone))))) {
+								if ((((Game_Flag_Query(kFlagBulletBobIsReplicant) 
+								&& Actor_Query_Goal_Number(kActorBulletBob) == kGoalBulletBobGone)))) {
+									if (((Game_Flag_Query(kFlagCrazylegsIsReplicant) 
+									&& Game_Flag_Query(kFlagCrazylegsDead))))  {
+										if ((Game_Flag_Query(kFlagEarlyQIsReplicant) 
+										&& Game_Flag_Query(kFlagEarlyQDead)))  {
+											if (Game_Flag_Query(kFlagHanoiIsReplicant) 
+											&& Game_Flag_Query(kFlagHanoiDead))  {
+												Actor_Says(kActorMcCoy, 2345, 16);
+											}
+										}
+									}
+								}
+							}
+						}
+					}
+				}
+			}
+		}
+	} else {
 		Actor_Says(kActorMcCoy, 2345, 16);
+	}
 		Actor_Says(kActorClovis, 170, -1);
 		Actor_Says(kActorClovis, 180, kAnimationModeTalk);
 		Actor_Says(kActorMcCoy, 2350, 17); //00-2350.AUD	You want me to feel sorry for you.

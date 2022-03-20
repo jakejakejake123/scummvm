@@ -183,6 +183,7 @@ void SceneScriptUG19::PlayerWalkedIn() {
 						Actor_Says(kActorGordo, 1380, 16); //02-1380.AUD	It’s the way of all flesh, baby. Just the issue of when that’s got us concerned.
 					}
 				}
+				if (!Actor_Clue_Query(kActorMcCoy, kClueGuzzaFramedMcCoy)) {
 				Actor_Says(kActorMcCoy, 6530, 15); //00-6530.AUD	Somebody set me up, Gordo. Who’s behind it? Clovis? 	
 				Actor_Says(kActorGordo, 1120, 12); //02-1120.AUD	Clovis ain’t no zipper-head He’s capable of pulling a string or two.
 				Actor_Says(kActorGordo, 1130, 11); //02-1130.AUD	But no way he’s a one-man show.
@@ -200,6 +201,7 @@ void SceneScriptUG19::PlayerWalkedIn() {
 					Actor_Says(kActorGordo, 1290, 11); //02-1290.AUD	Nice words coming from a fashion plate like you.
 					Actor_Says(kActorGordo, 1300, 13); //02-1300.AUD	When did you last press that shirt? 1492?
 					Actor_Says(kActorMcCoy, 665, 15); //00-0665.AUD	Real funny, pal.
+				}
 				}
 					Actor_Says(kActorMcCoy, 6535, 15); //00-6535.AUD	I need to see Clovis ASAP.
 					Actor_Says(kActorGordo, 1140, 14); //02-1140.AUD	You know what Clovis would do, if he found out I was even talking to you? 

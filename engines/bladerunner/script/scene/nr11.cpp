@@ -398,6 +398,13 @@ void SceneScriptNR11::PlayerWalkedIn() {
 		if (Game_Flag_Query(kFlagDektoraIsReplicant)) {
 			if (Actor_Query_Goal_Number(kActorSteele) == kGoalSteeleNR11StopWaiting) {
 				Actor_Set_At_XYZ(kActorMcCoy, -37.41f, 0.33f, -86.0f, 26);
+				// Made it so Blade runner blues only plays when Dektora dies if McCoy is neither surly or erratic.
+				if (_vm->_cutContent) {
+					if (Player_Query_Agenda() != kPlayerAgendaSurly 
+					|| Player_Query_Agenda() != kPlayerAgendaErratic) {
+						Music_Play(kMusicBRBlues, 52, 0, 2, -1, kMusicLoopPlayOnce, 0);
+					}
+				}
 				Delay(500);
 				Actor_Face_Current_Camera(kActorMcCoy, true);
 				Delay(750);
@@ -407,7 +414,15 @@ void SceneScriptNR11::PlayerWalkedIn() {
 				Actor_Face_Actor(kActorMcCoy, kActorSteele, true);
 			} else {
 				Actor_Set_At_XYZ(kActorMcCoy, -15.53f, 0.33f, 73.49f, 954);
-				Actor_Modify_Friendliness_To_Other(kActorSteele, kActorMcCoy, 3);
+				if (_vm->_cutContent) {
+					if (Player_Query_Agenda() != kPlayerAgendaSurly 
+					|| Player_Query_Agenda() != kPlayerAgendaErratic) {
+						Music_Play(kMusicBRBlues, 52, 0, 2, -1, kMusicLoopPlayOnce, 0);
+					}
+				}
+				if (!_vm->_cutContent) {
+					Actor_Modify_Friendliness_To_Other(kActorSteele, kActorMcCoy, 3);
+				}
 				Delay(1500);
 				Actor_Says(kActorMcCoy, 3805, 12);
 				Actor_Face_Actor(kActorMcCoy, kActorSteele, true);

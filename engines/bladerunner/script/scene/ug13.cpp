@@ -366,6 +366,7 @@ void SceneScriptUG13::PlayerWalkedIn() {
 		Loop_Actor_Travel_Stairs(kActorMcCoy, 11, false, kAnimationModeIdle);
 		Footstep_Sound_Override_Off();
 		Game_Flag_Reset(kFlagUG18toUG13);
+		Player_Gains_Control();
 		// This is code for a scene  where McCoy returns to the transient after chasing down Guzza. McCoy checks on the the transient but he died from his wound. 
 		// McCoy then searches the transients body and finds the original shipping form clue. 
 		if (_vm->_cutContent) {

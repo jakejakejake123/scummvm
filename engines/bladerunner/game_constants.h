@@ -3077,6 +3077,7 @@ enum GoalClovis {
 	kGoalClovisUG18SadikWillShootGuzza   = 301,
 	kGoalClovisUG18SadikIsShootingGuzza  = 302,
 	kGoalClovisUG18GuzzaDied             = 303,
+	kGoalClovisUG18HitByMcCoy			 = 304,
 	kGoalClovisUG18Leave                 = 310,
 	kGoalClovisStartChapter3             = 350,
 	kGoalClovisStartChapter4             = 400,

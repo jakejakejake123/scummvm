@@ -336,8 +336,6 @@ void AIScriptDektora::Retired(int byActorId) {
 		if (_vm->_cutContent) {
 			Actor_Clue_Acquire(kActorClovis, kClueMcCoyRetiredDektora, true, -1);
 			Game_Flag_Reset(kFlagMcCoyIsHelpingReplicants);
-			// Gave the player five friendliness points with Crystal when they retire Dektora. 
-			Actor_Modify_Friendliness_To_Other(kActorSteele, kActorMcCoy, 3);
 			// Made it so you lose affection to both Dektora and Lucy if you retired Dektora.
 			Global_Variable_Set(kVariableAffectionTowards, kAffectionTowardsNone);
 			if (Query_Difficulty_Level() != kGameDifficultyEasy) {

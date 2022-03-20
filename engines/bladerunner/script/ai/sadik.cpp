@@ -344,14 +344,6 @@ bool AIScriptSadik::GoalChanged(int currentGoalNumber, int newGoalNumber) {
 		Actor_Change_Animation_Mode(kActorSadik, kAnimationModeCombatIdle);
 		return true;
 
-	// Added in this goal because of a glitch where if you shoot Sadik during his goal SadikUG18Move Guzzas corpse will teleport to the top of the green ooze. I circumvented this
-	// this by making Sadik go into his combat mode at this point so he comes after you. So you can now not only shoot him but when he dies the glitch with Guzzas corpse does not happen.
-	case kGoalSadikAttackMcCoy:
-		Music_Play(kMusicMoraji, 71, 0, 0, -1, kMusicLoopPlayOnce, 2);
-		Actor_Set_Targetable(kActorSadik, true);
-		Non_Player_Actor_Combat_Mode_On(kActorSadik, kActorCombatStateIdle, true, kActorMcCoy, 9, kAnimationModeCombatIdle, kAnimationModeCombatWalk, kAnimationModeCombatRun, 0, -1, -1, 15, 300, false);
-		return true;
-
 	case kGoalSadikUG18Move:
 		Actor_Set_Targetable(kActorSadik, true);
 		World_Waypoint_Set(436, kSetUG18, -356.11f, 0.0f, 652.42f);
@@ -431,6 +423,32 @@ bool AIScriptSadik::GoalChanged(int currentGoalNumber, int newGoalNumber) {
 		return true;
 
 	case 412:
+	// Made it so if Sadik is dead Clovis is the one who kills Maggie and talks to you.
+	if (_vm->_cutContent) {
+		if (Actor_Clue_Query(kActorClovis, kClueMcCoyRetiredSadik)) {
+			Actor_Says(kActorClovis, 110, kAnimationModeTalk);
+			Actor_Says(kActorMcCoy, 2255, kAnimationModeTalk);
+			Actor_Says(kActorClovis, 120, kAnimationModeTalk);
+			Actor_Says(kActorClovis, 130, kAnimationModeTalk);
+			Actor_Says(kActorClovis, 140, kAnimationModeTalk);
+			Actor_Says(kActorMcCoy, 2260, kAnimationModeTalk);
+			Actor_Says(kActorClovis, 150, kAnimationModeTalk);
+			Actor_Set_Goal_Number(kActorClovis, kGoalClovisKP07Wait);
+		} else {
+			Actor_Says(kActorSadik, 60, 3);
+			Actor_Says(kActorMcCoy, 2240, 3);
+			Actor_Says(kActorSadik, 70, 3);
+			Actor_Says(kActorSadik, 80, 3);
+			Actor_Says(kActorMcCoy, 2245, 3);
+			Actor_Says(kActorSadik, 90, 3);
+			Actor_Says(kActorSadik, 100, 3);
+			Actor_Says(kActorMcCoy, 2250, 3);
+			// Added in some action music for the final confrontation with Sadik.
+			Music_Play(kMusicMoraji, 71, 0, 0, -1, kMusicLoopPlayOnce, 2);
+			Actor_Clue_Acquire(kActorMcCoy, kClueMcCoyRetiredSadik, true, kActorSadik);
+			Actor_Set_Goal_Number(kActorSadik, 413);
+		}
+	} else {
 		Actor_Says(kActorSadik, 60, 3);
 		Actor_Says(kActorMcCoy, 2240, 3);
 		Actor_Says(kActorSadik, 70, 3);
@@ -439,13 +457,9 @@ bool AIScriptSadik::GoalChanged(int currentGoalNumber, int newGoalNumber) {
 		Actor_Says(kActorSadik, 90, 3);
 		Actor_Says(kActorSadik, 100, 3);
 		Actor_Says(kActorMcCoy, 2250, 3);
-		// Added in some action music for the final confrontation with Sadik.
-		if (_vm->_cutContent) {
-			Music_Play(kMusicMoraji, 71, 0, 0, -1, kMusicLoopPlayOnce, 2);
-			Actor_Clue_Acquire(kActorMcCoy, kClueMcCoyRetiredSadik, true, kActorSadik);
-		}
 		Actor_Set_Goal_Number(kActorSadik, 413);
-		return true;
+	}
+	return true;
 
 	case 413:
 		Loop_Actor_Walk_To_XYZ(kActorSadik, -1062.0f, 0.0f, 219.0f, 0, false, true, false);

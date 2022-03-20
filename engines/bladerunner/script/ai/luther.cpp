@@ -106,7 +106,8 @@ bool AIScriptLuther::Update() {
 				Player_Set_Combat_Mode(false);
 				Delay(1000);
 				Actor_Says(kActorVoiceOver, 300, 12); //99-0300.AUD	I'd screwed up. Plain and simple.
-				Actor_Says(kActorMcCoy, 170, 14); //00-0170.AUD	Damn.
+				Actor_Says(kActorVoiceOver, 2120, 12); //99-2120.AUD	I didn't have a lot of time and my options were pretty lousy.
+				Actor_Says(kActorVoiceOver, 2130, 12); //99-2130.AUD	Stay and face the music or take off and hope I didn't get caught.
 				Game_Flag_Set(kFlagMcCoyRetiredHuman);
 			}
 		}

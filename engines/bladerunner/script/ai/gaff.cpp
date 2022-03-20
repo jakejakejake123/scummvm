@@ -330,6 +330,8 @@ bool AIScriptGaff::GoalChanged(int currentGoalNumber, int newGoalNumber) {
 		return true;
 
 	case kGoalGaffMA07Wait:
+	// Made it so Gaff only appears if Guzza is dead.
+	if (!Game_Flag_Query(kFlagGuzzaSaved)) {
 		Player_Loses_Control();
 		Actor_Put_In_Set(kActorGaff, kSetMA07);
 		Actor_Set_At_XYZ(kActorGaff, -102.54f, -172.43f, 463.18f, 1015);
@@ -337,6 +339,7 @@ bool AIScriptGaff::GoalChanged(int currentGoalNumber, int newGoalNumber) {
 			Music_Play(kMusicBRBlues, 52, 0, 2, -1, kMusicLoopPlayOnce, 0);
 		}
 		Actor_Set_Goal_Number(kActorGaff, kGoalGaffMA07TalkToMcCoy);
+	}
 		return true;
 
 	case kGoalGaffMA07TalkToMcCoy:

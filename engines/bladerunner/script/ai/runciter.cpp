@@ -80,13 +80,25 @@ void AIScriptRunciter::CompletedMovementTrack() {
 			case 2:
 				// fall through
 			case 3:
-				ADQ_Add(kActorRunciter, 530, -1);
+				if (_vm->_cutContent) {
+					if (!Game_Flag_Query(kFlagRunciterIsReplicant)) {
+						ADQ_Add(kActorRunciter, 530, -1); //15-0530.AUD	My precious one. She was my baby.
+					}
+				} else {
+					ADQ_Add(kActorRunciter, 530, -1); //15-0530.AUD	My precious one. She was my baby.
+				}
 				break;
 
 			case 1:
 				// fall through
 			case 5:
-				ADQ_Add(kActorRunciter, 80, -1);
+				if (_vm->_cutContent) {
+					if (!Game_Flag_Query(kFlagRunciterIsReplicant)) {
+						ADQ_Add(kActorRunciter, 80, -1); //15-0080.AUD	I am ruined! Totally ruined!
+					}
+				} else { 
+					ADQ_Add(kActorRunciter, 80, -1); //15-0530.AUD	My precious one. She was my baby.
+				}
 				break;
 
 			case 4:
@@ -240,16 +252,23 @@ bool AIScriptRunciter::ShotAtAndHit() {
 		Game_Flag_Set(kFlagMcCoyRetiredHuman);	
 	}
 	// Fixed Runciter anaimation. His head now tilts back when he is shot.
-	Actor_Says(kActorRunciter, 9020, 18); //15-9020.AUD	Argh!		
+	Actor_Says(kActorRunciter, 9020, 18); //15-9020.AUD	Argh!	
 	Actor_Change_Animation_Mode(kActorRunciter, kAnimationModeDie);
 	Actor_Set_Goal_Number(kActorRunciter, kGoalRunciterDead);
 	Delay(2000);
 	//Code for when McCoy shoots Runciter and he is a replicant.
 	if  (Game_Flag_Query(kFlagRunciterIsReplicant)
 	&&	Global_Variable_Query(kVariableChapter) == 1) {
-		Actor_Voice_Over(1410, kActorVoiceOver); //99-1410.AUD	I’d retired another Replicant so more money was headed my way but I didn’t feel so good about it.
-		Actor_Voice_Over(1670, kActorVoiceOver); //99-1670.AUD	Still it was a hell of a way to go.
-		Actor_Voice_Over(2090, kActorVoiceOver); //99-2090.AUD	And maybe I’d done him a favor too, since his animals were all dead.
+		// Made it so McCoys response to retiring Runciter is different based on his agenda.
+		if (Player_Query_Agenda() != kPlayerAgendaSurly 
+		|| Player_Query_Agenda() != kPlayerAgendaErratic) {
+			Music_Play(kMusicBRBlues, 52, 0, 2, -1, kMusicLoopPlayOnce, 0);
+			Actor_Voice_Over(1410, kActorVoiceOver); //99-1410.AUD	I’d retired another Replicant so more money was headed my way but I didn’t feel so good about it.
+			Actor_Voice_Over(1670, kActorVoiceOver); //99-1670.AUD	Still it was a hell of a way to go.
+			Actor_Voice_Over(2090, kActorVoiceOver); //99-2090.AUD	And maybe I’d done him a favor too, since his animals were all dead.
+		} else {
+			Actor_Voice_Over(920, kActorVoiceOver); //99-0920.AUD	Easy money.
+		}
 		Actor_Modify_Friendliness_To_Other(kActorSteele, kActorMcCoy, 3);
 		Game_Flag_Reset(kFlagRunciterConfronted);
 		Game_Flag_Set(kFlagMcCoyRetiredRunciter);
