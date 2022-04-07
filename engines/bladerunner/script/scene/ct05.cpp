@@ -78,8 +78,7 @@ void SceneScriptCT05::SceneLoaded() {
 	Unclickable_Object("LFTDOOR");
 	Unclickable_Object("LFTDOORFRM");
 	//Added in the Zuben incept clue. He dropped it while running away and it is near the staircase.
-	if (_vm->_cutContent &&
-		!Actor_Clue_Query(kActorMcCoy, kClueZubenIncept)) {
+	if (_vm->_cutContent && !Actor_Clue_Query(kActorMcCoy, kClueZubenIncept)) {
 		Item_Add_To_World(kItemNote, kModelAnimationPhoto, kSetCT05, -74.94, -109.42, 358.92, 0, 12, 12, false, true, false, true);
 	}
 }
@@ -253,7 +252,14 @@ void SceneScriptCT05::PlayerWalkedIn() {
 		Loop_Actor_Travel_Stairs(kActorMcCoy, 10, false, kAnimationModeIdle);
 		Game_Flag_Reset(kFlagCT06toCT05);
 		Footstep_Sound_Override_Off();
-		if (Actor_Query_Goal_Number(kActorGordo) == kGoalGordoCT01Left
+		if (_vm->_cutContent) {
+			if (Actor_Query_Goal_Number(kActorGordo) == kGoalGordoCT01Left
+			 && Game_Flag_Query(kFlagZubenRetired)
+			 && !Actor_Clue_Query(kActorMcCoy, kClueGaffsInformation) 
+			) {
+				Actor_Set_Goal_Number(kActorGordo, kGoalGordoCT05WalkThrough);
+			}
+		} else if (Actor_Query_Goal_Number(kActorGordo) == kGoalGordoCT01Left
 		 && Game_Flag_Query(kFlagCT06ZubenPhoto)
 		) {
 			Actor_Set_Goal_Number(kActorGordo, kGoalGordoCT05WalkThrough);

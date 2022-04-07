@@ -59,7 +59,13 @@ void SceneScriptCT02::InitializeScene() {
 	}
 
 	Scene_Exit_Add_2D_Exit(kCT02ExitCT01, 590, 0, 639, 479, 1);
-	if (Actor_Clue_Query(kActorMcCoy, kClueZubenRunsAway)) {
+	if (_vm->_cutContent) {
+		if (Game_Flag_Query(kFlagCT02PotTipped)) {	
+			Scene_Exit_Add_2D_Exit(kCT02ExitCT03, 332, 163, 404, 297, 0);
+		} else {
+			Overlay_Play("ct02over", 0, true, false, 0);
+		}
+	} else if (Actor_Clue_Query(kActorMcCoy, kClueZubenRunsAway)) {
 		Scene_Exit_Add_2D_Exit(kCT02ExitCT03, 332, 163, 404, 297, 0);
 	} else {
 		Overlay_Play("ct02over", 0, true, false, 0);
@@ -97,7 +103,13 @@ void SceneScriptCT02::SceneLoaded() {
 	Obstacle_Object("BACKWALL2", true);
 	Obstacle_Object("LFTSTOVE-1", true);
 	Obstacle_Object("FRIDGE-1", true);
-	if (Actor_Clue_Query(kActorMcCoy, kClueZubenRunsAway)) {
+	if (_vm->_cutContent) {
+		if (Game_Flag_Query(kFlagCT02PotTipped)) {	
+			Unobstacle_Object("BACK-DOOR", true);
+		} else {
+			Obstacle_Object("BACK-DOOR", true);
+		}
+	} else if (Actor_Clue_Query(kActorMcCoy, kClueZubenRunsAway)) {
 		Unobstacle_Object("BACK-DOOR", true);
 	} else {
 		Obstacle_Object("BACK-DOOR", true);
@@ -121,8 +133,7 @@ void SceneScriptCT02::SceneLoaded() {
 	Unclickable_Object("COFFEJUG IN FOREGRO");
 	Unclickable_Object("BACK-DOOR");
 	//Added in the candy wrapper clue. It is near McCoys feet when he enters the kitchen.
-	if (_vm->_cutContent &&
-		!Actor_Clue_Query(kActorMcCoy, kClueCandyWrapper)) {
+	if (_vm->_cutContent && !Actor_Clue_Query(kActorMcCoy, kClueCandyWrapper)) {
 		Item_Add_To_World(kItemChopstickWrapper, kModelAnimationCandyWrapper, kSetCT02, -144.69, -145.51, 195.58, 0, 12, 12, false, true, false, true);
 	}
 	if (!Game_Flag_Query(kFlagCT02PotTipped)) {
@@ -160,15 +171,11 @@ void SceneScriptCT02::dialogueWithZuben() {
 		DM_Add_To_List_Never_Repeat_Once_Selected(270, 8, 5, 3); // LUCY PHOTO
 	}
 	// Made it so McCoy always asks Zuben about Lucy since he always receives Lucys description by default.
-	if (_vm->_cutContent) {
-		if (!Actor_Clue_Query(kActorMcCoy, kClueLucy)
-	) {
-		DM_Add_To_List_Never_Repeat_Once_Selected(280, 8, 5, 3); // LUCY
-	}
-	} else if ( Actor_Clue_Query(kActorMcCoy, kClueRunciterInterviewA)
-	 && !Actor_Clue_Query(kActorMcCoy, kClueLucy)
-	) {
-		DM_Add_To_List_Never_Repeat_Once_Selected(280, 8, 5, 3); // LUCY
+	if (!_vm->_cutContent) {
+		 if (Actor_Clue_Query(kActorMcCoy, kClueRunciterInterviewA)
+		 && !Actor_Clue_Query(kActorMcCoy, kClueLucy)) {
+			DM_Add_To_List_Never_Repeat_Once_Selected(280, 8, 5, 3); // LUCY
+		}
 	}
 	int evidenceCount = 0;
 #if BLADERUNNER_ORIGINAL_BUGS
@@ -228,7 +235,11 @@ void SceneScriptCT02::dialogueWithZuben() {
 
 	switch (answerValue) {
 	case 270: // LUCY PHOTO
-		Actor_Says(kActorMcCoy, 380, 11);
+		if (_vm->_cutContent) {
+			Actor_Says(kActorMcCoy, 380, 23);
+		} else {
+			Actor_Says(kActorMcCoy, 380, 11);
+		}
 		Actor_Says(kActorZuben, 30, 17);
 		Actor_Says(kActorZuben, 40, 15);
 		Actor_Says(kActorMcCoy, 410, 9);
@@ -260,7 +271,9 @@ void SceneScriptCT02::dialogueWithZuben() {
 
 	if (Actor_Query_Friendliness_To_Other(kActorZuben, kActorMcCoy) < 44) {
 		Scene_Exits_Disable();
-		Actor_Clue_Acquire(kActorMcCoy, kClueZubenRunsAway, true, -1);
+		if (!_vm->_cutContent) {
+			Actor_Clue_Acquire(kActorMcCoy, kClueZubenRunsAway, true, -1);
+		}
 #if BLADERUNNER_ORIGINAL_BUGS
 #else
 		Unobstacle_Object("BACK-DOOR", true);
@@ -296,6 +309,9 @@ bool SceneScriptCT02::ClickedOnActor(int actorId) {
 					Actor_Says(kActorZuben, 100, 19); //19-0100.AUD	What do you want from Zuben?
 					Actor_Says(kActorMcCoy, 8225, 14); //00-8225.AUD	Just relax.
 					Actor_Says(kActorMcCoy, 375, 13); //00-0375.AUD	This will only take a minute.
+					Actor_Says(kActorMcCoy, 385, 9);
+					Actor_Says(kActorZuben, 40, 19);
+					Actor_Modify_Friendliness_To_Other(kActorZuben, kActorMcCoy, -2);
 					Game_Flag_Set(kFlagCT02ZubenTalk);
 				} else {
 					Actor_Says(kActorZuben, 20, 19);
@@ -370,7 +386,9 @@ bool SceneScriptCT02::ClickedOn2DRegion(int region) {
 		Scene_2D_Region_Remove(0);
 		Scene_2D_Region_Remove(1);
 		Actor_Voice_Over(4270, kActorVoiceOver);
-		// Removed this clue due to bugs.
+		if (_vm->_cutContent) {
+			Actor_Clue_Acquire(kActorMcCoy, kClueZubenRunsAway, true, -1);
+		}
 		return true;
 	}
 	return false;
@@ -410,7 +428,11 @@ void SceneScriptCT02::PlayerWalkedIn() {
 }
 
 void SceneScriptCT02::PlayerWalkedOut() {
-	if (!Actor_Clue_Query(kActorMcCoy, kClueZubenRunsAway)) {
+	if (_vm->_cutContent) {
+		if (Game_Flag_Query(kFlagCT02PotTipped)) {	
+			Overlay_Remove("ct02over");
+		}
+	} else if (!Actor_Clue_Query(kActorMcCoy, kClueZubenRunsAway)) {
 		Overlay_Remove("ct02over");
 	}
 }

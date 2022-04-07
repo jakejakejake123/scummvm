@@ -518,7 +518,7 @@ void SceneScriptHF01::PlayerWalkedIn() {
 			}
 			Actor_Set_Goal_Number(kActorCrazylegs, kGoalCrazyLegsLeavesShowroom);
 			Game_Flag_Reset(kFlagCrazylegsShot);
-			Actor_Modify_Friendliness_To_Other(kActorSteele, kActorMcCoy, 3);
+			Actor_Modify_Friendliness_To_Other(kActorSteele, kActorMcCoy, 2);
 			if (Query_Difficulty_Level() != kGameDifficultyEasy) {
 				Global_Variable_Increment (kVariableChinyen, 200);
 			}		

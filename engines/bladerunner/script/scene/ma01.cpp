@@ -112,9 +112,15 @@ bool SceneScriptMA01::ClickedOnActor(int actorId) {
 						Actor_Voice_Over(410, kActorVoiceOver);
 					}
 					Game_Flag_Set(kFlagCT06ZubenPhoto);
-				return true;
+					return true;
+				} else { 
+					if (Player_Query_Agenda() != kPlayerAgendaSurly 
+					|| Player_Query_Agenda() != kPlayerAgendaErratic) {
+						Actor_Says(kActorMcCoy, 8630, 12);  // What a waste
+					} else {
+						Actor_Says(kActorMcCoy, 8665, 13); //00-8665.AUD	Disgusting.
+					}
 				}
-			Actor_Says(kActorMcCoy, 8570, 13);
 			}
 			return false;
 		}

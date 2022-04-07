@@ -179,12 +179,13 @@ void SceneScriptMA07::PlayerWalkedIn() {
 		Actor_Voice_Over(1370, kActorVoiceOver); //99-1370.AUD	The evidence Guzza coughed up was all I’d needed to convince them I wasn’t a Rep.
 		// Made it so McCoys comments are different here depending on whether or not he saved Guzza.
 		if (_vm->_cutContent) {
-			if (Game_Flag_Query(kFlagGuzzaSaved)
-			&& !Actor_Clue_Query(kActorMcCoy, kClueFolder)) {
-				Actor_Voice_Over(4410, kActorVoiceOver); //99-4410.AUD	Guzza must have a little something going on the side.
-				Delay(1000);
-				Player_Gains_Control();
-				Game_Flag_Reset(kFlagMcCoyFreedOfAccusations);
+			if (Game_Flag_Query(kFlagGuzzaSaved)) {
+				if (!Actor_Clue_Query(kActorMcCoy, kClueFolder)) {
+					Actor_Voice_Over(4410, kActorVoiceOver); //99-4410.AUD	Guzza must have a little something going on the side.
+					Delay(1000);
+					Player_Gains_Control();
+					Game_Flag_Reset(kFlagMcCoyFreedOfAccusations);
+				}
 			} else {
 				Actor_Voice_Over(1380, kActorVoiceOver); //99-1380.AUD	Bryant chewed me out for letting the Reps kill him…
 				Actor_Voice_Over(1390, kActorVoiceOver);
@@ -201,10 +202,9 @@ void SceneScriptMA07::PlayerWalkedIn() {
 			Game_Flag_Reset(kFlagMcCoyFreedOfAccusations);
 		}
 	}
-		// If McCoy retired Luther and Lance in act 4 and he cleared his name he will receive 400 chinyen at the start of act 5.
-		
-		Game_Flag_Set(kFlagMA06ToMA02);
-		Set_Enter(kSetMA02_MA04, kSceneMA02);
+	// If McCoy retired Luther and Lance in act 4 and he cleared his name he will receive 400 chinyen at the start of act 5.
+	Game_Flag_Set(kFlagMA06ToMA02);
+	Set_Enter(kSetMA02_MA04, kSceneMA02);
 	//return false;
 	// Code for an encounter that you can have with Crystal in act 4 if McCoy didn't retire a human or is not on his
 	// way to the car ending.
@@ -213,12 +213,10 @@ void SceneScriptMA07::PlayerWalkedIn() {
 		// Made it so whether of not you have affection towards Dektora or Lucy this will determine whether or not you will meet Crystal here.
 		&& (Global_Variable_Query(kVariableAffectionTowards) != kAffectionTowardsDektora
 		&& Global_Variable_Query(kVariableAffectionTowards) != kAffectionTowardsLucy
-		&& !Actor_Clue_Query(kActorSteele, kClueMcCoyHelpedGordo)
-		&& !Game_Flag_Query(kFlagIzoWarned)
 		&& !Game_Flag_Query(kFlagMcCoyRetiredHuman)
 		// Made it so McCoy has to retire at least 3 replicants for Steele to like him enough to meet him. 3 friendliness points per replicant. Starting friendliness 50.
 		// In the cut content mode there are around 10 potential replicants up until this point so this should be achieveable.
-		&& Actor_Query_Friendliness_To_Other(kActorSteele, kActorMcCoy) > 58)
+		&& Actor_Query_Friendliness_To_Other(kActorSteele, kActorMcCoy) > 53)
 		&&	Global_Variable_Query(kVariableChapter) == 4) {
 			Actor_Put_In_Set(kActorSteele, kSetMA07);
 			Actor_Set_At_XYZ(kActorSteele, -68.06, -171.95, 393.86, 0);
@@ -228,7 +226,7 @@ void SceneScriptMA07::PlayerWalkedIn() {
 			Actor_Face_Actor(kActorMcCoy, kActorSteele, true);
 			Actor_Says(kActorMcCoy, 6215, 13); //00-6215.AUD	I plan to. I’m going home.
 			// If McCoy doesn't retire at least 5 reps Crystal teases him.
-			if (Actor_Query_Friendliness_To_Other(kActorRunciter, kActorMcCoy) > 64) {
+			if (Actor_Query_Friendliness_To_Other(kActorRunciter, kActorMcCoy) < 60) {
 				Actor_Says(kActorSteele, 2650, 14); //01-2650.AUD	No wonder you can’t afford a better suit.
 				Actor_Says(kActorSteele, 2660, 15); //01-2660.AUD	Ever think of a new line of work?
 				Actor_Says(kActorSteele, 2670, 13); //01-2670.AUD	Maybe you’ll have better luck finding that than all those skin-jobs that are running roughshod over you.
@@ -267,62 +265,65 @@ void SceneScriptMA07::PlayerWalkedIn() {
 				}
 				if (Game_Flag_Query(kFlagGordoIsReplicant))  {
 					Actor_Clue_Acquire(kActorMcCoy, kClueWarRecordsGordoFrizz, true, kActorSteele); 
+					Actor_Clue_Acquire(kActorMcCoy, kClueSightingGordo, true, kActorSteele);
 					Actor_Clue_Acquire(kActorMcCoy, kClueGordoIncept, true, kActorSteele);
 				}
-				if (Actor_Clue_Query(kActorSteele, kClueVKBobGorskyReplicant)) {
-					if (Game_Flag_Query(kFlagBulletBobIsReplicant)
-						&& Actor_Query_Goal_Number(kActorBulletBob) != kGoalBulletBobDead)  {
-						Actor_Clue_Acquire(kActorMcCoy, kClueCrystalRetiredBob, true, kActorSteele);
-						Actor_Set_Goal_Number(kActorBulletBob, kGoalBulletBobDead);
-					} else {
-						Actor_Clue_Acquire(kActorMcCoy, kClueCrystalTestedBulletBob, true, kActorSteele);
-						Actor_Clue_Acquire(kActorMcCoy, kClueVKBobGorskyHuman, true, -1);
-					}
+				if (Actor_Clue_Query(kActorSteele, kClueCrystalRetiredBob)) {
+					Actor_Clue_Acquire(kActorMcCoy, kClueCrystalRetiredBob, true, kActorSteele);
 				}
-				if (Actor_Clue_Query(kActorSteele, kClueCrazysInvolvement)) {
-					Actor_Clue_Acquire(kActorMcCoy, kClueCrystalTestedCrazylegs, true, kActorSteele);
-					Actor_Clue_Acquire(kActorMcCoy, kClueCrystalArrestedCrazylegs,  true, kActorSteele);
-					Actor_Clue_Acquire(kActorMcCoy, kClueVKCrazylegsHuman,  true, kActorSteele);
-					Game_Flag_Set(kFlagCrazylegsArrested);
-				} else if (Game_Flag_Query(kFlagCrystalRetiredCrazylegs)) {
-					Actor_Clue_Acquire(kActorMcCoy, kClueCrystalRetiredCrazylegs, true, kActorSteele);
+				if (Actor_Clue_Query(kActorSteele, kClueCrystalTestedBulletBob)) {
+					Actor_Clue_Acquire(kActorMcCoy, kClueCrystalTestedBulletBob, true, kActorSteele);
+				}
+				if (Actor_Clue_Query(kActorSteele, kClueVKBobGorskyHuman)) {
+					Actor_Clue_Acquire(kActorMcCoy,  kClueVKBobGorskyHuman, true, kActorSteele);
+				}
+				if (Actor_Clue_Query(kActorSteele, kClueVKBobGorskyReplicant)) {
+					Actor_Clue_Acquire(kActorMcCoy, kClueVKBobGorskyReplicant, true, kActorSteele);
+				}
+				if (Actor_Clue_Query(kActorSteele, kClueCrystalTestedCrazylegs)) {
+					Actor_Clue_Acquire(kActorMcCoy,  kClueCrystalTestedCrazylegs, true, kActorSteele);
+				}
+				if (Actor_Clue_Query(kActorSteele, kClueCrystalArrestedCrazylegs)) {
+					Actor_Clue_Acquire(kActorMcCoy,  kClueCrystalArrestedCrazylegs, true, kActorSteele);
+				}
+				if (Actor_Clue_Query(kActorSteele, kClueVKCrazylegsHuman)) {
+					Actor_Clue_Acquire(kActorMcCoy,  kClueVKCrazylegsHuman, true, kActorSteele);
+				}
+				if (Actor_Clue_Query(kActorSteele, kClueVKCrazylegsReplicant)) {
+					Actor_Clue_Acquire(kActorMcCoy,  kClueVKCrazylegsReplicant, true, kActorSteele);
+				}
+				if (Actor_Clue_Query(kActorSteele, kClueCrystalRetiredCrazylegs)) {
+					Actor_Clue_Acquire(kActorMcCoy,  kClueCrystalRetiredCrazylegs, true, kActorSteele);
+				}
+				if (Actor_Clue_Query(kActorSteele, kClueCrystalRetiredRunciter1)) {
+					Actor_Clue_Acquire(kActorMcCoy, kClueCrystalRetiredRunciter1, true, kActorSteele);
+				}
+				if (Actor_Clue_Query(kActorSteele, kClueCrystalRetiredRunciter2)) {
+					Actor_Clue_Acquire(kActorMcCoy,  kClueCrystalRetiredRunciter2, true, kActorSteele);
+				}
+				if (Actor_Clue_Query(kActorSteele, kClueCrystalTestedRunciter)) {
+					Actor_Clue_Acquire(kActorMcCoy,  kClueCrystalTestedRunciter, true, kActorSteele);
+				}
+				if (Actor_Clue_Query(kActorSteele, kClueVKRunciterHuman)) {
+					Actor_Clue_Acquire(kActorMcCoy,  kClueVKRunciterHuman, true, kActorSteele);
 				}
 				if (Actor_Clue_Query(kActorSteele, kClueVKRunciterReplicant)) {
-					if (Game_Flag_Query(kFlagRunciterIsReplicant)
-						&& Actor_Query_Goal_Number(kActorRunciter) != kGoalRunciterDead)  {
-						Actor_Clue_Acquire(kActorSteele, kClueCrystalRetiredRunciter1, true, kActorSteele);
-						Actor_Set_Goal_Number(kActorRunciter, kGoalRunciterDead);
-					} else {
-						Actor_Clue_Acquire(kActorMcCoy, kClueCrystalTestedRunciter, true, kActorSteele);
-						Actor_Clue_Acquire(kActorMcCoy, kClueVKRunciterHuman, true, -1);
-					}
+					Actor_Clue_Acquire(kActorMcCoy,  kClueVKRunciterReplicant, true, kActorSteele);
 				}
-				if (Game_Flag_Query(kFlagZubenSpared)) {
-					if (Actor_Clue_Query(kActorSteele, kClueHowieLeeInterview)
-					&& Actor_Clue_Query(kActorSteele, kClueCrowdInterviewA) 
-					&& Actor_Clue_Query(kActorSteele, kClueLabCorpses) 
-					&& Actor_Clue_Query(kActorSteele, kClueZubenInterview)) {
-						Actor_Set_Goal_Number(kActorZuben, kGoalZubenGone);
-						Actor_Clue_Acquire(kActorSteele, kClueCrystalRetiredZuben, true, kActorSteele);
-					} else {
-						Actor_Clue_Acquire(kActorSteele, kClueSightingZuben, true, kActorSteele);
-					}
+				if (Actor_Clue_Query(kActorSteele, kClueCrystalRetiredZuben)) {
+					Actor_Clue_Acquire(kActorMcCoy,  kClueCrystalRetiredZuben, true, kActorSteele);
 				}
-				if (Game_Flag_Query(kFlagGordoIsReplicant) && Game_Flag_Query(kFlagGordoRanAway)) {
-					Actor_Clue_Acquire(kActorMcCoy, kClueSightingGordo, true, kActorSteele);
+				if (Actor_Clue_Query(kActorSteele, kClueSightingZuben)) {
+					Actor_Clue_Acquire(kActorMcCoy,  kClueSightingZuben, true, kActorSteele);
 				}
-				if (!Game_Flag_Query(kFlagIzoIsReplicant) && Game_Flag_Query(kFlagIzoArrested)) {
+				if (Actor_Clue_Query(kActorSteele, kClueVKIzoHuman)) {
 					Actor_Clue_Acquire(kActorMcCoy, kClueVKIzoHuman, true, kActorSteele);
 				}
-				if  (Actor_Clue_Query(kActorSteele, kClueDektorasDressingRoom)) {
-					if (Game_Flag_Query(kFlagEarlyQIsReplicant) && !Game_Flag_Query(kFlagEarlyQDead))  {
-						Actor_Clue_Acquire(kActorMcCoy, kClueVKEarlyQReplicant, true, kActorSteele);
-					} else if (!Game_Flag_Query(kFlagEarlyQIsReplicant) && !Game_Flag_Query(kFlagEarlyQDead)) {
-						Actor_Clue_Acquire(kActorMcCoy, kClueVKEarlyQHuman, true, kActorSteele);
-					}
+				if (Actor_Clue_Query(kActorSteele, kClueVKEarlyQHuman)) {
+					Actor_Clue_Acquire(kActorMcCoy, kClueVKEarlyQHuman, true, kActorSteele);
 				}
-				if (Actor_Clue_Query(kActorSteele, kClueCrystalRetiredZuben)) { 
-					Actor_Clue_Acquire(kActorMcCoy, kClueCrystalRetiredZuben, true, kActorSteele);
+				if (Actor_Clue_Query(kActorSteele, kClueVKEarlyQReplicant)) {
+					Actor_Clue_Acquire(kActorMcCoy, kClueVKEarlyQReplicant, true, kActorSteele);
 				}
 				Actor_Says(kActorSteele, 2760, 13); //01-2760.AUD	What’s the latest?
 				Actor_Says(kActorMcCoy, 6345, 15); //00-6345.AUD	I think you already know the answer to that question
@@ -331,7 +332,7 @@ void SceneScriptMA07::PlayerWalkedIn() {
 				Actor_Says(kActorSteele, 2780, 13); //01-2780.AUD	Do yourself a favor, Slim. Turn yourself in. Guzza will give you a fair shake.
 				Actor_Says(kActorMcCoy, 6355, 14); //00-6355.AUD	Like hell!
 				// Made it so if McCoy has retired 5 replicants Steele is nicer to him.
-				if (Actor_Query_Friendliness_To_Other(kActorSteele, kActorMcCoy) > 64) {
+				if (Actor_Query_Friendliness_To_Other(kActorSteele, kActorMcCoy) > 59) {
 					Actor_Says(kActorSteele, 2790, 12); //01-2790.AUD	I guarantee it. I’ll put you on the Machine myself.
 					Actor_Says(kActorMcCoy, 6360, 13); //00-6360.AUD	Hey, you’re always crowing about the “magic”. What does it tell you now
 					Actor_Says(kActorSteele, 1390, 13); //01-1390.AUD	I ain’t sure yet. I like to be sure.
@@ -343,7 +344,7 @@ void SceneScriptMA07::PlayerWalkedIn() {
 				Actor_Says(kActorMcCoy, 6335, 13); //00-6335.AUD	Maybe he just doesn’t want to be found.
 				Actor_Says(kActorSteele, 2740, 14); //01-2740.AUD	That’s a big maybe.
 				Actor_Says(kActorMcCoy, 6340, 15); //00-6340.AUD	A likely maybe, don’t you think?
-				if (Actor_Query_Friendliness_To_Other(kActorSteele, kActorMcCoy) < 64) {
+				if (Actor_Query_Friendliness_To_Other(kActorSteele, kActorMcCoy) < 60) {
 					Actor_Says(kActorSteele, 2800, 15); //01-2800.AUD	You don’t want to know what I think.
 					Actor_Says(kActorSteele, 2810, 15); //01-2810.AUD	Beat it, Slim. Take it on the heel. Before I regret this.
 				} else {
@@ -417,8 +418,10 @@ void SceneScriptMA07::PlayerWalkedIn() {
 					Actor_Put_In_Set(kActorGuzza, kSetPS09);
 					Player_Gains_Control();
 					Player_Set_Combat_Mode(false);
+					Global_Variable_Set(kVariableAffectionTowards, kAffectionTowardsNone);
 					Game_Flag_Set(kFlagMcCoyFreedOfAccusations);
 					Game_Flag_Set(kFlagMcCoyIsInnocent);
+					Game_Flag_Reset(kFlagMcCoyRetiredHuman);
 					Actor_Set_Goal_Number(kActorMcCoy, kGoalMcCoyStartChapter5);
 				} else {
 					Actor_Says(kActorMcCoy, 8519, 14); // 00-8519.AUD	What do you say we dish each other the straight goods.

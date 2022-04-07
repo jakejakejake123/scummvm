@@ -192,7 +192,7 @@ bool SceneScriptNR11::ClickedOn3DObject(const char *objectName, bool combatMode)
 					Actor_Face_Actor(kActorMcCoy, kActorDektora, true);
 					//Repurposed the Dektora interview 4 clue for reasons I mentioned in NR07.
 					if (_vm->_cutContent) {
-						Actor_Clue_Acquire(kActorMcCoy, kClueDektoraConfession, true, kActorDektora);
+						Actor_Clue_Acquire(kActorMcCoy, kClueMcCoyHelpedDektora, true, kActorDektora);
 					} else {
 						Actor_Clue_Acquire(kActorMcCoy, kClueDektoraInterview4, true, kActorDektora);
 					}

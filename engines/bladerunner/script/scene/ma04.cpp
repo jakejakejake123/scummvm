@@ -187,23 +187,25 @@ bool SceneScriptMA04::ClickedOn2DRegion(int region) {
 				// 3. In act 4 when meeting Crystal outside McCoys apartment in act 4 (restored). Have 60 friendliness with Crystal by retiring 2 reps and being
 				// nice to her by accepting her offer to exchange information. You can also get her to trust you by submitting the Guzza evidence to the police.  
 				if (_vm->_cutContent) {
-					if (!Game_Flag_Query(kFlagMcCoyRetiredHuman)) {
 					if (Global_Variable_Query(kVariableAffectionTowards) != kAffectionTowardsDektora
 					&& Global_Variable_Query(kVariableAffectionTowards) != kAffectionTowardsLucy) {
-						if (Game_Flag_Query(kFlagMcCoyIsInnocent)
-						|| 	Game_Flag_Query(kFlagCrystalTrustsMcCoy)) {
-							phoneCallWithSteele();
+						if (!Game_Flag_Query(kFlagMcCoyRetiredHuman)) {
+							if (Game_Flag_Query(kFlagMcCoyIsInnocent)
+							|| 	Game_Flag_Query(kFlagCrystalTrustsMcCoy)) {
+								phoneCallWithSteele();
+							} else {
+								phoneCallWithClovis();
+							}
+						} else {
+							phoneCallWithClovis();
 						}
 					} else if (Global_Variable_Query(kVariableAffectionTowards) == kAffectionTowardsDektora) {
 						phoneCallWithDektora();
 					} else if (Global_Variable_Query(kVariableAffectionTowards) == kAffectionTowardsLucy) {
 						phoneCallWithLucy();
 					}
-					} else {
-						phoneCallWithClovis();
-					}
 					Music_Play(kMusicBRBlues, 52, 0, 3, -1, kMusicLoopPlayOnceRandomStart, 0);
-					} else if (Game_Flag_Query(kFlagMcCoyIsHelpingReplicants)) {
+				} else if (Game_Flag_Query(kFlagMcCoyIsHelpingReplicants)) {
 					if (Global_Variable_Query(kVariableAffectionTowards) == kAffectionTowardsDektora) {
 						phoneCallWithDektora();
 					} else if (Global_Variable_Query(kVariableAffectionTowards) == kAffectionTowardsLucy) {
@@ -428,7 +430,7 @@ void SceneScriptMA04::phoneCallWithDektora() {
 	Actor_Says(kActorDektora, 340, 3);
 	Actor_Says(kActorDektora, 350, 3);
 	if (Game_Flag_Query(kFlagCrazylegsArrested)
-	    || Actor_Query_Goal_Number(kActorCrazylegs) == kGoalCrazyLegsLeavesShowroom
+	|| Actor_Query_Goal_Number(kActorCrazylegs) == kGoalCrazyLegsLeavesShowroom
 	) {
 		answer = 1170; // CLOVIS
 	} else {
@@ -450,8 +452,8 @@ void SceneScriptMA04::phoneCallWithDektora() {
 				Actor_Says(kActorDektora, 380, 3); //03-0380.AUD	The owner was nice to us. He’ll probably help us, if we pay him.
 			}
 		} else {
-		Actor_Says(kActorDektora, 370, 3); 
-		Actor_Says(kActorDektora, 380, 3);
+			Actor_Says(kActorDektora, 370, 3); 
+			Actor_Says(kActorDektora, 380, 3);
 		}
 		Actor_Says(kActorMcCoy, 2515, 12);
 		Actor_Says(kActorDektora, 390, 3);
@@ -494,7 +496,7 @@ void SceneScriptMA04::phoneCallWithLucy() {
 	Actor_Says(kActorMcCoy, 2560, 17);
 	Actor_Says(kActorLucy, 580, 3); // You promise?
 	if (Game_Flag_Query(kFlagCrazylegsArrested)
-	    || Actor_Query_Goal_Number(kActorCrazylegs) == kGoalCrazyLegsLeavesShowroom
+	|| Actor_Query_Goal_Number(kActorCrazylegs) == kGoalCrazyLegsLeavesShowroom
 	) {
 #if BLADERUNNER_ORIGINAL_BUGS
 		Actor_Says(kActorLucy, 630, 3); // I'll meet you there, okay? At the place where he sells the cars.
@@ -651,7 +653,7 @@ void SceneScriptMA04::phoneCallWithClovis() {
 		Actor_Says(kActorClovis, 1230, 3); //05-1230.AUD	That’s what I remember.
 		Actor_Says(kActorMcCoy, 8565, 13); //00-8565.AUD	Really?
 	}
-		Actor_Says(kActorClovis, 500, 3); //05-0500.AUD	But if you dig real deep and feel, you’ll know what’s real.
+	Actor_Says(kActorClovis, 500, 3); //05-0500.AUD	But if you dig real deep and feel, you’ll know what’s real.
 	if (_vm->_cutContent) {
 		Actor_Says(kActorMcCoy, 2620, 15); //00-2620.AUD	Okay. What do we do next?
 		Actor_Says(kActorClovis, 510, 3); //05-0510.AUD	In the sewers near the police station is a tunnel that leads out to the Kipple.

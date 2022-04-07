@@ -425,11 +425,6 @@ void AIScriptSteele::EnteredSet(int setId) {
 	//Added in all the unused Crystal clues. Essentially when McCoy puts a certain clue in the mainframe Crystal will receive it and when she does the correlating clue will appear
 	// in her database and she will then later put it in the mainframe.
 	if (_vm->_cutContent) {
-		if (Actor_Clue_Query(kActorSteele, kClueVKBobGorskyReplicant) && !Game_Flag_Query(kFlagSteeleKnowsBulletBobIsDead)) {
-			Actor_Clue_Acquire(kActorSteele, kClueCrystalTestedBulletBob, true, kActorSteele);
-			Actor_Clue_Acquire(kActorSteele, kClueVKBobGorskyHuman,  true, -1);
-			return; //true;
-		}
 		if (Actor_Clue_Query(kActorSteele, kClueCrazysInvolvement)) {
 			if (!Game_Flag_Query(kFlagCrazylegsIsReplicant)) {
 				Actor_Clue_Acquire(kActorSteele, kClueCrystalTestedCrazylegs, true, kActorSteele);
@@ -437,6 +432,7 @@ void AIScriptSteele::EnteredSet(int setId) {
 				Actor_Clue_Acquire(kActorSteele, kClueVKCrazylegsHuman,  true, kActorSteele);
 				Game_Flag_Set(kFlagCrazylegsArrested); 
 			} else {
+				Actor_Clue_Acquire(kActorSteele, kClueVKCrazylegsReplicant, true, kActorSteele);
 				Actor_Clue_Acquire(kActorSteele, kClueCrystalRetiredCrazylegs, true, kActorSteele);
 				Actor_Set_Goal_Number(kActorCrazylegs, kGoalCrazyLegsLeavesShowroom);
 			}
@@ -445,30 +441,33 @@ void AIScriptSteele::EnteredSet(int setId) {
 		// Added in code so if Steele receives the Runciter is replicant Vk result and Runciter is a replicant and alive she retires him
 		// and receives the Crystal retired Runciter clue. Also did the same for Bob.
 		if (Actor_Clue_Query(kActorSteele, kClueVKRunciterReplicant)) {
-			if (Game_Flag_Query(kFlagRunciterIsReplicant)
-			&& Actor_Query_Goal_Number(kActorRunciter) != kGoalRunciterDead)  {
-				Actor_Clue_Acquire(kActorSteele, kClueCrystalRetiredRunciter1, true, kActorSteele);
-				Actor_Clue_Acquire(kActorSteele, kClueCrystalRetiredRunciter2, true, kActorSteele);
-				Actor_Set_Goal_Number(kActorRunciter, kGoalRunciterDead);
-				Game_Flag_Set(kFlagCrystalRetiredRunciter);
-			} else {
-				Actor_Clue_Acquire(kActorSteele, kClueCrystalTestedRunciter, true, kActorSteele);
-				Actor_Clue_Acquire(kActorSteele, kClueVKRunciterHuman, true, -1);
+			if (Actor_Query_Goal_Number(kActorRunciter) != kGoalRunciterDead)  {
+				if (Game_Flag_Query(kFlagRunciterIsReplicant)) {
+					Actor_Clue_Acquire(kActorSteele, kClueCrystalRetiredRunciter1, true, kActorSteele);
+					Actor_Clue_Acquire(kActorSteele, kClueCrystalRetiredRunciter2, true, kActorSteele);
+					Actor_Set_Goal_Number(kActorRunciter, kGoalRunciterDead);
+					Game_Flag_Set(kFlagCrystalRetiredRunciter);
+				} else {
+					Actor_Clue_Acquire(kActorSteele, kClueCrystalTestedRunciter, true, kActorSteele);
+					Actor_Clue_Acquire(kActorSteele, kClueVKRunciterHuman, true, -1);
+				}
 			}
 			return;	
 		}
 		if (Actor_Clue_Query(kActorSteele, kClueVKBobGorskyReplicant)) {
-			if (Game_Flag_Query(kFlagBulletBobIsReplicant)
-			&& Actor_Query_Goal_Number(kActorBulletBob) != kGoalBulletBobDead)  {
-				Actor_Clue_Acquire(kActorSteele, kClueCrystalRetiredBob, true, kActorSteele);
-				Actor_Set_Goal_Number(kActorBulletBob, kGoalBulletBobDead);
-				Game_Flag_Set(kFlagCrystalRetiredBulletBob);
-			} else {
-				Actor_Clue_Acquire(kActorSteele, kClueCrystalTestedBulletBob, true, kActorSteele);
-				Actor_Clue_Acquire(kActorSteele, kClueVKBobGorskyHuman, true, -1);
+			if (Actor_Query_Goal_Number(kActorBulletBob) != kGoalBulletBobDead) {
+				if (Game_Flag_Query(kFlagBulletBobIsReplicant)) {
+					Actor_Clue_Acquire(kActorSteele, kClueCrystalRetiredBob, true, kActorSteele);
+					Actor_Set_Goal_Number(kActorBulletBob, kGoalBulletBobDead);
+					Game_Flag_Set(kFlagCrystalRetiredBulletBob);
+				} else {
+					Actor_Clue_Acquire(kActorSteele, kClueCrystalTestedBulletBob, true, kActorSteele);
+					Actor_Clue_Acquire(kActorSteele, kClueVKBobGorskyHuman, true, -1);
+				}
 			}
 			return;	
-		}
+		}	
+	}
 		// Made it so if Zuben escapes Crystal will track him down and retire him if she has enough clues. This will give you the Crystal retired Zuben clue. If she doesn't have enough clues
 		// she just finds Zuben by chance and doesn't have time to come up with a plan of attack so escapes into the sewers. This will give you the Zuben sighting clue.
 		if (Game_Flag_Query(kFlagZubenSpared)) {
@@ -484,32 +483,34 @@ void AIScriptSteele::EnteredSet(int setId) {
 			return;
 		}
 		if (Game_Flag_Query(kFlagGordoIsReplicant) && Game_Flag_Query(kFlagGordoRanAway)) {
-			Actor_Clue_Acquire(kActorSteele, kClueSightingGordo, true, kActorSteele);
-			return;
-		}
-		if (Game_Flag_Query(kFlagGordoIsReplicant) && Game_Flag_Query(kFlagGordoRanAway)) {		
 			Actor_Clue_Acquire(kActorSteele, kClueWarRecordsGordoFrizz, true, kActorSteele);
+			Actor_Clue_Acquire(kActorSteele, kClueSightingGordo, true, kActorSteele);
 			return;
 		}
 		if (!Game_Flag_Query(kFlagIzoIsReplicant) && Game_Flag_Query(kFlagIzoArrested)) {
 			Actor_Clue_Acquire(kActorSteele, kClueVKIzoHuman, true, kActorSteele);
 			return;
 		}
+		if (Actor_Query_Goal_Number(kActorIzo) == kGoalIzoGetArrested) {
+			Actor_Clue_Acquire(kActorSteele, kClueVKIzoHuman, true, kActorSteele);
+			return;
+		}
 		// Added in these clues in regards to replicant Early Q.
 		if  (Actor_Clue_Query(kActorSteele, kClueDektorasDressingRoom)) {
-			if (Game_Flag_Query(kFlagEarlyQIsReplicant) && !Game_Flag_Query(kFlagEarlyQDead))  {
-				Actor_Clue_Acquire(kActorSteele, kClueVKEarlyQReplicant, true, kActorSteele);
-				Game_Flag_Set(kFlagEarlyQDead);
-				// Made it so if Hanoi is a replicant Crystal also kills him.
-				if (Game_Flag_Query(kFlagHanoiIsReplicant)) {
-					Game_Flag_Set(kFlagHanoiDead);
+			if (!Game_Flag_Query(kFlagEarlyQDead)) {
+				if (Game_Flag_Query(kFlagEarlyQIsReplicant)) {
+					Actor_Clue_Acquire(kActorSteele, kClueVKEarlyQReplicant, true, kActorSteele);
+					Game_Flag_Set(kFlagEarlyQDead);
+					// Made it so if Hanoi is a replicant Crystal also kills him.
+				} else {
+					Actor_Clue_Acquire(kActorSteele, kClueVKEarlyQHuman, true, kActorSteele);
 				}
-			} else if (!Game_Flag_Query(kFlagEarlyQIsReplicant) && !Game_Flag_Query(kFlagEarlyQDead))  {
-				Actor_Clue_Acquire(kActorSteele, kClueVKEarlyQHuman, true, kActorSteele);
+			}
+			if (Game_Flag_Query(kFlagHanoiIsReplicant)) {
+				Game_Flag_Set(kFlagHanoiDead);
 			}
 			return;
 		}
-	}
 
 	if (Actor_Query_Goal_Number(kActorSteele) == kGoalSteeleGoToRC02) {
 		if (!Game_Flag_Query(kFlagRC51ChopstickWrapperTaken)
@@ -889,7 +890,7 @@ bool AIScriptSteele::GoalChanged(int currentGoalNumber, int newGoalNumber) {
 		Actor_Says(kActorMcCoy, 4830, 13); //00-4830.AUD	Investigating Izo. Maybe we should compare notes.
 		if (_vm->_cutContent) {
 			if (Actor_Query_Friendliness_To_Other(kActorSteele, kActorMcCoy) > 50) {
-				Actor_Says(kActorSteele, 1870, kAnimationModeTalk); //-	01-2620.AUD	There’s a first for everything.
+				Actor_Says(kActorSteele, 2620, kAnimationModeTalk); //-	01-2620.AUD	There’s a first for everything.
 			} else {
 				Actor_Says(kActorSteele, 1890, kAnimationModeTalk); //01-1890.AUD	Maybe you should find another line of work.
 				Actor_Says(kActorSteele, 1900, kAnimationModeTalk); //01-1900.AUD	Just in case I'm not around to bail you out next time.
@@ -903,14 +904,14 @@ bool AIScriptSteele::GoalChanged(int currentGoalNumber, int newGoalNumber) {
 			if (Actor_Query_Friendliness_To_Other(kActorSteele, kActorMcCoy) > 50) {
 				Actor_Face_Actor(kActorMcCoy, kActorIzo, true);
 				Actor_Face_Actor(kActorSteele, kActorIzo, true);
-				Actor_Says(kActorSteele, 1870, kAnimationModeTalk); //01-0090.AUD	Just another stroll in the park.
+				Actor_Says(kActorSteele, 90, kAnimationModeTalk); //01-0090.AUD	Just another stroll in the park.
 				Actor_Clue_Acquire(kActorMcCoy, kClueCrystalRetiredIzo, true, kActorSteele);
 			} else {
 				Actor_Face_Actor(kActorSteele, kActorIzo, true);
 				Actor_Says(kActorSteele, 1920, kAnimationModeTalk); //01-1920.AUD	And pick up a bottle of scotch for the real Blade Runner, will ya?
 				Actor_Face_Actor(kActorMcCoy, kActorSteele, true);
 				Actor_Face_Actor(kActorSteele, kActorMcCoy, true); 
-				Actor_Says(kActorMcCoy, 6295, 13); //00-6295.AUD	Who made you queen of the world?
+				Actor_Says(kActorMcCoy, 6295, 18); //00-6295.AUD	Who made you queen of the world?
 				Actor_Says(kActorSteele, 1930, kAnimationModeTalk); //01-1930.AUD	Just kidding, Slim.
 				Actor_Clue_Acquire(kActorMcCoy, kClueCrystalRetiredIzo, true, kActorSteele);
 			}
@@ -921,7 +922,7 @@ bool AIScriptSteele::GoalChanged(int currentGoalNumber, int newGoalNumber) {
 			Actor_Face_Actor(kActorSteele, kActorMcCoy, true); 
 			Actor_Says(kActorSteele, 1930, kAnimationModeTalk); //01-1930.AUD	Just kidding, Slim.
 		}
-			Actor_Set_Goal_Number(kActorSteele, kGoalSteeleLeaveRC03);
+		Actor_Set_Goal_Number(kActorSteele, kGoalSteeleLeaveRC03);
 #if BLADERUNNER_ORIGINAL_BUGS
 		Player_Gains_Control(); // redundant - causes "WARNING: Unbalanced call to BladeRunnerEngine::playerGainsControl"
 #endif // BLADERUNNER_ORIGINAL_BUGS
@@ -1098,6 +1099,10 @@ bool AIScriptSteele::GoalChanged(int currentGoalNumber, int newGoalNumber) {
 				Actor_Says(kActorMcCoy, 3815, 19);
 			}
 			Actor_Says(kActorSteele, 1760, 13); //01-1760.AUD	You had to clear out everything else up here too.
+			if (_vm->_cutContent) {
+				Actor_Voice_Over(180, kActorVoiceOver); //99-0180.AUD	Sometimes my trigger finger starts to itch.
+				Actor_Says(kActorSteele, 2110, 14); //01-2110.AUD	That's okay.
+			}
 			Actor_Says(kActorMcCoy, 3820, 18);
 			Actor_Says(kActorSteele, 1770, 14);
 			Actor_Says(kActorSteele, 1780, 15);
@@ -1184,18 +1189,20 @@ bool AIScriptSteele::GoalChanged(int currentGoalNumber, int newGoalNumber) {
 		Actor_Set_At_XYZ(kActorLucy, 596.49f, 47.76f, -260.04f, 731);
 		// Added in some lines.
 		if (_vm->_cutContent) {
-			Actor_Says(kActorMcCoy, 1595, 13); //00-1595.AUD	Everybody out of the way!
+			Actor_Says(kActorMcCoy, 1595, 14); //00-1595.AUD	Everybody out of the way!
 			Actor_Says(kActorLucy, 330, 16); //06-0330.AUD	Please, please don’t!
 		} 
 		return true;
 
 	case kGoalSteeleHF02ShootLucy:
+		if (_vm->_cutContent) {
+			Music_Stop(3u);
+		}
 		Actor_Change_Animation_Mode(kActorSteele, kAnimationModeCombatAttack);
 		Delay(500);
 		Actor_Change_Animation_Mode(kActorLucy, kAnimationModeDie);
 		//Sad music plays when Lucy dies.
 		if (_vm->_cutContent) {
-			Music_Stop(3u);
 			Music_Play(kMusicCrysDie1, 25, 0, 1, -1, kMusicLoopPlayOnce, 0);
 		}
 		Actor_Set_Targetable(kActorLucy, false);
@@ -1223,7 +1230,7 @@ bool AIScriptSteele::GoalChanged(int currentGoalNumber, int newGoalNumber) {
 		Actor_Says(kActorSteele, 40, 18); //01-0040.AUD	Maybe she’ll see ‘em in the next life.
 		if (_vm->_cutContent) {
 			if (Player_Query_Agenda() == kPlayerAgendaSurly 
-				|| Player_Query_Agenda() == kPlayerAgendaErratic) {
+			|| Player_Query_Agenda() == kPlayerAgendaErratic) {
 				Actor_Says(kActorMcCoy, 1570, 13); //	00-1570.AUD	You sure aired that sucker out.
 			} else {
 				Actor_Says(kActorMcCoy, 1550, 13); //00-1550.AUD	You’re cruel and unusual.
@@ -1410,7 +1417,7 @@ bool AIScriptSteele::GoalChanged(int currentGoalNumber, int newGoalNumber) {
 		if (_vm->_cutContent) {
 			Game_Flag_Reset(kFlagMcCoyIsHelpingReplicants);
 			Actor_Clue_Acquire(kActorMcCoy, kClueMcCoyRetiredGordo, true, kActorSteele);
-			Actor_Modify_Friendliness_To_Other(kActorSteele, kActorMcCoy, 3);
+			Actor_Modify_Friendliness_To_Other(kActorSteele, kActorMcCoy, 2);
 		}
 		Player_Gains_Control();
 		Actor_Set_Goal_Number(kActorSteele, kGoalSteeleTalkAboutMissingSpinner);
@@ -1425,11 +1432,6 @@ bool AIScriptSteele::GoalChanged(int currentGoalNumber, int newGoalNumber) {
 		Actor_Set_Goal_Number(kActorGordo, kGoalGordoNR01ReleaseHostage);
 		Game_Flag_Reset(kFlagSteeleAimingAtGordo);
 		Game_Flag_Set(kFlagGordoRanAway);
-		if (_vm->_cutContent) {
-			Actor_Clue_Acquire(kActorGordo, kClueMcCoyHelpedGordo, true, -1);
-			Actor_Clue_Acquire(kActorSteele, kClueMcCoyHelpedGordo, true, -1);
-			Game_Flag_Set(kFlagMcCoyIsHelpingReplicants);
-		}
 		Actor_Set_Targetable(kActorSteele, false);
 		Player_Loses_Control();
 		return true;
@@ -1448,6 +1450,11 @@ bool AIScriptSteele::GoalChanged(int currentGoalNumber, int newGoalNumber) {
 		Actor_Says(kActorMcCoy, 3060, 15);
 		Actor_Says(kActorSteele, 1200, 16);
 		Actor_Says(kActorSteele, 1210, 14);
+		if (_vm->_cutContent) {
+			Actor_Clue_Acquire(kActorGordo, kClueMcCoyHelpedGordo, true, -1);
+			Actor_Clue_Acquire(kActorMcCoy, kClueMcCoyHelpedGordo, true, kActorSteele);
+			Game_Flag_Set(kFlagMcCoyIsHelpingReplicants);
+		}
 		Actor_Modify_Friendliness_To_Other(kActorSteele, kActorMcCoy, -5);
 		Actor_Modify_Friendliness_To_Other(kActorClovis, kActorMcCoy, 2);
 		Player_Set_Combat_Mode(false);
@@ -1540,10 +1547,10 @@ bool AIScriptSteele::GoalChanged(int currentGoalNumber, int newGoalNumber) {
 				Actor_Says(kActorMcCoy, 3015, 12); // 00-3015.AUD	You got a deal.	
 				Actor_Says(kActorSteele, 980, 17); //01-0980.AUD	Now get cracking. Before I change my mind.
 			}
-			} else {
-				Actor_Says(kActorMcCoy, 3015, 12); // 00-3015.AUD	You got a deal.	
-				Actor_Says(kActorSteele, 980, 17); //01-0980.AUD	Now get cracking. Before I change my mind.
-			}
+		} else {
+			Actor_Says(kActorMcCoy, 3015, 12); // 00-3015.AUD	You got a deal.	
+			Actor_Says(kActorSteele, 980, 17); //01-0980.AUD	Now get cracking. Before I change my mind.
+		}
 		if (Player_Query_Current_Scene() == kSceneNR01) {
 			Actor_Set_Goal_Number(kActorSteele, kGoalSteeleNR01StartChapter4);
 		} else {

@@ -972,8 +972,10 @@ void SceneScriptHF05::talkWithDektora() {
 	}
 	if (_vm->_cutContent) {
 		if (Game_Flag_Query(kFlagDektoraIsReplicant)) {
-	 		Actor_Says(kActorDektora, 1420, 15); //03-1420.AUD	This will be the first time I’ve killed a human without being ordered to do it by another human.
-			Actor_Says(kActorDektora, 1430, 12); //03-1430.AUD	It’s strangely liberating.
+			if (!Game_Flag_Query(kFlagNR04EarlyQStungByScorpions)) {
+				Actor_Says(kActorDektora, 1420, 15); //03-1420.AUD	This will be the first time I’ve killed a human without being ordered to do it by another human.
+				Actor_Says(kActorDektora, 1430, 12); //03-1430.AUD	It’s strangely liberating.
+			}
 		} 
 	}	
 	Actor_Says_With_Pause(kActorMcCoy, 9000, 1.0f, 16); //00-9000.AUD	No!

@@ -85,7 +85,7 @@ void AIScriptRunciter::CompletedMovementTrack() {
 						ADQ_Add(kActorRunciter, 530, -1); //15-0530.AUD	My precious one. She was my baby.
 					}
 				} else {
-					ADQ_Add(kActorRunciter, 530, -1); //15-0530.AUD	My precious one. She was my baby.
+					ADQ_Add(kActorRunciter, 930, -1); //15-0930.AUD	All my animals...
 				}
 				break;
 
@@ -97,7 +97,7 @@ void AIScriptRunciter::CompletedMovementTrack() {
 						ADQ_Add(kActorRunciter, 80, -1); //15-0080.AUD	I am ruined! Totally ruined!
 					}
 				} else { 
-					ADQ_Add(kActorRunciter, 80, -1); //15-0530.AUD	My precious one. She was my baby.
+					ADQ_Add(kActorRunciter, 930, -1); //15-0930.AUD	All my animals...
 				}
 				break;
 
@@ -164,10 +164,10 @@ void AIScriptRunciter::OtherAgentEnteredCombatMode(int otherActorId, int combatM
 #if BLADERUNNER_ORIGINAL_BUGS
 				Actor_Says(kActorRunciter, 670, 18);
 #else
-			// Jake - Added in some extra lines for McCoy. Also restored the Runciter confession clues.
-			if (_vm->_cutContent) {
-				Actor_Says(kActorMcCoy, 4800, -1); //00-4800.AUD	You son of a bitch she couldn't object.
-			}
+				// Jake - Added in some extra lines for McCoy. Also restored the Runciter confession clues.
+				if (_vm->_cutContent) {
+					Actor_Says(kActorMcCoy, 4800, -1); //00-4800.AUD	You son of a bitch she couldn't object.
+				}
 				// Runciter is interrupted here
 				Actor_Says_With_Pause(kActorRunciter, 670, 0.0f, 18); //15-0670.AUD	She...
 #endif // BLADERUNNER_ORIGINAL_BUGS
@@ -189,12 +189,16 @@ void AIScriptRunciter::OtherAgentEnteredCombatMode(int otherActorId, int combatM
 			Actor_Says(kActorRunciter, 490, 16);
 			// Made it so McCoy is a 'little' less agressive if he has high friendliness with Runciter.
 			if (_vm->_cutContent) {
-				if (Actor_Query_Friendliness_To_Other(kActorRunciter, kActorMcCoy) < 46) {
+				if (Player_Query_Agenda() != kPlayerAgendaSurly 
+				|| Player_Query_Agenda() != kPlayerAgendaErratic) {
+					Actor_Says(kActorMcCoy, 4740, -1); //00-4740.AUD	Lie to me. Go ahead. You'll only do it once.
+				} else {
+					Sound_Play(kSfxSHOTCOK1, 100, 0, 100, 50);
 					Actor_Says(kActorMcCoy, 4740, -1); //00-4740.AUD	Lie to me. Go ahead. You'll only do it once.
 				}
 			} else {
-			Sound_Play(kSfxSHOTCOK1, 100, 0, 100, 50);
-			Actor_Says(kActorMcCoy, 4740, -1); //00-4740.AUD	Lie to me. Go ahead. You'll only do it once.
+				Sound_Play(kSfxSHOTCOK1, 100, 0, 100, 50);
+				Actor_Says(kActorMcCoy, 4740, -1); //00-4740.AUD	Lie to me. Go ahead. You'll only do it once.
 			}
 			Actor_Says(kActorRunciter, 500, 18);
 #if BLADERUNNER_ORIGINAL_BUGS
@@ -209,19 +213,18 @@ void AIScriptRunciter::OtherAgentEnteredCombatMode(int otherActorId, int combatM
 			if (_vm->_cutContent) {
 				Actor_Says(kActorMcCoy, 4755, -1); //-	00-4755.AUD	Was the tiger a fake?
 			}
-				Actor_Says(kActorRunciter, 520, 17); //15-0520.AUD	No! The tiger was real. I swear it.
-				Actor_Says(kActorRunciter, 530, 18);
-				Actor_Says(kActorRunciter, 540, 16);
-				if (_vm->_cutContent) {
-					Actor_Clue_Acquire(kActorMcCoy, kClueRuncitersConfession3, true, kActorRunciter);
+			Actor_Says(kActorRunciter, 520, 17); //15-0520.AUD	No! The tiger was real. I swear it.
+			Actor_Says(kActorRunciter, 530, 18);
+			Actor_Says(kActorRunciter, 540, 16);
+			if (_vm->_cutContent) {
+				Actor_Clue_Acquire(kActorMcCoy, kClueRuncitersConfession3, true, kActorRunciter);
 			}
 		}
 		Game_Flag_Set(kFlagRC02RunciterTalkWithGun);
 		// Code for when McCoy decides to spare replicant Runciter. The scene exits are enabled at the end of the scene.
-		} else if (otherActorId == kActorMcCoy
+	} else if (otherActorId == kActorMcCoy
 	 && !combatMode
-	 &&  Game_Flag_Query(kFlagRunciterConfronted)
-	) {
+	 && Game_Flag_Query(kFlagRunciterConfronted)) {
 		Actor_Face_Actor(kActorMcCoy, kActorRunciter, true);
 		Actor_Says(kActorMcCoy, 455, 14); //00-0455.AUD	Relax. Nobody's gonna get retired. Okay?
 		Actor_Face_Heading(kActorRunciter, 1007, false);
@@ -231,8 +234,11 @@ void AIScriptRunciter::OtherAgentEnteredCombatMode(int otherActorId, int combatM
 		Delay(1000);
 		Actor_Says(kActorRunciter, 410, 13); //15-0410.AUD	My precious ones are gone. I cared for them. All of them.
 		Delay(2000);
-		Actor_Says(kActorMcCoy, 2305, 14); //00-2305.AUD	I’m sorry.
-		Delay(1000);
+		if (Player_Query_Agenda() != kPlayerAgendaSurly 
+		&& Player_Query_Agenda() != kPlayerAgendaErratic) {
+			Actor_Says(kActorMcCoy, 2305, 14); //00-2305.AUD	I’m sorry.
+		}
+		Delay(2000);
 		Actor_Face_Actor(kActorRunciter, kActorMcCoy, true);
 		Actor_Says(kActorRunciter, 730, 13); //15-0730.AUD	Please. Just leave me alone.
 		Actor_Set_Targetable(kActorRunciter, false);
@@ -252,7 +258,7 @@ bool AIScriptRunciter::ShotAtAndHit() {
 		Game_Flag_Set(kFlagMcCoyRetiredHuman);	
 	}
 	// Fixed Runciter anaimation. His head now tilts back when he is shot.
-	Actor_Says(kActorRunciter, 9020, 18); //15-9020.AUD	Argh!	
+	Actor_Says(kActorRunciter, 9020, 0); //15-9020.AUD	Argh!	
 	Actor_Change_Animation_Mode(kActorRunciter, kAnimationModeDie);
 	Actor_Set_Goal_Number(kActorRunciter, kGoalRunciterDead);
 	Delay(2000);
@@ -261,11 +267,11 @@ bool AIScriptRunciter::ShotAtAndHit() {
 	&&	Global_Variable_Query(kVariableChapter) == 1) {
 		// Made it so McCoys response to retiring Runciter is different based on his agenda.
 		if (Player_Query_Agenda() != kPlayerAgendaSurly 
-		|| Player_Query_Agenda() != kPlayerAgendaErratic) {
-			Music_Play(kMusicBRBlues, 52, 0, 2, -1, kMusicLoopPlayOnce, 0);
+		&& Player_Query_Agenda() != kPlayerAgendaErratic) {
 			Actor_Voice_Over(1410, kActorVoiceOver); //99-1410.AUD	I’d retired another Replicant so more money was headed my way but I didn’t feel so good about it.
 			Actor_Voice_Over(1670, kActorVoiceOver); //99-1670.AUD	Still it was a hell of a way to go.
 			Actor_Voice_Over(2090, kActorVoiceOver); //99-2090.AUD	And maybe I’d done him a favor too, since his animals were all dead.
+			Music_Play(kMusicBRBlues, 52, 0, 2, -1, kMusicLoopPlayOnce, 0);
 		} else {
 			Actor_Voice_Over(920, kActorVoiceOver); //99-0920.AUD	Easy money.
 		}
@@ -290,7 +296,7 @@ bool AIScriptRunciter::ShotAtAndHit() {
 			Actor_Clue_Acquire(kActorMcCoy, kClueMcCoyKilledRunciter2, true, kActorMcCoy);
 		}
 	}
-	Actor_Modify_Friendliness_To_Other(kActorClovis, kActorMcCoy, 3);
+	Actor_Modify_Friendliness_To_Other(kActorClovis, kActorMcCoy, 2);
 	if (_vm->_cutContent) {
 		Game_Flag_Set(kFlagMcCoyIsHelpingReplicants);
 	}

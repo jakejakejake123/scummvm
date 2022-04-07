@@ -761,6 +761,7 @@ void SceneScriptUG18::talkWithGuzza() {
 		Actor_Says(kActorMcCoy, 5940, 18); //00-5940.AUD	But don’t think I’m doing this to save your worthless hide.
 		Actor_Says(kActorGuzza, 1020, 13);
 		Actor_Says(kActorGuzza, 1030, 14);
+		Actor_Clue_Acquire(kActorMcCoy, kClueMcCoyIsABladeRunner, true, kActorGuzza);
 		}
 	} else if (_vm->_cutContent && Game_Flag_Query(kFlagMcCoyIsHelpingReplicants)) {
 	 if	(Global_Variable_Query(kVariableAffectionTowards) != kAffectionTowardsDektora 

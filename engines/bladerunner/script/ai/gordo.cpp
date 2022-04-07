@@ -158,7 +158,13 @@ void AIScriptGordo::CompletedMovementTrack() {
 			Player_Set_Combat_Mode(false);
 			Player_Gains_Control();
 		}
-		Actor_Clue_Acquire(kActorGordo, kClueMcCoyRetiredZuben, true, -1);
+		if (_vm->_cutContent) {
+			if (Game_Flag_Query(kFlagZubenRetired)) {
+				Actor_Clue_Acquire(kActorGordo, kClueMcCoyRetiredZuben, true, -1);
+			}
+		} else {
+			Actor_Clue_Acquire(kActorGordo, kClueMcCoyRetiredZuben, true, -1);
+		}
 		Actor_Set_Goal_Number(kActorGordo, kGoalGordoCT05Leave);
 		return;// true;
 	}
@@ -316,7 +322,7 @@ void AIScriptGordo::Retired(int byActorId) {
 		if (_vm->_cutContent) {
 			// Reset this flag and added friendliness with Crystal if you retired Gordo.
 			Game_Flag_Reset(kFlagMcCoyIsHelpingReplicants);
-			Actor_Modify_Friendliness_To_Other(kActorSteele, kActorMcCoy, 5);
+			Actor_Modify_Friendliness_To_Other(kActorSteele, kActorMcCoy, 2);
 			Actor_Clue_Acquire(kActorMcCoy, kClueMcCoyRetiredGordo, true, -1);
 		}
 		Player_Gains_Control();
@@ -386,9 +392,6 @@ bool AIScriptGordo::GoalChanged(int currentGoalNumber, int newGoalNumber) {
 		AI_Movement_Track_Append(kActorGordo, 119, 0);
 		AI_Movement_Track_Append(kActorGordo, 33, 1);
 		AI_Movement_Track_Repeat(kActorGordo);
-		if (_vm->_cutContent) {
-			Actor_Clue_Acquire(kActorMcCoy, kClueMcCoyPulledAGun, true, -1);
-		}
 		break;
 
 	case kGoalGordoCT01StandUp:
@@ -741,7 +744,6 @@ bool AIScriptGordo::GoalChanged(int currentGoalNumber, int newGoalNumber) {
 		Game_Flag_Set(kFlagGordoRanAway);
 		// Added in some dialogue.
 		if (_vm->_cutContent) {
-			Actor_Voice_Over(180, kActorVoiceOver); //99-0180.AUD	Sometimes my trigger finger starts to itch.
 			Actor_Voice_Over(190, kActorVoiceOver); //99-0190.AUD	If only we had a target range worth a damn back at the station.
 		}
 		Actor_Put_In_Set(kActorGordo, kSetFreeSlotA);
@@ -1740,21 +1742,21 @@ void AIScriptGordo::talkToMcCoyInCity() {
 			if (_vm->_cutContent) {
 				Actor_Says(kActorMcCoy, 1125, 12); //00-1125.AUD	Thanks a million.
 				Actor_Says(kActorGordo, 980, 15); //02-0980.AUD	Got any chinyen you can part with? Just so I can grab myself a couple of lichen-dogs.
-		  	if  (Player_Query_Agenda() == kPlayerAgendaSurly
-		   	|| Player_Query_Agenda() == kPlayerAgendaErratic) {  
-				Actor_Says(kActorMcCoy, 430, 14); //00-0430.AUD	Sorry, pal. All I got are hundreds.
-				Actor_Says(kActorGordo, 570, 15); //02-0570.AUD	Gotta go, daddy-o.
-				Actor_Modify_Friendliness_To_Other(kActorGordo, kActorMcCoy, -5);
-			} else {
-				Actor_Says(kActorMcCoy, 1025, 13); //00-1025.AUD	Absolutely.
-				Actor_Says(kActorGordo, 10, 15); //02-0010.AUD	Catch you later.
-				AI_Movement_Track_Unpause(kActorGordo);
-				Actor_Modify_Friendliness_To_Other(kActorGordo, kActorMcCoy, 10);
-				if (Query_Difficulty_Level() != kGameDifficultyEasy) {
-					Global_Variable_Decrement(kVariableChinyen, 10);
+				if  (Player_Query_Agenda() == kPlayerAgendaSurly
+				|| Player_Query_Agenda() == kPlayerAgendaErratic) {  
+					Actor_Says(kActorMcCoy, 430, 14); //00-0430.AUD	Sorry, pal. All I got are hundreds.
+					Actor_Says(kActorGordo, 570, 15); //02-0570.AUD	Gotta go, daddy-o.
+					Actor_Modify_Friendliness_To_Other(kActorGordo, kActorMcCoy, -5);
+				} else {
+					Actor_Says(kActorMcCoy, 1025, 13); //00-1025.AUD	Absolutely.
+					Actor_Says(kActorGordo, 10, 15); //02-0010.AUD	Catch you later.
+					AI_Movement_Track_Unpause(kActorGordo);
+					Actor_Modify_Friendliness_To_Other(kActorGordo, kActorMcCoy, 15);
+					if (Query_Difficulty_Level() != kGameDifficultyEasy) {
+						Global_Variable_Decrement(kVariableChinyen, 10);
+					}
 				}
 			}
-		}
 			Actor_Clue_Acquire(kActorMcCoy, kClueGordoInterview1, false, kActorGordo);
 		} else {
 			Actor_Says(kActorGordo, 1040, 12);
@@ -1768,26 +1770,26 @@ void AIScriptGordo::talkToMcCoyInCity() {
 			if (_vm->_cutContent) {
 				Actor_Says(kActorMcCoy, 1125, 12); //00-1125.AUD	Thanks a million.
 				Actor_Says(kActorGordo, 980, 15); //02-0980.AUD	Got any chinyen you can part with? Just so I can grab myself a couple of lichen-dogs.
-		  	if  (Player_Query_Agenda() == kPlayerAgendaSurly
-		   	|| Player_Query_Agenda() == kPlayerAgendaErratic) {  
-				Actor_Says(kActorMcCoy, 430, 14); //00-0430.AUD	Sorry, pal. All I got are hundreds.
-				Actor_Says(kActorGordo, 570, 15); //02-0570.AUD	Gotta go, daddy-o.
-				Actor_Modify_Friendliness_To_Other(kActorGordo, kActorMcCoy, -5);
-			} else {
-				Actor_Says(kActorMcCoy, 1025, 13); //00-1025.AUD	Absolutely.
-				Actor_Says(kActorGordo, 10, 15); //02-0010.AUD	Catch you later.
-				AI_Movement_Track_Unpause(kActorGordo);
-				Actor_Modify_Friendliness_To_Other(kActorGordo, kActorMcCoy, 10);
-				if (Query_Difficulty_Level() != kGameDifficultyEasy) {
-					Global_Variable_Decrement(kVariableChinyen, 10);
+				if  (Player_Query_Agenda() == kPlayerAgendaSurly
+				|| Player_Query_Agenda() == kPlayerAgendaErratic) {  
+					Actor_Says(kActorMcCoy, 430, 14); //00-0430.AUD	Sorry, pal. All I got are hundreds.
+					Actor_Says(kActorGordo, 570, 15); //02-0570.AUD	Gotta go, daddy-o.
+					Actor_Modify_Friendliness_To_Other(kActorGordo, kActorMcCoy, -5);
+				} else {
+					Actor_Says(kActorMcCoy, 1025, 13); //00-1025.AUD	Absolutely.
+					Actor_Says(kActorGordo, 10, 15); //02-0010.AUD	Catch you later.
+					AI_Movement_Track_Unpause(kActorGordo);
+					Actor_Modify_Friendliness_To_Other(kActorGordo, kActorMcCoy, 15);
+					if (Query_Difficulty_Level() != kGameDifficultyEasy) {
+						Global_Variable_Decrement(kVariableChinyen, 10);
+					}
 				}
 			}
-		}
-		if (_vm->_cutContent) {
-			Actor_Clue_Acquire(kActorMcCoy, kClueGordoInterview1, false, kActorGordo);
-		} else {
-			Actor_Clue_Acquire(kActorMcCoy, kClueGordoInterview2, false, kActorGordo);
-		}
+			if (_vm->_cutContent) {
+				Actor_Clue_Acquire(kActorMcCoy, kClueGordoInterview1, false, kActorGordo);
+			} else {
+				Actor_Clue_Acquire(kActorMcCoy, kClueGordoInterview2, false, kActorGordo);
+			}
 		}
 		AI_Movement_Track_Unpause(kActorGordo);
 	} else if (!Game_Flag_Query(kFlagGordoTalk2)
@@ -1849,7 +1851,7 @@ void AIScriptGordo::talkToMcCoyAtNR02() {
 	Actor_Says(kActorMcCoy, 3220, 12); //00-3220.AUD	I’m gonna ask you a few questions.
 	// If you gave money to Gordo for lichen dogs he will not be annoyed at McCoy asking him questions.
 	if (_vm->_cutContent) {
-		if (Actor_Query_Friendliness_To_Other(kActorGordo, kActorMcCoy) > 49) {
+		if (Actor_Query_Friendliness_To_Other(kActorGordo, kActorMcCoy) < 50) {
 			Actor_Says(kActorGordo, 330, 17); //02-0330.AUD	Man, don’t you got anything better to do than hassle innocent people at their place of work?
 			Actor_Says(kActorGordo, 350, 13); //02-0350.AUD	Make it snappy, okay?
 			Actor_Says(kActorMcCoy, 3225, 18); //00-3225.AUD	I really appreciate your patience.
@@ -1914,9 +1916,6 @@ void AIScriptGordo::dialogue2() {
 				Actor_Says(kActorGordo, 570, 15); //02-0570.AUD	Gotta go, daddy-o.
 			}
 			Actor_Clue_Acquire(kActorGordo, kClueMcCoyHelpedGordo, true, -1);
-			if (_vm->_cutContent) {
-				Actor_Clue_Acquire(kActorSteele, kClueMcCoyHelpedGordo, true, -1);
-			}
 		} else {
 			Delay(1000);
 			Actor_Says(kActorGordo, 570, 13);
@@ -2019,27 +2018,27 @@ void AIScriptGordo::dialogue1() {
 	// If Clovis heard Gordo say this or there was a hint of it, Gordo would not only not be helping the reps but Clovis would probably kill him so these lines will be removed for consistency  
 	if (_vm->_cutContent) {
 		if (Actor_Clue_Query(kActorMcCoy, kClueLucy) 
-			|| Actor_Clue_Query(kActorMcCoy, kClueLucyWithDektora)) {
-				Actor_Says(kActorMcCoy, 3245, kAnimationModeTalk);
-			} else {
-				Actor_Says(kActorMcCoy, 385, 9); //00-0385.AUD	I'm looking for a girl about 14 years old with pink hair. You seen her?
-			}
-		} else {
+		|| Actor_Clue_Query(kActorMcCoy, kClueLucyWithDektora)) {
 			Actor_Says(kActorMcCoy, 3245, kAnimationModeTalk);
-		}
-		if (_vm->_cutContent) {
-			Actor_Says(kActorGordo, 470, 17); //02-0470.AUD	I think I slept with her just last night!
-			Actor_Says(kActorMcCoy, 3285, 16);
-			Actor_Says(kActorGordo, 480, 13); //02-0480.AUD	Just kidding, baby. Tell you the truth
-			Actor_Says(kActorMcCoy, 380, 16); //02-0380.AUD	You are one hell of a suspicious cat, McCoy.
 		} else {
-			Actor_Says(kActorGordo, 470, 17);
-			Actor_Says(kActorMcCoy, 3285, 16);
-			Actor_Says(kActorGordo, 480, 13);
-			Actor_Says(kActorGordo, 490, 12);
-			Actor_Says(kActorGordo, 500, 13);
-			Actor_Says(kActorMcCoy, 3290, 16);
-			Actor_Says(kActorGordo, 510, 15);
+			Actor_Says(kActorMcCoy, 385, 9); //00-0385.AUD	I'm looking for a girl about 14 years old with pink hair. You seen her?
+		}
+	} else {
+		Actor_Says(kActorMcCoy, 3245, kAnimationModeTalk);
+	}
+	if (_vm->_cutContent) {
+		Actor_Says(kActorGordo, 470, 17); //02-0470.AUD	I think I slept with her just last night!
+		Actor_Says(kActorMcCoy, 3285, 16);
+		Actor_Says(kActorGordo, 480, 13); //02-0480.AUD	Just kidding, baby. Tell you the truth
+		Actor_Says(kActorMcCoy, 380, 16); //02-0380.AUD	You are one hell of a suspicious cat, McCoy.
+	} else {
+		Actor_Says(kActorGordo, 470, 17);
+		Actor_Says(kActorMcCoy, 3285, 16);
+		Actor_Says(kActorGordo, 480, 13);
+		Actor_Says(kActorGordo, 490, 12);
+		Actor_Says(kActorGordo, 500, 13);
+		Actor_Says(kActorMcCoy, 3290, 16);
+		Actor_Says(kActorGordo, 510, 15);
 #if BLADERUNNER_ORIGINAL_BUGS
 		Actor_Says(kActorMcCoy, 3295, 14);
 #else

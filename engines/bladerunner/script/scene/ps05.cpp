@@ -96,13 +96,13 @@ bool SceneScriptPS05::ClickedOn3DObject(const char *objectName, bool a2) {
 		// to cover for the reps, Guzza perhaps?
 		if (_vm->_cutContent) {
 			if (!Actor_Clue_Query (kActorMcCoy, kClueWantedPoster)) {
-			Item_Pickup_Spin_Effect(kModelAnimationGrigoriansNote, 513, 285);		
-			Actor_Voice_Over(4080, kActorVoiceOver); //	99-4080.AUD	He looks familiar.		
-			Actor_Clue_Acquire(kActorMcCoy, kClueWantedPoster, true, -1); 		
-		} else {
-			Actor_Voice_Over(1810, kActorVoiceOver);
-			Actor_Voice_Over(1820, kActorVoiceOver);
-		} 
+				Item_Pickup_Spin_Effect(kModelAnimationGrigoriansNote, 513, 285);		
+				Actor_Voice_Over(4080, kActorVoiceOver); //	99-4080.AUD	He looks familiar.		
+				Actor_Clue_Acquire(kActorMcCoy, kClueWantedPoster, true, -1); 		
+			} else {
+				Actor_Voice_Over(1810, kActorVoiceOver);
+				Actor_Voice_Over(1820, kActorVoiceOver);
+			} 
 		} else {
 			Actor_Voice_Over(1810, kActorVoiceOver);
 			Actor_Voice_Over(1820, kActorVoiceOver);

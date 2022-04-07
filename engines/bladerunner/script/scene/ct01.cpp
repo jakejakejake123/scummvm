@@ -192,14 +192,20 @@ bool SceneScriptCT01::ClickedOnActor(int actorId) {
 			if (!Game_Flag_Query(kFlagCT01McCoyTalkedToHowieLee)) {
 				// If Howie has low friendliness with McCoy Howie is not as pleasant towards him.
 				if (_vm->_cutContent) {
-					if (Actor_Query_Friendliness_To_Other(kActorHowieLee, kActorMcCoy) < 56) {
+					if (Actor_Query_Friendliness_To_Other(kActorHowieLee, kActorMcCoy) < 58) {
 						Actor_Says(kActorMcCoy, 260, 18);
-						Actor_Says(kActorHowieLee, 160, 14); //28-0160.AUD	I take care of you soon, McCoy. Real busy tonight.
+						Actor_Says(kActorHowieLee, 0, 14); //28-0000.AUD	When business thriving, night always beautiful.
+						Actor_Says(kActorMcCoy, 8615, 13);//00-8615.AUD	Heard anything on the street?
+						Actor_Says(kActorHowieLee, 180, 13); //28-0180.AUD	Nothing, nothing. Customer here to eat.
 						Game_Flag_Set(kFlagCT01McCoyTalkedToHowieLee);
 						Actor_Set_Goal_Number(kActorHowieLee, kGoalHowieLeeDefault);
 					} else {
 						Actor_Says(kActorMcCoy, 260, 18);
 						Actor_Says(kActorHowieLee, 0, 14); //28-0000.AUD	When business thriving, night always beautiful.
+						Actor_Says(kActorMcCoy, 8615, 13);//00-8615.AUD	Heard anything on the street?
+						Actor_Says(kActorHowieLee, 170, 13);//28-0170.AUD	Sure, McCoy. I hear something. Maybe it surprise you even.
+						Actor_Says(kActorMcCoy, 6990, 15);//00-6990.AUD	Enlighten me.
+						Actor_Says(kActorHowieLee, 160, 14); //28-0160.AUD	I take care of you soon, McCoy. Real busy tonight.
 						Game_Flag_Set(kFlagCT01McCoyTalkedToHowieLee);
 						Actor_Set_Goal_Number(kActorHowieLee, kGoalHowieLeeDefault);
 					}
@@ -220,30 +226,33 @@ bool SceneScriptCT01::ClickedOnActor(int actorId) {
 					//and if their relationship is high McCoy is not as harsh towards him.
 				} else {
 					if (Game_Flag_Query(kFlagZubenRetired) 
-					&& !Game_Flag_Query(kFlagCT01TalkToHowieAboutDeadZuben)
-					&& Actor_Query_Friendliness_To_Other(kActorHowieLee, kActorMcCoy) > 56) {
-						Game_Flag_Set(kFlagCT01TalkToHowieAboutDeadZuben);
-						Actor_Says(kActorMcCoy, 330, 17); //00-0330.AUD	Hey, Howie, what's cooking?
-						Actor_Says(kActorHowieLee, 130, 13); //28-0130.AUD	Nothing now, McCoy.
-						Actor_Says(kActorHowieLee, 140, 14); //28-0140.AUD	Got to find a new chef thanks to you.
-						Actor_Says(kActorMcCoy, 315, 16); //00-0315.AUD	Can't help you there, Howie.
-					} else if (Game_Flag_Query(kFlagZubenRetired) 
-						&& !Game_Flag_Query(kFlagCT01TalkToHowieAboutDeadZuben) 
-						&& Actor_Query_Friendliness_To_Other(kActorHowieLee, kActorMcCoy) <= 56) {
-						Game_Flag_Set(kFlagCT01TalkToHowieAboutDeadZuben);
-						Actor_Says(kActorMcCoy, 4260, 17);//00-4260.AUD	You've been helping Reps, pal?
-						Actor_Says(kActorHowieLee, 210, 13);//28-0210.AUD	You sharp one, McCoy. I try protect you, but you want truth.
-						Actor_Says(kActorMcCoy, 4420, 17);//00-4420.AUD	Contacting business with Reps is against the Law.
-						Actor_Says(kActorMcCoy, 1970, 13); //00-1970.AUD	You should start thinking about the company you keep.
-						Actor_Says(kActorHowieLee, 220, 14); //28-0220.AUD	Fine. But Howie do you favors no more.
-						Actor_Modify_Friendliness_To_Other(kActorHowieLee, kActorMcCoy, -5);		
-					} else if (Actor_Query_Friendliness_To_Other(kActorHowieLee, kActorMcCoy) <= 51) {
+					&& !Game_Flag_Query(kFlagCT01TalkToHowieAboutDeadZuben)) {
+						if (Player_Query_Agenda() != kPlayerAgendaSurly 
+						&& Player_Query_Agenda() != kPlayerAgendaErratic) {
+							Game_Flag_Set(kFlagCT01TalkToHowieAboutDeadZuben);
+							Actor_Says(kActorMcCoy, 330, 17); //00-0330.AUD	Hey, Howie, what's cooking?
+							Actor_Says(kActorHowieLee, 130, 13); //28-0130.AUD	Nothing now, McCoy.
+							Actor_Says(kActorHowieLee, 140, 14); //28-0140.AUD	Got to find a new chef thanks to you.
+							Actor_Says(kActorMcCoy, 315, 16); //00-0315.AUD	Can't help you there, Howie.
+						} else if (Player_Query_Agenda() == kPlayerAgendaSurly 
+						|| Player_Query_Agenda() == kPlayerAgendaErratic) {
+							Game_Flag_Set(kFlagCT01TalkToHowieAboutDeadZuben);
+							Actor_Says(kActorMcCoy, 4260, 17);//00-4260.AUD	You've been helping Reps, pal?
+							Actor_Says(kActorHowieLee, 210, 13);//28-0210.AUD	You sharp one, McCoy. I try protect you, but you want truth.
+							Actor_Says(kActorMcCoy, 4420, 17);//00-4420.AUD	Contacting business with Reps is against the Law.
+							Actor_Says(kActorMcCoy, 1970, 13); //00-1970.AUD	You should start thinking about the company you keep.
+							Actor_Says(kActorHowieLee, 220, 14); //28-0220.AUD	Fine. But Howie do you favors no more.		
+							Actor_Modify_Friendliness_To_Other(kActorHowieLee, kActorMcCoy, -5);
+						}	
+					} else if (Game_Flag_Query(kFlagCT01TalkToHowieAboutDeadZuben)
+					&& Actor_Query_Friendliness_To_Other(kActorHowieLee, kActorMcCoy) < 56) {
 						Actor_Says(kActorMcCoy, 310, 11);    // keeping out of trouble...?
 						Actor_Says(kActorHowieLee, 190, 13); // I look like I got time for chit-er chat-er?
-					} else if (Actor_Query_Friendliness_To_Other(kActorHowieLee, kActorMcCoy) <= 55) {
+					} else if (Game_Flag_Query(kFlagCT01TalkToHowieAboutDeadZuben)
+					&& Actor_Query_Friendliness_To_Other(kActorHowieLee, kActorMcCoy) > 55) {
 						Actor_Says(kActorMcCoy, 330, 13);
 						Actor_Says(kActorHowieLee, 160, 15);  // real busy tonight
-					} else { // friendly > 55
+					} else if (Game_Flag_Query(kFlagCT01ZubenGone)) {
 						Actor_Says(kActorMcCoy, 310, 11);
 						Actor_Says(kActorHowieLee, 10, 16);
 					}
@@ -719,9 +728,9 @@ void SceneScriptCT01::dialogueWithHowieLee() {
 			//their friendliness rating will be adjusted accordingly.
 			if (_vm->_cutContent) {
 		  	  	if  (Player_Query_Agenda() == kPlayerAgendaSurly
-		   				|| Player_Query_Agenda() == kPlayerAgendaErratic) {  
+		   		|| Player_Query_Agenda() == kPlayerAgendaErratic) {  
 					Actor_Says(kActorMcCoy, 7815, 18); //00-7815.AUD	No.
-					Actor_Modify_Friendliness_To_Other(kActorHowieLee, kActorMcCoy, -4);	
+					Actor_Modify_Friendliness_To_Other(kActorHowieLee, kActorMcCoy, -5);	
 				} else {
 					Actor_Says(kActorMcCoy, 1025, kAnimationModeTalk); //00-1025.AUD	Absolutely.
 					Actor_Modify_Friendliness_To_Other(kActorHowieLee, kActorMcCoy, 5);
@@ -785,7 +794,6 @@ void SceneScriptCT01::dialogueWithHowieLee() {
 				Actor_Says(kActorHowieLee, 90, 14);
 				Actor_Says(kActorHowieLee, 100, 13);
 				Actor_Clue_Acquire(kActorMcCoy, kClueHowieLeeInterview, true, kActorHowieLee);
-				Actor_Modify_Friendliness_To_Other(kActorHowieLee, kActorMcCoy, -3);
 			}
 		} else {
 			Actor_Says(kActorHowieLee, 90, 14);
@@ -800,11 +808,11 @@ void SceneScriptCT01::dialogueWithHowieLee() {
 		Actor_Says(kActorHowieLee, 110, 16);
 		//Added dialogue that plays if McCoys agenda is surly or erratic.
 		if (_vm->_cutContent) {
-			if  (Player_Query_Agenda() == kPlayerAgendaSurly
-		    		|| Player_Query_Agenda() == kPlayerAgendaErratic) {  
+			if  (Player_Query_Agenda() == kPlayerAgendaSurly 
+		    || Player_Query_Agenda() == kPlayerAgendaErratic) {  
 				Actor_Says(kActorMcCoy, 8519, 14);//00-8519.AUD	What do you say we dish each other the straight goods.
 				Actor_Says(kActorHowieLee, 200, 16); //28-0200.AUD	You call Howie liar? You find another place to eat lunch now [speaks Japanese]
-				Actor_Modify_Friendliness_To_Other(kActorHowieLee, kActorMcCoy, -4);
+				Actor_Modify_Friendliness_To_Other(kActorHowieLee, kActorMcCoy, -5);
 			}
 		}
 		break;

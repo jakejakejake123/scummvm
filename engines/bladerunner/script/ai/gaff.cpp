@@ -129,9 +129,9 @@ void AIScriptGaff::CompletedMovementTrack() {
 					ADQ_Add(kActorDispatcher, 400, kAnimationModeTalk); //38-0400.AUD	Registration info temporarily unavailable at this time.
 					ADQ_Add(kActorOfficerGrayford, 550, kAnimationModeTalk); //24-0550.AUD	LA, 38 Metro 3.10-4.
 					Game_Flag_Set(kFlagCT12Visited); 
-			}		
+				}		
+			}
 		}
-	}
 	}
 
 	if (Actor_Query_Goal_Number(kActorGaff) == kGoalGaffCT12GoToSpinner) {
@@ -187,11 +187,11 @@ void AIScriptGaff::ClickedByPlayer() {
 			if (!Game_Flag_Query(kFlagGaffTalk)) {
 				Actor_Says(kActorMcCoy, 8610, 13); //00-8610.AUD	What's the word, friend?
 				Actor_Says(kActorGaff, 320, 13); //53-0320.AUD	Someone said you've been earning your stripes, McCoy.
-				Actor_Says(kActorMcCoy, 6915, 13); //00-6915.AUD	Trying to.
+				Actor_Says(kActorMcCoy, 6915, 14); //00-6915.AUD	Trying to.
 				Actor_Says(kActorGaff, 330, 13); //53-0330.AUD	You just might have a future in this business.
-				Actor_Says(kActorMcCoy, 6920, 18); //00-6920.AUD	I like to hear that.
+				Actor_Says(kActorMcCoy, 6920, 16); //00-6920.AUD	I like to hear that.
 				Actor_Says(kActorGaff, 340, 13); //53-0340.AUD	Don't crack a bottle too soon. Steele is still way ahead on points.
-				Actor_Says(kActorMcCoy, 6925, 16); //00-6925.AUD	Don't bet on it.
+				Actor_Says(kActorMcCoy, 6925, 18); //00-6925.AUD	Don't bet on it.
 				Actor_Says(kActorGaff, 70, 13); //	53-0070.AUD	You ever retire human, your career is over. Remember that.
 				Game_Flag_Set(kFlagGaffTalk);
 				AI_Movement_Track_Unpause(kActorGaff);
@@ -357,7 +357,7 @@ bool AIScriptGaff::GoalChanged(int currentGoalNumber, int newGoalNumber) {
 		// police officers good mood. He will let the murder of Runciter and Guzza slide however.
 		if (_vm->_cutContent) {
 			if (Game_Flag_Query(kFlagOfficerGrayfordShot) 
-					|| Game_Flag_Query(kFlagOfficerLearyShot)) {
+			|| Game_Flag_Query(kFlagOfficerLearyShot)) {
 				Actor_Says(kActorGaff, 190, kAnimationModeTalk); //53-0190.AUD	It's like I said before. You retire a human, your career is over.
 				Actor_Says(kActorGaff, 200, kAnimationModeTalk); //53-0200.AUD	Your life too, maybe.
 				Actor_Says(kActorMcCoy, 7835, 18); //00-7835.AUD	Is that so?

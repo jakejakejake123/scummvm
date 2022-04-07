@@ -100,6 +100,7 @@ bool AIScriptLuther::Update() {
 		if (_vm->_cutContent) {
 			if (Game_Flag_Query(kFlagLutherLanceIsReplicant)) {
 				Actor_Says(kActorMcCoy, 8508, 12); //00-8508.AUD	No retirement swag.
+				Game_Flag_Reset(kFlagMcCoyIsHelpingReplicants);
 				Actor_Clue_Acquire(kActorMcCoy, kClueMcCoyRetiredLutherLance, true, -1);
 			} else {
 				Actor_Says(kActorVoiceOver, 2100, 12); //99-2100.AUD	I'd crossed the line.

@@ -274,7 +274,7 @@ void AIScriptLucy::Retired(int byActorId) {
 			Actor_Clue_Acquire(kActorClovis, kClueMcCoyRetiredLucy, true, -1);
 			Actor_Modify_Friendliness_To_Other(kActorClovis, kActorMcCoy, -6);
 			Game_Flag_Reset(kFlagMcCoyIsHelpingReplicants);
-			Actor_Modify_Friendliness_To_Other(kActorSteele, kActorMcCoy, 3);
+			Actor_Modify_Friendliness_To_Other(kActorSteele, kActorMcCoy, 2);
 			// Made it so you lose affection to both Lucy and Dektora if you retire Lucy.
 			Global_Variable_Set(kVariableAffectionTowards, kAffectionTowardsNone);
 		}
@@ -474,6 +474,7 @@ bool AIScriptLucy::GoalChanged(int currentGoalNumber, int newGoalNumber) {
 		// Added in a line and made it so Lucy approaches McCoy when he talks to her in the maze.
 		if (_vm->_cutContent) {
 			Actor_Says(kActorMcCoy, 1695, 16); //00-1695.AUD	Lucy? Come on out. I’m not the hunter anymore.
+			Actor_Clue_Acquire(kActorMcCoy, kClueMcCoyHelpedLucy, true, kActorLucy);
 		}
 		Actor_Says(kActorMcCoy, 1700, 16); //00-1700.AUD	I put my gun away.
 		AI_Movement_Track_Flush(kActorLucy);

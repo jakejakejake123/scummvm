@@ -565,7 +565,7 @@ enum Flags {
 	kFlagUG01toRC03                           = 119,
 	kFlagRC03toRC04                           = 120, // is never checked
 	kFlagRC04toRC03                           = 121,
-	kFlagKleinTalkChain					      = 122,
+	kFlagBobTalkShellCasings				  = 122,
 	kFlagCT01toCT12                           = 123,
 	kFlagGuzzaInformed						  = 124,
 	kFlagMcCoyHasShellCasings                 = 125,
@@ -593,7 +593,7 @@ enum Flags {
 	kFlagRC51ChopstickWrapperTaken            = 147,
 	kFlagRC51CandyTaken                       = 148,
 	kFlagRC51ToyDogTaken                      = 149,
-	kFlagNotUsed150                           = 150, // has no use
+	kFlagClovisTalkUnsympathetic			  = 150,
 	kFlagRC03UnlockedToUG01                   = 151,
 	kFlagUG15toUG16a                          = 152,
 	kFlagUG16toUG15a                          = 153,
@@ -3337,8 +3337,8 @@ enum GoalOfficerLeary {
 	kGoalOfficerLearyRC01ResumeWalkToCrowd            =   4, // added OfficerLeary goal
 #endif // BLADERUNNER_ORIGINAL_BUGS
 	kGoalOfficerLearyPoliceDoneFromRC01               =   3,
-	kGoalOfficerLearyAtBulletBobs					  = 5,
-	kGoalOfficerLearyAtPS14							  = 10,	
+	kGoalOfficerLearyAtBulletBobs					  =  5,
+	kGoalOfficerLearyAtPS14							  =  10,	
 	kGoalOfficerLearyEndOfAct1                        =  99,
 	kGoalOfficerLearyVisitsBulletBob                  = 102, // un-triggered
 	kGoalOfficerLearyStartOfAct4                      = 300,

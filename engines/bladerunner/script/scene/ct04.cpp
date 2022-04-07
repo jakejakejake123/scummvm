@@ -98,9 +98,19 @@ bool SceneScriptCT04::ClickedOn3DObject(const char *objectName, bool a2) {
 				Actor_Put_In_Set(kActorTransient, kSetFreeSlotI);
 				Actor_Set_At_XYZ(kActorTransient, 0, 0, 0, 0);
 				Actor_Change_Animation_Mode(kActorMcCoy, 40);
-				Actor_Voice_Over(320, kActorVoiceOver);
-				Actor_Voice_Over(330, kActorVoiceOver);
-				Actor_Voice_Over(340, kActorVoiceOver);
+				if (_vm->_cutContent) { 
+					if (Player_Query_Agenda() != kPlayerAgendaSurly 
+					&& Player_Query_Agenda() != kPlayerAgendaErratic) {
+						Actor_Voice_Over(320, kActorVoiceOver);
+						Actor_Voice_Over(330, kActorVoiceOver);
+					}
+				} else {
+					Actor_Voice_Over(320, kActorVoiceOver);
+					Actor_Voice_Over(330, kActorVoiceOver);
+				}
+				if (!_vm->_cutContent) { 
+					Actor_Voice_Over(340, kActorVoiceOver);
+				}
 				Game_Flag_Set(kFlagCT04HomelessBodyInDumpster);
 				Game_Flag_Set(kFlagCT04HomelessBodyInDumpsterNotChecked);
 			}
@@ -109,20 +119,40 @@ bool SceneScriptCT04::ClickedOn3DObject(const char *objectName, bool a2) {
 
 		if (Game_Flag_Query(kFlagCT04HomelessBodyInDumpster)) {
 			if (Game_Flag_Query(kFlagCT04HomelessBodyThrownAway)) {
-				Actor_Voice_Over(270, kActorVoiceOver);
-				Actor_Voice_Over(280, kActorVoiceOver);
+				Actor_Voice_Over(270, kActorVoiceOver); //99-0270.AUD	The trash had been collected.
+				Actor_Voice_Over(280, kActorVoiceOver); //99-0280.AUD	It was gone for good. All of it.
+				if (_vm->_cutContent) { 
+					if (Player_Query_Agenda() == kPlayerAgendaSurly 
+					|| Player_Query_Agenda() == kPlayerAgendaErratic) {
+						Actor_Voice_Over(340, kActorVoiceOver); //99-0340.AUD	Besides specials vanished every day in this city. And no one ever missed them.
+					}
+				} 
 			} else if (Game_Flag_Query(kFlagCT04HomelessBodyFound)) {
-				Actor_Voice_Over(250, kActorVoiceOver);
-				Actor_Voice_Over(260, kActorVoiceOver);
+				Actor_Voice_Over(250, kActorVoiceOver); //99-0250.AUD	The body had vanished but the trash was still there.
+				if (_vm->_cutContent) { 
+					if (Player_Query_Agenda() != kPlayerAgendaSurly 
+					&& Player_Query_Agenda() != kPlayerAgendaErratic) {
+						Actor_Voice_Over(260, kActorVoiceOver); //99-0260.AUD	I'd screwed up and screwed up bad. But maybe there was still a way to make it right.
+					}
+				} else {
+					Actor_Voice_Over(260, kActorVoiceOver); //99-0260.AUD	I'd screwed up and screwed up bad. But maybe there was still a way to make it right.
+				}
 			} else {
-				Actor_Voice_Over(230, kActorVoiceOver);
-				Actor_Voice_Over(240, kActorVoiceOver);
+				Actor_Voice_Over(230, kActorVoiceOver); //99-0230.AUD	The body was still there.
+				if (_vm->_cutContent) { 
+					if (Player_Query_Agenda() == kPlayerAgendaSurly 
+					|| Player_Query_Agenda() == kPlayerAgendaErratic) {
+						Actor_Voice_Over(240, kActorVoiceOver); //99-0240.AUD	I didn't know when the trash got picked up in this neighborhood but I hoped it was soon.
+					}
+				} else {
+					Actor_Voice_Over(240, kActorVoiceOver);	
+				}
 				Game_Flag_Reset(kFlagCT04HomelessBodyInDumpsterNotChecked);
 			}
 			return true;
 		}
 
-		if (!Game_Flag_Query(kFlagCT04LicensePlaceFound)) {
+		if (!Actor_Clue_Query(kActorMcCoy, kClueLicensePlate)) {
 			if (!Loop_Actor_Walk_To_Waypoint(kActorMcCoy, 75, 0, true, false)) {
 				Actor_Face_Heading(kActorMcCoy, 707, false);
 				Actor_Change_Animation_Mode(kActorMcCoy, 38);
@@ -177,7 +207,11 @@ void SceneScriptCT04::dialogueWithHomeless() {
 	switch (answer) {
 	case 410: // YES
 		Actor_Says(kActorTransient, 10, 13); // Thanks. The big man. He kind of limping.
-		Actor_Says(kActorTransient, 20, 14); // That way.
+		if (_vm->_cutContent) {
+			Actor_Says(kActorTransient, 20, 14); // That way.
+		} else {
+			Actor_Says(kActorTransient, 20, 13); // That way.
+		}
 		//Restored the big man limping clue.
 		if (_vm->_cutContent) {
 			Actor_Clue_Acquire(kActorMcCoy, kClueBigManLimping, true, kActorTransient);
@@ -202,7 +236,14 @@ bool SceneScriptCT04::ClickedOnActor(int actorId) {
 			if (!Loop_Actor_Walk_To_Actor(kActorMcCoy, kActorTransient, 36, true, false)) {
 				Actor_Voice_Over(290, kActorVoiceOver);
 				Actor_Voice_Over(300, kActorVoiceOver);
-				Actor_Voice_Over(310, kActorVoiceOver);
+				if (_vm->_cutContent) { 
+					if (Player_Query_Agenda() == kPlayerAgendaSurly 
+					|| Player_Query_Agenda() == kPlayerAgendaErratic) {
+						Actor_Voice_Over(310, kActorVoiceOver);
+					}
+				} else {
+					Actor_Voice_Over(310, kActorVoiceOver);
+				}
 			}
 		} else {
 			Actor_Set_Targetable(kActorTransient, false);

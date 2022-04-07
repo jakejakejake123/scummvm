@@ -84,7 +84,12 @@ bool SceneScriptPS15::ClickedOnActor(int actorId) {
 				if (_vm->_cutContent) {	
 					if (!Game_Flag_Query(kFlagWallsUpset)) {
 						Actor_Says(kActorSergeantWalls, 180, 16); // 34-0180.AUD	Yeah, dig this. It's been doing the circuits around the station
+						Delay (1000);
 						Item_Pickup_Spin_Effect(kModelAnimationWeaponsOrderForm, 211, 239);
+						Actor_Clue_Acquire(kActorMcCoy, kClueWeaponsOrderForm, true, kActorSergeantWalls);
+						if (Game_Flag_Query(kFlagPS04WeaponsOrderForm)) {
+							Item_Remove_From_World(kItemWeaponsOrderForm);
+						}
 					} else {
 						Actor_Says(kActorSergeantWalls, 130, 12); //34-0130.AUD	Why? You got a pressing need to rummage through my private files?
 					}
@@ -94,10 +99,10 @@ bool SceneScriptPS15::ClickedOnActor(int actorId) {
 				// Made it so McCoy only insults Walls if he is surly or erratic.
 				if (_vm->_cutContent) {
 					if (Player_Query_Agenda() == kPlayerAgendaSurly 
-							|| Player_Query_Agenda() == kPlayerAgendaErratic) {
+					|| Player_Query_Agenda() == kPlayerAgendaErratic) {
 						Actor_Says(kActorMcCoy, 4475, 17); //00-4475.AUD	Yeah. I forgot you were keeping your lacy underthings in there.
 					}
-				} else if (!_vm->_cutContent) {						
+				} else {
 					Actor_Says(kActorMcCoy, 4475, 17); //00-4475.AUD	Yeah. I forgot you were keeping your lacy underthings in there.
 				}
 				if (_vm->_cutContent &&	Game_Flag_Query(kFlagWallsUpset)) {
@@ -107,20 +112,26 @@ bool SceneScriptPS15::ClickedOnActor(int actorId) {
 					Actor_Says(kActorMcCoy, 4480, 13); //00-4480.AUD	Look, Jack, I just want to see what they're charging for a crate of rifles these days.
 					Actor_Says(kActorSergeantWalls, 140, 16); // 34-0140.AUD	Too damn much if you ask me. Especially at the rate the assault teams are losing them.
 				}
-				if (_vm->_cutContent && Game_Flag_Query(kFlagWallsUpset)) {
-					// If McCoy is on bad terms with Walls he will aggressively question Walls about why he didn't mention the assault teams losing their weapons before.
-					Actor_Says(kActorMcCoy, 3725, 18); //00-3725.AUD	Is that right? Any reason you didn’t tell me that right off?
-					Actor_Says(kActorSergeantWalls, 220, 16); // 34-0220.  AUD	I didn't think you needed to hear about this.
-					// If you upset Walls and your agenda is surly or erratic he won't give you the form and the player has to get it from Guzzas desk instead.
-					if (Player_Query_Agenda() == kPlayerAgendaSurly 
-							|| Player_Query_Agenda() == kPlayerAgendaErratic) {
+				if (_vm->_cutContent) {
+					if (!Actor_Clue_Query(kActorMcCoy, kClueWeaponsOrderForm)) {
+						if (Player_Query_Agenda() == kPlayerAgendaSurly 
+						|| Player_Query_Agenda() == kPlayerAgendaErratic) {
+							// If McCoy is on bad terms with Walls he will aggressively question Walls about why he didn't mention the assault teams losing their weapons before.
+							Actor_Says(kActorMcCoy, 3725, 18); //00-3725.AUD	Is that right? Any reason you didn’t tell me that right off?
+							Actor_Says(kActorSergeantWalls, 220, 16); // 34-0220.  AUD	I didn't think you needed to hear about this.
+							// If you upset Walls and your agenda is surly or erratic he won't give you the form and the player has to get it from Guzzas desk instead.
 							Actor_Says(kActorMcCoy, 8519, 14); // 00-8519.AUD	What do you say we dish each other the straight goods.
-						Actor_Says(kActorSergeantWalls, 200, 13); //34-0200.AUD	Come back at me when you got something worthwhile, McCoy.
-					} else {	   
-						Actor_Says(kActorMcCoy, 6985, 18); // 00-6985.AUD	Got the straight scoop for me or what?
-						Delay (2000);
-						Item_Pickup_Spin_Effect(kModelAnimationWeaponsOrderForm, 211, 239);
-						Actor_Says(kActorSergeantWalls, 150, 14); //34-0150.AUD	I guess there ain't no harm in it.
+							Actor_Says(kActorSergeantWalls, 200, 13); //34-0200.AUD	Come back at me when you got something worthwhile, McCoy.
+						} else {	   
+							Actor_Says(kActorMcCoy, 6985, 18); // 00-6985.AUD	Got the straight scoop for me or what?
+							Delay (2000);
+							Item_Pickup_Spin_Effect(kModelAnimationWeaponsOrderForm, 211, 239);
+							Actor_Says(kActorSergeantWalls, 150, 14); //34-0150.AUD	I guess there ain't no harm in it.
+							Actor_Clue_Acquire(kActorMcCoy, kClueWeaponsOrderForm, true, kActorSergeantWalls);
+							if (Game_Flag_Query(kFlagPS04WeaponsOrderForm)) {
+								Item_Remove_From_World(kItemWeaponsOrderForm);
+							}
+						}
 					}
 				}
 				if (!_vm->_cutContent) {
@@ -150,11 +161,11 @@ bool SceneScriptPS15::ClickedOnActor(int actorId) {
 			// Jake - Made it so when you receive the two forms in the station and have a good standing with Walls when you talk to Walls again in act 3
 			// he gives you the requisition form clue which was originally cut.
 			}  else if (_vm->_cutContent 
-				&& Actor_Clue_Query(kActorMcCoy, kClueShippingForm) 
-				&& Actor_Clue_Query(kActorMcCoy, kClueWeaponsOrderForm) 
-				&& !Actor_Clue_Query(kActorMcCoy, kClueRequisitionForm)
-				&& !Game_Flag_Query(kFlagWallsUpset)
-				&& Global_Variable_Query(kVariableChapter) == 3) {
+			&& Actor_Clue_Query(kActorMcCoy, kClueShippingForm) 
+			&& Actor_Clue_Query(kActorMcCoy, kClueWeaponsOrderForm) 
+			&& !Actor_Clue_Query(kActorMcCoy, kClueRequisitionForm)
+			&& !Game_Flag_Query(kFlagWallsUpset)
+			&& Global_Variable_Query(kVariableChapter) == 3) {
 				Actor_Face_Actor(kActorMcCoy, kActorSergeantWalls, true);
 				Actor_Face_Actor(kActorSergeantWalls, kActorMcCoy, true);
 				Actor_Says(kActorMcCoy, 8610, 18); //00-8610.AUD	What's the word, friend?
@@ -218,8 +229,8 @@ bool SceneScriptPS15::ClickedOnItem(int itemId, bool a2) {
 			Actor_Says(kActorMcCoy, 4490, 12); //00-4490.AUD	Let me guess. He's planning on taking out a small city.
 			//Jake - Added in some lines that Walls will only say to McCoy if he showed disgust to Guzzas behaviour towards the pimps.
 			if (_vm->_cutContent && !Game_Flag_Query(kFlagWallsUpset)) {
-			Actor_Says(kActorSergeantWalls, 230, 14); //34-0230.AUD	I'm gonna tell it to you straight but you ain't gonna like it.
-			Actor_Says(kActorMcCoy, 8490, 18); //00-8490.AUD	And that would be...?
+				Actor_Says(kActorSergeantWalls, 230, 14); //34-0230.AUD	I'm gonna tell it to you straight but you ain't gonna like it.
+				Actor_Says(kActorMcCoy, 8490, 18); //00-8490.AUD	And that would be...?
 			}
 			Actor_Says(kActorSergeantWalls, 170, 13); //34-0170.AUD	Lieutenant's a big believer in overkill.
 #if BLADERUNNER_ORIGINAL_BUGS
@@ -302,8 +313,8 @@ void SceneScriptPS15::PlayerWalkedIn() {
 			Actor_Says(kActorSergeantWalls, 40, 12); //34-0040.AUD	You can keep going but your score is gonna suffer.
 			//Added in some lines.
 			if (_vm->_cutContent) {
-			Actor_Says(kActorMcCoy, 8320, 18); //00-8320.AUD	Really?
-			Actor_Says(kActorSergeantWalls, 210, 0); //34-0210.AUD	Would I lie to you?
+				Actor_Says(kActorMcCoy, 8320, 18); //00-8320.AUD	Really?
+				Actor_Says(kActorSergeantWalls, 210, 0); //34-0210.AUD	Would I lie to you?
 			}
 			Actor_Says(kActorSergeantWalls, 50, 12); //34-0050.AUD	And take it easy in there.
 		}
@@ -314,7 +325,7 @@ void SceneScriptPS15::PlayerWalkedIn() {
 		// Made it so McCoy only insults Guzza and upsets Walls if he is surly or erratic. This is also what sets the WallsUpset flag since Walls really like Guzza.
 		if (_vm->_cutContent) {
 			if (Player_Query_Agenda() == kPlayerAgendaSurly 
-					|| Player_Query_Agenda() == kPlayerAgendaErratic) {
+				|| Player_Query_Agenda() == kPlayerAgendaErratic) {
 				Actor_Says(kActorMcCoy, 4465, 16); // 00-4465.AUD	Poor guy. I bet he gets all tuckered out from pushing those papers around.
 				Actor_Says(kActorSergeantWalls, 90, 13); // 34-0090.AUD	Ah, don't sell him short, McCoy. Guzza can be one tough hombre.
 				Game_Flag_Set(kFlagWallsUpset); 
@@ -332,7 +343,7 @@ void SceneScriptPS15::PlayerWalkedIn() {
 		// he is totally fine with this violent behaviour.
 		if (_vm->_cutContent) {
 			if (Player_Query_Agenda() == kPlayerAgendaSurly 
-			  	   || Player_Query_Agenda() == kPlayerAgendaErratic) {
+			|| Player_Query_Agenda() == kPlayerAgendaErratic) {
 				Actor_Says(kActorMcCoy, 4555, 14); //	00-4555.AUD	Peachy.
 			} else {
 				Actor_Says(kActorMcCoy, 4750, 14); //	00-4750.AUD	Unbelievable.

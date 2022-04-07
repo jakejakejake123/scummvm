@@ -216,6 +216,9 @@ void SceneScriptRC04::dialogueWithBulletBob() {
 		Actor_Says(kActorBulletBob, 250, 30);
 		Actor_Says(kActorBulletBob, 260, 33);
 		Actor_Says(kActorMcCoy, 4995, 15); //00-4995.AUD	Somebody shot up Runciter's shop with one.
+		if (_vm->_cutContent) {
+			Game_Flag_Set (kFlagBobTalkShellCasings);
+		}
 		// Added in some dialogue for Bob and McCoy.
 		if (_vm->_cutContent) {
 			Actor_Says(kActorBulletBob, 1860, 33); //14-1860.AUD	Runciter? You mean that animal dealer down the street?
@@ -934,8 +937,8 @@ void SceneScriptRC04::PlayerWalkedIn() {
 					}
 					Delay(1000);
 					if (Player_Query_Agenda() != kPlayerAgendaSurly 
-						|| Player_Query_Agenda() != kPlayerAgendaErratic) { 
-						Loop_Actor_Walk_To_XYZ(kActorMcCoy, 27.12, 0.29, -47.35, 0, true, false, false);
+					&& Player_Query_Agenda() != kPlayerAgendaErratic) { 
+						Loop_Actor_Walk_To_XYZ(kActorMcCoy, 27.12, 0.29, -47.35, 0, false, false, true);
 						Actor_Face_Actor(kActorMcCoy, kActorOfficerLeary, true);
 						Delay(1000);
 						Actor_Says(kActorMcCoy, 2390, 14); //00-2390.AUD	Oh, God. No.

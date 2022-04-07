@@ -255,15 +255,18 @@ bool AIScriptLeon::GoalChanged(int currentGoalNumber, int newGoalNumber) {
 	// him to be hit here. Also made other improvements to this encounter.
 		Player_Loses_Control();
 		Music_Stop(3u);
+		Actor_Face_Actor(kActorMcCoy, kActorLeon, true);
+		Actor_Face_Actor(kActorLeon, kActorMcCoy, true);
 		Actor_Says(kActorLeon, 40, kAnimationModeTalk); //62-0040.AUD	LPD, huh? You wouldn't be a Blade Runner would ya?
 		Actor_Says(kActorMcCoy, 7895, kAnimationModeTalk); //00-7895.AUD	No. I--
-		Music_Play(kMusicBeating1, 71, 0, 0, -1, kMusicLoopPlayOnce, 2);
 		Actor_Change_Animation_Mode(kActorLeon, kAnimationModeCombatAttack);
+		Music_Play(kMusicBeating1, 71, 0, 0, -1, kMusicLoopPlayOnce, 2);
+		Delay (500);
 		Actor_Says(kActorMcCoy, 8670, 21); //00-8670.AUD	(grunts)
-		Delay (1000);
 		Actor_Says(kActorMcCoy, 510, kAnimationModeTalk); //00-0510.AUD	I'm thinking of changing jobs.
 		Actor_Says(kActorLeon, 50, kAnimationModeTalk); //62-0050.AUD	You should have done it long ago. Now you're out of time, LPD. Good night!
 		Actor_Change_Animation_Mode(kActorLeon, kAnimationModeCombatAttack);
+		Delay (500);
 		Actor_Says(kActorMcCoy, 255, 21); //00-0255.AUD	Wait, I just-- Argh!
 		Actor_Change_Animation_Mode(kActorMcCoy, kAnimationModeDie);
 		Actor_Retired_Here(kActorMcCoy, 12, 12, true, -1);

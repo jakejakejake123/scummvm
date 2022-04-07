@@ -399,7 +399,9 @@ bool AIScriptEarlyQ::GoalChanged(int currentGoalNumber, int newGoalNumber) {
 				Actor_Says(kActorEarlyQ, 160, kAnimationModeTalk); //18-0160.AUD	I’ll throw in a night with one of my dancers.
 				Actor_Says(kActorMcCoy, 3410, kAnimationModeCombatAim); //00-3410.AUD	Sit down!
 				_vm->_aiScripts->callChangeAnimationMode(kActorMcCoy, kAnimationModeCombatIdle);
+				Player_Loses_Control();
 				Loop_Actor_Walk_To_XYZ(kActorMcCoy, 31.22f, 0.0f, 267.51f, 0, true, false, false);
+				Player_Gains_Control();
 				Actor_Set_Goal_Number(kActorEarlyQ, kGoalEarlyQNR04SitDown);
 			} else {
 				Actor_Says(kActorEarlyQ, 130, kAnimationModeTalk); //18-0130.AUD	(grunts) Whoa!
@@ -411,19 +413,21 @@ bool AIScriptEarlyQ::GoalChanged(int currentGoalNumber, int newGoalNumber) {
 				Actor_Says(kActorMcCoy, 3410, kAnimationModeCombatAim);
 				Actor_Clue_Acquire(kActorMcCoy, kClueEarlyQInterview, false, kActorEarlyQ);
 				_vm->_aiScripts->callChangeAnimationMode(kActorMcCoy, kAnimationModeCombatIdle);
+				Player_Loses_Control();
 				Loop_Actor_Walk_To_XYZ(kActorMcCoy, 31.22f, 0.0f, 267.51f, 0, true, false, false);
-				Actor_Set_Goal_Number(kActorEarlyQ, kGoalEarlyQNR04SitDown);
-				}
-			} else {
-				Actor_Says_With_Pause(kActorEarlyQ, 140, 1.0f, kAnimationModeTalk);
-				Actor_Says_With_Pause(kActorEarlyQ, 150, 1.0f, kAnimationModeTalk);
-				Actor_Says(kActorMcCoy, 3405, kAnimationModeCombatAim);
-				Actor_Says(kActorEarlyQ, 160, kAnimationModeTalk);
-				Actor_Says(kActorMcCoy, 3410, kAnimationModeCombatAim);
-				_vm->_aiScripts->callChangeAnimationMode(kActorMcCoy, kAnimationModeCombatIdle);
-				Loop_Actor_Walk_To_XYZ(kActorMcCoy, 31.22f, 0.0f, 267.51f, 0, true, false, false);
+				Player_Gains_Control();
 				Actor_Set_Goal_Number(kActorEarlyQ, kGoalEarlyQNR04SitDown);
 			}
+		} else {
+			Actor_Says_With_Pause(kActorEarlyQ, 140, 1.0f, kAnimationModeTalk);
+			Actor_Says_With_Pause(kActorEarlyQ, 150, 1.0f, kAnimationModeTalk);
+			Actor_Says(kActorMcCoy, 3405, kAnimationModeCombatAim);
+			Actor_Says(kActorEarlyQ, 160, kAnimationModeTalk);
+			Actor_Says(kActorMcCoy, 3410, kAnimationModeCombatAim);
+			_vm->_aiScripts->callChangeAnimationMode(kActorMcCoy, kAnimationModeCombatIdle);
+			Loop_Actor_Walk_To_XYZ(kActorMcCoy, 31.22f, 0.0f, 267.51f, 0, true, false, false);
+			Actor_Set_Goal_Number(kActorEarlyQ, kGoalEarlyQNR04SitDown);
+		}
 		break;
 
 	case kGoalEarlyQNR04ScorpionsCheck:

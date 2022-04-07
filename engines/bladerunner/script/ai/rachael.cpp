@@ -43,12 +43,7 @@ bool AIScriptRachael::Update() {
 	if (_vm->_cutContent) {
 		if (Global_Variable_Query(kVariableChapter) == 3) {
 			if (Actor_Query_Goal_Number(kActorRachael) == kGoalRachaelLeavesAfterTyrellMeeting) {
-				// Decide 50-50 whether Rachael will be encountered outside or in the elevator in Act 3
-				if (Random_Query(1,2 ) == 1) {
-					Actor_Set_Goal_Number(kActorRachael, kGoalRachaelShouldBeOutsideMcCoysAct3);
-				} else {
-					Actor_Set_Goal_Number(kActorRachael, kGoalRachaelShouldBeInElevatorMcCoysAct3);
-				}
+				Actor_Set_Goal_Number(kActorRachael, kGoalRachaelShouldBeInElevatorMcCoysAct3);
 				return true;
 			}
 		} else if (Global_Variable_Query(kVariableChapter) == 4) {
@@ -172,6 +167,8 @@ bool AIScriptRachael::GoalChanged(int currentGoalNumber, int newGoalNumber) {
 		} else {
 			dialogue_agenda1();
 		}
+		Actor_Set_Goal_Number(kActorRachael, kGoalRachaelIsOutsideMcCoysBuildingAct3);
+		AI_Movement_Track_Unpause(kActorRachael);
 		break;
 
 	case kGoalRachaelIsInsideElevatorStartTalkAct4:

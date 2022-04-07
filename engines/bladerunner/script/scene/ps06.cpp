@@ -64,7 +64,7 @@ bool SceneScriptPS06::ClickedOn3DObject(const char *objectName, bool a2) {
 			if (_vm->_cutContent) {
 				Delay(1000);
 				// Made it so McCoy only says this line if he found the black paint on the hydrant at Runciters.
-				if (Actor_Clue_Query(kActorMcCoy, kCluePaintTransfer)) {
+				if (Actor_Clue_Query(kActorMcCoy, kClueLabPaintTransfer)) {
 					Actor_Voice_Over(3790, kActorVoiceOver); //99-3790.AUD	The car from Chinatown was the same vehicle that had smacked the hydrant at Runciter's. 
 				}
 			} else {

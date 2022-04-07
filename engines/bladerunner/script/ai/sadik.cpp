@@ -477,7 +477,7 @@ bool AIScriptSadik::GoalChanged(int currentGoalNumber, int newGoalNumber) {
 	case 415:
 	// Added in some extra dialogue for Sadik and McCoy. If McCoy betrayed Crystal this will be mentioned in the conversation.
 		if (_vm->_cutContent) {
-		Actor_Says(kActorMcCoy, 8480, kAnimationModeTalk); //00-8480.AUD	Anyone there?
+			Actor_Says(kActorMcCoy, 8480, kAnimationModeTalk); //00-8480.AUD	Anyone there?
 		}
 		Actor_Says(kActorSadik, 110, kAnimationModeTalk); //08-0110.AUD	Brother mon. Wondering when you’d make it out here.
 		Actor_Says(kActorMcCoy, 2290, kAnimationModeTalk); //00-2290.AUD	Took a little while to realize where I belonged.

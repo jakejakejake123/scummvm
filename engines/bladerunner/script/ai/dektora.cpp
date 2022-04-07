@@ -161,9 +161,19 @@ void AIScriptDektora::CompletedMovementTrack() {
 		break;
 
 	case kGoalDektoraWalkAroundAsReplicant:
-		if (Random_Query(1, 7) == 1
-		 && Actor_Query_Goal_Number(kActorEarlyQ) != 1
-		 && Actor_Query_Goal_Number(kActorEarlyQ) != 101
+	if (_vm->_cutContent) {
+		if (!Game_Flag_Query(kFlagEarlyQIsReplicant)  
+		&& Actor_Query_Goal_Number(kActorEarlyQ) != 1
+		&& Actor_Query_Goal_Number(kActorEarlyQ) != 101
+		) {
+			Game_Flag_Set(kFlagAR02DektoraWillBuyScorpions);
+			Actor_Set_Goal_Number(kActorDektora, kGoalDektoraStartWalkingAround);
+		} else {
+			Actor_Set_Goal_Number(kActorDektora, kGoalDektoraStartWalkingAround);
+		}
+	} else if (Random_Query(1, 7) == 1
+		&& Actor_Query_Goal_Number(kActorEarlyQ) != 1
+		&& Actor_Query_Goal_Number(kActorEarlyQ) != 101
 		) {
 			Game_Flag_Set(kFlagAR02DektoraWillBuyScorpions);
 			Actor_Set_Goal_Number(kActorDektora, kGoalDektoraStartWalkingAround);
@@ -173,6 +183,7 @@ void AIScriptDektora::CompletedMovementTrack() {
 		break;
 
 	case kGoalDektoraWalkAroundAsHuman:
+	if (!_vm->_cutContent) {
 		if (Random_Query(1, 5) == 1
 		 && Actor_Query_Goal_Number(kActorEarlyQ) != 1
 		 && Actor_Query_Goal_Number(kActorEarlyQ) != 101
@@ -182,7 +193,8 @@ void AIScriptDektora::CompletedMovementTrack() {
 		} else {
 			Actor_Set_Goal_Number(kActorDektora, kGoalDektoraStartWalkingAround);
 		}
-		break;
+	}
+	break;
 
 	case kGoalDektoraNR11WalkAway:
 		Actor_Set_Goal_Number(kActorDektora, kGoalDektoraNR11RanAway);
@@ -282,7 +294,7 @@ bool AIScriptDektora::ShotAtAndHit() {
 		Actor_Set_Health(kActorDektora, 100, 100);
 		if (_vm->_cutContent) {
 		// add hit sounds with small probability
-			switch (Random_Query(1, 10)) {
+			switch (Random_Query(1, 2)) {
 			case 1:
 				Sound_Play_Speech_Line(kActorDektora, 9000, 65, 0, 99);
 				break;
@@ -338,6 +350,7 @@ void AIScriptDektora::Retired(int byActorId) {
 			Game_Flag_Reset(kFlagMcCoyIsHelpingReplicants);
 			// Made it so you lose affection to both Dektora and Lucy if you retired Dektora.
 			Global_Variable_Set(kVariableAffectionTowards, kAffectionTowardsNone);
+			Actor_Modify_Friendliness_To_Other(kActorSteele, kActorMcCoy, 2);
 			if (Query_Difficulty_Level() != kGameDifficultyEasy) {
 				Global_Variable_Increment(kVariableChinyen, 200);
 			}

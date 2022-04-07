@@ -433,7 +433,7 @@ bool AIScriptMcCoy::GoalChanged(int currentGoalNumber, int newGoalNumber) {
 		Actor_Face_Heading(kActorMcCoy, 768, true);
 		// Added in some dialogue for McCoy when he is thrown out of Early Qs club.
 		if (_vm->_cutContent) {
-			if (Random_Query(0, 1)) {
+			if (Random_Query(1, 2) == 1) {
 				Player_Set_Combat_Mode(false);
 				ADQ_Add(kActorMcCoy, 1275, 18);//00-1275.AUD	A real pacifist that guy.
 			} else {

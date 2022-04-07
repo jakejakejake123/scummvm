@@ -44,11 +44,6 @@ void KIAScript::SCRIPT_KIA_DLL_Play_Clue_Asset_Script(int notUsed, int clueId) {
 		if (_vm->_cutContent) {
 			KIA_Play_Actor_Dialogue(kActorOfficerLeary, 50); //23-0050.AUD	The shop's been thrashed. You ought to see this tiger cub they got in there.
 			KIA_Play_Actor_Dialogue(kActorOfficerLeary, 60); //23-0060.AUD	It's a goddamn tragedy.
-			KIA_Play_Actor_Dialogue(kActorMcCoy, 4520); //00-4520.AUD	How's old man Runciter holding up?
-			KIA_Play_Actor_Dialogue(kActorOfficerLeary, 70); //23-0070.AUD	State of shock. He's been moaning and complaining about his world caving in.
-			KIA_Play_Actor_Dialogue(kActorMcCoy, 4525); //00-4525.AUD	You'd feel the same way, if they were your animals. How many perps?
-			KIA_Play_Actor_Dialogue(kActorOfficerLeary,80); //23-0080.AUD	At least two. Bloody footprints all over the scene.
-			KIA_Play_Actor_Dialogue(kActorMcCoy, 4530); //00-4530.AUD	Must be a delightful sight.
 		}
 		break;
 	case kClueDoorForced2:
@@ -62,8 +57,9 @@ void KIAScript::SCRIPT_KIA_DLL_Play_Clue_Asset_Script(int notUsed, int clueId) {
 			KIA_Play_Actor_Dialogue(kActorMcCoy, 2635); ////00-2635.AUD	I’m all ears.
 			KIA_Play_Actor_Dialogue(kActorOfficerLeary, 0); //23-0000.AUD	I already checked for a crowbar or some kind of tool. No luck but it looks like we've got some latents.
 			KIA_Play_Actor_Dialogue(kActorMcCoy, 4495); //00-4495.AUD	Make sure the lab boys run them through the mainframe. Human and Rep.
+		} else {
+			KIA_Play_Actor_Dialogue(kActorOfficerLeary, 0); //23-0000.AUD	I already checked for a crowbar or some kind of tool. No luck but it looks like we've got some latents.
 		}
-		KIA_Play_Actor_Dialogue(kActorOfficerLeary, 0); //23-0000.AUD	I already checked for a crowbar or some kind of tool. No luck but it looks like we've got some latents.
 		break;
 	case kClueDoorForced1:
 		if (_vm->_gameVars[kVariableChapter] == 1) {
@@ -95,9 +91,15 @@ void KIAScript::SCRIPT_KIA_DLL_Play_Clue_Asset_Script(int notUsed, int clueId) {
 		break;
 	case kClueCandy:
 		KIA_Play_Slice_Model(kModelAnimationCandy);
+		if (_vm->_cutContent) {
+			KIA_Play_Actor_Dialogue(kActorMcCoy, 8735);//00-8735.AUD	A candy bar.
+		}
 		break;
 	case kClueToyDog:
 		KIA_Play_Slice_Model(kModelAnimationToyDog);
+		if (_vm->_cutContent) {
+			KIA_Play_Actor_Dialogue(kActorMcCoy, 8740);//00-8740.AUD	A toy dog.
+		}
 		break;
 	case kClueChopstickWrapper:
 		KIA_Play_Slice_Model(kModelAnimationChopstickWrapper);
@@ -138,14 +140,8 @@ void KIAScript::SCRIPT_KIA_DLL_Play_Clue_Asset_Script(int notUsed, int clueId) {
 		break;
 	case kClueLabShellCasings:
 		KIA_Play_Actor_Dialogue(kActorKlein, 50); //30-0050.AUD	The shell casings from Runciter's should be in the Museum of military history.
-		if (_vm->_cutContent) {
-			KIA_Play_Actor_Dialogue(kActorMcCoy, 4135); //00-4135.AUD	How's that?
-		}
 		KIA_Play_Actor_Dialogue(kActorKlein, 60); //30-0060.AUD	They're from an Ender rifle. It's standard-issue Off-World military hardware.
 		KIA_Play_Actor_Dialogue(kActorKlein, 70); //30-0070.AUD	Heavy caliber. That puppy can punch right through a tank.
-		if (_vm->_cutContent) {
-			KIA_Play_Actor_Dialogue(kActorMcCoy, 4140); //00-4140.AUD	What can I conclude from that?
-		}
 		KIA_Play_Actor_Dialogue(kActorKlein, 80); //30-0080.AUD	Whoever used this piece didn't just walk into their local sporting goods store and buy it.
 		KIA_Play_Actor_Dialogue(kActorKlein, 90); //30-0090.AUD	Those babies are collectibles and they ain't cheap.
 		break;
@@ -236,14 +232,29 @@ void KIAScript::SCRIPT_KIA_DLL_Play_Clue_Asset_Script(int notUsed, int clueId) {
 	case kClueRunciterInterviewB1:
 		if (_vm->_cutContent) {
 			KIA_Play_Actor_Dialogue(kActorMcCoy, 4760); //00-4760.AUD	About the girl.
-			KIA_Play_Actor_Dialogue(kActorRunciter, 590); //15-0590.AUD	What? Who?
-			KIA_Play_Actor_Dialogue(kActorMcCoy, 4775); //00-4775.AUD	Lucy.
 			KIA_Play_Actor_Dialogue(kActorMcCoy, 8514); //00-8514.AUD	Got anything new to tell me?
+			KIA_Play_Actor_Dialogue(kActorRunciter, 250); //15-0250.AUD	There's not a lot I can tell you. She's only worked for me for about a month.
+			KIA_Play_Actor_Dialogue(kActorMcCoy, 4645); //00-4645.AUD	How did you find her? 
+			KIA_Play_Actor_Dialogue(kActorRunciter, 280); //15-0280.AUD	She came to me with a reference from Ogilvies in the North West Zone.
+			KIA_Play_Actor_Dialogue(kActorRunciter, 290); //15-0290.AUD	And he's a very reputable wholesaler.
+			KIA_Play_Actor_Dialogue(kActorMcCoy, 4655); //00-4655.AUD	What did she do around here? Feed the animals?
+			KIA_Play_Actor_Dialogue(kActorRunciter, 330); //15-0330.AUD	I'm the only one who handles my animals, detective.
 			if (Game_Flag_Query(kFlagLucyIsReplicant)) {
-				KIA_Play_Actor_Dialogue(kActorRunciter, 250); //15-0250.AUD	There's not a lot I can tell you. She's only worked for me for about a month.
+				KIA_Play_Actor_Dialogue(kActorMcCoy, 4660); //00-4660.AUD	So what did she do?
+				KIA_Play_Actor_Dialogue(kActorRunciter, 340); //15-0340.AUD	Unskilled labor, mostly. She was perfect for that. As if she were made for it.
 			} else {
-				KIA_Play_Actor_Dialogue(kActorRunciter, 260); //15-0260.AUD	There's not a lot I can tell you. She's only worked for me for a short while.
+				KIA_Play_Actor_Dialogue(kActorMcCoy, 7835); ////00-7835.AUD	Is that so?
 			}
+		} else {
+			KIA_Play_Actor_Dialogue(kActorRunciter, 250); //15-0250.AUD	There's not a lot I can tell you. She's only worked for me for about a month.
+			KIA_Play_Actor_Dialogue(kActorRunciter, 270); //15-0270.AUD	She's about fourteen years old with pink hair. A very attractive young thing.
+		}
+		break;
+	case kClueRunciterInterviewB2:
+		if (_vm->_cutContent) {
+			KIA_Play_Actor_Dialogue(kActorMcCoy, 4760); //00-4760.AUD	About the girl.
+			KIA_Play_Actor_Dialogue(kActorMcCoy, 8514); //00-8514.AUD	Got anything new to tell me?
+			KIA_Play_Actor_Dialogue(kActorRunciter, 260); //15-0260.AUD	There's not a lot I can tell you. She's only worked for me for a short while.
 			KIA_Play_Actor_Dialogue(kActorMcCoy, 4645); //00-4645.AUD	How did you find her? 
 			KIA_Play_Actor_Dialogue(kActorRunciter, 280); //15-0280.AUD	She came to me with a reference from Ogilvies in the North West Zone.
 			KIA_Play_Actor_Dialogue(kActorRunciter, 290); //15-0290.AUD	And he's a very reputable wholesaler.
@@ -254,21 +265,9 @@ void KIAScript::SCRIPT_KIA_DLL_Play_Clue_Asset_Script(int notUsed, int clueId) {
 			if (Game_Flag_Query(kFlagLucyIsReplicant)) {
 				KIA_Play_Actor_Dialogue(kActorMcCoy, 4660); //00-4660.AUD	So what did she do?
 				KIA_Play_Actor_Dialogue(kActorRunciter, 340); //15-0340.AUD	Unskilled labor, mostly. She was perfect for that. As if she were made for it.
+			} else {
+				KIA_Play_Actor_Dialogue(kActorMcCoy, 7835); ////00-7835.AUD	Is that so?
 			}
-		} else {
-			KIA_Play_Actor_Dialogue(kActorRunciter, 250); //15-0250.AUD	There's not a lot I can tell you. She's only worked for me for about a month.
-			KIA_Play_Actor_Dialogue(kActorRunciter, 270); //15-0270.AUD	She's about fourteen years old with pink hair. A very attractive young thing.
-		}
-		break;
-	case kClueRunciterInterviewB2:
-		if (_vm->_cutContent) {
-			KIA_Play_Actor_Dialogue(kActorMcCoy, 4610); //00-4610.AUD	You ever do any business with the Replicant manufacturers? Tyrell Corporation?
-			KIA_Play_Actor_Dialogue(kActorRunciter, 150); //15-0150.AUD	I resent that accusation. 
-			KIA_Play_Actor_Dialogue(kActorMcCoy, 4615); //00-4615.AUD	Just wondering.
-			KIA_Play_Actor_Dialogue(kActorRunciter, 160); //15-0160.AUD	Officer, last May I personally sold Governor Kolvig an exquisite Percheron colt.
-			KIA_Play_Actor_Dialogue(kActorRunciter, 170); //15-0170.AUD	I have been a guest at his house on three separate occasions. 
-			KIA_Play_Actor_Dialogue(kActorRunciter, 180); //15-0180.AUD	Do I look like I need to carry artificial product?
-			
 		} else {
 			KIA_Play_Actor_Dialogue(kActorRunciter, 260); //15-0260.AUD	There's not a lot I can tell you. She's only worked for me for a short while.
 			KIA_Play_Actor_Dialogue(kActorRunciter, 270); //15-0270.AUD	She's about fourteen years old with pink hair. A very attractive young thing.
@@ -288,8 +287,6 @@ void KIAScript::SCRIPT_KIA_DLL_Play_Clue_Asset_Script(int notUsed, int clueId) {
 		if (_vm->_cutContent) {
 			KIA_Play_Actor_Dialogue(kActorOfficerLeary, 20); //23-0020.AUD	Find something? 
 			KIA_Play_Actor_Dialogue(kActorMcCoy, 4505); //00-4505.AUD	Piece of chrome.
-			KIA_Play_Actor_Dialogue(kActorOfficerLeary, 30); //23-0030.AUD	From a car?
-			KIA_Play_Actor_Dialogue(kActorMcCoy, 4510); //No, I think it's horse chrome. Bag it and tag it.
 		}
 		break;
 	case kClueRuncitersViewA:
@@ -327,6 +324,9 @@ void KIAScript::SCRIPT_KIA_DLL_Play_Clue_Asset_Script(int notUsed, int clueId) {
 		break;
 	case kClueLicensePlate:
 		KIA_Play_Slice_Model(kModelAnimationLicensePlate);
+		if (_vm->_cutContent) {
+			KIA_Play_Actor_Dialogue(kActorMcCoy, 8760); //00-8760.AUD	A license plate.
+		}
 		break;
 	case kClueLabPaintTransfer:
 		KIA_Play_Actor_Dialogue(kActorKlein, 170); //30-0170.AUD	That black paint you found on the fire hydrant is from a ground car.
@@ -388,15 +388,11 @@ void KIAScript::SCRIPT_KIA_DLL_Play_Clue_Asset_Script(int notUsed, int clueId) {
 	case kClueDetonatorWire:
 		KIA_Play_Slice_Model(kModelAnimationDetonatorWire);
 		if (_vm->_cutContent) {
-			KIA_Play_Actor_Dialogue(kActorVoiceOver, 2300); //99-2300.AUD	Obviously, he'd been killed with an explosive.
-			KIA_Play_Actor_Dialogue(kActorVoiceOver, 2310); //99-2310.AUD	And not just because he'd been plastered on the wall with a thousand strokes.
+			KIA_Play_Actor_Dialogue(kActorMcCoy, 8770); // 00-8770.AUD	A piece of detonator wire.
+		} else {
+			KIA_Play_Actor_Dialogue(kActorVoiceOver, 2320); //99-2320.AUD	The detonator wire I pulled out of his skull told the whole story.
+			KIA_Play_Actor_Dialogue(kActorVoiceOver, 2350);
 		}
-		KIA_Play_Actor_Dialogue(kActorVoiceOver, 2320); //99-2320.AUD	The detonator wire I pulled out of his skull told the whole story.
-		if (Game_Flag_Query(kFlagSadikIsReplicant)) {
-			KIA_Play_Actor_Dialogue(kActorVoiceOver, 2330);
-			KIA_Play_Actor_Dialogue(kActorVoiceOver, 2340);
-		}
-		KIA_Play_Actor_Dialogue(kActorVoiceOver, 2350);
 		break;
 	case kClueVictimInformation:
 		if (_vm->_cutContent) {
@@ -485,7 +481,7 @@ void KIAScript::SCRIPT_KIA_DLL_Play_Clue_Asset_Script(int notUsed, int clueId) {
 		}
 		KIA_Play_Actor_Dialogue(kActorHasan, 90); //20-0090.AUD	Why aren't you out arresting criminals like that disreputable Bob fellow.		
 		if (!_vm->_cutContent) {	
-				KIA_Play_Actor_Dialogue(kActorHasan, 100);
+			KIA_Play_Actor_Dialogue(kActorHasan, 100);
 		}
 		if (_vm->_cutContent) {
 			KIA_Play_Actor_Dialogue(kActorMcCoy, 85); //00-0180.AUD	Bob?
@@ -494,17 +490,17 @@ void KIAScript::SCRIPT_KIA_DLL_Play_Clue_Asset_Script(int notUsed, int clueId) {
 		}
 		break;
 	case kClueBobInterview1:
-	if (_vm->_cutContent) {
-		KIA_Play_Actor_Dialogue(kActorMcCoy, 4995); //00-4995.AUD	Somebody shot up Runciter's shop with one.
-		KIA_Play_Actor_Dialogue(kActorBulletBob, 1860); //14-1860.AUD	Runciter? You mean that animal dealer down the street?
-		KIA_Play_Actor_Dialogue(kActorMcCoy, 8535);	//00-8535.AUD	Yeah.
-		KIA_Play_Actor_Dialogue(kActorBulletBob, 270); //14-0270.AUD	Sucker had it coming. I'm sure of that.
-		KIA_Play_Actor_Dialogue(kActorMcCoy, 5005); //00-5005.AUD	Why is that?
-		KIA_Play_Actor_Dialogue(kActorBulletBob, 280); //14-0280.AUD	Runciter is always putting on those airs like he's better than everybody else.
-		KIA_Play_Actor_Dialogue(kActorBulletBob, 290); //14-0290.AUD	But he'll do anything for a buck. Sell anything to anybody.
-		KIA_Play_Actor_Dialogue(kActorBulletBob, 300); //14-0300.AUD	That's where I draw the line. If it's suspicious
-		KIA_Play_Actor_Dialogue(kActorBulletBob, 310); //14-0310.AUD	it's out of here. Got no place at Bullet Bob's.
-		KIA_Play_Actor_Dialogue(kActorMcCoy, 5010); //00-5010.AUD	You know anyone who might sell Ender rifles?
+		if (_vm->_cutContent) {
+			KIA_Play_Actor_Dialogue(kActorMcCoy, 4995); //00-4995.AUD	Somebody shot up Runciter's shop with one.
+			KIA_Play_Actor_Dialogue(kActorBulletBob, 1860); //14-1860.AUD	Runciter? You mean that animal dealer down the street?
+			KIA_Play_Actor_Dialogue(kActorMcCoy, 8535);	//00-8535.AUD	Yeah.
+			KIA_Play_Actor_Dialogue(kActorBulletBob, 270); //14-0270.AUD	Sucker had it coming. I'm sure of that.
+			KIA_Play_Actor_Dialogue(kActorMcCoy, 5005); //00-5005.AUD	Why is that?
+			KIA_Play_Actor_Dialogue(kActorBulletBob, 280); //14-0280.AUD	Runciter is always putting on those airs like he's better than everybody else.
+			KIA_Play_Actor_Dialogue(kActorBulletBob, 290); //14-0290.AUD	But he'll do anything for a buck. Sell anything to anybody.
+			KIA_Play_Actor_Dialogue(kActorBulletBob, 300); //14-0300.AUD	That's where I draw the line. If it's suspicious
+			KIA_Play_Actor_Dialogue(kActorBulletBob, 310); //14-0310.AUD	it's out of here. Got no place at Bullet Bob's.
+			KIA_Play_Actor_Dialogue(kActorMcCoy, 5010); //00-5010.AUD	You know anyone who might sell Ender rifles?
 		}
 		KIA_Play_Actor_Dialogue(kActorBulletBob, 320); //14-0320.AUD	There's one other guy around here who dips into that stuff.
 		KIA_Play_Actor_Dialogue(kActorBulletBob, 330); //14-0330.AUD	Got a pawn shop down the street. Goes by the name of Izo.
@@ -583,6 +579,7 @@ void KIAScript::SCRIPT_KIA_DLL_Play_Clue_Asset_Script(int notUsed, int clueId) {
 		break;
 	case kClueRadiationGoggles:
 		KIA_Play_Slice_Model(kModelAnimationRadiationGoggles);
+			KIA_Play_Actor_Dialogue(kActorMcCoy, 8785); //00-8785.AUD	Radiation goggles.
 		break;
 	case kClueGogglesReplicantIssue:
 		if (_vm->_cutContent) {
@@ -820,9 +817,16 @@ void KIAScript::SCRIPT_KIA_DLL_Play_Clue_Asset_Script(int notUsed, int clueId) {
 		break;
 	case kClueRagDoll:
 		KIA_Play_Slice_Model(kModelAnimationRagDoll);
+		if (_vm->_cutContent) {
+			KIA_Play_Actor_Dialogue(kActorVoiceOver, 480); //00-8815.AUD	A creepy looking doll.
+		}
 		break;
 	case kClueMoonbus1:
 		KIA_Play_Photograph(34);
+		if (_vm->_cutContent) {
+			KIA_Play_Actor_Dialogue(kActorMcCoy, 8527); // 00-8527.AUD	Strange.
+		}
+		
 		break;
 	case kClueCheese:
 		KIA_Play_Slice_Model(kModelAnimationCheese);
@@ -862,7 +866,7 @@ void KIAScript::SCRIPT_KIA_DLL_Play_Clue_Asset_Script(int notUsed, int clueId) {
 		break;
 	case kClueDragonflyBelt:
 		KIA_Play_Slice_Model(kModelAnimationDragonflyBelt);
-		KIA_Play_Actor_Dialogue(kActorVoiceOver, 4050);
+		KIA_Play_Actor_Dialogue(kActorVoiceOver, 8825); // 00-8825.AUD	A dragonfly belt.
 		break;
 	case kClueEarlyQInterview:
 		KIA_Play_Actor_Dialogue(kActorEarlyQ, 140);
@@ -870,6 +874,9 @@ void KIAScript::SCRIPT_KIA_DLL_Play_Clue_Asset_Script(int notUsed, int clueId) {
 		break;
 	case kClueStrangeScale1:
 		KIA_Play_Slice_Model(kModelAnimationStrangeScale);
+		if (_vm->_cutContent) {
+			KIA_Play_Actor_Dialogue(kActorMcCoy, 8830); //00-8830.AUD	A strange scale.
+		}
 		break;
 	case kClueDektoraInterview1:
 		if (_vm->_cutContent) {
@@ -925,6 +932,9 @@ void KIAScript::SCRIPT_KIA_DLL_Play_Clue_Asset_Script(int notUsed, int clueId) {
 		break;
 	case kClueGrigoriansNote:
 		KIA_Play_Slice_Model(kModelAnimationGrigoriansNote);
+		if (_vm->_cutContent) {
+			KIA_Play_Actor_Dialogue(kActorMcCoy, 8840); //00-8840.AUD	A note.
+		}
 		break;
 	case kClueCollectionReceipt:
 		KIA_Play_Slice_Model(kModelAnimationCollectionReceipt);
@@ -960,7 +970,9 @@ void KIAScript::SCRIPT_KIA_DLL_Play_Clue_Asset_Script(int notUsed, int clueId) {
 			KIA_Play_Actor_Dialogue(kActorMcCoy, 3270); //00-3270.AUD	Did you hear what happened to her?
 			KIA_Play_Actor_Dialogue(kActorGordo, 420); //02-0420.AUD	She went on permanent vacation.
 			KIA_Play_Actor_Dialogue(kActorMcCoy, 3275); //00-3275.AUD	That’s right. She was retired by a Blade Runner.
-			KIA_Play_Actor_Dialogue(kActorGordo, 430); //02-0430.AUD	She was one of those skin-jobs?
+			if (!Game_Flag_Query(kFlagGordoIsReplicant)) {
+				KIA_Play_Actor_Dialogue(kActorGordo, 430); //02-0430.AUD	She was one of those skin-jobs?
+			}
 			KIA_Play_Actor_Dialogue(kActorGordo, 440); //02-0440.AUD	Between you and me I hear they are all over the place down here.
 		}
 		KIA_Play_Actor_Dialogue(kActorGordo, 450); //02-0450.AUD	You ought to call in a few more of the hunters to clear the place out.
@@ -999,6 +1011,9 @@ void KIAScript::SCRIPT_KIA_DLL_Play_Clue_Asset_Script(int notUsed, int clueId) {
 		break;
 	case kClueGordosLighterHuman:
 		KIA_Play_Slice_Model(kModelAnimationGordosLighterHuman);
+		if (_vm->_cutContent) {
+			KIA_Play_Actor_Dialogue(kActorMcCoy, 8850); //00-8850.AUD	A lighter.
+		}
 		break;
 	case kClueDektoraInterview4:
 		if (_vm->_cutContent) {
@@ -1031,6 +1046,9 @@ void KIAScript::SCRIPT_KIA_DLL_Play_Clue_Asset_Script(int notUsed, int clueId) {
 		break;
 	case kClueBakersBadge:
 		KIA_Play_Slice_Model(kModelAnimationBadge);
+		if (_vm->_cutContent) {
+			KIA_Play_Actor_Dialogue(kActorMcCoy, 8855); //00-8855.AUD	Baker's badge.
+		}
 		break;
 	case kClueHoldensBadge:
 		KIA_Play_Slice_Model(kModelAnimationBadge);
@@ -1058,31 +1076,31 @@ void KIAScript::SCRIPT_KIA_DLL_Play_Clue_Asset_Script(int notUsed, int clueId) {
 		KIA_Play_Actor_Dialogue(kActorVoiceOver, 3900);
 		break;
 	case kClueCrazylegsInterview1:
-	if (_vm->_cutContent) {
-		KIA_Play_Actor_Dialogue(kActorMcCoy, 1895); //00-1895.AUD	I gotta know more about the woman, Crazy.
-		KIA_Play_Actor_Dialogue(kActorCrazylegs, 620); //09-0620.AUD	Like I said, she was tall and blonde. Real woo bait.
-		KIA_Play_Actor_Dialogue(kActorCrazylegs, 630); //09-0630.AUD	She was tooling around with a short guy in a bow tie.
-		KIA_Play_Actor_Dialogue(kActorMcCoy, 2000); //00-2000.AUD	And she wanted a car.
-		KIA_Play_Actor_Dialogue(kActorCrazylegs, 640); //09-0640.AUD	At first, she was looking for a very hard to find item.
-		KIA_Play_Actor_Dialogue(kActorCrazylegs, 650); //09-0650.AUD	Something that doesn’t show up on the lot too often.
-		KIA_Play_Actor_Dialogue(kActorCrazylegs, 660); //09-0660.AUD	A… police-issue vehicle.
-		KIA_Play_Actor_Dialogue(kActorMcCoy, 2005); //00-2005.AUD	A Spinner?
-		KIA_Play_Actor_Dialogue(kActorMcCoy, 2010); //00-2010.AUD	But you didn’t have one.
-		KIA_Play_Actor_Dialogue(kActorCrazylegs, 670); //09-0670.AUD	Well, not one that would actually fly.
-		KIA_Play_Actor_Dialogue(kActorCrazylegs, 680); //09-0680.AUD	I told them to check back in a couple of days.
-		KIA_Play_Actor_Dialogue(kActorCrazylegs, 690); //09-0690.AUD	So, then they got looking at that Sedan.
-		KIA_Play_Actor_Dialogue(kActorMcCoy, 2015); //00-2015.AUD	You know how many years mandatory you’d get for selling a police Spinner?
-		if (!Game_Flag_Query(kFlagCrazylegsIsReplicant)) {
-			KIA_Play_Actor_Dialogue(kActorCrazylegs, 700); //09-0700.AUD	I was gonna report them, if they showed up again.
+		if (_vm->_cutContent) {
+			KIA_Play_Actor_Dialogue(kActorMcCoy, 1895); //00-1895.AUD	I gotta know more about the woman, Crazy.
+			KIA_Play_Actor_Dialogue(kActorCrazylegs, 620); //09-0620.AUD	Like I said, she was tall and blonde. Real woo bait.
+			KIA_Play_Actor_Dialogue(kActorCrazylegs, 630); //09-0630.AUD	She was tooling around with a short guy in a bow tie.
+			KIA_Play_Actor_Dialogue(kActorMcCoy, 2000); //00-2000.AUD	And she wanted a car.
+			KIA_Play_Actor_Dialogue(kActorCrazylegs, 640); //09-0640.AUD	At first, she was looking for a very hard to find item.
+			KIA_Play_Actor_Dialogue(kActorCrazylegs, 650); //09-0650.AUD	Something that doesn’t show up on the lot too often.
+			KIA_Play_Actor_Dialogue(kActorCrazylegs, 660); //09-0660.AUD	A… police-issue vehicle.
+			KIA_Play_Actor_Dialogue(kActorMcCoy, 2005); //00-2005.AUD	A Spinner?
+			KIA_Play_Actor_Dialogue(kActorMcCoy, 2010); //00-2010.AUD	But you didn’t have one.
+			KIA_Play_Actor_Dialogue(kActorCrazylegs, 670); //09-0670.AUD	Well, not one that would actually fly.
+			KIA_Play_Actor_Dialogue(kActorCrazylegs, 680); //09-0680.AUD	I told them to check back in a couple of days.
+			KIA_Play_Actor_Dialogue(kActorCrazylegs, 690); //09-0690.AUD	So, then they got looking at that Sedan.
+			KIA_Play_Actor_Dialogue(kActorMcCoy, 2015); //00-2015.AUD	You know how many years mandatory you’d get for selling a police Spinner?
+			if (!Game_Flag_Query(kFlagCrazylegsIsReplicant)) {
+				KIA_Play_Actor_Dialogue(kActorCrazylegs, 700); //09-0700.AUD	I was gonna report them, if they showed up again.
+			} else {
+				KIA_Play_Actor_Dialogue(kActorCrazylegs, 1100);	//09-1100.AUD	Whatever happened I was ignorant, McCoy.
+			}
+			KIA_Play_Actor_Dialogue(kActorMcCoy, 2020); //00-2020.AUD	Sure you were.
 		} else {
-			KIA_Play_Actor_Dialogue(kActorCrazylegs, 1100);	//09-1100.AUD	Whatever happened I was ignorant, McCoy.
+			KIA_Play_Actor_Dialogue(kActorCrazylegs, 830); //09-0830.AUD	Oh-- Ooh, that Sedan.
+			KIA_Play_Actor_Dialogue(kActorCrazylegs, 840); //09-0840.AUD	Hey, look. A sexy blonde wants to pay top dollar for the ugliest car in the place…
+			KIA_Play_Actor_Dialogue(kActorCrazylegs, 850); //09-0850.AUD	who am I to say no?
 		}
-		KIA_Play_Actor_Dialogue(kActorMcCoy, 2020); //00-2020.AUD	Sure you were.
-	} else {
-		KIA_Play_Actor_Dialogue(kActorCrazylegs, 830); //09-0830.AUD	Oh-- Ooh, that Sedan.
-		KIA_Play_Actor_Dialogue(kActorCrazylegs, 840); //09-0840.AUD	Hey, look. A sexy blonde wants to pay top dollar for the ugliest car in the place…
-		KIA_Play_Actor_Dialogue(kActorCrazylegs, 850); //09-0850.AUD	who am I to say no?
-	}
 		break;
 	case kClueLichenDogWrapper:
 		KIA_Play_Slice_Model(kModelAnimationLichenDogWrapper);
@@ -1155,9 +1173,6 @@ void KIAScript::SCRIPT_KIA_DLL_Play_Clue_Asset_Script(int notUsed, int clueId) {
 		KIA_Play_Actor_Dialogue(kActorTransient, 360); //12-0360.AUD	Hell, I seen you guys together. Three weeks ago. At the speech. You remember.
 		KIA_Play_Actor_Dialogue(kActorVoiceOver, 2710);
 		KIA_Play_Actor_Dialogue(kActorVoiceOver, 2730);
-		if (_vm->_cutContent) {
-			KIA_Play_Actor_Dialogue(kActorVoiceOver, 4410);	//99-4410.AUD	Guzza must have a little something going on the side.
-		}
 		break;
 	case kClueFolder:
 		KIA_Play_Slice_Model(kModelAnimationFolder);
@@ -1187,6 +1202,7 @@ void KIAScript::SCRIPT_KIA_DLL_Play_Clue_Asset_Script(int notUsed, int clueId) {
 		KIA_Play_Slice_Model(kModelAnimationCandyWrapper);
 		if (_vm->_cutContent) {
 			if (Actor_Clue_Query(kActorMcCoy, kClueCandy)) {
+				KIA_Play_Actor_Dialogue(kActorMcCoy, 8875); //00-8875.AUD	A brown cow candy wrapper.
 				KIA_Play_Actor_Dialogue(kActorVoiceOver, 3300); //99-3300.AUD	I recognized the wrapper.
 				KIA_Play_Actor_Dialogue(kActorVoiceOver, 3310); //99-3310.AUD	The same brand of candy that Lucy had on her desk at Runciter’s.
 			}
@@ -1194,6 +1210,9 @@ void KIAScript::SCRIPT_KIA_DLL_Play_Clue_Asset_Script(int notUsed, int clueId) {
 		break;
 	case kClueFlaskOfAbsinthe:
 		KIA_Play_Slice_Model(kModelAnimationFlaskOfAbsinthe);
+		if (_vm->_cutContent) {
+			KIA_Play_Actor_Dialogue(kActorMcCoy, 8880); //00-8880.AUD	A flask of absinthe.
+		}
 		break;
 	case kClueLutherLanceInterview:
 		if (_vm->_cutContent) {
@@ -1217,7 +1236,7 @@ void KIAScript::SCRIPT_KIA_DLL_Play_Clue_Asset_Script(int notUsed, int clueId) {
 		break;
 	case kCluePhoneCallDektora1:
 		if (_vm->_cutContent) {
-			KIA_Play_Actor_Dialogue(kActorDektora, 2500); //00-2500.AUD	I got nothing to keep me here anymore. That’s for sure. You got a plan?
+			KIA_Play_Actor_Dialogue(kActorMcCoy, 2500); //00-2500.AUD	I got nothing to keep me here anymore. That’s for sure. You got a plan?
 			KIA_Play_Actor_Dialogue(kActorDektora, 360); //03-0360.AUD	There’s a used car place in the Fourth Sector near the arcade.
 			KIA_Play_Actor_Dialogue(kActorMcCoy, 2510); //00-2510.AUD	I know it.
 		} else {
@@ -1322,9 +1341,11 @@ void KIAScript::SCRIPT_KIA_DLL_Play_Clue_Asset_Script(int notUsed, int clueId) {
 		if (_vm->_cutContent) {
 			KIA_Play_Actor_Dialogue(kActorSteele, 770); //01-0770.AUD	That son of a bitch, Clovis, was climbing in and out of a manhole right next to the police station and nobody ever noticed.
 			KIA_Play_Actor_Dialogue(kActorMcCoy, 2655); //00-2655.AUD	Figures. With incompetents like Guzza at the helm.
-			KIA_Play_Actor_Dialogue(kActorSteele, 790); //01-0790.AUD	I think we can forget about Guzza. That guy’s gonna be fed to the barracudas.
-			KIA_Play_Actor_Dialogue(kActorMcCoy, 2660); //00-2660.AUD	That breaks my heart.
-			KIA_Play_Actor_Dialogue(kActorSteele, 800); //01-0800.AUD	I knew it would.
+			if (!Actor_Clue_Query(kActorMcCoy, kClueFolder)) {
+				KIA_Play_Actor_Dialogue(kActorSteele, 790); //01-0790.AUD	I think we can forget about Guzza. That guy’s gonna be fed to the barracudas.
+				KIA_Play_Actor_Dialogue(kActorMcCoy, 2660); //00-2660.AUD	That breaks my heart.
+				KIA_Play_Actor_Dialogue(kActorSteele, 800); //01-0800.AUD	I knew it would.
+			}
 			KIA_Play_Actor_Dialogue(kActorMcCoy, 2665); //00-2665.AUD	We’re gonna air out the Reps together or what?
 			KIA_Play_Actor_Dialogue(kActorSteele, 810); //01-0810.AUD	Mm. I’m liking your style more and more.
 			KIA_Play_Actor_Dialogue(kActorSteele, 820); //01-0820.AUD	But first come, first serve. I share my bonuses with nobody. See you on the other side, Slim.
@@ -1383,12 +1404,21 @@ void KIAScript::SCRIPT_KIA_DLL_Play_Clue_Asset_Script(int notUsed, int clueId) {
 		break;
 	case kClueGarterSnake:
 		KIA_Play_Slice_Model(kModelAnimationGarterSnake);
+		if (_vm->_cutContent) {
+			KIA_Play_Actor_Dialogue(kActorMcCoy, 8895); //00-8895.AUD	A fake garter snake.
+		}
 		break;
 	case kClueSlug:
 		KIA_Play_Slice_Model(kModelAnimationSlug);
+		if (_vm->_cutContent) {
+			KIA_Play_Actor_Dialogue(kActorMcCoy, 8900); //00-8900.AUD	An electric slug.
+		}
 		break;
 	case kClueGoldfish:
 		KIA_Play_Slice_Model(kModelAnimationGoldfish);
+		if (_vm->_cutContent) {
+			KIA_Play_Actor_Dialogue(kActorMcCoy, 8905); //00-8905.AUD	A mechanical goldfish.
+		}
 		break;
 	case kClueZubenTalksAboutLucy1:
 		if (_vm->_cutContent) {
@@ -1621,6 +1651,9 @@ void KIAScript::SCRIPT_KIA_DLL_Play_Clue_Asset_Script(int notUsed, int clueId) {
 		break;
 	case kClueOuterDressingRoom:
 		KIA_Play_Photograph(15);
+		if (_vm->_cutContent) {
+			KIA_Play_Actor_Dialogue(kActorVoiceOver, 4090); //99-4090.AUD	She looks familiar.
+		}
 		break;
 	case kCluePhotoOfMcCoy1:
 		KIA_Play_Photograph(17);
@@ -1700,6 +1733,9 @@ void KIAScript::SCRIPT_KIA_DLL_Play_Clue_Asset_Script(int notUsed, int clueId) {
 		break;
 	case kClueTyrellSecurityPhoto:
 		KIA_Play_Photograph(28);
+		if (_vm->_cutContent) {
+			KIA_Play_Actor_Dialogue(kActorVoiceOver, 4080); //99-4080.AUD	He looks familiar.
+		}
 		break;
 	case kClueChinaBar:
 		KIA_Play_Photograph(19);
@@ -1948,20 +1984,10 @@ void KIAScript::SCRIPT_KIA_DLL_Play_Clue_Asset_Script(int notUsed, int clueId) {
 		KIA_Play_Actor_Dialogue(kActorMcCoy, 3720); //00-3720.AUD	Buying the car isn’t. Using the car in an animal murder, well...
 		KIA_Play_Actor_Dialogue(kActorDektora, 780); //03-0780.AUD	Animal murder? That’s horrible.
 		KIA_Play_Actor_Dialogue(kActorDektora, 790); //03-0790.AUD	I haven’t seen the car for two days. It was stolen the day after I bought it.
-		KIA_Play_Actor_Dialogue(kActorMcCoy, 3730); //00-3730.AUD	Animal murder is pretty horrible.
-		KIA_Play_Actor_Dialogue(kActorDektora, 810); //03-0810.AUD	Yes.
-		KIA_Play_Actor_Dialogue(kActorDektora, 820); //03-0820.AUD	Any murder is horrible. And unfortunate.
-		KIA_Play_Actor_Dialogue(kActorMcCoy, 3735); //00-3735.AUD	Some are worse than others.
-		KIA_Play_Actor_Dialogue(kActorDektora, 830); //03-0830.AUD	But death is the same for all.
-		KIA_Play_Actor_Dialogue(kActorMcCoy, 3740); //00-3740.AUD	No argument there.
 		break;
 	case kClueGrigoriansResources:
-		KIA_Play_Actor_Dialogue(kActorMcCoy, 4335); //00-4335.AUD	So you help Replicants escape the city.
-		KIA_Play_Actor_Dialogue(kActorGrigorian, 290); //11-0290.AUD	I'm talking figuratively, detective.
-		KIA_Play_Actor_Dialogue(kActorMcCoy, 4340); //00-4340.AUD	Sure you are.
 		KIA_Play_Actor_Dialogue(kActorGrigorian, 320); //11-0320.AUD	We're not children, detective. We have resources.
 		KIA_Play_Actor_Dialogue(kActorGrigorian, 330); //11-0330.AUD	Friends with access to vehicles, to escape routes.
-		KIA_Play_Actor_Dialogue(kActorGrigorian, 340); //11-0340.AUD	The world is changing.
 		break;
 	case kClueCar:
 		KIA_Play_Actor_Dialogue(kActorVoiceOver, 510); //99-0510.AUD	The car looked a lot like the one I'd been tracking.
@@ -1973,7 +1999,6 @@ void KIAScript::SCRIPT_KIA_DLL_Play_Clue_Asset_Script(int notUsed, int clueId) {
 		KIA_Play_Actor_Dialogue(kActorAnsweringMachine, 390); // 39-0390.AUD	Begin test.
 		KIA_Play_Actor_Dialogue(kActorAnsweringMachine, 420); //39-0420.AUD	Positive result.
 		KIA_Play_Actor_Dialogue(kActorAnsweringMachine, 470); //39-0470.AUD	End test.
-		KIA_Play_Actor_Dialogue(kActorMcCoy, 7200); //00-7200.AUD	Bingo.
 		break;
 	case kClueCrazylegsInterview2:
 		KIA_Play_Actor_Dialogue(kActorMcCoy, 1915); //00-1915.AUD	You sell a black Sedan a few days ago?
@@ -2003,11 +2028,6 @@ void KIAScript::SCRIPT_KIA_DLL_Play_Clue_Asset_Script(int notUsed, int clueId) {
 		KIA_Play_Actor_Dialogue(kActorGordo, 1170); //02-1170.AUD	Smart. Real genius level you are.
 		break;
 	case kClueGuzzaAgreesToMeet:
-		KIA_Play_Actor_Dialogue(kActorGuzza, 1450); //04-1450.AUD	What do you want, McCoy?
-		KIA_Play_Actor_Dialogue(kActorMcCoy, 6670); //00-6670.AUD	Remove the frame, clear my name and get that guy out of my apartment!
-		KIA_Play_Actor_Dialogue(kActorMcCoy, 6675); //00-6675.AUD	I want my life back.
-		KIA_Play_Actor_Dialogue(kActorGuzza, 1460); //04-1460.AUD	I can’t do that.
-		KIA_Play_Actor_Dialogue(kActorMcCoy, 6680); //00-6680.AUD	You better start finding a way ‘cause I got another call to make.
 		KIA_Play_Actor_Dialogue(kActorGuzza, 1470); //04-1470.AUD	Okay, okay. How do we work this out? We can’t talk over the damn phone.
 		KIA_Play_Actor_Dialogue(kActorMcCoy, 6685); //00-6685.AUD	The sewers. I know you wanna be comfortable and I figured it’s kinda like your second home down there.
 		KIA_Play_Actor_Dialogue(kActorMcCoy, 6695); //00-6695.AUD	At the bottom of the old elevator there’s a gate.
@@ -2026,8 +2046,6 @@ void KIAScript::SCRIPT_KIA_DLL_Play_Clue_Asset_Script(int notUsed, int clueId) {
 		KIA_Play_Actor_Dialogue(kActorSteele, 2990); //01-2990.AUD	They locked him up in a PoW shuttle but he escaped and hadn’t been heard from since.
 		break;
 	case kClueGrigoriansResponse1:
-		KIA_Play_Actor_Dialogue(kActorMcCoy, 4275); //00-4275.AUD	I want to know about the people who were there.
-		KIA_Play_Actor_Dialogue(kActorMcCoy, 4280); //00-4280.AUD	The Rastafarian and the Asian guy with the sunglasses.
 		KIA_Play_Actor_Dialogue(kActorGrigorian, 130); //11-0130.AUD	I didn't know the Rastafarian.
 		KIA_Play_Actor_Dialogue(kActorGrigorian, 140); //11-0140.AUD	The Asian fellow was one of our ex members. Izo was his name.
 		KIA_Play_Actor_Dialogue(kActorMcCoy, 4305); //00-4305.AUD	How long did you know him for?
@@ -2041,9 +2059,6 @@ void KIAScript::SCRIPT_KIA_DLL_Play_Clue_Asset_Script(int notUsed, int clueId) {
 		KIA_Play_Actor_Dialogue(kActorGrigorian, 200); //11-0200.AUD	Guns so new that even the police had hardly used them I heard.
 		break;	
 	case kClueGrigoriansResponse2:
-		KIA_Play_Actor_Dialogue(kActorMcCoy, 4270); //00-4270.AUD	I got some more questions for you.
-		KIA_Play_Actor_Dialogue(kActorMcCoy, 4260); //00-4260.AUD	You've been helping Reps, pal?
-		KIA_Play_Actor_Dialogue(kActorGrigorian, 360); //11-0360.AUD	Through peaceful protest only.
 		KIA_Play_Actor_Dialogue(kActorMcCoy, 4380); //00-4380.AUD	So talk to me about the Reps with the black Sedan. I found your note in their car.
 		KIA_Play_Actor_Dialogue(kActorMcCoy, 4385); //00-4385.AUD	"Help these lost souls." Isn't that what it said?
 		KIA_Play_Actor_Dialogue(kActorGrigorian, 370); //11-0370.AUD	We still have freedom of speech in this country. I can write whatever I please.
@@ -2079,7 +2094,6 @@ void KIAScript::SCRIPT_KIA_DLL_Play_Clue_Asset_Script(int notUsed, int clueId) {
 		KIA_Play_Actor_Dialogue(kActorEarlyQ, 200); //18-0200.AUD	But I know you’re gonna be thankful I put those cameras in.
 		KIA_Play_Actor_Dialogue(kActorEarlyQ, 210); //18-0210.AUD	Hey, check out Dektora’s bearded boy-toy.
 		KIA_Play_Actor_Dialogue(kActorEarlyQ, 220); //18-0220.AUD	Eh, he’s here all the time. You can be sure he ain’t coming around for the witty conversation.
-		KIA_Play_Actor_Dialogue(kActorMcCoy, 3425); //00-3425.AUD	I’ve seen them before.
 		KIA_Play_Actor_Dialogue(kActorMcCoy, 3430); //00-3430.AUD	What makes you think he’s a Replicant?
 		KIA_Play_Actor_Dialogue(kActorEarlyQ, 240); //18-0240.AUD	He walked right by my dancers. Didn’t even pop a stiffy.
 		KIA_Play_Actor_Dialogue(kActorMcCoy, 3435); //00-3435.AUD	Maybe he swings another way.
@@ -2158,15 +2172,21 @@ void KIAScript::SCRIPT_KIA_DLL_Play_Clue_Asset_Script(int notUsed, int clueId) {
 		KIA_Play_Actor_Dialogue(kActorSteele, 3140); //01-3140.AUD	Let’s hope the lab boys don’t sit on the bone marrow test. My phone bill is due next week.
 		break;
 	case kClueDektoraConfession:
-		KIA_Play_Actor_Dialogue(kActorDektora, 1010); //03-1010.AUD	I’m not worried. She may kill some of us but not all of us. Clovis will see to that.
-		KIA_Play_Actor_Dialogue(kActorMcCoy, 3855); //00-3855.AUD	Is he the one that sent you the flowers?
-		KIA_Play_Actor_Dialogue(kActorDektora, 1020); //03-1020.AUD	Yes.
-		KIA_Play_Actor_Dialogue(kActorMcCoy, 3860); //00-3860.AUD	And you’re lovers?
-		KIA_Play_Actor_Dialogue(kActorDektora, 1030); //03-1030.AUD	We were once. But now we’ve evolved beyond that.
-		KIA_Play_Actor_Dialogue(kActorDektora, 1040); //03-1040.AUD	They are still my family. Clovis and Lucy.
-		KIA_Play_Actor_Dialogue(kActorMcCoy, 3865); //00-3865.AUD	What’s Clovis looking for?
-		KIA_Play_Actor_Dialogue(kActorDektora, 1050); //03-1050.AUD	Information. Data. Four years isn’t enough time, Mr. McCoy.
-		KIA_Play_Actor_Dialogue(kActorDektora, 1060); //03-1060.AUD	If anyone deserves more than four years, it’s Clovis. If you could only meet him.
+		if (Game_Flag_Query(kFlagDektoraIsReplicant)) {
+			KIA_Play_Actor_Dialogue(kActorDektora, 1300); //03-1300.AUD	The police know what I am.
+			KIA_Play_Actor_Dialogue(kActorMcCoy, 6435); //00-6435.AUD	Legally, it can’t be proved unless they put you on the Machine
+			KIA_Play_Actor_Dialogue(kActorDektora, 1310); //03-1310.AUD	Crystal Steele won’t bother with formalities.
+			KIA_Play_Actor_Dialogue(kActorDektora, 1320); //03-1320.AUD	And they’ve found my incept photo or my records, it won’t matter anyway
+		} else {
+			KIA_Play_Actor_Dialogue(kActorDektora, 1330); //03-1330.AUD	The police know I’ve been helping Clovis. They probably think I’m a Replicant.
+			KIA_Play_Actor_Dialogue(kActorMcCoy, 6440); //00-6440.AUD	But you’re not.
+			KIA_Play_Actor_Dialogue(kActorDektora, 1340); //03-1340.AUD	Of course not. I didn’t come down on the moonbus with him.
+			KIA_Play_Actor_Dialogue(kActorDektora, 1350); //03-1350.AUD	And I remember growing up back East. My mother, my father.
+			KIA_Play_Actor_Dialogue(kActorDektora, 1360); //03-1360.AUD	I had a spotted pony. She would take carrots right out of my mouth!
+			KIA_Play_Actor_Dialogue(kActorMcCoy, 6445); //00-6445.AUD	Memories can be implanted.
+			KIA_Play_Actor_Dialogue(kActorDektora, 1370); //03-1370.AUD	Not mine. Mine are real!
+			KIA_Play_Actor_Dialogue(kActorDektora, 1380); //03-1380.AUD	God damn Tyrell!
+		}
 		break;
 	case kClueClovisOrdersMcCoysDeath:
 		KIA_Play_Actor_Dialogue(kActorClovis, 650); //05-0650.AUD	So, what should we do with this detective. He’s been so persistent, so industrious.
@@ -2217,16 +2237,9 @@ void KIAScript::SCRIPT_KIA_DLL_Play_Clue_Asset_Script(int notUsed, int clueId) {
 		KIA_Play_Actor_Dialogue(kActorSteele, 1290); //01-1290.AUD	I better call this in. Your vehicle close by?
 		break;
 	case kClueSuspectDektora:
-		KIA_Play_Actor_Dialogue(kActorMcCoy, 3150); //00-3150.AUD	They must have been phony cops. Hired by the Reps for protection.
-		KIA_Play_Actor_Dialogue(kActorSteele, 1470); //01-1470.AUD	Cops? Yes. Phony? No. I remembered Baker.
-		KIA_Play_Actor_Dialogue(kActorSteele, 1480); //01-1480.AUD	He used to be an S.I.D. (Scientific Investigation Division) expert on Coercive Technique until he was fired from the force a couple of years ago.
-		KIA_Play_Actor_Dialogue(kActorMcCoy, 3155); //00-3155.AUD	A mercenary?
-		KIA_Play_Actor_Dialogue(kActorSteele, 1500); //01-1500.AUD	Bingo.
-		KIA_Play_Actor_Dialogue(kActorMcCoy, 3160); //00-3160.AUD	He won’t have to worry about getting paid no more.
 		KIA_Play_Actor_Dialogue(kActorSteele, 1510); //01-1510.AUD	That stripper you interviewed. She’s one of them.
 		KIA_Play_Actor_Dialogue(kActorSteele, 1520); //01-1520.AUD	Figure it out! She must have made the call to Baker and that other Bozo.
 		KIA_Play_Actor_Dialogue(kActorSteele, 1530); //01-1530.AUD	Let’s attend to some business.
-		KIA_Play_Actor_Dialogue(kActorMcCoy, 3170); //00-3170.AUD	I’m there.
 		break;
 	case kClueSightingDektora:
 		KIA_Play_Actor_Dialogue(kActorSteele, 2890); //01-2890.AUD	I knew I’d seen her somewhere before, but I had to dig real deep to find it.
@@ -2261,12 +2274,12 @@ void KIAScript::SCRIPT_KIA_DLL_Play_Clue_Asset_Script(int notUsed, int clueId) {
 		break;
 	case kClueMcCoyRetiredDektora:
 		KIA_Play_Actor_Dialogue(kActorSteele, 1750); //01-1750.AUD	Been pretty busy haven’t you, Slim?
-		KIA_Play_Actor_Dialogue(kActorMcCoy, 3815); //00-3815.AUD	I think we can safely say that one’s in bio-mechanical purgatory.
 		KIA_Play_Actor_Dialogue(kActorSteele, 1760); //01-1760.AUD	You had to clear out everything else up here too.
+		KIA_Play_Actor_Dialogue(kActorVoiceOver, 180); //99-0180.AUD	Sometimes my trigger finger starts to itch.
+		KIA_Play_Actor_Dialogue(kActorSteele, 2110); //01-2110.AUD	That's okay.
 		KIA_Play_Actor_Dialogue(kActorMcCoy, 3820); //00-3820.AUD	Hope Early’s got insurance.
 		KIA_Play_Actor_Dialogue(kActorSteele, 1770); //01-1770.AUD	Putz employs Replicants, he oughta expect the worst.
 		KIA_Play_Actor_Dialogue(kActorSteele, 1780); //01-1780.AUD	(sigh) Sorry I missed all the laughs.
-		KIA_Play_Actor_Dialogue(kActorMcCoy, 3825); //00-3825.AUD	Next time.
 		break;
 	case kClueMcCoyRetiredLucy:
 		KIA_Play_Actor_Dialogue(kActorMcCoy, 1560); //00-1560.AUD	Commerce is our business.
@@ -2281,10 +2294,6 @@ void KIAScript::SCRIPT_KIA_DLL_Play_Clue_Asset_Script(int notUsed, int clueId) {
 		KIA_Play_Actor_Dialogue(kActorMcCoy, 8965); //00-8965.AUD	What for?
 		KIA_Play_Actor_Dialogue(kActorLance, 240); //13-0240.AUD	Gone to have a little heart to heart with Eldon.
 		KIA_Play_Actor_Dialogue(kActorLuther, 280); //10-0280.AUD	We showed him how to get in through the basement.
-		KIA_Play_Actor_Dialogue(kActorMcCoy, 5815); //00-5815.AUD	He’ll kill Tyrell, if he gets to him.
-		KIA_Play_Actor_Dialogue(kActorLance, 250); //13-0250.AUD	Isn’t that just too bad.	 
-		KIA_Play_Actor_Dialogue(kActorLuther, 290); //10-0290.AUD	I won’t shed any tears. Tyrell is killing us all. Four years isn’t enough, is it?
-		KIA_Play_Actor_Dialogue(kActorLance, 260); //13-0260.AUD	If Clovis snaps his neck, it will be merciful and quick. That’s a hell of a lot more than we’ve been given.
 		break;
 	case kClueMoonbus2:
 		KIA_Play_Actor_Dialogue(kActorMcCoy, 5390); //00-5390.AUD	You heard about the moonbus hijacking?
@@ -2360,13 +2369,6 @@ void KIAScript::SCRIPT_KIA_DLL_Play_Clue_Asset_Script(int notUsed, int clueId) {
 		KIA_Play_Actor_Dialogue(kActorVoiceOver, 920); //99-0920.AUD	Easy money.
 		KIA_Play_Actor_Dialogue(kActorMcCoy, 8600); //00-8600.AUD	You keeping busy, pal?
 		break;
-		// This clue is when McCoy catches Gordo in the warehouse in act 1. It is a suspicious encounter so McCoy should record it as a clue.
-	case kClueMcCoyPulledAGun:
-		KIA_Play_Actor_Dialogue(kActorMcCoy, 460); //00-0460.AUD	Hold it right there!
-		KIA_Play_Actor_Dialogue(kActorGordo, 50); //02-0050.AUD	Chill it, man. Just took a wrong turn back there. That's all.
-		KIA_Play_Actor_Dialogue(kActorMcCoy, 465); //00-0465.AUD	Take your business elsewhere.
-		KIA_Play_Actor_Dialogue(kActorGordo, 60); //002-0060.AUD	An excellent idea.
-		break;
 		// This clue uses the dialogue that I added in for when you find the form at the homeless mans place.
 	case kCluePoliceWeaponUsed:
 		KIA_Play_Actor_Dialogue(kActorVoiceOver, 3390); //99-3390.AUD	I used to think Guzza was a pretty smart guy…
@@ -2426,10 +2428,6 @@ void KIAScript::SCRIPT_KIA_DLL_Play_Clue_Asset_Script(int notUsed, int clueId) {
 		// This is of some dialogue that I slightly modified where Runciters tells McCoy what the the suspects motives were and Runcitter confesses that he wsihed they killed him because
 		// his life is now ruined.
 	case kClueRunciterConfession1:
-		KIA_Play_Actor_Dialogue(kActorMcCoy, 4580); //00-4580.AUD	Can you think of anything they might have been after?
-		KIA_Play_Actor_Dialogue(kActorRunciter, 110); //15-0110.AUD	First I thought they wanted money but I don't keep any in the shop.
-		KIA_Play_Actor_Dialogue(kActorRunciter, 120); //15-0120.AUD	Then I thought they wanted to steal my animals but they started...
-		KIA_Play_Actor_Dialogue(kActorRunciter, 130); //15-0130.AUD	executing them.
 		KIA_Play_Actor_Dialogue(kActorMcCoy, 4605); //00-4605.AUD	Could they have been Replicants?
 		KIA_Play_Actor_Dialogue(kActorRunciter, 140); // 15-0140.AUD	Who else would be capable of such barbaric acts?
 		KIA_Play_Actor_Dialogue(kActorRunciter, 310);  // 15-0310.AUD	They should have just killed me!
@@ -2441,8 +2439,6 @@ void KIAScript::SCRIPT_KIA_DLL_Play_Clue_Asset_Script(int notUsed, int clueId) {
 		break;
 		// This the dialogue where Runciter confesses that he has a couple of friends who are genetic designers.
 	case kClueRunciterConfession2:
-		KIA_Play_Actor_Dialogue(kActorMcCoy, 4620); //00-4620.AUD	So if we do the bone marrow on these animals, there won't be any surprises.
-		KIA_Play_Actor_Dialogue(kActorRunciter, 190); //15-0190.AUD	Don't you have anything better to do with the tax payers' money than perform superfluous autopsies?
 		KIA_Play_Actor_Dialogue(kActorMcCoy, 4625); //00-4625.AUD	Do you know anybody who works at Tyrell Corporation?
 		KIA_Play_Actor_Dialogue(kActorRunciter, 210); //15-0210.AUD	A couple of genetic designers are old friends of mine.
 		KIA_Play_Actor_Dialogue(kActorMcCoy, 4630); //00-4630.AUD	Such as?
@@ -2498,10 +2494,6 @@ void KIAScript::SCRIPT_KIA_DLL_Play_Clue_Asset_Script(int notUsed, int clueId) {
 		break;
 		// This is when McCoy asks human Izo about Grigorian and Izo insults and threatens McCoy to which McCoy replies with a couple of warnings.
 	case kClueMcCoyWarnedIzo:
-		KIA_Play_Actor_Dialogue(kActorMcCoy, 1190); //00-1190.AUD	Grigorian said you were thrown out of C.A.R.S. for having violent tendencies.
-		KIA_Play_Actor_Dialogue(kActorIzo, 480); //07-0480.AUD	Whoever Grigorian is, he's lying.
-		KIA_Play_Actor_Dialogue(kActorMcCoy, 1195); //00-1195.AUD	He also said you were a borderline sociopath who ought to be locked up.
-		KIA_Play_Actor_Dialogue(kActorMcCoy, 1200); //00-1200.AUD	But I'm inclined to agree.
 		KIA_Play_Actor_Dialogue(kActorIzo, 490); //07-0490.AUD	Don't you wish I gave a damn about what you think?
 		KIA_Play_Actor_Dialogue(kActorMcCoy, 1205); //00-1205.AUD	I can make you give a damn..
 		KIA_Play_Actor_Dialogue(kActorIzo, 500); //07-0500.AUD	(snickers) Let me give you a little word of advice, detective.
@@ -2527,6 +2519,77 @@ void KIAScript::SCRIPT_KIA_DLL_Play_Clue_Asset_Script(int notUsed, int clueId) {
 		KIA_Play_Actor_Dialogue(kActorLuther, 80); //10-0080.AUD	I am sick and tired of people waving those things around.
 		KIA_Play_Actor_Dialogue(kActorLance, 40); //13-0040.AUD	Just give it up. You got no jurisdiction down here.
 		KIA_Play_Actor_Dialogue(kActorMcCoy, 8508); //00-8508.AUD	No retirement swag.
+		break;
+	case kClueCrystalVisitedRunciters:
+		KIA_Play_Slice_Model(kModelAnimationCrystalsCigarette);
+		KIA_Play_Actor_Dialogue(kActorVoiceOver, 1770); //99-1770.AUD	Lucky Strikes. Crystal's brand.
+		break;
+	case kClueCrystalVisitedChinatown:
+		KIA_Play_Slice_Model(kModelAnimationCrystalsCigarette);
+		KIA_Play_Actor_Dialogue(kActorVoiceOver, 1770); //99-1770.AUD	Lucky Strikes. Crystal's brand.
+		break;
+	case kClueSightingMcCoyRuncitersShop:
+		KIA_Play_Actor_Dialogue(kActorVoiceOver, 1910); //99-1910.AUD	It didn't add up. Animal murders, the lack of any theft.
+		KIA_Play_Actor_Dialogue(kActorVoiceOver, 1920); //99-1920.AUD	The small animals alone were worth a good chunk of change on the street.
+		KIA_Play_Actor_Dialogue(kActorVoiceOver, 1930); //99-1930.AUD	It seemed more like an act of vengeance.
+		break;
+	case kClueMcCoyIsABladeRunner:
+		KIA_Play_Actor_Dialogue(kActorMcCoy, 5935); //00-5935.AUD	That’s my job, Guzza. I’m still a Blade Runner.
+		KIA_Play_Actor_Dialogue(kActorMcCoy, 5940); //00-5940.AUD	But don’t think I’m doing this to save your worthless hide.
+		KIA_Play_Actor_Dialogue(kActorGuzza, 1020); //04-1020.AUD	It ain’t a tough decision now, Ray.
+		KIA_Play_Actor_Dialogue(kActorGuzza, 1030); //04-1030.AUD	You set the file over there and I’ll toss the briefcase over, okay? Count of three.
+		break;
+	case kClueMcCoyHelpedDektora:
+		KIA_Play_Actor_Dialogue(kActorMcCoy, 3840); //00-3840.AUD	(panting) Listen. Dektora, I wanna help.
+		KIA_Play_Actor_Dialogue(kActorDektora, 990); //03-0990.AUD	You say a lot of things, Mr. McCoy.
+		KIA_Play_Actor_Dialogue(kActorDektora, 1000); //03-1000.AUD	But you’re a Blade Runner. It’s hard to know what’s real.
+		KIA_Play_Actor_Dialogue(kActorMcCoy, 3845);  //00-3845.AUD	One of my associates is after you and your friends.
+		KIA_Play_Actor_Dialogue(kActorMcCoy, 3850); //00-3850.AUD	I’m not sure I can hold her off much longer.
+		KIA_Play_Actor_Dialogue(kActorDektora, 1010);  //03-1010.AUD	I’m not worried. She may kill some of us but not all of us. Clovis will see to that.
+		KIA_Play_Actor_Dialogue(kActorMcCoy, 3855); //00-3855.AUD	Is he the one that sent you the flowers?
+		KIA_Play_Actor_Dialogue(kActorDektora, 1020);  //03-1020.AUD	Yes.
+		KIA_Play_Actor_Dialogue(kActorMcCoy, 3860); //00-3860.AUD	And you’re lovers?
+		KIA_Play_Actor_Dialogue(kActorDektora, 1030);  //03-1030.AUD	We were once. But now we’ve evolved beyond that.
+		KIA_Play_Actor_Dialogue(kActorDektora, 1040);  //03-1040.AUD	They are still my family. Clovis and Lucy.
+		KIA_Play_Actor_Dialogue(kActorMcCoy, 3865); //00-3865.AUD	What’s Clovis looking for?
+		KIA_Play_Actor_Dialogue(kActorDektora, 1050); //03-1050.AUD	Information. Data. Four years isn’t enough time, Mr. McCoy.
+		KIA_Play_Actor_Dialogue(kActorDektora, 1060);  //03-1060.AUD	If anyone deserves more than four years, it’s Clovis. If you could only meet him.
+		KIA_Play_Actor_Dialogue(kActorMcCoy, 3870); //00-3870.AUD	Can you take me to him?
+		KIA_Play_Actor_Dialogue(kActorDektora, 1070);  //03-1070.AUD	I’m afraid that’s impossible right now.
+		KIA_Play_Actor_Dialogue(kActorDektora, 1080); //03-1080.AUD	Clovis will find you, when he’s ready.
+		KIA_Play_Actor_Dialogue(kActorMcCoy, 3875); //00-3875.AUD	You’d better go now. Take the fire escape.
+		KIA_Play_Actor_Dialogue(kActorDektora, 1090);  //03-1090.AUD	I… appreciate it, Mr. McCoy.
+		break;
+	case kClueMcCoyHelpedLucy:
+		KIA_Play_Actor_Dialogue(kActorMcCoy, 1695); //00-1695.AUD	Lucy? Come on out. I’m not the hunter anymore.
+		KIA_Play_Actor_Dialogue(kActorMcCoy, 1700);  //00-1700.AUD	I put my gun away.
+		KIA_Play_Actor_Dialogue(kActorLucy, 350); //06-0350.AUD	I saw you with that woman who smokes.
+		KIA_Play_Actor_Dialogue(kActorMcCoy, 1705);  //00-1705.AUD	I have to deal with her just to keep up appearances. I can be more effective that way. 
+		KIA_Play_Actor_Dialogue(kActorLucy, 360); //06-0360.AUD	She scares me.
+		KIA_Play_Actor_Dialogue(kActorMcCoy, 1710);  //00-1710.AUD	She’s being paid to kill your family.
+		KIA_Play_Actor_Dialogue(kActorLucy, 370); //06-0370.AUD	I’ll tell them. What you did. That you helped me.
+		break;
+	case kClueMcCoyHelpedGordo:
+		KIA_Play_Actor_Dialogue(kActorSteele, 1160); //01-1160.AUD	Dah! What the hell?! Now we’ll never catch it.
+		KIA_Play_Actor_Dialogue(kActorMcCoy, 3035); //00-3035.AUD	You were gonna shoot!
+		KIA_Play_Actor_Dialogue(kActorSteele, 1170); //01-1170.AUD	Damn straight!
+		KIA_Play_Actor_Dialogue(kActorMcCoy, 3040); //00-3040.AUD	What about the hostage?
+		KIA_Play_Actor_Dialogue(kActorSteele, 1180); //01-1180.AUD	A small price to pay to juice that skin-job.
+		KIA_Play_Actor_Dialogue(kActorMcCoy, 3045); //00-3045.AUD	You think Bryant is gonna keep you on if you start wasting civilians in the middle of the street?
+		KIA_Play_Actor_Dialogue(kActorMcCoy, 3055); //00-3055.AUD	I just saved your job, Steele.
+		KIA_Play_Actor_Dialogue(kActorSteele, 1190); //01-1190.AUD	I can’t believe you took a shot at me!
+		KIA_Play_Actor_Dialogue(kActorMcCoy, 3060); //00-3060.AUD	At your gun. There’s a difference.
+		KIA_Play_Actor_Dialogue(kActorSteele, 1200); //01-1200.AUD	Yeah, about three inches!
+		KIA_Play_Actor_Dialogue(kActorSteele, 1210); //01-1210.AUD	We’d better call this in. Maybe we can seal off the sewers and get a search team out here. Your vehicle close by?
+		break;
+	case kClueMcCoyShotZubenInTheBack:
+		KIA_Play_Actor_Dialogue(kActorMcCoy, 480); //00-0480.AUD	I'm McCoy, LPD Rep detect unit.
+		KIA_Play_Actor_Dialogue(kActorZuben, 130); //19-0130.AUD	Rep detect?
+		KIA_Play_Actor_Dialogue(kActorMcCoy, 485); //00-0485.AUD	Sometimes we're called Blade Runners.
+		KIA_Play_Actor_Dialogue(kActorMcCoy, 490); //00-0490.AUD	Suck on this, skin-job!
+		break;
+	case kClueZubenRunsAway:
+		KIA_Play_Actor_Dialogue(kActorVoiceOver, 4270); //99-4270.AUD	The guy dumped nu-sooch all over my coat and didn't even stick around to apologize. Looked like someone with a guilty conscience to me.
 		break;
 	default:
 		break;

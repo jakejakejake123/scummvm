@@ -125,14 +125,7 @@ void SceneScriptMA06::PlayerWalkedIn() {
 			Game_Flag_Reset(kFlagMA06toMA07);
 			Ambient_Sounds_Adjust_Looping_Sound(kSfxELEAMB3,  10, 0, 1u);
 			Ambient_Sounds_Adjust_Looping_Sound(kSfxAPRTFAN1, 10, 0, 1u);
-
-			if (_vm->_cutContent) {
-				Actor_Says(kActorAnsweringMachine, 70, kAnimationModeTalk); // voice print identification
-			}
-			Actor_Says(kActorAnsweringMachine, 80, kAnimationModeTalk);     // your floor number please
-			Actor_Says(kActorMcCoy, 2940, 18);             // McCoy: McCoy 88F
-			Game_Flag_Set(kFlagMA06ToMA02);                // to McCoy's Apartment
-			Actor_Says(kActorAnsweringMachine, 90, kAnimationModeTalk);     // 88 thank you
+			Game_Flag_Set(kFlagMA06toMA07);                
 			Actor_Face_Actor(kActorMcCoy, kActorRachael, true);
 			Actor_Says(kActorMcCoy, 2710, 14);             // Excuse me
 

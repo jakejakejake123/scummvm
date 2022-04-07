@@ -233,8 +233,17 @@ void AIScriptZuben::ClickedByPlayer() {
 			Game_Flag_Set(kFlagTalkToZuben);
 			AI_Movement_Track_Unpause(kActorZuben);
 		} else {
-			Actor_Face_Actor(kActorMcCoy, kActorZuben, true);
-			Actor_Says(kActorMcCoy, 8910, 11);
+			if (_vm->_cutContent) {
+				if (Player_Query_Agenda() != kPlayerAgendaSurly 
+				&& Player_Query_Agenda() != kPlayerAgendaErratic) {
+					Actor_Says(kActorMcCoy, 8630, 12);  // What a waste
+				} else {
+					Actor_Says(kActorMcCoy, 8529, 13);
+				}
+			} else {
+				Actor_Face_Actor(kActorMcCoy, kActorZuben, true);
+				Actor_Says(kActorMcCoy, 8910, 11);
+			}
 		}
 		// return true;
 	}
@@ -265,6 +274,7 @@ void AIScriptZuben::OtherAgentEnteredCombatMode(int otherActorId, int combatMode
 		Actor_Says(kActorMcCoy, 455, 18);
 		Actor_Modify_Friendliness_To_Other(kActorZuben, kActorMcCoy, 5);
 		Actor_Set_Goal_Number(kActorZuben, kGoalZubenCT07Spared);
+		Game_Flag_Set(kFlagCT01ZubenGone);
 		// return true;
 		//Restored the scene where if McCoy shot at Zuben even if he put his gun away while cornered by Zuben
 		//he still procceeds to attack him.
@@ -273,19 +283,18 @@ void AIScriptZuben::OtherAgentEnteredCombatMode(int otherActorId, int combatMode
 	 &&  Game_Flag_Query(kFlagCT07ZubenAttack)
 	 && Game_Flag_Query(kFlagMcCoyShotAtZuben)
 	) {
-			Actor_Says(kActorMcCoy, 450, 12); //00-0450.AUD	Take it easy big fella.
-			Delay (3000);
-			Actor_Change_Animation_Mode(kActorZuben, kAnimationModeCombatAttack);
-			// Added in some animations so McCoy actually reacts to Zuben when he attacks him.
-			Actor_Change_Animation_Mode(kActorMcCoy, 21);
-			Actor_Says(kActorMcCoy, 445, 12); //00-0445.AUD	Gah! Guess I've made a mistake. 
-			Actor_Says(kActorZuben, 90, 14); //19-0090.AUD	Big mistake.
-			Actor_Change_Animation_Mode(kActorZuben, kAnimationModeCombatAttack);
-			Actor_Change_Animation_Mode(kActorMcCoy, 21);
-			Actor_Says(kActorMcCoy, 255, 13); //00-0255.AUD	Wait, I just-- Argh!
-			Actor_Change_Animation_Mode(kActorMcCoy, 48);
-			Player_Gains_Control();
-			Actor_Retired_Here(kActorMcCoy, 12, 48, 1, kActorZuben);
+		Actor_Says(kActorMcCoy, 450, 12); //00-0450.AUD	Take it easy big fella.
+		Delay (3000);
+		Actor_Change_Animation_Mode(kActorZuben, kAnimationModeCombatAttack);
+		// Added in some animations so McCoy actually reacts to Zuben when he attacks him.
+		Delay (800);
+		Actor_Change_Animation_Mode(kActorMcCoy, 21);
+		Actor_Says(kActorMcCoy, 445, 21); //00-0445.AUD	Gah! Guess I've made a mistake. 
+		Actor_Says(kActorZuben, 90, 14); //19-0090.AUD	Big mistake.
+		Actor_Change_Animation_Mode(kActorZuben, kAnimationModeCombatAttack);
+		Delay (800);
+		Actor_Change_Animation_Mode(kActorMcCoy, 39);
+		Actor_Retired_Here(kActorMcCoy, 12, 48, 1, kActorZuben);
 	}
 	// return false;
 }
@@ -302,6 +311,9 @@ bool AIScriptZuben::ShotAtAndHit() {
 		Actor_Clue_Acquire(kActorZuben, kClueMcCoyShotZubenInTheBack, true, -1);
 		Actor_Clue_Lose(kActorZuben, kClueMcCoyLetZubenEscape);
 		Actor_Start_Speech_Sample(kActorMcCoy, 490);
+		if (_vm->_cutContent) {
+			Actor_Clue_Acquire(kActorMcCoy, kClueMcCoyShotZubenInTheBack, true, kActorZuben);
+		}
 	}
 	if (Player_Query_Current_Scene() == kSceneCT07) {
 		Music_Stop(2u);
@@ -396,7 +408,9 @@ bool AIScriptZuben::GoalChanged(int currentGoalNumber, int newGoalNumber) {
 		Actor_Set_Goal_Number(kActorZuben, kGoalZubenCT07RunToFreeSlotA);
 		//Added in a flag
 		if (_vm->_cutContent) {
-		Game_Flag_Set(kFlagMcCoyIsHelpingReplicants);
+			Game_Flag_Set(kFlagZubenSpared);
+			Game_Flag_Set(kFlagMcCoyIsHelpingReplicants);
+			Actor_Set_Goal_Number(kActorGordo, kGoalGordoCT05WalkThrough);
 		}
 		return false;
 
@@ -414,15 +428,16 @@ bool AIScriptZuben::GoalChanged(int currentGoalNumber, int newGoalNumber) {
 			Game_Flag_Set(kFlagCT07toCT06);
 			Actor_Set_Goal_Number(kActorGaff, kGoalGaffCT12WaitForMcCoy);
 			Set_Enter(kSetCT06, kSceneCT06);
+			Actor_Set_Goal_Number(kActorGordo, kGoalGordoCT05WalkThrough);
 		} else if (Actor_Query_In_Set(kActorZuben, kSetMA01)) {
 			Player_Set_Combat_Mode(false);
 			Actor_Set_Goal_Number(kActorGaff, kGoalGaffMA01ApproachMcCoy);
 		}
 		// Made it so you gain five friendliness points with Crystal when you retire Zuben.
 		if (_vm->_cutContent) {
-			Actor_Modify_Friendliness_To_Other(kActorSteele, kActorMcCoy, 3);
+			Actor_Modify_Friendliness_To_Other(kActorSteele, kActorMcCoy, 2);
 		}
-		Actor_Set_Goal_Number(kActorZuben, kGoalZubenGone);		
+		Actor_Set_Goal_Number(kActorZuben, kGoalZubenGone);	
 		return false;
 
 	case kGoalZubenCT02PushPot:

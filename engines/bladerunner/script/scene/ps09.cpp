@@ -118,7 +118,7 @@ bool SceneScriptPS09::ClickedOnActor(int actorId) {
 				Actor_Says(kActorGrigorian, 550, 15); //11-0550.AUD	No.
 				//Jake - Restored some dialogue for Grigorian and McCoy.
 				if (_vm->_cutContent) {
-            		Actor_Says(kActorMcCoy, 3910, 17); //00-3910.AUD	You’re lying.
+            		Actor_Says(kActorMcCoy, 6995, 18); //00-6995.AUD	That's not what I heard. You wanna set the record straight?
 					Delay (1000);
 					Actor_Says(kActorGrigorian, 1230, 15); //11-1230.AUD	Well, I'm afraid you've caught me, detective.
 					Actor_Says(kActorMcCoy, 5705, 18); //00-5705.AUD	Uh-huh.
@@ -140,6 +140,7 @@ bool SceneScriptPS09::ClickedOnActor(int actorId) {
 			 && Game_Flag_Query(kFlagPS09GrigorianTalk1)
 			 && (Actor_Clue_Query(kActorMcCoy, kClueGrigorianInterviewA)
 			  || Actor_Clue_Query(kActorMcCoy, kClueGrigorianInterviewB1)
+			  || Actor_Clue_Query(kActorMcCoy, kClueGrigorianInterviewB2)
 			  || Actor_Clue_Query(kActorMcCoy, kClueGrigoriansNote)
 			 )
 			) {
@@ -183,8 +184,16 @@ bool SceneScriptPS09::ClickedOnActor(int actorId) {
 				Game_Flag_Set(kFlagPS09IzoTalk2);
 				return true;
 			}
-
-			Actor_Says(kActorMcCoy, 4200, 13);
+			if (_vm->_cutContent) {
+				if (Player_Query_Agenda() == kPlayerAgendaSurly
+		  	  	|| Player_Query_Agenda() == kPlayerAgendaErratic) {
+					Actor_Says(kActorMcCoy, 4200, 13); 
+				} else {
+					Actor_Says(kActorMcCoy, 8590, 13); //00-8590.AUD	Not the talkative type.
+				}
+			} else {
+				Actor_Says(kActorMcCoy, 4200, 13);
+			}
 			return true;
 		}
 	}
@@ -195,12 +204,13 @@ bool SceneScriptPS09::ClickedOnActor(int actorId) {
 			Actor_Face_Actor(kActorCrazylegs, kActorMcCoy, true);
 			// Made it so McCoy only taunts Crazylegs if he is surly or erratic.
 			if (!Game_Flag_Query(kFlagPS09CrazylegsTalk1)) {
-		  	    if (Player_Query_Agenda() == kPlayerAgendaSurly
-		  	    || Player_Query_Agenda() == kPlayerAgendaErratic) {			
-					Actor_Says(kActorMcCoy, 4415, 18); //00-4415.AUD	Guess you can't sell a whole lot of cars from down here, Crazy.
-				} else {
-					Actor_Says(kActorMcCoy, 8920, 18); //00-8920.AUD	I gotta ask you a question.
-				}
+				if (!Actor_Clue_Query(kActorMcCoy, kClueCrazylegsInterview3)) {
+					if (Player_Query_Agenda() == kPlayerAgendaSurly
+					|| Player_Query_Agenda() == kPlayerAgendaErratic) {			
+						Actor_Says(kActorMcCoy, 4415, 18); //00-4415.AUD	Guess you can't sell a whole lot of cars from down here, Crazy.
+					} else {
+						Actor_Says(kActorMcCoy, 8920, 18); //00-8920.AUD	I gotta ask you a question.
+					}
 					Actor_Says(kActorCrazylegs, 1090, kAnimationModeTalk); //09-1090.AUD	I’m being railroaded! All I did was conduct business as per usual.
 					//Restored some dialogue between Crazylegs and McCoy. Originally this dialogue only played if Grigorian was not arrested but since that can
 					//not happen it only seems fair to include it here.
@@ -212,6 +222,7 @@ bool SceneScriptPS09::ClickedOnActor(int actorId) {
 					}
 					Actor_Says(kActorMcCoy, 4420, 18); //00-4420.AUD	Contacting business with Reps is against the Law.
 					Game_Flag_Set(kFlagPS09CrazylegsTalk1);
+				}
 			}
 
 			if ( Game_Flag_Query(kFlagPS09CrazylegsTalk1)
@@ -221,11 +232,7 @@ bool SceneScriptPS09::ClickedOnActor(int actorId) {
 				Actor_Face_Actor(kActorGrigorian, kActorCrazylegs, true);
 				Actor_Says(kActorGrigorian, 420, 14); //11-0420.AUD	You don't have to be afraid of the truth, Larry.
 				Actor_Face_Actor(kActorCrazylegs, kActorGrigorian, true);
-				// Altered code so Crazylegs only says I don't know what you are talking about if he hasn't previously confessed to doing business with reps. His confession will now be in the clue Crazylegs interview 3
-				// and will be used as the trigger for this.
-				if (!Actor_Clue_Query(kActorMcCoy, kClueCrazylegsInterview3)) {
-					Actor_Says(kActorCrazylegs, 1120, kAnimationModeTalk); //09-1120.AUD	I don’t know what you’re talking about.
-				}			
+				Actor_Says(kActorCrazylegs, 1120, kAnimationModeTalk); //09-1120.AUD	I don’t know what you’re talking about.		
 				Actor_Face_Actor(kActorMcCoy, kActorGrigorian, true);
 				// Made it so McCoys comment towards Grigorian isn't as harsh if McCoy isn't surly or erratic.
 				if (Actor_Clue_Query(kActorMcCoy, kClueGrigorianInterviewA)) {
@@ -248,9 +255,9 @@ bool SceneScriptPS09::ClickedOnActor(int actorId) {
 #if !BLADERUNNER_ORIGINAL_BUGS
 				Actor_Face_Actor(kActorCrazylegs, kActorMcCoy, true);
 #endif
-				return true;
+					return true;
+				}
 			}
-		}
 			// Removed the code that only plays certain dialogue with Crazylegs if Grigorian is not present.
 
 			Actor_Says(kActorMcCoy, 4425, 18);
@@ -360,15 +367,16 @@ void SceneScriptPS09::dialogueWithGrigorian() {
 		// restored clue Grigorians resources and this activates the protest option. It would make no sense for the player to pick the protest option and Grigorian talks about McCoys 
 		// treatment of him before that even happens, so this change feels necessary.
 		if (_vm->_cutContent) {
-			if (Actor_Clue_Query(kActorMcCoy, kClueGrigoriansResources))	 {
+			if (Actor_Clue_Query(kActorMcCoy, kClueGrigoriansResources)) {
 				DM_Add_To_List_Never_Repeat_Once_Selected(170,  5, 5, 3); // PROTEST
 			}
-		} else { DM_Add_To_List_Never_Repeat_Once_Selected(170,  5, 5, 3); // PROTEST
+		} else {
+			 DM_Add_To_List_Never_Repeat_Once_Selected(170,  5, 5, 3); // PROTEST
 		}
 		DM_Add_To_List_Never_Repeat_Once_Selected(180, -1, 5, 5); // CARS
 		if ((_vm->_cutContent
 		     && (!Game_Flag_Query(kFlagPS09GrigorianVKChosen)
-		         && (!Actor_Clue_Query(kActorMcCoy, kClueVKGrigorianHuman) && !Actor_Clue_Query(kActorMcCoy, kClueVKGrigorianReplicant))))
+		     && (!Actor_Clue_Query(kActorMcCoy, kClueVKGrigorianHuman) && !Actor_Clue_Query(kActorMcCoy, kClueVKGrigorianReplicant))))
 		    || !_vm->_cutContent
 		) {
 			if (_vm->_cutContent) {
@@ -409,11 +417,9 @@ void SceneScriptPS09::dialogueWithGrigorian() {
 				Actor_Says(kActorGrigorian, 1210, 13); //11-1210.AUD	Tell me, detective. What possible interest would I have in telling you the truth? You're a killer!
 				Actor_Says(kActorMcCoy, 8519, 18); ////00-8519.AUD	What do you say we dish each other the straight goods.
 				Actor_Says(kActorGrigorian, 1190, 13); //11-1190.AUD	I haven't heard anything that could possibly be of even remote interest to you, detective.
-			} else if (Actor_Query_Friendliness_To_Other(kActorGrigorian, kActorMcCoy) > 43) {
-				//McCoy was nice.
-				Actor_Says(kActorGrigorian, 1170, 13); //11-1170.AUD	Well, normally I wouldn't talk to a detective. Especially a killer like you.
-				Actor_Says(kActorGrigorian, 1240, 13); //11-1240.AUD	I can't imagine what you think this information will do for you but... here's the truth.
+			} else if (Actor_Query_Friendliness_To_Other(kActorGrigorian, kActorMcCoy) > 43) {		
 				if (Game_Flag_Query(kFlagIzoIsReplicant)) {
+					Actor_Says(kActorGrigorian, 1240, 13); //11-1240.AUD	I can't imagine what you think this information will do for you but... here's the truth.
 					Actor_Says(kActorGrigorian, 60, 14); //11-0060.AUD	I don't know them.
 					Actor_Says(kActorMcCoy, 4285, 13);
 					Actor_Says(kActorGrigorian, 70, 12);
@@ -423,20 +429,23 @@ void SceneScriptPS09::dialogueWithGrigorian() {
 					Actor_Says(kActorMcCoy, 4295, 18);
 					Actor_Says(kActorGrigorian, 110, 14);
 					Actor_Says(kActorMcCoy, 4300, 17);
+				} else {
+					Actor_Says(kActorGrigorian, 1170, 13); //11-1170.AUD	Well, normally I wouldn't talk to a detective. Especially a killer like you.
+					Actor_Says(kActorGrigorian, 1180, 13); //11-1180.AUD	But you have been quite decent to me. I did hear something you might find interesting.
+					Actor_Says(kActorMcCoy, 3415, 18); //00-3415.AUD	Let’s hear what you got.
+					Actor_Says(kActorGrigorian, 130, 15); //11-0130.AUD	I didn't know the Rastafarian.
+					Actor_Says(kActorGrigorian, 140, 13);
+					Actor_Says(kActorMcCoy, 4305, 13);
+					Actor_Says(kActorGrigorian, 150, 14);
+					Actor_Says(kActorGrigorian, 160, 12);
+					Actor_Says(kActorMcCoy, 4310, 13);
+					Actor_Says(kActorGrigorian, 170, 15);
+					Actor_Says(kActorGrigorian, 180, 16);
+					Actor_Says(kActorMcCoy, 4315, 18);
+					Actor_Says(kActorGrigorian, 190, kAnimationModeTalk);
+					Actor_Says(kActorGrigorian, 200, 13);
+					Actor_Clue_Acquire(kActorMcCoy, kClueGrigoriansResponse1, true, kActorGrigorian);
 				}
-			} else if (!Game_Flag_Query(kFlagIzoIsReplicant)) {
-				Actor_Says(kActorGrigorian, 1170, 13); //11-1170.AUD	Well, normally I wouldn't talk to a detective. Especially a killer like you.
-				Actor_Says(kActorGrigorian, 1180, 13); //11-1180.AUD	But you have been quite decent to me. I did hear something you might find interesting.
-				Actor_Says(kActorMcCoy, 3415, 18); //00-3415.AUD	Let’s hear what you got.
-				Actor_Says(kActorGrigorian, 130, 15); //11-0130.AUD	I didn't know the Rastafarian.
-				Actor_Says(kActorGrigorian, 140, 13);
-				Actor_Says(kActorMcCoy, 4305, 13);
-				Actor_Says(kActorGrigorian, 150, 14);
-				Actor_Says(kActorGrigorian, 160, 12);
-				Actor_Says(kActorMcCoy, 4310, 13);
-				Actor_Says(kActorGrigorian, 170, 15);
-				Actor_Says(kActorGrigorian, 180, 16);
-				Actor_Says(kActorMcCoy, 4315, 18);
 			}
 		} else if (Game_Flag_Query(kFlagIzoIsReplicant)) {
 			Actor_Says(kActorGrigorian, 60, 14);
@@ -448,9 +457,7 @@ void SceneScriptPS09::dialogueWithGrigorian() {
 			Actor_Says(kActorMcCoy, 4295, 18);
 			Actor_Says(kActorGrigorian, 110, 14);
 			Actor_Says(kActorMcCoy, 4300, 17);
-			return;
-		}
-		if (!Game_Flag_Query(kFlagIzoIsReplicant)) {
+		} else {
 			Actor_Says(kActorGrigorian, 130, 15);
 			Actor_Says(kActorGrigorian, 140, 13);
 			Actor_Says(kActorMcCoy, 4305, 13);
@@ -482,10 +489,6 @@ void SceneScriptPS09::dialogueWithGrigorian() {
 				// "Guns so new that even the police had hardly used them I heard."
 				Actor_Says(kActorGrigorian, 190, kAnimationModeTalk);
 				Actor_Says(kActorGrigorian, 200, 13);
-				//Added in the clue Grigorians response 1 where he talks about human Izo.
-				if (_vm->_cutContent) {
-					Actor_Clue_Acquire(kActorMcCoy, kClueGrigoriansResponse1, true, kActorGrigorian);
-				}
 			} else {
 				// vanilla version (non-restored content)
 				// This plays only the second half of the full quote in ENG, FRA, DEU and ITA versions
@@ -515,7 +518,7 @@ void SceneScriptPS09::dialogueWithGrigorian() {
 			Actor_Says(kActorGrigorian, 220, 13);
 			// pause (after the quote is spoken) is set to 0.0f here
 			// Grigorian is interrupted by McCoy here, so there shouldn't be any pause after his quote
-			Actor_Says_With_Pause(kActorGrigorian, 230, 0.0f, 14); //11-0230.AUD	The “Citizens Against Replicant Slavery” will spearhead the movement towards--
+			Actor_Says_With_Pause(kActorGrigorian, 230, 0.0f, 15); //11-0230.AUD	The “Citizens Against Replicant Slavery” will spearhead the movement towards--
 		} else {
 			// In ESP version, quote 210 contains the full quote,
 			// and quotes 220 and 230 are muted.
@@ -530,24 +533,23 @@ void SceneScriptPS09::dialogueWithGrigorian() {
 		// Added in code so McCoy is either nice or mean to Grigorian based on his agenda. Also being mean will set the Grigorian upset flag and Grigorian will treat you accordingly.
 		if (_vm->_cutContent) {
 		   if (Player_Query_Agenda() == kPlayerAgendaSurly 
-					|| Player_Query_Agenda() == kPlayerAgendaErratic) {
-				// McCoy being nice to Grigorian
+			|| Player_Query_Agenda() == kPlayerAgendaErratic) {
 				Actor_Says(kActorMcCoy, 4320, 14); //00-4320.AUD	Save the pitch for someone who gives a shit.
-				// Mean McCoy
 			} else {
 				Actor_Says(kActorMcCoy, 2750, kAnimationModeTalk); //00-2750.AUD	Okay, I get the picture.
 			}
-		} else { Actor_Says(kActorMcCoy, 4320, 14);           
+		} else { 
+			Actor_Says(kActorMcCoy, 4320, 14);           
 		}
 		if (_vm->_cutContent) {
 			// "What else do you guys do besides wave signs"
 			if (Player_Query_Agenda() == kPlayerAgendaSurly 
-					|| Player_Query_Agenda() == kPlayerAgendaErratic) {
+			|| Player_Query_Agenda() == kPlayerAgendaErratic) {
 				Actor_Says(kActorMcCoy, 4325, kAnimationModeTalk);
-			// McCoy was mean, Grigorian friendliness drop.
-			Actor_Modify_Friendliness_To_Other(kActorGrigorian, kActorMcCoy, -5);
+				// McCoy was mean, Grigorian friendliness drop.
+				Actor_Modify_Friendliness_To_Other(kActorGrigorian, kActorMcCoy, -5);
 			}
-		} else if (!_vm->_cutContent) {
+		} else {
 			Actor_Says(kActorMcCoy, 4325, kAnimationModeTalk);
 		}
 		Actor_Says(kActorGrigorian, 240, 16);
@@ -569,7 +571,6 @@ void SceneScriptPS09::dialogueWithGrigorian() {
 		Actor_Says(kActorMcCoy, 4335, 18);
 		Actor_Says(kActorGrigorian, 290, 15);
 		Actor_Says(kActorMcCoy, 4340, 13);
-		Actor_Modify_Friendliness_To_Other(kActorGrigorian, kActorMcCoy, -5);
 		// Since the protest option is triggered by McCoy gaining the Grigorians resources clue I have moved to conversation with Crazylegs and Grigorian to the end
 		// of the conversation. This is because it would be unfair for the player not to access the protest option just because Crazylegs was there and that stops them from gaining the Grigorians
 		// resources clue.
@@ -591,7 +592,7 @@ void SceneScriptPS09::dialogueWithGrigorian() {
 #else
 			if (_vm->_language != Common::ES_ESP) {
 				Actor_Says(kActorGrigorian, 340, 14);
-				Actor_Says_With_Pause(kActorGrigorian, 350, 0.0f, 12);
+				Actor_Says_With_Pause(kActorGrigorian, 350, 0.0f, 15);
 			} else {
 				// quote 350 is muted in ESP version. The quote 340 contains the full quote
 				// TODO: When mixing ESP voiceover with subtitles from other languages,
@@ -607,8 +608,9 @@ void SceneScriptPS09::dialogueWithGrigorian() {
 		//Altered code so McCoy can be nice.
 		if (_vm->_cutContent) {
 		    if (Player_Query_Agenda() == kPlayerAgendaSurly
-		   		   || Player_Query_Agenda() == kPlayerAgendaErratic) {
+		   	|| Player_Query_Agenda() == kPlayerAgendaErratic) {
 				Actor_Says(kActorMcCoy, 4375, 14); //00-4375.AUD	A lot of them will wake up dead, if Reps are allowed to run amok on Terra, jerk.
+				Actor_Modify_Friendliness_To_Other(kActorGrigorian, kActorMcCoy, -5);
 			} else {
 				Actor_Says(kActorMcCoy, 1510, kAnimationModeTalk); //00-1510.AUD	Okay, okay. Just forget it.
 			}
@@ -616,11 +618,11 @@ void SceneScriptPS09::dialogueWithGrigorian() {
 			Actor_Says(kActorMcCoy, 4375, 14);           
 		} 
 	 //Moved Grigorians interaction with Crazylegs here so the player will be able to gain the Grigorians resources clue and acces the protest option.
-	 if (Game_Flag_Query(kFlagCrazylegsArrested)) {
-		Actor_Says(kActorGrigorian, 300, 12);
-		Actor_Face_Actor(kActorCrazylegs, kActorGrigorian, true);
-		Actor_Says(kActorCrazylegs, 1010, kAnimationModeTalk);
-		Actor_Face_Actor(kActorGrigorian, kActorCrazylegs, true);
+		if (Game_Flag_Query(kFlagCrazylegsArrested)) {
+			Actor_Says(kActorGrigorian, 300, 12);
+			Actor_Face_Actor(kActorCrazylegs, kActorGrigorian, true);
+			Actor_Says(kActorCrazylegs, 1010, kAnimationModeTalk);
+			Actor_Face_Actor(kActorGrigorian, kActorCrazylegs, true);
 #if BLADERUNNER_ORIGINAL_BUGS
 			Actor_Says(kActorGrigorian, 310, 16);
 #else
@@ -632,47 +634,26 @@ void SceneScriptPS09::dialogueWithGrigorian() {
 			Actor_Face_Actor(kActorCrazylegs, kActorMcCoy, true);
 			Actor_Says(kActorCrazylegs, 1020, kAnimationModeTalk);
 			Actor_Says(kActorMcCoy, 4350, 18); 
-			Actor_Says(kActorCrazylegs, 1030, kAnimationModeTalk);
-			Actor_Says(kActorMcCoy, 4355, 19); // 00-4355.AUD	So you were ready to do business with the Reps who dropped by your place.
-			// Added code so Crazylegs only says he didn't know what that broad was only if Dektora is a rep.
-			if (_vm->_cutContent) {
+			Delay(1000);
+			if (Player_Query_Agenda() == kPlayerAgendaSurly
+			|| Player_Query_Agenda() == kPlayerAgendaErratic) {
+				Actor_Says(kActorMcCoy, 4360, 16); //00-4360.AUD	Tell it straight or I'm gonna make sure you get the same as he gets. Full conspiracy, payable for 25.
+				Actor_Says(kActorCrazylegs, 1030, kAnimationModeTalk);
+				Actor_Says(kActorMcCoy, 4355, 19); // 00-4355.AUD	So you were ready to do business with the Reps who dropped by your place.
+				// Added code so Crazylegs only says he didn't know what that broad was only if Dektora is a rep.
 				if (Game_Flag_Query(kFlagDektoraIsReplicant)) {
 					Actor_Says(kActorCrazylegs, 1040, kAnimationModeTalk); //09-1040.AUD	Hey, I didn’t know what that broad was.
 				}
-			// Added in code so McCoy is nice or mean to Crazylegs based on his agenda.
-			 if (Player_Query_Agenda() == kPlayerAgendaSurly
-				|| Player_Query_Agenda() == kPlayerAgendaErratic) {
-					Actor_Says(kActorMcCoy, 4360, 16); //00-4360.AUD	Tell it straight or I'm gonna make sure you get the same as he gets. Full conspiracy, payable for 25.
-					Actor_Says(kActorCrazylegs, 1050, kAnimationModeTalk); //09-1050.AUD	Look. Now I believe in laissez-faire.
-					Actor_Says(kActorCrazylegs, 1060, kAnimationModeTalk);			
-					Actor_Says(kActorMcCoy, 4370, 14);
-					Actor_Says(kActorCrazylegs, 1070, kAnimationModeTalk);
-					Actor_Says(kActorCrazylegs, 1080, kAnimationModeTalk);
-					Actor_Clue_Acquire(kActorMcCoy, kClueCrazylegsInterview3, true, kActorCrazylegs);
-				} else {
-					Actor_Says(kActorMcCoy, 6985, 16); //00-4360.AUD	Got the straight scoop for me or what?
-					Actor_Says(kActorCrazylegs, 1160, kAnimationModeTalk); //09-1160.AUD	Take a ride, McCoy. I already told you everything.
-				}
-		    } else {
-			// NOTE McCoy's 4365 cue does NOT exist in the game files
-				Actor_Says(kActorMcCoy, 4365, 14); 
-			Actor_Says(kActorMcCoy, 4365, 14); 
-				Actor_Says(kActorMcCoy, 4365, 14); 
-			Actor_Says(kActorMcCoy, 4365, 14); 
-				Actor_Says(kActorMcCoy, 4365, 14); 
+				// Added in code so McCoy is nice or mean to Crazylegs based on his agenda.
 				Actor_Says(kActorCrazylegs, 1050, kAnimationModeTalk); //09-1050.AUD	Look. Now I believe in laissez-faire.
-				Actor_Says(kActorCrazylegs, 1060, kAnimationModeTalk);			
-			Actor_Says(kActorCrazylegs, 1060, kAnimationModeTalk);			
-				Actor_Says(kActorCrazylegs, 1060, kAnimationModeTalk);			
-			Actor_Says(kActorCrazylegs, 1060, kAnimationModeTalk);			
 				Actor_Says(kActorCrazylegs, 1060, kAnimationModeTalk);			
 				Actor_Says(kActorMcCoy, 4370, 14);
 				Actor_Says(kActorCrazylegs, 1070, kAnimationModeTalk);
 				Actor_Says(kActorCrazylegs, 1080, kAnimationModeTalk);
-				//Restored the clue CrazyLegs interview 3.
-				if (_vm->_cutContent) {
-					Actor_Clue_Acquire(kActorMcCoy, kClueCrazylegsInterview3, true, kActorCrazylegs);
-				}
+				Actor_Clue_Acquire(kActorMcCoy, kClueCrazylegsInterview3, true, kActorCrazylegs);
+			} else {
+				Actor_Says(kActorMcCoy, 6985, 16); //00-4360.AUD	Got the straight scoop for me or what?
+				Actor_Says(kActorCrazylegs, 1160, kAnimationModeTalk); //09-1160.AUD	Take a ride, McCoy. I already told you everything.
 			}
 		}
 		break;
@@ -693,15 +674,15 @@ void SceneScriptPS09::dialogueWithGrigorian() {
 		// So Crazylegs:
 		// - should not be arrested yet
 		// - nor talked to about (Grigorian's) Note already
-		if (!Game_Flag_Query(kFlagCrazylegsArrested)
-		    && (Actor_Clue_Query(kActorMcCoy, kClueCarRegistration1)
-		        || Actor_Clue_Query(kActorMcCoy, kClueCarRegistration3))
+		if ((!Game_Flag_Query(kFlagCrazylegsArrested))
+		&& (Actor_Clue_Query(kActorMcCoy, kClueCarRegistration1)
+		|| Actor_Clue_Query(kActorMcCoy, kClueCarRegistration3))
 		) {
 			Actor_Says(kActorMcCoy, 4395, 18);    // How was Crazylegs supposed to help them?
 			Actor_Says(kActorGrigorian, 380, 14);
 			if (_vm->_cutContent) {
 				if (Player_Query_Agenda() == kPlayerAgendaSurly 
-						|| Player_Query_Agenda() == kPlayerAgendaErratic) {
+				|| Player_Query_Agenda() == kPlayerAgendaErratic) {
 					//Added in some extra dialogue if McCoy is surly or erratic.
 					Actor_Says(kActorMcCoy, 8519, 14); //00-8519.AUD	What do you say we dish each other the straight goods.
 					Actor_Says(kActorGrigorian, 1200, 13); //11-1200.AUD	I think perhaps you should talk to my attorney, Mr. McCoy.
@@ -727,7 +708,7 @@ void SceneScriptPS09::dialogueWithGrigorian() {
 		//Altered code so McCoy is nice or mean to Grigorian when he VKS him depending on his agenda.
 		if (_vm->_cutContent) {
 		    if (Player_Query_Agenda() == kPlayerAgendaSurly 
-					|| Player_Query_Agenda() == kPlayerAgendaErratic) {
+			|| Player_Query_Agenda() == kPlayerAgendaErratic) {
 				Actor_Says(kActorMcCoy, 4400, 13); //00-4400.AUD	Aha, look, I gotta check out the equipment and you're the only stiff around.
 				Actor_Says_With_Pause(kActorGrigorian, 410, 0.0f, 16);
 				Actor_Says(kActorMcCoy, 4405, 14); //00-4405.AUD	Your lawyer would tell you I got the authority to V-K the mayor, if I want.
@@ -751,7 +732,7 @@ void SceneScriptPS09::dialogueWithGrigorian() {
 		} else {
 		
 #if BLADERUNNER_ORIGINAL_BUGS
-		Actor_Says(kActorGrigorian, 410, 16);
+			Actor_Says(kActorGrigorian, 410, 16);
 #else
 			// Grigorian is interrupted here, so pause has to be 0.0f
 			Actor_Says_With_Pause(kActorGrigorian, 410, 0.0f, 16);

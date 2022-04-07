@@ -526,7 +526,7 @@ bool AIScriptClovis::GoalChanged(int currentGoalNumber, int newGoalNumber) {
 		// Altered the dialogue between McCoy and dying Clovis. It will play out differently depending on McCoys agenda.
 		if (_vm->_cutContent) {
 			if (Player_Query_Agenda() == kPlayerAgendaSurly 
-				|| (Player_Query_Agenda() == kPlayerAgendaErratic)) {
+			|| (Player_Query_Agenda() == kPlayerAgendaErratic)) {
 				Actor_Says(kActorMcCoy, 2355, 11); //00-2355.AUD	But after what you did to Maggie? No way.
 			}
 		} else if (!Game_Flag_Query(kFlagMcCoyAttackedReplicants)) {
@@ -538,6 +538,7 @@ bool AIScriptClovis::GoalChanged(int currentGoalNumber, int newGoalNumber) {
 			if (Player_Query_Agenda() == kPlayerAgendaSurly 
 			|| (Player_Query_Agenda() == kPlayerAgendaErratic)) {
 				Actor_Says(kActorMcCoy, 2360, 18); //00-2360.AUD	I don’t need to.
+				Game_Flag_Set(kFlagClovisTalkUnsympathetic);
 			} else {
 				Delay (2000);
 				Actor_Says(kActorMcCoy, 2305, 17); //00-2305.AUD	I’m sorry.
@@ -564,37 +565,38 @@ bool AIScriptClovis::GoalChanged(int currentGoalNumber, int newGoalNumber) {
 			Actor_Says(kActorClovis, 280, -1);
 			Actor_Says(kActorClovis, 290, -1);
 			Actor_Says(kActorClovis, 300, -1);
-		if (Actor_Clue_Query(kActorClovis, kClueMcCoyRetiredLucy) 
-			|| Actor_Clue_Query(kActorClovis, kClueMcCoyRetiredDektora)) {
-			Actor_Change_Animation_Mode(kActorClovis, 54);
-			Loop_Actor_Walk_To_XYZ(kActorMcCoy, 54.09, -42.70, -148.65, 0, false, false, false);
-			Delay (1000);
-			Actor_Says(kActorMcCoy, 8990, 13); //00-8990.AUD	What have you got there?
-			Delay (1000);
-			Actor_Says(kActorMcCoy, 1800, 14); //00-1800.AUD	No, wait!
-			Sound_Play(kSfxLGCAL1, 100, 0, 0, 50);
-			Actor_Force_Stop_Walking(kActorMcCoy);
-			Actor_Change_Animation_Mode(kActorMcCoy, kAnimationModeDie);
-			Actor_Change_Animation_Mode(kActorClovis, 21);
-			Player_Loses_Control();
-			Actor_Retired_Here(kActorMcCoy, 6, 6, true, kActorClovis);
-			Actor_Set_Goal_Number(kActorClovis, kGoalClovisGone);
+			if (Actor_Clue_Query(kActorClovis, kClueMcCoyRetiredLucy) 
+			|| Actor_Clue_Query(kActorClovis, kClueMcCoyRetiredDektora)
+			|| Game_Flag_Query(kFlagClovisTalkUnsympathetic)) {
+				Actor_Change_Animation_Mode(kActorClovis, 54);
+				Loop_Actor_Walk_To_XYZ(kActorMcCoy, 54.09, -42.70, -148.65, 0, false, false, false);
+				Delay (1000);
+				Actor_Says(kActorMcCoy, 8990, 13); //00-8990.AUD	What have you got there?
+				Delay (1000);
+				Actor_Says(kActorMcCoy, 1800, 14); //00-1800.AUD	No, wait!
+				Sound_Play(kSfxLGCAL1, 100, 0, 0, 50);
+				Actor_Force_Stop_Walking(kActorMcCoy);
+				Actor_Change_Animation_Mode(kActorMcCoy, kAnimationModeDie);
+				Actor_Change_Animation_Mode(kActorClovis, 21);
+				Player_Loses_Control();
+				Actor_Retired_Here(kActorMcCoy, 6, 6, true, kActorClovis);
+				Actor_Set_Goal_Number(kActorClovis, kGoalClovisGone);
+			} else {
+				Actor_Set_Targetable(kActorClovis, false);
+				Actor_Change_Animation_Mode(kActorClovis, kAnimationModeHit);
+				Actor_Retired_Here(kActorClovis, 12, 48, true, -1);
+				Actor_Set_Goal_Number(kActorClovis, kGoalClovisGone);
+				Player_Gains_Control();
+			}
 		} else {
-			Actor_Set_Targetable(kActorClovis, false);
-			Actor_Change_Animation_Mode(kActorClovis, kAnimationModeHit);
-			Actor_Retired_Here(kActorClovis, 12, 48, true, -1);
-			Actor_Set_Goal_Number(kActorClovis, kGoalClovisGone);
-			Player_Gains_Control();
-		}
-	} else {
-		ADQ_Add(kActorClovis, 240, -1);
-		ADQ_Add(kActorClovis, 250, -1);
-		ADQ_Add(kActorClovis, 260, -1);
-		ADQ_Add(kActorClovis, 270, -1);
-		ADQ_Add_Pause(1000);
-		ADQ_Add(kActorClovis, 280, -1);
-		ADQ_Add(kActorClovis, 290, -1);
-		ADQ_Add(kActorClovis, 300, -1);
+			ADQ_Add(kActorClovis, 240, -1);
+			ADQ_Add(kActorClovis, 250, -1);
+			ADQ_Add(kActorClovis, 260, -1);
+			ADQ_Add(kActorClovis, 270, -1);
+			ADQ_Add_Pause(1000);
+			ADQ_Add(kActorClovis, 280, -1);
+			ADQ_Add(kActorClovis, 290, -1);
+			ADQ_Add(kActorClovis, 300, -1);
 		}
 		return true;
 
