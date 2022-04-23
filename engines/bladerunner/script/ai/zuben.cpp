@@ -475,7 +475,6 @@ bool AIScriptZuben::GoalChanged(int currentGoalNumber, int newGoalNumber) {
 			Player_Set_Combat_Mode(true);
 		}
 		Player_Gains_Control();
-		Game_Flag_Set(kFlagNotUsed142);
 		Set_Enter(kSetCT07, kSceneCT07);
 		return false;
 

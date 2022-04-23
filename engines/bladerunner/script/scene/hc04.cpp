@@ -162,6 +162,9 @@ void SceneScriptHC04::ActorChangedGoal(int actorId, int newGoal, int oldGoal, bo
 }
 
 void SceneScriptHC04::PlayerWalkedIn() {
+	if (_vm->_cutContent) {
+		Game_Flag_Set(kFlagHC04Visited);
+	}
 }
 
 void SceneScriptHC04::PlayerWalkedOut() {
@@ -185,7 +188,7 @@ void SceneScriptHC04::dialogueWithIsabella() {
 		// Also made it so if you have the stolen cheese clue the deliverymen and Eisenduller options disappear since McCoy now knows that it was
 		// Gordo who stole that takeout boxes and not Sadik who was delivring them.
 		if (_vm->_cutContent) {
-			if (Actor_Query_Friendliness_To_Other(kActorIsabella, kActorMcCoy) > 46) {
+			if (Actor_Query_Friendliness_To_Other(kActorIsabella, kActorMcCoy) > 49) {
 				if (Actor_Clue_Query(kActorMcCoy, kClueBombingSuspect)
 				&& !Actor_Clue_Query(kActorMcCoy, kClueStolenCheese)) {
 					DM_Add_To_List_Never_Repeat_Once_Selected(350, 5, 6, 5); // DELIVERYMEN
@@ -193,12 +196,12 @@ void SceneScriptHC04::dialogueWithIsabella() {
 			}
 		} else if (Actor_Clue_Query(kActorMcCoy, kClueBombingSuspect)) {
 			DM_Add_To_List_Never_Repeat_Once_Selected(340, 5, 6, 5); // SADIK PHOTO
-		} else if (Actor_Clue_Query(kActorMcCoy, kClueTyrellSecurityPhoto)) {
+		} else if (!_vm->_cutContent && Actor_Clue_Query(kActorMcCoy, kClueTyrellSecurityPhoto)) {
 			DM_Add_To_List_Never_Repeat_Once_Selected(350, 5, 6, 5); // DELIVERYMEN
 		}
 		if (_vm->_cutContent) {
 			if  (!Actor_Clue_Query(kActorMcCoy, kClueStolenCheese)
-			&& Actor_Query_Friendliness_To_Other(kActorIsabella, kActorMcCoy) > 46) {
+			&& Actor_Query_Friendliness_To_Other(kActorIsabella, kActorMcCoy) > 49) {
 				DM_Add_To_List_Never_Repeat_Once_Selected(360, 6, 4, 3); // MARCUS EISENDULLER
 			}		
 		} else {
@@ -216,7 +219,7 @@ void SceneScriptHC04::dialogueWithIsabella() {
 	// Made it so McCoy doesn't have the option to buy the stew if he found out about the special ingredient.
 	// It would make no sense for McCoy to ask what's in the stew and then buy some of it knowing it contains illegal ingredients.
 	if (_vm->_cutContent) {
-		if (Actor_Query_Friendliness_To_Other(kActorIsabella, kActorMcCoy) > 46) {
+		if (Actor_Query_Friendliness_To_Other(kActorIsabella, kActorMcCoy) > 49) {
 			if (!Actor_Clue_Query(kActorMcCoy, kClueSpecialIngredient)) {
 				DM_Add_To_List_Never_Repeat_Once_Selected(390, 7, 5, -1); // BUY STEW
 			}
@@ -282,7 +285,9 @@ void SceneScriptHC04::dialogueWithIsabella() {
 
 	case 380: // MIA AND MURRAY INFO
 		Actor_Says(kActorMcCoy, 1305, kAnimationModeTalk);
-		Actor_Modify_Friendliness_To_Other(kActorIsabella, kActorMcCoy, -2);
+		if (!_vm->_cutContent) {
+			Actor_Modify_Friendliness_To_Other(kActorIsabella, kActorMcCoy, -2);
+		}
 		Actor_Says(kActorIsabella, 160, kAnimationModeTalk);
 		Actor_Says(kActorMcCoy, 1370, kAnimationModeTalk);
 		Actor_Says(kActorIsabella, 170, kAnimationModeTalk); //59-0170.AUD	Why you pick on Mama Isabella? I never do you no harm.
@@ -292,7 +297,7 @@ void SceneScriptHC04::dialogueWithIsabella() {
 			Actor_Says(kActorMcCoy, 1365, kAnimationModeTalk); //00-1365.AUD	I'm not looking to bust the dealer. I just want to know who bought it.
 			Delay (1000);
 			if (Player_Query_Agenda() == kPlayerAgendaSurly 
-					|| Player_Query_Agenda() == kPlayerAgendaErratic) {
+			|| Player_Query_Agenda() == kPlayerAgendaErratic) {
 				Actor_Says(kActorMcCoy, 4360, 16); //00-4360.AUD	Tell it straight or I'm gonna make sure you get the same as he gets. Full conspiracy, payable for 25.
 				Actor_Modify_Friendliness_To_Other(kActorIsabella, kActorMcCoy, -10);
 				Actor_Says(kActorIsabella, 150, kAnimationModeTalk); //59-0150.AUD	This is a clean place man. Mama Isabella law-abiding soul.
@@ -334,28 +339,52 @@ void SceneScriptHC04::dialogueWithIsabella() {
 		break;
 
 	case 390: // BUY STEW
-		Actor_Says(kActorMcCoy, 1310, kAnimationModeTalk);
-		Actor_Modify_Friendliness_To_Other(kActorIsabella, kActorMcCoy, 2);
+		if (_vm->_cutContent) {
+			Loop_Actor_Walk_To_XYZ(kActorMcCoy, -154.54, 0.31, -441.12, 0, true, false, false);
+			Actor_Face_Actor(kActorMcCoy, kActorIsabella, true);
+			Actor_Face_Actor(kActorIsabella, kActorMcCoy, true);
+			if (Player_Query_Agenda() != kPlayerAgendaPolite
+			&& Player_Query_Agenda() != kPlayerAgendaNormal) { 
+				Actor_Says(kActorMcCoy, 2980, 12); //00-2980.AUD	What the hell is that?
+			} else {
+				Actor_Says(kActorMcCoy, 1310, kAnimationModeTalk);
+			}
+		} else {
+			Actor_Says(kActorMcCoy, 1310, kAnimationModeTalk);
+			Actor_Modify_Friendliness_To_Other(kActorIsabella, kActorMcCoy, 2);
+		}
 		// Added in some dialogue. Made it so you actually lose 30 chinyen when you buy the stew. Made it so you
 		// receive a kingston kitchen box when you buy the stew.
 		Actor_Says(kActorIsabella, 340, kAnimationModeTalk); //59-0340.AUD	Fix you right up. Only 30 chinyen. It put a spring in your step, mon. The ladies they be loving you.
 		if (_vm->_cutContent) {
-			Actor_Says(kActorMcCoy, 1320, kAnimationModeTalk); // 00-1320.AUD	Smells good. What is it?
-			Actor_Says(kActorIsabella, 30, kAnimationModeTalk); //59-0030.AUD	All in special recipe. (laughs) But if I be telling you what's in it, you might be thinking twice about eating it.
-			if (Global_Variable_Query(kVariableChinyen) >= 30
-			|| Query_Difficulty_Level() == kGameDifficultyEasy) {
-				Actor_Says(kActorMcCoy, 4940, 14); //00-4940.AUD	Okay, let's have it.
-				if (Query_Difficulty_Level() != kGameDifficultyEasy) {
-					Global_Variable_Decrement(kVariableChinyen, 30);
-				}
-				Delay (1000);
-				Item_Pickup_Spin_Effect(kModelAnimationKingstonKitchenBox, 228, 224);
-				Actor_Says(kActorMcCoy, 1345, 12); //00-1345.AUD	Thanks.		
-				Actor_Modify_Friendliness_To_Other(kActorIsabella, kActorMcCoy, 5);
-			} else {
+			if (Player_Query_Agenda() != kPlayerAgendaPolite
+			&& Player_Query_Agenda() != kPlayerAgendaNormal) { 
+				Actor_Says(kActorMcCoy, 5685, 15); //00-5685.AUD	Triple-A you ain’t.
+				Delay(1000);
+				Actor_Says(kActorMcCoy, 8650, 14); //00-8650.AUD	What smells in there?
+				Actor_Says(kActorIsabella, 30, kAnimationModeTalk); //59-0030.AUD	All in special recipe. (laughs) But if I be telling you what's in it, you might be thinking twice about eating it.
+				Delay(1000);
+				Actor_Says(kActorMcCoy, 3575, 19); //00-3575.AUD	Oh, god forbid.
+				Delay(2000);
 				Actor_Says(kActorMcCoy, 1325, 13); //00-1325.AUD/Uh... I'm not that hungry anyway.
+				Delay(1000);
+			} else {
+				Actor_Says(kActorMcCoy, 1320, kAnimationModeTalk); // 00-1320.AUD	Smells good. What is it?
+				Actor_Says(kActorIsabella, 30, kAnimationModeTalk); //59-0030.AUD	All in special recipe. (laughs) But if I be telling you what's in it, you might be thinking twice about eating it.
+				if (Global_Variable_Query(kVariableChinyen) >= 30
+				|| Query_Difficulty_Level() == kGameDifficultyEasy) {
+					Actor_Says(kActorMcCoy, 4940, 14); //00-4940.AUD	Okay, let's have it.
+					if (Query_Difficulty_Level() != kGameDifficultyEasy) {
+						Global_Variable_Decrement(kVariableChinyen, 30);
+					}
+					Delay (1000);
+					Item_Pickup_Spin_Effect(kModelAnimationKingstonKitchenBox, 228, 224);
+					Actor_Says(kActorMcCoy, 1345, 12); //00-1345.AUD	Thanks.		
+					Actor_Modify_Friendliness_To_Other(kActorIsabella, kActorMcCoy, 5);
+				} else {
+					Actor_Says(kActorMcCoy, 1325, 13); //00-1325.AUD/Uh... I'm not that hungry anyway.
+				}
 			}
-
 		}
 
 		break;

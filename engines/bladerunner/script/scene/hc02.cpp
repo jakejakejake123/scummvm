@@ -111,18 +111,20 @@ bool SceneScriptHC02::ClickedOnActor(int actorId) {
 				Global_Variable_Increment(kVariableMcCoyDrinks, 1);
 				Game_Flag_Set(kFlagHC02HawkersBarkeepIntroduction);
 			} else if ( Actor_Clue_Query(kActorMcCoy, kClueChinaBarSecurityCamera)
-			        && !Actor_Clue_Query(kActorMcCoy, kClueChinaBarSecurityDisc)
-					// Made it so McCoy only asks the barkeep for the disc in acts 2 and 3. It doesn't make any sense for McCoy to ask for it when he is currently investigating the 
-					// conspiracy and is on the run from the cops, heck he doesn't even have access to the esper at this point.
-					&& Global_Variable_Query(kVariableChapter) <= 3
-			) {
+			&& !Game_Flag_Query(kFlagMcCoyAsksBarkeepForDisk)
+			// Made it so McCoy only asks the barkeep for the disc in acts 2 and 3. It doesn't make any sense for McCoy to ask for it when he is currently investigating the 
+			// conspiracy and is on the run from the cops, heck he doesn't even have access to the esper at this point.
+			&& Global_Variable_Query(kVariableChapter) < 4) {
 				// Added in some dialogue for the barkeep and McCoy. Made it so McCoys response is different based on his agenda.
 				Actor_Says(kActorMcCoy, 4545, 11); //00-4545.AUD	You got any discs from that camera?
 				Actor_Says(kActorHawkersBarkeep, 120, 12); //32-0120.AUD	I just serve drinks, pal.
+				Game_Flag_Set(kFlagMcCoyAsksBarkeepForDisk);
 				if (_vm->_cutContent) {
 					Actor_Says(kActorHawkersBarkeep, 130, 16); //32-0130.AUD	I don't pay a whole lot attention to what goes on around here. Nor do I want to.
+					Actor_Says(kActorMcCoy, 6995, 18); //00-6995.AUD	That's not what I heard. You wanna set the record straight?
+					Actor_Says(kActorHawkersBarkeep, 150, 16); //32-0150.AUD	Hey, you can always ask someone who cares what you think.
 					if (Player_Query_Agenda() == kPlayerAgendaSurly 
-						|| Player_Query_Agenda() == kPlayerAgendaErratic) {
+					|| Player_Query_Agenda() == kPlayerAgendaErratic) {
 						Actor_Says(kActorMcCoy, 8445, 14); //00-8445.AUD	Cough it up!
 						Delay (1000);
 						Actor_Says(kActorHawkersBarkeep, 160, 12); //32-0160.AUD	Listen close, cause I'm only gonna say this once. I was trying to protect you, all right?
@@ -176,8 +178,6 @@ bool SceneScriptHC02::ClickedOnActor(int actorId) {
 						Actor_Says(kActorHawkersBarkeep, 100, 12); //32-0100.AUD	Yeah, I heard something.
 						Actor_Says(kActorMcCoy, 2635, 18); //00-2635.AUD	I’m all ears.
 						Actor_Says(kActorHawkersBarkeep, 140, 13); //32-0140.AUD	I ain't a cheap date, pal. I don't put out. Especially not for chumps like you.
-						Actor_Says(kActorMcCoy, 8640, 14); //00-8640.AUD	That's useless.
-						Actor_Says(kActorHawkersBarkeep, 150, 16); //32-0150.AUD	Hey, you can always ask someone who cares what you think.
 					}
 					Game_Flag_Set(kFlagHC02HawkersBarkeepBraceletTalk);
 				}

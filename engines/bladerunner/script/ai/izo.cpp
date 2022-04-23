@@ -282,8 +282,6 @@ bool AIScriptIzo::ShotAtAndHit() {
 				Actor_Retired_Here(kActorIzo, 36, 12, true, -1);
 				Actor_Set_Goal_Number(kActorIzo, kGoalIzoDie);
 				Game_Flag_Reset(kFlagMcCoyIsHelpingReplicants);
-				Game_Flag_Reset(kFlagIzoWarnedAboutCrystal);
-				Music_Play(kMusicBRBlues, 52, 0, 2, -1, kMusicLoopPlayOnce, 0);
 				if (Game_Flag_Query(kFlagIzoIsReplicant)) {
 					Actor_Set_Goal_Number(kActorSteele, 200);
 					Actor_Put_In_Set(kActorSteele, kSetRC03);
@@ -298,7 +296,6 @@ bool AIScriptIzo::ShotAtAndHit() {
 					Loop_Actor_Walk_To_Actor(kActorSteele, kActorMcCoy, 60, false, true);
 					Actor_Face_Actor(kActorMcCoy, kActorSteele, true);
 					Actor_Face_Actor(kActorSteele, kActorMcCoy, true);
-					Actor_Modify_Friendliness_To_Other(kActorSteele, kActorMcCoy, 2);
 					if (Actor_Query_Friendliness_To_Other(kActorSteele, kActorMcCoy) < 51) {
 						Actor_Says(kActorSteele, 2710, 59); //01-2710.AUD	You must be in better shape that I thought.
 						Actor_Says(kActorSteele, 2720, 59); //01-2720.AUD	You’re still alive.			
@@ -313,6 +310,7 @@ bool AIScriptIzo::ShotAtAndHit() {
 					Scene_Exits_Enable();
 					Game_Flag_Set(kFlagMcCoyShotIzo);
 					Game_Flag_Reset (kFlagMcCoyIsHelpingReplicants);
+					Actor_Modify_Friendliness_To_Other(kActorSteele, kActorMcCoy, 2);
 					if (Query_Difficulty_Level() != kGameDifficultyEasy) {
 						Global_Variable_Increment(kVariableChinyen, 200);
 					}

@@ -226,41 +226,39 @@ bool AIScriptBulletBob::GoalChanged(int currentGoalNumber, int newGoalNumber) {
 		// This will be if McCoy has the clues Hasan interview or VKBobGorskyReplicant.
 		if (_vm->_cutContent) {
 			if (Actor_Clue_Query(kActorMcCoy, kClueHasanInterview)
-				||  Actor_Clue_Query(kActorMcCoy, kClueVKBobGorskyReplicant)) {
-					Actor_Says(kActorMcCoy, 4915, 13); //00-4915.AUD	I'm gonna put something away, but it ain't gonna be my gun.
-					Actor_Set_Targetable(kActorBulletBob, true);
-					// If Bullet Bob is a replicant and McCoy has discovered this when McCoy pulls his gun out this exchange will happen.
-					if (Game_Flag_Query(kFlagBulletBobIsReplicant)) {
-						Music_Play(kMusicBatl226M, 50, 0, 2, -1, kMusicLoopPlayOnce, 0);
-						Actor_Says(kActorBulletBob, 1780, 37); //14-1780.AUD	That's supposed to scare me?
-						Actor_Says(kActorBulletBob, 1610, 37); //14-1610.AUD	I've had enough McCoy.
-						Actor_Change_Animation_Mode(kActorMcCoy, 5); // McCoy points his gun at Bob.
-						Actor_Says(kActorMcCoy, 8950, -1); //00-8950.AUD	Hold it right there!
-						Actor_Says(kActorBulletBob, 1840, 37); //14-1840.AUD	Okay, okay, look.
-						Actor_Says(kActorBulletBob, 1850, 37); //14-1850.AUD	I didn't want to get you riled up for no reason but here's the real skinny.
-						Actor_Says(kActorMcCoy, 4320, -1); //00-4320.AUD	Save the pitch for someone who gives a shit.
-						Actor_Says(kActorBulletBob, 1600, 37); //14-1600.AUD	Is that right?
-						Actor_Says(kActorMcCoy, 2215, -1); //00-2215.AUD	That’s right.
-						Delay (1000);
-						Actor_Says(kActorBulletBob, 1440, 37); //14-1440.AUD	Why?
-						Delay (1000);
-						Actor_Says(kActorMcCoy, 6865, -1); //00-6865.AUD	You're a Replicant.
-						Delay (2000);
-						Actor_Says(kActorMcCoy, 840, -1); //00-0840.AUD	Did you hear me?
-						Delay (2000);
-						Actor_Says(kActorMcCoy, 180, 13); //00-0180.AUD	Bob?
-						// The player will gain control and will have a brief moment to shoot Bob as he speaks before Bob shoots them.
-						Player_Gains_Control();
-						ADQ_Add (kActorBulletBob, 1270, 37); //14-1270.AUD	(Laughing) I guess I picked the right line of work.
-						return true;
-					}
+			||  Actor_Clue_Query(kActorMcCoy, kClueVKBobGorskyReplicant)) {
+				Actor_Says(kActorMcCoy, 4915, 13); //00-4915.AUD	I'm gonna put something away, but it ain't gonna be my gun.
+				Actor_Set_Targetable(kActorBulletBob, true);
+				// If Bullet Bob is a replicant and McCoy has discovered this when McCoy pulls his gun out this exchange will happen.
+				if (Game_Flag_Query(kFlagBulletBobIsReplicant)) {
+					Actor_Says(kActorBulletBob, 1780, 37); //14-1780.AUD	That's supposed to scare me?
+					Actor_Says(kActorBulletBob, 1610, 37); //14-1610.AUD	I've had enough McCoy.
+					Actor_Change_Animation_Mode(kActorMcCoy, 5); // McCoy points his gun at Bob.
+					Actor_Says(kActorMcCoy, 8950, -1); //00-8950.AUD	Hold it right there!
+					Actor_Says(kActorBulletBob, 1840, 37); //14-1840.AUD	Okay, okay, look.
+					Actor_Says(kActorBulletBob, 1850, 37); //14-1850.AUD	I didn't want to get you riled up for no reason but here's the real skinny.
+					Actor_Says(kActorMcCoy, 4320, -1); //00-4320.AUD	Save the pitch for someone who gives a shit.
+					Actor_Says(kActorBulletBob, 1600, 37); //14-1600.AUD	Is that right?
+					Actor_Says(kActorMcCoy, 2215, -1); //00-2215.AUD	That’s right.
+					Delay (500);
+					Actor_Says(kActorBulletBob, 1440, 37); //14-1440.AUD	Why?
+					Delay (1000);
+					Actor_Says(kActorMcCoy, 6865, -1); //00-6865.AUD	You're a Replicant.
+					Delay (2000);
+					Actor_Says(kActorMcCoy, 840, -1); //00-0840.AUD	Did you hear me?
+					Delay (2000);
+					Actor_Says(kActorMcCoy, 180, 13); //00-0180.AUD	Bob?
+					// The player will gain control and will have a brief moment to shoot Bob as he speaks before Bob shoots them.
+					Player_Gains_Control();
+					ADQ_Add (kActorBulletBob, 1270, 37); //14-1270.AUD	(Laughing) I guess I picked the right line of work.
+					return true;
+				}
 			} else {
 				Actor_Set_Targetable(kActorBulletBob, false);
 			}
 		} else {
 			Actor_Says(kActorMcCoy, 4915, 13);
 		}
-
 		return true;
 	}
 	if (_vm->_cutContent) {

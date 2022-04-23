@@ -389,7 +389,6 @@ void SceneScriptRC02::dialogueWithRunciter() {
 				Actor_Says(kActorRunciter, 1700, 15);
 				Actor_Clue_Acquire(kActorMcCoy, kClueReferenceLetter, true, kActorRunciter);
 				// If McCoy doesn't have the shell casings yet and Runciter likes him Runciter will show McCoy where the shell casings are and give them to him.
-				Actor_Says(kActorMcCoy, 3935, 14);	// 00-3935.AUD	Thanks.
 				Delay (500);
 				Actor_Says(kActorMcCoy, 4130, 13); //00-4130.AUD	Anything else?
 				if (Actor_Clue_Query(kActorMcCoy, kClueShellCasings)) {
@@ -663,7 +662,6 @@ bool SceneScriptRC02::ClickedOnActor(int actorId) {
 
 		if (Game_Flag_Query(kFlagRC02RunciterTalk1)) {
 			if (Player_Query_Agenda() == kPlayerAgendaPolite) {
-				Game_Flag_Reset(kFlagNotUsed0);
 				dialogueWithRunciter();
 				AI_Movement_Track_Unpause(kActorRunciter);
 				return true;

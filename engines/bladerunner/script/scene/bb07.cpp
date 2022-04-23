@@ -164,6 +164,7 @@ bool SceneScriptBB07::ClickedOn2DRegion(int region) {
 				Ambient_Sounds_Play_Sound(kSfxCOMPON1, 40, 20, 20, 99);
 				Overlay_Play("BB07OVER", 1, false, true, 0);
 				Overlay_Play("BB07OVER", 2, true, false, 0);
+				Scene_2D_Region_Remove(1);
 				Game_Flag_Set(kFlagBB07ElectricityOn);
 				if (!Game_Flag_Query(kFlagBB07PrinterChecked)) {
 					Actor_Says(kActorAnsweringMachine, 0, kAnimationModeTalk);

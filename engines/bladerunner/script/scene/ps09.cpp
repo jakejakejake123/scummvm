@@ -121,7 +121,7 @@ bool SceneScriptPS09::ClickedOnActor(int actorId) {
             		Actor_Says(kActorMcCoy, 6995, 18); //00-6995.AUD	That's not what I heard. You wanna set the record straight?
 					Delay (1000);
 					Actor_Says(kActorGrigorian, 1230, 15); //11-1230.AUD	Well, I'm afraid you've caught me, detective.
-					Actor_Says(kActorMcCoy, 5705, 18); //00-5705.AUD	Uh-huh.
+					Actor_Says(kActorMcCoy, 8925, 18); //00-8925.AUD	You got a few minutes, buddy?
      		 	} 
 				Actor_Says(kActorGrigorian, 480, 16);
 				dialogueWithGrigorian();

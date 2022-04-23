@@ -119,7 +119,7 @@ bool SceneScriptPS07::ClickedOnActor(int actorId) {
 				Actor_Clue_Acquire(kActorMcCoy, kClueLabShellCasings, false, kActorKlein);
 				Actor_Says(kActorKlein, 50, 16);
 				if (_vm->_cutContent) {
-					if (!Game_Flag_Query(kFlagBobTalkShellCasings)) {
+					if (!Actor_Clue_Query(kActorMcCoy, kClueBobInterview1)) {
 						Actor_Says(kActorMcCoy, 4135, 13);
 					}
 				} else {
@@ -128,7 +128,7 @@ bool SceneScriptPS07::ClickedOnActor(int actorId) {
 				Actor_Says(kActorKlein, 60, 15);
 				Actor_Says(kActorKlein, 70, 12);
 				if (_vm->_cutContent) {
-					if (!Game_Flag_Query(kFlagBobTalkShellCasings)) {
+					if (!Actor_Clue_Query(kActorMcCoy, kClueBobInterview1)) {
 						Actor_Says(kActorMcCoy, 4140, 13);
 					}
 				} else {

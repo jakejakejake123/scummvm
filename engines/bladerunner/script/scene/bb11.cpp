@@ -70,13 +70,12 @@ void SceneScriptBB11::SceneLoaded() {
 		Unobstacle_Object("X2_VENTSCYL05", true);
 	}
 	// Added in the Sadik incept clue.
-		if (_vm->_cutContent) {
-			if (!Actor_Clue_Query(kActorMcCoy, kClueSadikIncept)
-				&& (Game_Flag_Query(kFlagSadikIsReplicant))) {
-				Item_Add_To_World(kItemNote, kModelAnimationPhoto, kSetBB11, 103.42, -30.74, 217.77, 0, 12, 12, false, true, false, true);
-			}
+	if (_vm->_cutContent) {
+		if (!Actor_Clue_Query(kActorMcCoy, kClueSadikIncept) && (Game_Flag_Query(kFlagSadikIsReplicant))) {
+			Item_Add_To_World(kItemNote, kModelAnimationPhoto, kSetBB11, 103.42, -30.74, 217.77, 0, 12, 12, false, true, false, true);
 		}
 	}
+}
 
 bool SceneScriptBB11::MouseClick(int x, int y) {
 	return false;

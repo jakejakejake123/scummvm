@@ -203,9 +203,6 @@ bool AIScriptLuther::ShotAtAndHit() {
 	Music_Stop(2u);
 
 	if (Global_Variable_Query(kVariableLutherLanceShot) > 0) {
-		if (!Game_Flag_Query(kFlagLutherLanceIsReplicant)) {
-			Game_Flag_Set(kFlagNotUsed557);
-		}
 		Actor_Set_Goal_Number(kActorLuther, kGoalLutherShot);
 		return true;
 	}

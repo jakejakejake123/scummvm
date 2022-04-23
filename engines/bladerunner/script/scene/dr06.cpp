@@ -101,11 +101,13 @@ bool SceneScriptDR06::ClickedOn3DObject(const char *objectName, bool a2) {
 	if (Object_Query_Click("X2_ASHTRAY", objectName)) {
 		if (!Loop_Actor_Walk_To_XYZ(kActorMcCoy, -645.03, 136.84, -1111.44, 0, true, false, false)) {
 			Actor_Face_Object(kActorMcCoy, "X2_ASHTRAY", true);
-			if (Game_Flag_Query(kFlagLucyIsReplicant) 
-			&& !Actor_Clue_Query(kActorMcCoy, kClueLucyIncept)) {
-				Item_Pickup_Spin_Effect(kModelAnimationPhoto, 365, 344);
-				Actor_Voice_Over(4040, kActorVoiceOver);
-				Actor_Clue_Acquire(kActorMcCoy, kClueLucyIncept, true, -1);
+			if (_vm->_cutContent) {
+				if (Game_Flag_Query(kFlagLucyIsReplicant) 
+				&& !Actor_Clue_Query(kActorMcCoy, kClueLucyIncept)) {
+					Item_Pickup_Spin_Effect(kModelAnimationPhoto, 365, 344);
+					Actor_Voice_Over(4040, kActorVoiceOver);
+					Actor_Clue_Acquire(kActorMcCoy, kClueLucyIncept, true, -1);
+				}
 			}
 		}
 	}
@@ -139,16 +141,30 @@ bool SceneScriptDR06::ClickedOn3DObject(const char *objectName, bool a2) {
 	if (Object_Query_Click("X2_MON01D01", objectName)) {
 		if (!Loop_Actor_Walk_To_XYZ(kActorMcCoy, -645.34f, 136.6f, -1047.37f, 0, true, false, false)) {
 			Actor_Face_Heading(kActorMcCoy, 329, false);			
-				// Made it so Luther and Lances vidphone won't work if you have affection towards Dektora and you haven't met her yet in act 4.
-				// This will get the player to go to Taffys to use the phone the phone there instead and that's when they will meet up with Dektora.
-				// I did this because I would really like the player to see this scene especially after putting a lot of time and effort into restoring it.
-			if (_vm->_cutContent
-			&& Global_Variable_Query(kVariableAffectionTowards) == kAffectionTowardsDektora) {
-				Sound_Play(kSfxSPNBEEP9, 50, 0, 0, 50);
-				Delay(2000);
-				Actor_Says(kActorMcCoy, 170, 13); //00-0170.AUD	Damn.
-				Actor_Says(kActorMcCoy, 8640, 13); //00-8640.AUD	That's useless.
-			 } else if ( Actor_Clue_Query(kActorMcCoy, kClueFolder)
+			// Made it so Luther and Lances vidphone won't work if you have affection towards Dektora and you haven't met her yet in act 4.
+			// This will get the player to go to Taffys to use the phone the phone there instead and that's when they will meet up with Dektora.
+			// I did this because I would really like the player to see this scene especially after putting a lot of time and effort into restoring it.
+			if (_vm->_cutContent) { 
+				if (Global_Variable_Query(kVariableAffectionTowards) == kAffectionTowardsDektora) {
+					Sound_Play(kSfxSPNBEEP9, 50, 0, 0, 50);
+					Delay(2000);
+					Actor_Says(kActorMcCoy, 170, 13); //00-0170.AUD	Damn.
+					Actor_Says(kActorMcCoy, 8640, 13); //00-8640.AUD	That's useless.
+				} else if ( Actor_Clue_Query(kActorMcCoy, kClueFolder)
+				&&  Actor_Clue_Query(kActorMcCoy, kClueGuzzaFramedMcCoy)
+				&& !Game_Flag_Query(kFlagCallWithGuzza)) {
+					Actor_Set_Goal_Number(kActorMcCoy, kGoalMcCoyCallWithGuzza);
+					Game_Flag_Set(kFlagCallWithGuzza);
+				} else if (!Game_Flag_Query(kFlagDR06VidphoneChecked)) {
+					Actor_Voice_Over(770, kActorVoiceOver);
+					Actor_Voice_Over(780, kActorVoiceOver);
+					Actor_Voice_Over(790, kActorVoiceOver);
+					Actor_Voice_Over(800, kActorVoiceOver);
+					Game_Flag_Set(kFlagDR06VidphoneChecked);
+				} else {
+					Actor_Says(kActorMcCoy, 8570, 13);
+				}
+			} else if ( Actor_Clue_Query(kActorMcCoy, kClueFolder)
 			 &&  Actor_Clue_Query(kActorMcCoy, kClueGuzzaFramedMcCoy)
 			 && !Game_Flag_Query(kFlagCallWithGuzza)
 			) {
@@ -201,22 +217,38 @@ bool SceneScriptDR06::ClickedOn3DObject(const char *objectName, bool a2) {
 				Sound_Play(kSfxCEMENTL1, 100, 0, 0, 50);
 				if (!Actor_Clue_Query(kActorMcCoy, kClueEnvelope)) {
 					if (_vm->_cutContent) {
+						Item_Pickup_Spin_Effect(kModelAnimationEnvelope, 171, 280);
 						Actor_Says(kActorMcCoy, 8800, kAnimationModeIdle); //00-8800.AUD	An envelope full of money.
 					}
 					Actor_Voice_Over(850, kActorVoiceOver);
-					Item_Pickup_Spin_Effect(kModelAnimationEnvelope, 171, 280);
+					if (!_vm->_cutContent) {
+						Item_Pickup_Spin_Effect(kModelAnimationEnvelope, 171, 280);
+					}
 					Actor_Voice_Over(860, kActorVoiceOver);
-					Actor_Voice_Over(870, kActorVoiceOver); //99-0870.AUD	But I didn't expect to find hundreds of chinyen inside.
+					if (!_vm->_cutContent) {
+						Actor_Voice_Over(870, kActorVoiceOver); //99-0870.AUD	But I didn't expect to find hundreds of chinyen inside.
+					}
 					// Made it so McCoy only he didn't know what the money in the envelope was for he has not found out that Runciter was selling fake animals.
 					if (_vm->_cutContent) {
-						if (!Actor_Clue_Query(kActorMcCoy, kClueLabCorpses)) {			
-						Actor_Voice_Over(880, kActorVoiceOver); //99-0880.AUD	I didn't know what it was for but I'd bet the farm it wasn't on Runciter's books.
+						if (Actor_Clue_Query(kActorMcCoy, kClueLabCorpses)	
+						&& Actor_Clue_Query(kActorMcCoy, kClueAnsweringMachineMessage)) {	
+							Actor_Voice_Over(870, kActorVoiceOver); //99-0870.AUD	But I didn't expect to find hundreds of chinyen inside.
+						} else {
+							Actor_Voice_Over(870, kActorVoiceOver); //99-0870.AUD	But I didn't expect to find hundreds of chinyen inside.
+							Actor_Voice_Over(880, kActorVoiceOver); //99-0880.AUD	I didn't know what it was for but I'd bet the farm it wasn't on Runciter's books.
 						}
 					} else {
 						Actor_Voice_Over(880, kActorVoiceOver); //99-0880.AUD	I didn't know what it was for but I'd bet the farm it wasn't on Runciter's books.
 					}
 					Actor_Clue_Acquire(kActorMcCoy, kClueEnvelope, true, kActorLance);
-					if (Query_Difficulty_Level() != kGameDifficultyEasy) {
+					if (_vm->_cutContent) {
+						if (Query_Difficulty_Level() != kGameDifficultyEasy) {
+							if (Player_Query_Agenda() == kPlayerAgendaSurly 
+							|| Player_Query_Agenda() == kPlayerAgendaErratic) {
+								Global_Variable_Increment(kVariableChinyen, 200);
+							}
+						}
+					} else if (Query_Difficulty_Level() != kGameDifficultyEasy) {
 						Global_Variable_Increment(kVariableChinyen, 200);
 					}
 				}

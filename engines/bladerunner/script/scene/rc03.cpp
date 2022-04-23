@@ -247,6 +247,7 @@ bool SceneScriptRC03::ClickedOnExit(int exitId) {
 			// Made it so Bobs shop is open in act 3
 			if (_vm->_cutContent)  {
 				if (Global_Variable_Query(kVariableChapter) == 5
+				|| Game_Flag_Query(kFlagOfficerLearyKilledByBob)
 				) {
 				Actor_Says(kActorMcCoy, 8522, 14);
 			} else {
@@ -406,13 +407,15 @@ void SceneScriptRC03::PlayerWalkedIn() {
 		Actor_Says(kActorMcCoy, 4820, 16); //00-4820.AUD	He probably went down in the sewers.
 		Actor_Says(kActorSteele, 1850, 59); //01-1850.AUD	Right where that dirt-bag belongs.
 		Actor_Says(kActorSteele, 1950, 59); //01-1950.AUD	I've been tracking Izo for a week and you ruined my whole plan in two seconds.
-		if (!Game_Flag_Query(kFlagIzoGotAway)) {
+		if (!Game_Flag_Query(kFlagIzoWarned)) {
 			Actor_Says(kActorMcCoy, 4835, 13); //00-4835.AUD	Sorry, I bet you can still catch him if you want.
 			Actor_Says(kActorSteele, 1960, 60); //01-1960.AUD	Crawl down that hole and ruin a twenty thousand chinyen Yamamoto suit? I don't think so.
 			Actor_Says(kActorSteele, 1980, 60); //01-1980.AUD	If I didn't know any better, I'd think you wanted him to get away.
 			Actor_Says(kActorMcCoy, 4840, 16); //00-4840.AUD	You crazy? I've been tailing him myself.
 			Actor_Says(kActorSteele, 1990, 60); //01-1990.AUD	A little word of advice, Slim. Stay out of my way.
 			Player_Gains_Control();
+			Game_Flag_Reset(kFlagIzoWarnedAboutCrystal);
+			Game_Flag_Set(kFlagIzoGotAway);
 			Actor_Set_Goal_Number(kActorSteele, kGoalSteeleLeaveRC03);
 		} else {
 			Actor_Says(kActorMcCoy, 8565, 15); //00-8565.AUD	Really?

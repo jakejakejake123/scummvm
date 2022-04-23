@@ -184,7 +184,7 @@ bool SceneScriptUG02::ClickedOnItem(int itemId, bool a2) {
 		}
 		return true;
 	}
-		if (itemId == kItemNote) {
+	if (itemId == kItemNote) {
 		Actor_Face_Item(kActorMcCoy, kItemNote, true);
 		Actor_Clue_Acquire(kActorMcCoy, kClueIzoIncept, true, -1);
 		Item_Remove_From_World(kItemNote);

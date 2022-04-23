@@ -51,14 +51,21 @@ void AIScriptInsectDealer::Initialize() {
 
 bool AIScriptInsectDealer::Update() {
 	if (_vm->_cutContent) {
-		if (Global_Variable_Query(kVariableChapter) >= 4
-	 	&& Actor_Query_Goal_Number(kActorInsectDealer) < 400)
-		Actor_Set_Goal_Number(kActorInsectDealer, 400);
+		if (Global_Variable_Query(kVariableChapter) == 3) {
+			if (!Actor_Clue_Query(kActorMcCoy, kCluePeruvianLadyInterview) 
+			&& Actor_Query_Goal_Number(kActorInsectDealer) < 400) {
+				Actor_Set_Goal_Number(kActorInsectDealer, 400);
+				Item_Remove_From_World(kItemScorpions);
+			}
+		} else if (Global_Variable_Query(kVariableChapter) >= 4
+		&& Actor_Query_Goal_Number(kActorInsectDealer) < 400) {
+			Actor_Set_Goal_Number(kActorInsectDealer, 400);
+			Item_Remove_From_World(kItemScorpions);
+		}
 	} else if (Global_Variable_Query(kVariableChapter) == 5
-	 && Actor_Query_Goal_Number(kActorInsectDealer) < 400
-	)
+	&& Actor_Query_Goal_Number(kActorInsectDealer) < 400) {
 		Actor_Set_Goal_Number(kActorInsectDealer, 400);
-
+	}
 	return false;
 }
 

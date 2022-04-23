@@ -451,19 +451,22 @@ void AIScriptRachael::dialogue_agenda1() {
 		Actor_Says(kActorMcCoy, 2805, 18);                      // DidYourUncleSaySomethingToYou
 		Actor_Says(kActorRachael, 160, 14);                     // HeCanBeSoCruel
 		Actor_Says(kActorRachael, 170, 13);                     // HereIAmPouringMyHeartOut
-		Actor_Says(kActorMcCoy, 2810, 14);                      // NotHowILookAtIt
-		Actor_Says(kActorRachael, 180, 13);                     // GotToLiveWithYourself
-		Actor_Says(kActorMcCoy, 2815, 12);                      // NotSomeKillingMachineRachael
-		Actor_Says(kActorMcCoy, 2820, 13);                      // LatelyReEvalTheJobDontLikeItNeverHave - I've thought ab... Well lately reevaluating the job dont like it
-		Actor_Says(kActorRachael, 190, 15);                     // WhyDontYouQuitThen
-		Actor_Says(kActorMcCoy, 2825, 12);                      // SomeoneWouldJustTakeMyPlace
-		Actor_Says(kActorRachael, 200, 15);                     // SoMuchForIntegrity
-		Actor_Says(kActorMcCoy, 2830, 14);                      // ItsNotThat
-		Actor_Says(kActorRachael, 210, 15);                     // ItsTheMoneyThen
-		Actor_Says(kActorRachael, 220, 16);                     // ImSoFedUpWithAllOfIt
-		Actor_Says(kActorMcCoy, 2835, 13);                      // IveThinkingAboutTheTreatmentOfReps
-		Actor_Says(kActorRachael, 230, 14);                     // BravoShouldWeCallThePressConf -  new switched to here
-		Actor_Says(kActorMcCoy, 2840, 12);                      // MaybeTheyVeGottenARawDeal
+		if (!Game_Flag_Query(kFlagMcCoyIsHelpingReplicants)) {
+			Actor_Says(kActorMcCoy, 2810, 14);                      // NotHowILookAtIt
+			Actor_Says(kActorRachael, 180, 13);                     // GotToLiveWithYourself
+		} else {
+			Actor_Says(kActorMcCoy, 2815, 12);                      // NotSomeKillingMachineRachael
+			Actor_Says(kActorMcCoy, 2820, 13);                      // LatelyReEvalTheJobDontLikeItNeverHave - I've thought ab... Well lately reevaluating the job dont like it
+			Actor_Says(kActorRachael, 190, 15);                     // WhyDontYouQuitThen
+			Actor_Says(kActorMcCoy, 2825, 12);                      // SomeoneWouldJustTakeMyPlace
+			Actor_Says(kActorRachael, 200, 15);                     // SoMuchForIntegrity
+			Actor_Says(kActorMcCoy, 2830, 14);                      // ItsNotThat
+			Actor_Says(kActorRachael, 210, 15);                     // ItsTheMoneyThen
+			Actor_Says(kActorRachael, 220, 16);                     // ImSoFedUpWithAllOfIt
+			Actor_Says(kActorMcCoy, 2835, 13);                      // IveThinkingAboutTheTreatmentOfReps
+			Actor_Says(kActorRachael, 230, 14);                     // BravoShouldWeCallThePressConf -  new switched to here
+			Actor_Says(kActorMcCoy, 2840, 12);                      // MaybeTheyVeGottenARawDeal
+		}
 		Actor_Says(kActorRachael, 240, 13);                     // ImagineSomebodyEngineeringYourMind
 		Actor_Says(kActorRachael, 250, 15);                     // PuttingWhateverThoughtsAndMemories
 		Actor_Says(kActorRachael, 260, 16);                     // NothingInThisWorldWouldBelongToyou

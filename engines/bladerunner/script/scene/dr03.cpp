@@ -86,13 +86,16 @@ bool SceneScriptDR03::ClickedOnActor(int actorId) {
 					Actor_Says(kActorMcCoy, 755, 18);
 					Actor_Says(kActorChew, 10, 14); //52-0010.AUD	Deliveries to rear!
 				}
-				Actor_Says(kActorMcCoy, 760, 18);
-				Actor_Says(kActorChew, 20, 14);
-				Actor_Says(kActorMcCoy, 765, 18);
-				Actor_Says(kActorChew, 30, 14);
-				Game_Flag_Set(kFlagDR03ChewTalk1);
-				return true;
+			} else {
+				Actor_Says(kActorMcCoy, 755, 18);
+				Actor_Says(kActorChew, 10, 14); //52-0010.AUD	Deliveries to rear!
 			}
+			Actor_Says(kActorMcCoy, 760, 18);
+			Actor_Says(kActorChew, 20, 14);
+			Actor_Says(kActorMcCoy, 765, 18);
+			Actor_Says(kActorChew, 30, 14);
+			Game_Flag_Set(kFlagDR03ChewTalk1);
+			return true;
 		}
 
 		if (!Actor_Clue_Query(kActorMcCoy, kClueChewInterview)) {
@@ -113,10 +116,11 @@ bool SceneScriptDR03::ClickedOnActor(int actorId) {
 				if (_vm->_cutContent) {
 					Actor_Says(kActorMcCoy, 870, 13); //00-0870.AUD	What does he work on?
 					Actor_Says(kActorChew, 290, 12); //52-0290.AUD	Skin. Did skin for Nexus-6. Beautiful work. You go see.
-						if (!Game_Flag_Query(kFlagDR05BombExploded)) {
 					Actor_Says(kActorMcCoy, 875, 15); //00-0875.AUD	Where do I find him?
 					Actor_Says(kActorChew, 300, 18); //52-0300.AUD	He at “Dermo Design” across street. You find him, you tell him I wait.
-				}
+					if (Game_Flag_Query(kFlagDR05BombExploded)) { 
+						Actor_Clue_Acquire(kActorMcCoy, kClueMorajiInterview, true, kActorMoraji);
+					}
 				}
 				if (!Game_Flag_Query(kFlagDR05BombExploded)) {
 					Actor_Says(kActorMcCoy, 850, 15);
@@ -125,8 +129,8 @@ bool SceneScriptDR03::ClickedOnActor(int actorId) {
 					Actor_Says(kActorMcCoy, 855, 18);
 					Actor_Says(kActorChew, 210, 12);
 				}
+				Actor_Clue_Acquire(kActorMcCoy, kClueChewInterview, true, kActorChew);
 			}
-			Actor_Clue_Acquire(kActorMcCoy, kClueChewInterview, true, kActorChew);
 			return true;
 		}
 
@@ -234,8 +238,7 @@ void SceneScriptDR03::PlayerWalkedIn() {
 	// will hand over his DNA information to McCoy.
 		if (_vm->_cutContent) {
 			if (!Game_Flag_Query(kFlagChewTalkGiveData)
-			&& (Global_Variable_Query(kVariableChapter) == 3))	
-				{	
+			&& (Global_Variable_Query(kVariableChapter) == 3))	{	
 				// Inserted the homeless guy into the set offscreen so when Chew has a panic attack and collapses on the ground we can use the homeless guys snoring sounds to show 
 				// that Chew isn't dead but is just sleeping.	
 				Actor_Put_In_Set(kActorTransient, kSetDR03);
@@ -250,6 +253,7 @@ void SceneScriptDR03::PlayerWalkedIn() {
 				// by Sadik so he should only mention Clovis' description if he has clue that gave him said information.
 				if (Actor_Clue_Query(kActorMcCoy, kClueAnimalMurderSuspect)
 				|| Actor_Clue_Query(kActorMcCoy, kClueMorajiInterview)
+				|| Actor_Clue_Query(kActorMcCoy, kClueIzosFriend)
 				|| Actor_Clue_Query(kActorMcCoy, kClueMoonbus1)
 				|| Actor_Clue_Query(kActorMcCoy, kClueDektorasDressingRoom)) {
 					Actor_Says(kActorMcCoy, 920, 13); //00-0920.AUD	A tall Rastafarian and a guy with a beard?
@@ -270,7 +274,7 @@ void SceneScriptDR03::PlayerWalkedIn() {
 				Actor_Says(kActorMcCoy, 3910, 14); // 00-3910.AUD	You’re lying.
 				Actor_Says(kActorChew, 760, 15); //52-0760.AUD	Ha. Been called worse than liar before. You go now.
 				if (Player_Query_Agenda() == kPlayerAgendaSurly 
-					|| Player_Query_Agenda() == kPlayerAgendaErratic) {
+				|| Player_Query_Agenda() == kPlayerAgendaErratic) {
 					Actor_Says(kActorMcCoy, 2485, 18); //00-2485.AUD	I’ve a hard time believing that.
 					Actor_Says(kActorChew, 720, 14); //52-0720.AUD	Pah! You believe what you believe, McCoy.
 				}
@@ -285,7 +289,7 @@ void SceneScriptDR03::PlayerWalkedIn() {
 				// Made it so if McCoy threatens Chew he walks up to him and gives him the data. This leads to Chew getting a close look at McCoys eyes and commenting on them.
 				// If McCoy doesn't threaten Chew he tells McCoy that he is busy and he should leave and the scene with McCoys eyes doesn't happen. 
 				if (Player_Query_Agenda() == kPlayerAgendaSurly 
-					|| Player_Query_Agenda() == kPlayerAgendaErratic) {
+				|| Player_Query_Agenda() == kPlayerAgendaErratic) {
 					Actor_Says(kActorMcCoy, 895, 14); //00-0895.AUD	I need whatever Replicant DNA information you have. Now!
 					Actor_Says(kActorChew, 460, 18); //52-0460.AUD	(whimpers) Okay, sure. I find something.
 					Delay (2000);
@@ -347,14 +351,23 @@ void SceneScriptDR03::PlayerWalkedIn() {
 		}
 	    if (Global_Variable_Query(kVariableChapter) == 2) {
 			if (Random_Query(1, 2) == 1) {
+				if (_vm->_cutContent) {
+					Actor_Face_Actor(kActorMcCoy, kActorChew, true);
+				}
 				Actor_Face_Actor(kActorChew, kActorMcCoy, true);
 				Actor_Says(kActorChew, 660, 14); // (yells) Ah!
 				Actor_Says(kActorChew, 680, 14); // What you want? I busy.
 			} else if (Random_Query(1, 2) == 2) {
+				if (_vm->_cutContent) {
+					Actor_Face_Actor(kActorMcCoy, kActorChew, true);
+				}
 				Actor_Face_Actor(kActorChew, kActorMcCoy, true);
 				Actor_Says(kActorChew, 670, 14); // Hmph. (mumbles in Chinese)
 				Actor_Says(kActorChew, 620, 14); // (yells) What you do, huh?
 			} else {
+				if (_vm->_cutContent) {
+					Actor_Face_Actor(kActorMcCoy, kActorChew, true);
+				}
 				Actor_Face_Actor(kActorChew, kActorMcCoy, true);
 				Actor_Says(kActorChew, 690, 14); // Not good time now, come back later.
 				Actor_Says(kActorChew, 710, 14); // (Mumbles in Chinese)
@@ -370,7 +383,11 @@ void SceneScriptDR03::DialogueQueueFlushed(int a1) {
 
 void SceneScriptDR03::dialogueWithChew() {
 	Dialogue_Menu_Clear_List();
-	if (Actor_Clue_Query(kActorMcCoy, kClueChewInterview)
+	if (_vm->_cutContent) {
+		if (Actor_Clue_Query(kActorMcCoy, kClueChewInterview)) {
+			DM_Add_To_List_Never_Repeat_Once_Selected(650, 5, 5, 5); // TWINS
+		}
+	} else if (Actor_Clue_Query(kActorMcCoy, kClueChewInterview)
 	 || Actor_Clue_Query(kActorMcCoy, kClueAnsweringMachineMessage)
 	 || Actor_Clue_Query(kActorMcCoy, kClueMorajiInterview)
 	) {
@@ -381,11 +398,9 @@ void SceneScriptDR03::dialogueWithChew() {
 	}
 	// Made it so McCoy only warns Chew about the reps if he is not surly or erratic.
 	if (_vm->_cutContent) {
-		if (Actor_Clue_Query(kActorMcCoy, kClueTyrellInterview)) {
-			if (Player_Query_Agenda() != kPlayerAgendaSurly 
-			|| Player_Query_Agenda() != kPlayerAgendaErratic) {
-				DM_Add_To_List_Never_Repeat_Once_Selected(670, 6, 5, 2); // TYRELL
-			}
+		if (Player_Query_Agenda() != kPlayerAgendaSurly 
+		&& Player_Query_Agenda() != kPlayerAgendaErratic) {
+			DM_Add_To_List_Never_Repeat_Once_Selected(640, 6, 5, 2); // EISENDULLER
 		}
 	} else if (Actor_Clue_Query(kActorMcCoy, kClueTyrellInterview)) {
 		DM_Add_To_List_Never_Repeat_Once_Selected(670, 6, 5, 2); // TYRELL
@@ -406,35 +421,57 @@ void SceneScriptDR03::dialogueWithChew() {
 
 	switch (answer) {
 	case 640: // EISENDULLER
-		Actor_Says(kActorMcCoy, 770, 12);
-		Actor_Says(kActorChew, 110, 12);
-		Actor_Says(kActorChew, 120, 13);
-		Actor_Says(kActorMcCoy, 835, 13);
-		Actor_Says(kActorChew, 130, 14);
-		Actor_Says(kActorMcCoy, 840, 16);
-		Actor_Says(kActorChew, 140, 15);
-		if (!Game_Flag_Query(kFlagDR03ChewTalkExplosion)) {
-			Actor_Says(kActorChew, 150, 13);
-			Actor_Says(kActorMcCoy, 845, 17);
-			Actor_Says(kActorChew, 170, 18);
-			Actor_Says(kActorChew, 180, 16);
-			Actor_Says(kActorMcCoy, 850, 15);
-			Actor_Says(kActorChew, 190, 14);
-			Actor_Says(kActorChew, 200, 13);
-			Actor_Says(kActorMcCoy, 855, 18);
-			Actor_Says(kActorChew, 210, 12);
+		if (_vm->_cutContent) {
+			Actor_Says(kActorMcCoy, 765, 12);
+			if (Actor_Clue_Query(kActorMcCoy, kClueCrystalsCase)) {
+				Actor_Says_With_Pause(kActorMcCoy, 785, 0.80f, 18);
+			}
+			Actor_Says(kActorMcCoy, 790, 13);
+			Actor_Says(kActorChew, 310, 12);
+			Actor_Says(kActorChew, 320, 3);
+		} else {
+			Actor_Says(kActorMcCoy, 770, 12);
+			Actor_Says(kActorChew, 110, 12);
+			Actor_Says(kActorChew, 120, 13);
+			Actor_Says(kActorMcCoy, 835, 13);
+			Actor_Says(kActorChew, 130, 14);
+			Actor_Says(kActorMcCoy, 840, 16);
+			Actor_Says(kActorChew, 140, 15);
+			if (!Game_Flag_Query(kFlagDR03ChewTalkExplosion)) {
+				Actor_Says(kActorChew, 150, 13);
+				Actor_Says(kActorMcCoy, 845, 17);
+				Actor_Says(kActorChew, 170, 18);
+				Actor_Says(kActorChew, 180, 16);
+				Actor_Says(kActorMcCoy, 850, 15);
+				Actor_Says(kActorChew, 190, 14);
+				Actor_Says(kActorChew, 200, 13);
+				Actor_Says(kActorMcCoy, 855, 18);
+				Actor_Says(kActorChew, 210, 12);
+				Actor_Clue_Acquire(kActorMcCoy, kClueChewInterview, true, kActorChew);
+			}
 		}
-		Actor_Clue_Acquire(kActorMcCoy, kClueChewInterview, true, kActorChew);
 		break;
 
 	case 650: // TWINS
 		Actor_Says(kActorMcCoy, 775, 11);
 		Actor_Says(kActorChew, 220, 14);
-		Actor_Says(kActorMcCoy, 860, 11);
-		Actor_Says(kActorChew, 230, 14);
-		Actor_Says(kActorMcCoy, 865, 11);
-		Actor_Says(kActorChew, 240, 14);
-		Actor_Says(kActorChew, 250, 14);
+		if (_vm->_cutContent) {
+			if (Actor_Clue_Query(kActorMcCoy, kClueAnsweringMachineMessage)) {
+				Actor_Says(kActorMcCoy, 6975, 15); //00-6975.AUD	Interesting.
+			} else {
+				Actor_Says(kActorMcCoy, 860, 11);
+				Actor_Says(kActorChew, 230, 14);
+				Actor_Says(kActorMcCoy, 865, 11);
+				Actor_Says(kActorChew, 240, 14);
+				Actor_Says(kActorChew, 250, 14);
+			}
+		} else {
+			Actor_Says(kActorMcCoy, 860, 11);
+			Actor_Says(kActorChew, 230, 14);
+			Actor_Says(kActorMcCoy, 865, 11);
+			Actor_Says(kActorChew, 240, 14);
+			Actor_Says(kActorChew, 250, 14);
+		}
 		break;
 
 	case 660: // MORAJI
@@ -453,22 +490,10 @@ void SceneScriptDR03::dialogueWithChew() {
 				Actor_Says(kActorChew, 300, 12);
 			}
 		}
-		Actor_Clue_Acquire(kActorMcCoy, kClueChewInterview, true, kActorChew);
 		break;
 
 	case 670: // TYRELL
 		Actor_Says(kActorMcCoy, 765, 12);
-		if (_vm->_cutContent) {
-			Actor_Says_With_Pause(kActorMcCoy, 785, 0.80f, 18);
-		}
-		if (_vm->_cutContent) {
-			if (Player_Query_Agenda() != kPlayerAgendaSurly 
-				|| Player_Query_Agenda() != kPlayerAgendaErratic) {
-				Actor_Says(kActorMcCoy, 790, 13);//00-0790.AUD	You might consider knocking off work early.
-			}
-		} else {
-			Actor_Says(kActorMcCoy, 790, 13);
-		}
 		Actor_Says(kActorMcCoy, 790, 13);
 		Actor_Says(kActorChew, 310, 12);
 		Actor_Says(kActorChew, 320, 3);
@@ -491,7 +516,20 @@ void SceneScriptDR03::dialogueWithChew() {
 		break;
 
 	case 690: // DONE
-		Actor_Says(kActorMcCoy, 805, 3);
+		if (_vm->_cutContent) {
+			if (Player_Query_Agenda() == kPlayerAgendaSurly 
+			|| Player_Query_Agenda() == kPlayerAgendaErratic) {
+				if (Random_Query(1, 2) == 1) {
+						Actor_Says(kActorMcCoy, 8715, 17);
+					} else {
+						Actor_Says(kActorMcCoy, 8720, 17);
+					}
+				} else {
+					Actor_Says(kActorMcCoy, 805, 3);
+				}
+			} else {
+				Actor_Says(kActorMcCoy, 805, 3);
+			}
 		break;
 
 	case 1270: // LANCE'S ENVELOPE

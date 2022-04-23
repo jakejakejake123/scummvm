@@ -29,17 +29,15 @@ void SceneScriptTB06::InitializeScene() {
 	Scene_Exit_Add_2D_Exit(0, 330, 195, 417, 334, 0);
 	if (_vm->_cutContent && !Game_Flag_Query(kFlagMcCoyCommentsOnBurnMarks)) {
 		Scene_2D_Region_Add(0, 1, 1, 280, 325); 
-}
+	}
 	Ambient_Sounds_Add_Looping_Sound(kSfxTB5LOOP1, 50, 0, 1);
 	Ambient_Sounds_Add_Looping_Sound(kSfxTB5LOOP2, 50, 0, 1);
 	Ambient_Sounds_Add_Looping_Sound(kSfxTBLOOP1,  66, 0, 1);
-	if (!Game_Flag_Query(kFlagNotUsed103)) {
-		Actor_Put_In_Set(kActorMarcus, kSetTB06);
-		Actor_Set_At_XYZ(kActorMarcus, 135.0f, 151.0f, -671.0f, 800);
-		Actor_Retired_Here(kActorMarcus, 60, 32, 1, -1);
-		//return true;
-		return;
-	}
+	Actor_Put_In_Set(kActorMarcus, kSetTB06);
+	Actor_Set_At_XYZ(kActorMarcus, 135.0f, 151.0f, -671.0f, 800);
+	Actor_Retired_Here(kActorMarcus, 60, 32, 1, -1);
+	//return true;
+	return;
 	Scene_Loop_Set_Default(0);
 	//return false;
 }
@@ -89,9 +87,16 @@ bool SceneScriptTB06::ClickedOnActor(int actorId) {
 				}
 				Actor_Voice_Over(2350, kActorVoiceOver);
 				Actor_Clue_Acquire(kActorMcCoy, kClueDetonatorWire, true, -1);
-				return true;
+			} else if (_vm->_cutContent) {
+				if (Player_Query_Agenda() == kPlayerAgendaSurly 
+				|| Player_Query_Agenda() == kPlayerAgendaErratic) {
+					Actor_Says(kActorMcCoy, 8665, 13); //00-8665.AUD	Disgusting.
+				} else {	
+					Actor_Says(kActorMcCoy, 8630, 12);  // What a waste
+				}
+			} else {
+				Actor_Says(kActorMcCoy, 8665, 13);
 			}
-			Actor_Says(kActorMcCoy, 8665, 13);
 			return false;
 		}
 	}
@@ -136,21 +141,22 @@ bool SceneScriptTB06::ClickedOnItem(int itemId, bool a2) {
 	 || itemId == kItemDeadDogB
 	 || itemId == kItemDeadDogC
 	) {
-		if (!Loop_Actor_Walk_To_Item(kActorMcCoy, kItemDeadDogA, 24, true, false)) {
-			Actor_Face_Item(kActorMcCoy, kItemDeadDogA, true);
-			Actor_Voice_Over(2380, kActorVoiceOver);
-			Actor_Voice_Over(2390, kActorVoiceOver);
-			Actor_Voice_Over(2400, kActorVoiceOver);
-			// Added in some lines for when McCoy examines the dead dogs. 
-			if (_vm->_cutContent) {
-				Actor_Face_Actor(kActorMcCoy, kActorPhotographer, true);
-				Actor_Face_Actor(kActorPhotographer, kActorMcCoy, true);
-				Actor_Says(kActorMcCoy, 8516, kAnimationModeTalk); //00-8516.AUD	Any idea if they were real dogs?
-				Actor_Says(kActorPhotographer, 60, kAnimationModeTalk); //37-0060.AUD	I've hit a brick, McCoy. You're running this investigation, right?
-				// Added in a line, McCoy is perplexed by the fact the photographer knows he's running the investigation. McCoy question him on this but receives no answer.
-				Actor_Says(kActorMcCoy, 8517, kAnimationModeTalk); //00-8517.AUD	But how do you know?
-				Delay (1000);
-				Actor_Says(kActorMcCoy, 440, kAnimationModeTalk); //00-0440.AUD	Forget it.
+		if (!Loop_Actor_Walk_To_XYZ(kActorMcCoy, -27.97f, 148.68f, -659.41f, 12, true, false, false)) {
+			if (!Game_Flag_Query(kFlagDeadDogsTalk)) {
+				Actor_Face_Item(kActorMcCoy, kItemDeadDogA, true);
+				Actor_Voice_Over(2380, kActorVoiceOver);
+				Actor_Voice_Over(2390, kActorVoiceOver);
+				Actor_Voice_Over(2400, kActorVoiceOver);
+				// Added in some lines for when McCoy examines the dead dogs. 
+				if (_vm->_cutContent) {
+					Actor_Face_Actor(kActorMcCoy, kActorPhotographer, true);
+					Actor_Face_Actor(kActorPhotographer, kActorMcCoy, true);
+					Actor_Says(kActorMcCoy, 8516, kAnimationModeTalk); //00-8516.AUD	Any idea if they were real dogs?
+					Actor_Says(kActorPhotographer, 60, kAnimationModeTalk); //37-0060.AUD	I've hit a brick, McCoy. You're running this investigation, right?
+					Game_Flag_Set(kFlagDeadDogsTalk);
+				}
+			} else {
+				Actor_Says(kActorMcCoy, 8630, 12);  // What a waste
 			}
 			return true;
 		}
@@ -232,17 +238,21 @@ void SceneScriptTB06::PlayerWalkedIn() {
 				AI_Movement_Track_Pause(kActorPhotographer);
 				Actor_Says(kActorPhotographer, 50, kAnimationModeTalk); //37-0050.AUD	Yeah, I dug up a couple of leads, let me clue you in.
 				Actor_Says(kActorMcCoy, 2635, 18); //00-2635.AUD	I’m all ears.
+				Actor_Says(kActorPhotographer, 90, kAnimationModeTalk); //37-0090.AUD	Gaff said you didn't need to hear this but I guess you deserve to know.
+				Actor_Says(kActorMcCoy, 4940, 13); //00-4940.AUD	Okay, let's have it.
 			}
 			Actor_Face_Actor(kActorPhotographer, kActorMarcus, true);
 			Actor_Says(kActorPhotographer, 10, kAnimationModeTalk); //37-0010.AUD	You could strain him through a sieve.
-			AI_Movement_Track_Unpause(kActorPhotographer);
 			if (_vm->_cutContent) {
 				AI_Movement_Track_Pause(kActorPhotographer);
 				Actor_Face_Actor(kActorPhotographer, kActorMcCoy, true);
 				Delay (1000);
+				Actor_Face_Actor(kActorMcCoy, kActorMarcus, true);
+				Delay (2000);
+				Actor_Face_Actor(kActorMcCoy, kActorPhotographer, true);
 				// Depending on McCoys agenda he will be a little more disgusted to the tastless joke that the photograher makes about Eisenduller.
 				if (Player_Query_Agenda() == kPlayerAgendaSurly
-					|| Player_Query_Agenda() == kPlayerAgendaErratic) {
+				|| Player_Query_Agenda() == kPlayerAgendaErratic) {
 					// McCoy doesn't care.
 					Actor_Says(kActorMcCoy, 2685, kAnimationModeTalk); //00-2685.AUD	Hmph. Very funny.
 				} else {
@@ -256,13 +266,6 @@ void SceneScriptTB06::PlayerWalkedIn() {
 			}
 		}
 		Game_Flag_Set(kFlagTB06Introduction);
-		//return true;
-		return;
-	}
-	if (Game_Flag_Query(kFlagNotUsed103)) {
-		Item_Remove_From_World(kItemDogCollar);
-		Item_Remove_From_World(kItemChopstickWrapper);
-		Item_Remove_From_World(kItemToyDog); // why? some unused branch
 		//return true;
 		return;
 	}

@@ -439,7 +439,13 @@ void KIAScript::SCRIPT_KIA_DLL_Play_Clue_Asset_Script(int notUsed, int clueId) {
 		break;
 	case kClueKingstonKitchenBox1:
 		KIA_Play_Slice_Model(kModelAnimationKingstonKitchenBox);
-		if (Query_Difficulty_Level() == kGameDifficultyEasy) {
+		if (_vm->_cutContent) {
+			if (Game_Flag_Query(kFlagHC04Visited)) {
+				KIA_Play_Actor_Dialogue(kActorVoiceOver, 4140); //99-4140.AUD	Kingston Kitchens. That's down at Hawker's Circle.
+			} else {
+				KIA_Play_Actor_Dialogue(kActorVoiceOver, 4150); //99-4150.AUD	Kingston Kitchens. Where have I heard that before?
+			}
+		} else if (Query_Difficulty_Level() == kGameDifficultyEasy) {
 			KIA_Play_Actor_Dialogue(kActorVoiceOver, 4140);
 		} else {
 			KIA_Play_Actor_Dialogue(kActorVoiceOver, 4150);
@@ -484,7 +490,6 @@ void KIAScript::SCRIPT_KIA_DLL_Play_Clue_Asset_Script(int notUsed, int clueId) {
 			KIA_Play_Actor_Dialogue(kActorHasan, 100);
 		}
 		if (_vm->_cutContent) {
-			KIA_Play_Actor_Dialogue(kActorMcCoy, 85); //00-0180.AUD	Bob?
 			KIA_Play_Actor_Dialogue(kActorHasan, 110); //20-0110.AUD	He takes peculiar pleasure in agitating all the vendors around here.
 			KIA_Play_Actor_Dialogue(kActorHasan, 120); //20-0120.AUD	I cannot even go out for a Shish-Taouk without worrying whether Bob is going to sabotage my snakes.
 		}
@@ -494,12 +499,19 @@ void KIAScript::SCRIPT_KIA_DLL_Play_Clue_Asset_Script(int notUsed, int clueId) {
 			KIA_Play_Actor_Dialogue(kActorMcCoy, 4995); //00-4995.AUD	Somebody shot up Runciter's shop with one.
 			KIA_Play_Actor_Dialogue(kActorBulletBob, 1860); //14-1860.AUD	Runciter? You mean that animal dealer down the street?
 			KIA_Play_Actor_Dialogue(kActorMcCoy, 8535);	//00-8535.AUD	Yeah.
-			KIA_Play_Actor_Dialogue(kActorBulletBob, 270); //14-0270.AUD	Sucker had it coming. I'm sure of that.
-			KIA_Play_Actor_Dialogue(kActorMcCoy, 5005); //00-5005.AUD	Why is that?
-			KIA_Play_Actor_Dialogue(kActorBulletBob, 280); //14-0280.AUD	Runciter is always putting on those airs like he's better than everybody else.
-			KIA_Play_Actor_Dialogue(kActorBulletBob, 290); //14-0290.AUD	But he'll do anything for a buck. Sell anything to anybody.
-			KIA_Play_Actor_Dialogue(kActorBulletBob, 300); //14-0300.AUD	That's where I draw the line. If it's suspicious
-			KIA_Play_Actor_Dialogue(kActorBulletBob, 310); //14-0310.AUD	it's out of here. Got no place at Bullet Bob's.
+			if (Game_Flag_Query(kFlagBulletBobIsReplicant)) {
+				KIA_Play_Actor_Dialogue(kActorBulletBob, 270); //14-0270.AUD	Sucker had it coming. I'm sure of that.
+				KIA_Play_Actor_Dialogue(kActorMcCoy, 5005); //00-5005.AUD	Why is that?
+				KIA_Play_Actor_Dialogue(kActorBulletBob, 280); //14-0280.AUD	Runciter is always putting on those airs like he's better than everybody else.
+				KIA_Play_Actor_Dialogue(kActorBulletBob, 290); //14-0290.AUD	But he'll do anything for a buck. Sell anything to anybody.
+				KIA_Play_Actor_Dialogue(kActorBulletBob, 300); //14-0300.AUD	That's where I draw the line. If it's suspicious
+				KIA_Play_Actor_Dialogue(kActorBulletBob, 310); //14-0310.AUD	it's out of here. Got no place at Bullet Bob's.
+			} else {
+				KIA_Play_Actor_Dialogue(kActorBulletBob, 1700); //14-1700.AUD	Damn. You know I'm getting to be an old man and I ain't gonna...
+				KIA_Play_Actor_Dialogue(kActorMcCoy, 3730); // 00-3730.AUD	Animal murder is pretty horrible.
+				KIA_Play_Actor_Dialogue(kActorBulletBob, 1550); //14-1550.AUD	I'd kick the crap out of that sicko.
+				KIA_Play_Actor_Dialogue(kActorBulletBob, 1340); //14-1340.AUD	You know what I mean?
+			}
 			KIA_Play_Actor_Dialogue(kActorMcCoy, 5010); //00-5010.AUD	You know anyone who might sell Ender rifles?
 		}
 		KIA_Play_Actor_Dialogue(kActorBulletBob, 320); //14-0320.AUD	There's one other guy around here who dips into that stuff.
@@ -579,7 +591,7 @@ void KIAScript::SCRIPT_KIA_DLL_Play_Clue_Asset_Script(int notUsed, int clueId) {
 		break;
 	case kClueRadiationGoggles:
 		KIA_Play_Slice_Model(kModelAnimationRadiationGoggles);
-			KIA_Play_Actor_Dialogue(kActorMcCoy, 8785); //00-8785.AUD	Radiation goggles.
+		KIA_Play_Actor_Dialogue(kActorMcCoy, 8785); //00-8785.AUD	Radiation goggles.
 		break;
 	case kClueGogglesReplicantIssue:
 		if (_vm->_cutContent) {
@@ -1858,7 +1870,12 @@ void KIAScript::SCRIPT_KIA_DLL_Play_Clue_Asset_Script(int notUsed, int clueId) {
 		}
 		break;
 	case kClueRachaelInterview:
-		KIA_Play_Actor_Dialogue(kActorMcCoy, 5365);
+		if (_vm->_cutContent) {
+			KIA_Play_Actor_Dialogue(kActorMcCoy, 5355); //00-5355.AUD	Fair enough. I wanted to ask about Marcus Eisenduller.
+			KIA_Play_Actor_Dialogue(kActorRachael, 590); //57-0590.AUD	I can't tell you who killed him, if that's what you're asking.
+			KIA_Play_Actor_Dialogue(kActorMcCoy, 5360); //00-5360.AUD	We've already got a suspect.
+		}
+		KIA_Play_Actor_Dialogue(kActorMcCoy, 5365); //00-5365.AUD	What I want to know is why the killer would be interested in Replicant DNA information.
 		KIA_Play_Actor_Dialogue(kActorRachael, 600);
 		KIA_Play_Actor_Dialogue(kActorMcCoy, 5370);
 		KIA_Play_Actor_Dialogue(kActorRachael, 610); //57-0610.AUD	Your suspect is obviously a Replicant. A very dangerous one.

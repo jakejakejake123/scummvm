@@ -398,7 +398,6 @@ void SceneScriptHF06::steelInterruption() {
 					Actor_Change_Animation_Mode(kActorSteele, kAnimationModeCombatIdle);
 					// Added in some action music here for the fight with Crystal.
 					Music_Play(kMusicMoraji, 71, 0, 0, -1, kMusicLoopPlayOnce, 2);
-					Game_Flag_Set(kFlagNotUsed644);
 					Actor_Set_Goal_Number(kActorSteele, kGoalSteeleHF06Attack);
 					Actor_Face_Actor(kActorSteele, actorId, true);
 					Actor_Change_Animation_Mode(kActorSteele, kAnimationModeCombatAttack);
@@ -457,7 +456,6 @@ void SceneScriptHF06::steelInterruption() {
 				}
 				Actor_Change_Animation_Mode(kActorSteele, kAnimationModeCombatIdle);
 				Music_Play(kMusicMoraji, 71, 0, 0, -1, kMusicLoopPlayOnce, 2);
-				Game_Flag_Set(kFlagNotUsed644);
 				Actor_Set_Goal_Number(kActorSteele, kGoalSteeleHF06Attack);
 				Actor_Face_Actor(kActorSteele, actorId, true);
 				Actor_Change_Animation_Mode(kActorSteele, kAnimationModeCombatAttack);
@@ -505,7 +503,6 @@ void SceneScriptHF06::steelInterruption() {
 	Actor_Says(kActorSteele, 340, 58);
 	Actor_Says(kActorSteele, 350, 58);
 	Actor_Change_Animation_Mode(kActorSteele, kAnimationModeCombatIdle);
-	Game_Flag_Set(kFlagNotUsed644);
 	Actor_Set_Goal_Number(kActorSteele, kGoalSteeleHF06Attack);
 	Actor_Face_Actor(kActorSteele, actorId, true);
 	Actor_Change_Animation_Mode(kActorSteele, kAnimationModeCombatAttack);

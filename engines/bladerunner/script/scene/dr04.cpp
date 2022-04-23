@@ -140,14 +140,20 @@ bool SceneScriptDR04::ClickedOnActor(int actorId) {
 				Actor_Says(kActorMcCoy, 955, 13);
 				Actor_Says_With_Pause(kActorMoraji, 40, 0.0f, kAnimationModeTalk);
 				Actor_Says(kActorMoraji, 50, kAnimationModeTalk);
-				Actor_Clue_Acquire(kActorMcCoy, kClueMorajiInterview, true, kActorMoraji);
+				if (_vm->_cutContent) {
+					if (Actor_Clue_Query(kActorMcCoy, kClueChewInterview)) {
+						Actor_Clue_Acquire(kActorMcCoy, kClueMorajiInterview, true, kActorMoraji);
+					}
+				} else {
+					Actor_Clue_Acquire(kActorMcCoy, kClueMorajiInterview, true, kActorMoraji);
+				}
 				// Code which determines whether or not Moraji survives depending on whether you talked to Chew.
 				if (_vm->_cutContent) {
 					if (Game_Flag_Query(kFlagDR03ChewTalk1)) {
 						Actor_Set_Goal_Number(kActorMoraji, kGoalMorajiDie);
-					} else if (!Game_Flag_Query(kFlagDR03ChewTalk1)) {
-					 Game_Flag_Set(kFlagMorajiAlive);
-					 Actor_Set_Goal_Number(kActorMoraji, kGoalMorajiLives);
+					} else {
+						Game_Flag_Set(kFlagMorajiAlive);
+						Actor_Set_Goal_Number(kActorMoraji, kGoalMorajiLives);
 					}
 				} else {
 					Actor_Set_Goal_Number(kActorMoraji, kGoalMorajiDie);
@@ -331,9 +337,9 @@ void SceneScriptDR04::PlayerWalkedIn() {
 			Loop_Actor_Walk_To_XYZ(kActorMcCoy, -851.0f, 71.64f, 647.0f, 0, false, false, false);
 			Actor_Face_Heading(kActorMcCoy, 0, false);
 			Loop_Actor_Travel_Stairs(kActorMcCoy, 7, false, kAnimationModeIdle);
+			Footstep_Sound_Override_Off();
 			Loop_Actor_Walk_To_XYZ(kActorMcCoy, -774.85f, 7.18f, 386.67f, 0, false, false, false);
 			Actor_Set_Immunity_To_Obstacles(kActorMcCoy, false);
-			Footstep_Sound_Override_Off();
 		}
 	}
 	Game_Flag_Reset(kFlagDR01toDR04);

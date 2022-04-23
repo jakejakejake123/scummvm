@@ -325,35 +325,34 @@ void SceneScriptDR01::PlayerWalkedIn() {
 		Player_Loses_Control();
 		Loop_Actor_Walk_To_XYZ(kActorMcCoy, -447.39f, 0.16f, -92.38f, 0, false, false, false);
 		if (!Game_Flag_Query(kFlagDR01Visited)) {
-			Game_Flag_Set(kFlagDR01Visited);
 			// Make use of the kFlagDirectorsCut like in CT01 case
 			// extra flags and chapter check are for compatibility / sane behavior
 			// in imported original save games (or "exported" save games for the original)
 			// Made it so McCoy comments on the DNA row subcons only play if he is surly or erratic. McCoy came off as being a jerk here calling the subcons freaks and saying that they 
 			// deserve to be brains damaged so this change feels appropriate. Instead if McCoy isn't surly or erratic some dispatcher dialogue will play instead.
 			if (_vm->_cutContent) {
-				if (
-					Global_Variable_Query(kVariableChapter) == 2
-					&& !Game_Flag_Query(kFlagDR03ChewTalk1)
-					&& !Game_Flag_Query(kFlagDR05MorajiTalk)
-					&& !Game_Flag_Query(kFlagDirectorsCut)) {
+				if (Global_Variable_Query(kVariableChapter) == 2
+				&& !Game_Flag_Query(kFlagDR03ChewTalk1)
+				&& !Game_Flag_Query(kFlagDR05MorajiTalk)
+				&& !Game_Flag_Query(kFlagDirectorsCut)) {
 					if (Player_Query_Agenda() == kPlayerAgendaSurly 
-						|| Player_Query_Agenda() == kPlayerAgendaErratic) {
+					|| Player_Query_Agenda() == kPlayerAgendaErratic) {
 						Actor_Voice_Over(600, kActorVoiceOver);
 						Actor_Voice_Over(610, kActorVoiceOver);
 						Actor_Voice_Over(620, kActorVoiceOver);
 						Actor_Voice_Over(630, kActorVoiceOver);
 						Actor_Voice_Over(640, kActorVoiceOver);
 						Actor_Voice_Over(650, kActorVoiceOver);
-					} else {	
-						ADQ_Add(kActorDispatcher, 170, kAnimationModeTalk);	//38-0170.AUD	Any Second Sector unit in position. Report of a possible jumper on the old 405 ped crossing at Jackson.
-						ADQ_Add(kActorOfficerLeary, 260, kAnimationModeTalk); //23-0260.AUD	LA, 38 Metro 3. Copied. Responding with an ETA momentarily.
-						ADQ_Add(kActorDispatcher, 470, kAnimationModeTalk); //38-0470.AUD	38 Metro 3. 10-4. LA copy. 10-97 in Code 4.
-						ADQ_Add(kActorOfficerGrayford, 470, kAnimationModeTalk); //24-0470.AUD	LA, 24 Metro 2. Copied. ETA thirty seconds.
-						ADQ_Add(kActorDispatcher, 200, kAnimationModeTalk); //38-0200.AUD	24, Metro 2, LA. Confirming ETA 30 seconds...?
-						ADQ_Add(kActorOfficerGrayford, 480, kAnimationModeTalk); //24-0480.AUD	LA, 24 Metro 2. That’s affirmative. You call, I answer.
-						ADQ_Add(kActorDispatcher, 210, kAnimationModeTalk); //38-0210.AUD	10-4. Mr Johnny on the spot.
-					}
+						Delay (500);
+					}  
+					ADQ_Add(kActorDispatcher, 170, kAnimationModeTalk);	//38-0170.AUD	Any Second Sector unit in position. Report of a possible jumper on the old 405 ped crossing at Jackson.
+					ADQ_Add(kActorOfficerLeary, 260, kAnimationModeTalk); //23-0260.AUD	LA, 38 Metro 3. Copied. Responding with an ETA momentarily.
+					ADQ_Add(kActorDispatcher, 470, kAnimationModeTalk); //38-0470.AUD	38 Metro 3. 10-4. LA copy. 10-97 in Code 4.
+					ADQ_Add(kActorOfficerGrayford, 470, kAnimationModeTalk); //24-0470.AUD	LA, 24 Metro 2. Copied. ETA thirty seconds.
+					ADQ_Add(kActorDispatcher, 200, kAnimationModeTalk); //38-0200.AUD	24, Metro 2, LA. Confirming ETA 30 seconds...?
+					ADQ_Add(kActorOfficerGrayford, 480, kAnimationModeTalk); //24-0480.AUD	LA, 24 Metro 2. That’s affirmative. You call, I answer.
+					ADQ_Add(kActorDispatcher, 210, kAnimationModeTalk); //38-0210.AUD	10-4. Mr Johnny on the spot.	
+					Game_Flag_Set(kFlagDR01Visited);
 				}			
 			}
 		}

@@ -205,9 +205,6 @@ void AIScriptEarlyQ::OtherAgentEnteredCombatMode(int otherActorId, int combatMod
 	 &&  combatMode
 	 && !Game_Flag_Query(kFlagNR04McCoyAimedAtEarlyQ)
 	) {
-		if (!Game_Flag_Query(kFlagNotUsed565)) {
-			Game_Flag_Set(kFlagNotUsed565);
-		}
 		Game_Flag_Set(kFlagNR04McCoyAimedAtEarlyQ);
 		AI_Countdown_Timer_Reset(kActorEarlyQ, kActorTimerAIScriptCustomTask0);
 		Actor_Set_Goal_Number(kActorEarlyQ, kGoalEarlyQNR04McCoyPulledGun);
@@ -218,9 +215,6 @@ void AIScriptEarlyQ::OtherAgentEnteredCombatMode(int otherActorId, int combatMod
 	 &&  otherActorId == kActorMcCoy
 	 && !combatMode
 	) {
-		if (Game_Flag_Query(kFlagNotUsed565)) {
-			Game_Flag_Reset(kFlagNotUsed565);
-		}
 		AI_Countdown_Timer_Reset(kActorEarlyQ, kActorTimerAIScriptCustomTask1);
 		Actor_Set_Goal_Number(kActorEarlyQ, kGoalEarlyQNR04Talk3);
 		return; //true;

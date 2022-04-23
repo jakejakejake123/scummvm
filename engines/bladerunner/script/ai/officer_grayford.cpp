@@ -588,7 +588,7 @@ bool AIScriptOfficerGrayford::GoalChanged(int currentGoalNumber, int newGoalNumb
 			if (Game_Flag_Query(kFlagMorajiAlive)) {
 				Actor_Face_Actor(kActorMcCoy, kActorMoraji, true);
 				if (Player_Query_Agenda() == kPlayerAgendaSurly 
-						|| Player_Query_Agenda() == kPlayerAgendaErratic) {
+				|| Player_Query_Agenda() == kPlayerAgendaErratic) {
 					Actor_Says(kActorMcCoy, 8920, 15); //00-8920.AUD	I gotta ask you a question.
 					Delay (2000);
 					Actor_Says(kActorMcCoy, 440, 16); //00-0440.AUD	Forget it.
@@ -609,16 +609,16 @@ bool AIScriptOfficerGrayford::GoalChanged(int currentGoalNumber, int newGoalNumb
 			Actor_Says_With_Pause(kActorMcCoy, 970, 0.2f, 13); // Got a dead man here. Victim of an explosion.
 			Actor_Says(kActorMcCoy, 975, 12); // TODO - a bug? McCoy may not know Moraji's name here(?)
 
-		if (Actor_Clue_Query(kActorMcCoy, kClueMorajiInterview) == 1) {
-			Actor_Says(kActorMcCoy, 980, 16);
-			Actor_Says_With_Pause(kActorOfficerGrayford, 130, 0.1f, 13);
-			Actor_Says(kActorMcCoy, 985, 14);
-			Actor_Says_With_Pause(kActorMcCoy, 990, 0.0f, 17);
-			Actor_Says_With_Pause(kActorOfficerGrayford, 140, 1.0f, 16);
-			Actor_Says_With_Pause(kActorOfficerGrayford, 150, 0.0f, 17);
-			Actor_Says(kActorOfficerGrayford, 160, 15);
-			Actor_Says_With_Pause(kActorMcCoy, 995, 0.3f, 14);
-		}
+			if (Actor_Clue_Query(kActorMcCoy, kClueMorajiInterview) == 1) {
+				Actor_Says(kActorMcCoy, 980, 16);
+				Actor_Says_With_Pause(kActorOfficerGrayford, 130, 0.1f, 13);
+				Actor_Says(kActorMcCoy, 985, 14);
+				Actor_Says_With_Pause(kActorMcCoy, 990, 0.0f, 17);
+				Actor_Says_With_Pause(kActorOfficerGrayford, 140, 1.0f, 16);
+				Actor_Says_With_Pause(kActorOfficerGrayford, 150, 0.0f, 17);
+				Actor_Says(kActorOfficerGrayford, 160, 15);
+				Actor_Says_With_Pause(kActorMcCoy, 995, 0.3f, 14);
+			}
 		}
 
 		Player_Gains_Control();
@@ -632,16 +632,8 @@ bool AIScriptOfficerGrayford::GoalChanged(int currentGoalNumber, int newGoalNumb
 		Actor_Change_Animation_Mode(kActorOfficerGrayford, 43);
 
 		if (Player_Query_Current_Scene() == kSceneDR04) {
-			// Made it so the scene exits enable.
-			if (_vm->_cutContent) {
-				if (Actor_Query_Goal_Number(kActorMoraji) == kGoalMorajiDead) {
 			Actor_Says(kActorOfficerGrayford, 170, kAnimationModeTalk); // This is 32, Sector 3. Reporting a homicide. Possible act of terrorism.
-				Scene_Exits_Enable();
-				}
-			} else {
-				Actor_Says(kActorOfficerGrayford, 170, kAnimationModeTalk); // This is 32, Sector 3. Reporting a homicide. Possible act of terrorism.
-				Scene_Exits_Enable();
-			}
+			Scene_Exits_Enable();
 		}
 		return true;
 

@@ -231,6 +231,8 @@ void SceneScriptUG01::PlayerWalkedIn() {
 			Actor_Says(kActorMcCoy, 5465, 15); //00-5465.AUD	Okay, just cool out a second!
 			Actor_Says(kActorMcCoy, 5475, 13); //00-5475.AUD	Listen, there’s another Blade Runner after you and she won’t stop to talk.
 			Actor_Says(kActorIzo, 720, 17); //07-0720.AUD	I know. She came into the store once.
+			Actor_Says(kActorMcCoy, 4880, 13); //00-4880.AUD	Is that right?
+			Delay (500);
 			if (!Game_Flag_Query(kFlagIzoIsReplicant)) {
 				Actor_Says(kActorIzo, 800, 17); //07-0800.AUD	I’m no Replicant. She can run tests on me all day long. It won’t make a difference!
 			} 
@@ -245,6 +247,7 @@ void SceneScriptUG01::PlayerWalkedIn() {
 			Loop_Actor_Walk_To_XYZ(kActorIzo, -57.24, -48.79, -2023.48, 48, false, true, false);
 			// Removed code that makes Izo invisible.
 			Actor_Set_Goal_Number(kActorIzo, kGoalIzoRC03RunAway);
+			Actor_Put_In_Set(kActorIzo, kSetUG03);
 			Game_Flag_Reset(kFlagIzoWarnedAboutCrystal);
 			Game_Flag_Set(kFlagIzoEscaped);
 			Game_Flag_Set(kFlagIzoGotAway);

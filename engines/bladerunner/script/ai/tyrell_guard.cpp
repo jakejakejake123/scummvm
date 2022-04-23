@@ -125,6 +125,12 @@ bool AIScriptTyrellGuard::GoalChanged(int currentGoalNumber, int newGoalNumber) 
 		return true;
 
 	case kGoalTyrellGuardWakeUp:
+		if (_vm->_cutContent) {
+			Delay(300);
+			Sound_Play(kSfxGUNAIM1, 100, 0, 0, 50);
+			Delay(1000);
+			Actor_Face_Actor(kActorMcCoy, kActorTyrellGuard, true);
+		}
 		AI_Countdown_Timer_Reset(kActorTyrellGuard, kActorTimerAIScriptCustomTask0);
 		Actor_Says(kActorTyrellGuard, 310, 14);
 		AI_Countdown_Timer_Start(kActorTyrellGuard, kActorTimerAIScriptCustomTask1, 20);

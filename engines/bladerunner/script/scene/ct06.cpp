@@ -137,7 +137,6 @@ bool SceneScriptCT06::ClickedOnExit(int exitId) {
 			Ambient_Sounds_Remove_All_Looping_Sounds(1u);
 			Game_Flag_Set(kFlagCT06toCT05);
 			Set_Enter(kSetCT05, kSceneCT05);
-			Game_Flag_Reset(kFlagNotUsed212);
 		}
 		return true;
 	}
@@ -150,7 +149,6 @@ bool SceneScriptCT06::ClickedOnExit(int exitId) {
 				Ambient_Sounds_Remove_Sound(kSfxZUBWLK4, true);
 				Player_Loses_Control();
 				Actor_Set_Goal_Number(kActorZuben, kGoalZubenCT06JumpDown);
-				Game_Flag_Reset(kFlagNotUsed212);
 			}
 			return true;
 		}
@@ -163,7 +161,6 @@ bool SceneScriptCT06::ClickedOnExit(int exitId) {
 				Ambient_Sounds_Remove_All_Looping_Sounds(1u);
 				Game_Flag_Set(kFlagCT06toCT08);
 				Set_Enter(kSetCT08_CT51_UG12, kSceneCT08);
-				Game_Flag_Reset(kFlagNotUsed212);
 			}
 		}
 	}

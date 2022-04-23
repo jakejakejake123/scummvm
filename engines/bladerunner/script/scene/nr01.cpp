@@ -44,8 +44,6 @@ void SceneScriptNR01::InitializeScene() {
 		Setup_Scene_Information( -270.0f,  4.93f, -1096.0f, 500);
 	} else if (Game_Flag_Query(kFlagNR02toNR01)) {
 		Setup_Scene_Information(  312.0f, 31.66f,  -901.0f, 700);
-	} else if (Game_Flag_Query(kFlagNotUsed545)) {
-		Setup_Scene_Information( -170.0f,  24.0f,  -574.0f, 768);
 	} else {
 		// eg. when thrown out
 		Setup_Scene_Information(   76.0f, 23.88f,  -109.0f, 966);
@@ -506,13 +504,6 @@ void SceneScriptNR01::PlayerWalkedIn() {
 			Actor_Set_Goal_Number(kActorGordo, kGoalGordoNR01Attack);
 			Non_Player_Actor_Combat_Mode_On(kActorGordo, kActorCombatStateIdle, true, kActorMcCoy, 3, kAnimationModeCombatIdle, kAnimationModeCombatWalk, kAnimationModeCombatRun, 0, -1, -1, 15, 300, false);
 		}
-	} else if (Game_Flag_Query(kFlagNotUsed545)) {
-		Game_Flag_Reset(kFlagNotUsed545);
-		Actor_Put_In_Set(kActorHanoi, kSetNR01);
-		Actor_Set_At_XYZ(kActorHanoi, -202.0f, 24.0f, -574.0f, 0);
-		Actor_Face_Heading(kActorHanoi, 256, false);
-		Actor_Set_Goal_Number(kActorHanoi, 204);
-		Player_Gains_Control();
 	} else {
 		if (!Game_Flag_Query(kFlagNR01VisitedFirstTimeWithSpinner) && Game_Flag_Query(kFlagArrivedFromSpinner1)) {
 			Game_Flag_Set(kFlagNR01VisitedFirstTimeWithSpinner);

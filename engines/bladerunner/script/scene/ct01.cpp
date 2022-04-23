@@ -204,7 +204,7 @@ bool SceneScriptCT01::ClickedOnActor(int actorId) {
 						Actor_Says(kActorHowieLee, 0, 14); //28-0000.AUD	When business thriving, night always beautiful.
 						Actor_Says(kActorMcCoy, 8615, 13);//00-8615.AUD	Heard anything on the street?
 						Actor_Says(kActorHowieLee, 170, 13);//28-0170.AUD	Sure, McCoy. I hear something. Maybe it surprise you even.
-						Actor_Says(kActorMcCoy, 6990, 15);//00-6990.AUD	Enlighten me.
+						Actor_Says(kActorMcCoy, 2635, 18); //00-2635.AUD	I’m all ears.. 
 						Actor_Says(kActorHowieLee, 160, 14); //28-0160.AUD	I take care of you soon, McCoy. Real busy tonight.
 						Game_Flag_Set(kFlagCT01McCoyTalkedToHowieLee);
 						Actor_Set_Goal_Number(kActorHowieLee, kGoalHowieLeeDefault);

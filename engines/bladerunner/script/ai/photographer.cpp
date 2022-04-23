@@ -105,7 +105,7 @@ void AIScriptPhotographer::ClickedByPlayer() {
 		// Made it so if McCoy is surly or erratic he is harsher towards the photographer.
 		if (_vm->_cutContent) {
 			if (Player_Query_Agenda() == kPlayerAgendaSurly 
-					|| Player_Query_Agenda() == kPlayerAgendaErratic) {
+			|| Player_Query_Agenda() == kPlayerAgendaErratic) {
 				Actor_Says(kActorMcCoy, 8519, kAnimationModeTalk); // 00-8519.AUD	What do you say we dish each other the straight goods.
 				Actor_Says(kActorPhotographer, 80, kAnimationModeTalk); //37-0080.AUD	You ain't talking to some flunky, McCoy.	
 			} else {
