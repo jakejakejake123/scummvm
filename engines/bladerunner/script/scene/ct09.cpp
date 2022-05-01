@@ -57,15 +57,22 @@ bool SceneScriptCT09::MouseClick(int x, int y) {
 bool SceneScriptCT09::ClickedOn3DObject(const char *objectName, bool a2) {
 	if (Object_Query_Click("BELL", objectName)) {
 		if (Actor_Query_Which_Set_In(kActorLeon) != kSetCT09) {
-			if (!Loop_Actor_Walk_To_XYZ(kActorMcCoy, 229.0f, 348.52f, 851.0f, 36, true, false, false)) {
+			if (_vm->_cutContent) {
+				if (!Loop_Actor_Walk_To_XYZ(kActorMcCoy, 270.0f, 348.52f, 846.0f, 12, true, false, false)) {
+					Actor_Face_Object(kActorMcCoy, "BELL", true);
+					Actor_Face_Actor(kActorDeskClerk, kActorMcCoy, true);
+					Sound_Play(kSfxDESKBELL, 100, 0, 0, 50);
+					if (!Actor_Query_Goal_Number(kActorDeskClerk)) {
+						Actor_Says(kActorDeskClerk, 160, kAnimationModeTalk);
+						// Put a flag here so ringing the bell will change the clerks disposition towards you.
+						Game_Flag_Set(kFlagBellRung);
+					}
+				}
+			} else if (!Loop_Actor_Walk_To_XYZ(kActorMcCoy, 229.0f, 348.52f, 851.0f, 36, true, false, false)) {
 				Actor_Face_Object(kActorMcCoy, "BELL", true);
 				Sound_Play(kSfxDESKBELL, 100, 0, 0, 50);
 				if (!Actor_Query_Goal_Number(kActorDeskClerk)) {
 					Actor_Says(kActorDeskClerk, 160, kAnimationModeTalk);
-					// Put a flag here so ringing the bell will change the clerks disposition towards you.
-					if (_vm->_cutContent) {
-						Game_Flag_Set(kFlagBellRung);
-					}
 				}
 			}
 		}
@@ -83,8 +90,10 @@ bool SceneScriptCT09::ClickedOnActor(int actorId) {
 				Player_Loses_Control();
 				Actor_Face_Actor(kActorMcCoy, kActorDeskClerk, true);
 				if (Global_Variable_Query(kVariableChapter) < 3) { // it is impossible to get here before chapter 3
-				// Made it so the clerk faces McCoy when he talks to him.
-					Actor_Face_Actor(kActorDeskClerk, kActorMcCoy, true);
+					// Made it so the clerk faces McCoy when he talks to him.
+					if (_vm->_cutContent) {
+						Actor_Face_Actor(kActorDeskClerk, kActorMcCoy, true);
+					}
 					Actor_Says(kActorMcCoy, 650, kAnimationModeTalk);
 					Actor_Says(kActorDeskClerk, 250, 12);
 					Actor_Says(kActorMcCoy, 665, 18);
@@ -105,21 +114,24 @@ bool SceneScriptCT09::ClickedOnActor(int actorId) {
 						Actor_Says(kActorMcCoy, 610, 15); //00-0610.AUD	What do you got back there?
 						Actor_Says(kActorDeskClerk, 100, 13); //27-0100.AUD	Excuse me?
 						Actor_Says(kActorMcCoy, 615, 18); //00-0615.AUD	The back room.
-						if (!Game_Flag_Query(kFlagCT09LeonInterrupted)) {
+						if (!Game_Flag_Query(kFlagCT09LeonInterrupted)
+						|| Game_Flag_Query(kFlagBellRung)) {
 							Actor_Says(kActorDeskClerk, 110, 15); //27-0110.AUD	Mister, you don't want to know. It'd take a Level Four suit just to put a key in the door. 
 							Actor_Says(kActorMcCoy, 3910, 14); //00-3910.AUD	You’re lying. 
-							Actor_Says(kActorDeskClerk, 300, 13); //27-0300.AUD	Okay, okay! 
-							Actor_Says(kActorDeskClerk, 290, 15); //27-0290.AUD	So I lied. Cause you won't like what I heard, that's why—
-							if (Player_Query_Agenda() == kPlayerAgendaSurly 
-							|| Player_Query_Agenda() == kPlayerAgendaErratic) {
-								Actor_Says(kActorMcCoy, 8519, 14);//00-8519.AUD	What do you say we dish each other the straight goods.
+							if (Player_Query_Agenda() != kPlayerAgendaSurly 
+							&& Player_Query_Agenda() != kPlayerAgendaErratic) {
+								Actor_Says(kActorMcCoy, 6985, 16); //00-6985.AUD	Got the straight scoop for me or what?			
 								Actor_Says(kActorDeskClerk, 280, 14); //27-0280.AUD	You seem to think I care.
 								Actor_Says(kActorMcCoy, 5075, 13); //00-5075.AUD	Hey, pal.
 								Game_Flag_Set(kFlagCT09DeskClerkTalk2);
 							} else {
+								Actor_Says(kActorMcCoy, 8519, 14);//00-8519.AUD	What do you say we dish each other the straight goods.
+								Actor_Says(kActorDeskClerk, 300, 13); //27-0300.AUD	Okay, okay! 
+								Actor_Says(kActorDeskClerk, 290, 15); //27-0290.AUD	So I lied. Cause you won't like what I heard, that's why—
 								Actor_Says(kActorMcCoy, 6985, 16); //00-6985.AUD	Got the straight scoop for me or what?
 								Actor_Says(kActorDeskClerk, 260, 14); //27-0260.AUD	If I tell you this, will you promise to go our separate ways?
 								Actor_Says(kActorMcCoy, 1025, 13); //00-1025.AUD	Absolutely.
+								Delay(1000);
 								Actor_Says(kActorDeskClerk, 120, 13); //27-0120.AUD	Used to store all the booty the tenants left behind in there.
 								Actor_Says(kActorDeskClerk, 130, 14);  //27-0130.AUD	My boss sold everything to a Mongolian guy last month
 								Actor_Says(kActorMcCoy, 625, 13); //00-0625.AUD	So, now there's nothing in there.
@@ -127,42 +139,39 @@ bool SceneScriptCT09::ClickedOnActor(int actorId) {
 								Actor_Says(kActorDeskClerk, 150, 15); //27-0150.AUD	Maybe if we paid you, someone would actually want to stay there. (laughs)
 								Game_Flag_Set(kFlagCT09DeskClerkTalk2);
 							}
-							} else { 	
-								Actor_Says(kActorDeskClerk, 120, 13); //27-0120.AUD	Used to store all the booty the tenants left behind in there.
-								Actor_Says(kActorDeskClerk, 130, 14);  //27-0130.AUD	My boss sold everything to a Mongolian guy last month
-								Actor_Says(kActorMcCoy, 625, 13); //00-0625.AUD	So, now there's nothing in there.
-								Actor_Says(kActorDeskClerk, 140, 13); //27-0140.AUD	Rumor has it the boss wants to rent it out. What a dump.
-								Actor_Says(kActorDeskClerk, 150, 15); //27-0150.AUD	Maybe if we paid you, someone would actually want to stay there. (laughs)
-								Game_Flag_Set(kFlagCT09DeskClerkTalk2);
-							}
-							// Made it so the desk clerk treats you differently depending on your actions. If you helped the clerk out with Leon he will be nice to you.
-							// If you helped out the clerk but rang the bell he will be neutral towrds you. If you didn't help out the clerk he will be mean to you.
-						} else if (_vm->_cutContent && Game_Flag_Query (kFlagCT09DeskClerkTalk2)) {
-							if (!Game_Flag_Query(kFlagBellRung) 
-							&& Game_Flag_Query(kFlagCT09LeonInterrupted)) {
-								Actor_Says(kActorMcCoy, 660, 14); //00-0660.AUD	You seen any suspicious types around here lately?
-								Actor_Says(kActorDeskClerk, 230, 13); //27-0230.AUD	Hey, rest up them dogs right down in the lobby here.
-								Actor_Says(kActorDeskClerk, 240, 15); //27-0240.AUD	I assure you. You'll see a lot of fine people strolling through
-								Actor_Says(kActorMcCoy, 3140, 16); //00-3140.AUD	Thanks.
-								Player_Gains_Control();
-							} else if (Game_Flag_Query(kFlagBellRung)
-							&& Game_Flag_Query(kFlagCT09LeonInterrupted)) {
-								Actor_Says(kActorMcCoy, 650, 18); //00-0650.AUD	You seen any suspicious types around here lately?
-								Actor_Says(kActorDeskClerk, 220, 15); //27-0220.AUD	Howley, that's all I do see. You think this is a Club Med or something?	
-							} else {
-								Actor_Says(kActorMcCoy, 660, 14); //00-0660.AUD	You seen any suspicious types around here lately?
-								Actor_Says(kActorDeskClerk, 250, 13); //27-0250.AUD	You're pretty suspicious.
-								Actor_Says(kActorMcCoy, 665, 16); //00-0665.AUD	Real funny, pal.
-								Actor_Says(kActorDeskClerk, 270, 15); //27-0270.AUD	I mind my own business, pal. I don't see who goes in and I don't see who goes out.
-								Actor_Says(kActorMcCoy, 4270, 16); //00-4270.AUD	I got some more questions for you.
-								Actor_Says(kActorDeskClerk, 280, 14); //27-0280.AUD	You seem to think I care.
-								Actor_Says(kActorMcCoy, 5075, 13); //00-5075.AUD	Hey, pal.
-							}		
-						} else {
-							Actor_Says(kActorMcCoy, 650, 18);
-							Actor_Says(kActorDeskClerk, 220, 15);
+						} else { 	
+							Actor_Says(kActorDeskClerk, 120, 13); //27-0120.AUD	Used to store all the booty the tenants left behind in there.
+							Actor_Says(kActorDeskClerk, 130, 14);  //27-0130.AUD	My boss sold everything to a Mongolian guy last month
+							Actor_Says(kActorMcCoy, 625, 13); //00-0625.AUD	So, now there's nothing in there.
+							Actor_Says(kActorDeskClerk, 140, 13); //27-0140.AUD	Rumor has it the boss wants to rent it out. What a dump.
+							Actor_Says(kActorDeskClerk, 150, 15); //27-0150.AUD	Maybe if we paid you, someone would actually want to stay there. (laughs)
+							Game_Flag_Set(kFlagCT09DeskClerkTalk2);
 						}
-						Player_Gains_Control();
+						// Made it so the desk clerk treats you differently depending on your actions. If you helped the clerk out with Leon he will be nice to you.
+						// If you helped out the clerk but rang the bell he will be neutral towrds you. If you didn't help out the clerk he will be mean to you.
+					} else if (_vm->_cutContent && Game_Flag_Query (kFlagCT09DeskClerkTalk2)) {
+						if (!Game_Flag_Query(kFlagBellRung) 
+						&& Game_Flag_Query(kFlagCT09LeonInterrupted)) {
+							Actor_Says(kActorMcCoy, 660, 14); //00-0660.AUD	You seen any suspicious types around here lately?
+							Actor_Says(kActorDeskClerk, 230, 13); //27-0230.AUD	Hey, rest up them dogs right down in the lobby here.
+							Actor_Says(kActorDeskClerk, 240, 15); //27-0240.AUD	I assure you. You'll see a lot of fine people strolling through
+							Actor_Says(kActorMcCoy, 3140, 16); //00-3140.AUD	Thanks.
+							Player_Gains_Control();
+						} else if (Game_Flag_Query(kFlagBellRung)
+						&& Game_Flag_Query(kFlagCT09LeonInterrupted)) {
+							Actor_Says(kActorMcCoy, 650, 18); //00-0650.AUD	You seen any suspicious types around here lately?
+							Actor_Says(kActorDeskClerk, 220, 15); //27-0220.AUD	Howley, that's all I do see. You think this is a Club Med or something?	
+						} else {
+							Actor_Says(kActorMcCoy, 660, 14); //00-0660.AUD	You seen any suspicious types around here lately?
+							Actor_Says(kActorDeskClerk, 250, 13); //27-0250.AUD	You're pretty suspicious.
+							Actor_Says(kActorMcCoy, 665, 16); //00-0665.AUD	Real funny, pal.
+							Actor_Says(kActorDeskClerk, 270, 15); //27-0270.AUD	I mind my own business, pal. I don't see who goes in and I don't see who goes out.
+						}		
+					} else {
+						Actor_Says(kActorMcCoy, 650, 18);
+						Actor_Says(kActorDeskClerk, 220, 15);
+					}
+					Player_Gains_Control();
 				}
 		}
 		return true;

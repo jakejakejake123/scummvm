@@ -437,6 +437,7 @@ bool AIScriptHanoi::GoalChanged(int currentGoalNumber, int newGoalNumber) {
 				Actor_Change_Animation_Mode(kActorMcCoy, 6);
 				Sound_Play(kSfxGUNH1A, 100, 0, 0, 50);
 				Actor_Change_Animation_Mode(kActorHanoi, 48);
+				Actor_Modify_Friendliness_To_Other(kActorSteele, kActorMcCoy, 2);
 				Game_Flag_Set(kFlagHanoiDead);
 				Player_Gains_Control();
 				if (Query_Difficulty_Level() != kGameDifficultyEasy) {

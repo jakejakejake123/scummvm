@@ -585,7 +585,10 @@ void SceneScriptUG16::dialogueWithLuther() {
 		Actor_Voice_Over(2740, kActorVoiceOver);
 		Actor_Voice_Over(2750, kActorVoiceOver);
 		Actor_Voice_Over(2760, kActorVoiceOver);
-		Actor_Voice_Over(2770, kActorVoiceOver);
+		Actor_Voice_Over(2770, kActorVoiceOver); //99-2770.AUD	It was the complete file on Guzza, the dirty cop.
+		Actor_Voice_Over(2780, kActorVoiceOver); //99-2780.AUD	When my stomach stopped churning, I realized I had everything I needed to force the bastard to play ball with me.
+		Actor_Voice_Over(2800, kActorVoiceOver); //99-2800.AUD	I knew that he would listen to reason, if applied with serious pressure.
+		Actor_Voice_Over(2810, kActorVoiceOver); //99-2810.AUD	All I needed to do was call him.
 		Actor_Says(kActorMcCoy, 5850, 13); 
 		Actor_Says(kActorLuther, 400, 15); //10-0400.AUD	From Clovis. He told us to hold it for him.
 		if (_vm->_cutContent) {

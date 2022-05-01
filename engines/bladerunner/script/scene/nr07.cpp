@@ -38,8 +38,7 @@ void SceneScriptNR07::SceneLoaded() {
 	// Added code so the dragonfly belt appears on Dektoras desk. It never made sense to me that you just receive the belt after asking Dektora about it.
 	// I mean she doesn't give it to you and why would she, you are a complete stranger after all. So now it will appear on her desk and if you try to take it
 	// while she's there she will say not to touch it and while she's away you can pick it up.
-	if (_vm->_cutContent &&
-		!Actor_Clue_Query(kActorMcCoy, kClueDragonflyBelt)) {
+	if (_vm->_cutContent && !Actor_Clue_Query(kActorMcCoy, kClueDragonflyBelt)) {
 		Item_Add_To_World(kItemDragonflyBelt, kModelAnimationDragonflyBelt, kSetNR07,  -103.12, -38.08, 42.14,  0, 12, 12, false, true, false, true);
 	}
 	if (_vm->_cutContent
@@ -79,11 +78,22 @@ bool SceneScriptNR07::ClickedOnActor(int actorId) {
 		Actor_Face_Actor(kActorMcCoy, kActorDektora, true);
 		Dialogue_Menu_Clear_List();
 		if (Game_Flag_Query(kFlagNR07McCoyIsCop)) {
-			DM_Add_To_List_Never_Repeat_Once_Selected(1100, -1, 3, 8); // VOIGT-KAMPFF
-			DM_Add_To_List_Never_Repeat_Once_Selected(1110, 8, -1, -1); // CRYSTAL
+			if (_vm->_cutContent) {
+				if (Actor_Clue_Query(kActorMcCoy, kClueEarlyInterviewB2)
+				|| Actor_Clue_Query(kActorMcCoy, kClueDektorasDressingRoom)
+				|| Actor_Clue_Query(kActorMcCoy, kClueCarRegistration1)
+				|| Actor_Clue_Query(kActorMcCoy, kClueChinaBar)) {
+					DM_Add_To_List_Never_Repeat_Once_Selected(1100, -1, 3, 8); // VOIGT-KAMPFF
+					DM_Add_To_List_Never_Repeat_Once_Selected(1110, 8, -1, -1); // CRYSTAL
+				}
+			} else {
+				DM_Add_To_List_Never_Repeat_Once_Selected(1100, -1, 3, 8); // VOIGT-KAMPFF
+				DM_Add_To_List_Never_Repeat_Once_Selected(1110, 8, -1, -1); // CRYSTAL
+			}
 			// Made it so the moonbus option is now available when talking to Dektora. The trigger will be the clue DektorasDressingRoom. 
 			if (_vm->_cutContent) {
-				if (Actor_Clue_Query(kActorMcCoy, kClueDektorasDressingRoom)) {	
+				if (Actor_Clue_Query(kActorMcCoy, kClueEarlyInterviewB2)
+				|| Actor_Clue_Query(kActorMcCoy, kClueDektorasDressingRoom)) {	
 					DM_Add_To_List_Never_Repeat_Once_Selected(1120, 3, 6, 7); // MOONBUS
 				}
 			}
@@ -120,7 +130,7 @@ bool SceneScriptNR07::ClickedOnActor(int actorId) {
 			// If Early Q is a rep Dektora says that he's always treated her well since he is now nice to the replicants. If he is human she aggressively says 
 			// that McCoy doesn't need to know that.
 			if (_vm->_cutContent) {
-				if (Game_Flag_Query(kFlagEarlyQIsReplicant)) {
+				if (!Game_Flag_Query(kFlagEarlyQIsReplicant)) {
 					Actor_Says(kActorDektora, 630, 31); //03-0630.AUD	He’s always treated me very well. I--
 				} else {
 					Actor_Says(kActorDektora, 1440, 31); //03-1440.AUD	I don't see why you need to know that.
@@ -213,7 +223,7 @@ bool SceneScriptNR07::ClickedOn2DRegion(int region) {
 					} else {
 						Sound_Play(kSfxDRAWER1, 90, 85, 85, 50);
 						Delay(700);
-						Actor_Clue_Acquire(kActorMcCoy, kClueCrazysInvolvement, false, -1);
+						Actor_Clue_Acquire(kActorMcCoy, kClueCrazysInvolvement, false, kActorDektora);
 						// McCoy picks up a sales brochure (it's CrazyLeg's -- but the model is the same as the Tyrell's Pamphlet)
 						Item_Pickup_Spin_Effect(kModelAnimationTyrellSalesPamphlet, 508, 401);
 						// McCoy finds something inside the brochure - CrazyLeg's note to the Replicants
@@ -224,11 +234,9 @@ bool SceneScriptNR07::ClickedOn2DRegion(int region) {
 						// Added in code so you receive the Dektora incept clue when you are searching her desk.
 						Delay (3000);
 						Item_Pickup_Spin_Effect(kModelAnimationPhoto, 508, 401);
-						Actor_Clue_Acquire(kActorMcCoy, kClueDektoraIncept, false, -1);
+						Actor_Clue_Acquire(kActorMcCoy, kClueDektoraIncept, false, kActorDektora);
 						Actor_Says(kActorMcCoy, 6975, 12); // Interesting
-						if (_vm->_cutContent) {
-							CDB_Set_Crime(kClueCrazysInvolvement, kCrimeReplicantHarboring);
-						}
+						CDB_Set_Crime(kClueCrazysInvolvement, kCrimeReplicantHarboring);
 						// We don't remove the region after picking the clue
 						// McCoy will just point out that there's nothing more there to find.
 						// (Saves us from using up a flag and having to write extra code)
@@ -267,13 +275,13 @@ void SceneScriptNR07::PlayerWalkedIn() {
 			if (!Actor_Clue_Query(kActorDektora, kClueMcCoyIsABladeRunner)) {
 				Actor_Modify_Friendliness_To_Other(kActorDektora, kActorMcCoy, 5);
 			} else if (Actor_Clue_Query(kActorMcCoy, kClueMcCoyWarnedIzo)
-			        || Actor_Clue_Query(kActorMcCoy, kClueMcCoyHelpedIzoIzoIsAReplicant)
+			|| Actor_Clue_Query(kActorMcCoy, kClueMcCoyHelpedIzoIzoIsAReplicant)
 			) {
 				Actor_Modify_Friendliness_To_Other(kActorDektora, kActorMcCoy, 10);
 			}
 			// Removed code where McCoy assaults Dektora.
-			Actor_Says(kActorDektora, 500, 30);
 			if (_vm->_cutContent) {
+				Actor_Face_Actor(kActorDektora, kActorMcCoy, true);
 				Music_Play(kMusicTaffy3, 41, 0, 2, -1, kMusicLoopPlayOnce, 0);
 			}
 			Actor_Says(kActorDektora, 500, 30);
@@ -282,10 +290,14 @@ void SceneScriptNR07::PlayerWalkedIn() {
 			Actor_Start_Speech_Sample(kActorMcCoy, 3590);
 			Loop_Actor_Walk_To_XYZ(kActorMcCoy, -112.0f, -73.0f, -89.0f, 525, false, false, false);
 			Actor_Says(kActorDektora, 520, kAnimationModeSit);
+			Actor_Face_Object(kActorDektora, "VANITY", true);
 		} else {
 			Actor_Modify_Friendliness_To_Other(kActorDektora, kActorMcCoy, -2);
-			Actor_Face_Actor(kActorDektora, kActorMcCoy, true);
+			if (_vm->_cutContent) {
+				Actor_Face_Actor(kActorDektora, kActorMcCoy, true);
+			}
 			Actor_Says(kActorDektora, 530, 31);
+			Actor_Face_Object(kActorDektora, "VANITY", true);
 		}
 		Actor_Set_Goal_Number(kActorHanoi, kGoalHanoiDefault);
 	}
@@ -382,7 +394,7 @@ void SceneScriptNR07::clickedOnVase() {
 				Actor_Says(kActorMcCoy, 3610, 19);  // Sorry (McCoy fake fan voice)
 				// The clue will now be obtained here.
 				if (_vm->_cutContent) {
-					Actor_Clue_Acquire(kActorMcCoy, kClueDektoraInterview3, true, -1);
+					Actor_Clue_Acquire(kActorMcCoy, kClueDektoraInterview3, true, kActorDektora);
 				}
 			} else {
 				Actor_Says(kActorDektora, 560, 31); // Please don't touch that. It's private.
@@ -391,6 +403,11 @@ void SceneScriptNR07::clickedOnVase() {
 #endif // BLADERUNNER_ORIGINAL_BUGS
 		}
 	} else if (!Actor_Clue_Query(kActorMcCoy, kClueDektorasCard)) {
+		if (_vm->_cutContent) {
+			Actor_Clue_Acquire(kActorMcCoy, kClueDektorasCard, true, kActorDektora);
+		} else {
+			Actor_Clue_Acquire(kActorMcCoy, kClueDektorasCard, true, -1);
+		}
 		Actor_Clue_Acquire(kActorMcCoy, kClueDektorasCard, true, -1);
 		Loop_Actor_Walk_To_Scene_Object(kActorMcCoy, "VASE", 100, true, false);
 		Actor_Change_Animation_Mode(kActorMcCoy, 23);
@@ -518,17 +535,17 @@ void SceneScriptNR07::talkAboutVoightKampff() {
 			Voight_Kampff_Activate(kActorDektora, 40);
 		}
 	} else {
-	Actor_Says(kActorDektora, 680, 30); //03-0680.AUD	Look, I’m willing to testify against Early Q.
-	Actor_Says(kActorDektora, 690, 31); //03-0690.AUD	A Replicant wouldn’t do that, would it?
-	Actor_Says(kActorMcCoy, 3670, 17); 
-	Actor_Says(kActorDektora, 700, 30); //03-0700.AUD	Then, you must be a Replicant.
-	Actor_Says(kActorMcCoy, 3675, 19); 
-	Actor_Says(kActorDektora, 710, 30); 
-	Actor_Says(kActorMcCoy, 3680, 19); 
-	Actor_Says(kActorDektora, 720, 30); 
-	Actor_Says(kActorDektora, 730, 30); 
-	Actor_Says(kActorMcCoy, 3685, 13); 
-	Voight_Kampff_Activate(kActorDektora, 40);
+		Actor_Says(kActorDektora, 680, 30); //03-0680.AUD	Look, I’m willing to testify against Early Q.
+		Actor_Says(kActorDektora, 690, 31); //03-0690.AUD	A Replicant wouldn’t do that, would it?
+		Actor_Says(kActorMcCoy, 3670, 17); 
+		Actor_Says(kActorDektora, 700, 30); //03-0700.AUD	Then, you must be a Replicant.
+		Actor_Says(kActorMcCoy, 3675, 19); 
+		Actor_Says(kActorDektora, 710, 30); 
+		Actor_Says(kActorMcCoy, 3680, 19); 
+		Actor_Says(kActorDektora, 720, 30); 
+		Actor_Says(kActorDektora, 730, 30); 
+		Actor_Says(kActorMcCoy, 3685, 13); 
+		Voight_Kampff_Activate(kActorDektora, 40);
 	}
 
 	if (Game_Flag_Query(kFlagDektoraIsReplicant)) {
@@ -685,9 +702,9 @@ void SceneScriptNR07::talkAboutBlackSedan() {
 	Actor_Says(kActorDektora, 790, 31);
 	if (_vm->_cutContent) {
 		if (Player_Query_Agenda() == kPlayerAgendaSurly 
-			|| Player_Query_Agenda() == kPlayerAgendaErratic) {
-		Actor_Says(kActorMcCoy, 3725, 18); //00-3725.AUD	Is that right? Any reason you didn’t tell me that right off?
-		Actor_Says(kActorDektora, 800, 30);
+		|| Player_Query_Agenda() == kPlayerAgendaErratic) {
+			Actor_Says(kActorMcCoy, 3725, 18); //00-3725.AUD	Is that right? Any reason you didn’t tell me that right off?
+			Actor_Says(kActorDektora, 800, 30);
 		}
 	} else {
 		Actor_Says(kActorMcCoy, 3725, 18); //00-3725.AUD	Is that right? Any reason you didn’t tell me that right off?

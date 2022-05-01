@@ -463,7 +463,11 @@ void SceneScriptMA04::phoneCallWithDektora() {
 		Actor_Says(kActorMcCoy, 2525, 15);
 		Actor_Says(kActorDektora, 420, 3);
 		Sound_Play(kSfxSPNBEEP9, 100, 0, 0, 50);
-		Actor_Clue_Acquire(kActorMcCoy, kCluePhoneCallDektora1, true, -1);
+		if (_vm->_cutContent) {
+			Actor_Clue_Acquire(kActorMcCoy, kCluePhoneCallDektora1, true, kActorDektora);
+		} else {
+			Actor_Clue_Acquire(kActorMcCoy, kCluePhoneCallDektora1, true, -1);
+		}
 	} else {
 		Actor_Says_With_Pause(kActorMcCoy, 2505, 0.5f, 19);
 		Actor_Says(kActorDektora, 430, 3);
@@ -477,7 +481,11 @@ void SceneScriptMA04::phoneCallWithDektora() {
 		Actor_Says(kActorDektora, 490, 3);
 		Sound_Play(kSfxSPNBEEP9, 100, 0, 0, 50);
 		Actor_Says(kActorMcCoy, 2540, 15);
-		Actor_Clue_Acquire(kActorMcCoy, kCluePhoneCallDektora2, true, -1);
+		if (_vm->_cutContent) {
+			Actor_Clue_Acquire(kActorMcCoy, kCluePhoneCallDektora2, true, kActorDektora);
+		} else {
+			Actor_Clue_Acquire(kActorMcCoy, kCluePhoneCallDektora2, true, -1);
+		}
 	}
 }
 
@@ -514,7 +522,11 @@ void SceneScriptMA04::phoneCallWithLucy() {
 		Sound_Play(kSfxSPNBEEP9, 100, 0, 0, 50); // (Lucy hangs up)
 		Actor_Says(kActorMcCoy, 2575, 15); // Wait, Lucy!
 #endif // BLADERUNNER_ORIGINAL_BUGS
-		Actor_Clue_Acquire(kActorMcCoy, kCluePhoneCallLucy2, true, -1);
+		if (_vm->_cutContent) {
+			Actor_Clue_Acquire(kActorMcCoy, kCluePhoneCallLucy2, true, kActorLucy);
+		} else {
+			Actor_Clue_Acquire(kActorMcCoy, kCluePhoneCallLucy2, true, -1);
+		}
 	} else {
 		Actor_Says(kActorLucy, 590, 3);
 		Actor_Says(kActorMcCoy, 2565, 12);
@@ -541,7 +553,11 @@ void SceneScriptMA04::phoneCallWithLucy() {
 #else
 		Sound_Play(kSfxSPNBEEP9, 100, 0, 0, 50);
 #endif // BLADERUNNER_ORIGINAL_BUGS
-		Actor_Clue_Acquire(kActorMcCoy, kCluePhoneCallLucy1, true, -1);
+		if (_vm->_cutContent) {
+			Actor_Clue_Acquire(kActorMcCoy, kCluePhoneCallLucy1, true, kActorLucy);
+		} else {
+			Actor_Clue_Acquire(kActorMcCoy, kCluePhoneCallLucy1, true, -1);
+		}
 	}
 #if BLADERUNNER_ORIGINAL_BUGS
 	Sound_Play(kSfxSPNBEEP9, 100, 0, 0, 50);
@@ -580,7 +596,11 @@ void SceneScriptMA04::phoneCallWithSteele() {
 	Actor_Says(kActorSteele, 810, 3);
 	Actor_Says(kActorSteele, 820, 3);
 	Sound_Play(kSfxSPNBEEP9, 100, 0, 0, 50);
-	Actor_Clue_Acquire(kActorMcCoy, kCluePhoneCallCrystal, true, -1);
+	if (_vm->_cutContent) {
+		Actor_Clue_Acquire(kActorMcCoy, kCluePhoneCallCrystal, true, kActorSteele);
+	} else {
+		Actor_Clue_Acquire(kActorMcCoy, kCluePhoneCallCrystal, true, -1);
+	}
 }
 
 void SceneScriptMA04::phoneCallWithClovis() {
@@ -663,9 +683,12 @@ void SceneScriptMA04::phoneCallWithClovis() {
 	Actor_Says(kActorClovis, 530, 3); //05-0530.AUD	It’s a passage to freedom, McCoy. To your destiny.
 	Actor_Says(kActorClovis, 540, 3);
 	Sound_Play(kSfxSPNBEEP9, 100, 0, 0, 50);
-	Actor_Clue_Acquire(kActorMcCoy, kCluePhoneCallClovis, true, -1);
+	if (_vm->_cutContent) {
+		Actor_Clue_Acquire(kActorMcCoy, kCluePhoneCallClovis, true, kActorClovis);
+	} else {
+		Actor_Clue_Acquire(kActorMcCoy, kCluePhoneCallClovis, true, -1);
+	}
 }
-
 void SceneScriptMA04::turnOnTV() {
 	Overlay_Play("MA04OVR2", 0, true, false, 0);
 	switch (Global_Variable_Query(kVariableNextTvNews)) {

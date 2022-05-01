@@ -95,7 +95,7 @@ bool SceneScriptBB11::ClickedOnItem(int itemId, bool a2) {
 		if (itemId ==  kItemNote) {
 			if (!Loop_Actor_Walk_To_Item(kActorMcCoy,  kItemNote, 12, true, false)) {
 				Actor_Face_Item(kActorMcCoy,  kItemNote, true);
-				Actor_Clue_Acquire(kActorMcCoy, kClueSadikIncept, true, -1);
+				Actor_Clue_Acquire(kActorMcCoy, kClueSadikIncept, true, kActorSadik);
 				Item_Pickup_Spin_Effect(kModelAnimationPhoto, 502, 423);
 				Item_Remove_From_World(kItemNote);
 				return true;

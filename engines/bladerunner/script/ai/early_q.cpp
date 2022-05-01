@@ -388,9 +388,9 @@ bool AIScriptEarlyQ::GoalChanged(int currentGoalNumber, int newGoalNumber) {
 				Actor_Says(kActorMcCoy, 8950, kAnimationModeCombatAim); //00-8950.AUD	Hold it right there!
 				Delay (1000);
 				Actor_Says(kActorMcCoy, 3400, kAnimationModeCombatAim); //00-3400.AUD	Cough up some dirt, Early. Or I’m taking this disc downtown.
-				Actor_Says(kActorEarlyQ, 90, kAnimationModeTalk); //18-0090.AUD	Well, it’s your lucky day, McCoy. You’re in the garden of earthly delights. See, I bet we can find something to wet your wick.
-				Actor_Says(kActorMcCoy, 3405, kAnimationModeCombatAim); //00-3405.AUD	Sit down.
 				Actor_Says(kActorEarlyQ, 160, kAnimationModeTalk); //18-0160.AUD	I’ll throw in a night with one of my dancers.
+				Actor_Says(kActorMcCoy, 3405, kAnimationModeCombatAim); //00-3405.AUD	Sit down.
+				Delay (2000);
 				Actor_Says(kActorMcCoy, 3410, kAnimationModeCombatAim); //00-3410.AUD	Sit down!
 				_vm->_aiScripts->callChangeAnimationMode(kActorMcCoy, kAnimationModeCombatIdle);
 				Player_Loses_Control();
@@ -496,26 +496,15 @@ bool AIScriptEarlyQ::GoalChanged(int currentGoalNumber, int newGoalNumber) {
 		// Hanoi will show up to shoot McCoy after these two scenarios if he is a replicant and if he is human he will not show up at all.
 		if (_vm->_cutContent) {
 			if (Actor_Query_In_Set(kActorEarlyQ, kSetNR04)) {
-				if (Game_Flag_Query(kFlagEarlyQIsReplicant)) {
-					Game_Flag_Set(kFlagEarlyQDead);
-					Actor_Voice_Over(920, kActorVoiceOver); //99-0920.AUD	Easy money.
-					Actor_Modify_Friendliness_To_Other(kActorSteele, kActorMcCoy, 3);
-					Actor_Set_Targetable(kActorEarlyQ, false);
-					if (Query_Difficulty_Level() != kGameDifficultyEasy) {
-						Global_Variable_Increment (kVariableChinyen, 200);
-					}
-					if (Game_Flag_Query(kFlagHanoiIsReplicant)) {
-						Actor_Set_Goal_Number(kActorHanoi, kGoalHanoiNR04Enter);
-					}
-				} else if (!Game_Flag_Query(kFlagEarlyQIsReplicant)) {
-					Delay (2000);	
-					Actor_Says(kActorMcCoy, 2080, kAnimationModeTalk); //99-2080.AUD	I’d done the city a favor.
-					Game_Flag_Set(kFlagEarlyQDead);
-					Game_Flag_Set(kFlagMcCoyRetiredHuman);
-					Actor_Set_Targetable(kActorEarlyQ, false);
-					if (Game_Flag_Query(kFlagHanoiIsReplicant)) {
-						Actor_Set_Goal_Number(kActorHanoi, kGoalHanoiNR04Enter);
-					}
+				Game_Flag_Set(kFlagEarlyQDead);
+				Actor_Voice_Over(920, kActorVoiceOver); //99-0920.AUD	Easy money.
+				Actor_Modify_Friendliness_To_Other(kActorSteele, kActorMcCoy, 2);
+				Actor_Set_Targetable(kActorEarlyQ, false);
+				if (Query_Difficulty_Level() != kGameDifficultyEasy) {
+					Global_Variable_Increment (kVariableChinyen, 200);
+				}
+				if (Game_Flag_Query(kFlagHanoiIsReplicant)) {
+					Actor_Set_Goal_Number(kActorHanoi, kGoalHanoiNR04Enter);
 				}
 			}
 		} else {

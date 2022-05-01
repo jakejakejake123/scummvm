@@ -244,7 +244,7 @@ bool SceneScriptPS15::ClickedOnItem(int itemId, bool a2) {
 			if (!Actor_Clue_Query(kActorMcCoy, kClueShippingForm)) {
 				// (McCoy apparently finds it attached to the weapon's shipment crate)
 				// It's not given by Sgt Walls, so McCoy is credited for the clue find
-				Actor_Clue_Acquire(kActorMcCoy, kClueShippingForm, true, kActorMcCoy);
+				Actor_Clue_Acquire(kActorMcCoy, kClueShippingForm, true, kActorSergeantWalls);
 			}
 			Actor_Clue_Acquire(kActorMcCoy, kCluePoliceIssueWeapons, true, kActorSergeantWalls);
 #endif // BLADERUNNER_ORIGINAL_BUGS

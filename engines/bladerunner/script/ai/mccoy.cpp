@@ -273,21 +273,20 @@ void AIScriptMcCoy::ReceivedClue(int clueId, int fromActorId) {
 			// if McCoy just got the folder
 			// Added in some dialogue.
 			if (_vm->_cutContent) {
-			Actor_Voice_Over(3430, kActorVoiceOver); //99-3430.AUD	The info I’d gotten from Luther and Lance finally made some sense.
-			Actor_Voice_Over(3440, kActorVoiceOver); //99-3440.AUD	The Reps must had found out about Guzza’s career's sidelines…
-			Actor_Voice_Over(3450, kActorVoiceOver); //99-3450.AUD	and pressured him to set me up in order to get me off their backs.
-			Actor_Voice_Over(3460, kActorVoiceOver); //99-3460.AUD	This nasty business he was only too willing to do.
-			Actor_Voice_Over(3470, kActorVoiceOver); //99-3470.AUD	But I wasn’t gonna eat crow that easily.
-			Actor_Voice_Over(2780, kActorVoiceOver); //99-2780.AUD	When my stomach stopped churning, I realized I had everything I needed to force the bastard to play ball with me.
-			Actor_Voice_Over(3490, kActorVoiceOver); //99-3490.AUD	It was time to have my own little fun with Guzza.
-			Actor_Voice_Over(3500, kActorVoiceOver); //99-3500.AUD	All I had to do was place a call and make the worm squirm.
-			Actor_Voice_Over(2800, kActorVoiceOver); //99-2880.AUD	I realized I could use this to force the bastard to give me my life back.
-			Actor_Voice_Over(2810, kActorVoiceOver); //99-2810.AUD	All I needed to do was call him.
-		} else {
-			Actor_Voice_Over(2780, kActorVoiceOver);
-			Actor_Voice_Over(2800, kActorVoiceOver);
-			Actor_Voice_Over(2810, kActorVoiceOver);
-		}
+				Actor_Voice_Over(3430, kActorVoiceOver); //99-3430.AUD	The info I’d gotten from Luther and Lance finally made some sense.
+				Actor_Voice_Over(3440, kActorVoiceOver); //99-3440.AUD	The Reps must had found out about Guzza’s career's sidelines…
+				Actor_Voice_Over(3450, kActorVoiceOver); //99-3450.AUD	and pressured him to set me up in order to get me off their backs.
+				Actor_Voice_Over(3460, kActorVoiceOver); //99-3460.AUD	This nasty business he was only too willing to do.
+				Actor_Voice_Over(3470, kActorVoiceOver); //99-3470.AUD	But I wasn’t gonna eat crow that easily.
+				Actor_Voice_Over(2870, kActorVoiceOver); //99-2870.AUD	When my stomach stopped churning…
+				Actor_Voice_Over(2880, kActorVoiceOver); //99-2880.AUD	I realized I could use this to force the bastard to give me my life back.
+				Actor_Voice_Over(3490, kActorVoiceOver); //99-3490.AUD	It was time to have my own little fun with Guzza.
+				Actor_Voice_Over(3500, kActorVoiceOver); //99-3500.AUD	All I had to do was place a call and make the worm squirm.
+			} else {
+				Actor_Voice_Over(2780, kActorVoiceOver);
+				Actor_Voice_Over(2800, kActorVoiceOver);
+				Actor_Voice_Over(2810, kActorVoiceOver);
+			}
 		} else if (Actor_Clue_Query(kActorMcCoy, kClueFolder)) {
 			// if McCoy already had the folder
 			Actor_Voice_Over(3430, kActorVoiceOver);

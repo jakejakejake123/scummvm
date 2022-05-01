@@ -156,14 +156,15 @@ bool SceneScriptCT04::ClickedOn3DObject(const char *objectName, bool a2) {
 			if (!Loop_Actor_Walk_To_Waypoint(kActorMcCoy, 75, 0, true, false)) {
 				Actor_Face_Heading(kActorMcCoy, 707, false);
 				Actor_Change_Animation_Mode(kActorMcCoy, 38);
-				Actor_Clue_Acquire(kActorMcCoy, kClueLicensePlate, true, -1);
-				Item_Pickup_Spin_Effect(kModelAnimationLicensePlate, 392, 225);
-				Game_Flag_Set(kFlagCT04LicensePlaceFound);
 				if (_vm->_cutContent) { 
-					//Restored the license plate match clue. When McCoy finds the license plate in the dumpster and he has the partial license plate photo clue
-					//he runs a test on the KIA and it is a positive match. Also added in code to the esper script so the same happens if it is the other way around.
-					Actor_Says(kActorMcCoy, 8760, 9);//00-8760.AUD	A license plate.
 					if (Actor_Clue_Query(kActorMcCoy, kCluePartialLicenseNumber)) {
+						Actor_Clue_Acquire(kActorMcCoy, kClueLicensePlate, true, kActorZuben);
+						Item_Pickup_Spin_Effect(kModelAnimationLicensePlate, 392, 225);
+						Game_Flag_Set(kFlagCT04LicensePlaceFound); 
+						//Restored the license plate match clue. When McCoy finds the license plate in the dumpster and he has the partial license plate photo clue
+						//he runs a test on the KIA and it is a positive match. Also added in code to the esper script so the same happens if it is the other way around.
+						Actor_Says(kActorMcCoy, 8760, -1);//00-8760.AUD	A license plate.
+						Delay(2000);
 						Actor_Says(kActorMcCoy, 8525, 9); //00-8525.AUD	Hmph.
 						Actor_Says(kActorAnsweringMachine, 390, kAnimationModeTalk); // 39-0390.AUD	Begin test.
 						Ambient_Sounds_Play_Sound(kSfxDATALOAD, 50, 0, 0, 99);
@@ -173,7 +174,15 @@ bool SceneScriptCT04::ClickedOn3DObject(const char *objectName, bool a2) {
 						Actor_Says(kActorAnsweringMachine, 470, kAnimationModeTalk); //39-0470.AUD	End test.
 						Actor_Says(kActorMcCoy, 7200, 13); //00-7200.AUD	Bingo.
 						Actor_Clue_Acquire(kActorMcCoy, kClueLicensePlateMatch, true, -1); 
-			  		}
+			  		} else {
+						Ambient_Sounds_Play_Sound(kSfxGARBAGE, 45, 30, 30, 0);
+						Actor_Voice_Over(1810, kActorVoiceOver);
+						Actor_Voice_Over(1820, kActorVoiceOver);
+					}
+				} else {
+					Actor_Clue_Acquire(kActorMcCoy, kClueLicensePlate, true, -1);
+					Item_Pickup_Spin_Effect(kModelAnimationLicensePlate, 392, 225);
+					Game_Flag_Set(kFlagCT04LicensePlaceFound); 
 				}
 				return true;
 			}
@@ -209,6 +218,7 @@ void SceneScriptCT04::dialogueWithHomeless() {
 		Actor_Says(kActorTransient, 10, 13); // Thanks. The big man. He kind of limping.
 		if (_vm->_cutContent) {
 			Actor_Says(kActorTransient, 20, 14); // That way.
+			Delay(1000);
 		} else {
 			Actor_Says(kActorTransient, 20, 13); // That way.
 		}
@@ -224,7 +234,11 @@ void SceneScriptCT04::dialogueWithHomeless() {
 
 	case 420: // NO
 		Actor_Says(kActorMcCoy, 430, 3);
-		Actor_Says(kActorTransient, 30, 14); // Hey, that'd work.
+		if (_vm->_cutContent) {
+			Actor_Says(kActorTransient, 30, 13); // Hey, that'd work.
+		} else {
+			Actor_Says(kActorTransient, 30, 14); // Hey, that'd work.
+		}
 		Actor_Modify_Friendliness_To_Other(kActorTransient, kActorMcCoy, -5);
 		break;
 	}

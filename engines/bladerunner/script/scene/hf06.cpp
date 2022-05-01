@@ -300,7 +300,7 @@ void SceneScriptHF06::steelInterruption() {
 	if (_vm->_cutContent) {
 		if (Actor_Query_Is_In_Current_Set(kActorDektora)) {
 			if (!Game_Flag_Query(kFlagDektoraIsReplicant)
-			|| Game_Flag_Query(kFlagMcCoyIsInnocent)) {
+			&& Game_Flag_Query(kFlagMcCoyIsInnocent)) {
 				Delay(2000);
 				Scene_Loop_Set_Default(3);
 				Scene_Loop_Start_Special(kSceneLoopModeOnce, 2, true);
@@ -319,7 +319,7 @@ void SceneScriptHF06::steelInterruption() {
 		// This section of code is for when Lucy is with you.	
 		} else if (Actor_Query_Is_In_Current_Set(kActorLucy)) {
 			if (!Game_Flag_Query(kFlagLucyIsReplicant)
-			|| Game_Flag_Query(kFlagMcCoyFreedOfAccusations)) {
+			&& Game_Flag_Query(kFlagMcCoyFreedOfAccusations)) {
 				Delay(2000);
 				Scene_Loop_Set_Default(3);
 				Scene_Loop_Start_Special(kSceneLoopModeOnce, 2, true);
@@ -327,7 +327,7 @@ void SceneScriptHF06::steelInterruption() {
 				Actor_Says(kActorMcCoy, 170, 14); //00-0170.AUD	Damn.
 				Actor_Face_Heading(kActorMcCoy, 486, true);
 				if (Actor_Query_In_Set(kActorLucy, kSetHF06)
-				        && Actor_Query_Goal_Number(kActorLucy) != kGoalLucyGone
+				 && Actor_Query_Goal_Number(kActorLucy) != kGoalLucyGone
 				) {
 					Actor_Face_Actor(kActorLucy, kActorMcCoy, true);
 					Actor_Says(kActorLucy, 490, 18); //06-0490.AUD	Can you get it working?
@@ -350,10 +350,11 @@ void SceneScriptHF06::steelInterruption() {
 				Actor_Face_Actor(actorId, kActorSteele, true);
 				// If Dektora is a human she will say Ray in a terrified tone. If she is a rep she is shocked into silence.
 				if (actorId == kActorDektora) {
-					if (!Game_Flag_Query(kFlagDektoraIsReplicant))
-					Actor_Says(kActorDektora, 90, 13);
-				} else {
-					Delay (1000);
+					if (!Game_Flag_Query(kFlagDektoraIsReplicant)) {
+						Actor_Says(kActorDektora, 90, 13);
+					} else {
+						Delay (2000);
+					}
 				}
 				Actor_Says(kActorMcCoy, 6230, 0);
 				Actor_Says(kActorSteele, 280, 58);
@@ -366,48 +367,44 @@ void SceneScriptHF06::steelInterruption() {
 				Loop_Actor_Walk_To_XYZ(kActorSteele, 92.0f, 367.93f, 107.0f, 0, false, false, false);
 				Actor_Face_Actor(kActorSteele, kActorMcCoy, true);
 				Actor_Change_Animation_Mode(kActorSteele, kAnimationModeCombatIdle);
-					if (Actor_Query_Is_In_Current_Set(kActorDektora)) { 
-						if (Game_Flag_Query(kFlagDektoraIsReplicant)) {
-							// This line will only be said if your companion is a replicant.
-							Actor_Says(kActorSteele, 290, 58); //01-0290.AUD	Thanks for bringing her here. Makes my end a hell of a lot easier.
+				if (Game_Flag_Query(kFlagDektoraIsReplicant)) {
+					// This line will only be said if your companion is a replicant.
+					Actor_Says(kActorSteele, 290, 58); //01-0290.AUD	Thanks for bringing her here. Makes my end a hell of a lot easier.
 				}
-					}
 				Actor_Says(kActorMcCoy, 2130, -1); //00-2130.AUD	You’re the coldest person I’ve ever seen when it comes to killing.
 				Actor_Says(kActorSteele, 300, 59); //01-0300.AUD	I’ll take that as a compliment.
 				Actor_Says(kActorMcCoy, 2135, -1); //00-2135.AUD	How did it feel to kill an innocent animal.
-					if (!Game_Flag_Query(kFlagMcCoyIsInnocent)) {
-						// If McCoy proved his innocence therefore showing he is not a rep Crystal won't accuse him of being a rep.
-						Actor_Says(kActorSteele, 310, 60); //01-0310.AUD	Wake up, Slim. The mutt was a Replicant. Just like its master.
-						Actor_Says(kActorMcCoy, 2140, -1); //00-2140.AUD	Bullshit.
-						Actor_Says(kActorSteele, 320, 59); //01-0320.AUD	You’re more confused than the damn dog was when I pulled the plug.
-						Actor_Says(kActorMcCoy, 2145, -1); //00-2145.AUD	She was real, Steele. No two ways about it.
-					}
-					Actor_Says(kActorSteele, 330, 58); //01-0330.AUD	Nobody gives a damn.
-					Delay (1000);
-					Actor_Says(kActorSteele, 530, 58); //01-0530.AUD	You almost got away with it, Slim.
-					Actor_Says(kActorSteele, 530, 58);	//01-0540.AUD	And I expected so much more from you.
-					Actor_Says(kActorMcCoy, 2170, -1); //00-2170.AUD	And my animal? Guzza tell you to get rid of her? Or did you do that on your own?
-					if (Actor_Query_Is_In_Current_Set(kActorDektora)) {
-						if (Game_Flag_Query(kFlagDektoraIsReplicant)
-						&& !Game_Flag_Query(kFlagMcCoyIsInnocent)) {
-							// These lines will only be said if Crystal believes that both you and your companion are replicants.
-							Actor_Says(kActorSteele, 340, 58); //01-0340.AUD	All three of you’d be nothing but a memory anyhow.
-							Actor_Says(kActorSteele, 350, 58); //01-0350.AUD	And I’ll be a rich lady.
-						}
-					}
-					Actor_Change_Animation_Mode(kActorSteele, kAnimationModeCombatIdle);
-					// Added in some action music here for the fight with Crystal.
-					Music_Play(kMusicMoraji, 71, 0, 0, -1, kMusicLoopPlayOnce, 2);
-					Actor_Set_Goal_Number(kActorSteele, kGoalSteeleHF06Attack);
-					Actor_Face_Actor(kActorSteele, actorId, true);
-					Actor_Change_Animation_Mode(kActorSteele, kAnimationModeCombatAttack);
-					Delay(500);
-					Scene_Loop_Set_Default(3);
-					Scene_Loop_Start_Special(kSceneLoopModeOnce, 2, true);
-					Sound_Play(kSfxBOMBFAIL, 50, 0, 0, 50);
-					Game_Flag_Set(kFlagHF06SteelInterruption);
-					Scene_Exits_Disable();
-					Non_Player_Actor_Combat_Mode_On(kActorSteele, kActorCombatStateUncover, true, actorId, 15, kAnimationModeCombatIdle, kAnimationModeCombatWalk, kAnimationModeCombatRun, 0, 0, 100, 10, 300, false);
+				if (!Game_Flag_Query(kFlagMcCoyIsInnocent)) {
+					// If McCoy proved his innocence therefore showing he is not a rep Crystal won't accuse him of being a rep.
+					Actor_Says(kActorSteele, 310, 60); //01-0310.AUD	Wake up, Slim. The mutt was a Replicant. Just like its master.
+					Actor_Says(kActorMcCoy, 2140, -1); //00-2140.AUD	Bullshit.
+					Actor_Says(kActorSteele, 320, 59); //01-0320.AUD	You’re more confused than the damn dog was when I pulled the plug.
+					Actor_Says(kActorMcCoy, 2145, -1); //00-2145.AUD	She was real, Steele. No two ways about it.
+				}
+				Actor_Says(kActorSteele, 330, 58); //01-0330.AUD	Nobody gives a damn.
+				Delay (1000);
+				Actor_Says(kActorSteele, 530, 58); //01-0530.AUD	You almost got away with it, Slim.
+				Actor_Says(kActorSteele, 530, 58);	//01-0540.AUD	And I expected so much more from you.
+				Actor_Says(kActorMcCoy, 2170, -1); //00-2170.AUD	And my animal? Guzza tell you to get rid of her? Or did you do that on your own?
+				if (Game_Flag_Query(kFlagDektoraIsReplicant)
+				&& !Game_Flag_Query(kFlagMcCoyIsInnocent)) {
+					// These lines will only be said if Crystal believes that both you and your companion are replicants.
+					Actor_Says(kActorSteele, 340, 58); //01-0340.AUD	All three of you’d be nothing but a memory anyhow.
+					Actor_Says(kActorSteele, 350, 58); //01-0350.AUD	And I’ll be a rich lady.
+				}
+				Actor_Change_Animation_Mode(kActorSteele, kAnimationModeCombatIdle);
+				// Added in some action music here for the fight with Crystal.
+				Music_Play(kMusicMoraji, 71, 0, 0, -1, kMusicLoopPlayOnce, 2);
+				Actor_Set_Goal_Number(kActorSteele, kGoalSteeleHF06Attack);
+				Actor_Face_Actor(kActorSteele, actorId, true);
+				Actor_Change_Animation_Mode(kActorSteele, kAnimationModeCombatAttack);
+				Delay(500);
+				Scene_Loop_Set_Default(3);
+				Scene_Loop_Start_Special(kSceneLoopModeOnce, 2, true);
+				Sound_Play(kSfxBOMBFAIL, 50, 0, 0, 50);
+				Game_Flag_Set(kFlagHF06SteelInterruption);
+				Scene_Exits_Disable();
+				Non_Player_Actor_Combat_Mode_On(kActorSteele, kActorCombatStateUncover, true, actorId, 15, kAnimationModeCombatIdle, kAnimationModeCombatWalk, kAnimationModeCombatRun, 0, 0, 100, 10, 300, false);
 			}
 		// This next set of code is for the same scene but Lucy is with you.
 		} else if (Actor_Query_Is_In_Current_Set(kActorLucy)) { 
@@ -429,30 +426,27 @@ void SceneScriptHF06::steelInterruption() {
 				Loop_Actor_Walk_To_XYZ(kActorSteele, 92.0f, 367.93f, 107.0f, 0, false, false, false);
 				Actor_Face_Actor(kActorSteele, kActorMcCoy, true);
 				Actor_Change_Animation_Mode(kActorSteele, kAnimationModeCombatIdle);
-				if (Actor_Query_Is_In_Current_Set(kActorLucy)) { 
-					if (Game_Flag_Query(kFlagLucyIsReplicant)) {
-						Actor_Says(kActorSteele, 290, 58); ////01-0290.AUD	Thanks for bringing her here. Makes my end a hell of a lot easier.
- 					}
-					Actor_Says(kActorMcCoy, 2130, -1); //00-2130.AUD	You’re the coldest person I’ve ever seen when it comes to killing.
-					Actor_Says(kActorSteele, 300, 59); //01-0300.AUD	I’ll take that as a compliment.
-					Actor_Says(kActorMcCoy, 2135, -1); //00-2135.AUD	How did it feel to kill an innocent animal.
-					if (!Game_Flag_Query(kFlagMcCoyIsInnocent)) {
-						Actor_Says(kActorSteele, 310, 60); //01-0310.AUD	Wake up, Slim. The mutt was a Replicant. Just like its master.
-						Actor_Says(kActorMcCoy, 2140, -1); //00-2140.AUD	Bullshit.
-						Actor_Says(kActorSteele, 320, 59); //01-0320.AUD	You’re more confused than the damn dog was when I pulled the plug.
-						Actor_Says(kActorMcCoy, 2145, -1); //00-2145.AUD	She was real, Steele. No two ways about it.
+				if (Game_Flag_Query(kFlagLucyIsReplicant)) {
+					Actor_Says(kActorSteele, 290, 58); ////01-0290.AUD	Thanks for bringing her here. Makes my end a hell of a lot easier.
+				}
+				Actor_Says(kActorMcCoy, 2130, -1); //00-2130.AUD	You’re the coldest person I’ve ever seen when it comes to killing.
+				Actor_Says(kActorSteele, 300, 59); //01-0300.AUD	I’ll take that as a compliment.
+				Actor_Says(kActorMcCoy, 2135, -1); //00-2135.AUD	How did it feel to kill an innocent animal.
+				if (!Game_Flag_Query(kFlagMcCoyIsInnocent)) {
+					Actor_Says(kActorSteele, 310, 60); //01-0310.AUD	Wake up, Slim. The mutt was a Replicant. Just like its master.
+					Actor_Says(kActorMcCoy, 2140, -1); //00-2140.AUD	Bullshit.
+					Actor_Says(kActorSteele, 320, 59); //01-0320.AUD	You’re more confused than the damn dog was when I pulled the plug.
+					Actor_Says(kActorMcCoy, 2145, -1); //00-2145.AUD	She was real, Steele. No two ways about it.
 				}
 				Actor_Says(kActorSteele, 330, 58); //01-0330.AUD	Nobody gives a damn.
 				Delay (1000);
 				Actor_Says(kActorSteele, 530, 58); //01-0530.AUD	You almost got away with it, Slim.
 				Actor_Says(kActorSteele, 530, 58);	//01-0540.AUD	And I expected so much more from you.
 				Actor_Says(kActorMcCoy, 2170, -1); //00-2170.AUD	And my animal? Guzza tell you to get rid of her? Or did you do that on your own?
-				if (Actor_Query_Is_In_Current_Set(kActorLucy)) { 
-					if (Game_Flag_Query(kFlagLucyIsReplicant) 
-					&& !Game_Flag_Query(kFlagMcCoyIsInnocent)) {
-						Actor_Says(kActorSteele, 340, 58); //01-0340.AUD	All three of you’d be nothing but a memory anyhow.
-						Actor_Says(kActorSteele, 350, 58); //01-0350.AUD	And I’ll be a rich lady.
-					}	
+				if (Game_Flag_Query(kFlagLucyIsReplicant) 
+				&& !Game_Flag_Query(kFlagMcCoyIsInnocent)) {
+					Actor_Says(kActorSteele, 340, 58); //01-0340.AUD	All three of you’d be nothing but a memory anyhow.
+					Actor_Says(kActorSteele, 350, 58); //01-0350.AUD	And I’ll be a rich lady.	
 				}
 				Actor_Change_Animation_Mode(kActorSteele, kAnimationModeCombatIdle);
 				Music_Play(kMusicMoraji, 71, 0, 0, -1, kMusicLoopPlayOnce, 2);
@@ -468,51 +462,50 @@ void SceneScriptHF06::steelInterruption() {
 				Non_Player_Actor_Combat_Mode_On(kActorSteele, kActorCombatStateUncover, true, actorId, 15, kAnimationModeCombatIdle, kAnimationModeCombatWalk, kAnimationModeCombatRun, 0, 0, 100, 10, 300, false);
 			}
 		}
-		}
 	} else {
-	// The code for the scene in the vanila game.
-	Actor_Put_In_Set(kActorSteele, kSetHF06);
-	Actor_Set_At_XYZ(kActorSteele, 92.0f, 367.93f, 19.0f, 0);
-	Actor_Set_Targetable(kActorSteele, true);
-	Actor_Face_Actor(actorId, kActorSteele, true);
-	if (actorId == kActorDektora) {
-		Actor_Says(kActorDektora, 90, 13);
-	} else if (actorId == kActorLucy) {
-		Actor_Says(kActorLucy, 380, 13);
-	}
-	Actor_Says(kActorMcCoy, 6230, 0);
-	Actor_Says(kActorSteele, 280, 58);
-	Actor_Face_Actor(kActorMcCoy, kActorSteele, true);
-	Player_Set_Combat_Mode(true);
-	// TODO revisit setting kActorMcCoy to Combat Aim via Actor_Change_Animation_Mode()
-	//      (see notes in Gordo AI script in his CompletedMovementTrack())
-	Actor_Change_Animation_Mode(kActorMcCoy, kAnimationModeCombatAim);
-	Actor_Change_Animation_Mode(kActorSteele, kAnimationModeCombatWalk);
-	Loop_Actor_Walk_To_XYZ(kActorSteele, 92.0f, 367.93f, 107.0f, 0, false, false, false);
-	Actor_Face_Actor(kActorSteele, kActorMcCoy, true);
-	Actor_Change_Animation_Mode(kActorSteele, kAnimationModeCombatIdle);
-	Actor_Says(kActorSteele, 290, 58);
-	Actor_Says(kActorMcCoy, 2130, -1);
-	Actor_Says(kActorSteele, 300, 59);
-	Actor_Says(kActorMcCoy, 2135, -1);
-	Actor_Says(kActorSteele, 310, 60);
-	Actor_Says(kActorMcCoy, 2140, -1);
-	Actor_Says(kActorSteele, 320, 59);
-	Actor_Says(kActorMcCoy, 2145, -1);
-	Actor_Says(kActorSteele, 330, 58);
-	Actor_Says(kActorSteele, 340, 58);
-	Actor_Says(kActorSteele, 350, 58);
-	Actor_Change_Animation_Mode(kActorSteele, kAnimationModeCombatIdle);
-	Actor_Set_Goal_Number(kActorSteele, kGoalSteeleHF06Attack);
-	Actor_Face_Actor(kActorSteele, actorId, true);
-	Actor_Change_Animation_Mode(kActorSteele, kAnimationModeCombatAttack);
-	Delay(500);
-	Scene_Loop_Set_Default(3);
-	Scene_Loop_Start_Special(kSceneLoopModeOnce, 2, true);
-	Sound_Play(kSfxBOMBFAIL, 50, 0, 0, 50);
-	Game_Flag_Set(kFlagHF06SteelInterruption);
-	Scene_Exits_Disable();
-	Non_Player_Actor_Combat_Mode_On(kActorSteele, kActorCombatStateUncover, true, actorId, 15, kAnimationModeCombatIdle, kAnimationModeCombatWalk, kAnimationModeCombatRun, 0, 0, 100, 10, 300, false);
+		// The code for the scene in the vanila game.
+		Actor_Put_In_Set(kActorSteele, kSetHF06);
+		Actor_Set_At_XYZ(kActorSteele, 92.0f, 367.93f, 19.0f, 0);
+		Actor_Set_Targetable(kActorSteele, true);
+		Actor_Face_Actor(actorId, kActorSteele, true);
+		if (actorId == kActorDektora) {
+			Actor_Says(kActorDektora, 90, 13);
+		} else if (actorId == kActorLucy) {
+			Actor_Says(kActorLucy, 380, 13);
+		}
+		Actor_Says(kActorMcCoy, 6230, 0);
+		Actor_Says(kActorSteele, 280, 58);
+		Actor_Face_Actor(kActorMcCoy, kActorSteele, true);
+		Player_Set_Combat_Mode(true);
+		// TODO revisit setting kActorMcCoy to Combat Aim via Actor_Change_Animation_Mode()
+		//      (see notes in Gordo AI script in his CompletedMovementTrack())
+		Actor_Change_Animation_Mode(kActorMcCoy, kAnimationModeCombatAim);
+		Actor_Change_Animation_Mode(kActorSteele, kAnimationModeCombatWalk);
+		Loop_Actor_Walk_To_XYZ(kActorSteele, 92.0f, 367.93f, 107.0f, 0, false, false, false);
+		Actor_Face_Actor(kActorSteele, kActorMcCoy, true);
+		Actor_Change_Animation_Mode(kActorSteele, kAnimationModeCombatIdle);
+		Actor_Says(kActorSteele, 290, 58);
+		Actor_Says(kActorMcCoy, 2130, -1);
+		Actor_Says(kActorSteele, 300, 59);
+		Actor_Says(kActorMcCoy, 2135, -1);
+		Actor_Says(kActorSteele, 310, 60);
+		Actor_Says(kActorMcCoy, 2140, -1);
+		Actor_Says(kActorSteele, 320, 59);
+		Actor_Says(kActorMcCoy, 2145, -1);
+		Actor_Says(kActorSteele, 330, 58);
+		Actor_Says(kActorSteele, 340, 58);
+		Actor_Says(kActorSteele, 350, 58);
+		Actor_Change_Animation_Mode(kActorSteele, kAnimationModeCombatIdle);
+		Actor_Set_Goal_Number(kActorSteele, kGoalSteeleHF06Attack);
+		Actor_Face_Actor(kActorSteele, actorId, true);
+		Actor_Change_Animation_Mode(kActorSteele, kAnimationModeCombatAttack);
+		Delay(500);
+		Scene_Loop_Set_Default(3);
+		Scene_Loop_Start_Special(kSceneLoopModeOnce, 2, true);
+		Sound_Play(kSfxBOMBFAIL, 50, 0, 0, 50);
+		Game_Flag_Set(kFlagHF06SteelInterruption);
+		Scene_Exits_Disable();
+		Non_Player_Actor_Combat_Mode_On(kActorSteele, kActorCombatStateUncover, true, actorId, 15, kAnimationModeCombatIdle, kAnimationModeCombatWalk, kAnimationModeCombatRun, 0, 0, 100, 10, 300, false);
 	}
 }
 

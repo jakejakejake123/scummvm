@@ -242,6 +242,8 @@ void SceneScriptNR08::PlayerWalkedIn() {
 		Actor_Says(kActorSteele, 1690, 15); //01-1690.AUD	I don’t want this one giving us the blow-off.
 		// Added in some dialogue for Crystal and McCoy.
 		if (_vm->_cutContent) {
+			Music_Stop(3u);
+			Actor_Face_Actor(kActorMcCoy, kActorSteele, true);
 			Actor_Says(kActorMcCoy, 6285, 14); //00-6285.AUD	Who made you Captain?
 			Actor_Says(kActorSteele, 1530, 15); //01-1530.AUD	Let’s attend to some business.
 			Music_Play(kMusicBatl226M, 50, 0, 2, -1, kMusicLoopPlayOnce, 0);

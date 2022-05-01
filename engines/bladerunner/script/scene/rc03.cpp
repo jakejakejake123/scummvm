@@ -316,65 +316,127 @@ void SceneScriptRC03::talkWithSteele() {
 }
 
 void SceneScriptRC03::PlayerWalkedIn() {
-	if (Actor_Query_Goal_Number(kActorIzo) == kGoalIzoWaitingAtRC03) {
+	if (_vm->_cutContent) {
+		if (Actor_Query_Goal_Number(kActorIzo) == kGoalIzoWaitingAtRC03) {
+			Scene_Exits_Disable();
+			if (Game_Flag_Query(kFlagUG01toRC03)) {
+				// Music will play during the confrontation with Izo.
+				if (Game_Flag_Query(kFlagIzoIsReplicant)) {
+					Music_Play(kMusicBeating1, 71, 0, 0, -1, kMusicLoopPlayOnce, 2);
+					Player_Set_Combat_Mode(false);
+					Player_Loses_Control();
+					Actor_Set_At_XYZ(kActorMcCoy, 147.51f, -4.0f, 166.48f, 500);
+					Actor_Put_In_Set(kActorIzo, kSetRC03);
+					Actor_Set_At_XYZ(kActorIzo, 196.0f, -4.0f, 184.0f, 775);
+					Actor_Face_Actor(kActorIzo, kActorMcCoy, true);
+					Actor_Face_Actor(kActorMcCoy, kActorIzo, true);
+					Actor_Change_Animation_Mode(kActorIzo, kAnimationModeCombatIdle);
+					Actor_Says_With_Pause(kActorIzo, 630, 0.0f, -1); // TODO: A bug? why is animation mode set as -1? and why is "With_Pause" version used?
+					Actor_Says_With_Pause(kActorIzo, 640, 0.0f, -1); // TODO: A bug? why is animation mode set as -1? and why is "With_Pause" version used?
+					Actor_Says_With_Pause(kActorIzo, 650, 0.0f, -1); // TODO: A bug? why is animation mode set as -1? and why is "With_Pause" version used?
+					if (Game_Flag_Query(kFlagIzoIsReplicant) ) {
+						if (Actor_Query_Goal_Number(kActorIzo) != kGoalIzoDie
+							&& Actor_Query_Goal_Number(kActorIzo) != kGoalIzoDieHidden
+							&& Actor_Query_Goal_Number(kActorIzo) != kGoalIzoRC03RanAwayDone
+							&& Actor_Query_Goal_Number(kActorIzo) != kGoalIzoEscape
+							&& Actor_Query_Goal_Number(kActorSteele) != kGoalSteeleShootIzo
+							&& Actor_Query_Goal_Number(kActorSteele) != kGoalSteeleIzoBlockedByMcCoy
+							&& Actor_Query_Goal_Number(kActorSteele) != kGoalSteeleLeaveRC03
+							&& Actor_Query_Goal_Number(kActorSteele) != kGoalSteeleGoToPoliceStation
+						) {
+							Actor_Set_Goal_Number(kActorSteele, kGoalSteeleApprehendIzo);
+						}
+						Player_Gains_Control();
+					}
+					Actor_Change_Animation_Mode(kActorMcCoy, kAnimationModeDodge);
+					Loop_Actor_Walk_To_XYZ(kActorIzo, 180.0f, -4.0f, 184.0f, 0, false, false, false);
+					Actor_Change_Animation_Mode(kActorIzo, kAnimationModeCombatAttack);
+				} else {
+					Player_Set_Combat_Mode(false);
+					Player_Loses_Control();
+					Actor_Set_At_XYZ(kActorMcCoy, 147.51f, -4.0f, 166.48f, 500);
+					Actor_Put_In_Set(kActorIzo, kSetRC03);
+					Actor_Set_At_XYZ(kActorIzo, 196.0f, -4.0f, 184.0f, 775);
+					Actor_Face_Actor(kActorIzo, kActorMcCoy, true);
+					Actor_Face_Actor(kActorMcCoy, kActorIzo, true);
+					Actor_Says(kActorMcCoy, 8950, 14); //00-8950.AUD	Hold it right there!
+					if (Actor_Query_Goal_Number(kActorIzo) != kGoalIzoDie
+						&& Actor_Query_Goal_Number(kActorIzo) != kGoalIzoDieHidden
+						&& Actor_Query_Goal_Number(kActorIzo) != kGoalIzoRC03RanAwayDone
+						&& Actor_Query_Goal_Number(kActorIzo) != kGoalIzoEscape
+						&& Actor_Query_Goal_Number(kActorSteele) != kGoalSteeleShootIzo
+						&& Actor_Query_Goal_Number(kActorSteele) != kGoalSteeleIzoBlockedByMcCoy
+						&& Actor_Query_Goal_Number(kActorSteele) != kGoalSteeleLeaveRC03
+						&& Actor_Query_Goal_Number(kActorSteele) != kGoalSteeleGoToPoliceStation
+					) {
+						Actor_Set_Goal_Number(kActorSteele, kGoalSteeleApprehendIzo);
+					}
+					Player_Gains_Control();
+				}
+			} else {
+				Actor_Put_In_Set(kActorIzo, kSetRC03);
+				Actor_Set_At_XYZ(kActorIzo, -226.0f, 1.72f, 86.0f, 0);
+				Actor_Set_Targetable(kActorIzo, true);
+				Actor_Set_Goal_Number(kActorIzo, kGoalIzoRC03Walk);
+			}
+		}
+	} else if (Actor_Query_Goal_Number(kActorIzo) == kGoalIzoWaitingAtRC03) {
 		Scene_Exits_Disable();
 		if (Game_Flag_Query(kFlagUG01toRC03)) {
-			// Music will play during the confrontation with Izo.
-			if (_vm->_cutContent) {
-				Music_Play(kMusicBeating1, 71, 0, 0, -1, kMusicLoopPlayOnce, 2);
-			}
-			Player_Set_Combat_Mode(false);
-			Player_Loses_Control();
-			Actor_Set_At_XYZ(kActorMcCoy, 147.51f, -4.0f, 166.48f, 500);
-			Actor_Put_In_Set(kActorIzo, kSetRC03);
-			Actor_Set_At_XYZ(kActorIzo, 196.0f, -4.0f, 184.0f, 775);
-			Actor_Face_Actor(kActorIzo, kActorMcCoy, true);
-			Actor_Face_Actor(kActorMcCoy, kActorIzo, true);
-			Actor_Change_Animation_Mode(kActorIzo, kAnimationModeCombatIdle);
-			Actor_Says_With_Pause(kActorIzo, 630, 0.0f, -1); // TODO: A bug? why is animation mode set as -1? and why is "With_Pause" version used?
-			Actor_Says_With_Pause(kActorIzo, 640, 0.0f, -1); // TODO: A bug? why is animation mode set as -1? and why is "With_Pause" version used?
-			Actor_Says_With_Pause(kActorIzo, 650, 0.0f, -1); // TODO: A bug? why is animation mode set as -1? and why is "With_Pause" version used?
-			if (Game_Flag_Query(kFlagIzoIsReplicant) ) {
-#if BLADERUNNER_ORIGINAL_BUGS
-				Actor_Set_Goal_Number(kActorSteele, kGoalSteeleApprehendIzo);
-#else
-				// prevent re-apprehending of Izo
-				if (Actor_Query_Goal_Number(kActorIzo) != kGoalIzoDie
-				    && Actor_Query_Goal_Number(kActorIzo) != kGoalIzoDieHidden
-				    && Actor_Query_Goal_Number(kActorIzo) != kGoalIzoRC03RanAwayDone
-				    && Actor_Query_Goal_Number(kActorIzo) != kGoalIzoEscape
-				    && Actor_Query_Goal_Number(kActorSteele) != kGoalSteeleShootIzo
-				    && Actor_Query_Goal_Number(kActorSteele) != kGoalSteeleIzoBlockedByMcCoy
-				    && Actor_Query_Goal_Number(kActorSteele) != kGoalSteeleLeaveRC03
-				    && Actor_Query_Goal_Number(kActorSteele) != kGoalSteeleGoToPoliceStation
-				) {
+			if (Game_Flag_Query(kFlagIzoIsReplicant)) {
+				Player_Set_Combat_Mode(false);
+				Player_Loses_Control();
+				Actor_Set_At_XYZ(kActorMcCoy, 147.51f, -4.0f, 166.48f, 500);
+				Actor_Put_In_Set(kActorIzo, kSetRC03);
+				Actor_Set_At_XYZ(kActorIzo, 196.0f, -4.0f, 184.0f, 775);
+				Actor_Face_Actor(kActorIzo, kActorMcCoy, true);
+				Actor_Face_Actor(kActorMcCoy, kActorIzo, true);
+				Actor_Change_Animation_Mode(kActorIzo, kAnimationModeCombatIdle);
+				Actor_Says_With_Pause(kActorIzo, 630, 0.0f, -1); // TODO: A bug? why is animation mode set as -1? and why is "With_Pause" version used?
+				Actor_Says_With_Pause(kActorIzo, 640, 0.0f, -1); // TODO: A bug? why is animation mode set as -1? and why is "With_Pause" version used?
+				Actor_Says_With_Pause(kActorIzo, 650, 0.0f, -1); // TODO: A bug? why is animation mode set as -1? and why is "With_Pause" version used?
+				if (Game_Flag_Query(kFlagIzoIsReplicant) ) {
+	#if BLADERUNNER_ORIGINAL_BUGS
 					Actor_Set_Goal_Number(kActorSteele, kGoalSteeleApprehendIzo);
+	#else
+					// prevent re-apprehending of Izo
+					if (Actor_Query_Goal_Number(kActorIzo) != kGoalIzoDie
+						&& Actor_Query_Goal_Number(kActorIzo) != kGoalIzoDieHidden
+						&& Actor_Query_Goal_Number(kActorIzo) != kGoalIzoRC03RanAwayDone
+						&& Actor_Query_Goal_Number(kActorIzo) != kGoalIzoEscape
+						&& Actor_Query_Goal_Number(kActorSteele) != kGoalSteeleShootIzo
+						&& Actor_Query_Goal_Number(kActorSteele) != kGoalSteeleIzoBlockedByMcCoy
+						&& Actor_Query_Goal_Number(kActorSteele) != kGoalSteeleLeaveRC03
+						&& Actor_Query_Goal_Number(kActorSteele) != kGoalSteeleGoToPoliceStation
+					) {
+						Actor_Set_Goal_Number(kActorSteele, kGoalSteeleApprehendIzo);
+					}
+	#endif // BLADERUNNER_ORIGINAL_BUGS
 				}
-#endif // BLADERUNNER_ORIGINAL_BUGS
-			}
-			Actor_Change_Animation_Mode(kActorMcCoy, kAnimationModeDodge);
-			Loop_Actor_Walk_To_XYZ(kActorIzo, 180.0f, -4.0f, 184.0f, 0, false, false, false);
-			Actor_Change_Animation_Mode(kActorIzo, kAnimationModeCombatAttack);
-			if (!Game_Flag_Query(kFlagIzoIsReplicant)) {
-#if BLADERUNNER_ORIGINAL_BUGS
-				Actor_Set_Goal_Number(kActorSteele, kGoalSteeleApprehendIzo);
-#else
-				// prevent re-apprehending of Izo
-				if (Actor_Query_Goal_Number(kActorIzo) != kGoalIzoGetArrested
-				    && Actor_Query_Goal_Number(kActorIzo) != kGoalIzoGotArrested
-				    && Actor_Query_Goal_Number(kActorIzo) != kGoalIzoRC03RanAwayDone
-				    && Actor_Query_Goal_Number(kActorIzo) != kGoalIzoEscape
-				    && Actor_Query_Goal_Number(kActorSteele) != kGoalSteeleApprehendIzo
-				    && Actor_Query_Goal_Number(kActorSteele) != kGoalSteeleArrestIzo
-				    && Actor_Query_Goal_Number(kActorSteele) != kGoalSteeleIzoBlockedByMcCoy
-				    && Actor_Query_Goal_Number(kActorSteele) != kGoalSteeleLeaveRC03
-				    && Actor_Query_Goal_Number(kActorSteele) != kGoalSteeleGoToPoliceStation
-				) {
+				Actor_Change_Animation_Mode(kActorMcCoy, kAnimationModeDodge);
+				Loop_Actor_Walk_To_XYZ(kActorIzo, 180.0f, -4.0f, 184.0f, 0, false, false, false);
+				Actor_Change_Animation_Mode(kActorIzo, kAnimationModeCombatAttack);
+				if (!Game_Flag_Query(kFlagIzoIsReplicant)) {
+	#if BLADERUNNER_ORIGINAL_BUGS
 					Actor_Set_Goal_Number(kActorSteele, kGoalSteeleApprehendIzo);
+	#else
+					// prevent re-apprehending of Izo
+					if (Actor_Query_Goal_Number(kActorIzo) != kGoalIzoGetArrested
+						&& Actor_Query_Goal_Number(kActorIzo) != kGoalIzoGotArrested
+						&& Actor_Query_Goal_Number(kActorIzo) != kGoalIzoRC03RanAwayDone
+						&& Actor_Query_Goal_Number(kActorIzo) != kGoalIzoEscape
+						&& Actor_Query_Goal_Number(kActorSteele) != kGoalSteeleApprehendIzo
+						&& Actor_Query_Goal_Number(kActorSteele) != kGoalSteeleArrestIzo
+						&& Actor_Query_Goal_Number(kActorSteele) != kGoalSteeleIzoBlockedByMcCoy
+						&& Actor_Query_Goal_Number(kActorSteele) != kGoalSteeleLeaveRC03
+						&& Actor_Query_Goal_Number(kActorSteele) != kGoalSteeleGoToPoliceStation
+					) {
+						Actor_Set_Goal_Number(kActorSteele, kGoalSteeleApprehendIzo);
+					}
+	#endif // BLADERUNNER_ORIGINAL_BUGS
 				}
-#endif // BLADERUNNER_ORIGINAL_BUGS
+				Player_Gains_Control();
 			}
-			Player_Gains_Control();
 		} else {
 			Actor_Put_In_Set(kActorIzo, kSetRC03);
 			Actor_Set_At_XYZ(kActorIzo, -226.0f, 1.72f, 86.0f, 0);
@@ -407,6 +469,8 @@ void SceneScriptRC03::PlayerWalkedIn() {
 		Actor_Says(kActorMcCoy, 4820, 16); //00-4820.AUD	He probably went down in the sewers.
 		Actor_Says(kActorSteele, 1850, 59); //01-1850.AUD	Right where that dirt-bag belongs.
 		Actor_Says(kActorSteele, 1950, 59); //01-1950.AUD	I've been tracking Izo for a week and you ruined my whole plan in two seconds.
+		Game_Flag_Reset(kFlagIzoEscaped);
+		Game_Flag_Reset(kFlagIzoWarnedAboutCrystal);
 		if (!Game_Flag_Query(kFlagIzoWarned)) {
 			Actor_Says(kActorMcCoy, 4835, 13); //00-4835.AUD	Sorry, I bet you can still catch him if you want.
 			Actor_Says(kActorSteele, 1960, 60); //01-1960.AUD	Crawl down that hole and ruin a twenty thousand chinyen Yamamoto suit? I don't think so.
@@ -414,8 +478,6 @@ void SceneScriptRC03::PlayerWalkedIn() {
 			Actor_Says(kActorMcCoy, 4840, 16); //00-4840.AUD	You crazy? I've been tailing him myself.
 			Actor_Says(kActorSteele, 1990, 60); //01-1990.AUD	A little word of advice, Slim. Stay out of my way.
 			Player_Gains_Control();
-			Game_Flag_Reset(kFlagIzoWarnedAboutCrystal);
-			Game_Flag_Set(kFlagIzoGotAway);
 			Actor_Set_Goal_Number(kActorSteele, kGoalSteeleLeaveRC03);
 		} else {
 			Actor_Says(kActorMcCoy, 8565, 15); //00-8565.AUD	Really?

@@ -107,7 +107,11 @@ bool SceneScriptTB06::ClickedOnItem(int itemId, bool a2) {
 	if (itemId == kItemDogCollar) {
 		if (!Loop_Actor_Walk_To_Item(kActorMcCoy, kItemDogCollar, 12, true, false)) {
 			Actor_Face_Item(kActorMcCoy, kItemDogCollar, true);
-			Actor_Clue_Acquire(kActorMcCoy, kClueDogCollar1, true, -1);
+			if (_vm->_cutContent) {
+				Actor_Clue_Acquire(kActorMcCoy, kClueDogCollar1, true, kActorMarcus);
+			} else {
+				Actor_Clue_Acquire(kActorMcCoy, kClueDogCollar1, true, -1);
+			}
 			Item_Pickup_Spin_Effect(kModelAnimationDogCollar, 341, 368);
 			Item_Remove_From_World(kItemDogCollar);
 			if (_vm->_cutContent) {

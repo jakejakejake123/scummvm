@@ -82,9 +82,9 @@ void SceneScriptCT10::checkCabinet() {
 			} else if (!Actor_Clue_Query(kActorMcCoy, kClueHoldensBadge)) {
 				Item_Pickup_Spin_Effect(kModelAnimationBadge, 435, 258);
 				Actor_Says(kActorMcCoy, 8860, 12); //00-8860.AUD	Holden's badge.
-				Actor_Clue_Acquire(kActorMcCoy, kClueHoldensBadge, true, -1);	
+				Actor_Clue_Acquire(kActorMcCoy, kClueHoldensBadge, true, kActorLeon);	
 			} else {
-				Actor_Clue_Acquire(kActorMcCoy, kClueInceptShotsLeon, true, -1);
+				Actor_Clue_Acquire(kActorMcCoy, kClueInceptShotsLeon, true, kActorLeon);
 				Item_Pickup_Spin_Effect(kModelAnimationPhoto, 435, 258);
 				Delay (2000);
 				Item_Pickup_Spin_Effect(kModelAnimationPhoto, 435, 258);
@@ -93,9 +93,6 @@ void SceneScriptCT10::checkCabinet() {
 			Actor_Voice_Over(3700, kActorVoiceOver); //99-3700.AUD	Nothing.
 		} else {
 			Item_Pickup_Spin_Effect(kModelAnimationBadge, 435, 258);
-			if (_vm->_cutContent) {
-				Actor_Says(kActorMcCoy, 8860, 12); //00-8860.AUD	Holden's badge.
-			}
 			Actor_Clue_Acquire(kActorMcCoy, kClueHoldensBadge, true, -1);
 		}
 		Player_Gains_Control();

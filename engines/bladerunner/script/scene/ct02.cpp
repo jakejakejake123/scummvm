@@ -332,15 +332,17 @@ bool SceneScriptCT02::ClickedOnItem(int itemId, bool a2) {
 	if (itemId == kItemChopstickWrapper) {
 		if (!Loop_Actor_Walk_To_Item(kActorMcCoy, kItemChopstickWrapper, 12, true, false)) {
 			Actor_Face_Item(kActorMcCoy, kItemChopstickWrapper, true);
-			Actor_Clue_Acquire(kActorMcCoy, kClueCandyWrapper, true, -1);
-			Item_Pickup_Spin_Effect(kModelAnimationCandyWrapper, 434, 388);
-			Item_Remove_From_World(kItemChopstickWrapper);
-			Actor_Says(kActorMcCoy, 8875, 13); //00-8875.AUD	A brown cow candy wrapper.
-				if ( Actor_Clue_Query(kActorMcCoy, kClueCandy)) {
-					Actor_Voice_Over(3300, kActorVoiceOver); //99-3300.AUD	I recognized the wrapper.
-					Actor_Voice_Over(3310, kActorVoiceOver); //99-3310.AUD	The same brand of candy that Lucy had on her desk at Runciter’s.
-				}
-				return true;
+			if (Actor_Clue_Query(kActorMcCoy, kClueCandy)) {
+				Actor_Clue_Acquire(kActorMcCoy, kClueCandyWrapper, true, kActorLucy);
+				Item_Pickup_Spin_Effect(kModelAnimationCandyWrapper, 434, 388);
+				Item_Remove_From_World(kItemChopstickWrapper);
+				Actor_Says(kActorMcCoy, 8875, 13); //00-8875.AUD	A brown cow candy wrapper.
+				Actor_Voice_Over(3300, kActorVoiceOver); //99-3300.AUD	I recognized the wrapper.
+				Actor_Voice_Over(3310, kActorVoiceOver); //99-3310.AUD	The same brand of candy that Lucy had on her desk at Runciter’s.
+			} else {
+				Actor_Says(kActorMcCoy, 8525, 14); // 00-8525.AUD	Hmph.
+			}
+			return true;
 		}
 			
 	}	

@@ -65,7 +65,11 @@ bool SceneScriptCT51::ClickedOn3DObject(const char *objectName, bool a2) {
 	if (Object_Query_Click("BED02", objectName)) {
 		if (!Actor_Clue_Query(kActorMcCoy, kClueHysteriaToken)) {
 			Item_Pickup_Spin_Effect(kModelAnimationHysteriaToken, 203, 200);
-			Actor_Clue_Acquire(kActorMcCoy, kClueHysteriaToken, true, -1);
+			if (_vm->_cutContent) {
+				Actor_Clue_Acquire(kActorMcCoy, kClueHysteriaToken, true, kActorLucy);
+			} else {
+				Actor_Clue_Acquire(kActorMcCoy, kClueHysteriaToken, true, -1);
+			}
 			if (_vm->_cutContent) {
 				Actor_Says(kActorMcCoy, 8810, 14);	//00-8810.AUD	An arcade token.
 			}
@@ -83,7 +87,11 @@ bool SceneScriptCT51::ClickedOnActor(int actorId) {
 
 bool SceneScriptCT51::ClickedOnItem(int itemId, bool a2) {
 	if (itemId == kItemRagDoll) {
-		Actor_Clue_Acquire(kActorMcCoy, kClueRagDoll, true, -1);
+		if (_vm->_cutContent) {
+			Actor_Clue_Acquire(kActorMcCoy, kClueRagDoll, true, kActorLucy);
+		} else {
+			Actor_Clue_Acquire(kActorMcCoy, kClueRagDoll, true, -1);
+		}
 		Item_Pickup_Spin_Effect(kModelAnimationRagDoll, 260, 200);
 		Ambient_Sounds_Play_Sound(kSfxBABYCRY2, 40, 99, 0, 0);
 		Item_Remove_From_World(kItemRagDoll);
@@ -94,7 +102,11 @@ bool SceneScriptCT51::ClickedOnItem(int itemId, bool a2) {
 	}
 
 	if (itemId == kItemMoonbusPhoto) {
-		Actor_Clue_Acquire(kActorMcCoy, kClueMoonbus1, true, -1);
+		if (_vm->_cutContent) {
+			Actor_Clue_Acquire(kActorMcCoy, kClueMoonbus1, true, kActorIzo);
+		} else {
+			Actor_Clue_Acquire(kActorMcCoy, kClueMoonbus1, true, -1);
+		}
 		Item_Pickup_Spin_Effect(kModelAnimationPhoto, 490, 307);
 		Item_Remove_From_World(kItemMoonbusPhoto);
 		Actor_Says(kActorMcCoy, 8527, kAnimationModeTalk);

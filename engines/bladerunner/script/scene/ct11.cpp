@@ -67,18 +67,22 @@ void SceneScriptCT11::SceneLoaded() {
 			Game_Flag_Set(kFlagCT11DogWrapperAvailable);
 		}
 
-		if (_vm->_cutContent
-		    && !Actor_Clue_Query(kActorMcCoy, kClueGrigoriansNote)
-		    && (!Game_Flag_Query(kFlagDektoraIsReplicant)
-		        && !Game_Flag_Query(kFlagGordoIsReplicant))
-		) {
-			// The car is only bought by Reps from CrazyLegs
-			// if Dektora is a Replicant
-			// or if Dektora  is human and Gordo is also human (so Clovis bought it from Crazylegs)
-			// We place the note only for the second case here.
-			// For the first case, a CrazyLegs advertisement (plus note) is placed in Dektora's room (nr07, kClueCrazysInvolvement)
-			Item_Add_To_World(kItemNote, kModelAnimationGrigoriansNote, kSetCT11, 641.21f, 26.0f, 472.0f, 304, 12, 12, false, true, false, true);
-			Scene_2D_Region_Add(2, 505, 321, 519, 332);
+		if (_vm->_cutContent) {
+		    if (!Actor_Clue_Query(kActorMcCoy, kClueGrigoriansNote)) {
+		    	if (Game_Flag_Query(kFlagDektoraIsReplicant)
+		   		&& !Game_Flag_Query(kFlagGordoIsReplicant)) {
+					Item_Add_To_World(kItemNote, kModelAnimationGrigoriansNote, kSetCT11, 641.21f, 26.0f, 472.0f, 304, 12, 12, false, true, false, true);
+					Scene_2D_Region_Add(2, 505, 321, 519, 332);
+				} else if (Game_Flag_Query(kFlagDektoraIsReplicant)
+				&& Game_Flag_Query(kFlagGordoIsReplicant)) {
+					Item_Add_To_World(kItemNote, kModelAnimationGrigoriansNote, kSetCT11, 641.21f, 26.0f, 472.0f, 304, 12, 12, false, true, false, true);
+					Scene_2D_Region_Add(2, 505, 321, 519, 332);
+				} else if (!Game_Flag_Query(kFlagDektoraIsReplicant)
+				&& !Game_Flag_Query(kFlagGordoIsReplicant)) {
+					Item_Add_To_World(kItemNote, kModelAnimationGrigoriansNote, kSetCT11, 641.21f, 26.0f, 472.0f, 304, 12, 12, false, true, false, true);
+					Scene_2D_Region_Add(2, 505, 321, 519, 332);
+				}
+			}
 		}
 
 		if (!Actor_Clue_Query(kActorMcCoy, kClueCar)) {
@@ -87,9 +91,9 @@ void SceneScriptCT11::SceneLoaded() {
 #else
 			// expand region 1 a bit and add two more
 			// as auxilliary in order to better cover the car area
-			Scene_2D_Region_Add(1, 365, 258, 552, 358);
-			Scene_2D_Region_Add(3, 267, 330, 365, 377);
-			Scene_2D_Region_Add(4, 365, 358, 454, 377);
+			Scene_2D_Region_Add(1, 365, 258, 460, 358);
+			Scene_2D_Region_Add(3, 267, 330, 460, 377);
+			Scene_2D_Region_Add(4, 365, 358, 460, 377);
 #endif // BLADERUNNER_ORIGINAL_BUGS
 		}
 	} else {
@@ -176,23 +180,45 @@ bool SceneScriptCT11::ClickedOn2DRegion(int region) {
 	if (region == 0 && Game_Flag_Query(kFlagCT11DogWrapperAvailable)) {
 		if (!Loop_Actor_Walk_To_XYZ(kActorMcCoy, 686.0f, 0.0f, 658.0f, 12, true, false, false)) {
 			Actor_Face_Heading(kActorMcCoy, 47, false);
-			Item_Remove_From_World(kItemDogWrapper);
-			Actor_Clue_Acquire(kActorMcCoy, kClueLichenDogWrapper, false, -1);
-			Item_Pickup_Spin_Effect(kModelAnimationLichenDogWrapper, 510, 319);
-			Game_Flag_Reset(kFlagCT11DogWrapperAvailable);
-			Game_Flag_Set(kFlagCT11DogWrapperTaken);
 			if (_vm->_cutContent) {
-				Actor_Says(kActorMcCoy, 8865, 13); //00-8865.AUD	A lichen-dog wrapper.
+				if (Actor_Clue_Query(kActorMcCoy, kClueCar)
+				|| Game_Flag_Query(kFlagCarFound)
+				|| Actor_Clue_Query(kActorMcCoy, kClueGrigoriansNote)) {
+					Item_Remove_From_World(kItemDogWrapper);		
+					Actor_Clue_Acquire(kActorMcCoy, kClueLichenDogWrapper, false, kActorMurray);
+					Item_Pickup_Spin_Effect(kModelAnimationLichenDogWrapper, 510, 319);
+					Game_Flag_Reset(kFlagCT11DogWrapperAvailable);
+					Game_Flag_Set(kFlagCT11DogWrapperTaken);
+					Actor_Says(kActorMcCoy, 8865, 13); //00-8865.AUD	A lichen-dog wrapper.
+					Actor_Voice_Over(550, kActorVoiceOver);
+					Actor_Voice_Over(560, kActorVoiceOver);
+					Actor_Voice_Over(570, kActorVoiceOver);
+					Actor_Voice_Over(580, kActorVoiceOver);
+		#if !BLADERUNNER_ORIGINAL_BUGS
+					// in the original game the hotspot would not be removed
+					// after picking up the lichendog Wrapper
+					Scene_2D_Region_Remove(0);
+		#endif // !BLADERUNNER_ORIGINAL_BUGS
+				} else {
+					Actor_Says(kActorMcCoy, 8525, 14); // 00-8525.AUD	Hmph.
+				}
+			} else {
+				Item_Remove_From_World(kItemDogWrapper);		
+					Actor_Clue_Acquire(kActorMcCoy, kClueLichenDogWrapper, false, kActorMurray);
+					Item_Pickup_Spin_Effect(kModelAnimationLichenDogWrapper, 510, 319);
+					Game_Flag_Reset(kFlagCT11DogWrapperAvailable);
+					Game_Flag_Set(kFlagCT11DogWrapperTaken);
+					Actor_Says(kActorMcCoy, 8865, 13); //00-8865.AUD	A lichen-dog wrapper.
+					Actor_Voice_Over(550, kActorVoiceOver);
+					Actor_Voice_Over(560, kActorVoiceOver);
+					Actor_Voice_Over(570, kActorVoiceOver);
+					Actor_Voice_Over(580, kActorVoiceOver);
+		#if !BLADERUNNER_ORIGINAL_BUGS
+					// in the original game the hotspot would not be removed
+					// after picking up the lichendog Wrapper
+					Scene_2D_Region_Remove(0);
+		#endif // !BLADERUNNER_ORIGINAL_BUGS
 			}
-			Actor_Voice_Over(550, kActorVoiceOver);
-			Actor_Voice_Over(560, kActorVoiceOver);
-			Actor_Voice_Over(570, kActorVoiceOver);
-			Actor_Voice_Over(580, kActorVoiceOver);
-#if !BLADERUNNER_ORIGINAL_BUGS
-			// in the original game the hotspot would not be removed
-			// after picking up the lichendog Wrapper
-			Scene_2D_Region_Remove(0);
-#endif // !BLADERUNNER_ORIGINAL_BUGS
 		}
 		return true;
 	}
@@ -223,57 +249,91 @@ bool SceneScriptCT11::ClickedOn2DRegion(int region) {
 	) {
 		if (!Loop_Actor_Walk_To_XYZ(kActorMcCoy, 686.0f, 0.0f, 658.0f, 12, true, false, false)) {
 			Actor_Face_Heading(kActorMcCoy, 47, false);
-			int cluesFound = 0;
-			if (Actor_Clue_Query(kActorMcCoy, kClueCrowdInterviewB)) {
-				++cluesFound;
-			}
-			if (Actor_Clue_Query(kActorMcCoy, kCluePaintTransfer)) {
-				++cluesFound;
-			}
-			if (Actor_Clue_Query(kActorMcCoy, kClueLabPaintTransfer)) {
-				++cluesFound;
-			}
-			if (Actor_Clue_Query(kActorMcCoy, kClueLicensePlate)) {
-				cluesFound += 2;
-			}
-			if (Actor_Clue_Query(kActorMcCoy, kClueCarColorAndMake)) {
-				cluesFound += 2;
-			}
-			if (Actor_Clue_Query(kActorMcCoy, kCluePartialLicenseNumber)) {
-				cluesFound += 2;
-			}
-			if ( cluesFound > 2
-			 && !Actor_Clue_Query(kActorMcCoy, kClueCar)
-			) {
-				Actor_Voice_Over(510, kActorVoiceOver);
-				// Made it so McCoy only gets the car identity clue if he was told by Dino how to identify the car by using the vehicle identification number.
-				if (_vm->_cutContent) {
-					if (Game_Flag_Query(kFlagKleinCarIdentityTalk)) {
-						Actor_Voice_Over(520, kActorVoiceOver);
-						Actor_Voice_Over(530, kActorVoiceOver);
-						Actor_Voice_Over(540, kActorVoiceOver);
-						Actor_Clue_Acquire(kActorMcCoy, kClueCar, false, -1);
-						Scene_2D_Region_Remove(1);
-					}
+			if (_vm->_cutContent) {
+				if (Game_Flag_Query(kFlagKleinCarIdentityTalk) 
+				&& Actor_Clue_Query(kActorMcCoy, kClueGrigoriansNote)) {
+					Actor_Voice_Over(520, kActorVoiceOver);
+					Actor_Voice_Over(530, kActorVoiceOver);
+					Actor_Voice_Over(540, kActorVoiceOver);
+					Actor_Clue_Acquire(kActorMcCoy, kClueCar, false, -1);
+					Scene_2D_Region_Remove(1);
 				} else {
+					int cluesFound = 0;
+					if (Actor_Clue_Query(kActorMcCoy, kClueCrowdInterviewB)) {
+						++cluesFound;
+					}
+					if (Actor_Clue_Query(kActorMcCoy, kCluePaintTransfer)) {
+						++cluesFound;
+					}
+					if (Actor_Clue_Query(kActorMcCoy, kClueLabPaintTransfer)) {
+						++cluesFound;
+					}
+					if (Actor_Clue_Query(kActorMcCoy, kClueLicensePlate)) {
+						cluesFound += 2;
+					}
+					if (Actor_Clue_Query(kActorMcCoy, kClueCarColorAndMake)) {
+						cluesFound += 2;
+					}
+					if (Actor_Clue_Query(kActorMcCoy, kCluePartialLicenseNumber)) {
+						cluesFound += 2;
+					}
+					if ( cluesFound > 2
+					&& !Actor_Clue_Query(kActorMcCoy, kClueCar)
+					) {
+						Actor_Voice_Over(510, kActorVoiceOver);
+						Game_Flag_Set(kFlagCarFound);
+						// Made it so McCoy only gets the car identity clue if he was told by Dino how to identify the car by using the vehicle identification number.
+						if (Game_Flag_Query(kFlagKleinCarIdentityTalk)) {
+							Actor_Voice_Over(520, kActorVoiceOver);
+							Actor_Voice_Over(530, kActorVoiceOver);
+							Actor_Voice_Over(540, kActorVoiceOver);
+							Scene_2D_Region_Remove(1);
+							Actor_Clue_Acquire(kActorMcCoy, kClueCar, false, -1);	
+						}
+#if !BLADERUNNER_ORIGINAL_BUGS
+						Scene_2D_Region_Remove(3);
+						Scene_2D_Region_Remove(4);
+#endif // !BLADERUNNER_ORIGINAL_BUGS
+					} else {
+						Actor_Says(kActorMcCoy, 8525, 12); //00-8525.AUD	Hmph.
+						Actor_Says(kActorMcCoy, 8524, 12); //00-8524.AUD	That's a washout.
+					}
+				}
+			} else {
+				int cluesFound = 0;
+				if (Actor_Clue_Query(kActorMcCoy, kClueCrowdInterviewB)) {
+					++cluesFound;
+				}
+				if (Actor_Clue_Query(kActorMcCoy, kCluePaintTransfer)) {
+					++cluesFound;
+				}
+				if (Actor_Clue_Query(kActorMcCoy, kClueLabPaintTransfer)) {
+					++cluesFound;
+				}
+				if (Actor_Clue_Query(kActorMcCoy, kClueLicensePlate)) {
+					cluesFound += 2;
+				}
+				if (Actor_Clue_Query(kActorMcCoy, kClueCarColorAndMake)) {
+					cluesFound += 2;
+				}
+				if (Actor_Clue_Query(kActorMcCoy, kCluePartialLicenseNumber)) {
+					cluesFound += 2;
+				}
+				if ( cluesFound > 2
+				&& !Actor_Clue_Query(kActorMcCoy, kClueCar)
+				) {
+					Actor_Voice_Over(510, kActorVoiceOver);
 					Actor_Voice_Over(520, kActorVoiceOver);
 					Actor_Voice_Over(530, kActorVoiceOver);
 					Actor_Voice_Over(540, kActorVoiceOver);
 					Actor_Clue_Acquire(kActorMcCoy, kClueCar, false, -1);
 					Scene_2D_Region_Remove(1);
 				}
-#if !BLADERUNNER_ORIGINAL_BUGS
-				Scene_2D_Region_Remove(3);
-				Scene_2D_Region_Remove(4);
-#endif // !BLADERUNNER_ORIGINAL_BUGS
-
-			} else {
-				Actor_Says(kActorMcCoy, 8525, 12); //00-8525.AUD	Hmph.
-				// Added in a line.
-				if (_vm->_cutContent) {
-					Actor_Says(kActorMcCoy, 8524, 12); //00-8524.AUD	That's a washout.
-				}
 			}
+#if !BLADERUNNER_ORIGINAL_BUGS
+			Scene_2D_Region_Remove(3);
+			Scene_2D_Region_Remove(4);
+#endif // !BLADERUNNER_ORIGINAL_BUGS
 		}
 		return true;
 	}
@@ -314,7 +374,7 @@ void SceneScriptCT11::PlayerWalkedIn() {
 				ADQ_Add_Pause(1000);
 				ADQ_Add(kActorOfficerGrayford, 510, kAnimationModeTalk); //24-0510.AUD	LA, Units 34 and 32 are 10-97
 				ADQ_Add(kActorDispatcher, 270, kAnimationModeTalk); //38-0270.AUD	LA Copy. 34 and 32 at 10-97 at the scene. All Third Sector Units stand by.
-				ADQ_Add_Pause(2000);
+				ADQ_Add_Pause(1000);
 				ADQ_Add(kActorOfficerGrayford, 410 , kAnimationModeTalk); // 24-0410.AUD	LA, This is 32 Metro 3. Code 4. Two suspects in custody.
 				ADQ_Add(kActorDispatcher, 280, kAnimationModeTalk);	//38-0280.AUD	32 Metro 3. 10-4. LA Copy. Code 4. Two in custody.
 				ADQ_Add(kActorDispatcher, 290, kAnimationModeTalk); //38-0290.AUD	Attention all Third Sector units. We have a Code 4 at the Kitty Hawk Savings and Loan. LA clear. Resume normal traffic.

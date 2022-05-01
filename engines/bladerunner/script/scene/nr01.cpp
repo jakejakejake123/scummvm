@@ -328,7 +328,7 @@ void SceneScriptNR01::PlayerWalkedIn() {
 		// Action music will play during the confrontation with Gordo.
 		if (_vm->_cutContent) {
 			Music_Stop(3u);
-			Music_Play(kMusicMoraji, 71, 0, 0, -1, kMusicLoopPlayOnce, 2);
+			Music_Play(kMusicBatl226M, 50, 0, 2, -1, kMusicLoopPlayOnce, 0);
 		}
 		ADQ_Add(kActorGordo, 70, 81);
 		ADQ_Add(kActorSteele, 990, kAnimationModeTalk);
@@ -388,7 +388,7 @@ void SceneScriptNR01::PlayerWalkedIn() {
 			// Changed a Steele line based on your friendliness with her.
 			if (_vm->_cutContent) {
 				// Steele will respond differently if McCoy retired a few reps.
-				if (Actor_Query_Friendliness_To_Other(kActorSteele, kActorMcCoy) > 60) {
+				if (Actor_Query_Friendliness_To_Other(kActorSteele, kActorMcCoy) > 55) {
 					Actor_Says(kActorSteele, 2600, 13); //01-2600.AUD	Hey, Slim!
 				} else {
 					Actor_Says(kActorSteele, 1440, 13);
@@ -411,36 +411,35 @@ void SceneScriptNR01::PlayerWalkedIn() {
 			// Made it so Crystal also says that Guzza mentioned that McCoy retired a human if you told him about killing the homeless man.
 			// Guzza lied and did not cover it up like he said he would and instead used it against McCoy to get him out of the way.
 			if (Game_Flag_Query(kFlagSteeleKnowsBulletBobIsDead)
+			|| Actor_Clue_Query(kActorMcCoy, kClueBobShotInColdBlood)
 			|| Game_Flag_Query(kFlagGuzzaInformed)) {
-					Actor_Says(kActorSteele, 1330, 12);
-					Actor_Says(kActorSteele, 1340, 12);
-					Actor_Says(kActorSteele, 1350, 12);
-					Actor_Says(kActorMcCoy, 3120, 15);
-					Actor_Says(kActorSteele, 1360, 12);
-					Actor_Says(kActorSteele, 1370, 12);
-					Actor_Says(kActorMcCoy, 3125, 15);
-					Actor_Says(kActorSteele, 1380, 12);
-					Actor_Says(kActorMcCoy, 3130, 15);
-					Actor_Says(kActorSteele, 1390, 12);
-					Actor_Says(kActorSteele, 1400, 12);
-					Actor_Says(kActorSteele, 1410, 12);
-					Actor_Says(kActorMcCoy, 3135, 15);
-					Actor_Says(kActorSteele, 1420, 12); //01-1420.AUD	Go, if you’re going. I’m gonna talk to Guzza before I do anything.
-					// Made it so Crystal arrests McCoy for killing Bob or the homeless guy instead of letting him go. The plot makes no sense from this point if
-					// McCoy actually did kill someone since he mentions from this point onwards multiple times about him being framed which doesn't make any sense if
-					// he actually killed someone.
-					if (_vm->_cutContent) {
-						// Made it so Crystal only arrests McCoy for killing Bob if he is not a replicant.
-						if (!Game_Flag_Query(kFlagBulletBobIsReplicant)) {
-							Actor_Says(kActorMcCoy, 8565, 15); //00-8565.AUD	Really?
-							Actor_Says(kActorSteele, 1930, 12); //01-1930.AUD	Just kidding, Slim.
-							Actor_Says(kActorSteele, 2210, 12); //01-2210.AUD	I guess I gotta take you in. They'll probably have to run a couple of tests, too.
-							Actor_Set_Goal_Number(kActorMcCoy, kGoalMcCoyArrested);
-						}
-					} else {
-						Actor_Says(kActorMcCoy, 3140, 15); //00-3140.AUD	Thanks.
-						Actor_Says(kActorSteele, 1430, 12); //01-1430.AUD	Don’t thank me yet. The next time you see me... (smacks lips twice) 
-						Actor_Set_Goal_Number(kActorSteele, kGoalSteeleImmediatelyStartChapter4);
+				Actor_Says(kActorSteele, 1330, 12);
+				Actor_Says(kActorSteele, 1340, 12);
+				Actor_Says(kActorSteele, 1350, 12);
+				Actor_Says(kActorMcCoy, 3120, 15);
+				Actor_Says(kActorSteele, 1360, 12);
+				Actor_Says(kActorSteele, 1370, 12);
+				Actor_Says(kActorMcCoy, 3125, 15);
+				Actor_Says(kActorSteele, 1380, 12);
+				Actor_Says(kActorMcCoy, 3130, 15);
+				Actor_Says(kActorSteele, 1390, 12);
+				Actor_Says(kActorSteele, 1400, 12);
+				Actor_Says(kActorSteele, 1410, 12);
+				Actor_Says(kActorMcCoy, 3135, 15);
+				Actor_Says(kActorSteele, 1420, 12); //01-1420.AUD	Go, if you’re going. I’m gonna talk to Guzza before I do anything.
+				// Made it so Crystal arrests McCoy for killing Bob or the homeless guy instead of letting him go. The plot makes no sense from this point if
+				// McCoy actually did kill someone since he mentions from this point onwards multiple times about him being framed which doesn't make any sense if
+				// he actually killed someone.
+				if (_vm->_cutContent) {
+					// Made it so Crystal only arrests McCoy for killing Bob if he is not a replicant.
+					Actor_Says(kActorMcCoy, 8565, 15); //00-8565.AUD	Really?
+					Actor_Says(kActorSteele, 1930, 12); //01-1930.AUD	Just kidding, Slim.
+					Actor_Says(kActorSteele, 2210, 12); //01-2210.AUD	I guess I gotta take you in. They'll probably have to run a couple of tests, too.
+					Actor_Set_Goal_Number(kActorMcCoy, kGoalMcCoyArrested);
+				} else {
+					Actor_Says(kActorMcCoy, 3140, 15); //00-3140.AUD	Thanks.
+					Actor_Says(kActorSteele, 1430, 12); //01-1430.AUD	Don’t thank me yet. The next time you see me... (smacks lips twice) 
+					Actor_Set_Goal_Number(kActorSteele, kGoalSteeleImmediatelyStartChapter4);
 				}
 			} else {
 				int v0 = Global_Variable_Query(kVariableHollowayArrest);
@@ -502,7 +501,7 @@ void SceneScriptNR01::PlayerWalkedIn() {
 				Actor_Says(kActorMcCoy, 8945, 14); //00-8945.AUD	Freeze!
 			}
 			Actor_Set_Goal_Number(kActorGordo, kGoalGordoNR01Attack);
-			Non_Player_Actor_Combat_Mode_On(kActorGordo, kActorCombatStateIdle, true, kActorMcCoy, 3, kAnimationModeCombatIdle, kAnimationModeCombatWalk, kAnimationModeCombatRun, 0, -1, -1, 15, 300, false);
+			Non_Player_Actor_Combat_Mode_On(kActorGordo, kActorCombatStateIdle, true, kActorMcCoy, 3, kAnimationModeCombatIdle, kAnimationModeCombatWalk, kAnimationModeCombatRun, 0, -1, -1, 20, 300, false);
 		}
 	} else {
 		if (!Game_Flag_Query(kFlagNR01VisitedFirstTimeWithSpinner) && Game_Flag_Query(kFlagArrivedFromSpinner1)) {
@@ -523,7 +522,14 @@ void SceneScriptNR01::PlayerWalkedIn() {
 		Scene_Exits_Disable();
 		Actor_Set_Goal_Number(kActorGordo, kGoalGordoNR01GiveUp);
 		if (!Player_Query_Combat_Mode()) {
-			Player_Set_Combat_Mode(true);
+			if (_vm->_cutContent) {
+				if (Actor_Clue_Query(kActorMcCoy, kClueGordoConfession)
+				|| Actor_Clue_Query(kActorMcCoy, kClueGordoInterview3)) {
+					Player_Set_Combat_Mode(true);
+				} 
+			} else {
+				Player_Set_Combat_Mode(true);
+			}
 		}
 	}
 	//return false;

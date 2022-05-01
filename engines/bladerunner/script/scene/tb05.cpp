@@ -107,7 +107,11 @@ bool SceneScriptTB05::ClickedOn3DObject(const char *objectName, bool a2) {
 				if (Actor_Clue_Query(kActorMcCoy, kClueDogCollar1)
 				 || Actor_Clue_Query(kActorMcCoy, kClueDogCollar2)
 				) {
-					Actor_Clue_Acquire(kActorMcCoy, kClueDNAMarcus, true, -1);
+					if (_vm->_cutContent) {
+						Actor_Clue_Acquire(kActorMcCoy, kClueDNAMarcus, true, kActorMarcus);
+					} else {
+						Actor_Clue_Acquire(kActorMcCoy, kClueDNAMarcus, true, -1);
+					}
 					Actor_Voice_Over(2230, kActorVoiceOver);
 					Item_Pickup_Spin_Effect(kModelAnimationDNADataDisc, 352, 333);
 					Actor_Voice_Over(2240, kActorVoiceOver);

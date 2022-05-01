@@ -345,10 +345,10 @@ void SceneScriptNR05::talkToEarlyQ() {
 		// Made it so the blonde woman option is now available if you have either the China bar photo or the woman in animoid row photo.
 		// Also made it so this option is only available if you also talked to Early Q about the jewelry. This is because Early Q mentions giving the jewelry to 'Hecuba'
 		// in this conversation which is a follow up of the previous conversation where he mentions giving the jewelry to one of his dancers.
-			if (_vm->_cutContent) {
-				if (Game_Flag_Query(kFlagEarlyQTalkJewelry)) {
-					if (Actor_Clue_Query(kActorMcCoy, kClueChinaBar)
-					|| Actor_Clue_Query(kActorMcCoy, kClueWomanInAnimoidRow)) {
+		if (_vm->_cutContent) {
+			if (Game_Flag_Query(kFlagEarlyQTalkJewelry)) {
+				if (Actor_Clue_Query(kActorMcCoy, kClueChinaBar)
+				|| Actor_Clue_Query(kActorMcCoy, kClueWomanInAnimoidRow)) {
 					// TODO A bug? kClueDektorasDressingRoom is acquired from EarlyQ
 					// at his office (nr04) while being threatened by McCoy.
 					// At which point EarlyQ already tells McCoy who the people on the photograph are.
@@ -397,8 +397,25 @@ void SceneScriptNR05::talkToEarlyQ() {
 				Actor_Says(kActorEarlyQ, 430, 13); //18-0430.AUD	You ain’t with Robbery-Homicide.
 				Actor_Says(kActorMcCoy, 3530, 15); //00-3530.AUD	No, sir.
 				Actor_Says(kActorEarlyQ, 730, kAnimationModeTalk); //18-0730.AUD	I’m working right now, General. Ask me later.
-				Game_Flag_Set(kFlagEarlyQTalkJewelry);
-				Actor_Face_Heading(kActorEarlyQ, 849, false);
+				if (Player_Query_Agenda() == kPlayerAgendaSurly
+				|| (Player_Query_Agenda() == kPlayerAgendaErratic)) {
+					Actor_Says(kActorMcCoy, 8519, 14);//00-8519.AUD	What do you say we dish each other the straight goods.
+					Actor_Says(kActorEarlyQ, 750, 12); //18-0750.AUD	Look, General. No reason to get your panties in a bind. If I’d known you were gonna get so testy, I would have tossed you the straight dope to begin with.
+					Actor_Says(kActorMcCoy, 3415, kAnimationModeTalk); //00-3415.AUD	Let’s hear what you got.
+					Actor_Says(kActorEarlyQ, 440, 15); //18-0440.AUD	Eh, those pieces ain’t hot. I got the papers to prove it. I picked them up at a legitimate auction. Cost me nearly a pound of flesh too.
+					Actor_Says(kActorMcCoy, 3535, 13);
+					Actor_Says(kActorEarlyQ, 460, 16); //18-0460.AUD	You kiddin’? I ain’t that stupid. No, no, no, no. I was letting one of my dancers use the stuff in her act. Kind of a tribute to the ancient swamp lands, you know what I mean?
+					Actor_Says(kActorMcCoy, 3540, 15);
+					Actor_Says(kActorEarlyQ, 490, 16); //18-0490.AUD	Hecuba. She’s going on in a few.
+					Actor_Says(kActorEarlyQ, 500, 13); //18-0500.AUD	She’s one of my biggest earners too. She ain’t in any trouble now, is she?
+					Actor_Says(kActorMcCoy, 3545, 15);
+					Actor_Says(kActorEarlyQ, 520, 12); //18-0520.AUD	(sighs) Good, good. Wouldn’t wanna slaughter the goose that lays them golden eggs.
+					Actor_Clue_Acquire(kActorMcCoy, kClueEarlyInterviewA, true, kActorEarlyQ);
+					Game_Flag_Set(kFlagEarlyQTalkJewelry);
+					Actor_Face_Heading(kActorEarlyQ, 849, false);
+				} else {
+					Actor_Face_Heading(kActorEarlyQ, 849, false);
+				}
 			} else {
 				Actor_Says(kActorEarlyQ, 440, 15); //18-0440.AUD	Eh, those pieces ain’t hot. I got the papers to prove it. I picked them up at a legitimate auction. Cost me nearly a pound of flesh too.
 				Actor_Says(kActorMcCoy, 3535, 13);
@@ -425,21 +442,21 @@ void SceneScriptNR05::talkToEarlyQ() {
 			Actor_Says(kActorEarlyQ, 500, 13); //18-0500.AUD	She’s one of my biggest earners too. She ain’t in any trouble now, is she?
 			Actor_Says(kActorMcCoy, 3545, 15);
 			Actor_Says(kActorEarlyQ, 520, 12); //18-0520.AUD	(sighs) Good, good. Wouldn’t wanna slaughter the goose that lays them golden eggs.
-		// Added in this flag so when McCoy shows Early Q the photo of Dektora after talking to Early about the jewelry Early mentions Dektora being the one that he gave the jewelry to.
-		// Early slipped up by saying Hecuba was the one he gave the jewelry after looking at the photo of Dektora whereas if you did not ask him about the jewelry he does not
-		// mention that therefore McCoy has no reason not press him into telling the truth and Early outright denies knowing the woman in the photo.
-		//Added in a clue.
-		Actor_Face_Heading(kActorEarlyQ, 849, false);
+			// Added in this flag so when McCoy shows Early Q the photo of Dektora after talking to Early about the jewelry Early mentions Dektora being the one that he gave the jewelry to.
+			// Early slipped up by saying Hecuba was the one he gave the jewelry after looking at the photo of Dektora whereas if you did not ask him about the jewelry he does not
+			// mention that therefore McCoy has no reason not press him into telling the truth and Early outright denies knowing the woman in the photo.
+			//Added in a clue.
+			Actor_Face_Heading(kActorEarlyQ, 849, false);
 		}
 		break;
 
 	case 900: // LUCY
 		if (_vm->_cutContent) {
 			if (!Actor_Clue_Query(kActorMcCoy, kClueLucy)) {
-			Actor_Says(kActorMcCoy, 385, 9); //00-0385.AUD	I'm looking for a girl about 14 years old with pink hair. You seen her?
-		} else {
-			Actor_Says(kActorMcCoy, 3510, 15);
-		}
+				Actor_Says(kActorMcCoy, 385, 9); //00-0385.AUD	I'm looking for a girl about 14 years old with pink hair. You seen her?
+			} else {
+				Actor_Says(kActorMcCoy, 3510, 23);
+			}
 		} else {
 			Actor_Says(kActorMcCoy, 3510, 15);
 		}
@@ -498,6 +515,11 @@ void SceneScriptNR05::talkToEarlyQ() {
 			Actor_Says(kActorEarlyQ, 640, 13); //18-0640.AUD	Gee, I don’t know. She looks kind of familiar but I got so many broads working here, they all get kinda jumbled in my brain.
 			Actor_Says(kActorMcCoy, 3580, 15); 
 			Actor_Says(kActorEarlyQ, 660, 12); //18-0660.AUD	Relax, have a drink, loosen up. You see her, you let me know.
+			if (Player_Query_Agenda() == kPlayerAgendaSurly
+			|| (Player_Query_Agenda() == kPlayerAgendaErratic)) {
+				Actor_Says(kActorMcCoy, 8519, 14);//00-8519.AUD	What do you say we dish each other the straight goods.
+				Actor_Says(kActorEarlyQ, 730, kAnimationModeTalk); //18-0730.AUD	I’m working right now, General. Ask me later.
+			}
 		}
 		Actor_Face_Heading(kActorEarlyQ, 849, false);
 		break;

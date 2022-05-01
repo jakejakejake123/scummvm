@@ -650,7 +650,7 @@ enum Flags {
 	kFlagPS15toPS05                           = 204,
 	kFlagIzoEscaped							  = 205,
 	kFlagSergeantWallsBuzzInRequest           = 206, // is never set
-	kFlagCrystalConvinced					  = 207,
+	//					  
 	kFlagIzoGotAway							  = 208,
 	kFlagAR01FishDealerTalkInsects		      = 209,
 	kFlagCT02ZubenFled                        = 210,
@@ -957,11 +957,11 @@ enum Flags {
 	kFlagDR05ExplodedEntered                  = 511,
 	kFlagCrystalRetiredBulletBob			  = 512,
 	kFlagCrystalRetiredCrazylegs			  = 513,
-	kFlagCrazylegsDiscovered				  = 514, 
+	//	
 	kFlagDR05ViewExplosion                    = 515,
 	kFlagCT07ZubenAttack                      = 516,
 	kFlagCrazylegsDead						  = 517,
-	kFlagCrazylegsSpared					  = 518,
+	kFlagCarFound							  = 518,	
 	kFlagTB06DogCollarTaken                   = 519,
 	kFlagTB06KitchenBoxTaken                  = 520,
 	kFlagHC03TrapDoorOpened                   = 521,

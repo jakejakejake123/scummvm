@@ -85,13 +85,17 @@ bool SceneScriptTB07::ClickedOnItem(int itemId, bool a2) {
 		Actor_Face_Item(kActorMcCoy, itemId, true);
 		if (itemId == kItemDNATyrell) {
 			Item_Pickup_Spin_Effect(kModelAnimationDNADataDisc, 331, 296);
-			Actor_Clue_Acquire(kActorMcCoy, kClueDNATyrell, false, -1);	
+			if (_vm->_cutContent) {
+				Actor_Clue_Acquire(kActorMcCoy, kClueDNATyrell, false, kActorTyrell);	
+			} else {
+				Actor_Clue_Acquire(kActorMcCoy, kClueDNATyrell, false, -1);
+			}
 			// Added in the incept shot Roy clue. You pick it up when you pick up the Tyrell DNA data.
 			if (_vm->_cutContent) {
 				Delay(1500);
 				Item_Pickup_Spin_Effect(kModelAnimationPhoto, 331, 296);
 				Delay(1500);		
-				Actor_Clue_Acquire(kActorMcCoy, kClueInceptShotRoy, true, -1);
+				Actor_Clue_Acquire(kActorMcCoy, kClueInceptShotRoy, true, kActorTyrell);
 			}
 		}
 		Item_Remove_From_World(itemId);

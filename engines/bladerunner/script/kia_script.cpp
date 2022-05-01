@@ -2007,7 +2007,6 @@ void KIAScript::SCRIPT_KIA_DLL_Play_Clue_Asset_Script(int notUsed, int clueId) {
 		KIA_Play_Actor_Dialogue(kActorGrigorian, 330); //11-0330.AUD	Friends with access to vehicles, to escape routes.
 		break;
 	case kClueCar:
-		KIA_Play_Actor_Dialogue(kActorVoiceOver, 510); //99-0510.AUD	The car looked a lot like the one I'd been tracking.
 		KIA_Play_Actor_Dialogue(kActorVoiceOver, 520); //99-0520.AUD	The driver had been smart enough to pull the license plate.
 		KIA_Play_Actor_Dialogue(kActorVoiceOver, 530); //99-0530.AUD	But the vehicle identification number was still there.
 		KIA_Play_Actor_Dialogue(kActorVoiceOver, 540); //99-0540.AUD	If I ran it through the Mainframe back at the station, I could ID the owner.

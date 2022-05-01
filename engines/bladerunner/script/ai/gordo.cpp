@@ -207,7 +207,23 @@ void AIScriptGordo::CompletedMovementTrack() {
 	}
 
 	if (Actor_Query_Goal_Number(kActorGordo) == kGoalGordoNR02RunAway3) {
-		if (Game_Flag_Query(kFlagGordoIsReplicant)) {
+		if (_vm->_cutContent) {
+			if (Game_Flag_Query(kFlagGordoIsReplicant)) {
+				if (Global_Variable_Query(kVariableHollowayArrest) == 2) {
+					Actor_Set_Goal_Number(kActorGordo, kGoalGordoNR01WaitAndTakeHostage);
+				} else {
+					if (!Actor_Clue_Query(kActorMcCoy, kClueGordoConfession)  
+					&& !Actor_Clue_Query(kActorMcCoy, kClueGordoInterview3)) {
+						Actor_Set_Goal_Number(kActorGordo, kGoalGordoNR01WaitAndGiveUp);
+					} else {
+						Actor_Set_Goal_Number(kActorGordo, kGoalGordoNR01WaitAndAttack);
+					}
+				}
+			} else {
+				Actor_Set_Goal_Number(kActorGordo, kGoalGordoNR01WaitAndGiveUp);		
+			}
+			Scene_Exits_Enable();
+		} else if (Game_Flag_Query(kFlagGordoIsReplicant)) {
 			if (Global_Variable_Query(kVariableHollowayArrest) == 2) {
 				Actor_Set_Goal_Number(kActorGordo, kGoalGordoNR01WaitAndTakeHostage);
 			} else {
@@ -247,7 +263,16 @@ void AIScriptGordo::ClickedByPlayer() {
 		Actor_Says(kActorGordo, 1390, 16);
 	} else if (goal == kGoalGordoGone) {
 		Actor_Face_Actor(kActorMcCoy, kActorGordo, true);
-		Actor_Says(kActorMcCoy, 8665, 14);
+		 if (_vm->_cutContent) {
+			if (Player_Query_Agenda() == kPlayerAgendaSurly 
+			|| Player_Query_Agenda() == kPlayerAgendaErratic) {
+				Actor_Says(kActorMcCoy, 8665, 13); //00-8665.AUD	Disgusting.
+			} else {	
+				Actor_Says(kActorMcCoy, 8630, 12);  // What a waste
+			}
+		} else {
+			Actor_Says(kActorMcCoy, 8665, 14);
+		}
 	}
 	//return false;
 }
@@ -611,9 +636,21 @@ bool AIScriptGordo::GoalChanged(int currentGoalNumber, int newGoalNumber) {
 		Actor_Says(kActorGordo, 780, 13);
 		Actor_Says(kActorMcCoy, 3885, 16);
 		if (Game_Flag_Query(kFlagGordoIsReplicant)) {
-			Actor_Says(kActorGordo, 850, 12);
-			Actor_Says(kActorGordo, 860, 15);
-			Actor_Says(kActorMcCoy, 3910, 16);
+			if (_vm->_cutContent) {
+				if (Actor_Clue_Query(kActorMcCoy, kClueGordoConfession)  
+				|| Actor_Clue_Query(kActorMcCoy, kClueGordoInterview3)) {
+					Actor_Says(kActorGordo, 850, 12);
+					Actor_Says(kActorGordo, 860, 15);
+					Actor_Says(kActorMcCoy, 3910, 16);
+				} else {
+					Actor_Says(kActorGordo, 850, 12);
+					Actor_Says(kActorMcCoy, 8000, 16); //00-8000.AUD	Yes.
+				}
+			} else {
+				Actor_Says(kActorGordo, 850, 12);
+				Actor_Says(kActorGordo, 860, 15);
+				Actor_Says(kActorMcCoy, 3910, 16);
+			}
 			if (Global_Variable_Query(kVariableHollowayArrest) == 2) {
 				Actor_Says(kActorGordo, 870, 16);
 				Sound_Play(kSfxRIMSHOT2, 50, 0, 0, 50);
@@ -626,21 +663,37 @@ bool AIScriptGordo::GoalChanged(int currentGoalNumber, int newGoalNumber) {
 				Actor_Set_Goal_Number(kActorGordo, kGoalGordoNR02RunAway1);
 			}
 		} else {
-			Actor_Says(kActorGordo, 790, 12);
-			Actor_Says(kActorMcCoy, 3890, 15);
-			Sound_Play(kSfxRIMSHOT3, 50, 0, 0, 50);
-			Sound_Play(kSfxAUDLAFF3, 50, 0, 0, 50);
-			Actor_Says(kActorGordo, 800, 15);
-			Actor_Says(kActorGordo, 810, 17);
-			Actor_Says(kActorMcCoy, 3895, 16);
-			Actor_Says(kActorGordo, 820, 14);
-			Actor_Says(kActorMcCoy, 3900, 14);
-			Actor_Says(kActorGordo, 830, 15);
-			Actor_Says(kActorMcCoy, 3905, 13);
-			Actor_Says(kActorGordo, 840, 13);
-			Sound_Play(kSfxRIMSHOT4, 50, 0, 0, 50);
-			Sound_Play(kSfxAUDLAFF3, 50, 0, 0, 50);
-			Actor_Set_Goal_Number(kActorGordo, kGoalGordoNR02RunAway1);
+			if (_vm->_cutContent) {
+				if (!Actor_Clue_Query(kActorMcCoy, kClueGordoConfession)) {
+					Actor_Says(kActorGordo, 790, 12); //02-0790.AUD	Doesn’t, eh? What if I pretended to be a Replicant?
+					Actor_Says(kActorMcCoy, 3890, 15);
+					Sound_Play(kSfxRIMSHOT3, 50, 0, 0, 50);
+					Sound_Play(kSfxAUDLAFF3, 50, 0, 0, 50);
+				} 
+				Actor_Says(kActorGordo, 800, 15);
+				Actor_Says(kActorGordo, 810, 17);
+				Actor_Says(kActorMcCoy, 3895, 16);
+				Actor_Says(kActorGordo, 820, 14);
+				Actor_Says(kActorMcCoy, 3900, 14);
+				Actor_Says(kActorGordo, 830, 15);
+				Actor_Says(kActorMcCoy, 3905, 13);
+				Actor_Says(kActorGordo, 840, 13);
+				Sound_Play(kSfxRIMSHOT4, 50, 0, 0, 50);
+				Sound_Play(kSfxAUDLAFF3, 50, 0, 0, 50);
+				Actor_Set_Goal_Number(kActorGordo, kGoalGordoNR02RunAway1);
+			} else {
+				Actor_Says(kActorGordo, 800, 15);
+				Actor_Says(kActorGordo, 810, 17);
+				Actor_Says(kActorMcCoy, 3895, 16);
+				Actor_Says(kActorGordo, 820, 14);
+				Actor_Says(kActorMcCoy, 3900, 14);
+				Actor_Says(kActorGordo, 830, 15);
+				Actor_Says(kActorMcCoy, 3905, 13);
+				Actor_Says(kActorGordo, 840, 13);
+				Sound_Play(kSfxRIMSHOT4, 50, 0, 0, 50);
+				Sound_Play(kSfxAUDLAFF3, 50, 0, 0, 50);
+				Actor_Set_Goal_Number(kActorGordo, kGoalGordoNR02RunAway1);
+			}
 		}
 		break;
 
@@ -687,8 +740,34 @@ bool AIScriptGordo::GoalChanged(int currentGoalNumber, int newGoalNumber) {
 		break;
 
 	case kGoalGordoNR01GiveUp:
-		ADQ_Add(kActorGordo, 170, 18);
-		AI_Countdown_Timer_Start(kActorGordo, kActorTimerAIScriptCustomTask0, 10);
+		if (_vm->_cutContent) {
+			if (Actor_Clue_Query(kActorMcCoy, kClueGordoConfession) 
+			&& !Game_Flag_Query(kFlagGordoIsReplicant)) {
+				ADQ_Add(kActorGordo, 170, 18);
+				AI_Countdown_Timer_Start(kActorGordo, kActorTimerAIScriptCustomTask0, 10);
+			} else {
+				Actor_Face_Actor(kActorGordo, kActorMcCoy, true);
+				Actor_Face_Actor(kActorMcCoy, kActorGordo, true);
+				Actor_Says(kActorMcCoy, 3970, 14); //00-3970.AUD	Hey.
+				Loop_Actor_Walk_To_Actor(kActorGordo, kActorMcCoy, 60, false, true);
+				Actor_Face_Actor(kActorGordo, kActorMcCoy, true);
+				Actor_Face_Actor(kActorMcCoy, kActorGordo, true);
+				Actor_Says(kActorMcCoy, 4270, 14);
+				Actor_Says(kActorGordo, 330, 15); //02-0330.AUD	Man, don’t you got anything better to do than hassle innocent people at their place of work?
+				Actor_Says(kActorMcCoy, 7815, 13); //00-7815.AUD	No.
+				Delay(1000);
+				Actor_Says(kActorGordo, 40, 13);//02-0040.AUD	Unfortunately, my man, I got to book.
+				Actor_Says(kActorMcCoy, 7915, 14);	//00-7915.AUD	We're not finished yet.
+				Actor_Says(kActorGordo, 570, 14); //02-0570.AUD	Gotta go, daddy-o.
+				Actor_Set_Targetable(kActorGordo, false);
+				Game_Flag_Set(kFlagGordoRanAway);
+				Scene_Exits_Enable();
+				Actor_Set_Goal_Number(kActorGordo, kGoalGordoNR01RunAway);
+			}
+		} else {
+			ADQ_Add(kActorGordo, 170, 18);
+			AI_Countdown_Timer_Start(kActorGordo, kActorTimerAIScriptCustomTask0, 10);
+		}
 		break;
 
 	case kGoalGordoNR01TalkToMcCoy:
@@ -742,10 +821,6 @@ bool AIScriptGordo::GoalChanged(int currentGoalNumber, int newGoalNumber) {
 	case kGoalGordoNR01RanAway:
 		Scene_Exits_Enable();
 		Game_Flag_Set(kFlagGordoRanAway);
-		// Added in some dialogue.
-		if (_vm->_cutContent) {
-			Actor_Voice_Over(190, kActorVoiceOver); //99-0190.AUD	If only we had a target range worth a damn back at the station.
-		}
 		Actor_Put_In_Set(kActorGordo, kSetFreeSlotA);
 		Actor_Set_At_Waypoint(kActorGordo, 33, 0);
 		break;
@@ -1904,7 +1979,7 @@ void AIScriptGordo::dialogue2() {
 			Actor_Says(kActorMcCoy, 3110, 17); //00-3110.AUD	You’re gonna go tell your pal, Clovis, that I’m looking for him.
 			//Added in some Gordo dialogue.
 			if (_vm->_cutContent) {
-				Actor_Says(kActorMcCoy, 1210, 15); //02-1210.AUD	Sure. But he wants to pick the venue. And he doesn’t like to be hurried into anything.
+				Actor_Says(kActorGordo, 1210, 15); //02-1210.AUD	Sure. But he wants to pick the venue. And he doesn’t like to be hurried into anything.
 				Actor_Says(kActorMcCoy, 880, 17); //00-0880.AUD	That so?
 			}
 			Actor_Says(kActorGordo, 250, 13);

@@ -132,7 +132,11 @@ bool SceneScriptDR06::ClickedOn3DObject(const char *objectName, bool a2) {
 				Actor_Says(kActorAnsweringMachine, 40, kAnimationModeTalk);
 				Actor_Says(kActorMcCoy, 1030, 13);
 				Actor_Says(kActorAnsweringMachine, 50, kAnimationModeTalk);
-				Actor_Clue_Acquire(kActorMcCoy, kClueAnsweringMachineMessage, true, kActorAnsweringMachine);
+				if (_vm->_cutContent) {
+					Actor_Clue_Acquire(kActorMcCoy, kClueAnsweringMachineMessage, true, kActorAnsweringMachine);
+				} else {
+					Actor_Clue_Acquire(kActorMcCoy, kClueAnsweringMachineMessage, true, kActorSebastian);
+				}
 			}
 		}
 		return true;

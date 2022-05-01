@@ -120,15 +120,26 @@ void SceneScriptHF03::dialogueWithLucy() {
 				Actor_Says(kActorLucy, 1000, 13);
 				Actor_Says(kActorLucy, 1010, 17);
 				Actor_Says(kActorLucy, 1020, 18);
-				Actor_Says(kActorMcCoy, 6795, 14);
+				Actor_Says(kActorMcCoy, 6795, 14); //00-6795.AUD	I agree.			
 				Actor_Says(kActorLucy, 1030, 17);
-				Actor_Says(kActorMcCoy, 6800, 14);
+				Actor_Says(kActorMcCoy, 6800, 14); //00-6800.AUD	You’ll see them with your own eyes one day.
+				if (_vm->_cutContent) {
+					Actor_Says(kActorLucy, 1040, 18); //06-1040.AUD	Will I?
+					Actor_Says(kActorMcCoy, 6805, 13); //00-6805.AUD	I-- I promise you. But for now we gotta be careful. You should stay hidden for a while.
+					Actor_Says(kActorLucy, 220, 13); //06-0220.AUD	You’re not-- You’re not the hunter anymore?
+					Actor_Says(kActorMcCoy, 6810, 14); //00-6810.AUD	Go. I’ll find you when it’s safe.
+					Actor_Says(kActorLucy, 1050, 17); //06-1050.AUD	Oh, thank you. Thank you for everything.
+				}
 			}
-			Actor_Says(kActorLucy, 220, 13);
-			Actor_Says(kActorMcCoy, 1660, 15);
-			Actor_Says(kActorLucy, 230, 14);
+			if (!_vm->_cutContent) {
+				Actor_Says(kActorLucy, 220, 13);
+			}
+			Actor_Says(kActorMcCoy, 1660, 15); //00-1660.AUD	Go! Quickly.
+			Actor_Says(kActorLucy, 230, 14); //06-0230.AUD	Thank you.
 			Actor_Clue_Acquire(kActorLucy, kClueMcCoyHelpedLucy, true, kActorMcCoy);
-
+			if (_vm->_cutContent) {
+				Game_Flag_Set(kFlagMcCoyIsHelpingReplicants);
+			}
 			if (Game_Flag_Query(kFlagLucyIsReplicant)) {
 				Actor_Set_Goal_Number(kActorLucy, kGoalLucyHF03RunToHF041);
 			} else {

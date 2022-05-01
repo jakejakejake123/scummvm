@@ -120,20 +120,33 @@ bool SceneScriptNR02::ClickedOnItem(int itemId, bool a2) {
 	) {
 		if (!Loop_Actor_Walk_To_XYZ(kActorMcCoy, 109.38f, -24.0f, 420.5f, 0, true, false, false)) {
 			Actor_Face_Heading(kActorMcCoy, 423, false);
-			if (itemId == kItemGordosLighterReplicant) {
-				Item_Remove_From_World(kItemGordosLighterReplicant);
-				Item_Pickup_Spin_Effect(kModelAnimationGordosLighterReplicant, 214, 380);
-				Actor_Clue_Acquire(kActorMcCoy, kClueGordosLighterReplicant, true, -1);
-				if (_vm->_cutContent) {
-					Actor_Says(kActorMcCoy, 8850, 13); //00-8850.AUD	A lighter.
+			if (_vm->_cutContent) {
+				if (Actor_Clue_Query(kActorMcCoy, kClueGordoConfession)  
+				|| Actor_Clue_Query(kActorMcCoy, kClueGordoInterview3)) {
+					if (itemId == kItemGordosLighterReplicant) {
+						Item_Remove_From_World(kItemGordosLighterReplicant);
+						Item_Pickup_Spin_Effect(kModelAnimationGordosLighterReplicant, 214, 380);
+						Actor_Clue_Acquire(kActorMcCoy, kClueGordosLighterReplicant, true, kActorGordo);
+						Actor_Says(kActorMcCoy, 8850, 13); //00-8850.AUD	A lighter.
+					} else if (itemId == kItemGordosLighterHuman) {
+						Item_Remove_From_World(kItemGordosLighterHuman);
+						Item_Pickup_Spin_Effect(kModelAnimationGordosLighterHuman, 214, 380);
+						Actor_Clue_Acquire(kActorMcCoy, kClueGordosLighterHuman, true, kActorGordo);
+						Actor_Says(kActorMcCoy, 8850, 13); //00-8850.AUD	A lighter.
+					}
+				} else {
+					Actor_Says(kActorMcCoy, 8525, 13); // 00-8525.AUD	Hmph.
 				}
-			}
-			if (itemId == kItemGordosLighterHuman) {
-				Item_Remove_From_World(kItemGordosLighterHuman);
-				Item_Pickup_Spin_Effect(kModelAnimationGordosLighterHuman, 214, 380);
-				Actor_Clue_Acquire(kActorMcCoy, kClueGordosLighterHuman, true, -1);
-				if (_vm->_cutContent) {
-					Actor_Says(kActorMcCoy, 8850, 13); //00-8850.AUD	A lighter.
+			} else {
+				if (itemId == kItemGordosLighterReplicant) {					
+					Item_Remove_From_World(kItemGordosLighterReplicant);
+					Item_Pickup_Spin_Effect(kModelAnimationGordosLighterReplicant, 214, 380);
+					Actor_Clue_Acquire(kActorMcCoy, kClueGordosLighterReplicant, true, -1);
+				}
+				if (itemId == kItemGordosLighterHuman) {
+					Item_Remove_From_World(kItemGordosLighterHuman);
+					Item_Pickup_Spin_Effect(kModelAnimationGordosLighterHuman, 214, 380);
+					Actor_Clue_Acquire(kActorMcCoy, kClueGordosLighterHuman, true, -1);
 				}
 			}
 		}
@@ -273,11 +286,11 @@ void SceneScriptNR02::PlayerWalkedIn() {
 					Loop_Actor_Walk_To_XYZ(kActorDektora, -300.18, -23.44, 44.75, 48, true, false, false);
 					// Removed code that makes Dekora invisible.
 					Game_Flag_Set(kFlagDektoraTalkAct4);
-					}
 				}
 			}
 		}
 	}
+}
 
 void SceneScriptNR02::PlayerWalkedOut() {
 	Music_Stop(2u);

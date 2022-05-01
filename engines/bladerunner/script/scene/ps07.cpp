@@ -152,7 +152,7 @@ bool SceneScriptPS07::ClickedOnActor(int actorId) {
 				if (_vm->_cutContent) {
 					Actor_Says(kActorKlein, 310, 13); //-	30-0310.AUD	I’m gonna tell it to you straight. But you ain’t gonna like it.
 					if (Player_Query_Agenda() != kPlayerAgendaSurly 
-					|| Player_Query_Agenda() != kPlayerAgendaErratic) {
+					&& Player_Query_Agenda() != kPlayerAgendaErratic) {
 						Actor_Says(kActorMcCoy, 620, 18); //-	00-0620.AUD	Try me.
 					} else {
 						Actor_Says(kActorMcCoy, 8445, 14); //00-8445.AUD	Cough it up!
@@ -281,9 +281,9 @@ bool SceneScriptPS07::ClickedOnActor(int actorId) {
 			// still see the Maggie inscription on the 'gold chain' but Sadik did mention having a lover that was killed by a blade runner.
 			// Could it be that her name was also Maggie? It certainly is a possibility and would be pretty if it were true.
 			if (_vm->_cutContent 
-				&& Actor_Clue_Query(kActorMcCoy, kClueTyrellSecurityPhoto)	
-			    && !Actor_Clue_Query(kActorMcCoy, kClueLabAnalysisGoldChain)
-		        && (Actor_Query_Friendliness_To_Other(kActorKlein, kActorMcCoy) > 49)) {
+			&& Actor_Clue_Query(kActorMcCoy, kClueTyrellSecurityPhoto)	
+			&& !Actor_Clue_Query(kActorMcCoy, kClueLabAnalysisGoldChain)
+			&& (Actor_Query_Friendliness_To_Other(kActorKlein, kActorMcCoy) > 49)) {
 				Actor_Says(kActorKlein, 260, 12); //30-0260.AUD Yeah, dig this. It's been doing the circuits throughout the station.
 				Item_Pickup_Spin_Effect(kModelAnimationMaggieBracelet, 180, 228); 
 				Actor_Voice_Over(4190, kActorVoiceOver); //99-4190.AUD	Where have I seen that before?

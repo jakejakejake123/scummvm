@@ -54,7 +54,7 @@ void SceneScriptHC01::InitializeScene() {
 	// in unused dialogue later on.  This code will put Izo into the set if you did help him out. 
 	if (_vm->_cutContent) {
 		if (Global_Variable_Query(kVariableChapter) == 3) {
-			if	(Game_Flag_Query(kFlagCrystalConvinced)) {
+			if	(Game_Flag_Query(kFlagIzoWarned)) {
 				Actor_Put_In_Set(kActorIzo, kSetHC01_HC02_HC03_HC04);
 				Actor_Set_At_XYZ(kActorIzo, 605.53, 0.95, 39.46, 524);
 			}
@@ -160,7 +160,7 @@ bool SceneScriptHC01::ClickedOnActor(int actorId) {
 		Actor_Face_Actor(kActorMcCoy, actorId, true);
 		Actor_Says(kActorMcCoy, 8910, 14); 
 		// This is the code for the conversation that you have with Izo if you warned him about Crystal.
-	} else if (actorId == kActorIzo && Game_Flag_Query(kFlagCrystalConvinced)) {
+	} else if (actorId == kActorIzo && Game_Flag_Query(kFlagIzoWarned)) {
 		if (!Game_Flag_Query(kFlagIzoPrepared)) {
 			Loop_Actor_Walk_To_XYZ(kActorMcCoy, 624.43f, 0.14f, 83.0f, 0, true, false, false);
 			Actor_Face_Actor(kActorMcCoy, kActorIzo, true);
@@ -411,6 +411,16 @@ void SceneScriptHC01::dialogueWithIzo() {
 				// Restored: if Izo is a Replicant, he would probably lie
 				// so this line goes here
 				Actor_Says(kActorIzo, 150, kAnimationModeTalk);
+				if (Player_Query_Agenda() == kPlayerAgendaSurly
+				|| (Player_Query_Agenda() == kPlayerAgendaErratic)) {
+					Actor_Says(kActorMcCoy, 8519, 14);//00-8519.AUD	What do you say we dish each other the straight goods.
+					Delay(2000);
+					Actor_Says(kActorIzo, 160, kAnimationModeTalk);
+					Actor_Says(kActorMcCoy, 1110, 16);
+					Actor_Says(kActorIzo, 170, kAnimationModeTalk);
+					Actor_Says(kActorIzo, 180, kAnimationModeTalk);
+					Actor_Says(kActorIzo, 190, 12); //07-0190.AUD	And that was the last time I've seen them.
+				}
 			} else {
 				Actor_Says(kActorIzo, 160, kAnimationModeTalk);
 				Actor_Says(kActorMcCoy, 1110, 16);
@@ -489,6 +499,7 @@ void SceneScriptHC01::dialogueWithIzo() {
 			Dialogue_Menu_Remove_From_List(1100);
 			Actor_Says(kActorMcCoy, 5480, 15); //00-5480.AUD	Look, just come along with me. You’re gonna have to take a little personality test.
 			Game_Flag_Set(kFlagIzoEscaped);
+			Game_Flag_Set(kFlagIzoGotAway);
 			if (Actor_Query_Friendliness_To_Other(kActorIzo, kActorMcCoy) < 60) {
 				takePhotoAndRunAway();
 			}
@@ -499,6 +510,7 @@ void SceneScriptHC01::dialogueWithIzo() {
 			Actor_Says(kActorMcCoy, 3690, 14); //00-3690.AUD	Look. I wanna warn you. There’s a woman looking for you and your friends.
 			// Added in two flags here, the first one is so the scene with Izo in the sewers will play and then will be reset so the scene doesn't repaet. The other will be used in the endgame to decide Steeles status towards McCoy.
 			Game_Flag_Set(kFlagIzoEscaped);
+			Game_Flag_Set(kFlagIzoGotAway);
 			Game_Flag_Set(kFlagIzoWarnedAboutCrystal);
 			if (Actor_Query_Friendliness_To_Other(kActorIzo, kActorMcCoy) < 60) {
 				takePhotoAndRunAway();

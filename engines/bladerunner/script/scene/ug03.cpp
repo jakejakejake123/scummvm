@@ -197,6 +197,8 @@ void SceneScriptUG03::PlayerWalkedIn() {
 				Actor_Says (kActorHolloway, 0, kAnimationModeTalk); //33-0000.AUD	(Coughs) You're a Rep, McCoy. I've seen your incept photo with my own eyes.
 				Actor_Says(kActorMcCoy, 5520, 18); //00-5520.AUD	Oh, yeah?
 				Delay (1000);
+				Actor_Says(kActorMcCoy, 8990, 14); //00-8990.AUD	What have you got there?
+				Delay (2000);
 				Item_Pickup_Spin_Effect(kModelAnimationPhoto, 602, 435);
 				Actor_Voice_Over(4240, kActorVoiceOver); //99-4240.AUD	That can't be me.
 				Actor_Clue_Acquire(kActorMcCoy, kClueMcCoyIncept, true, kActorHolloway);

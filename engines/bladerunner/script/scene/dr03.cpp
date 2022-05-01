@@ -263,7 +263,6 @@ void SceneScriptDR03::PlayerWalkedIn() {
 				Actor_Says(kActorChew, 550, 12); //52-0550.AUD	They touch eyes, destroy coat. Have to start all over.
 				if (Actor_Clue_Query(kActorMcCoy, kClueAnimalMurderSuspect)
 				|| Actor_Clue_Query(kActorMcCoy, kClueMorajiInterview)
-				|| Actor_Clue_Query(kActorMcCoy, kClueIzosFriend)
 				|| Actor_Clue_Query(kActorMcCoy, kClueMoonbus1)
 				|| Actor_Clue_Query(kActorMcCoy, kClueDektorasDressingRoom)) {
 					Actor_Says(kActorMcCoy, 925, 18); //00-0925.AUD	You sure about the descriptions?

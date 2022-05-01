@@ -87,7 +87,7 @@ bool SceneScriptBB07::ClickedOn3DObject(const char *objectName, bool a2) {
 					Actor_Voice_Over(4360, kActorVoiceOver); //99-4360.AUD	The suspect was definitely looking for something at the Bradbury.
 				}
 				Game_Flag_Set(kFlagBB07PrinterChecked);
-				Actor_Clue_Acquire(kActorMcCoy, kClueDNASebastian, true, -1);
+				Actor_Clue_Acquire(kActorMcCoy, kClueDNASebastian, true, kActorSebastian);
 			} else if (Game_Flag_Query(kFlagBB07ElectricityOn)
 			        && Game_Flag_Query(kFlagBB07PrinterChecked)
 			) {

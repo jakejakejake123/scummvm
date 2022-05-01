@@ -401,7 +401,8 @@ void SceneScriptNR11::PlayerWalkedIn() {
 				// Made it so Blade runner blues only plays when Dektora dies if McCoy is neither surly or erratic.
 				if (_vm->_cutContent) {
 					if (Player_Query_Agenda() != kPlayerAgendaSurly 
-					|| Player_Query_Agenda() != kPlayerAgendaErratic) {
+					&& Player_Query_Agenda() != kPlayerAgendaErratic) {
+						Music_Stop(4u);
 						Music_Play(kMusicBRBlues, 52, 0, 2, -1, kMusicLoopPlayOnce, 0);
 					}
 				}
@@ -416,7 +417,7 @@ void SceneScriptNR11::PlayerWalkedIn() {
 				Actor_Set_At_XYZ(kActorMcCoy, -15.53f, 0.33f, 73.49f, 954);
 				if (_vm->_cutContent) {
 					if (Player_Query_Agenda() != kPlayerAgendaSurly 
-					|| Player_Query_Agenda() != kPlayerAgendaErratic) {
+					&& Player_Query_Agenda() != kPlayerAgendaErratic) {
 						Music_Play(kMusicBRBlues, 52, 0, 2, -1, kMusicLoopPlayOnce, 0);
 					}
 				}

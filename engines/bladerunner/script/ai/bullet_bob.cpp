@@ -59,8 +59,15 @@ bool AIScriptBulletBob::Update() {
 	 && !Game_Flag_Query(kFlagRC04McCoyCombatMode)
 	 &&  Global_Variable_Query(kVariableChapter) < 4
 	) {
-		AI_Countdown_Timer_Reset(kActorBulletBob, kActorTimerAIScriptCustomTask2);
-		AI_Countdown_Timer_Start(kActorBulletBob, kActorTimerAIScriptCustomTask2, 10);
+		if (_vm->_cutContent) {
+			if (Game_Flag_Query(kFlagBulletBobIsReplicant)) {
+				AI_Countdown_Timer_Reset(kActorBulletBob, kActorTimerAIScriptCustomTask2);
+				AI_Countdown_Timer_Start(kActorBulletBob, kActorTimerAIScriptCustomTask2, 10);
+			}
+		} else {
+			AI_Countdown_Timer_Reset(kActorBulletBob, kActorTimerAIScriptCustomTask2);
+			AI_Countdown_Timer_Start(kActorBulletBob, kActorTimerAIScriptCustomTask2, 10);
+		}
 		Actor_Set_Goal_Number(kActorBulletBob, kGoalBulletBobWarningMcCoy);
 		Actor_Modify_Friendliness_To_Other(kActorBulletBob, kActorMcCoy, -15);
 		Game_Flag_Set(kFlagRC04McCoyCombatMode);
@@ -89,7 +96,15 @@ bool AIScriptBulletBob::Update() {
 	 && Player_Query_Combat_Mode()
 	 && Actor_Query_Goal_Number(kActorBulletBob) != kGoalBulletBobDead
 	) {
-		Actor_Set_Goal_Number(kActorBulletBob, kGoalBulletBobShootMcCoy);
+		if (_vm->_cutContent) {
+			if (Game_Flag_Query(kFlagBulletBobIsReplicant)) {
+				Actor_Set_Goal_Number(kActorBulletBob, kGoalBulletBobShootMcCoy);
+			} else {
+				Actor_Says(kActorBulletBob, 120, 37);
+			}
+		} else {
+			Actor_Set_Goal_Number(kActorBulletBob, kGoalBulletBobShootMcCoy);
+		}
 		return true;
 	}
 

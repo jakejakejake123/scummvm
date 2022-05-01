@@ -246,11 +246,8 @@ void SceneScriptUG01::PlayerWalkedIn() {
 			Actor_Says(kActorMcCoy, 5470, 15); //00-5470.AUD	Get lost, Izo. Take off.
 			Loop_Actor_Walk_To_XYZ(kActorIzo, -57.24, -48.79, -2023.48, 48, false, true, false);
 			// Removed code that makes Izo invisible.
-			Actor_Set_Goal_Number(kActorIzo, kGoalIzoRC03RunAway);
 			Actor_Put_In_Set(kActorIzo, kSetUG03);
 			Game_Flag_Reset(kFlagIzoWarnedAboutCrystal);
-			Game_Flag_Set(kFlagIzoEscaped);
-			Game_Flag_Set(kFlagIzoGotAway);
 			// Flag for determining the ending added.
 			Game_Flag_Set(kFlagIzoWarned);
 			Game_Flag_Set(kFlagMcCoyIsHelpingReplicants);

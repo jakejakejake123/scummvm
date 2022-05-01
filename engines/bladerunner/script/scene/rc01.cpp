@@ -496,29 +496,32 @@ bool SceneScriptRC01::ClickedOnItem(int itemId, bool a2) {
 		if (!Loop_Actor_Walk_To_Item(kActorMcCoy, kItemChromeDebris, 36, true, false)) {
 			Actor_Face_Item(kActorMcCoy, kItemChromeDebris, true);
 			Actor_Clue_Acquire(kActorMcCoy, kClueChromeDebris, true, -1);
-			if (_vm->_cutContent) {
-				Actor_Face_Actor(kActorOfficerLeary, kActorMcCoy, true);
-				Actor_Says(kActorMcCoy, 8525, 13); // 00-8525.AUD	Hmph.
-				Actor_Says(kActorMcCoy, 8755, 15); //00-8755.AUD	A piece of chrome.
-				Loop_Actor_Walk_To_Actor(kActorOfficerLeary, kActorMcCoy, 36, false, false);
-				Actor_Says(kActorOfficerLeary, 20, 12);
-				Game_Flag_Set(kFlagRC01ChromeDebrisTaken);
-				Item_Remove_From_World(kItemChromeDebris);
-				Item_Pickup_Spin_Effect(kModelAnimationChromeDebris, 426, 316);
-				I_Sez("JM: Chrome...is that what that is?");
-				Actor_Says(kActorMcCoy, 4505, -1);
-				// Jake - Added in a line where Leary is annoyed at McCoy for him being condescending towards him. 
-				Actor_Says(kActorOfficerLeary, 30, 14);
-				Actor_Face_Actor(kActorMcCoy, kActorOfficerLeary, true);
-				if (Player_Query_Agenda() == kPlayerAgendaSurly 
-				|| Player_Query_Agenda() == kPlayerAgendaErratic) {
-					Actor_Says(kActorMcCoy, 4510, 13); //00-4510.AUD	No, I think it's horse chrome. Bag it and tag it.
-					Actor_Says(kActorOfficerLeary, 170, 13); //23-0170.AUD	You ain't talking to some flunky, McCoy.
-					Actor_Modify_Friendliness_To_Other(kActorOfficerLeary, kActorMcCoy, -5);
+			if (_vm->_cutContent) {		
+				if (!Actor_Clue_Query(kActorMcCoy, kCluePaintTransfer)) {
+					Actor_Says(kActorMcCoy, 8525, 13); // 00-8525.AUD	Hmph.
 				} else {
-					Actor_Says(kActorMcCoy, 8535, 19); //00-8535.AUD	Yeah.
-					Delay (500);
-					Actor_Says(kActorMcCoy, 5310, 11); //00-5310.AUD	You spot anything you think I ought to know about, tell me.
+					Actor_Face_Actor(kActorOfficerLeary, kActorMcCoy, true);
+					Actor_Says(kActorMcCoy, 8755, 15); //00-8755.AUD	A piece of chrome.
+					Loop_Actor_Walk_To_Actor(kActorOfficerLeary, kActorMcCoy, 36, false, false);
+					Actor_Says(kActorOfficerLeary, 20, 12);
+					Game_Flag_Set(kFlagRC01ChromeDebrisTaken);
+					Item_Remove_From_World(kItemChromeDebris);
+					Item_Pickup_Spin_Effect(kModelAnimationChromeDebris, 426, 316);
+					I_Sez("JM: Chrome...is that what that is?");
+					Actor_Says(kActorMcCoy, 4505, -1);
+					// Jake - Added in a line where Leary is annoyed at McCoy for him being condescending towards him. 
+					Actor_Says(kActorOfficerLeary, 30, 14);
+					Actor_Face_Actor(kActorMcCoy, kActorOfficerLeary, true);
+					if (Player_Query_Agenda() == kPlayerAgendaSurly 
+					|| Player_Query_Agenda() == kPlayerAgendaErratic) {
+						Actor_Says(kActorMcCoy, 4510, 13); //00-4510.AUD	No, I think it's horse chrome. Bag it and tag it.
+						Actor_Says(kActorOfficerLeary, 170, 13); //23-0170.AUD	You ain't talking to some flunky, McCoy.
+						Actor_Modify_Friendliness_To_Other(kActorOfficerLeary, kActorMcCoy, -5);
+					} else {
+						Actor_Says(kActorMcCoy, 8535, 19); //00-8535.AUD	Yeah.
+						Delay (500);
+						Actor_Says(kActorMcCoy, 5310, 11); //00-5310.AUD	You spot anything you think I ought to know about, tell me.
+					}
 				}
 			} else {
 				Actor_Says(kActorOfficerLeary, 20, 12);

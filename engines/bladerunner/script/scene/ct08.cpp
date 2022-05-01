@@ -203,12 +203,12 @@ void SceneScriptCT08::PlayerWalkedIn() {
 				Actor_Voice_Over(4390, kActorVoiceOver); //99-4390.AUD	I got in at least one good shot and he definitely felt it.
 				Actor_Voice_Over(4400, kActorVoiceOver); //99-4400.AUD	A Nexus-6 wouldn't have even blinked.
 				Actor_Clue_Acquire(kActorMcCoy, kClueStaggeredbyPunches, true, -1);
-				Actor_Clue_Acquire(kActorMcCoy, kClueSightingSadikBradbury, true, -1);
+				Actor_Clue_Acquire(kActorMcCoy, kClueSightingSadikBradbury, true, kActorSadik);
 			} else {
 				Actor_Voice_Over(430, kActorVoiceOver); //99-0430.AUD	The Reps were regular Boy Scouts.
 				Actor_Voice_Over(440, kActorVoiceOver); //99-0440.AUD	The knots were tighter than my grandma on New Year's Eve.
 				Actor_Voice_Over(940,  kActorVoiceOver); //99-0940.AUD	I had an idea. I didn't know if it was gonna work or not, but I'd run out of options.
-				Actor_Clue_Acquire(kActorMcCoy, kClueSightingSadikBradbury, true, -1);
+				Actor_Clue_Acquire(kActorMcCoy, kClueSightingSadikBradbury, true, kActorSadik);
 			}
 		}
 

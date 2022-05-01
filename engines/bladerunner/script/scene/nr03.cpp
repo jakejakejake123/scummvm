@@ -127,6 +127,7 @@ bool SceneScriptNR03::ClickedOnActor(int actorId) {
 					// Also McCoy mentions that Hanoi looks familliar. This is because he saw
 					// an incept photo of Hanoi but doesn't recognise him because of his punk attire and hairstyle.
 					if (!Game_Flag_Query(kFlagHanoiIsReplicant)) {
+						Game_Flag_Set(kFlagHanoiTalk);
 						Game_Flag_Set(kFlagNR03HanoiTalk);
 						// Hanoi is human: McCoy and Hanoi know each other and have a pleasant exchange
 						Actor_Says(kActorMcCoy, 3340, kAnimationModeTalk); //00-3340.AUD	Hey, Hanoi. Where’s Early?
@@ -137,10 +138,13 @@ bool SceneScriptNR03::ClickedOnActor(int actorId) {
 						Actor_Says(kActorMcCoy, 3365, 16); //00-3365.AUD	You and I both know he ain’t at any spa, Hanoi.
 						Actor_Says(kActorHanoi, 70, 13); //25-0070.AUD	He ring you from the spa or what?
 						Actor_Says(kActorMcCoy, 3530, 15); //00-3530.AUD	No, sir.
-						Delay (1000);
+						Delay(1000);
+						Actor_Says(kActorMcCoy, 5150, 18); //00-5150.AUD	One more thing.
 						Actor_Says(kActorMcCoy, 8615, 13); //00-8615.AUD	Heard anything on the street?
 						Actor_Says(kActorHanoi, 190, 14); //25-0190.AUD	I heard something, yeah. Maybe I’ll even tell it to you, mate.
 						Actor_Says(kActorMcCoy, 7835, 13); //00-7835.AUD	Is that so?
+						Delay(1000);
+						Actor_Says(kActorMcCoy, 5145, 18); //00-5145.AUD	I may have more questions for you later on.
 					} else {
 						Game_Flag_Set(kFlagHanoiTalk);
 						Game_Flag_Set(kFlagNR03HanoiTalk);
@@ -150,12 +154,14 @@ bool SceneScriptNR03::ClickedOnActor(int actorId) {
 						Actor_Says(kActorMcCoy, 3350, 14); //00-3350.AUD	Early’s waiting on me.
 						Actor_Says(kActorMcCoy, 3360, 15); //00-3360.AUD	It’s a social visit.
 						Actor_Says(kActorHanoi, 60, 13); //25-0060.AUD	Dirty old geezer blow me. There’s nothing social about the cops.
+						Actor_Says(kActorMcCoy, 7835, 13); //00-7835.AUD	Is that so?
 						Actor_Says(kActorHanoi, 80, 13); //25-0080.AUD	Listen good, boy-o.
 						Actor_Says(kActorHanoi, 90, 14); //25-0090.AUD	You can sit in here and do whatever you want.
 						Actor_Says(kActorHanoi, 100, 13); //25-0100.AUD	Drink, shoot some pocket nine ball. Whatever cops like to do in joints like this.
 						Actor_Says(kActorHanoi, 110, 14); //25-0110.AUD	Or you can take a flying leap through the front door. Are we clear?
+						Delay(1000);
 						Actor_Says(kActorMcCoy, 3370, 13); //00-3370.AUD	As the banks of the LA river.
-						Delay (1000);
+						Actor_Says(kActorMcCoy, 5150, 18); //00-5150.AUD	One more thing.
 						Actor_Says(kActorMcCoy, 8615, 13); //00-8615.AUD	Heard anything on the street?
 						Actor_Says(kActorHanoi, 190, 14); //25-0190.AUD	I heard something, yeah. Maybe I’ll even tell it to you, mate.
 						Actor_Says(kActorMcCoy, 8320, 15); //00-8320.AUD	Really?
@@ -225,9 +231,9 @@ bool SceneScriptNR03::ClickedOnExit(int exitId) {
 				switch (Global_Variable_Query(kVariableHanoiNR04Warnings)) {
 				case 0:
 					if (_vm->_cutContent) {
-						if (!Game_Flag_Query(kFlagHanoiIsReplicant)) {
-							Actor_Face_Actor(kActorHanoi, kActorMcCoy, true);
-							Actor_Face_Actor(kActorMcCoy, kActorHanoi, true);
+						Actor_Face_Actor(kActorHanoi, kActorMcCoy, true);
+						Actor_Face_Actor(kActorMcCoy, kActorHanoi, true);
+						if (!Game_Flag_Query(kFlagHanoiIsReplicant)) {	
 							// Human - gentle warning.
 							Actor_Says(kActorHanoi, 80, 13); // 25-0080.AUD	Listen good, boy-o.
 							Actor_Says(kActorMcCoy, 1510, 16); // 00-1510.AUD	Okay, okay. Just forget it.
@@ -294,14 +300,17 @@ bool SceneScriptNR03::ClickedOnExit(int exitId) {
 				case 0:
 					Actor_Says(kActorHanoi, 0, 15); //25-0000.AUD	This here is reserved for VIPs.
 					if (_vm->_cutContent) {
+						Game_Flag_Set(kFlagHanoiTalk);
 						// Hanoi is a relicant - Tells McCoy to get lost.
 						if (Game_Flag_Query(kFlagHanoiIsReplicant)) {
 							Actor_Face_Actor(kActorMcCoy, kActorHanoi, true);
 							Actor_Says(kActorMcCoy, 3335, 13); //00-3335.AUD	But that’s my name. Vip.
 							Actor_Says(kActorHanoi, 10, 16); //25-0010.AUD	You’re real cute, boy-o.
+							Actor_Says(kActorMcCoy, 2215, 18); //00-2215.AUD	That’s right.
+							Delay(1000);
 							Actor_Says(kActorHanoi, 20, 16); //25-0020.AUD	Take a hike, boy-o. Mr. Q don’t like interlopers in the sanctuary.
 							Actor_Face_Actor(kActorMcCoy, kActorHanoi, true);
-						// Human - McCoy immediately complies since they are on better terms.
+							// Human - McCoy immediately complies since they are on better terms.
 						} else {
 							Actor_Says(kActorMcCoy, 1825, 13);	//00-1825.AUD	Okay.
 						}
@@ -310,9 +319,6 @@ bool SceneScriptNR03::ClickedOnExit(int exitId) {
 						Actor_Says(kActorHanoi, 10, 16); //25-0010.AUD	You’re real cute, boy-o.
 					}
 					AI_Movement_Track_Unpause(kActorHanoi);
-					if (_vm->_cutContent) {
-						Game_Flag_Set(kFlagHanoiTalk);
-					}
 					break;
 				case 1:
 					Actor_Face_Actor(kActorMcCoy, kActorHanoi, true);

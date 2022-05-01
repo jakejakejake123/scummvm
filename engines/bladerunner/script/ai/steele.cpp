@@ -949,6 +949,10 @@ bool AIScriptSteele::GoalChanged(int currentGoalNumber, int newGoalNumber) {
 		Actor_Says(kActorSteele, 2050, kAnimationModeTalk);
 		Actor_Face_Actor(kActorSteele, kActorMcCoy, true);
 		Actor_Says(kActorSteele, 2060, kAnimationModeTalk);
+		if (_vm->_cutContent) {
+			Loop_Actor_Walk_To_Actor(kActorMcCoy, kActorIzo, 36, false, true);
+			Actor_Face_Actor(kActorMcCoy, kActorSteele, true);
+		}
 		Actor_Says(kActorMcCoy, 4845, kAnimationModeTalk);
 		Actor_Says(kActorSteele, 2070, kAnimationModeTalk);
 		Actor_Says(kActorSteele, 2080, kAnimationModeTalk);
@@ -986,6 +990,9 @@ bool AIScriptSteele::GoalChanged(int currentGoalNumber, int newGoalNumber) {
 		Actor_Says(kActorMcCoy, 4840, 15);
 		Actor_Says(kActorSteele, 1990, kAnimationModeTalk);
 		Actor_Says(kActorSteele, 2000, kAnimationModeTalk);
+		if (_vm->_cutContent) {
+			Game_Flag_Set(kFlagIzoGotAway);
+		}
 		Actor_Set_Goal_Number(kActorSteele, kGoalSteeleLeaveRC03);
 		Scene_Exits_Enable();
 		return true;
@@ -1082,7 +1089,7 @@ bool AIScriptSteele::GoalChanged(int currentGoalNumber, int newGoalNumber) {
 
 		case kGoalDektoraNR11FallThroughWindow:
 			if (_vm->_cutContent) {
-				Actor_Modify_Friendliness_To_Other(kActorSteele, kActorMcCoy, 3);
+				Actor_Modify_Friendliness_To_Other(kActorSteele, kActorMcCoy, 2);
 				Music_Stop(3u);
 			} else {
 				Actor_Modify_Friendliness_To_Other(kActorSteele, kActorMcCoy, 6);
@@ -1201,10 +1208,6 @@ bool AIScriptSteele::GoalChanged(int currentGoalNumber, int newGoalNumber) {
 		Actor_Change_Animation_Mode(kActorSteele, kAnimationModeCombatAttack);
 		Delay(500);
 		Actor_Change_Animation_Mode(kActorLucy, kAnimationModeDie);
-		//Sad music plays when Lucy dies.
-		if (_vm->_cutContent) {
-			Music_Play(kMusicCrysDie1, 25, 0, 1, -1, kMusicLoopPlayOnce, 0);
-		}
 		Actor_Set_Targetable(kActorLucy, false);
 		Actor_Retired_Here(kActorLucy, 36, 18, true, -1);
 		Delay(1000);
@@ -1212,6 +1215,9 @@ bool AIScriptSteele::GoalChanged(int currentGoalNumber, int newGoalNumber) {
 		AI_Movement_Track_Append_Run(kActorSteele, 380, 0);
 		AI_Movement_Track_Repeat(kActorSteele);
 		Delay(500);
+		if (_vm->_cutContent) {
+			Music_Play(kMusicCrysDie1, 25, 0, 1, -1, kMusicLoopPlayOnce, 0);
+		}
 		ADQ_Add(kActorLucy, 340, kAnimationModeDie);
 		return true;
 
@@ -1291,10 +1297,13 @@ bool AIScriptSteele::GoalChanged(int currentGoalNumber, int newGoalNumber) {
 		Actor_Says(kActorSteele, 150, 13);
 		Actor_Face_Actor(kActorMcCoy, kActorSteele, true);
 		Actor_Says(kActorMcCoy, 1580, 13);
-		Actor_Says(kActorSteele, 160, 14);
-		Actor_Says(kActorMcCoy, 1585, 16);
-		Actor_Says(kActorSteele, 170, 16);
-		Actor_Says(kActorSteele, 180, 17);
+		Actor_Says(kActorSteele, 160, 14); //01-0160.AUD	How the hell did it get away? We had it cornered.
+		Actor_Says(kActorMcCoy, 1585, 16); //00-1585.AUD	This one must be pretty damn clever.
+		Actor_Says(kActorSteele, 170, 16); //01-0170.AUD	What’s the problem, Slim?
+		if (_vm->_cutContent) {
+			Actor_Voice_Over(190, kActorVoiceOver); //99-0190.AUD	If only we had a target range worth a damn back at the station.
+		}
+		Actor_Says(kActorSteele, 180, 17); //01-0180.AUD	If you can’t even retire a freaking Lolita, how do you expect to dance with a combat Six?
 		Actor_Says(kActorMcCoy, 1590, 17);
 		Actor_Says(kActorSteele, 200, 15);
 		Actor_Set_Goal_Number(kActorSteele, kGoalSteeleHFxxGoToSpinner);

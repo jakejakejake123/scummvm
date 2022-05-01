@@ -144,7 +144,7 @@ bool SceneScriptCT05::ClickedOnItem(int itemId, bool a2) {
 		if (itemId ==  kItemNote) {
 			if (!Loop_Actor_Walk_To_Item(kActorMcCoy,  kItemNote, 12, true, false)) {
 				Actor_Face_Item(kActorMcCoy,  kItemNote, true);
-				Actor_Clue_Acquire(kActorMcCoy, kClueZubenIncept, true, -1);
+				Actor_Clue_Acquire(kActorMcCoy, kClueZubenIncept, true, kActorZuben);
 				Item_Pickup_Spin_Effect(kModelAnimationPhoto, 461, 319);
 				Item_Remove_From_World(kItemNote);
 				return true;

@@ -248,7 +248,11 @@ bool SceneScriptPS04::ClickedOnItem(int itemId, bool a2) {
 			Item_Remove_From_World(kItemWeaponsOrderForm);
 			Item_Pickup_Spin_Effect(kModelAnimationOriginalRequisitionForm, 464, 362);
 			Actor_Says(kActorMcCoy, 4485, kAnimationModeTalk);
-			Actor_Clue_Acquire(kActorMcCoy, kClueWeaponsOrderForm, true, kActorMcCoy);
+			if (_vm->_cutContent) {
+				Actor_Clue_Acquire(kActorMcCoy, kClueWeaponsOrderForm, true, kActorGuzza);
+			} else {
+				Actor_Clue_Acquire(kActorMcCoy, kClueWeaponsOrderForm, true, kActorMcCoy);
+			}
 		}
 	}
 #endif // BLADERUNNER_ORIGINAL_BUGS

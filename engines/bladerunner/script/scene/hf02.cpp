@@ -58,9 +58,9 @@ void SceneScriptHF02::InitializeScene() {
 void SceneScriptHF02::SceneLoaded() {
 	Obstacle_Object("BARD_NEON", true);
 	if (_vm->_cutContent) {
-	Clickable_Object("BARD_NEON");
+		Clickable_Object("BARD_NEON");
 	} else {
-	Unclickable_Object("BARD_NEON");	
+		Unclickable_Object("BARD_NEON");	
 	}
 	if (Actor_Query_Goal_Number(kActorSteele) == kGoalSteeleHF03McCoyChasingLucy) {
 		if (Game_Flag_Query(kFlagLucyRanAway)) {
@@ -86,7 +86,7 @@ bool SceneScriptHF02::ClickedOn3DObject(const char *objectName, bool a2) {
 				Actor_Voice_Over(1690, kActorVoiceOver); //99-1690.AUD	“Never seek to tell thy love, love that never told can be.”
 				Actor_Voice_Over(1700, kActorVoiceOver); //99-1700.AUD	Poetry. I was running into a lot of that crap lately.
 				if (Query_Difficulty_Level() != kGameDifficultyEasy) {
-					Global_Variable_Decrement(kVariableChinyen, 5);
+					Global_Variable_Decrement(kVariableChinyen, 2);
 				}
 			} else {
 				Actor_Says(kActorMcCoy, 8525, 3); //00-8525.AUD	Hmph.
@@ -95,7 +95,7 @@ bool SceneScriptHF02::ClickedOn3DObject(const char *objectName, bool a2) {
 				Delay (1000);
 				Actor_Says(kActorMcCoy, 2340, kAnimationModeTalk); // 00-2340.AUD	I never did like poetry.
 				if (Query_Difficulty_Level() != kGameDifficultyEasy) {
-					Global_Variable_Decrement(kVariableChinyen, 5);
+					Global_Variable_Decrement(kVariableChinyen, 2);
 				}
 			}
 		}
