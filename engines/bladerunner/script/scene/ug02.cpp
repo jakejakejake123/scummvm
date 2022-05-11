@@ -75,10 +75,10 @@ void SceneScriptUG02::SceneLoaded() {
 	) {
 		// Adjusted the position for the radiation goggles so they are a little easier to see.
 		if (_vm->_cutContent) {
-		Item_Add_To_World(kItemRadiationGoogles, kModelAnimationRadiationGoggles, kSetUG02,  -265.71, 120.23, 71.33, 0, 8, 8, false, true, false, true);
-	} else {
-		Item_Add_To_World(kItemRadiationGoogles, kModelAnimationRadiationGoggles, kSetUG02, -300.37f, 120.16f, -81.31f, 0, 8, 8, false, true, false, true);
-	}
+			Item_Add_To_World(kItemRadiationGoogles, kModelAnimationRadiationGoggles, kSetUG02,  -265.71, 120.23, 71.33, 0, 8, 8, false, true, false, true);
+		} else {
+			Item_Add_To_World(kItemRadiationGoogles, kModelAnimationRadiationGoggles, kSetUG02, -300.37f, 120.16f, -81.31f, 0, 8, 8, false, true, false, true);
+		}
 	}
 	// Added in the the Izo incept photo into the scene if he is a replicant.
 		if (!Actor_Clue_Query(kActorMcCoy, kClueIzoIncept)
@@ -172,7 +172,7 @@ bool SceneScriptUG02::ClickedOnActor(int actorId) {
 bool SceneScriptUG02::ClickedOnItem(int itemId, bool a2) {
 	if (itemId == kItemRadiationGoogles) {
 		Actor_Face_Item(kActorMcCoy, kItemRadiationGoogles, true);
-		Actor_Clue_Acquire(kActorMcCoy, kClueRadiationGoggles, true, -1);
+		Actor_Clue_Acquire(kActorMcCoy, kClueRadiationGoggles, true, kActorIzo);
 		Game_Flag_Set(kFlagUG02RadiationGogglesTaken);
 		Item_Remove_From_World(kItemRadiationGoogles);
 		// Code for picking up the goggles and the incept photo.
@@ -186,7 +186,7 @@ bool SceneScriptUG02::ClickedOnItem(int itemId, bool a2) {
 	}
 	if (itemId == kItemNote) {
 		Actor_Face_Item(kActorMcCoy, kItemNote, true);
-		Actor_Clue_Acquire(kActorMcCoy, kClueIzoIncept, true, -1);
+		Actor_Clue_Acquire(kActorMcCoy, kClueIzoIncept, true, kActorIzo);
 		Item_Remove_From_World(kItemNote);
 		Item_Pickup_Spin_Effect(kModelAnimationPhoto, 462, 252);
 		return true;

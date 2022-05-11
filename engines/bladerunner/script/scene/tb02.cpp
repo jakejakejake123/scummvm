@@ -398,17 +398,19 @@ void SceneScriptTB02::PlayerWalkedIn() {
 		if (!Game_Flag_Query(kFlagTB02GuardTalk1)) {
 			Player_Loses_Control();
 			Actor_Says(kActorMcCoy, 5125, 18);
-			Actor_Says(kActorTyrellGuard, 0, 50);
-			Actor_Says(kActorMcCoy, 5130, 13);
-			// Made it so the guard now presses the buzzer to let McCoy in. Also restored some dialogue.
-			Actor_Says(kActorTyrellGuard, 10, 15); //17-0010.AUD	Grav Test on the East Wing. 66th floor.
 			if (_vm->_cutContent) {
+				Actor_Says(kActorTyrellGuard, 0, 14);
 				Actor_Change_Animation_Mode(kActorTyrellGuard, 50);
 				Delay (800);
 				Sound_Play(kSfxLABBUZZ1, 90, 0, 0, 50);
 				Delay (1000);
+				Actor_Says(kActorMcCoy, 5130, 13);
+				Actor_Says(kActorTyrellGuard, 10, 15); //17-0010.AUD	Grav Test on the East Wing. 66th floor.
 				Actor_Says(kActorMcCoy, 4130, kAnimationModeTalk); //00-4130.AUD	Anything else?
 				Actor_Says(kActorTyrellGuard, 380, 10); //17-0380.AUD	Oh, yeah, there-- There is one more thing.
+			} else {
+				Actor_Says(kActorMcCoy, 5130, 13);
+				Actor_Says(kActorTyrellGuard, 10, 15); //17-0010.AUD	Grav Test on the East Wing. 66th floor.
 			}
 			Item_Pickup_Spin_Effect(kModelAnimationVideoDisc, 351, 315);
 			Actor_Says(kActorTyrellGuard, 20, 23); //17-0020.AUD	Ah-- here's the footage from the security cameras. You get a pretty good look at the man's face.

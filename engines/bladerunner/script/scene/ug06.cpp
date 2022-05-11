@@ -142,26 +142,28 @@ void SceneScriptUG06::PlayerWalkedIn() {
 	if ( Global_Variable_Query(kVariableChapter) == 4
 	 && !Game_Flag_Query(kFlagUG06Chapter4Started)
 	) {
-		Player_Loses_Control();
-		Actor_Voice_Over(2620, kActorVoiceOver);
-		Actor_Voice_Over(2630, kActorVoiceOver);
-		Actor_Voice_Over(2640, kActorVoiceOver);
+		Player_Loses_Control(); 
+		Actor_Voice_Over(2620, kActorVoiceOver); 
+		Actor_Voice_Over(2630, kActorVoiceOver); 
+		Actor_Voice_Over(2640, kActorVoiceOver); //99-2640.AUD	I didn’t know what it was. I didn’t know who I was.
 		// Made it so McCoy only mentions not killing Izo if he actually didn't do that.
 		if (_vm->_cutContent) {
 			if (!Game_Flag_Query(kFlagMcCoyShotIzo)) {
 				Actor_Voice_Over(2650, kActorVoiceOver); //99-2650.AUD	A cop dangling on the short end of the stick or a Rep whose memory banks had ran out.
 				Actor_Voice_Over(2660, kActorVoiceOver); //99-2660.AUD	One thing I was sure of was that I didn’t kill Izo.
+				Actor_Voice_Over(2670, kActorVoiceOver); //99-2670.AUD	That I know I experienced. And this misinformation…
+				Actor_Voice_Over(2680, kActorVoiceOver); //99-2680.AUD	maybe it was the key to everything that was happening.
 			} else {
 				Actor_Voice_Over(2650, kActorVoiceOver); //99-2650.AUD	A cop dangling on the short end of the stick or a Rep whose memory banks had ran out.
 			}
 		} else {
 			Actor_Voice_Over(2650, kActorVoiceOver); //99-2650.AUD	A cop dangling on the short end of the stick or a Rep whose memory banks had ran out.
 			Actor_Voice_Over(2660, kActorVoiceOver); //99-2660.AUD	One thing I was sure of was that I didn’t kill Izo.
+			Actor_Voice_Over(2670, kActorVoiceOver); //99-2670.AUD	That I know I experienced. And this misinformation…
+			Actor_Voice_Over(2680, kActorVoiceOver); //99-2680.AUD	maybe it was the key to everything that was happening.
 		}
-		Actor_Voice_Over(2670, kActorVoiceOver); //99-2670.AUD	That I know I experienced. And this misinformation…
-		Actor_Voice_Over(2680, kActorVoiceOver);
-		Actor_Voice_Over(2690, kActorVoiceOver);
-		Actor_Voice_Over(2700, kActorVoiceOver);
+		Actor_Voice_Over(2690, kActorVoiceOver); //99-2690.AUD	Maybe there was a lot more than what met my eye.
+		Actor_Voice_Over(2700, kActorVoiceOver); //99-2700.AUD	All I had to do was stay alive long enough to find out.
 		Player_Gains_Control();
 		Game_Flag_Set(kFlagUG06Chapter4Started);
 		Autosave_Game(2);

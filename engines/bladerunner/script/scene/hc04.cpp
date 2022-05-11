@@ -38,11 +38,9 @@ void SceneScriptHC04::InitializeScene() {
 	Music_Play(kMusicOneTime, 14, -90, 1, -1, loop, 2);
 
 	if (_vm->_cutContent) {
-		if (Global_Variable_Query(kVariableChapter) < 4) {
+		if (!Game_Flag_Query(kFlagIsabellaArrested))  {
 			Actor_Put_In_Set(kActorIsabella, kSetHC01_HC02_HC03_HC04);
 			Actor_Set_At_XYZ(kActorIsabella, -210.0f, 0.0f, -445.0f, 250);
-		} else {
-			Actor_Set_At_XYZ(kActorIsabella, 360.77f, 4.4f, -806.67f, 126);
 		}
 	} else {
 		Actor_Put_In_Set(kActorIsabella, kSetHC01_HC02_HC03_HC04);
@@ -188,10 +186,12 @@ void SceneScriptHC04::dialogueWithIsabella() {
 		// Also made it so if you have the stolen cheese clue the deliverymen and Eisenduller options disappear since McCoy now knows that it was
 		// Gordo who stole that takeout boxes and not Sadik who was delivring them.
 		if (_vm->_cutContent) {
-			if (Actor_Query_Friendliness_To_Other(kActorIsabella, kActorMcCoy) > 49) {
-				if (Actor_Clue_Query(kActorMcCoy, kClueBombingSuspect)
-				&& !Actor_Clue_Query(kActorMcCoy, kClueStolenCheese)) {
-					DM_Add_To_List_Never_Repeat_Once_Selected(350, 5, 6, 5); // DELIVERYMEN
+			if (Global_Variable_Query(kVariableChapter) < 4) {
+				if (Actor_Query_Friendliness_To_Other(kActorIsabella, kActorMcCoy) > 49) {
+					if (Actor_Clue_Query(kActorMcCoy, kClueBombingSuspect)
+					&& !Actor_Clue_Query(kActorMcCoy, kClueStolenCheese)) {
+						DM_Add_To_List_Never_Repeat_Once_Selected(350, 5, 6, 5); // DELIVERYMEN
+					}
 				}
 			}
 		} else if (Actor_Clue_Query(kActorMcCoy, kClueBombingSuspect)) {
@@ -200,20 +200,41 @@ void SceneScriptHC04::dialogueWithIsabella() {
 			DM_Add_To_List_Never_Repeat_Once_Selected(350, 5, 6, 5); // DELIVERYMEN
 		}
 		if (_vm->_cutContent) {
-			if  (!Actor_Clue_Query(kActorMcCoy, kClueStolenCheese)
-			&& Actor_Query_Friendliness_To_Other(kActorIsabella, kActorMcCoy) > 49) {
-				DM_Add_To_List_Never_Repeat_Once_Selected(360, 6, 4, 3); // MARCUS EISENDULLER
+			if (Global_Variable_Query(kVariableChapter) < 4) {
+				if (Actor_Query_Friendliness_To_Other(kActorIsabella, kActorMcCoy) > 49) {
+					if  (!Actor_Clue_Query(kActorMcCoy, kClueStolenCheese)
+					&& Actor_Query_Friendliness_To_Other(kActorIsabella, kActorMcCoy) > 49) {
+						DM_Add_To_List_Never_Repeat_Once_Selected(360, 6, 4, 3); // MARCUS EISENDULLER
+					}
+				}
 			}		
 		} else {
 			DM_Add_To_List_Never_Repeat_Once_Selected(360, 6, 4, 3); // MARCUS EISENDULLER
 		}
 	}
-	if ( Actor_Clue_Query(kActorMcCoy, kClueCheese)
+	if (_vm->_cutContent) {
+		if (Global_Variable_Query(kVariableChapter) < 4) {
+			if (Actor_Query_Friendliness_To_Other(kActorIsabella, kActorMcCoy) > 49) {
+				if ( Actor_Clue_Query(kActorMcCoy, kClueCheese)
+				&& !Actor_Clue_Query(kActorMcCoy, kClueSpecialIngredient)) {
+					DM_Add_To_List_Never_Repeat_Once_Selected(370, 3, 4, 7); // CHEESE
+				}
+				}
+		}
+	} else if ( Actor_Clue_Query(kActorMcCoy, kClueCheese)
 	 && !Actor_Clue_Query(kActorMcCoy, kClueSpecialIngredient)
 	) {
 		DM_Add_To_List_Never_Repeat_Once_Selected(370, 3, 4, 7); // CHEESE
 	}
-	if (Actor_Clue_Query(kActorMcCoy, kClueSpecialIngredient)) {
+	if (_vm->_cutContent) {
+		if (Global_Variable_Query(kVariableChapter) < 4) {
+			if (Actor_Query_Friendliness_To_Other(kActorIsabella, kActorMcCoy) > 49) {
+				if (Actor_Clue_Query(kActorMcCoy, kClueSpecialIngredient)) {
+					DM_Add_To_List_Never_Repeat_Once_Selected(380, -1, 5, 8); // MIA AND MURRAY INFO
+				}
+			}
+		}
+	} else if (Actor_Clue_Query(kActorMcCoy, kClueSpecialIngredient)) {
 		DM_Add_To_List_Never_Repeat_Once_Selected(380, -1, 5, 8); // MIA AND MURRAY INFO
 	}
 	// Made it so McCoy doesn't have the option to buy the stew if he found out about the special ingredient.
@@ -301,6 +322,19 @@ void SceneScriptHC04::dialogueWithIsabella() {
 				Actor_Says(kActorMcCoy, 4360, 16); //00-4360.AUD	Tell it straight or I'm gonna make sure you get the same as he gets. Full conspiracy, payable for 25.
 				Actor_Modify_Friendliness_To_Other(kActorIsabella, kActorMcCoy, -10);
 				Actor_Says(kActorIsabella, 150, kAnimationModeTalk); //59-0150.AUD	This is a clean place man. Mama Isabella law-abiding soul.
+				Actor_Says(kActorMcCoy, 7835, 18); //00-7835.AUD	Is that so?
+				Actor_Says(kActorMcCoy, 1955, 14); //00-1955.AUD	We’re taking a little drive downtown.
+				Game_Flag_Set(kFlagIsabellaArrested);
+				Music_Stop(3u);
+				Delay (1000);
+				Actor_Put_In_Set(kActorIsabella, kSetPS09);
+				Actor_Set_At_XYZ(kActorIsabella, -450.0f, 0.2f, -200.0f, 518);
+				Game_Flag_Reset(kFlagSpinnerAtAR01);
+				Game_Flag_Set(kFlagSpinnerAtPS01);
+				Scene_Exits_Enable();
+				Game_Flag_Reset(kFlagMcCoyInHawkersCircle);
+				Game_Flag_Set(kFlagMcCoyInPoliceStation);
+				Set_Enter(kSetPS09, kScenePS09);
 			} else {
 				Actor_Says(kActorMcCoy, 1375, kAnimationModeTalk); //00-1375.AUD	Where did you get it?
 				Actor_Says(kActorIsabella, 180, kAnimationModeTalk); //59-0180.AUD	My sister. She got connections.
@@ -343,8 +377,8 @@ void SceneScriptHC04::dialogueWithIsabella() {
 			Loop_Actor_Walk_To_XYZ(kActorMcCoy, -154.54, 0.31, -441.12, 0, true, false, false);
 			Actor_Face_Actor(kActorMcCoy, kActorIsabella, true);
 			Actor_Face_Actor(kActorIsabella, kActorMcCoy, true);
-			if (Player_Query_Agenda() != kPlayerAgendaPolite
-			&& Player_Query_Agenda() != kPlayerAgendaNormal) { 
+			if (Player_Query_Agenda() == kPlayerAgendaSurly 
+			|| Player_Query_Agenda() == kPlayerAgendaErratic) {
 				Actor_Says(kActorMcCoy, 2980, 12); //00-2980.AUD	What the hell is that?
 			} else {
 				Actor_Says(kActorMcCoy, 1310, kAnimationModeTalk);
@@ -357,8 +391,8 @@ void SceneScriptHC04::dialogueWithIsabella() {
 		// receive a kingston kitchen box when you buy the stew.
 		Actor_Says(kActorIsabella, 340, kAnimationModeTalk); //59-0340.AUD	Fix you right up. Only 30 chinyen. It put a spring in your step, mon. The ladies they be loving you.
 		if (_vm->_cutContent) {
-			if (Player_Query_Agenda() != kPlayerAgendaPolite
-			&& Player_Query_Agenda() != kPlayerAgendaNormal) { 
+			if (Player_Query_Agenda() == kPlayerAgendaSurly 
+			|| Player_Query_Agenda() == kPlayerAgendaErratic) {
 				Actor_Says(kActorMcCoy, 5685, 15); //00-5685.AUD	Triple-A you ain’t.
 				Delay(1000);
 				Actor_Says(kActorMcCoy, 8650, 14); //00-8650.AUD	What smells in there?

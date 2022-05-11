@@ -234,10 +234,12 @@ void AIScriptZuben::ClickedByPlayer() {
 			AI_Movement_Track_Unpause(kActorZuben);
 		} else {
 			if (_vm->_cutContent) {
+				Actor_Face_Actor(kActorMcCoy, kActorZuben, true);
 				if (Player_Query_Agenda() != kPlayerAgendaSurly 
 				&& Player_Query_Agenda() != kPlayerAgendaErratic) {
 					Actor_Says(kActorMcCoy, 8630, 12);  // What a waste
 				} else {
+					Actor_Face_Actor(kActorMcCoy, kActorZuben, true);
 					Actor_Says(kActorMcCoy, 8529, 13);
 				}
 			} else {
@@ -346,7 +348,7 @@ void AIScriptZuben::Retired(int byActorId) {
 					Actor_Put_In_Set(kActorCrazylegs, kSceneKP06);
 				}
 			}
-			Delay(3000);
+			Delay(2000);
 			Player_Set_Combat_Mode(false);
 			Delay(1000); 
 		}
@@ -410,6 +412,8 @@ bool AIScriptZuben::GoalChanged(int currentGoalNumber, int newGoalNumber) {
 		if (_vm->_cutContent) {
 			Game_Flag_Set(kFlagZubenSpared);
 			Game_Flag_Set(kFlagMcCoyIsHelpingReplicants);
+			Actor_Modify_Friendliness_To_Other(kActorSteele, kActorMcCoy, -2);
+			Actor_Modify_Friendliness_To_Other(kActorGuzza, kActorMcCoy, -2);
 			Actor_Set_Goal_Number(kActorGordo, kGoalGordoCT05WalkThrough);
 		}
 		return false;
@@ -436,6 +440,7 @@ bool AIScriptZuben::GoalChanged(int currentGoalNumber, int newGoalNumber) {
 		// Made it so you gain five friendliness points with Crystal when you retire Zuben.
 		if (_vm->_cutContent) {
 			Actor_Modify_Friendliness_To_Other(kActorSteele, kActorMcCoy, 2);
+			Actor_Modify_Friendliness_To_Other(kActorGuzza, kActorMcCoy, 2);
 		}
 		Actor_Set_Goal_Number(kActorZuben, kGoalZubenGone);	
 		return false;
@@ -1393,7 +1398,7 @@ void AIScriptZuben::dialogue() {
 		Actor_Says(kActorMcCoy, 7300, 13); //00-7300.AUD	Did you kill the animals?
 		if (_vm->_cutContent) {
 			Actor_Says(kActorZuben, 270, 12); //19-0270.AUD	Because he bad.
-			Actor_Says(kActorMcCoy, 7300, 13); //00-7350.AUD	Runciter?
+			Actor_Says(kActorMcCoy, 7350, 13); //00-7350.AUD	Runciter?
 		}
 		Actor_Says(kActorZuben, 280, 12); //19-0280.AUD	He not pay. Bad to Lucy. Bad to everybody. Make people starve.
 		Actor_Says(kActorMcCoy, 7355, 14); //00-7355.AUD	All those animals died.

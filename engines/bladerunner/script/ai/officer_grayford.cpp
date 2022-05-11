@@ -360,8 +360,8 @@ void AIScriptOfficerGrayford::ClickedByPlayer() {
 		if (Random_Query(1, 2) == 1) {
 			// Added in some Grayford dialogue.
 			if (_vm->_cutContent) {
-			Actor_Says(kActorMcCoy, 5295, 14); //00-5295.AUD	Learn anything?
-			Actor_Says(kActorOfficerGrayford, 320, 13); //24-0320.AUD	Nah, I’ve hit a brick, McCoy. You running this investigation, right?
+				Actor_Says(kActorMcCoy, 5295, 14); //00-5295.AUD	Learn anything?
+				Actor_Says(kActorOfficerGrayford, 320, 13); //24-0320.AUD	Nah, I’ve hit a brick, McCoy. You running this investigation, right?
 			} else {
 				Actor_Says(kActorMcCoy, 5075, 14);
 				Actor_Says(kActorOfficerGrayford, 160, 13);

@@ -164,6 +164,7 @@ void AIScriptHanoi::ClickedByPlayer() {
 		if (_vm->_cutContent) {
 			if (Game_Flag_Query(kFlagHanoiIsReplicant)) {
 				Actor_Says(kActorMcCoy, 8915, 11); //00-8915.AUD	You got a minute, pal?
+				Actor_Says(kActorHanoi, 210, kAnimationModeTalk); //25-0210.AUD	Sod off, McCoy. I got no time for you.
 			} else {
 				Actor_Says(kActorMcCoy, 3210, kAnimationModeTalk); //00-3210.AUD	Hey, man.
 			}		
@@ -270,7 +271,7 @@ void AIScriptHanoi::Retired(int byActorId) {
 						Actor_Put_In_Set(kActorCrazylegs, kSceneKP06);
 					}
 				}
-				Delay(3000);
+				Delay(2000);
 				Player_Set_Combat_Mode(false);
 				Delay(1000); 
 				Ambient_Sounds_Remove_All_Non_Looping_Sounds(true);

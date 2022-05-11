@@ -84,8 +84,7 @@ void AIScriptRachael::ClickedByPlayer() {
 		dialogue_start(); // "I remember you mr McCoy" till "I'm fine, thank you for asking."
 
 		// the structure is simplified (maintaining the same logic flow)
-		if ((Player_Query_Agenda() == kPlayerAgendaSurly || Player_Query_Agenda() == kPlayerAgendaErratic)
-			|| (Player_Query_Agenda() != kPlayerAgendaPolite && Actor_Query_Friendliness_To_Other(kActorSteele, kActorMcCoy) > Actor_Query_Friendliness_To_Other(kActorClovis, kActorMcCoy))
+		if (!Game_Flag_Query(kFlagMcCoyIsHelpingReplicants)
 		) {
 			dialogue_agenda2();
 		} else {
@@ -413,20 +412,23 @@ void AIScriptRachael::FledCombat() {
 
 void AIScriptRachael::dialogue_start() {
 	if (_vm->_cutContent) {
-			Actor_Face_Actor(kActorRachael, kActorMcCoy, true);
-			Loop_Actor_Walk_To_Actor(kActorRachael, kActorMcCoy, 84, false, false);
-			if (_vm->_cutContent) {
-				Actor_Says(kActorMcCoy, 2735, 14);              // MetAtYourUnclesOffice
-			}
-			Actor_Says(kActorRachael, 0, 15);                   // RememberYouMisterMcCoy
-			Actor_Says(kActorMcCoy, 2740, 13);                  // YouLiveHereSameBuilding
-			Actor_Says(kActorRachael, 10, 14);                  // VisitingSomebody
-			Actor_Says(kActorMcCoy, 2745, 13);                  // WhoMaybeIKnowHim
-			Actor_Says(kActorRachael, 20, 12);                  // NoneOfYourBusiness
+		Actor_Face_Actor(kActorRachael, kActorMcCoy, true);
+		Loop_Actor_Walk_To_Actor(kActorRachael, kActorMcCoy, 84, false, false);
+		if (_vm->_cutContent) {
+			Actor_Says(kActorMcCoy, 2735, 14);              // MetAtYourUnclesOffice
+		}
+		Actor_Says(kActorRachael, 0, 15);                   // RememberYouMisterMcCoy
+		Actor_Says(kActorMcCoy, 2740, 13);                  // YouLiveHereSameBuilding
+		Actor_Says(kActorRachael, 10, 14);                  // VisitingSomebody
+		Actor_Says(kActorMcCoy, 2745, 13);                  // WhoMaybeIKnowHim
+		Actor_Says(kActorRachael, 20, 12);                  // NoneOfYourBusiness
+		if (Player_Query_Agenda() != kPlayerAgendaSurly 
+		&& Player_Query_Agenda() != kPlayerAgendaErratic) {
 			Actor_Says_With_Pause(kActorMcCoy, 2750, 1.5f, 3); // OkGetThePicture
 			Actor_Says(kActorMcCoy, 2755, 3);                  // AreYouAlrightALittlePale
 			Actor_Says(kActorRachael, 30, 13);                  // CertainlyHadBetterDaysInMyLifeButImFine
 			Actor_Says(kActorRachael, 40, 15);                  // ThankYouForAsking
+		}
 	} else {
 		// original code -- un-triggered
 		Loop_Actor_Walk_To_Actor(kActorRachael, kActorMcCoy, 84, false, false);
@@ -446,27 +448,27 @@ void AIScriptRachael::dialogue_agenda1() {
 	if (_vm->_cutContent) {
 		Actor_Says(kActorMcCoy, 2795, 13);                      // YouAreUpset
 		Actor_Says(kActorRachael, 140, 15);                     // HowObservant
-		Actor_Says(kActorMcCoy, 2800, 12);                      // WhatTheMatterGoodListener
-		Actor_Says(kActorRachael, 150, 16);                     // HowObservant
+		if (Player_Query_Agenda() != kPlayerAgendaSurly 
+		&& Player_Query_Agenda() != kPlayerAgendaErratic) {
+			Actor_Says(kActorMcCoy, 2800, 12);                      // WhatTheMatterGoodListener
+			Actor_Says(kActorRachael, 150, 16);                     // HowObservant
+		}
 		Actor_Says(kActorMcCoy, 2805, 18);                      // DidYourUncleSaySomethingToYou
 		Actor_Says(kActorRachael, 160, 14);                     // HeCanBeSoCruel
 		Actor_Says(kActorRachael, 170, 13);                     // HereIAmPouringMyHeartOut
-		if (!Game_Flag_Query(kFlagMcCoyIsHelpingReplicants)) {
-			Actor_Says(kActorMcCoy, 2810, 14);                      // NotHowILookAtIt
-			Actor_Says(kActorRachael, 180, 13);                     // GotToLiveWithYourself
-		} else {
-			Actor_Says(kActorMcCoy, 2815, 12);                      // NotSomeKillingMachineRachael
-			Actor_Says(kActorMcCoy, 2820, 13);                      // LatelyReEvalTheJobDontLikeItNeverHave - I've thought ab... Well lately reevaluating the job dont like it
-			Actor_Says(kActorRachael, 190, 15);                     // WhyDontYouQuitThen
-			Actor_Says(kActorMcCoy, 2825, 12);                      // SomeoneWouldJustTakeMyPlace
-			Actor_Says(kActorRachael, 200, 15);                     // SoMuchForIntegrity
-			Actor_Says(kActorMcCoy, 2830, 14);                      // ItsNotThat
-			Actor_Says(kActorRachael, 210, 15);                     // ItsTheMoneyThen
-			Actor_Says(kActorRachael, 220, 16);                     // ImSoFedUpWithAllOfIt
-			Actor_Says(kActorMcCoy, 2835, 13);                      // IveThinkingAboutTheTreatmentOfReps
-			Actor_Says(kActorRachael, 230, 14);                     // BravoShouldWeCallThePressConf -  new switched to here
-			Actor_Says(kActorMcCoy, 2840, 12);                      // MaybeTheyVeGottenARawDeal
-		}
+		Actor_Says(kActorMcCoy, 2810, 14);                      // NotHowILookAtIt
+		Actor_Says(kActorRachael, 180, 13);                     // GotToLiveWithYourself
+		Actor_Says(kActorMcCoy, 2815, 12);                      // NotSomeKillingMachineRachael
+		Actor_Says(kActorMcCoy, 2820, 13);                      // LatelyReEvalTheJobDontLikeItNeverHave - I've thought ab... Well lately reevaluating the job dont like it
+		Actor_Says(kActorRachael, 190, 15);                     // WhyDontYouQuitThen
+		Actor_Says(kActorMcCoy, 2825, 12);                      // SomeoneWouldJustTakeMyPlace
+		Actor_Says(kActorRachael, 200, 15);                     // SoMuchForIntegrity
+		Actor_Says(kActorMcCoy, 2830, 14);                      // ItsNotThat
+		Actor_Says(kActorRachael, 210, 15);                     // ItsTheMoneyThen
+		Actor_Says(kActorRachael, 220, 16);                     // ImSoFedUpWithAllOfIt
+		Actor_Says(kActorMcCoy, 2835, 13);                      // IveThinkingAboutTheTreatmentOfReps
+		Actor_Says(kActorRachael, 230, 14);                     // BravoShouldWeCallThePressConf -  new switched to here
+		Actor_Says(kActorMcCoy, 2840, 12);                      // MaybeTheyVeGottenARawDeal
 		Actor_Says(kActorRachael, 240, 13);                     // ImagineSomebodyEngineeringYourMind
 		Actor_Says(kActorRachael, 250, 15);                     // PuttingWhateverThoughtsAndMemories
 		Actor_Says(kActorRachael, 260, 16);                     // NothingInThisWorldWouldBelongToyou

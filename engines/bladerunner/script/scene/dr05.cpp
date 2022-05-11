@@ -131,7 +131,6 @@ bool SceneScriptDR05::ClickedOnItem(int itemId, bool a2) {
 bool SceneScriptDR05::ClickedOnExit(int exitId) {
 	if (exitId == 0) {
 		if (!Loop_Actor_Walk_To_XYZ(kActorMcCoy, -22.0f, 0.3f, 221.0f, 0, true, false, false)) {
-			Game_Flag_Reset(kFlagNotUsed232);
 			Game_Flag_Set(kFlagDR05toDR04);
 			Set_Enter(kSetDR01_DR02_DR04, kSceneDR04);
 		}

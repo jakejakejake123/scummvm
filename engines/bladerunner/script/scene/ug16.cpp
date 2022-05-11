@@ -107,8 +107,13 @@ bool SceneScriptUG16::ClickedOn3DObject(const char *objectName, bool a2) {
 				Actor_Voice_Over(2770, kActorVoiceOver);
 				// Added in an extra line.
 				if (_vm->_cutContent) {
-					if (!Actor_Clue_Query(kActorMcCoy, kClueGuzzaFramedMcCoy)) {
+					if (!Actor_Clue_Query(kActorMcCoy, kClueGuzzaFramedMcCoy)
+					&& Actor_Clue_Query(kActorMcCoy, kClueLutherLanceInterview)) {
 						Actor_Voice_Over(2820, kActorVoiceOver); //99-2820.AUD	Why did the Reps have this? Were they blackmailing Guzza? I knew I was getting close.
+					} else if (Actor_Clue_Query(kActorMcCoy, kClueGuzzaFramedMcCoy)) {
+						Actor_Voice_Over(2780, kActorVoiceOver); //99-2780.AUD	When my stomach stopped churning, I realized I had everything I needed to force the bastard to play ball with me.
+						Actor_Voice_Over(2800, kActorVoiceOver); //99-2800.AUD	I knew that he would listen to reason, if applied with serious pressure.
+						Actor_Voice_Over(2810, kActorVoiceOver); //99-2810.AUD	All I needed to do was call him.
 					}
 				}
 				Actor_Clue_Acquire(kActorMcCoy, kClueFolder, true, -1);
@@ -229,6 +234,10 @@ void SceneScriptUG16::PlayerWalkedIn() {
 		Actor_Says(kActorLuther, 0, 6);
 		Actor_Says(kActorLuther, 30, 13);
 		Actor_Change_Animation_Mode(kActorLuther, 17);
+		if (_vm->_cutContent) {
+			Actor_Says(kActorMcCoy, 755, 18);
+			Actor_Face_Actor(kActorLuther, kActorMcCoy, true);
+		}
 		Actor_Says(kActorLance, 0, 17); //13-0000.AUD	Hey, it’s about time you showed up.
 		Actor_Says(kActorMcCoy, 5710, 14);
 		// Altered the dialogue between McCoy and Luther and Lance so if they are human they don't act like sarcastic jerks to him and they also don't want Tyrell dead despite
@@ -272,6 +281,7 @@ void SceneScriptUG16::PlayerWalkedIn() {
 		// This will change when Luther and Lance reveal that they are reps.
 		if (_vm->_cutContent) {
 			Actor_Set_Targetable(kActorLuther, false);
+			Actor_Face_Heading(kActorLuther, 486, false);
 		}
 		Player_Gains_Control();
 		Game_Flag_Set(kFlagUG16LutherLanceTalk1);
@@ -312,7 +322,13 @@ void SceneScriptUG16::dialogueWithLuther() {
 		DM_Add_To_List_Never_Repeat_Once_Selected(1430, 6, 4, 5); // CLOVIS
 		DM_Add_To_List_Never_Repeat_Once_Selected(1440, 6, 4, 5); // VOIGT-KAMPFF
 	}
-	if ( Global_Variable_Query(kVariableCorruptedGuzzaEvidence) > 1
+	if (_vm->_cutContent) {
+		if (Actor_Clue_Query(kActorMcCoy, kClueGuzzaFramedMcCoy)
+		&& !Actor_Clue_Query(kActorMcCoy, kClueFolder)
+		) {
+			DM_Add_To_List_Never_Repeat_Once_Selected(1450, 6, 4, 5); // GUZZA
+		}
+	} else if ( Global_Variable_Query(kVariableCorruptedGuzzaEvidence) > 1
 	 && !Actor_Clue_Query(kActorMcCoy, kClueFolder)
 	 ) {
 		DM_Add_To_List_Never_Repeat_Once_Selected(1450, 6, 4, 5); // GUZZA
@@ -334,26 +350,26 @@ void SceneScriptUG16::dialogueWithLuther() {
 
 	switch (answer) {
 	case 1400: // REPLICANTS
-	// If Moraji is alive McCoy won't mention that the reps killed him.
-	if (_vm->_cutContent) {
-		if (Game_Flag_Query(kFlagMorajiAlive)) { 
-			Actor_Says(kActorMcCoy, 785, 13);//00-0785.AUD	There could be a group of Nexus-6s tracking down genetic designers.
-			if (Player_Query_Agenda() != kPlayerAgendaSurly 
-			|| Player_Query_Agenda() != kPlayerAgendaErratic) {
-				Actor_Says(kActorMcCoy, 790, 13);//00-0790.AUD	You might consider knocking off work early.
+		// If Moraji is alive McCoy won't mention that the reps killed him.
+		if (_vm->_cutContent) {
+			if (Game_Flag_Query(kFlagMorajiAlive)) { 
+				Actor_Says(kActorMcCoy, 785, 13);//00-0785.AUD	There could be a group of Nexus-6s tracking down genetic designers.
+				if (Player_Query_Agenda() != kPlayerAgendaSurly 
+				|| Player_Query_Agenda() != kPlayerAgendaErratic) {
+					Actor_Says(kActorMcCoy, 790, 13);//00-0790.AUD	You might consider knocking off work early.
+				}
+				// Made it so McCoy will not mention the reps killing Eisenduller and Moraji if Moraji survived the explosion.
+				// Also McCoy will only warn Luther and Lance if he is not surly or erratic.
+			} else {
+				Actor_Says(kActorMcCoy, 5730, 13); //00-5730.AUD	The Reps that killed Marcus and Moraji. They’ll be looking for you.
+				if (Player_Query_Agenda() != kPlayerAgendaSurly 
+				|| Player_Query_Agenda() != kPlayerAgendaErratic) {
+					Actor_Says(kActorMcCoy, 790, 13);//00-0790.AUD	You might consider knocking off work early.
+				}
 			}
-			// Made it so McCoy will not mention the reps killing Eisenduller and Moraji if Moraji survived the explosion.
-			// Also McCoy will only warn Luther and Lance if he is not surly or erratic.
 		} else {
 			Actor_Says(kActorMcCoy, 5730, 13); //00-5730.AUD	The Reps that killed Marcus and Moraji. They’ll be looking for you.
-			if (Player_Query_Agenda() != kPlayerAgendaSurly 
-			|| Player_Query_Agenda() != kPlayerAgendaErratic) {
-				Actor_Says(kActorMcCoy, 790, 13);//00-0790.AUD	You might consider knocking off work early.
-			}
 		}
-	} else {
-		Actor_Says(kActorMcCoy, 5730, 13); //00-5730.AUD	The Reps that killed Marcus and Moraji. They’ll be looking for you.
-	}
 		Actor_Face_Actor(kActorMcCoy, kActorLuther, true);
 		Actor_Says(kActorLuther, 100, 18);
 		Actor_Says(kActorMcCoy, 5775, 13);
@@ -581,14 +597,20 @@ void SceneScriptUG16::dialogueWithLuther() {
 			Delay(2000);
 			Item_Pickup_Spin_Effect(kModelAnimationOriginalShippingForm, 239, 454);
 			Actor_Clue_Acquire(kActorMcCoy, kClueOriginalShippingForm, true, -1);
+			Delay(2000);
 		}
 		Actor_Voice_Over(2740, kActorVoiceOver);
 		Actor_Voice_Over(2750, kActorVoiceOver);
 		Actor_Voice_Over(2760, kActorVoiceOver);
-		Actor_Voice_Over(2770, kActorVoiceOver); //99-2770.AUD	It was the complete file on Guzza, the dirty cop.
-		Actor_Voice_Over(2780, kActorVoiceOver); //99-2780.AUD	When my stomach stopped churning, I realized I had everything I needed to force the bastard to play ball with me.
-		Actor_Voice_Over(2800, kActorVoiceOver); //99-2800.AUD	I knew that he would listen to reason, if applied with serious pressure.
-		Actor_Voice_Over(2810, kActorVoiceOver); //99-2810.AUD	All I needed to do was call him.
+		Actor_Voice_Over(3430, kActorVoiceOver); //99-3430.AUD	The info I’d gotten from Luther and Lance finally made some sense.
+		Actor_Voice_Over(3440, kActorVoiceOver); //99-3440.AUD	The Reps must had found out about Guzza’s career's sidelines…
+		Actor_Voice_Over(3450, kActorVoiceOver); //99-3450.AUD	and pressured him to set me up in order to get me off their backs.
+		Actor_Voice_Over(3460, kActorVoiceOver); //99-3460.AUD	This nasty business he was only too willing to do.
+		Actor_Voice_Over(3470, kActorVoiceOver); //99-3470.AUD	But I wasn’t gonna eat crow that easily.
+		Actor_Voice_Over(2870, kActorVoiceOver); //99-2870.AUD	When my stomach stopped churning…
+		Actor_Voice_Over(2880, kActorVoiceOver); //99-2880.AUD	I realized I could use this to force the bastard to give me my life back.
+		Actor_Voice_Over(3490, kActorVoiceOver); //99-3490.AUD	It was time to have my own little fun with Guzza.
+		Actor_Voice_Over(3500, kActorVoiceOver); //99-3500.AUD	All I had to do was place a call and make the worm squirm.
 		Actor_Says(kActorMcCoy, 5850, 13); 
 		Actor_Says(kActorLuther, 400, 15); //10-0400.AUD	From Clovis. He told us to hold it for him.
 		if (_vm->_cutContent) {

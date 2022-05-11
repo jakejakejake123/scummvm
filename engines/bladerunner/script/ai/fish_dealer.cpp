@@ -58,18 +58,12 @@ bool AIScriptFishDealer::Update() {
 	}
 	return false;
 #else
-	// Made it so the fish dealer, Hasan, the Peruvian woman and Isabella don't appear after act 3. 
-	// There is a chance that the player may not have talked to them at this point and it would make no sense for McCoy to talk to them as if he is investigating
-	// when he is on the run from the police. After all McCoy at this point is trying to get to the bottom of the conspiracy while trying not to die, not investigating a piece of jewellry
-	// a piece of jewellry that he found at a crime scene or stolen cheese.
-	if (Global_Variable_Query(kVariableChapter) < 4) {
-		// prevent Fish Dealer from blinking out while McCoy is flying out from Animoid
-		if (Player_Query_Current_Scene() == kSceneAR01
-		 && Actor_Query_Goal_Number(kActorFishDealer) == 3
-		) {
-			Actor_Set_Goal_Number(kActorFishDealer, 1);
-			return true;
-		}
+	// prevent Fish Dealer from blinking out while McCoy is flying out from Animoid
+	if (Player_Query_Current_Scene() == kSceneAR01
+		&& Actor_Query_Goal_Number(kActorFishDealer) == 3
+	) {
+		Actor_Set_Goal_Number(kActorFishDealer, 1);
+		return true;
 	} else {
 		if (Actor_Query_Goal_Number(kActorFishDealer) < 400) {
 			Actor_Set_Goal_Number(kActorFishDealer, 400);

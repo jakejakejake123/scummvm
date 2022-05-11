@@ -272,7 +272,7 @@ void AIScriptEarlyQ::Retired(int byActorId) {
 							Actor_Put_In_Set(kActorCrazylegs, kSceneKP06);
 						}
 					}
-					Delay(3000);
+					Delay(2000);
 					Player_Set_Combat_Mode(false);
 					Delay(1000); 
 				}
@@ -497,6 +497,7 @@ bool AIScriptEarlyQ::GoalChanged(int currentGoalNumber, int newGoalNumber) {
 		if (_vm->_cutContent) {
 			if (Actor_Query_In_Set(kActorEarlyQ, kSetNR04)) {
 				Game_Flag_Set(kFlagEarlyQDead);
+				Game_Flag_Reset(kFlagMcCoyIsHelpingReplicants);
 				Actor_Voice_Over(920, kActorVoiceOver); //99-0920.AUD	Easy money.
 				Actor_Modify_Friendliness_To_Other(kActorSteele, kActorMcCoy, 2);
 				Actor_Set_Targetable(kActorEarlyQ, false);

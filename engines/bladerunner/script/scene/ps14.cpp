@@ -168,9 +168,7 @@ void SceneScriptPS14::PlayerWalkedIn() {
 				Actor_Says(kActorOfficerGrayford, 30, kAnimationModeTalk); //24-0030.AUD	Let’s get the bomb squad out here!
 				//The Crystal will vouch for me line will only play if you are on good terms with Crystal meaning not having Lucy and Dektoras global affection goals activated.
 				if (Global_Variable_Query(kVariableAffectionTowards) != kAffectionTowardsDektora 	 
-				&& Global_Variable_Query(kVariableAffectionTowards) != kAffectionTowardsLucy
-				&& !Actor_Clue_Query(kActorSteele, kClueMcCoyHelpedGordo)
-				&& !Game_Flag_Query(kFlagIzoWarned)) {
+				&& Global_Variable_Query(kVariableAffectionTowards) != kAffectionTowardsLucy) {
 					Actor_Says(kActorMcCoy, 720, kAnimationModeTalk); //00-0720.AUD	Talk to Crystal Steele, she'll vouch for me.
 				}
 				Actor_Says(kActorOfficerGrayford, 40, kAnimationModeTalk); //24-0040.AUD	Drop your gun, put your hands in the air and then we’ll talk.

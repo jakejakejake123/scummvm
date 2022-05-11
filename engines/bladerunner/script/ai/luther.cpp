@@ -99,6 +99,8 @@ bool AIScriptLuther::Update() {
 		// McCoy scolds himself saying that he has crossed the line. This will also set the McCoy retired human flag.
 		if (_vm->_cutContent) {
 			if (Game_Flag_Query(kFlagLutherLanceIsReplicant)) {
+				Actor_Voice_Over(920, kActorVoiceOver); //99-0920.AUD	Easy money.
+				Delay(1000);
 				Actor_Says(kActorMcCoy, 8508, 12); //00-8508.AUD	No retirement swag.
 				Game_Flag_Reset(kFlagMcCoyIsHelpingReplicants);
 				Actor_Clue_Acquire(kActorMcCoy, kClueMcCoyRetiredLutherLance, true, -1);
@@ -232,7 +234,7 @@ void AIScriptLuther::Retired(int byActorId) {
 						Actor_Put_In_Set(kActorCrazylegs, kSceneKP06);
 					}
 				}
-				Delay(3000);
+				Delay(2000);
 				Player_Set_Combat_Mode(false);
 				Delay(1000); 
 			}

@@ -264,11 +264,13 @@ bool SceneScriptKP07::ClickedOnItem(int itemId, bool a2) {
 	// Code for picking up the Clovis incept photo.
 	if (_vm->_cutContent) {
 		if (itemId ==  kItemPhoto) {
-			Actor_Face_Item(kActorMcCoy,  kItemPhoto, true);
-			Actor_Clue_Acquire(kActorMcCoy, kClueClovisIncept, true, -1);
-			Item_Pickup_Spin_Effect(kModelAnimationPhoto, 83, 390);
-			Item_Remove_From_World(kItemPhoto);
-			return true;		
+			if (!Loop_Actor_Walk_To_Item(kActorMcCoy,  kItemPhoto, 12, true, false)) {
+				Actor_Face_Item(kActorMcCoy,  kItemPhoto, true);
+				Actor_Clue_Acquire(kActorMcCoy, kClueClovisIncept, true, kActorClovis);
+				Item_Pickup_Spin_Effect(kModelAnimationPhoto, 83, 390);
+				Item_Remove_From_World(kItemPhoto);
+				return true;	
+			}	
 		}	
 	}
 	return false;
@@ -313,7 +315,7 @@ void SceneScriptKP07::PlayerWalkedIn() {
 			// towards either Dektora or Lucy the will say I told you he'd come and McCoy will say I promised you didn't I.
 			if (_vm->_cutContent) {
 				if (Actor_Query_Is_In_Current_Set(kActorDektora) 
-					&& Global_Variable_Query(kVariableAffectionTowards) ==  kAffectionTowardsDektora) {
+				&& Global_Variable_Query(kVariableAffectionTowards) ==  kAffectionTowardsDektora) {
 					Actor_Face_Actor(kActorDektora, kActorMcCoy, true);
 					Actor_Says(kActorDektora, 2650, 3); //03-2650.AUD	I told you he’d come!
 					Actor_Face_Actor(kActorMcCoy, kActorDektora, true);

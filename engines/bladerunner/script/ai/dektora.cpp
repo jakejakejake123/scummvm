@@ -346,7 +346,7 @@ void AIScriptDektora::Retired(int byActorId) {
 		// Added in some code so when you retire Dektora the McCoy is helping replicnants flag is reset and he receives 200 chinyen.
 		// Made it so when McCoy retired Dektora Clovis gains the McCoy retired Dektora clue which leads him to breaking one of McCoys fingers.
 		if (_vm->_cutContent) {
-			Actor_Clue_Acquire(kActorClovis, kClueMcCoyRetiredDektora, true, -1);
+			Actor_Clue_Acquire(kActorClovis, kClueMcCoyRetiredDektora, true, kActorSteele);
 			Game_Flag_Reset(kFlagMcCoyIsHelpingReplicants);
 			// Made it so you lose affection to both Dektora and Lucy if you retired Dektora.
 			Global_Variable_Set(kVariableAffectionTowards, kAffectionTowardsNone);
@@ -354,8 +354,6 @@ void AIScriptDektora::Retired(int byActorId) {
 			if (Query_Difficulty_Level() != kGameDifficultyEasy) {
 				Global_Variable_Increment(kVariableChinyen, 200);
 			}
-			// Added in a clue.
-			Actor_Clue_Acquire(kActorMcCoy, kClueMcCoyRetiredDektora, true, kActorSteele);
 		}
 	}
 
@@ -384,7 +382,7 @@ void AIScriptDektora::Retired(int byActorId) {
 						Actor_Put_In_Set(kActorCrazylegs, kSceneKP06);
 					}
 				}
-				Delay(3000);
+				Delay(2000);
 				Player_Set_Combat_Mode(false);
 				Delay(1000); 
 			}

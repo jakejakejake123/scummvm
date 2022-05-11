@@ -189,7 +189,7 @@ void SceneScriptKP06::PlayerWalkedIn() {
 					Actor_Says(kActorSteele, 2580, 15); //01-2580.AUD	I gotta say, McCoy. You had me fooled. I thought for sure you were a Rep.
 					Actor_Says(kActorSteele, 2590, 12); //01-2590.AUD	Don’t get me wrong. I mean, you’re one crazy dude. But I like that.
 					// Made it so Crystal or Gaff only mentions McCoy getting a promotion and having a lot of bonuses if he retires enough reps to earn 1500 chinyen.
-					if (Global_Variable_Query(kVariableChinyen) >= 1500) {
+					if (Global_Variable_Query(kVariableChinyen) >= 1200) {
 						Actor_Says(kActorSteele, 2550, 12); //01-2550.AUD	I think you got a promotion coming. Not to mention all those retirement bonuses.
 						Actor_Says(kActorMcCoy, 6205, 14); //00-6205.AUD	As long as I get something like… twenty hours of sleep in the process.
 					}
@@ -209,62 +209,62 @@ void SceneScriptKP06::PlayerWalkedIn() {
 					Actor_Says(kActorMcCoy, 6200, 11);
 					Actor_Says(kActorSteele, 2540, 15);
 					Delay(1000);
-					if (Global_Variable_Query(kVariableChinyen) >= 1500) {
+					if (Global_Variable_Query(kVariableChinyen) >= 1200) {
 						Actor_Says(kActorSteele, 2550, 12); //01-2550.AUD	I think you got a promotion coming. Not to mention all those retirement bonuses.
 						Actor_Says(kActorMcCoy, 6205, 14); //00-6205.AUD	As long as I get something like… twenty hours of sleep in the process.
 					} 
-			Async_Actor_Walk_To_Waypoint(kActorMcCoy, 551, 0, false);
-			Delay(1000);
-			Actor_Says(kActorMcCoy, 6220, -1);
-			Delay(3000);
-			Ambient_Sounds_Remove_All_Non_Looping_Sounds(true);
-			Ambient_Sounds_Remove_All_Looping_Sounds(1u);
-			Outtake_Play(kOuttakeEnd6, false, -1);
-			Game_Over();
-			}
-			} else { // Ending - talk with Gaff and leaving alone
-			Actor_Set_Goal_Number(kActorGaff, kGoalGaffGone);
-			Actor_Face_Actor(kActorGaff, kActorMcCoy, true);
-			// If Maggie is alive she will be in the set.
-			if (_vm->_cutContent) {
-				if	(Actor_Query_Goal_Number(kActorMaggie) < kGoalMaggieDead) {
-					Actor_Put_In_Set(kActorMaggie, kSetKP05_KP06);
-					Actor_Set_At_XYZ(kActorMaggie, -802.21, 3.74, -640.55, 659);
-					Actor_Face_Actor(kActorMaggie, kActorMcCoy, true);
+					Async_Actor_Walk_To_Waypoint(kActorMcCoy, 551, 0, false);
+					Delay(1000);
+					Actor_Says(kActorMcCoy, 6220, -1);
+					Delay(3000);
+					Ambient_Sounds_Remove_All_Non_Looping_Sounds(true);
+					Ambient_Sounds_Remove_All_Looping_Sounds(1u);
+					Outtake_Play(kOuttakeEnd6, false, -1);
+					Game_Over();
 				}
-			}
-			Actor_Says(kActorGaff, 220, 13);
-			Actor_Face_Actor(kActorMcCoy, kActorGaff, true);
-			Actor_Says(kActorMcCoy, 6245, 11);
-			Actor_Says(kActorGaff, 230, 14);
-			if (Game_Flag_Query(kFlagMcCoyAttackedReplicants)) {
-				Actor_Says(kActorMcCoy, 6250, 15);
-				Actor_Says(kActorGaff, 240, 13);
-				Delay(1000);
-				Actor_Says(kActorMcCoy, 6255, 17);
-				Actor_Says(kActorGaff, 250, 14);
-				Delay(1000);
-			}
-			Actor_Says(kActorGaff, 260, 12);
-			Actor_Says(kActorMcCoy, 6260, 15);
-			if (Global_Variable_Query(kVariableChinyen) >= 1500) {
-				Actor_Says(kActorGaff, 270, 13); //53-0270.AUD	Uh-uh,  you're a real Blade Runner now. Full retirement bonuses and everything.
-			}
-			Actor_Says(kActorGaff, 280, 15); 
-			Actor_Says(kActorMcCoy, 6265, 14); //00-6265.AUD	How come I don’t feel good about it?
-			// If Maggie is alive Gaffs lines about getting a new animal will not play and instead McCoy will say the city is a cess pool instead.
+			} else { // Ending - talk with Gaff and leaving alone
+				Actor_Set_Goal_Number(kActorGaff, kGoalGaffGone);
+				Actor_Face_Actor(kActorGaff, kActorMcCoy, true);
+				// If Maggie is alive she will be in the set.
+				if (_vm->_cutContent) {
+					if	(Actor_Query_Goal_Number(kActorMaggie) < kGoalMaggieDead) {
+						Actor_Put_In_Set(kActorMaggie, kSetKP05_KP06);
+						Actor_Set_At_XYZ(kActorMaggie, -802.21, 3.74, -640.55, 659);
+						Actor_Face_Actor(kActorMaggie, kActorMcCoy, true);
+					}
+				}
+				Actor_Says(kActorGaff, 220, 13);
+				Actor_Face_Actor(kActorMcCoy, kActorGaff, true);
+				Actor_Says(kActorMcCoy, 6245, 11);
+				Actor_Says(kActorGaff, 230, 14);
+				if (Game_Flag_Query(kFlagMcCoyAttackedReplicants)) {
+					Actor_Says(kActorMcCoy, 6250, 15);
+					Actor_Says(kActorGaff, 240, 13);
+					Delay(1000);
+					Actor_Says(kActorMcCoy, 6255, 17);
+					Actor_Says(kActorGaff, 250, 14);
+					Delay(1000);
+				}
+				Actor_Says(kActorGaff, 260, 12);
+				Actor_Says(kActorMcCoy, 6260, 15);
+				if (Global_Variable_Query(kVariableChinyen) >= 1200) {
+					Actor_Says(kActorGaff, 270, 13); //53-0270.AUD	Uh-uh,  you're a real Blade Runner now. Full retirement bonuses and everything.
+				}
+				Actor_Says(kActorGaff, 280, 15); 
+				Actor_Says(kActorMcCoy, 6265, 14); //00-6265.AUD	How come I don’t feel good about it?
+				// If Maggie is alive Gaffs lines about getting a new animal will not play and instead McCoy will say the city is a cess pool instead.
 				if (Actor_Query_Goal_Number(kActorMaggie) < kGoalMaggieDead 
 				// Made it so Gaff only mentions McCoy buying another dog if he has at least 1500 chinyen.
-					|| Global_Variable_Query(kVariableChinyen) < 1500) {
+				|| Global_Variable_Query(kVariableChinyen) < 1200) {
 					Actor_Says(kActorGaff, 290, 14); //53-0290.AUD	Who knows?
 					Delay(2000);									
 					Actor_Says(kActorMcCoy, 8625, 14); //00-8625.AUD	This city is a cesspool.
-					Async_Actor_Walk_To_Waypoint(kActorMcCoy, 550, 0, false);
+					Async_Actor_Walk_To_Waypoint(kActorMcCoy, 551, 0, false);
 					Async_Actor_Walk_To_Waypoint(kActorMaggie, 551, 0, false);
 					Async_Actor_Walk_To_Waypoint(kActorGaff, 551, 0, false);
 					Actor_Says(kActorGaff, 310, -1); //53-0310.AUD	Whatever you want to believe, McCoy.
 				} else if (Actor_Query_Goal_Number(kActorMaggie) > kGoalMaggieDead 
-				&& Global_Variable_Query(kVariableChinyen) >= 1500) { 
+				&& Global_Variable_Query(kVariableChinyen) >= 1200) { 
 					Actor_Says(kActorGaff, 290, 14);
 					Actor_Says(kActorGaff, 300, 15);
 					Actor_Says(kActorMcCoy, 6270, 11);
@@ -272,11 +272,11 @@ void SceneScriptKP06::PlayerWalkedIn() {
 					Async_Actor_Walk_To_Waypoint(kActorGaff, 551, 0, false);
 					Actor_Says(kActorGaff, 310, -1);
 				}
-			Delay(3000);
-			Ambient_Sounds_Remove_All_Non_Looping_Sounds(true);
-			Ambient_Sounds_Remove_All_Looping_Sounds(1u);
-			Outtake_Play(kOuttakeEnd7, false, -1);
-			Game_Over();
+				Delay(3000);
+				Ambient_Sounds_Remove_All_Non_Looping_Sounds(true);
+				Ambient_Sounds_Remove_All_Looping_Sounds(1u);
+				Outtake_Play(kOuttakeEnd7, false, -1);
+				Game_Over();
 			}
 		} else if (Actor_Query_Goal_Number(kActorSteele) == kGoalSteeleWaitingForEnd) {
 			Actor_Face_Actor(kActorSteele, kActorMcCoy, true);

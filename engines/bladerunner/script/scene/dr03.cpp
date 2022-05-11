@@ -106,21 +106,19 @@ bool SceneScriptDR03::ClickedOnActor(int actorId) {
 			Actor_Says(kActorChew, 130, 14);
 			Actor_Says(kActorMcCoy, 840, 16);
 			Actor_Says(kActorChew, 140, 15);
-			if (!Game_Flag_Query(kFlagDR03ChewTalkExplosion)) {
-				Actor_Says(kActorChew, 150, 13);
+			if (_vm->_cutContent) {
 				Actor_Says(kActorMcCoy, 845, 17);
 				Actor_Says(kActorChew, 170, 18);
 				Actor_Says(kActorChew, 180, 16); //52-0180.AUD	Sometimes we go up and eat with twins.
 				// Added in some more dialogue. Also made it so the dialogue of McCoy asking Chew where to find Moraji and Chew directing McCoy to dermo design
 				// and explaining Moraji didn't show up only plays if McCoy did not have his encounter with Moraji.
-				if (_vm->_cutContent) {
-					Actor_Says(kActorMcCoy, 870, 13); //00-0870.AUD	What does he work on?
-					Actor_Says(kActorChew, 290, 12); //52-0290.AUD	Skin. Did skin for Nexus-6. Beautiful work. You go see.
-					Actor_Says(kActorMcCoy, 875, 15); //00-0875.AUD	Where do I find him?
-					Actor_Says(kActorChew, 300, 18); //52-0300.AUD	He at “Dermo Design” across street. You find him, you tell him I wait.
-					if (Game_Flag_Query(kFlagDR05BombExploded)) { 
-						Actor_Clue_Acquire(kActorMcCoy, kClueMorajiInterview, true, kActorMoraji);
-					}
+				Actor_Says(kActorMcCoy, 870, 13); //00-0870.AUD	What does he work on?
+				Actor_Says(kActorChew, 290, 12); //52-0290.AUD	Skin. Did skin for Nexus-6. Beautiful work. You go see.
+				Actor_Says(kActorMcCoy, 875, 15); //00-0875.AUD	Where do I find him?
+				Actor_Says(kActorChew, 300, 18); //52-0300.AUD	He at “Dermo Design” across street. You find him, you tell him I wait.
+				Actor_Clue_Acquire(kActorMcCoy, kClueChewInterview, true, kActorChew);
+				if (Game_Flag_Query(kFlagDR05BombExploded)) { 
+					Actor_Clue_Acquire(kActorMcCoy, kClueMorajiInterview, true, kActorMoraji);
 				}
 				if (!Game_Flag_Query(kFlagDR05BombExploded)) {
 					Actor_Says(kActorMcCoy, 850, 15);
@@ -128,37 +126,57 @@ bool SceneScriptDR03::ClickedOnActor(int actorId) {
 					Actor_Says(kActorChew, 200, 13);
 					Actor_Says(kActorMcCoy, 855, 18);
 					Actor_Says(kActorChew, 210, 12);
-				}
-				Actor_Clue_Acquire(kActorMcCoy, kClueChewInterview, true, kActorChew);
+				} 
+			} else if (!Game_Flag_Query(kFlagDR03ChewTalkExplosion)) {
+				Actor_Says(kActorChew, 150, 13);
+				Actor_Says(kActorMcCoy, 845, 17);
+				Actor_Says(kActorChew, 170, 18);
+				Actor_Says(kActorChew, 180, 16); //52-0180.AUD	Sometimes we go up and eat with twins.
 			}
-			return true;
+			if (!Game_Flag_Query(kFlagDR05BombExploded)) {
+				Actor_Says(kActorMcCoy, 850, 15);
+				Actor_Says(kActorChew, 190, 14);
+				Actor_Says(kActorChew, 200, 13);
+				Actor_Says(kActorMcCoy, 855, 18);
+				Actor_Says(kActorChew, 210, 12);
+			}
+			Actor_Clue_Acquire(kActorMcCoy, kClueChewInterview, true, kActorChew);
+		return true;
 		}
 
-		if (Game_Flag_Query(kFlagDR05JustExploded)
-		 && Game_Flag_Query(kFlagDR03ChewTalk1)
-		) {
+		if (_vm->_cutContent) {
+			if (Game_Flag_Query(kFlagDR05JustExploded)
+			 && Game_Flag_Query(kClueChewInterview)) {
+				Actor_Says(kActorMcCoy, 815, 18);
+				Actor_Says(kActorChew, 60, 14);
+				Actor_Says(kActorChew, 70, 14);
+				Actor_Says(kActorChew, 80, 14);
+				Actor_Says(kActorMcCoy, 820, 18);
+				Actor_Says(kActorChew, 90, 14); //52-0090.AUD	Oh, what-- what of Moraji?
+				// Made it so if McCoy saves Moraji (a scenario which will be added in later) it is achknowledged in this dialogue.
+				if (Game_Flag_Query(kFlagMorajiAlive)) { 
+					Actor_Says(kActorMcCoy, 4900, 18); //00-4900.AUD	Word is he's gonna be okay.
+				} else {
+					Actor_Says(kActorMcCoy, 825, 13); //00-0825.AUD	He didn't make it.
+				}
+				Actor_Says(kActorChew, 100, 14); //52-0100.AUD	You leave now, okay? Very busy. Must work. Must work, ah.
+				// Restored some more dialogue.
+				Actor_Says(kActorMcCoy, 4270, 18); //00-4270.AUD	I got some more questions for you.
+				Actor_Says(kActorChew, 730, 14); //52-0730.AUD	Oy, I tell you something then you go, okay?
+				Game_Flag_Reset(kFlagDR05JustExploded);
+				Game_Flag_Set(kFlagDR03ChewTalkExplosion);
+			 }
+		} else if (Game_Flag_Query(kFlagDR05JustExploded)
+		&& Game_Flag_Query(kFlagDR03ChewTalk1)) {
 			Actor_Says(kActorMcCoy, 815, 18);
 			Actor_Says(kActorChew, 60, 14);
 			Actor_Says(kActorChew, 70, 14);
 			Actor_Says(kActorChew, 80, 14);
 			Actor_Says(kActorMcCoy, 820, 18);
 			Actor_Says(kActorChew, 90, 14); //52-0090.AUD	Oh, what-- what of Moraji?
-			// Made it so if McCoy saves Moraji (a scenario which will be added in later) it is achknowledged in this dialogue.
-			if (_vm->_cutContent) {
-				if (Game_Flag_Query(kFlagMorajiAlive)) { 
-					Actor_Says(kActorMcCoy, 4900, 18); //00-4900.AUD	Word is he's gonna be okay.
-				} else {
-					Actor_Says(kActorMcCoy, 825, 13); //00-0825.AUD	He didn't make it.
-				}
-			} else {
-				Actor_Says(kActorMcCoy, 825, 18); //00-0825.AUD	He didn't make it.
-			}
+			Actor_Says(kActorMcCoy, 825, 13); //00-0825.AUD	He didn't make it.
 			Actor_Says(kActorChew, 100, 14); //52-0100.AUD	You leave now, okay? Very busy. Must work. Must work, ah.
 			// Restored some more dialogue.
-			if (_vm->_cutContent) {
-				Actor_Says(kActorMcCoy, 4270, 18); //00-4270.AUD	I got some more questions for you.
-				Actor_Says(kActorChew, 730, 14); //52-0730.AUD	Oy, I tell you something then you go, okay?
-			}
 			Game_Flag_Reset(kFlagDR05JustExploded);
 			Game_Flag_Set(kFlagDR03ChewTalkExplosion);
 			return true;

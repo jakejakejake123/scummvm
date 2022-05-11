@@ -179,7 +179,7 @@ void AIScriptGaff::ClickedByPlayer() {
 			Actor_Says(kActorGaff, 180, 13);
 		}
 		if (Game_Flag_Query(kFlagGaffTalk)) {
-		AI_Movement_Track_Unpause(kActorGaff);
+			AI_Movement_Track_Unpause(kActorGaff);
 		}
 		// return true;
 		// Restored some dialogue for Gaff when you talk to him in DNA row.
@@ -192,7 +192,9 @@ void AIScriptGaff::ClickedByPlayer() {
 				Actor_Says(kActorMcCoy, 6920, 16); //00-6920.AUD	I like to hear that.
 				Actor_Says(kActorGaff, 340, 13); //53-0340.AUD	Don't crack a bottle too soon. Steele is still way ahead on points.
 				Actor_Says(kActorMcCoy, 6925, 18); //00-6925.AUD	Don't bet on it.
-				Actor_Says(kActorGaff, 70, 13); //	53-0070.AUD	You ever retire human, your career is over. Remember that.
+				Actor_Says(kActorGaff, 190, kAnimationModeTalk); //53-0190.AUD	It's like I said before. You retire a human, your career is over.
+				Actor_Says(kActorGaff, 200, kAnimationModeTalk); //53-0200.AUD	Your life too, maybe.
+				Delay (1000);
 				Game_Flag_Set(kFlagGaffTalk);
 				AI_Movement_Track_Unpause(kActorGaff);
 			}
@@ -330,16 +332,16 @@ bool AIScriptGaff::GoalChanged(int currentGoalNumber, int newGoalNumber) {
 		return true;
 
 	case kGoalGaffMA07Wait:
-	// Made it so Gaff only appears if Guzza is dead.
-	if (!Game_Flag_Query(kFlagGuzzaSaved)) {
-		Player_Loses_Control();
-		Actor_Put_In_Set(kActorGaff, kSetMA07);
-		Actor_Set_At_XYZ(kActorGaff, -102.54f, -172.43f, 463.18f, 1015);
-		if (_vm->_cutContent) {
-			Music_Play(kMusicBRBlues, 52, 0, 2, -1, kMusicLoopPlayOnce, 0);
+		// Made it so Gaff only appears if Guzza is dead.
+		if (!Game_Flag_Query(kFlagGuzzaSaved)) {
+			Player_Loses_Control();
+			Actor_Put_In_Set(kActorGaff, kSetMA07);
+			Actor_Set_At_XYZ(kActorGaff, -102.54f, -172.43f, 463.18f, 1015);
+			if (_vm->_cutContent) {
+				Music_Play(kMusicBRBlues, 52, 0, 2, -1, kMusicLoopPlayOnce, 0);
+			}
+			Actor_Set_Goal_Number(kActorGaff, kGoalGaffMA07TalkToMcCoy);
 		}
-		Actor_Set_Goal_Number(kActorGaff, kGoalGaffMA07TalkToMcCoy);
-	}
 		return true;
 
 	case kGoalGaffMA07TalkToMcCoy:

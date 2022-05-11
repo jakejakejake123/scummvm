@@ -371,7 +371,7 @@ void AIScriptGordo::Retired(int byActorId) {
 						Actor_Put_In_Set(kActorCrazylegs, kSceneKP06);
 					}
 				}
-				Delay(3000);
+				Delay(2000);
 				Player_Set_Combat_Mode(false);
 				Delay(1000); 
 			}
@@ -1960,6 +1960,9 @@ void AIScriptGordo::dialogue2() {
 		Actor_Says(kActorGordo, 210, 17);
 		Actor_Says(kActorGordo, 220, 14);
 		Actor_Says(kActorGordo, 230, 15);
+		if (_vm->_cutContent) {
+			Game_Flag_Reset(kFlagMcCoyIsHelpingReplicants);
+		}
 		Actor_Set_Goal_Number(kActorGordo, kGoalGordoNR01Arrested);
 		Actor_Put_In_Set(kActorGordo, kSetPS09);
 		Actor_Set_At_XYZ(kActorGordo, -479.15f, 0.0f, -197.84f, 547);
@@ -1974,6 +1977,7 @@ void AIScriptGordo::dialogue2() {
 	} else if (answer == 830) { // LET GO
 		Actor_Says(kActorMcCoy, 3100, 16);
 		Actor_Says(kActorGordo, 240, 14);
+		Actor_Clue_Acquire(kActorGordo, kClueMcCoyHelpedGordo, true, -1);
 		if (Actor_Clue_Query(kActorMcCoy, kClueStolenCheese)) {
 			Actor_Says(kActorMcCoy, 3105, 15);
 			Actor_Says(kActorMcCoy, 3110, 17); //00-3110.AUD	You’re gonna go tell your pal, Clovis, that I’m looking for him.
@@ -1988,9 +1992,8 @@ void AIScriptGordo::dialogue2() {
 			Actor_Says(kActorGordo, 270, 15); //02-0270.AUD	Very funny.
 			if (_vm->_cutContent) {
 				Actor_Says(kActorMcCoy, 3255, 18); //00-3255.AUD	Maybe I’ll see you again.
-				Actor_Says(kActorGordo, 570, 15); //02-0570.AUD	Gotta go, daddy-o.
+				Actor_Says(kActorGordo, 10, 15); //02-0010.AUD	Catch you later.
 			}
-			Actor_Clue_Acquire(kActorGordo, kClueMcCoyHelpedGordo, true, -1);
 		} else {
 			Delay(1000);
 			Actor_Says(kActorGordo, 570, 13);
@@ -2059,7 +2062,11 @@ void AIScriptGordo::dialogue1() {
 		Actor_Says(kActorMcCoy, 3270, 15);
 		Actor_Says(kActorGordo, 420, 14);
 		Actor_Says(kActorMcCoy, 3275, 15);
-		Actor_Says(kActorGordo, 430, 12);
+		if (_vm->_cutContent) {
+			if (!Game_Flag_Query(kFlagGordoIsReplicant)) {
+				Actor_Says(kActorGordo, 430, 12);
+			}
+		}
 		Actor_Says(kActorGordo, 440, 13);
 		if (Game_Flag_Query(kFlagGordoIsReplicant)) {
 			Actor_Says(kActorGordo, 450, 17);
@@ -2094,9 +2101,9 @@ void AIScriptGordo::dialogue1() {
 	if (_vm->_cutContent) {
 		if (Actor_Clue_Query(kActorMcCoy, kClueLucy) 
 		|| Actor_Clue_Query(kActorMcCoy, kClueLucyWithDektora)) {
-			Actor_Says(kActorMcCoy, 3245, kAnimationModeTalk);
+			Actor_Says(kActorMcCoy, 3245, 23);
 		} else {
-			Actor_Says(kActorMcCoy, 385, 9); //00-0385.AUD	I'm looking for a girl about 14 years old with pink hair. You seen her?
+			Actor_Says(kActorMcCoy, 385, 13); //00-0385.AUD	I'm looking for a girl about 14 years old with pink hair. You seen her?
 		}
 	} else {
 		Actor_Says(kActorMcCoy, 3245, kAnimationModeTalk);

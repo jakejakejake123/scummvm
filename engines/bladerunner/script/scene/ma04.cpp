@@ -613,8 +613,7 @@ void SceneScriptMA04::phoneCallWithClovis() {
 	// Altered code so Clovis and McCoy will be angry with each other if McCoy retired Dektora Lucy or Zuben or he didn't kill Guzza.
 	// If he didn't do any of that Clovis is nicer to him.
 	if (_vm->_cutContent) {
-		if (Game_Flag_Query(kFlagGuzzaSaved)
-		|| Actor_Clue_Query(kActorMcCoy, kClueClovisOrdersMcCoysDeath)
+		if (Actor_Clue_Query(kActorMcCoy, kClueClovisOrdersMcCoysDeath)
 		|| Actor_Clue_Query(kActorClovis, kClueMcCoyRetiredLucy) 
 		|| Actor_Clue_Query(kActorClovis, kClueMcCoyRetiredDektora)
 		|| Actor_Clue_Query(kActorMcCoy, kClueMcCoyRetiredZuben)) {

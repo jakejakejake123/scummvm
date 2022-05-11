@@ -477,6 +477,8 @@ void SceneScriptRC03::PlayerWalkedIn() {
 			Actor_Says(kActorSteele, 1980, 60); //01-1980.AUD	If I didn't know any better, I'd think you wanted him to get away.
 			Actor_Says(kActorMcCoy, 4840, 16); //00-4840.AUD	You crazy? I've been tailing him myself.
 			Actor_Says(kActorSteele, 1990, 60); //01-1990.AUD	A little word of advice, Slim. Stay out of my way.
+			Actor_Modify_Friendliness_To_Other(kActorSteele, kActorMcCoy, -2);
+			Actor_Modify_Friendliness_To_Other(kActorGuzza, kActorMcCoy, -2);
 			Player_Gains_Control();
 			Actor_Set_Goal_Number(kActorSteele, kGoalSteeleLeaveRC03);
 		} else {

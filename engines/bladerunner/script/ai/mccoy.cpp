@@ -203,11 +203,11 @@ void AIScriptMcCoy::ReceivedClue(int clueId, int fromActorId) {
 	case kClueHomelessManKid:
 		// fall through
 	case kClueOriginalRequisitionForm:
-	// Made it so no corrupted Guzza points are given when you pick up the form. Originally the Guzza framed McCoy
-	// dialogue played immediately when you clicked on the form and then McCoy would pick up the form and talk about it.
-	if (!_vm->_cutContent) {
-		Global_Variable_Increment(kVariableCorruptedGuzzaEvidence, 3);
-	}
+		// Made it so no corrupted Guzza points are given when you pick up the form. Originally the Guzza framed McCoy
+		// dialogue played immediately when you clicked on the form and then McCoy would pick up the form and talk about it.
+		if (!_vm->_cutContent) {
+			Global_Variable_Increment(kVariableCorruptedGuzzaEvidence, 3);
+		}
 		break;
 
 	case kClueScaryChair:

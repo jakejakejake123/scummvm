@@ -47,9 +47,17 @@ void AIScriptHasan::Initialize() {
 	_var5 = 0;
 	_varChooseIdleAnimation = 0;
 
-	Actor_Put_In_Set(kActorHasan, kSetAR01_AR02);
-	Actor_Set_At_XYZ(kActorHasan, -214.0f, 0.0f, -1379.0f, 371);
-	Actor_Set_Goal_Number(kActorHasan, kGoalHasanDefault);
+	if (_vm->_cutContent) {
+		if (!Game_Flag_Query(kFlagHasanArrested)) {
+			Actor_Put_In_Set(kActorHasan, kSetAR01_AR02);
+			Actor_Set_At_XYZ(kActorHasan, -214.0f, 0.0f, -1379.0f, 371);
+			Actor_Set_Goal_Number(kActorHasan, kGoalHasanDefault);
+		}
+	} else {
+		Actor_Put_In_Set(kActorHasan, kSetAR01_AR02);
+		Actor_Set_At_XYZ(kActorHasan, -214.0f, 0.0f, -1379.0f, 371);
+		Actor_Set_Goal_Number(kActorHasan, kGoalHasanDefault);
+	}
 }
 
 bool AIScriptHasan::Update() {
@@ -58,7 +66,7 @@ bool AIScriptHasan::Update() {
 		    && Actor_Query_Goal_Number(kActorHasan) != kGoalHasanIsAway)
 		{
 			// use this goal to put Hasan in a FreeSlot set for Act 1
-			Actor_Set_Goal_Number(kActorHasan, kGoalHasanIsAway);
+			Actor_Set_Goal_Number(kActorHasan, kGoalHasanDefault);
 			return true;
 		} else if (Global_Variable_Query(kVariableChapter) == 2
 		           && Actor_Query_Goal_Number(kActorHasan) != kGoalHasanDefault

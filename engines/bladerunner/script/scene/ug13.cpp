@@ -99,10 +99,9 @@ void SceneScriptUG13::SceneLoaded() {
 	// the form to the other forms won't make sense.
 	if (_vm->_cutContent) {
 		if (Game_Flag_Query(kFlagCT04HomelessKilledByMcCoy)
-		    && (Actor_Clue_Query(kActorMcCoy, kClueShippingForm)
-	        || Actor_Clue_Query(kActorMcCoy, kClueWeaponsOrderForm))) {
-				Game_Flag_Set(kFlagUG13OriginalRequisitionFormPlaced);
-				Item_Add_To_World(kItemWeaponsOrderForm, kModelAnimationOriginalRequisitionForm, kSetUG13, -209.01f, 70.76f, -351.79f, 0, 16, 12, false, true, false, true);
+		&& Actor_Clue_Query(kActorMcCoy, kClueRequisitionForm)) {
+			Game_Flag_Set(kFlagUG13OriginalRequisitionFormPlaced);
+			Item_Add_To_World(kItemWeaponsOrderForm, kModelAnimationOriginalRequisitionForm, kSetUG13, -209.01f, 70.76f, -351.79f, 0, 16, 12, false, true, false, true);
 		}
 	} else if (Global_Variable_Query(kVariableChapter) >= 3
 	    && !Actor_Clue_Query(kActorMcCoy, kClueOriginalRequisitionForm)
@@ -184,8 +183,9 @@ bool SceneScriptUG13::ClickedOnActor(int actorId) {
 							Actor_Says(kActorTransient, 90, 32); // Hm, guess so
 						 } else {
 							Actor_Says(kActorMcCoy, 5560, 13); // hey
-							Actor_Says(kActorMcCoy, 8920, 13); // 00-8920.AUD	I gotta ask you a question.
+							Actor_Says(kActorMcCoy, 8920, 14); // 00-8920.AUD	I gotta ask you a question.
 							Actor_Says(kActorTransient, 130, 31); // You got something...?
+							Actor_Says(kActorMcCoy, 7815, 15); //00-7815.AUD	No.
 						 }
 					} else {
 						Actor_Says(kActorMcCoy, 5560, 13); // hey
@@ -230,27 +230,36 @@ bool SceneScriptUG13::ClickedOnItem(int itemId, bool a2) {
 			Actor_Clue_Acquire(kActorMcCoy, kClueOriginalRequisitionForm, true, -1);
 			Item_Remove_From_World(kItemWeaponsOrderForm);
 			Item_Pickup_Spin_Effect(kModelAnimationOriginalRequisitionForm, 426, 316);
-			Actor_Voice_Over(3950, kActorVoiceOver);
-			Actor_Voice_Over(3960, kActorVoiceOver);
-			Actor_Voice_Over(3970, kActorVoiceOver);
-			Actor_Voice_Over(3980, kActorVoiceOver);
-			Actor_Voice_Over(3990, kActorVoiceOver);
-			Actor_Voice_Over(4000, kActorVoiceOver);
-			// Added in some some new dialogue for when McCoy finds the form and has not found out that Guzza has framed him. The last three lines regarding Baker only play in this instance.
 			if (_vm->_cutContent) {
-				if (!Actor_Clue_Query(kActorMcCoy, kClueGuzzaFramedMcCoy)) {
-					Actor_Voice_Over(3320, kActorVoiceOver); //99-3320.AUD	A little light started to flicker in my brain. Guzza was the one measuring me for the frame.
-					Actor_Voice_Over(3340, kActorVoiceOver); //99-3340.AUD	He set up a Black Market network…
-					Actor_Voice_Over(3350, kActorVoiceOver); //99-3350.AUD	Moving surplus LPD weapons through Izo and the Green Pawn.
-					Actor_Voice_Over(3360, kActorVoiceOver); //99-3360.AUD	Nothing wrong with a little graft…
-					Actor_Voice_Over(3370, kActorVoiceOver); //99-3370.AUD	but when I started stirring the pot…
-					Actor_Voice_Over(3380, kActorVoiceOver); //99-3380.AUD	the heat got too intense in the kitchen and the sweat started coming.
-					Actor_Voice_Over(3390, kActorVoiceOver); //99-3390.AUD	I used to think Guzza was a pretty smart guy…
-					Actor_Voice_Over(3400, kActorVoiceOver); //99-3400.AUD	but letting Baker and Holloway work their bogus interrogation deal with all that LPD equipment was a suicide move.
-					Actor_Voice_Over(3420, kActorVoiceOver); //99-3420.AUD	And those two morons weren’t sharp enough to keep the stuff out of my sight. 
-					Actor_Clue_Acquire(kActorMcCoy, kClueGuzzaFramedMcCoy, true, -1);
-					Actor_Clue_Acquire(kActorMcCoy, kCluePoliceWeaponUsed, true, -1);
+				Actor_Says(kActorMcCoy, 8525, 19); //00-8805.AUD	A requisition form.
+				if (Actor_Clue_Query(kActorMcCoy, kClueRequisitionForm)) {
+					Actor_Voice_Over(3950, kActorVoiceOver);
+					Actor_Voice_Over(3960, kActorVoiceOver);
+					Actor_Voice_Over(3970, kActorVoiceOver);
+					Actor_Voice_Over(3980, kActorVoiceOver);
+					Actor_Voice_Over(3990, kActorVoiceOver);
+					Actor_Voice_Over(4000, kActorVoiceOver);
+					if (!Actor_Clue_Query(kActorMcCoy, kClueGuzzaFramedMcCoy)) {
+						Actor_Voice_Over(3320, kActorVoiceOver); //99-3320.AUD	A little light started to flicker in my brain. Guzza was the one measuring me for the frame.
+						Actor_Voice_Over(3340, kActorVoiceOver); //99-3340.AUD	He set up a Black Market network…
+						Actor_Voice_Over(3350, kActorVoiceOver); //99-3350.AUD	Moving surplus LPD weapons through Izo and the Green Pawn.
+						Actor_Voice_Over(3360, kActorVoiceOver); //99-3360.AUD	Nothing wrong with a little graft…
+						Actor_Voice_Over(3370, kActorVoiceOver); //99-3370.AUD	but when I started stirring the pot…
+						Actor_Voice_Over(3380, kActorVoiceOver); //99-3380.AUD	the heat got too intense in the kitchen and the sweat started coming.
+						Actor_Voice_Over(3390, kActorVoiceOver); //99-3390.AUD	I used to think Guzza was a pretty smart guy…
+						Actor_Voice_Over(3400, kActorVoiceOver); //99-3400.AUD	but letting Baker and Holloway work their bogus interrogation deal with all that LPD equipment was a suicide move.
+						Actor_Voice_Over(3420, kActorVoiceOver); //99-3420.AUD	And those two morons weren’t sharp enough to keep the stuff out of my sight. 
+						Actor_Clue_Acquire(kActorMcCoy, kClueGuzzaFramedMcCoy, true, -1);
+						Actor_Clue_Acquire(kActorMcCoy, kCluePoliceWeaponUsed, true, -1);
+					}
 				}
+			} else {
+				Actor_Voice_Over(3950, kActorVoiceOver);
+				Actor_Voice_Over(3960, kActorVoiceOver);
+				Actor_Voice_Over(3970, kActorVoiceOver);
+				Actor_Voice_Over(3980, kActorVoiceOver);
+				Actor_Voice_Over(3990, kActorVoiceOver);
+				Actor_Voice_Over(4000, kActorVoiceOver);
 			}
 			return true;
 		}
@@ -287,28 +296,36 @@ bool SceneScriptUG13::ClickedOnExit(int exitId) {
 			// This path is unreachable in the original game
 			// Restore this condition only for hard mode. Probably occurs before meeting with Guzza is set
 			// Since this situation always now happens in cut content mode it will only play in hard mode for the original game.
-			if (!_vm->_cutContent && Query_Difficulty_Level() == kGameDifficultyHard) {
+			if (_vm->_cutContent && Game_Flag_Query(kFlagGuzzaSaved)) {
+				Actor_Says(kActorMcCoy, 8522, 14); // Locked
+				Actor_Face_Heading(kActorMcCoy, 325, false);
+				Loop_Actor_Travel_Stairs(kActorMcCoy, 11, false, kAnimationModeIdle);
+			} else if (!_vm->_cutContent && Query_Difficulty_Level() == kGameDifficultyHard) {
 				if (!Game_Flag_Query(kFlagCallWithGuzza)) {
 					// Passage to UG18 is locked
 					// These lines of dialogue are not in the code of the original game
 					if (Actor_Query_Goal_Number(kActorTransient) == 391
 					    || Actor_Query_Goal_Number(kActorTransient) == 395
 					    || Actor_Query_Goal_Number(kActorTransient) == 599
+						|| Game_Flag_Query(kFlagGuzzaSaved)
 					) {
 						Actor_Says(kActorMcCoy, 8522, 14); // Locked
 					} else {
-						Actor_Says(kActorMcCoy, 5555, 14); // How do I get this thing open?
-						Actor_Says(kActorTransient, 60, 31); // Nah, it only happens when they want it to open.
+						if (!Game_Flag_Query(kFlagGuzzaSaved)) {
+							Actor_Says(kActorMcCoy, 5555, 14); // How do I get this thing open?
+							Actor_Says(kActorTransient, 60, 31); // Nah, it only happens when they want it to open.
+						}
 					}
 					// turn back
 					Actor_Face_Heading(kActorMcCoy, 325, false);
 					Loop_Actor_Travel_Stairs(kActorMcCoy, 11, false, kAnimationModeIdle);
 					return true;
 				}
+			} else {
+				Loop_Actor_Walk_To_XYZ(kActorMcCoy, -477.0f, 141.9f, -870.0f, 0, false, false, false);
+				Game_Flag_Set(kFlagUG13toUG18);
+				Set_Enter(kSetUG18, kSceneUG18);
 			}
-			Loop_Actor_Walk_To_XYZ(kActorMcCoy, -477.0f, 141.9f, -870.0f, 0, false, false, false);
-			Game_Flag_Set(kFlagUG13toUG18);
-			Set_Enter(kSetUG18, kSceneUG18);
 		}
 		return true;
 	}
@@ -375,7 +392,7 @@ void SceneScriptUG13::PlayerWalkedIn() {
 				Loop_Actor_Walk_To_XYZ(kActorMcCoy, -248.0f, 44.0f, -390.0f, 12, true, false, false);
 				Actor_Face_Actor(kActorMcCoy, kActorTransient, true);
 				if (Player_Query_Agenda() != kPlayerAgendaSurly 
-					|| Player_Query_Agenda() != kPlayerAgendaErratic) {
+				|| Player_Query_Agenda() != kPlayerAgendaErratic) {
 					Actor_Says(kActorMcCoy, 2175, 13); //00-2175.AUD	Hold on, I’ll get an ambulance out here.
 					Music_Play(kMusicBRBlues, 52, 0, 2, -1, kMusicLoopPlayOnce, 0);
 				}
@@ -383,44 +400,46 @@ void SceneScriptUG13::PlayerWalkedIn() {
 				Actor_Says(kActorMcCoy, 3970, 14); //00-3970.AUD	Hey.
 				Delay(2000);
 				if (Player_Query_Agenda() != kPlayerAgendaSurly 
-					|| Player_Query_Agenda() != kPlayerAgendaErratic) {
+				|| Player_Query_Agenda() != kPlayerAgendaErratic) {
 					Actor_Says(kActorMcCoy, 2390, kAnimationModeIdle); //00-2390.AUD	Oh, God. No.
 					Delay(2000);
-					}
+				}
 				Loop_Actor_Walk_To_Actor(kActorMcCoy, kActorTransient, 24, true, false);
 				Player_Gains_Control();
 				Actor_Face_Actor(kActorMcCoy, kActorTransient, true);
 				Delay(2000);
 				if (Player_Query_Agenda() != kPlayerAgendaSurly 
-					|| Player_Query_Agenda() != kPlayerAgendaErratic) {
+				|| Player_Query_Agenda() != kPlayerAgendaErratic) {
 					Actor_Says(kActorMcCoy, 2305, 13); //00-2305.AUD	I’m sorry.
 				} else {
 					Actor_Says(kActorMcCoy, 170, -1); //00-0170.AUD	Damn.
 				}
+				Actor_Change_Animation_Mode(kActorMcCoy, 23);
 				Delay(3000);
-				Actor_Clue_Acquire(kActorMcCoy, kClueOriginalRequisitionForm, true, -1);
-				Item_Remove_From_World(kItemWeaponsOrderForm);
+				Actor_Clue_Acquire(kActorMcCoy, kClueOriginalRequisitionForm, true, kActorTransient);
 				Item_Pickup_Spin_Effect(kModelAnimationOriginalRequisitionForm, 129, 344);
 				Actor_Says(kActorMcCoy, 8525, 19); //00-8805.AUD	A requisition form.
-				Actor_Voice_Over(3950, kActorVoiceOver);
-				Actor_Voice_Over(3960, kActorVoiceOver);
-				Actor_Voice_Over(3970, kActorVoiceOver);
-				Actor_Voice_Over(3980, kActorVoiceOver);
-				Actor_Voice_Over(3990, kActorVoiceOver);
-				Actor_Voice_Over(4000, kActorVoiceOver);
-				// Added in some some new dialogue for when McCoy finds the form and has not found out that Guzza has framed him. The last three lines regarding Baker only play in this instance.
-				if (!Actor_Clue_Query(kActorMcCoy, kClueGuzzaFramedMcCoy)) {
-					Actor_Voice_Over(3320, kActorVoiceOver); //99-3320.AUD	A little light started to flicker in my brain. Guzza was the one measuring me for the frame.
-					Actor_Voice_Over(3340, kActorVoiceOver); //99-3340.AUD	He set up a Black Market network…
-					Actor_Voice_Over(3350, kActorVoiceOver); //99-3350.AUD	Moving surplus LPD weapons through Izo and the Green Pawn.
-					Actor_Voice_Over(3360, kActorVoiceOver); //99-3360.AUD	Nothing wrong with a little graft…
-					Actor_Voice_Over(3370, kActorVoiceOver); //99-3370.AUD	but when I started stirring the pot…
-					Actor_Voice_Over(3380, kActorVoiceOver); //99-3380.AUD	the heat got too intense in the kitchen and the sweat started coming.
-					Actor_Voice_Over(3390, kActorVoiceOver); //99-3390.AUD	I used to think Guzza was a pretty smart guy…
-					Actor_Voice_Over(3400, kActorVoiceOver); //99-3400.AUD	but letting Baker and Holloway work their bogus interrogation deal with all that LPD equipment was a suicide move.
-					Actor_Voice_Over(3420, kActorVoiceOver); //99-3420.AUD	And those two morons weren’t sharp enough to keep the stuff out of my sight. 
-					Actor_Clue_Acquire(kActorMcCoy, kClueGuzzaFramedMcCoy, true, -1);
-					Actor_Clue_Acquire(kActorMcCoy, kCluePoliceWeaponUsed, true, -1);
+				if (Actor_Clue_Query(kActorMcCoy, kClueRequisitionForm)) {
+					Actor_Voice_Over(3950, kActorVoiceOver);
+					Actor_Voice_Over(3960, kActorVoiceOver);
+					Actor_Voice_Over(3970, kActorVoiceOver);
+					Actor_Voice_Over(3980, kActorVoiceOver);
+					Actor_Voice_Over(3990, kActorVoiceOver);
+					Actor_Voice_Over(4000, kActorVoiceOver);
+					// Added in some some new dialogue for when McCoy finds the form and has not found out that Guzza has framed him. The last three lines regarding Baker only play in this instance.
+					if (!Actor_Clue_Query(kActorMcCoy, kClueGuzzaFramedMcCoy)) {
+						Actor_Voice_Over(3320, kActorVoiceOver); //99-3320.AUD	A little light started to flicker in my brain. Guzza was the one measuring me for the frame.
+						Actor_Voice_Over(3340, kActorVoiceOver); //99-3340.AUD	He set up a Black Market network…
+						Actor_Voice_Over(3350, kActorVoiceOver); //99-3350.AUD	Moving surplus LPD weapons through Izo and the Green Pawn.
+						Actor_Voice_Over(3360, kActorVoiceOver); //99-3360.AUD	Nothing wrong with a little graft…
+						Actor_Voice_Over(3370, kActorVoiceOver); //99-3370.AUD	but when I started stirring the pot…
+						Actor_Voice_Over(3380, kActorVoiceOver); //99-3380.AUD	the heat got too intense in the kitchen and the sweat started coming.
+						Actor_Voice_Over(3390, kActorVoiceOver); //99-3390.AUD	I used to think Guzza was a pretty smart guy…
+						Actor_Voice_Over(3400, kActorVoiceOver); //99-3400.AUD	but letting Baker and Holloway work their bogus interrogation deal with all that LPD equipment was a suicide move.
+						Actor_Voice_Over(3420, kActorVoiceOver); //99-3420.AUD	And those two morons weren’t sharp enough to keep the stuff out of my sight. 
+						Actor_Clue_Acquire(kActorMcCoy, kClueGuzzaFramedMcCoy, true, -1);
+						Actor_Clue_Acquire(kActorMcCoy, kCluePoliceWeaponUsed, true, -1);
+					}
 					Actor_Set_Targetable(kActorTransient, false);
 					Game_Flag_Reset(kFlagGuzzaKilledTransient);
 					Player_Gains_Control();
@@ -460,32 +479,31 @@ void SceneScriptUG13::PlayerWalkedIn() {
 		// there. Since this scene will always happen McCoys phone call with Guzza where he organises a meeting will always makes sense since McCoy will always 
 		// see the room by default.	
 		if (_vm->_cutContent && !Game_Flag_Query(kFlagUG13Entered)) {
-		Sound_Play(kSfxBANGDOOR, 50, 0, 0, 50);
-		Actor_Face_Heading(kActorMcCoy, 830, false);
-		Delay (1000);
-		Actor_Says(kActorMcCoy, 8525, 19); //00-8525.AUD	Hmph.
-		Player_Loses_Control();
-		Loop_Actor_Walk_To_XYZ(kActorMcCoy, -267.0f, 44.0f, -795.0f, 0, true, false, false);
-		Footstep_Sound_Override_On(3);
-		Loop_Actor_Travel_Stairs(kActorMcCoy, 11, true, kAnimationModeIdle);
-		Footstep_Sound_Override_Off();
-		if (Actor_Query_Goal_Number(kActorTransient) == 391
-			|| Actor_Query_Goal_Number(kActorTransient) == 395
-			|| Actor_Query_Goal_Number(kActorTransient) == 599
-		) {
-			Actor_Says(kActorMcCoy, 8522, 14); // Locked
-		} else {
-			Actor_Says(kActorMcCoy, 8522, 14); // Locked
-			Actor_Face_Actor(kActorMcCoy, kActorTransient, true);
-			Actor_Says(kActorMcCoy, 5555, 14); // How do I get this thing open?
-			Actor_Says(kActorTransient, 60, 31); // Nah, it only happens when they want it to open.
+			Sound_Play(kSfxBANGDOOR, 50, 0, 0, 50);
 			Actor_Face_Heading(kActorMcCoy, 830, false);
+			Delay (1000);
 			Actor_Says(kActorMcCoy, 8525, 19); //00-8525.AUD	Hmph.
-			Player_Set_Combat_Mode(true);
-			Game_Flag_Set(kFlagUG13Entered);
-		}				
-		Game_Flag_Set(kFlagUG13toUG18);
-		Set_Enter(kSetUG18, kSceneUG18);
+			Player_Loses_Control();
+			Loop_Actor_Walk_To_XYZ(kActorMcCoy, -267.0f, 44.0f, -795.0f, 0, true, false, false);
+			Footstep_Sound_Override_On(3);
+			Loop_Actor_Travel_Stairs(kActorMcCoy, 11, true, kAnimationModeIdle);
+			Footstep_Sound_Override_Off();
+			if (Actor_Query_Goal_Number(kActorTransient) == 391
+			|| Actor_Query_Goal_Number(kActorTransient) == 395
+			|| Actor_Query_Goal_Number(kActorTransient) == 599) {
+				Actor_Says(kActorMcCoy, 8522, 14); // Locked
+			} else {
+				Actor_Says(kActorMcCoy, 8522, 14); // Locked
+				Actor_Face_Actor(kActorMcCoy, kActorTransient, true);
+				Actor_Says(kActorMcCoy, 5555, 14); // How do I get this thing open?
+				Actor_Says(kActorTransient, 60, 31); // Nah, it only happens when they want it to open.
+				Actor_Face_Heading(kActorMcCoy, 830, false);
+				Actor_Says(kActorMcCoy, 8525, 19); //00-8525.AUD	Hmph.
+				Player_Set_Combat_Mode(true);
+				Game_Flag_Set(kFlagUG13Entered);
+			}				
+			Game_Flag_Set(kFlagUG13toUG18);
+			Set_Enter(kSetUG18, kSceneUG18);
 		}
 	}
 	//return false;
@@ -609,10 +627,10 @@ void SceneScriptUG13::dialogueWithHomeless1() {
 
 	case 1350: // GIVE FLASK
 	// Made it so McCoy walks around to the front of the couch so he can give transient the flask.
-	if (_vm->_cutContent) {
-		Player_Loses_Control();
-		Loop_Actor_Walk_To_Actor(kActorMcCoy, kActorTransient, 36, false, true);
-		Actor_Face_Actor(kActorMcCoy, kActorTransient, true);
+		if (_vm->_cutContent) {
+			Player_Loses_Control();
+			Loop_Actor_Walk_To_Actor(kActorMcCoy, kActorTransient, 36, false, true);
+			Actor_Face_Actor(kActorMcCoy, kActorTransient, true);
 		}
 		Actor_Clue_Acquire(kActorTransient, kClueFlaskOfAbsinthe, false, kActorMcCoy);
 		Actor_Says_With_Pause(kActorMcCoy, 5595, 1.0f, 23); // You still thirsty, pal?
@@ -655,37 +673,51 @@ void SceneScriptUG13::dialogueWithHomeless2() {
 	// After McCoy gives the transient the flask and selects one of the three options Guzza will shoot the transient before he can reveal the trutch and McCoy chases after Guzza.
 	// This outcome can be avoided if you have high friendliness with Guzza by either retiring Zuben and talking to Guzza about it or giving Guzza holdens badge. 
 	case 1370: // DIRECTIONS
-	if (_vm->_cutContent) {
-		if (Actor_Query_Friendliness_To_Other(kActorGuzza, kActorMcCoy) < 54) {
-			Actor_Says(kActorMcCoy, 5665, 16); // This place is a maze
-			Actor_Says(kActorTransient, 300, 32); // This is the sewers, man.
-			Player_Loses_Control();
-			Music_Play(kMusicMoraji, 71, 0, 0, -1, kMusicLoopPlayOnce, 2);
-			Sound_Play(kSfxLGCAL3, 100, 0, 0, 50);
-			Actor_Set_Goal_Number(kActorTransient, kGoalGuzzaShootsTransient);
-			Delay(500);
-			Player_Set_Combat_Mode(true);
-			Delay(1000);
-			Sound_Play(kSfxLGCAL3, 100, 0, 0, 50);
-			Actor_Change_Animation_Mode(kActorMcCoy, 21);
-			Delay(1000);
-			Actor_Change_Animation_Mode(kActorMcCoy, 6);
-			Sound_Play(kSfxGUNH1A, 100, 0, 0, 50);
-			Delay(1000);
-			Loop_Actor_Walk_To_Actor(kActorMcCoy, kActorTransient, 36, false, true);
-			Loop_Actor_Walk_To_XYZ(kActorMcCoy, -267.0f, 44.0f, -795.0f, 0, true, false, false);
-			Actor_Face_Heading(kActorMcCoy, 830, false);
-			Footstep_Sound_Override_On(3);
-			Loop_Actor_Travel_Stairs(kActorMcCoy, 11, true, kAnimationModeIdle);
-			Footstep_Sound_Override_Off();
-			Actor_Change_Animation_Mode(kActorMcCoy, 6);
-			Sound_Play(kSfxGUNH1A, 100, 0, 0, 50);
-			Delay(500);
-			Loop_Actor_Walk_To_XYZ(kActorMcCoy, -477.0f, 141.9f, -870.0f, 0, false, false, false);
-			Game_Flag_Set(kFlagGuzzaKilledTransient);
-			Game_Flag_Set(kFlagTransientDead);
-			Game_Flag_Set(kFlagUG13toUG18);
-			Set_Enter(kSetUG18, kSceneUG18);
+		if (_vm->_cutContent) {
+			if (Actor_Query_Friendliness_To_Other(kActorGuzza, kActorMcCoy) < 51) {
+				Actor_Says(kActorMcCoy, 5665, 16); // This place is a maze
+				Actor_Says(kActorTransient, 300, 32); // This is the sewers, man.
+				Player_Loses_Control();
+				Music_Play(kMusicMoraji, 71, 0, 0, -1, kMusicLoopPlayOnce, 2);
+				Sound_Play(kSfxLGCAL3, 100, 0, 0, 50);
+				Actor_Set_Goal_Number(kActorTransient, kGoalGuzzaShootsTransient);
+				Delay(500);
+				Player_Set_Combat_Mode(true);
+				Delay(1000);
+				Sound_Play(kSfxLGCAL3, 100, 0, 0, 50);
+				Actor_Change_Animation_Mode(kActorMcCoy, 21);
+				Delay(1000);
+				Actor_Change_Animation_Mode(kActorMcCoy, 6);
+				Sound_Play(kSfxGUNH1A, 100, 0, 0, 50);
+				Delay(1000);
+				Loop_Actor_Walk_To_Actor(kActorMcCoy, kActorTransient, 36, false, true);
+				Loop_Actor_Walk_To_XYZ(kActorMcCoy, -267.0f, 44.0f, -795.0f, 0, true, false, false);
+				Actor_Face_Heading(kActorMcCoy, 830, false);
+				Footstep_Sound_Override_On(3);
+				Loop_Actor_Travel_Stairs(kActorMcCoy, 11, true, kAnimationModeIdle);
+				Footstep_Sound_Override_Off();
+				Actor_Change_Animation_Mode(kActorMcCoy, 6);
+				Sound_Play(kSfxGUNH1A, 100, 0, 0, 50);
+				Delay(500);
+				Loop_Actor_Walk_To_XYZ(kActorMcCoy, -477.0f, 141.9f, -870.0f, 0, false, false, false);
+				Game_Flag_Set(kFlagGuzzaKilledTransient);
+				Game_Flag_Set(kFlagTransientDead);
+				Game_Flag_Set(kFlagUG13toUG18);
+				Set_Enter(kSetUG18, kSceneUG18);
+			} else {
+				Actor_Says(kActorMcCoy, 5665, 16); // This place is a maze
+				Actor_Says(kActorTransient, 300, 32); // This is the sewers, man.
+				Actor_Says(kActorMcCoy, 5680, 19); // So what? I just follow my nose?
+				Actor_Says(kActorTransient, 310, 33); // Noses get a little overworked down here.
+				Actor_Says(kActorTransient, 330, 30); // You can get to it all from down here.
+				Actor_Start_Speech_Sample(kActorTransient, 110); // sleeping, mumbling
+				Actor_Set_Goal_Number(kActorTransient, 395);
+				Actor_Says(kActorMcCoy, 5685, 18); // Triple-A...
+				// Added in a line.
+				if (_vm->_cutContent) {
+					Actor_Says(kActorTransient, 420, 30); //12-0420.AUD	Don’t care what you think.
+				}
+			}
 		} else {
 			Actor_Says(kActorMcCoy, 5665, 16); // This place is a maze
 			Actor_Says(kActorTransient, 300, 32); // This is the sewers, man.
@@ -695,31 +727,17 @@ void SceneScriptUG13::dialogueWithHomeless2() {
 			Actor_Start_Speech_Sample(kActorTransient, 110); // sleeping, mumbling
 			Actor_Set_Goal_Number(kActorTransient, 395);
 			Actor_Says(kActorMcCoy, 5685, 18); // Triple-A...
-			// Added in a line.
-			if (_vm->_cutContent) {
-				Actor_Says(kActorTransient, 420, 30); //12-0420.AUD	Don’t care what you think.
-			}
 		}
-	} else {
-		Actor_Says(kActorMcCoy, 5665, 16); // This place is a maze
-		Actor_Says(kActorTransient, 300, 32); // This is the sewers, man.
-		Actor_Says(kActorMcCoy, 5680, 19); // So what? I just follow my nose?
-		Actor_Says(kActorTransient, 310, 33); // Noses get a little overworked down here.
-		Actor_Says(kActorTransient, 330, 30); // You can get to it all from down here.
-		Actor_Start_Speech_Sample(kActorTransient, 110); // sleeping, mumbling
-		Actor_Set_Goal_Number(kActorTransient, 395);
-		Actor_Says(kActorMcCoy, 5685, 18); // Triple-A...
-	}
 		break;
 
 	case 1380: // FAT MAN
-	if (_vm->_cutContent) {
-		if (Actor_Clue_Query(kActorMcCoy, kClueHomelessManInterview2)
-		&& !Actor_Clue_Query(kActorMcCoy, kClueFolder)) {
-			Actor_Says(kActorMcCoy, 5670, 9); // About that fat man you saw.
-			// Added in some lines.
+		if (_vm->_cutContent) {
+			if (Actor_Clue_Query(kActorMcCoy, kClueHomelessManInterview2)
+			&& !Actor_Clue_Query(kActorMcCoy, kClueFolder)) {
+				Actor_Says(kActorMcCoy, 5670, 9); // About that fat man you saw.
+				// Added in some lines.
 				Actor_Says(kActorTransient, 390, 31); //12-0390.AUD	Don’t know why you’d wanna know this but, yeah, I heard something
-				if (Actor_Query_Friendliness_To_Other(kActorGuzza, kActorMcCoy) < 54) {
+				if (Actor_Query_Friendliness_To_Other(kActorGuzza, kActorMcCoy) < 51) {
 					Player_Loses_Control();
 					Music_Play(kMusicMoraji, 71, 0, 0, -1, kMusicLoopPlayOnce, 2);
 					Sound_Play(kSfxLGCAL3, 100, 0, 0, 50);
@@ -768,40 +786,42 @@ void SceneScriptUG13::dialogueWithHomeless2() {
 					Item_Remove_From_World(kItemWeaponsOrderForm);
 					Item_Pickup_Spin_Effect(kModelAnimationOriginalRequisitionForm, 129, 344);
 					Actor_Says(kActorMcCoy, 8525, 19); //00-8805.AUD	A requisition form.
-					Actor_Voice_Over(3950, kActorVoiceOver);
-					Actor_Voice_Over(3960, kActorVoiceOver);
-					Actor_Voice_Over(3970, kActorVoiceOver);
-					Actor_Voice_Over(3980, kActorVoiceOver);
-					Actor_Voice_Over(3990, kActorVoiceOver);
-					Actor_Voice_Over(4000, kActorVoiceOver);
-					// Added in some some new dialogue for when McCoy finds the form and has not found out that Guzza has framed him. The last three lines regarding Baker only play in this instance.
-					if (!Actor_Clue_Query(kActorMcCoy, kClueGuzzaFramedMcCoy)) {
-						Actor_Voice_Over(3320, kActorVoiceOver); //99-3320.AUD	A little light started to flicker in my brain. Guzza was the one measuring me for the frame.
-						Actor_Voice_Over(3340, kActorVoiceOver); //99-3340.AUD	He set up a Black Market network…
-						Actor_Voice_Over(3350, kActorVoiceOver); //99-3350.AUD	Moving surplus LPD weapons through Izo and the Green Pawn.
-						Actor_Voice_Over(3360, kActorVoiceOver); //99-3360.AUD	Nothing wrong with a little graft…
-						Actor_Voice_Over(3370, kActorVoiceOver); //99-3370.AUD	but when I started stirring the pot…
-						Actor_Voice_Over(3380, kActorVoiceOver); //99-3380.AUD	the heat got too intense in the kitchen and the sweat started coming.
-						Actor_Voice_Over(3390, kActorVoiceOver); //99-3390.AUD	I used to think Guzza was a pretty smart guy…
-						Actor_Voice_Over(3400, kActorVoiceOver); //99-3400.AUD	but letting Baker and Holloway work their bogus interrogation deal with all that LPD equipment was a suicide move.
-						Actor_Voice_Over(3420, kActorVoiceOver); //99-3420.AUD	And those two morons weren’t sharp enough to keep the stuff out of my sight. 
-						Player_Gains_Control();
-						Actor_Clue_Acquire(kActorMcCoy, kClueGuzzaFramedMcCoy, true, -1);
-						Actor_Clue_Acquire(kActorMcCoy, kCluePoliceWeaponUsed, true, -1);
-						Game_Flag_Reset(kFlagGuzzaKilledTransient);
+					if (Actor_Clue_Query(kActorMcCoy, kClueRequisitionForm)) {
+						Actor_Voice_Over(3950, kActorVoiceOver);
+						Actor_Voice_Over(3960, kActorVoiceOver);
+						Actor_Voice_Over(3970, kActorVoiceOver);
+						Actor_Voice_Over(3980, kActorVoiceOver);
+						Actor_Voice_Over(3990, kActorVoiceOver);
+						Actor_Voice_Over(4000, kActorVoiceOver);
+						// Added in some some new dialogue for when McCoy finds the form and has not found out that Guzza has framed him. The last three lines regarding Baker only play in this instance.
+						if (!Actor_Clue_Query(kActorMcCoy, kClueGuzzaFramedMcCoy)) {
+							Actor_Voice_Over(3320, kActorVoiceOver); //99-3320.AUD	A little light started to flicker in my brain. Guzza was the one measuring me for the frame.
+							Actor_Voice_Over(3340, kActorVoiceOver); //99-3340.AUD	He set up a Black Market network…
+							Actor_Voice_Over(3350, kActorVoiceOver); //99-3350.AUD	Moving surplus LPD weapons through Izo and the Green Pawn.
+							Actor_Voice_Over(3360, kActorVoiceOver); //99-3360.AUD	Nothing wrong with a little graft…
+							Actor_Voice_Over(3370, kActorVoiceOver); //99-3370.AUD	but when I started stirring the pot…
+							Actor_Voice_Over(3380, kActorVoiceOver); //99-3380.AUD	the heat got too intense in the kitchen and the sweat started coming.
+							Actor_Voice_Over(3390, kActorVoiceOver); //99-3390.AUD	I used to think Guzza was a pretty smart guy…
+							Actor_Voice_Over(3400, kActorVoiceOver); //99-3400.AUD	but letting Baker and Holloway work their bogus interrogation deal with all that LPD equipment was a suicide move.
+							Actor_Voice_Over(3420, kActorVoiceOver); //99-3420.AUD	And those two morons weren’t sharp enough to keep the stuff out of my sight. 
+							Player_Gains_Control();
+							Actor_Clue_Acquire(kActorMcCoy, kClueGuzzaFramedMcCoy, true, -1);
+							Actor_Clue_Acquire(kActorMcCoy, kCluePoliceWeaponUsed, true, -1);
+							Game_Flag_Reset(kFlagGuzzaKilledTransient);
+						}
 					}
 				}
 			} else {
-			// McCoy could also have asked about "Fat Man" before he gives the flask of absinthe
-			// to the homeless man. But if he didn't then he'll only get the same conversation
-			// that he would have got without giving him the flask.
+				// McCoy could also have asked about "Fat Man" before he gives the flask of absinthe
+				// to the homeless man. But if he didn't then he'll only get the same conversation
+				// that he would have got without giving him the flask.
 #if BLADERUNNER_ORIGINAL_BUGS
 #else
-			// Re-use this line here, so the question is not so abrupt
-			Actor_Says(kActorMcCoy, 5670, 9); // About that fat man you saw.
+				// Re-use this line here, so the question is not so abrupt
+				Actor_Says(kActorMcCoy, 5670, 9); // About that fat man you saw.
 #endif // BLADERUNNER_ORIGINAL_BUGS
-			Actor_Says(kActorMcCoy, 5700, 15); // He been down here a lot?
-			talkAboutGuzza();
+				Actor_Says(kActorMcCoy, 5700, 15); // He been down here a lot?
+				talkAboutGuzza();
 			}
 		} else if (Actor_Clue_Query(kActorMcCoy, kClueHomelessManInterview2)) {
 			Actor_Says(kActorMcCoy, 5670, 9); // About that fat man you saw.
@@ -828,47 +848,47 @@ void SceneScriptUG13::dialogueWithHomeless2() {
 		break;
 
 	case 1390: // REPLICANTS
-	if (_vm->_cutContent) {
-		if (Actor_Query_Friendliness_To_Other(kActorGuzza, kActorMcCoy) < 54) {
-			Actor_Says(kActorMcCoy, 5675, 9); // You say this place is crawling with Reps...
-			Actor_Says(kActorTransient, 370, 32); // They ain't too bad. You don't mess with them, they don't mess with you.
-			Player_Loses_Control();
-			Music_Play(kMusicMoraji, 71, 0, 0, -1, kMusicLoopPlayOnce, 2);
-			Sound_Play(kSfxLGCAL3, 100, 0, 0, 50);
-			Actor_Set_Goal_Number(kActorTransient, kGoalGuzzaShootsTransient);
-			Delay(500);
-			Player_Set_Combat_Mode(true);
-			Delay(1000);
-			Sound_Play(kSfxLGCAL3, 100, 0, 0, 50);
-			Actor_Change_Animation_Mode(kActorMcCoy, 21);
-			Delay(1000);
-			Actor_Change_Animation_Mode(kActorMcCoy, 6);
-			Sound_Play(kSfxGUNH1A, 100, 0, 0, 50);
-			Delay(1000);
-			Loop_Actor_Walk_To_Actor(kActorMcCoy, kActorTransient, 36, false, true);
-			Loop_Actor_Walk_To_XYZ(kActorMcCoy, -267.0f, 44.0f, -795.0f, 0, true, false, false);
-			Actor_Face_Heading(kActorMcCoy, 830, false);
-			Footstep_Sound_Override_On(3);
-			Loop_Actor_Travel_Stairs(kActorMcCoy, 11, true, kAnimationModeIdle);
-			Footstep_Sound_Override_Off();
-			Actor_Change_Animation_Mode(kActorMcCoy, 6);
-			Sound_Play(kSfxGUNH1A, 100, 0, 0, 50);
-			Delay(500);
-			Loop_Actor_Walk_To_XYZ(kActorMcCoy, -477.0f, 141.9f, -870.0f, 0, false, false, false);
-			Game_Flag_Set(kFlagGuzzaKilledTransient);
-			Game_Flag_Set(kFlagTransientDead);
-			Game_Flag_Set(kFlagUG13toUG18);
-			Set_Enter(kSetUG18, kSceneUG18);
+		if (_vm->_cutContent) {
+			if (Actor_Query_Friendliness_To_Other(kActorGuzza, kActorMcCoy) < 51) {
+				Actor_Says(kActorMcCoy, 5675, 9); // You say this place is crawling with Reps...
+				Actor_Says(kActorTransient, 370, 32); // They ain't too bad. You don't mess with them, they don't mess with you.
+				Player_Loses_Control();
+				Music_Play(kMusicMoraji, 71, 0, 0, -1, kMusicLoopPlayOnce, 2);
+				Sound_Play(kSfxLGCAL3, 100, 0, 0, 50);
+				Actor_Set_Goal_Number(kActorTransient, kGoalGuzzaShootsTransient);
+				Delay(500);
+				Player_Set_Combat_Mode(true);
+				Delay(1000);
+				Sound_Play(kSfxLGCAL3, 100, 0, 0, 50);
+				Actor_Change_Animation_Mode(kActorMcCoy, 21);
+				Delay(1000);
+				Actor_Change_Animation_Mode(kActorMcCoy, 6);
+				Sound_Play(kSfxGUNH1A, 100, 0, 0, 50);
+				Delay(1000);
+				Loop_Actor_Walk_To_Actor(kActorMcCoy, kActorTransient, 36, false, true);
+				Loop_Actor_Walk_To_XYZ(kActorMcCoy, -267.0f, 44.0f, -795.0f, 0, true, false, false);
+				Actor_Face_Heading(kActorMcCoy, 830, false);
+				Footstep_Sound_Override_On(3);
+				Loop_Actor_Travel_Stairs(kActorMcCoy, 11, true, kAnimationModeIdle);
+				Footstep_Sound_Override_Off();
+				Actor_Change_Animation_Mode(kActorMcCoy, 6);
+				Sound_Play(kSfxGUNH1A, 100, 0, 0, 50);
+				Delay(500);
+				Loop_Actor_Walk_To_XYZ(kActorMcCoy, -477.0f, 141.9f, -870.0f, 0, false, false, false);
+				Game_Flag_Set(kFlagGuzzaKilledTransient);
+				Game_Flag_Set(kFlagTransientDead);
+				Game_Flag_Set(kFlagUG13toUG18);
+				Set_Enter(kSetUG18, kSceneUG18);
+			} else {
+				Actor_Says(kActorMcCoy, 5675, 9); // You say this place is crawling with Reps...
+				Actor_Says(kActorTransient, 370, 32); // They ain't too bad. You don't mess with them, they don't mess with you.
+				Actor_Says(kActorMcCoy, 5705, 10); // Uh-huh.
+			}
 		} else {
 			Actor_Says(kActorMcCoy, 5675, 9); // You say this place is crawling with Reps...
 			Actor_Says(kActorTransient, 370, 32); // They ain't too bad. You don't mess with them, they don't mess with you.
 			Actor_Says(kActorMcCoy, 5705, 10); // Uh-huh.
 		}
-	} else {
-		Actor_Says(kActorMcCoy, 5675, 9); // You say this place is crawling with Reps...
-		Actor_Says(kActorTransient, 370, 32); // They ain't too bad. You don't mess with them, they don't mess with you.
-		Actor_Says(kActorMcCoy, 5705, 10); // Uh-huh.
-	}
 		break;
 	}
 }

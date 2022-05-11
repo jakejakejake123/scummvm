@@ -185,6 +185,8 @@ void SceneScriptMA07::PlayerWalkedIn() {
 					Delay(1000);
 					Player_Gains_Control();
 					Game_Flag_Reset(kFlagMcCoyFreedOfAccusations);
+					Game_Flag_Set(kFlagMA06ToMA02);
+					Set_Enter(kSetMA02_MA04, kSceneMA02);
 				}
 			} else {
 				Actor_Voice_Over(1380, kActorVoiceOver); //99-1380.AUD	Bryant chewed me out for letting the Reps kill him…
@@ -193,6 +195,8 @@ void SceneScriptMA07::PlayerWalkedIn() {
 				Delay(1000);
 				Player_Gains_Control();
 				Game_Flag_Reset(kFlagMcCoyFreedOfAccusations);
+				Game_Flag_Set(kFlagMA06ToMA02);
+				Set_Enter(kSetMA02_MA04, kSceneMA02);
 			}
 		} else {
 			Actor_Voice_Over(1380, kActorVoiceOver); //99-1380.AUD	Bryant chewed me out for letting the Reps kill him…
@@ -200,14 +204,10 @@ void SceneScriptMA07::PlayerWalkedIn() {
 			Actor_Voice_Over(1400, kActorVoiceOver);
 			Delay(1000);
 			Game_Flag_Reset(kFlagMcCoyFreedOfAccusations);
+			Game_Flag_Set(kFlagMA06ToMA02);
+			Set_Enter(kSetMA02_MA04, kSceneMA02);
 		}
 	}
-	// If McCoy retired Luther and Lance in act 4 and he cleared his name he will receive 400 chinyen at the start of act 5.
-	Game_Flag_Set(kFlagMA06ToMA02);
-	Set_Enter(kSetMA02_MA04, kSceneMA02);
-	//return false;
-	// Code for an encounter that you can have with Crystal in act 4 if McCoy didn't retire a human or is not on his
-	// way to the car ending.
 	if (_vm->_cutContent) {
 		if (!Game_Flag_Query(kFlagCrystalTalkAct4)
 		// Made it so whether of not you have affection towards Dektora or Lucy this will determine whether or not you will meet Crystal here.
@@ -219,7 +219,7 @@ void SceneScriptMA07::PlayerWalkedIn() {
 		&& Actor_Query_Friendliness_To_Other(kActorSteele, kActorMcCoy) > 53)
 		&&	Global_Variable_Query(kVariableChapter) == 4) {
 			Actor_Put_In_Set(kActorSteele, kSetMA07);
-			Actor_Set_At_XYZ(kActorSteele, -68.06, -171.95, 393.86, 0);
+			Actor_Set_At_XYZ(kActorSteele, 27.19, -162.21, 184.93, 0);
 			Actor_Face_Actor(kActorSteele, kActorMcCoy, true);
 			Actor_Says(kActorSteele, 2640, 12); //01-2640.AUD	Killing time again, Slim?
 			Music_Play(kMusicBRBlues, 52, 0, 2, -1, kMusicLoopPlayOnce, 0);
@@ -233,8 +233,7 @@ void SceneScriptMA07::PlayerWalkedIn() {
 				Actor_Says(kActorMcCoy, 2685, 18); //00-2685.AUD	Hmph. Very funny.
 			}
 			Actor_Says(kActorSteele, 2690, 14); //01-2690.AUD	Hey, Slim. I dug up some new dirt. What do you say we have a pow-wow.
-			if (Player_Query_Agenda() == kPlayerAgendaSurly 
-			|| Player_Query_Agenda() == kPlayerAgendaErratic) {
+			if (Game_Flag_Query(kFlagMcCoyIsHelpingReplicants)) {
 				Actor_Says(kActorMcCoy, 6305, 16); //00-6305.AUD	I don’t got the time or the inclination, Steele. 
 				Actor_Says(kActorSteele, 3300, 13); //01-3300.AUD	One day you’ll be begging me for time, I guarantee.
 				Actor_Says(kActorMcCoy, 5495, 15); //00-5495.AUD	Oh, yeah?
@@ -387,6 +386,7 @@ void SceneScriptMA07::PlayerWalkedIn() {
 				Actor_Says(kActorGuzza, 1530, 15); //04-1530.AUD	I must have made a mistake or something. Truly, an honest mistake.
 				Actor_Says(kActorMcCoy, 3910, 15); //00-3910.AUD	You’re lying.
 				Actor_Says(kActorGuzza, 1520, 14); //04-1520.AUD	Everything I say is as true as holy writ.
+				Actor_Says(kActorMcCoy, 2140, 14); //00-2140.AUD	Bullshit.
 				Delay(1000);
 				Actor_Says(kActorMcCoy, 2130, 15); //00-2130.AUD	You’re the coldest person I’ve ever seen when it comes to killing.
 				Delay(500);

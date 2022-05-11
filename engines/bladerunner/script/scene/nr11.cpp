@@ -425,13 +425,22 @@ void SceneScriptNR11::PlayerWalkedIn() {
 					Actor_Modify_Friendliness_To_Other(kActorSteele, kActorMcCoy, 3);
 				}
 				Delay(1500);
-				Actor_Says(kActorMcCoy, 3805, 12);
+				Actor_Says(kActorMcCoy, 3805, 12); //00-3805.AUD	Hope Early’s got insurance.
 				Actor_Face_Actor(kActorMcCoy, kActorSteele, true);
 				Actor_Face_Actor(kActorSteele, kActorMcCoy, true);
 				Actor_Says_With_Pause(kActorSteele, 1720, 0.3f, 16);
-				Actor_Says(kActorMcCoy, 3810, 16);
-				Actor_Says_With_Pause(kActorSteele, 1730, 0.2f, 14);
-				Actor_Says(kActorSteele, 1740, 15);
+				if (_vm->_cutContent) {
+					if (!Game_Flag_Query(kFlagMcCoyIsHelpingReplicants)) {
+						Actor_Says(kActorMcCoy, 1570, 13); //00-1570.AUD	You sure aired that sucker out.
+					} else {
+						Actor_Says(kActorMcCoy, 3810, 16); //00-3810.AUD	You could have taken her out in a more discrete way.
+						Actor_Says_With_Pause(kActorSteele, 1730, 0.2f, 14); //01-1730.AUD	What’s this "her" crap? It’s an "it", remember? A goddamn machine.
+					}
+				} else {
+					Actor_Says(kActorMcCoy, 3810, 16); //00-3810.AUD	You could have taken her out in a more discrete way.
+					Actor_Says_With_Pause(kActorSteele, 1730, 0.2f, 14); //01-1730.AUD	What’s this "her" crap? It’s an "it", remember? A goddamn machine.
+				}
+				Actor_Says(kActorSteele, 1740, 15); //01-1740.AUD	Come on, let’s blow while the getting's good.
 				Actor_Set_Goal_Number(kActorDektora, kGoalDektoraGone);
 				Actor_Put_In_Set(kActorDektora, kSetFreeSlotI);
 				Actor_Set_At_Waypoint(kActorDektora, 41, 0);

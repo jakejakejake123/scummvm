@@ -273,8 +273,30 @@ void SceneScriptUG05::endGame() {
 
 	Ambient_Sounds_Remove_All_Non_Looping_Sounds(true);
 	Ambient_Sounds_Remove_All_Looping_Sounds(1u);
+	if (_vm->_cutContent) {
+		if (affectionTowardsActor == kActorLucy) {
+			if (!Game_Flag_Query(kFlagLucyIsReplicant)) {
+				Outtake_Play(kOuttakeEnd1A, false, -1);
+			} else if (Global_Variable_Query(kVariableDNAEvidence) > 5) {
+				Outtake_Play(kOuttakeEnd1B, false, -1);
+			} else {
+				Outtake_Play(kOuttakeEnd1C, false, -1);
+			}
+		} else if (affectionTowardsActor == kActorDektora) {
+			if (!Game_Flag_Query(kFlagDektoraIsReplicant)) {
+				Outtake_Play(kOuttakeEnd1D, false, -1);
+			} else if (Global_Variable_Query(kVariableDNAEvidence) > 5) {
+				Outtake_Play(kOuttakeEnd1E, false, -1);
+			} else {
+				Outtake_Play(kOuttakeEnd1F, false, -1);
+			}
+		} else {
+			Outtake_Play(kOuttakeEnd3, false, -1);
+		}
+		Outtake_Play(kOuttakeEnd2, false, -1);
 
-	if (affectionTowardsActor == kActorLucy) {
+		Game_Over();
+	} else if (affectionTowardsActor == kActorLucy) {
 		if (!Game_Flag_Query(kFlagLucyIsReplicant)) {
 			Outtake_Play(kOuttakeEnd1A, false, -1);
 		} else if (Global_Variable_Query(kVariableDNAEvidence) > 3) {

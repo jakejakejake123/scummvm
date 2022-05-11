@@ -203,7 +203,7 @@ void AIScriptBulletBob::Retired(int byActorId) {
 							Actor_Put_In_Set(kActorCrazylegs, kSceneKP06);
 						}
 					}
-					Delay(3000);
+					Delay(2000);
 					Player_Set_Combat_Mode(false);
 					Delay(1000); 
 				}

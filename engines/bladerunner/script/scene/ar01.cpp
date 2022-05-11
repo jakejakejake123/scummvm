@@ -173,7 +173,8 @@ bool SceneScriptAR01::ClickedOnActor(int actorId) {
 				|| Actor_Clue_Query(kActorMcCoy, kClueStrangeScale2))
 				&& !Actor_Clue_Query(kActorMcCoy, kClueFishLadyInterview)
 				&& !Game_Flag_Query(kFlagWrongInvestigation)
-				&& !Game_Flag_Query(kFlagFishLadyTalkScale)) {
+				&& !Game_Flag_Query(kFlagFishLadyTalkScale)
+				&& Global_Variable_Query(kVariableChapter) < 4) {
 					Actor_Says(kActorMcCoy, 40, 11);
 					Actor_Says(kActorFishDealer, 120, 14);
 					Actor_Says(kActorMcCoy, 45, 17); //00-0045.AUD	What other one?
@@ -207,7 +208,8 @@ bool SceneScriptAR01::ClickedOnActor(int actorId) {
 					}
 				} else if (Game_Flag_Query(kFlagFishDealerBuyFishTalk)
 				&& !Game_Flag_Query(kFlagAR01FishDealerTalk) 
-				&& !Game_Flag_Query(kFlagAR02InsectDealerInterviewed)) {		
+				&& !Game_Flag_Query(kFlagAR02InsectDealerInterviewed)
+				&& Global_Variable_Query(kVariableChapter) < 4) {		
 					Actor_Says(kActorMcCoy, 0, 18);
 					Actor_Says(kActorFishDealer, 0, 14);
 					Actor_Says(kActorFishDealer, 10, 14); //29-0010.AUD	They're no good companion. But fish, fish are good.
@@ -658,12 +660,12 @@ void SceneScriptAR01::PlayerWalkedIn() {
 			Actor_Face_Actor(kActorFishDealer, kActorMcCoy, true);
 			Player_Gains_Control();
 			Actor_Says(kActorMcCoy, 8910, 14); //00-8910.AUD	Hey you.
-			Actor_Says(kActorFishDealer, 230, 14); // 29-0230.AUD	You buy fish? Highest quality.
+			Actor_Says(kActorFishDealer, 230, -1); // 29-0230.AUD	You buy fish? Highest quality.
 			Actor_Says(kActorMcCoy, 140, 18); //00-0140.AUD	Not today, thanks.
 			Actor_Says(kActorMcCoy, 475, 13);  //00-0475.AUD	There are things I want to know.
-			Actor_Says(kActorFishDealer, 160, 0); //29-0160.AUD	I heard something, yeah. I tell it to you, if you like.
+			Actor_Says(kActorFishDealer, 160, -1); //29-0160.AUD	I heard something, yeah. I tell it to you, if you like.
 			Actor_Says(kActorMcCoy, 5060, 13); //00-5060.AUD	Some other time.
-			Actor_Says(kActorFishDealer, 230, 0); // 29-0230.AUD	You buy fish? Highest quality.
+			Actor_Says(kActorFishDealer, 230, -1); // 29-0230.AUD	You buy fish? Highest quality.
 			Delay (1000);
 			Actor_Says(kActorMcCoy, 7815, 16); //00-7815.AUD	No.
 			Delay (500);

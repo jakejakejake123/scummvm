@@ -271,10 +271,10 @@ void SceneScriptKP03::SceneFrameAdvanced(int frame) {
 				// Made it so the Crystal dies music only plays if McCoy is not helping the replicants and doesn't betray her.
 				if (_vm->_cutContent) {
 					if (!Game_Flag_Query(kFlagMcCoyIsHelpingReplicants)) {
-					Music_Play(kMusicCrysDie1, 25, 0, 1, -1, kMusicLoopPlayOnce, 0);
+						Music_Play(kMusicCrysDie1, 25, 0, 1, -1, kMusicLoopPlayOnce, 0);
 					}
 				} else {
-				Music_Play(kMusicCrysDie1, 25, 0, 1, -1, kMusicLoopPlayOnce, 0);
+					Music_Play(kMusicCrysDie1, 25, 0, 1, -1, kMusicLoopPlayOnce, 0);
 				}
 				if (Actor_Query_Inch_Distance_From_Actor(kActorMcCoy, kActorSteele) <= 120) {
 					bombTriggeredByActor = kActorMcCoy;
@@ -308,7 +308,6 @@ void SceneScriptKP03::PlayerWalkedIn() {
  			if (!Game_Flag_Query(kFlagMcCoyRetiredHuman)
 			&& Global_Variable_Query(kVariableAffectionTowards) != kAffectionTowardsDektora
 			&& Global_Variable_Query(kVariableAffectionTowards) != kAffectionTowardsLucy
-			&& !Game_Flag_Query(kFlagIzoWarned)
 			&& !Game_Flag_Query(kFlagKP03BombExploded)
 			&& !Game_Flag_Query(kFlagKP03BombDisarmed)
 			&&  Game_Flag_Query(kFlagKP01toKP03)) {

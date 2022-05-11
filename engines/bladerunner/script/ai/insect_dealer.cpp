@@ -44,9 +44,17 @@ void AIScriptInsectDealer::Initialize() {
 	_var2 = 6;
 	_counter = 0;
 
-	Actor_Put_In_Set(kActorInsectDealer, kSetAR01_AR02);
-	Actor_Set_At_XYZ(kActorInsectDealer, -414.0f, 0.0f, -1199.0f, 371);
-	Actor_Set_Goal_Number(kActorInsectDealer, 0);
+	if (_vm->_cutContent) {
+		if (!Game_Flag_Query(kFlagInsectDealerArrested)) {
+			Actor_Put_In_Set(kActorInsectDealer, kSetAR01_AR02);
+			Actor_Set_At_XYZ(kActorInsectDealer, -414.0f, 0.0f, -1199.0f, 371);
+			Actor_Set_Goal_Number(kActorInsectDealer, 0);
+		}
+	} else {
+		Actor_Put_In_Set(kActorInsectDealer, kSetAR01_AR02);
+		Actor_Set_At_XYZ(kActorInsectDealer, -414.0f, 0.0f, -1199.0f, 371);
+		Actor_Set_Goal_Number(kActorInsectDealer, 0);
+	}
 }
 
 bool AIScriptInsectDealer::Update() {

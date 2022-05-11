@@ -300,9 +300,10 @@ bool AIScriptIzo::ShotAtAndHit() {
 						Actor_Says(kActorSteele, 2710, 59); //01-2710.AUD	You must be in better shape that I thought.
 						Actor_Says(kActorSteele, 2720, 59); //01-2720.AUD	You’re still alive.			
 						Actor_Says(kActorMcCoy, 1025, 12); //00-1025.AUD	Absolutely.
+					} else {
+						Actor_Says(kActorSteele, 1790, 59); //01-1790.AUD	We having fun yet?
+						Actor_Says(kActorMcCoy, 6275, 15); //00-6275.AUD	Just doing what I get paid the big bucks to do.
 					}
-					Actor_Says(kActorSteele, 1790, 59); //01-1790.AUD	We having fun yet?
-					Actor_Says(kActorMcCoy, 6275, 15); //00-6275.AUD	Just doing what I get paid the big bucks to do.
 					Actor_Says(kActorSteele, 1800, 59); //01-1800.AUD	You should have waited for me, Slim.
 					Actor_Says(kActorMcCoy, 6280, 15); //00-6280.AUD	Ha. A guy’s got to start somewhere.
 					Actor_Says(kActorSteele, 1810, 59); //01-1810.AUD	(smacks lips) We’ll see who has it next time.
@@ -311,6 +312,7 @@ bool AIScriptIzo::ShotAtAndHit() {
 					Game_Flag_Set(kFlagMcCoyShotIzo);
 					Game_Flag_Reset (kFlagMcCoyIsHelpingReplicants);
 					Actor_Modify_Friendliness_To_Other(kActorSteele, kActorMcCoy, 2);
+					Actor_Modify_Friendliness_To_Other(kActorGuzza, kActorMcCoy, 2);
 					if (Query_Difficulty_Level() != kGameDifficultyEasy) {
 						Global_Variable_Increment(kVariableChinyen, 200);
 					}
@@ -373,26 +375,26 @@ void AIScriptIzo::Retired(int byActorId) {
 			}
 		}
 
-	if (Global_Variable_Query(kVariableReplicantsSurvivorsAtMoonbus) == 0) {
-		Player_Loses_Control();
-		if (_vm->_cutContent) {
-			if (Game_Flag_Query(kFlagCrazylegsIsReplicant)) {
-				if (!Game_Flag_Query(kFlagCrazylegsDead)) {
-					Loop_Actor_Walk_To_XYZ(kActorCrazylegs, -12.0f, -41.58f, 72.0f, 0, true, false, false);
-					Actor_Put_In_Set(kActorCrazylegs, kSceneKP06);
+		if (Global_Variable_Query(kVariableReplicantsSurvivorsAtMoonbus) == 0) {
+			Player_Loses_Control();
+			if (_vm->_cutContent) {
+				if (Game_Flag_Query(kFlagCrazylegsIsReplicant)) {
+					if (!Game_Flag_Query(kFlagCrazylegsDead)) {
+						Loop_Actor_Walk_To_XYZ(kActorCrazylegs, -12.0f, -41.58f, 72.0f, 0, true, false, false);
+						Actor_Put_In_Set(kActorCrazylegs, kSceneKP06);
+					}
 				}
+				Delay(2000);
+				Player_Set_Combat_Mode(false);
+				Delay(1000); 
 			}
-			Delay(3000);
-			Player_Set_Combat_Mode(false);
-			Delay(1000); 
+			Ambient_Sounds_Remove_All_Non_Looping_Sounds(true);
+			Ambient_Sounds_Remove_All_Looping_Sounds(1u);
+			Game_Flag_Set(kFlagKP07toKP06);
+			Game_Flag_Reset(kFlagMcCoyIsHelpingReplicants);
+			Set_Enter(kSetKP05_KP06, kSceneKP06);
+			return; //true;
 		}
-		Ambient_Sounds_Remove_All_Non_Looping_Sounds(true);
-		Ambient_Sounds_Remove_All_Looping_Sounds(1u);
-		Game_Flag_Set(kFlagKP07toKP06);
-		Game_Flag_Reset(kFlagMcCoyIsHelpingReplicants);
-		Set_Enter(kSetKP05_KP06, kSceneKP06);
-		return; //true;
-	}
 	}
 
 	return; //false;

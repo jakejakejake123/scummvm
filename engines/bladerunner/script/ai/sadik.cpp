@@ -233,6 +233,14 @@ void AIScriptSadik::Retired(int byActorId) {
 	 )
 	 && Actor_Query_Which_Set_In(kActorSadik) != kSetKP07
 	) {
+		if (_vm->_cutContent) {
+			if (Game_Flag_Query(kFlagSadikIsReplicant)) {
+				if (Query_Difficulty_Level() != kGameDifficultyEasy) {
+					Global_Variable_Increment(kVariableChinyen, 200);	
+				}	
+			}
+		}
+		Actor_Set_Goal_Number(kActorSadik, kGoalSadikGone);
 		Scene_Exits_Enable();
 	}
 
@@ -249,7 +257,7 @@ void AIScriptSadik::Retired(int byActorId) {
 						Actor_Put_In_Set(kActorCrazylegs, kSceneKP06);
 					}
 				}
-				Delay(3000);
+				Delay(2000);
 				Player_Set_Combat_Mode(false);
 				Delay(1000); 
 			}
@@ -259,16 +267,6 @@ void AIScriptSadik::Retired(int byActorId) {
 			Game_Flag_Reset(kFlagMcCoyIsHelpingReplicants);
 			Set_Enter(kSetKP05_KP06, kSceneKP06);
 			return; //true;
-		}
-	}
-	// Made it so McCoy receives 200 chinyen when he retires Sadik when he is a replicant.
-	Actor_Set_Goal_Number(kActorSadik, kGoalSadikGone);
-	// Made it so you only receive the chinyen in cut content mode.
-	if (_vm->_cutContent) {
-		if (Game_Flag_Query(kFlagSadikIsReplicant)) {
-			if (Query_Difficulty_Level() != kGameDifficultyEasy) {
-				Global_Variable_Increment(kVariableChinyen, 200);	
-			}	
 		}
 	}
 	return; //false;
@@ -443,9 +441,9 @@ bool AIScriptSadik::GoalChanged(int currentGoalNumber, int newGoalNumber) {
 			Actor_Says(kActorSadik, 90, 3);
 			Actor_Says(kActorSadik, 100, 3);
 			Actor_Says(kActorMcCoy, 2250, 3);
+			Actor_Clue_Acquire(kActorMcCoy, kClueMcCoyRetiredSadik, true, kActorSadik);
 			// Added in some action music for the final confrontation with Sadik.
 			Music_Play(kMusicMoraji, 71, 0, 0, -1, kMusicLoopPlayOnce, 2);
-			Actor_Clue_Acquire(kActorMcCoy, kClueMcCoyRetiredSadik, true, kActorSadik);
 			Actor_Set_Goal_Number(kActorSadik, 413);
 		}
 	} else {

@@ -593,12 +593,12 @@ bool AIScriptMaggie::GoalChanged(int currentGoalNumber, int newGoalNumber) {
 
 	case kGoalMaggieKP05McCoyEntered:
 		Scene_Exits_Disable();
-		Loop_Actor_Walk_To_XYZ(kActorMaggie, -734.0, 0.0, -432.0, 0, false, false, false);
-		Actor_Face_Actor(kActorMaggie, kActorMcCoy, true);
-		Actor_Change_Animation_Mode(kActorMaggie, 56);
 		if (_vm->_cutContent) {
 			Sound_Play(kSfxDOGFAR1,  40, 0, 0, 50);
 		}
+		Loop_Actor_Walk_To_XYZ(kActorMaggie, -734.0, 0.0, -432.0, 0, false, false, false);
+		Actor_Face_Actor(kActorMaggie, kActorMcCoy, true);
+		Actor_Change_Animation_Mode(kActorMaggie, 56);
 		Actor_Face_Actor(kActorMcCoy, kActorMaggie, true);
 		Actor_Says(kActorMcCoy, 2225, kAnimationModeTalk);
 		Actor_Set_Goal_Number(kActorMaggie, kGoalMaggieKP05WalkToMcCoy);

@@ -447,6 +447,9 @@ bool SceneScriptRC01::ClickedOnActor(int actorId) {
 						Actor_Says(kActorOfficerLeary, 40, 13);
 						Actor_Says(kActorOfficerLeary, 50, 14);
 						Actor_Says(kActorOfficerLeary, 60, 15);
+						if (_vm->_cutContent) {
+							Actor_Clue_Acquire(kActorMcCoy, kClueOfficersStatement, true, kActorOfficerLeary);
+						}
 						if (!Game_Flag_Query(kFlagRC02Entered)) {	
 							I_Sez("MG: It's all fun and games until someone loses a tiger cub.");
 							Actor_Says(kActorMcCoy, 4520, 18);
@@ -454,7 +457,9 @@ bool SceneScriptRC01::ClickedOnActor(int actorId) {
 							Actor_Says(kActorMcCoy, 4525, 14);
 							Actor_Says(kActorOfficerLeary, 80, 18);
 							Actor_Says(kActorMcCoy, 4530, 15);
-							Actor_Clue_Acquire(kActorMcCoy, kClueOfficersStatement, true, kActorOfficerLeary);
+							if (!_vm->_cutContent) {
+								Actor_Clue_Acquire(kActorMcCoy, kClueOfficersStatement, true, kActorOfficerLeary);
+							}
 						}
 					}
 				} else { 

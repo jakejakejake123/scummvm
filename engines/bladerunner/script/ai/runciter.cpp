@@ -238,7 +238,7 @@ void AIScriptRunciter::OtherAgentEnteredCombatMode(int otherActorId, int combatM
 		&& Player_Query_Agenda() != kPlayerAgendaErratic) {
 			Actor_Says(kActorMcCoy, 2305, 14); //00-2305.AUD	I’m sorry.
 		}
-		Delay(2000);
+		Delay(1000);
 		Actor_Face_Actor(kActorRunciter, kActorMcCoy, true);
 		Actor_Says(kActorRunciter, 730, 13); //15-0730.AUD	Please. Just leave me alone.
 		Actor_Set_Targetable(kActorRunciter, false);
@@ -275,7 +275,8 @@ bool AIScriptRunciter::ShotAtAndHit() {
 		} else {
 			Actor_Voice_Over(920, kActorVoiceOver); //99-0920.AUD	Easy money.
 		}
-		Actor_Modify_Friendliness_To_Other(kActorSteele, kActorMcCoy, 3);
+		Actor_Modify_Friendliness_To_Other(kActorSteele, kActorMcCoy, 2);
+		Actor_Modify_Friendliness_To_Other(kActorGuzza, kActorMcCoy, 2);
 		Game_Flag_Reset(kFlagRunciterConfronted);
 		Game_Flag_Set(kFlagMcCoyRetiredRunciter);
 		Scene_Exits_Enable();
@@ -286,14 +287,14 @@ bool AIScriptRunciter::ShotAtAndHit() {
 		Actor_Voice_Over(2050, kActorVoiceOver);
 		Actor_Voice_Over(2060, kActorVoiceOver);
 		if (_vm->_cutContent) {
-			Actor_Clue_Acquire(kActorMcCoy, kClueMcCoyKilledRunciter1, true, kActorMcCoy);
+			Actor_Clue_Acquire(kActorMcCoy, kClueMcCoyKilledRunciter1, true, -1);
 		}
 	} else {
 		Actor_Voice_Over(2070, kActorVoiceOver);
 		Actor_Voice_Over(2080, kActorVoiceOver);
 		Actor_Voice_Over(2090, kActorVoiceOver);
 		if (_vm->_cutContent) {
-			Actor_Clue_Acquire(kActorMcCoy, kClueMcCoyKilledRunciter2, true, kActorMcCoy);
+			Actor_Clue_Acquire(kActorMcCoy, kClueMcCoyKilledRunciter2, true, -1);
 		}
 	}
 	Actor_Modify_Friendliness_To_Other(kActorClovis, kActorMcCoy, 2);

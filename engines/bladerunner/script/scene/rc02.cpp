@@ -256,7 +256,8 @@ void SceneScriptRC02::dialogueWithRunciter() {
 			Dialogue_Menu_Clear_Never_Repeat_Was_Selected_Flag(200);
 			// Made it so you can only VK Runciter after he gives you the video disc. This is to avoid a dead end
 			// since the video disc contains evidence necessary to proceed further into the game.
-			if (Actor_Clue_Query(kActorMcCoy, kClueRuncitersVideo)) {
+			if (Actor_Clue_Query(kActorMcCoy, kClueRuncitersVideo)
+			&& Actor_Clue_Query(kActorMcCoy,kClueRunciterConfession2)) {
 				DM_Add_To_List_Never_Repeat_Once_Selected(200, -1, 3, 6); // VOIGT-KAMPFF
 			}
 		}
@@ -844,7 +845,89 @@ void SceneScriptRC02::ActorChangedGoal(int actorId, int newGoal, int oldGoal, bo
 
 void SceneScriptRC02::PlayerWalkedIn() {
 	Player_Set_Combat_Mode(false);
-	if (Game_Flag_Query(kFlagRC01toRC02)) {
+	if (Actor_Clue_Query(kActorMcCoy, kClueLabCorpses) 
+	&& Actor_Clue_Query(kActorMcCoy, kClueRuncitersVideo)
+	&& !Game_Flag_Query(kFlagRunciterArrestTalk)
+	&& Global_Variable_Query(kVariableChapter) == 1) {
+		Actor_Set_At_XYZ(kActorMcCoy, -63.47f, -1238.74f, 108497.95f, 0);
+		Actor_Put_In_Set(kActorRunciter, kSetRC02_RC51);
+		Actor_Set_At_Waypoint(kActorRunciter, 93, 1007);
+		Actor_Face_Actor(kActorRunciter, kActorMcCoy, true);
+		Actor_Says(kActorRunciter, 370, 12); //15-0370.AUD	Oh, it's you.
+		Actor_Says(kActorRunciter, 380, 14); //15-0380.AUD	Did you find the girl? Lucy.
+		Actor_Face_Actor(kActorMcCoy, kActorRunciter, true);
+		Actor_Says(kActorMcCoy, 3545, 15); //00-3545.AUD	Not yet.
+		Actor_Face_Heading(kActorRunciter, 1007, false);
+		Actor_Says(kActorRunciter, 400, 13); //15-0400.AUD	All right. I just wanted to ask her why. Why she would do such a thing.
+		Actor_Says(kActorRunciter, 410, 12); //15-0410.AUD	My precious ones are gone. I cared for them. All of them.
+		if (Actor_Clue_Query(kActorMcCoy, kClueRunciterConfession2) && Actor_Clue_Query(kActorMcCoy, kClueEnvelope)) {
+			Actor_Says(kActorMcCoy, 4690, 11); // 00-4690.AUD	I wanted to ask you about the Tyrell subcontractors again.
+			Actor_Says(kActorMcCoy, 4695, 13); // 00-4695.AUD	The ones down on DNA Row.
+			Actor_Face_Actor(kActorRunciter, kActorMcCoy, true);
+			Actor_Says(kActorRunciter, 1670, 14); // 15-1670.AUD	Haven't we been already through this? Why would I have any dealings with those people?
+		} else {
+			Actor_Face_Actor(kActorRunciter, kActorMcCoy, true);
+			Actor_Says(kActorMcCoy, 4685, 11);	// 00-4685.AUD	You're sure there's nothing else you wanna tell me?	
+			Actor_Says(kActorRunciter, 1610, 11); // 15-1610.AUD	Detective, if I knew something you can be sure I'd tell you.	
+			Actor_Says(kActorMcCoy, 4725, 17); //00-4725.AUD	I'm thinking it'll be worth a little tax payer money to check out those animals of yours.
+			Delay(2000);
+			Actor_Says(kActorRunciter, 1620, 12); //15-1620.AUD	Hmph! I don't think I want to talk to you anymore Mr. McCoy.
+			Actor_Says(kActorMcCoy, 4720, 16); //00-4720.AUD	Bone marrow tests are getting cheaper every day.
+			Actor_Says(kActorRunciter, 430, 16); //15-0430.AUD	Go away!
+			Game_Flag_Set(kFlagRunciterArrestTalk);
+			if (Player_Query_Agenda() == kPlayerAgendaSurly 
+			|| Player_Query_Agenda() == kPlayerAgendaErratic) {
+				Actor_Says(kActorMcCoy, 8519, 14);//00-8519.AUD	What do you say we dish each other the straight goods.
+				Actor_Says(kActorRunciter, 1630, 17); //15-1630.AUD	What? Do you really think I'd lie to you? Preposterous,
+				Actor_Says(kActorMcCoy, 4740, -1); //00-4740.AUD	Lie to me. Go ahead. You'll only do it once.
+				Actor_Says(kActorRunciter, 500, 18); //15-0500.AUD	Animals. It was my animals. Some of them were...
+				Actor_Says_With_Pause(kActorRunciter, 510, 0.0f, 19); //15-0510.AUD	F-- fake. You won't-- You can't tell anyone. My reputation.
+				Actor_Says(kActorMcCoy, 4745, -1); //00-4745.AUD	Your reputation?!
+				Actor_Says(kActorMcCoy, 4750, -1); //00-4750.AUD	Unbelievable.
+				Actor_Says(kActorMcCoy, 4755, -1); //00-4755.AUD	Was the tiger a fake?
+				Actor_Says(kActorRunciter, 520, 17); //15-0520.AUD	No! The tiger was real. I swear it.
+				Actor_Clue_Acquire(kActorMcCoy, kClueRuncitersConfession3, true, kActorRunciter);
+			}
+			if (Game_Flag_Query(kFlagRunciterIsReplicant)) {
+				Actor_Says(kActorMcCoy, 395, 14);
+				Actor_Says(kActorMcCoy, 400, 14); //00-0400.AUD	It won't take too long.
+				Actor_Says(kActorAnsweringMachine, 390, kAnimationModeTalk); // 39-0390.AUD	Begin test.
+				Ambient_Sounds_Play_Sound(kSfxDATALOAD, 50, 0, 0, 99);
+				Delay(2000);
+				Ambient_Sounds_Play_Sound(kSfxBEEPNEAT, 80, 0, 0, 99);
+				Actor_Says(kActorAnsweringMachine, 420, 19); //39-0420.AUD	Positive result.
+				Actor_Says(kActorAnsweringMachine, 430, 19); //39-0430.AUD	Subject is Replicant.
+				Actor_Says(kActorAnsweringMachine, 460, 19); //39-0460.AUD	Test terminated.
+				Actor_Says(kActorMcCoy, 6865, 14); //00-6865.AUD	You're a Replicant.
+				Actor_Says(kActorRunciter, 490, 14); //15-0490.AUD	No. You heard it wrong.
+				Actor_Says(kActorRunciter, 1070, 15); //15-1070.AUD	I'm not a Replicant for heaven's sakes.
+				Actor_Says(kActorMcCoy, 1610, 15); //00-1610.AUD	Yes. You are.
+				Actor_Says(kActorRunciter, 600, 17); //15-0600.AUD	That's ridiculous. I--.
+				Actor_Says(kActorRunciter, 720, 18); //15-0720.AUD	I have nothing more to say to you, detective.
+				Player_Set_Combat_Mode(true);
+				Actor_Set_Targetable(kActorRunciter, true);
+				Actor_Says(kActorRunciter, 420, 12); //15-0420.AUD	What? Why?
+				Game_Flag_Set(kFlagRunciterDiscovered);
+				Game_Flag_Set(kFlagRunciterConfronted);
+				// Added code so Runciters goal where he walks around changes to him standing still. This is to prevent him still walking around
+				// after you shoot him dead.
+				Actor_Set_Goal_Number(kActorRunciter, kGoalRunciterStill);
+				Player_Gains_Control();
+				Scene_Exits_Disable();
+			} else {
+				Actor_Says(kActorMcCoy, 3095, -15); //00-3095.AUD	Now we’re gonna take a little ride downtown.
+				Delay (1000);
+				Actor_Put_In_Set(kActorRunciter, kSetPS09);
+				Actor_Set_At_XYZ(kActorRunciter, -389.43f, 2.06f, -200.77f, 512);
+				Game_Flag_Reset(kFlagSpinnerAtRC01);
+				Game_Flag_Set(kFlagSpinnerAtPS01);
+				Scene_Exits_Enable();
+				Game_Flag_Reset(kFlagMcCoyInRunciters);
+				Game_Flag_Set(kFlagMcCoyInPoliceStation);
+				Set_Enter(kSetPS09, kScenePS09);
+			}
+		}
+	} else if (Game_Flag_Query(kFlagRC01toRC02)) {
 		Player_Loses_Control();
 		Loop_Actor_Walk_To_XYZ(kActorMcCoy, -72.2f, -1238.89f, 108496.73f, 0, false, false, false);
 		Player_Gains_Control();

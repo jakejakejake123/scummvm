@@ -121,10 +121,11 @@ bool SceneScriptHC02::ClickedOnActor(int actorId) {
 				Game_Flag_Set(kFlagMcCoyAsksBarkeepForDisk);
 				if (_vm->_cutContent) {
 					Actor_Says(kActorHawkersBarkeep, 130, 16); //32-0130.AUD	I don't pay a whole lot attention to what goes on around here. Nor do I want to.
-					Actor_Says(kActorMcCoy, 6995, 18); //00-6995.AUD	That's not what I heard. You wanna set the record straight?
-					Actor_Says(kActorHawkersBarkeep, 150, 16); //32-0150.AUD	Hey, you can always ask someone who cares what you think.
-					if (Player_Query_Agenda() == kPlayerAgendaSurly 
-					|| Player_Query_Agenda() == kPlayerAgendaErratic) {
+					if (Player_Query_Agenda() != kPlayerAgendaSurly 
+					&& Player_Query_Agenda() != kPlayerAgendaErratic) {
+						Actor_Says(kActorMcCoy, 6995, 18); //00-6995.AUD	That's not what I heard. You wanna set the record straight?
+						Actor_Says(kActorHawkersBarkeep, 150, 16); //32-0150.AUD	Hey, you can always ask someone who cares what you think.
+					} else {
 						Actor_Says(kActorMcCoy, 8445, 14); //00-8445.AUD	Cough it up!
 						Delay (1000);
 						Actor_Says(kActorHawkersBarkeep, 160, 12); //32-0160.AUD	Listen close, cause I'm only gonna say this once. I was trying to protect you, all right?

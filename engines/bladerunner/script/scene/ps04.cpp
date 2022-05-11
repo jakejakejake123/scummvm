@@ -465,7 +465,6 @@ void SceneScriptPS04::dialogueWithGuzza() {
 					Actor_Says(kActorMcCoy, 3930, 13); 
 				}
 				Game_Flag_Set(kFlagPS04GuzzaTalkZubenRetired);
-				Actor_Modify_Friendliness_To_Other(kActorGuzza, kActorMcCoy, 5);
 				Actor_Face_Actor(kActorGuzza, kActorMcCoy, true);
 	#if BLADERUNNER_ORIGINAL_BUGS
 				Actor_Says(kActorGuzza, 180, 34);	// But I'm proud of you McCoy. Why don't you take the rest of the day off?
@@ -516,14 +515,19 @@ void SceneScriptPS04::dialogueWithGuzza() {
 					Actor_Says(kActorGuzza, 310, 33);	// That's an order McCoy.
 					Actor_Says(kActorGuzza, 320, 34);	// I'm ordering you to relax.
 				}
-			} else if (Game_Flag_Query(kFlagPS04GuzzaTalkZubenRetired)
-			&& Game_Flag_Query(kFlagPS04GuzzaTalkDumpToMainframe)
+			} else if (!Game_Flag_Query(kFlagPS04GuzzaTalkDumpToMainframe)) {
+				Actor_Says(kActorMcCoy, 3920, 13); //00-3920.AUD	Bryant go on permanent leave and you get full use of the office, Lieutenant?
+				Actor_Says(kActorGuzza, 570, 32); //04-0570.AUD	You know the procedure. Dump it all in the mainframe upstairs and I'll read it later.
+				Actor_Says(kActorMcCoy, 4070, 13); //00-4070.AUD	You got it.
+				Game_Flag_Set(kFlagPS04GuzzaTalkDumpToMainframe);
+			} else if (Game_Flag_Query(kFlagPS04GuzzaTalkDumpToMainframe)
 			&& Actor_Query_Friendliness_To_Other(kActorGuzza, kActorMcCoy) > 50) {
 				Actor_Says(kActorMcCoy, 8514, 18); //00-8514.AUD	Got anything new to tell me?
 				Actor_Says(kActorGuzza, 1510, 30); //04-1510.AUD	You’re the one on the job, kid. My own case looks stacked up on a desk a yard high. 
 				Actor_Says(kActorMcCoy, 2305, 16); //00-2305.AUD	I’m sorry.
 				Actor_Says(kActorGuzza, 1500, 30); //04-1500.AUD	Anything comes up, kid, you’ll be the first to know.
-			} else if (Actor_Query_Friendliness_To_Other(kActorGuzza, kActorMcCoy) < 50) {
+			} else if (Game_Flag_Query(kFlagPS04GuzzaTalkDumpToMainframe)
+			&& Actor_Query_Friendliness_To_Other(kActorGuzza, kActorMcCoy) < 51) {
 				Actor_Says(kActorMcCoy, 4020, 13);
 				Actor_Says(kActorGuzza, 580, 34);
 				Actor_Says(kActorMcCoy, 4075, 16);
@@ -532,10 +536,6 @@ void SceneScriptPS04::dialogueWithGuzza() {
 				Actor_Says(kActorGuzza, 130, 30); //04-0130.AUD	Don't got time for you now, McCoy. Hit me later.
 				Actor_Face_Current_Camera(kActorGuzza, true);
 				Actor_Says(kActorMcCoy, 3915, 13);
-			} else {
-				Actor_Says(kActorMcCoy, 3920, 13); //00-3920.AUD	Bryant go on permanent leave and you get full use of the office, Lieutenant?
-				Actor_Says(kActorGuzza, 570, 32); //04-0570.AUD	You know the procedure. Dump it all in the mainframe upstairs and I'll read it later.
-				Actor_Says(kActorMcCoy, 4070, 13); //00-4070.AUD	You got it.
 			}
 		} else if (!_vm->_cutContent 
 		&& Game_Flag_Query(kFlagZubenSpared)

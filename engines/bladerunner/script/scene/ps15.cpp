@@ -218,9 +218,14 @@ bool SceneScriptPS15::ClickedOnItem(int itemId, bool a2) {
 #else
 			// A form is added to McCoy's KIA from examining the crate
 			// but no item pickup effect was playing in the original
-
-			//Jake - Added in the actual model for the shipping form in place of the weapons order form.
-			Item_Pickup_Spin_Effect(kModelAnimationOriginalShippingForm, 411, 333);
+			if (_vm->_cutContent) {
+				Loop_Actor_Walk_To_XYZ(kActorMcCoy, -220.29, -112.92, 66.42, 0, true, false, false); 
+				//Jake - Added in the actual model for the shipping form in place of the weapons order form.
+				Item_Pickup_Spin_Effect(kModelAnimationOriginalShippingForm, 411, 333);
+				Delay(1000);
+			} else {
+				Item_Pickup_Spin_Effect(kModelAnimationWeaponsOrderForm, 411, 333);
+			}
 #endif // BLADERUNNER_ORIGINAL_BUGS
 			Actor_Face_Actor(kActorMcCoy, kActorSergeantWalls, true);
 			Actor_Face_Actor(kActorSergeantWalls, kActorMcCoy, true);
