@@ -289,30 +289,31 @@ bool AIScriptIzo::ShotAtAndHit() {
 					Actor_Force_Stop_Walking(kActorMcCoy);
 					Player_Set_Combat_Mode(false);
 					Actor_Change_Animation_Mode(kActorMcCoy, kAnimationModeIdle);
-					if (Player_Query_Agenda() == kPlayerAgendaSurly 
-					|| Player_Query_Agenda() == kPlayerAgendaErratic) {
-						ADQ_Add (kActorMcCoy, 3830, 13);//00-3830.AUD	Oh, yeah.
-					}
 					Loop_Actor_Walk_To_Actor(kActorSteele, kActorMcCoy, 60, false, true);
 					Actor_Face_Actor(kActorMcCoy, kActorSteele, true);
 					Actor_Face_Actor(kActorSteele, kActorMcCoy, true);
 					if (Actor_Query_Friendliness_To_Other(kActorSteele, kActorMcCoy) < 51) {
-						Actor_Says(kActorSteele, 2710, 59); //01-2710.AUD	You must be in better shape that I thought.
-						Actor_Says(kActorSteele, 2720, 59); //01-2720.AUD	You’re still alive.			
-						Actor_Says(kActorMcCoy, 1025, 12); //00-1025.AUD	Absolutely.
+						Actor_Says(kActorSteele, 1800, 59); //01-1800.AUD	You should have waited for me, Slim.
+						Actor_Says(kActorMcCoy, 6280, 15); //00-6280.AUD	Ha. A guy’s got to start somewhere.
+						Actor_Says(kActorSteele, 1810, 59); //01-1810.AUD	(smacks lips) We’ll see who has it next time.
 					} else {
 						Actor_Says(kActorSteele, 1790, 59); //01-1790.AUD	We having fun yet?
-						Actor_Says(kActorMcCoy, 6275, 15); //00-6275.AUD	Just doing what I get paid the big bucks to do.
+						if (Player_Query_Agenda() == kPlayerAgendaSurly 
+						|| Player_Query_Agenda() == kPlayerAgendaErratic) {
+							Actor_Says(kActorMcCoy, 3830, 13);//00-3830.AUD	Oh, yeah.
+						} else {
+							Actor_Says(kActorMcCoy, 6275, 15); //00-6275.AUD	Just doing what I get paid the big bucks to do.
+						}
+						Actor_Says(kActorSteele, 1810, 59); //01-1810.AUD	(smacks lips) We’ll see who has it next time.
 					}
-					Actor_Says(kActorSteele, 1800, 59); //01-1800.AUD	You should have waited for me, Slim.
-					Actor_Says(kActorMcCoy, 6280, 15); //00-6280.AUD	Ha. A guy’s got to start somewhere.
-					Actor_Says(kActorSteele, 1810, 59); //01-1810.AUD	(smacks lips) We’ll see who has it next time.
 					Actor_Set_Goal_Number(kActorSteele, kGoalSteeleLeaveRC03);
 					Scene_Exits_Enable();
 					Game_Flag_Set(kFlagMcCoyShotIzo);
 					Game_Flag_Reset (kFlagMcCoyIsHelpingReplicants);
 					Actor_Modify_Friendliness_To_Other(kActorSteele, kActorMcCoy, 2);
 					Actor_Modify_Friendliness_To_Other(kActorGuzza, kActorMcCoy, 2);
+					Actor_Modify_Friendliness_To_Other(kActorClovis, kActorMcCoy, -2);
+					Actor_Modify_Friendliness_To_Other(kActorGaff, kActorMcCoy, 2);
 					if (Query_Difficulty_Level() != kGameDifficultyEasy) {
 						Global_Variable_Increment(kVariableChinyen, 200);
 					}
@@ -320,10 +321,6 @@ bool AIScriptIzo::ShotAtAndHit() {
 					Actor_Set_Goal_Number(kActorSteele, 200);
 					Actor_Put_In_Set(kActorSteele, kSetRC03);
 					Actor_Set_At_XYZ(kActorSteele, 292.24, -3.66, 331.70, 0);
-					if (Player_Query_Agenda() == kPlayerAgendaSurly 
-					|| Player_Query_Agenda() == kPlayerAgendaErratic) {
-						ADQ_Add (kActorMcCoy, 3830, 13);//00-3830.AUD	Oh, yeah.
-					}
 					Loop_Actor_Walk_To_Actor(kActorSteele, kActorMcCoy, 60, false, true);
 					Actor_Force_Stop_Walking(kActorMcCoy);
 					Player_Set_Combat_Mode(false);
@@ -373,6 +370,7 @@ void AIScriptIzo::Retired(int byActorId) {
 			if (Query_Difficulty_Level() != kGameDifficultyEasy) {
 				Global_Variable_Increment (kVariableChinyen, 200);
 			}
+			Actor_Modify_Friendliness_To_Other(kActorGaff, kActorMcCoy, 2);
 		}
 
 		if (Global_Variable_Query(kVariableReplicantsSurvivorsAtMoonbus) == 0) {
@@ -386,7 +384,7 @@ void AIScriptIzo::Retired(int byActorId) {
 				}
 				Delay(2000);
 				Player_Set_Combat_Mode(false);
-				Delay(1000); 
+				Delay(2000); 
 			}
 			Ambient_Sounds_Remove_All_Non_Looping_Sounds(true);
 			Ambient_Sounds_Remove_All_Looping_Sounds(1u);
@@ -925,7 +923,6 @@ bool AIScriptIzo::UpdateAnimation(int *animation, int *frame) {
 			*animation = kModelAnimationIzoIdle;
 			_animationFrame = 0;
 			_animationState = 0;
-			Game_Flag_Set(kFlagUnused407);
 			Item_Add_To_World(kItemCamera, kModelAnimationIzoCamera, kSetHC01_HC02_HC03_HC04, 597.46f, 0.14f, 49.92f, 0, 12, 12, false, true, false, false);
 			Actor_Set_Goal_Number(kActorIzo, kGoalIzoRunToUG02);
 			if	(Game_Flag_Query(kFlagIzoEscaped)) {

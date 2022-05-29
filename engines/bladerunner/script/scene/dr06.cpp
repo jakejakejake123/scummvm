@@ -132,11 +132,7 @@ bool SceneScriptDR06::ClickedOn3DObject(const char *objectName, bool a2) {
 				Actor_Says(kActorAnsweringMachine, 40, kAnimationModeTalk);
 				Actor_Says(kActorMcCoy, 1030, 13);
 				Actor_Says(kActorAnsweringMachine, 50, kAnimationModeTalk);
-				if (_vm->_cutContent) {
-					Actor_Clue_Acquire(kActorMcCoy, kClueAnsweringMachineMessage, true, kActorAnsweringMachine);
-				} else {
-					Actor_Clue_Acquire(kActorMcCoy, kClueAnsweringMachineMessage, true, kActorSebastian);
-				}
+				Actor_Clue_Acquire(kActorMcCoy, kClueAnsweringMachineMessage, true, kActorSebastian);
 			}
 		}
 		return true;
@@ -222,7 +218,7 @@ bool SceneScriptDR06::ClickedOn3DObject(const char *objectName, bool a2) {
 				if (!Actor_Clue_Query(kActorMcCoy, kClueEnvelope)) {
 					if (_vm->_cutContent) {
 						Item_Pickup_Spin_Effect(kModelAnimationEnvelope, 171, 280);
-						Actor_Says(kActorMcCoy, 8800, kAnimationModeIdle); //00-8800.AUD	An envelope full of money.
+						Actor_Says(kActorMcCoy, 8800, 13); //00-8800.AUD	An envelope full of money.
 					}
 					Actor_Voice_Over(850, kActorVoiceOver);
 					if (!_vm->_cutContent) {

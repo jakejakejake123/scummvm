@@ -221,6 +221,12 @@ void AIScriptMaggie::ClickedByPlayer() {
 			Actor_Face_Actor(kActorMcCoy, kActorMaggie, true);
 			Actor_Says(kActorMcCoy, 2400, kAnimationModeFeeding);
 		}
+	} else if (Actor_Query_In_Set(kActorMaggie, kSetPS09)) {
+		if (Loop_Actor_Walk_To_Actor(kActorMcCoy, kActorMaggie, 24, true, false)) {
+			Actor_Face_Actor(kActorMcCoy, kActorMaggie, true);
+			Actor_Face_Actor(kActorMaggie, kActorMcCoy, true);
+			Actor_Says(kActorMcCoy, 2400, kAnimationModeFeeding);
+		}
 		return; // true
 	}
 

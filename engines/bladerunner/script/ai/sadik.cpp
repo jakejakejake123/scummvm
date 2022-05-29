@@ -58,7 +58,6 @@ bool AIScriptSadik::Update() {
 		Actor_Set_Goal_Number(kActorSadik, kGoalSadikRunFromBB09);
 		Actor_Set_Targetable(kActorSadik, true);
 		Game_Flag_Set(kFlagBB09SadikRun);
-		Game_Flag_Set(kFlagUnused406);
 		return true;
 	}
 
@@ -80,9 +79,7 @@ bool AIScriptSadik::Update() {
 	}
 
 	if (Actor_Query_Goal_Number(kActorSadik) == 411) {
-		if (Game_Flag_Query(kFlagNotUsed657)) {
-			Actor_Set_Goal_Number(kActorSadik, 412);
-		}
+		Actor_Set_Goal_Number(kActorSadik, 412);
 	}
 	return false;
 }
@@ -236,8 +233,9 @@ void AIScriptSadik::Retired(int byActorId) {
 		if (_vm->_cutContent) {
 			if (Game_Flag_Query(kFlagSadikIsReplicant)) {
 				if (Query_Difficulty_Level() != kGameDifficultyEasy) {
-					Global_Variable_Increment(kVariableChinyen, 200);	
+					Global_Variable_Increment(kVariableChinyen, 200);		
 				}	
+				Actor_Modify_Friendliness_To_Other(kActorGaff, kActorMcCoy, 2);
 			}
 		}
 		Actor_Set_Goal_Number(kActorSadik, kGoalSadikGone);
@@ -259,7 +257,7 @@ void AIScriptSadik::Retired(int byActorId) {
 				}
 				Delay(2000);
 				Player_Set_Combat_Mode(false);
-				Delay(1000); 
+				Delay(2000); 
 			}
 			Ambient_Sounds_Remove_All_Non_Looping_Sounds(true);
 			Ambient_Sounds_Remove_All_Looping_Sounds(1u);

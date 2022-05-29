@@ -236,11 +236,13 @@ void SceneScriptUG01::PlayerWalkedIn() {
 			if (!Game_Flag_Query(kFlagIzoIsReplicant)) {
 				Actor_Says(kActorIzo, 800, 17); //07-0800.AUD	I’m no Replicant. She can run tests on me all day long. It won’t make a difference!
 			} 
-			Actor_Says(kActorMcCoy, 5485, 14); //00-5485.AUD	Where did you get the hardware, Izo?
-			Actor_Says(kActorIzo, 730, 17); //07-0730.AUD	You know a person can buy just about anything these days.
-			Actor_Says(kActorMcCoy, 5490, 16); //00-5490.AUD	Not that stuff. Who’s the source?
-			Actor_Says(kActorIzo, 740, 17); //07-0740.AUD	That I can’t tell you. But I’d like to think I’m protected at the highest levels.
-			Actor_Says(kActorMcCoy, 5495, 18); //00-5495.AUD	Oh, yeah?
+			if (Actor_Clue_Query(kActorMcCoy, kClueWeaponsCache)) {
+				Actor_Says(kActorMcCoy, 5485, 14); //00-5485.AUD	Where did you get the hardware, Izo?
+				Actor_Says(kActorIzo, 730, 17); //07-0730.AUD	You know a person can buy just about anything these days.
+				Actor_Says(kActorMcCoy, 5490, 16); //00-5490.AUD	Not that stuff. Who’s the source?
+				Actor_Says(kActorIzo, 740, 17); //07-0740.AUD	That I can’t tell you. But I’d like to think I’m protected at the highest levels.
+				Actor_Says(kActorMcCoy, 5495, 18); //00-5495.AUD	Oh, yeah?
+			}
 			Actor_Says(kActorIzo, 830, 17); //07-0830.AUD	I got some… friends who’ll probably want to meet you.
 			Actor_Says(kActorIzo, 840, 17); //07-0840.AUD	You’ll be hearing from them soon enough.
 			Actor_Says(kActorMcCoy, 5470, 15); //00-5470.AUD	Get lost, Izo. Take off.
@@ -250,7 +252,9 @@ void SceneScriptUG01::PlayerWalkedIn() {
 			Game_Flag_Reset(kFlagIzoWarnedAboutCrystal);
 			// Flag for determining the ending added.
 			Game_Flag_Set(kFlagIzoWarned);
+			Actor_Clue_Acquire(kActorIzo,  kClueMcCoyHelpedIzoIzoIsAReplicant, true, kActorIzo);
 			Game_Flag_Set(kFlagMcCoyIsHelpingReplicants);
+			Actor_Modify_Friendliness_To_Other(kActorClovis, kActorMcCoy, 2);
 			Player_Loses_Control();
 			Loop_Actor_Walk_To_XYZ(kActorMcCoy, -70.0f, -50.13f, -500.0f, 0, true, false, false);
 			Player_Gains_Control();

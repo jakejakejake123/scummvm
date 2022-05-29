@@ -77,9 +77,7 @@ bool AIScriptClovis::Update() {
 		Actor_Set_Goal_Number(kActorClovis, kGoalClovisStartChapter5);
 	}
 
-	if (Actor_Query_Goal_Number(kActorClovis) == kGoalClovisKP06Wait
-	 && Game_Flag_Query(kFlagNotUsed657)
-	) {
+	if (Actor_Query_Goal_Number(kActorClovis) == kGoalClovisKP06Wait) {
 		Actor_Set_Goal_Number(kActorClovis, kGoalClovisKP06TalkToMcCoy);
 	}
 
@@ -155,9 +153,6 @@ void AIScriptClovis::OtherAgentEnteredCombatMode(int otherActorId, int combatMod
 	) {
 		Game_Flag_Set(kFlagKP07McCoyPulledGun);
 		Game_Flag_Set(kFlagMcCoyAttackedReplicants);
-		if (_vm->_cutContent) {
-			Music_Play(kMusicMoraji, 71, 0, 0, -1, kMusicLoopPlayOnce, 2);
-		}
 		// return true;
 	}
 	// return false;
@@ -172,19 +167,16 @@ bool AIScriptClovis::ShotAtAndHit() {
 		if (Actor_Query_Goal_Number(kActorClovis) == kGoalClovisKP07SayFinalWords) {
 			ADQ_Flush();
 			Actor_Set_Goal_Number(kActorClovis, kGoalClovisGone);
-			// Added in some extra code here because I altered some other code which may have disabled these two lines in another code sheet,
-			// so I put these lines here just in case.
-			if (_vm->_cutContent) {
-				Actor_Change_Animation_Mode(kActorClovis, kAnimationModeHit);
-				Actor_Retired_Here(kActorClovis, 12, 48, true, -1);
-			}
 			shotAnim();
 			Actor_Set_Targetable(kActorClovis, false);
 			ADQ_Add(kActorMcCoy, 2340, -1);
 			Music_Stop(3u);
 			// Made it so McCoy receives 200 chinyen when he retires Clovis.
-			if (Query_Difficulty_Level() != kGameDifficultyEasy) {
-				Global_Variable_Increment(kVariableChinyen, 200);
+			if (_vm->_cutContent) {
+				if (Query_Difficulty_Level() != kGameDifficultyEasy) {
+					Global_Variable_Increment(kVariableChinyen, 200);
+				}
+				Actor_Modify_Friendliness_To_Other(kActorGaff, kActorMcCoy, 2);
 			}
 			// Made it so the scene exits enable aftter Clovis dies.
 			Scene_Exits_Enable();		
@@ -196,9 +188,11 @@ bool AIScriptClovis::ShotAtAndHit() {
 			shotAnim();
 			Actor_Set_Targetable(kActorClovis, false);
 			Music_Stop(3u);
-			// Made it so McCoy receives 200 chinyen when he retires Clovis.
-			if (Query_Difficulty_Level() != kGameDifficultyEasy) {
-				Global_Variable_Increment(kVariableChinyen, 200);
+			if (_vm->_cutContent) {
+				if (Query_Difficulty_Level() != kGameDifficultyEasy) {
+					Global_Variable_Increment(kVariableChinyen, 200);
+				}
+				Actor_Modify_Friendliness_To_Other(kActorGaff, kActorMcCoy, 2);
 			}
 			// Made it so the scene exits enable aftter Clovis dies.
 			Scene_Exits_Enable();
@@ -221,6 +215,7 @@ void AIScriptClovis::Retired(int byActorId) {
 				if (Query_Difficulty_Level() != kGameDifficultyEasy) {
 					Global_Variable_Increment (kVariableChinyen, 200);
 				}
+				Actor_Modify_Friendliness_To_Other(kActorGaff, kActorMcCoy, 2);
 			}
 
 			if (Global_Variable_Query(kVariableReplicantsSurvivorsAtMoonbus) == 0) {
@@ -234,7 +229,7 @@ void AIScriptClovis::Retired(int byActorId) {
 					}
 					Delay(2000);
 					Player_Set_Combat_Mode(false);
-					Delay(1000); 
+					Delay(2000); 
 				}
 				Ambient_Sounds_Remove_All_Non_Looping_Sounds(true);
 				Ambient_Sounds_Remove_All_Looping_Sounds(1u);
@@ -331,7 +326,13 @@ bool AIScriptClovis::GoalChanged(int currentGoalNumber, int newGoalNumber) {
 
 	case kGoalClovisBB11TalkWithSadik:
 		Actor_Set_Goal_Number(kActorSadik, kGoalSadikBB11TalkWithClovis);
-		Actor_Says(kActorClovis, 10, 15);
+		if (_vm->_cutContent) {
+			if (Actor_Query_Friendliness_To_Other(kActorClovis, kActorMcCoy) > 50) {
+				Actor_Says(kActorClovis, 10, 15);
+			}
+		} else {
+			Actor_Says(kActorClovis, 10, 15);
+		}
 		Actor_Says(kActorSadik, 0, kAnimationModeTalk);
 		Actor_Face_Actor(kActorClovis, kActorSadik, true);
 		Actor_Says(kActorClovis, 20, 13);
@@ -342,7 +343,13 @@ bool AIScriptClovis::GoalChanged(int currentGoalNumber, int newGoalNumber) {
 		Actor_Says(kActorSadik, 20, kAnimationModeTalk);
 		Actor_Face_Actor(kActorClovis, kActorMcCoy, true);
 		Actor_Face_Actor(kActorSadik, kActorMcCoy, true);
-		Actor_Says(kActorClovis, 50, 14);
+		if (_vm->_cutContent) {
+			if (Actor_Query_Friendliness_To_Other(kActorClovis, kActorMcCoy) > 50) {		
+				Actor_Says(kActorClovis, 50, 14);
+			}
+		} else {
+			Actor_Says(kActorClovis, 50, 14);
+		}
 		Actor_Change_Animation_Mode(kActorClovis, kAnimationModeSit);
 		return true;
 
@@ -367,6 +374,9 @@ bool AIScriptClovis::GoalChanged(int currentGoalNumber, int newGoalNumber) {
 		if (!Game_Flag_Query(kFlagSadikIsReplicant)) {
 			Actor_Clue_Acquire(kActorMcCoy, kClueStaggeredbyPunches, true, kActorSadik);
 		}
+		if (_vm->_cutContent) {
+			Actor_Clue_Acquire(kActorMcCoy, kClueSightingSadikBradbury, true, kActorSadik);
+		}	
 		Game_Flag_Reset(kFlagBB11SadikFight);
 		Global_Variable_Set(kVariableChapter, 3);
 		Actor_Set_Goal_Number(kActorClovis, 200);
@@ -534,12 +544,12 @@ bool AIScriptClovis::GoalChanged(int currentGoalNumber, int newGoalNumber) {
 		Actor_Says(kActorClovis, 190, -1); //05-0190.AUD	And what about you, Ray McCoy?(coughs) After what you did to my family.
 		Actor_Says(kActorClovis, 200, kAnimationModeTalk); //05-0200.AUD	To my friends. Do you not also seek forgiveness?
 		if (_vm->_cutContent) {
+			Delay (2000);
 			if (Player_Query_Agenda() == kPlayerAgendaSurly 
 			|| (Player_Query_Agenda() == kPlayerAgendaErratic)) {
 				Actor_Says(kActorMcCoy, 2360, 18); //00-2360.AUD	I don’t need to.
 				Game_Flag_Set(kFlagClovisTalkUnsympathetic);
-			} else {
-				Delay (2000);
+			} else {	
 				Actor_Says(kActorMcCoy, 2305, 17); //00-2305.AUD	I’m sorry.
 			}
 		}

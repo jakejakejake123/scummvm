@@ -99,7 +99,12 @@ bool SceneScriptBB12::ClickedOnActor(int actorId) {
 		&& !Loop_Actor_Walk_To_XYZ(kActorMcCoy, -45.93, 0.28, -13.71, 0, true, false, false)) {
 			Actor_Face_Actor(kActorMcCoy, kActorDektora, true);
 			Actor_Face_Actor(kActorSebastian, kActorDektora, true);
-			Actor_Says(kActorMcCoy, 7230, 13); //00-7230.AUD	That's a real pretty design. I don't remember seeing it before.
+			if (Player_Query_Agenda() != kPlayerAgendaSurly 
+			&& Player_Query_Agenda() != kPlayerAgendaErratic) {
+				Actor_Says(kActorMcCoy, 7230, 13); //00-7230.AUD	That's a real pretty design. I don't remember seeing it before.
+			} else {
+				Actor_Says(kActorMcCoy, 8695, 13); //00-8695.AUD	That's an unusual design.
+			}
 			Loop_Actor_Walk_To_XYZ(kActorSebastian, -29.04, 0.31, -63.71, 0, true, false, false);
 			Actor_Face_Actor(kActorSebastian, kActorDektora, true);
 			Actor_Says(kActorSebastian, 620, 16); //56-0620.AUD	She is new.
@@ -110,7 +115,12 @@ bool SceneScriptBB12::ClickedOnActor(int actorId) {
 			Actor_Says(kActorSebastian, 640, 13); //56-0640.AUD	But she's mine now.
 			Actor_Says(kActorMcCoy, 7240, 18); //00-7240.AUD	Easy boy, I'm not gonna take her away from ya.
 			Actor_Face_Actor(kActorMcCoy, kActorDektora, true);
-			Actor_Says(kActorMcCoy, 7245, 15); //00-7245.AUD	The detail! She's a real beauty, ain't she?
+			if (Player_Query_Agenda() != kPlayerAgendaSurly 
+			&& Player_Query_Agenda() != kPlayerAgendaErratic) {
+				Actor_Says(kActorMcCoy, 7245, 15); //00-7245.AUD	The detail! She's a real beauty, ain't she?
+			} else {
+				Actor_Says(kActorMcCoy, 8700, 18); //00-8700.AUD	Never seen anything like that before.
+			}
 			Actor_Says(kActorSebastian, 650, 14); //56-0650.AUD	I haven't named her yet.
 			Actor_Says(kActorMcCoy, 7250, 13); //00-7250.AUD	She almost looks real.
 			Actor_Says(kActorSebastian, 660, 14); //56-0660.AUD	She isn't. Believe you me.
@@ -136,19 +146,19 @@ bool SceneScriptBB12::ClickedOnActor(int actorId) {
 				Actor_Says(kActorMcCoy, 7260, 16); //00-7260.AUD	Didn't I see an incept tape at the--
 				Actor_Change_Animation_Mode(kActorMcCoy, 4);
 				Actor_Says(kActorSebastian, 680, 14); //56-0680.AUD	Hey, you don't need to do that.
-				Actor_Says(kActorMcCoy, 2775, -1); //00-2775.AUD	Hey, I'd just as soon not do this job.
 				Actor_Change_Animation_Mode(kActorMcCoy, 5);
 				Loop_Actor_Walk_To_XYZ(kActorSebastian,  6.18, 0.29, -33.29, 0, false, false, true); 
 				Actor_Face_Actor(kActorSebastian, kActorMcCoy, true);
 				Actor_Says(kActorSebastian, 700, 13); //56-0700.AUD	Please! You don't have to pull your gun in here.
 				Actor_Says(kActorMcCoy, 465, -1); //00-0465.AUD	Take your business elsewhere.
-				Delay(2000);
+				Delay(1500);
 				Actor_Says(kActorSebastian, 610, 14); //56-0610.AUD	I think you should leave now, Mr. McCoy.
-				Delay(1000);
+				Delay(1500);
 				Sound_Play(kSfxSHOTCOK1, 100, 0, 100, 50);
 				Actor_Change_Animation_Mode(kActorSebastian, 20);
-				Delay(2000);
+				Delay(1500);
 				Music_Play(kMusicCrysDie1, 25, 0, 1, -1, kMusicLoopPlayOnce, 0);
+				Delay(1500);
 				Actor_Says(kActorSebastian, 710, 15); //56-0710.AUD	Stop! Please! Why are you doing all these terrible things?
 				Delay(3000);
 				Actor_Says(kActorMcCoy, 170, -1); //00-0170.AUD	Damn.

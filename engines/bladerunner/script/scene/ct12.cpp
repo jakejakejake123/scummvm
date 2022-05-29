@@ -284,9 +284,25 @@ void SceneScriptCT12::PlayerWalkedIn() {
 		Actor_Face_Actor(kActorGaff, kActorMcCoy, true);
 		Actor_Face_Actor(kActorMcCoy, kActorGaff, true);
 		Actor_Says(kActorGaff, 0, kAnimationModeTalk);
-		Actor_Says(kActorMcCoy, 670, kAnimationModeTalk);
+		if (_vm->_cutContent) {
+			if (!Game_Flag_Query(kFlagMcCoyIsHelpingReplicants)) {
+				Actor_Says(kActorMcCoy, 670, kAnimationModeTalk); //00-0670.AUD	Working on it.
+			} else {
+				Delay(1000);
+			}
+		} else {
+			Actor_Says(kActorMcCoy, 670, kAnimationModeTalk);
+		}
 		Actor_Says(kActorGaff, 10, kAnimationModeTalk);
-		Actor_Says(kActorMcCoy, 675, kAnimationModeTalk);
+		if (_vm->_cutContent) {
+			if (!Game_Flag_Query(kFlagMcCoyIsHelpingReplicants)) {
+				Actor_Says(kActorMcCoy, 675, kAnimationModeTalk); //00-0675.AUD	I understand it's got a hell of a retirement plan.
+			} else {	
+				Actor_Says(kActorMcCoy, 8610, 18); //00-8610.AUD	What's the word, friend?
+			}
+		} else {
+			Actor_Says(kActorMcCoy, 675, kAnimationModeTalk);
+		}
 		Actor_Says(kActorGaff, 20, kAnimationModeTalk);
 		Actor_Says(kActorMcCoy, 680, kAnimationModeTalk);
 		Actor_Says(kActorGaff, 30, kAnimationModeTalk);
@@ -342,7 +358,7 @@ void SceneScriptCT12::PlayerWalkedIn() {
 				if (!Game_Flag_Query(kFlagCT12Visited)) {
 					if (Global_Variable_Query(kVariableChapter) == 1) {
 						if (Game_Flag_Query(kFlagLearyChecksCar)) {
-							Delay (2000);
+							Delay (1000);
 							ADQ_Add(kActorOfficerLeary, 360, kAnimationModeTalk); 	//23-0360.AUD	LA, 31 Metro 3 is 10-97 at the scene. 
 							ADQ_Add(kActorDispatcher, 370, kAnimationModeTalk);   //38-0370.AUD	32 Metro 1 LA. Go ahead.
 							ADQ_Add(kActorOfficerLeary, 420, kAnimationModeTalk);	//23-0420.AUD	LA, 13 Metro 1. 10-29 on abandoned vehicle.
@@ -352,7 +368,7 @@ void SceneScriptCT12::PlayerWalkedIn() {
 							ADQ_Add(kActorOfficerLeary, 270, kAnimationModeTalk);  	//23-0270.AUD	LA, 38 Metro 3. 10-4.
 							Game_Flag_Set(kFlagCT12Visited);
 						} else {
-							Delay (2000);
+							Delay (1000);
 							ADQ_Add(kActorOfficerGrayford, 380, kAnimationModeTalk);   //24-0380.AUD	LA, 31 Metro 3 is 10-97 at the scene.	
 							ADQ_Add(kActorDispatcher, 370, kAnimationModeTalk);  //38-0370.AUD	32 Metro 1 LA. Go ahead.
 							ADQ_Add(kActorOfficerGrayford, 420, kAnimationModeTalk);  //24-0420.AUD	LA, 13 Metro 1. 10-29 on abandoned vehicle.

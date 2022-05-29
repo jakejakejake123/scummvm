@@ -68,8 +68,7 @@ bool SceneScriptDR05::MouseClick(int x, int y) {
 
 bool SceneScriptDR05::ClickedOn3DObject(const char *objectName, bool a2) {
 	if (Object_Query_Click("T2 DOORWAY", objectName)) {
-		if (!Game_Flag_Query(kFlagNotUsed276)
-		 &&  Actor_Query_Goal_Number(kActorMoraji) == kGoalMorajiDefault
+		if (Actor_Query_Goal_Number(kActorMoraji) == kGoalMorajiDefault
 		) {
 			Actor_Face_Object(kActorMcCoy, "T2 DOORWAY", true);
 			Actor_Says(kActorMcCoy, 1020, 14);

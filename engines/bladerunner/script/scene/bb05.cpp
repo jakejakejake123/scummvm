@@ -182,8 +182,18 @@ void SceneScriptBB05::PlayerWalkedIn() {
 		Actor_Says(kActorSebastian, 140, 16);
 		Actor_Says(kActorSebastian, 150, 14);
 		Actor_Says(kActorSebastian, 160, 15);
-		Actor_Says(kActorMcCoy, 7035, 14);
-		Actor_Says(kActorSebastian, 170, 12);
+		if (_vm->_cutContent) {
+			if (Player_Query_Agenda() != kPlayerAgendaSurly 
+			&& Player_Query_Agenda() != kPlayerAgendaErratic) {
+				Actor_Says(kActorMcCoy, 7035, 14); //00-7035.AUD	You feeling all right?
+				Actor_Says(kActorSebastian, 170, 12);
+			} else {
+				Delay(1000);
+			}
+		} else {
+			Actor_Says(kActorMcCoy, 7035, 14); 
+			Actor_Says(kActorSebastian, 170, 12);
+		}
 		Actor_Says(kActorMcCoy, 7040, 14);
 		Actor_Says(kActorSebastian, 180, 16);
 		Actor_Says(kActorMcCoy, 7045, 14);
@@ -192,7 +202,14 @@ void SceneScriptBB05::PlayerWalkedIn() {
 			Actor_Says(kActorMcCoy, 7050, 17);
 			Actor_Says(kActorSebastian, 200, 16);
 			Actor_Says_With_Pause(kActorSebastian, 210, 1.5f, 14);
-			Actor_Says(kActorMcCoy, 7055, 15);
+			if (_vm->_cutContent) {
+				if (Player_Query_Agenda() != kPlayerAgendaSurly 
+				&& Player_Query_Agenda() != kPlayerAgendaErratic) {
+					Actor_Says(kActorMcCoy, 7055, 15);
+				}
+			} else {
+				Actor_Says(kActorMcCoy, 7055, 15);
+			}
 		} else {
 			Actor_Put_In_Set(kActorGeneralDoll, kSetBB05);
 			Actor_Set_At_Waypoint(kActorGeneralDoll, 134, 0);

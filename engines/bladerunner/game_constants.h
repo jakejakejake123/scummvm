@@ -616,7 +616,7 @@ enum Flags {
 	kFlagCT04HomelessBodyInDumpster           = 170,
 	kFlagCT04HomelessBodyFound                = 171,
 	kFlagCT04HomelessBodyThrownAway           = 172,
-	kFlagCT04HomelessBodyInDumpsterNotChecked = 173, // is never checked
+	kFlagGordoEscaped						  = 173, // is never checked
 	kFlagCT04LicensePlaceFound                = 174,
 	kFlagPS09CrazylegsTalk2                   = 175,
 	kFlagMcCoyInChinaTown                     = 176,
@@ -719,7 +719,7 @@ enum Flags {
 	kFlagArrivedFromSpinner2                  = 273,
 	kFlagDR05MorajiTalk                       = 274,
 	kFlagHollowayTalk						  = 275,
-	kFlagNotUsed276                           = 276, // is never set
+	kFlagShoeshineManTalk                     = 276, // is never set
 	kFlagDispatcherTalkMcCoy				  = 277,	
 	kFlagDR06KeyboardChecked                  = 278,
 	kFlagTyrellGuardTalkMeeting				  = 279,
@@ -822,7 +822,7 @@ enum Flags {
 	kFlagIzoTalkAct4						  = 376,
 	kFlagHF01MurrayMiaIntro                   = 377,
 	kFlagDirectorsCut                         = 378, // Designer's Cut (KIA options) flag!
-	kFlagCT08toCT51                           = 379, // is never checked
+	kFlagHanoiFight                           = 379, // is never checked
 	kFlagCT51toCT08                           = 380,
 	kFlagLutherLanceTalkWork 				  = 381,	
 	kFlagHF01MurrayMiaTalk                    = 382,
@@ -849,8 +849,8 @@ enum Flags {
 	kFlagHC03CageOpen                         = 403,
 	kFlagHC02HawkersBarkeepIntroduction       = 404,
 	kFlagHC02HawkersBarkeepBraceletTalk       = 405,
-	kFlagUnused406                            = 406, // is never checked
-	kFlagUnused407                            = 407, // is never checked
+	kFlagHowieLeeArrested                     = 406, // is never checked
+	//                     					  = 407, Flag broken, don't use.
 	kFlagMcCoyCommentsOnStatues               = 408, // Re-purposed. Original: 408 is never used
 	kFlagMA01GaffApproachMcCoy                = 409,
 	kFlagBB06AndroidDestroyed                 = 410,
@@ -883,7 +883,7 @@ enum Flags {
 	kFlagNR04toNR03                           = 437,
 	kFlagNR03toNR04                           = 438,
 	kFlagNR06toNR08                           = 439,
-	kFlagNR08toNR06                           = 440, // is never checked
+	kFlagGuzzaLoanTalk                        = 440, // is never checked
 	kFlagNR06toNR07                           = 441,
 	kFlagNR07toNR06                           = 442,
 	kFlagGenericWalkerWaiting                 = 443,
@@ -1100,11 +1100,11 @@ enum Flags {
 	kFlagMA02Chapter5Started                  = 654,
 	kFlagMA02RajifTalk                        = 655,
 	kFlagUG02RadiationGogglesTaken            = 656,
-	kFlagNotUsed657                           = 657, // is never set
+	kFlagMcCoyHelpedShoeshineMan              = 657, // is never set
 	kFlagKP07Entered                          = 658,
 	kFlagNR11BreakWindow                      = 659,
 	kFlagDNARowAvailableTalk                  = 660,
-	kFlagTB07ShadeDown                        = 661, // is never set
+	kFlagZhoraNewsReport               		  = 661, // is never set
 	kFlagHF01TalkToLovedOne                   = 662,
 	kFlagHF05PoliceArrived                    = 663,
 	kFlagUG07PoliceLeave                      = 664,

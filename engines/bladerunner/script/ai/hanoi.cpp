@@ -164,7 +164,6 @@ void AIScriptHanoi::ClickedByPlayer() {
 		if (_vm->_cutContent) {
 			if (Game_Flag_Query(kFlagHanoiIsReplicant)) {
 				Actor_Says(kActorMcCoy, 8915, 11); //00-8915.AUD	You got a minute, pal?
-				Actor_Says(kActorHanoi, 210, kAnimationModeTalk); //25-0210.AUD	Sod off, McCoy. I got no time for you.
 			} else {
 				Actor_Says(kActorMcCoy, 3210, kAnimationModeTalk); //00-3210.AUD	Hey, man.
 			}		
@@ -261,6 +260,7 @@ void AIScriptHanoi::Retired(int byActorId) {
 				if (Query_Difficulty_Level() != kGameDifficultyEasy) {
 					Global_Variable_Increment (kVariableChinyen, 200);
 				}
+				Actor_Modify_Friendliness_To_Other(kActorGaff, kActorMcCoy, 2);
 			}
 
 			if (Global_Variable_Query(kVariableReplicantsSurvivorsAtMoonbus) == 0) {
@@ -273,7 +273,7 @@ void AIScriptHanoi::Retired(int byActorId) {
 				}
 				Delay(2000);
 				Player_Set_Combat_Mode(false);
-				Delay(1000); 
+				Delay(2000); 
 				Ambient_Sounds_Remove_All_Non_Looping_Sounds(true);
 				Ambient_Sounds_Remove_All_Looping_Sounds(1u);
 				Game_Flag_Set(kFlagKP07toKP06);
@@ -429,21 +429,43 @@ bool AIScriptHanoi::GoalChanged(int currentGoalNumber, int newGoalNumber) {
 		if (_vm->_cutContent) {
 			if (Game_Flag_Query(kFlagHanoiIsReplicant)) {
 				Actor_Change_Animation_Mode(kActorHanoi, 4);
-				Sound_Play(kSfxSHOTCOK1, 77, 0, 0, 20);
 				Actor_Face_Actor(kActorHanoi, kActorMcCoy, true);
 				Actor_Face_Actor(kActorMcCoy, kActorHanoi, true);
 				Delay (1000);
-				Actor_Says(kActorHanoi, 160, 4); //25-0160.AUD	Here, what’s this then?
-				ADQ_Add(kActorMcCoy, 490, kAnimationModeTalk); //00-0490.AUD	Suck on this, skin-job!
+				Actor_Says(kActorHanoi, 160, -1); //25-0160.AUD	Here, what’s this then?
+				Actor_Says(kActorMcCoy, 525, -1); //00-0525.AUD	I've seen you before...
+				Actor_Says(kActorMcCoy, 7260, -1); //00-7260.AUD	Didn't I see an incept tape at the—	
+				Sound_Play(kSfxSHOTCOK1, 77, 0, 0, 20);
+				Delay (1000);
 				Actor_Change_Animation_Mode(kActorMcCoy, 6);
 				Sound_Play(kSfxGUNH1A, 100, 0, 0, 50);
-				Actor_Change_Animation_Mode(kActorHanoi, 48);
-				Actor_Modify_Friendliness_To_Other(kActorSteele, kActorMcCoy, 2);
-				Game_Flag_Set(kFlagHanoiDead);
-				Player_Gains_Control();
-				if (Query_Difficulty_Level() != kGameDifficultyEasy) {
-					Global_Variable_Increment (kVariableChinyen, 200);
-				}
+				Actor_Change_Animation_Mode(kActorHanoi, 21);
+				Actor_Says(kActorMcCoy, 490, 6); //00-0490.AUD	Suck on this, skin-job!
+				Music_Stop(3u);
+				Delay(1000);
+				Actor_Change_Animation_Mode(kActorMcCoy, 6);
+				Sound_Play(kSfxGUNH1A, 100, 0, 0, 50);
+				Loop_Actor_Walk_To_XYZ(kActorHanoi, 47.04, 0.18, 321.63, 0, false, false, false);
+				Actor_Face_Actor(kActorHanoi, kActorMcCoy, true);
+				Actor_Face_Actor(kActorMcCoy, kActorHanoi, true);
+				Ambient_Sounds_Play_Sound(kSfxKICK2, 90, 99, 0, 0);
+				Actor_Change_Animation_Mode(kActorHanoi, 71);
+				Actor_Change_Animation_Mode(kActorMcCoy, 21);
+				Music_Play(kMusicBeating1, 71, 0, 0, -1, kMusicLoopPlayOnce, 2);
+				Delay(2000);
+				Loop_Actor_Walk_To_XYZ(kActorMcCoy, 5.29, 0.24, 226.55, 0, false, true, false);
+				Actor_Face_Actor(kActorHanoi, kActorMcCoy, true);
+				Actor_Face_Actor(kActorMcCoy, kActorHanoi, true);
+				Sound_Play(kSfxGUNH1A, 100, 0, 0, 50);
+				Actor_Change_Animation_Mode(kActorMcCoy, 6);	
+				Actor_Change_Animation_Mode(kActorHanoi, 21);
+				Loop_Actor_Walk_To_XYZ(kActorHanoi, 13.51, 0.22, 256.05, 0, false, false, false);
+				Actor_Change_Animation_Mode(kActorHanoi, 23);
+				Actor_Set_Invisible(kActorMcCoy, true);
+				Actor_Says(kActorMcCoy, 3595, kAnimationModeTalk);
+				Actor_Says(kActorMcCoy, 3785, kAnimationModeTalk); //00-3785.AUD	Let go, you lug. I gotta-- (grunts)
+				Actor_Set_Goal_Number(kActorHanoi, kGoalHanoiThrowOutMcCoy);
+				Game_Flag_Set(kFlagHanoiFight);
 			}
 		} else {
 			Actor_Face_Actor(kActorHanoi, kActorMcCoy, true);
@@ -640,8 +662,10 @@ bool AIScriptHanoi::UpdateAnimation(int *animation, int *frame) {
 		}
 
 		if (_animationFrame == 5) {
-			Actor_Force_Stop_Walking(kActorMcCoy);
-			Actor_Change_Animation_Mode(kActorMcCoy, kAnimationModeDie);
+			if (!_vm->_cutContent) {
+				Actor_Force_Stop_Walking(kActorMcCoy);
+				Actor_Change_Animation_Mode(kActorMcCoy, kAnimationModeDie);
+			}
 		}
 
 		if (_animationFrame >= Slice_Animation_Query_Number_Of_Frames(*animation)) {

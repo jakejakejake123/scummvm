@@ -377,8 +377,20 @@ void AIScriptOfficerGrayford::ClickedByPlayer() {
 		AI_Movement_Track_Flush(kActorOfficerGrayford);
 		Actor_Set_Goal_Number(kActorOfficerGrayford, kGoalOfficerGrayfordStopAndTalk1);
 		Actor_Face_Actor(kActorMcCoy, kActorOfficerGrayford, true);
-		Actor_Says(kActorMcCoy, 4515, 14);
-		Actor_Says(kActorOfficerGrayford, 330, 13);
+		if (!_vm->_cutContent) {
+			Actor_Says(kActorMcCoy, 4515, 14);
+		}
+		if (_vm->_cutContent) {
+			Actor_Says(kActorMcCoy, 5295, kAnimationModeTalk); //00-5295.AUD	Learn anything?
+			Actor_Says(kActorOfficerGrayford, 310, 13); //24-0310.AUD	Yeah, I dug up a couple of leads. Let me clue you in.
+			Actor_Says(kActorMcCoy, 4940, 18); //00-4940.AUD	Okay, let's have it.
+			Actor_Says(kActorOfficerGrayford, 350, 15); //24-0350.AUD	Eh, Gaff said that you didn’t need to hear this. Ah, but I guess you deserve to know.
+			Actor_Says(kActorMcCoy, 4515, 13);
+		}
+		Actor_Says(kActorOfficerGrayford, 330, 16); //24-0330.AUD	Zero that would interest you, detective.
+		if (_vm->_cutContent) {
+			Actor_Says(kActorMcCoy, 5075, 14); //00-5075.AUD	Hey, pal.
+		}
 		Actor_Set_Goal_Number(kActorOfficerGrayford, kGoalOfficerGrayfordWalksInPS09b);
 		break;
 
@@ -655,25 +667,57 @@ bool AIScriptOfficerGrayford::GoalChanged(int currentGoalNumber, int newGoalNumb
 
 	case kGoalOfficerGrayfordStopPatrolToTalkToMcCoyAtDR04:
 		Actor_Face_Actor(kActorMcCoy, kActorOfficerGrayford, true);
-		Actor_Says(kActorMcCoy, 1000, 14); // You got a sheet or something...?
-		AI_Movement_Track_Flush(kActorOfficerGrayford);
-		AI_Countdown_Timer_Reset(kActorOfficerGrayford, kActorTimerAIScriptCustomTask2);
-
-		if (_animationState == 35
-		 || _animationState == 34
-		) {
-			_animationState = 37;
-			_animationFrame = 0;
-		}
-
-		Actor_Face_Actor(kActorOfficerGrayford, kActorMcCoy, true);
-		// Added in some dialogue.
 		if (_vm->_cutContent) {
-			Actor_Says(kActorOfficerGrayford, 350, 18); //24-0350.AUD	Eh, Gaff said that you didn’t need to hear this. Ah, but I guess you deserve to know.
-			Actor_Says(kActorMcCoy, 7805, 14); //00-7805.AUD	Answer the question.
+			if (Player_Query_Agenda() == kPlayerAgendaPolite) {
+				Actor_Says(kActorMcCoy, 1000, 14); // You got a sheet or something...?
+				AI_Movement_Track_Flush(kActorOfficerGrayford);
+				AI_Countdown_Timer_Reset(kActorOfficerGrayford, kActorTimerAIScriptCustomTask2);
+
+				if (_animationState == 35
+				|| _animationState == 34
+				) {
+					_animationState = 37;
+					_animationFrame = 0;
+				}
+
+				Actor_Face_Actor(kActorOfficerGrayford, kActorMcCoy, true);
+				Actor_Says(kActorOfficerGrayford, 180, 18);
+				Actor_Set_Goal_Number(kActorOfficerGrayford, currentGoalNumber);
+			} else {
+				Actor_Says(kActorMcCoy, 1005, kAnimationModeTalk); // Don't miss anything.
+				AI_Movement_Track_Flush(kActorOfficerGrayford);
+				AI_Countdown_Timer_Reset(kActorOfficerGrayford, kActorTimerAIScriptCustomTask2);
+				if (_animationState == 35 || _animationState == 34) {
+					_animationState = 37;
+					_animationFrame = 0;
+				}
+				Actor_Face_Actor(kActorOfficerGrayford, kActorMcCoy, true);
+				Actor_Says(kActorOfficerGrayford, 190, 19);
+				Delay(1000);
+				Actor_Says(kActorMcCoy, 5295, kAnimationModeTalk); //00-5295.AUD	Learn anything?
+				Actor_Says(kActorOfficerGrayford, 320, 19); //24-0320.AUD	Nah, I’ve hit a brick, McCoy. You running this investigation, right?
+				if (Player_Query_Agenda() == kPlayerAgendaSurly 
+				|| Player_Query_Agenda() == kPlayerAgendaErratic) {
+					Actor_Says(kActorMcCoy, 8519, 14); //00-8519.AUD	What do you say we dish each other the straight goods.
+					Actor_Says(kActorOfficerGrayford, 340, 19); //24-0340.AUD	Hey, you ain’t talking to some flunky, McCoy.
+				}
+			}
+		} else {
+			Actor_Says(kActorMcCoy, 1000, 14); // You got a sheet or something...?
+			AI_Movement_Track_Flush(kActorOfficerGrayford);
+			AI_Countdown_Timer_Reset(kActorOfficerGrayford, kActorTimerAIScriptCustomTask2);
+
+			if (_animationState == 35
+			|| _animationState == 34
+			) {
+				_animationState = 37;
+				_animationFrame = 0;
+			}
+
+			Actor_Face_Actor(kActorOfficerGrayford, kActorMcCoy, true);
+			Actor_Says(kActorOfficerGrayford, 180, 18);
+			Actor_Set_Goal_Number(kActorOfficerGrayford, currentGoalNumber);
 		}
-		Actor_Says(kActorOfficerGrayford, 180, 18);
-		Actor_Set_Goal_Number(kActorOfficerGrayford, currentGoalNumber);
 		return true; // possible bugfix: was break;
 
 	case kGoalOfficerGrayfordLeavesWithMorajiCorpseDR04:

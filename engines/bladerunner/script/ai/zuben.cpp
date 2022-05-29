@@ -270,13 +270,25 @@ void AIScriptZuben::OtherAgentEnteredCombatMode(int otherActorId, int combatMode
 	 &&  Game_Flag_Query(kFlagCT07ZubenAttack)
 	 && !Game_Flag_Query(kFlagMcCoyShotAtZuben)
 	) {
-		Non_Player_Actor_Combat_Mode_Off(kActorZuben);
-		Game_Flag_Reset(kFlagCT07ZubenAttack);
-		AI_Movement_Track_Flush(kActorZuben);
-		Actor_Says(kActorMcCoy, 455, 18);
-		Actor_Modify_Friendliness_To_Other(kActorZuben, kActorMcCoy, 5);
-		Actor_Set_Goal_Number(kActorZuben, kGoalZubenCT07Spared);
-		Game_Flag_Set(kFlagCT01ZubenGone);
+		if (_vm->_cutContent) {
+			if (!Game_Flag_Query(kFlagMcCoyIsHelpingReplicants)) {
+				Non_Player_Actor_Combat_Mode_Off(kActorZuben);
+				Game_Flag_Reset(kFlagCT07ZubenAttack);
+				AI_Movement_Track_Flush(kActorZuben);
+				Actor_Says(kActorMcCoy, 455, 18);
+				Actor_Modify_Friendliness_To_Other(kActorZuben, kActorMcCoy, 5);
+				Actor_Set_Goal_Number(kActorZuben, kGoalZubenCT07Spared);
+				Game_Flag_Set(kFlagCT01ZubenGone);
+			}
+		} else {
+			Non_Player_Actor_Combat_Mode_Off(kActorZuben);
+			Game_Flag_Reset(kFlagCT07ZubenAttack);
+			AI_Movement_Track_Flush(kActorZuben);
+			Actor_Says(kActorMcCoy, 455, 18);
+			Actor_Modify_Friendliness_To_Other(kActorZuben, kActorMcCoy, 5);
+			Actor_Set_Goal_Number(kActorZuben, kGoalZubenCT07Spared);
+			Game_Flag_Set(kFlagCT01ZubenGone);
+		}
 		// return true;
 		//Restored the scene where if McCoy shot at Zuben even if he put his gun away while cornered by Zuben
 		//he still procceeds to attack him.
@@ -350,7 +362,7 @@ void AIScriptZuben::Retired(int byActorId) {
 			}
 			Delay(2000);
 			Player_Set_Combat_Mode(false);
-			Delay(1000); 
+			Delay(2000); 
 		}
 		Ambient_Sounds_Remove_All_Non_Looping_Sounds(true);
 		Ambient_Sounds_Remove_All_Looping_Sounds(1u);
@@ -389,32 +401,56 @@ bool AIScriptZuben::GoalChanged(int currentGoalNumber, int newGoalNumber) {
 		return false;
 
 	case kGoalZubenCT07Spared:
-		AI_Movement_Track_Flush(kActorZuben);
-		Actor_Face_Actor(kActorZuben, kActorMcCoy, true);
-		Music_Stop(3u);
-		Actor_Says(kActorZuben, 100, 19);
-		Actor_Says(kActorMcCoy, 470, 12);
-		Actor_Says(kActorZuben, 110, 18);
-		Actor_Says(kActorMcCoy, 475, 12);
-		Actor_Says(kActorZuben, 120, 15);
-		Actor_Says(kActorMcCoy, 480, 16);
-		Actor_Says(kActorZuben, 130, 17);
-		Actor_Says(kActorMcCoy, 485, 14);
-		if (Random_Query(1, 3) < 3) {
-			Actor_Clue_Acquire(kActorZuben, kClueMcCoysDescription, true, -1);
-		}
-		if (Random_Query(1, 5) < 5) {
-			Actor_Clue_Acquire(kActorZuben, kClueMcCoyIsABladeRunner, true, -1);
-		}
-		Actor_Clue_Acquire(kActorZuben, kClueMcCoyLetZubenEscape, true, -1);
-		Actor_Set_Goal_Number(kActorZuben, kGoalZubenCT07RunToFreeSlotA);
-		//Added in a flag
 		if (_vm->_cutContent) {
-			Game_Flag_Set(kFlagZubenSpared);
-			Game_Flag_Set(kFlagMcCoyIsHelpingReplicants);
-			Actor_Modify_Friendliness_To_Other(kActorSteele, kActorMcCoy, -2);
-			Actor_Modify_Friendliness_To_Other(kActorGuzza, kActorMcCoy, -2);
-			Actor_Set_Goal_Number(kActorGordo, kGoalGordoCT05WalkThrough);
+			if (!Game_Flag_Query(kFlagMcCoyIsHelpingReplicants)) {
+				AI_Movement_Track_Flush(kActorZuben);
+				Actor_Face_Actor(kActorZuben, kActorMcCoy, true);
+				Music_Stop(3u);
+				Actor_Says(kActorZuben, 100, 19);
+				Actor_Says(kActorMcCoy, 470, 12);
+				Actor_Says(kActorZuben, 110, 18);
+				Actor_Says(kActorMcCoy, 475, 12);
+				Actor_Says(kActorZuben, 120, 15);
+				Actor_Says(kActorMcCoy, 480, 16);
+				Actor_Says(kActorZuben, 130, 17);
+				Actor_Says(kActorMcCoy, 485, 14);
+				if (_vm->_cutContent) {
+					Game_Flag_Set(kFlagZubenSpared);
+					Game_Flag_Set(kFlagMcCoyIsHelpingReplicants);
+					Actor_Modify_Friendliness_To_Other(kActorSteele, kActorMcCoy, -2);
+					Actor_Modify_Friendliness_To_Other(kActorGuzza, kActorMcCoy, -2);
+					Actor_Modify_Friendliness_To_Other(kActorClovis, kActorMcCoy, 2);
+					Actor_Set_Goal_Number(kActorGordo, kGoalGordoCT05WalkThrough);
+				}
+				if (Random_Query(1, 3) < 3) {
+					Actor_Clue_Acquire(kActorZuben, kClueMcCoysDescription, true, -1);
+				}
+				if (Random_Query(1, 5) < 5) {
+					Actor_Clue_Acquire(kActorZuben, kClueMcCoyIsABladeRunner, true, -1);
+				}
+				Actor_Clue_Acquire(kActorZuben, kClueMcCoyLetZubenEscape, true, -1);
+				Actor_Set_Goal_Number(kActorZuben, kGoalZubenCT07RunToFreeSlotA);
+			}
+		} else {
+			AI_Movement_Track_Flush(kActorZuben);
+			Actor_Face_Actor(kActorZuben, kActorMcCoy, true);
+			Music_Stop(3u);
+			Actor_Says(kActorZuben, 100, 19);
+			Actor_Says(kActorMcCoy, 470, 12);
+			Actor_Says(kActorZuben, 110, 18);
+			Actor_Says(kActorMcCoy, 475, 12);
+			Actor_Says(kActorZuben, 120, 15);
+			Actor_Says(kActorMcCoy, 480, 16);
+			Actor_Says(kActorZuben, 130, 17);
+			Actor_Says(kActorMcCoy, 485, 14);
+			if (Random_Query(1, 3) < 3) {
+				Actor_Clue_Acquire(kActorZuben, kClueMcCoysDescription, true, -1);
+			}
+			if (Random_Query(1, 5) < 5) {
+				Actor_Clue_Acquire(kActorZuben, kClueMcCoyIsABladeRunner, true, -1);
+			}
+			Actor_Clue_Acquire(kActorZuben, kClueMcCoyLetZubenEscape, true, -1);
+			Actor_Set_Goal_Number(kActorZuben, kGoalZubenCT07RunToFreeSlotA);
 		}
 		return false;
 
@@ -441,6 +477,8 @@ bool AIScriptZuben::GoalChanged(int currentGoalNumber, int newGoalNumber) {
 		if (_vm->_cutContent) {
 			Actor_Modify_Friendliness_To_Other(kActorSteele, kActorMcCoy, 2);
 			Actor_Modify_Friendliness_To_Other(kActorGuzza, kActorMcCoy, 2);
+			Actor_Modify_Friendliness_To_Other(kActorClovis, kActorMcCoy, -2);
+			Actor_Modify_Friendliness_To_Other(kActorGaff, kActorMcCoy, 2);
 		}
 		Actor_Set_Goal_Number(kActorZuben, kGoalZubenGone);	
 		return false;

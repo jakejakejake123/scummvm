@@ -148,6 +148,7 @@ void SceneScriptUG09::PlayerWalkedIn() {
 	if  (!Game_Flag_Query(kFlagIzoTalkAct4)
 	// Added in correct flag.
 	&& Game_Flag_Query(kFlagIzoGotAway)
+	&& !Game_Flag_Query(kFlagUG18GuzzaScene)
 	&& !Game_Flag_Query(kFlagUG09Visited)
 	&& (Global_Variable_Query(kVariableChapter) == 4)) {
 		Actor_Put_In_Set(kActorIzo, kSetUG09);
@@ -156,12 +157,14 @@ void SceneScriptUG09::PlayerWalkedIn() {
 		Actor_Face_Actor(kActorIzo, kActorMcCoy, true);
 		Actor_Says(kActorMcCoy, 6745, 18); //00-6745.AUD	Izo, we gotta talk.
 		// If you didn't help Izo with Crystal by convinvcing her that he isn't smuggling weapons and warning him in act 3 outside his shop this happens.
-		if (!Game_Flag_Query(kFlagIzoPrepared)) {
-			Actor_Says(kActorMcCoy, 6710, 16); //00-6710.AUD	How’s business these days, Izo?
-			Actor_Says(kActorIzo, 850, 12); //07-0850.AUD	Non existent. You and Steele made sure of that. Scavengers took the rest.
-			Actor_Says(kActorMcCoy, 6740, 16); //00-6740.AUD	What exactly did the scavengers take?
-			Actor_Says(kActorIzo, 970, 17); //07-0970.AUD	Some of the police-issue weapons and electronics. They took them down into the sewers.
-		} 
+		if (Actor_Clue_Query(kActorMcCoy, kClueWeaponsCache)) {
+			if (!Game_Flag_Query(kFlagIzoPrepared)) {
+				Actor_Says(kActorMcCoy, 6710, 16); //00-6710.AUD	How’s business these days, Izo?
+				Actor_Says(kActorIzo, 850, 12); //07-0850.AUD	Non existent. You and Steele made sure of that. Scavengers took the rest.
+				Actor_Says(kActorMcCoy, 6740, 16); //00-6740.AUD	What exactly did the scavengers take?
+				Actor_Says(kActorIzo, 970, 17); //07-0970.AUD	Some of the police-issue weapons and electronics. They took them down into the sewers.
+			} 
+		}
 		//Made it so Izo only shares what he knows with McCoy in regards to who framed him if McCoy helped Izo in covering up his weapon smuggling operation.
 		if (!Actor_Clue_Query(kActorMcCoy, kClueGuzzaFramedMcCoy)) {
 			Actor_Says(kActorMcCoy, 6735, 15); //00-6735.AUD	Who is trying to nail me, Izo?
@@ -169,7 +172,7 @@ void SceneScriptUG09::PlayerWalkedIn() {
 			Actor_Says(kActorMcCoy, 6760, 18); //00-6760.AUD	Feel like sharing?
 			Actor_Says(kActorIzo, 930, 14); //07-0930.AUD	My life wouldn’t be worth one chinyen, if I did.
 			Actor_Says(kActorMcCoy, 6765, 13); //00-6765.AUD	You’re talking about Clovis. 
-			if (Game_Flag_Query(kFlagIzoPrepared)) {
+			if (Actor_Clue_Query(kActorIzo,  kClueMcCoyHelpedIzoIzoIsAReplicant)) {
 				Actor_Says(kActorIzo, 940, 17); //07-0940.AUD	One man? Nobody can act alone.
 				Actor_Says(kActorMcCoy, 6770, 18); //00-6770.AUD	You mean conspiracy?
 				Actor_Says(kActorIzo, 950, 16); //07-0950.AUD	Think, McCoy. Which human has the most power over one’s activities on a daily basis?
@@ -183,16 +186,17 @@ void SceneScriptUG09::PlayerWalkedIn() {
 			Actor_Says(kActorMcCoy, 6755, 13); //00-6755.AUD	He wants to talk to me?!
 			Actor_Says(kActorIzo, 910, 12); //07-0910.AUD	He would have made that clear.
 			Actor_Says(kActorIzo, 760, 14); //07-0760.AUD	He knows all about you. Knows what happened with Zuben.
+			if (Actor_Clue_Query(kActorMcCoy, kClueCrimeSceneNotes)) {
+				Actor_Says(kActorMcCoy, 5500, 18); //00-5500.AUD	Is Clovis the Tyrell bomber?
+				Actor_Says(kActorIzo, 770, 12); //07-0770.AUD	You really are groping in the dark.
+				Actor_Says(kActorIzo, 780, 17); //07-0780.AUD	No. The bomb belonged to Sadik. It was his signature.
+				Actor_Clue_Acquire(kActorMcCoy, kClueIzosWarning, true, kActorIzo);
+			}
 		}
-		if (Actor_Clue_Query(kActorMcCoy, kClueCrimeSceneNotes)) {
-			Actor_Says(kActorMcCoy, 5500, 18); //00-5500.AUD	Is Clovis the Tyrell bomber?
-			Actor_Says(kActorIzo, 770, 12); //07-0770.AUD	You really are groping in the dark.
-			Actor_Says(kActorIzo, 780, 17); //07-0780.AUD	No. The bomb belonged to Sadik. It was his signature.
-			Actor_Says(kActorMcCoy, 5505, 13); //00-5505.AUD	I need to talk to Clovis.
+		Actor_Says(kActorMcCoy, 5505, 13); //00-5505.AUD	I need to talk to Clovis.
+		if (Actor_Clue_Query(kActorIzo,  kClueMcCoyHelpedIzoIzoIsAReplicant)) {
 			Actor_Says(kActorIzo, 790, 16); //07-0790.AUD	I’ll tell him you helped me. That’s as much as I can do.
-			Actor_Clue_Acquire(kActorMcCoy, kClueIzosWarning, true, kActorIzo);
 		} else {
-			Actor_Says(kActorMcCoy, 5505, 13); //00-5505.AUD	I need to talk to Clovis.
 			Actor_Says(kActorIzo, 870, 17); //07-0870.AUD	I’ve been warned not to waste any more words with you.
 		}
 		Actor_Says(kActorMcCoy, 6730, 15); //00-6730.AUD	I’ll do you a good turn, if you hook me up with Clovis.
@@ -203,8 +207,8 @@ void SceneScriptUG09::PlayerWalkedIn() {
 		Loop_Actor_Walk_To_XYZ(kActorIzo, -109.20, 152.67, -676.67, 48, false, true, false);
 		Actor_Put_In_Set(kActorIzo, kSetCT11);
 		Game_Flag_Set(kFlagIzoTalkAct4);
-		}
 	}
+}
 
 void SceneScriptUG09::PlayerWalkedOut() {
 	if (Global_Variable_Query(kVariableChapter) == 4) {

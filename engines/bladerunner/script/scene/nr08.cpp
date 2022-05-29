@@ -115,7 +115,6 @@ bool SceneScriptNR08::ClickedOnExit(int exitId) {
 		if (!Loop_Actor_Walk_To_XYZ(kActorMcCoy, -724.7f, 0.0f, 384.24f, 0, true, false, false)) {
 			Actor_Face_Heading(kActorMcCoy, 505, false);
 			Loop_Actor_Travel_Stairs(kActorMcCoy, 4, true, kAnimationModeIdle);
-			Game_Flag_Set(kFlagNR08toNR06);
 			Set_Enter(kSetNR06, kSceneNR06);
 		}
 		return true;

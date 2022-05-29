@@ -52,11 +52,6 @@ void SceneScriptTB07::InitializeScene() {
 	) {
 		Item_Add_To_World(kItemDNATyrell, kModelAnimationDNADataDisc, kSetTB07, 9.7f, 48.7f, -174.22f, 0, 12, 12, false, true, false, true);
 	}
-	if (Game_Flag_Query(kFlagTB07ShadeDown)) {
-		Scene_Loop_Set_Default(kTB07LoopMainShadeDown);
-	} else {
-		Scene_Loop_Set_Default(kTB07LoopMainLoop);
-	}
 }
 
 void SceneScriptTB07::SceneLoaded() {
@@ -249,20 +244,39 @@ void SceneScriptTB07::McCoyTalkWithRachaelAndTyrell() {
 	Actor_Says(kActorRachael, 480, 14);
 	Actor_Face_Actor(kActorMcCoy, kActorRachael, true);
 	Actor_Says(kActorMcCoy, 5315, 9);
-	Actor_Says(kActorRachael, 490, kAnimationModeTalk);
-	Actor_Face_Heading(kActorMcCoy, 178, true);
-	Actor_Says(kActorMcCoy, 5320, 15);
-	Actor_Says_With_Pause(kActorMcCoy, 5325, 1.0f, 19);
-	Actor_Start_Speech_Sample(kActorRachael, 500);
-	Loop_Actor_Walk_To_XYZ(kActorRachael, -60.15f, 12.0f, 60.84f, 0, false, false, false);
-	Actor_Face_Actor(kActorRachael, kActorMcCoy, true);
-	Actor_Face_Actor(kActorMcCoy, kActorRachael, true);
-	Actor_Says(kActorMcCoy, 5330, 14);
-	Actor_Says(kActorRachael, 510, 12);
-	Actor_Says(kActorMcCoy, 5335, 16);
-	Actor_Says(kActorRachael, 520, 17);
+	Actor_Says(kActorRachael, 490, kAnimationModeTalk); //57-0490.AUD	Both.
+	if (_vm->_cutContent) {
+		if (!Game_Flag_Query(kFlagMcCoyIsHelpingReplicants)) {
+			Actor_Face_Heading(kActorMcCoy, 178, true);
+			Actor_Says(kActorMcCoy, 5320, 15);
+			Actor_Says_With_Pause(kActorMcCoy, 5325, 1.0f, 19);
+			Actor_Start_Speech_Sample(kActorRachael, 500); //57-0500.AUD	It's a flawless replica. We used a real one as a model.
+			Loop_Actor_Walk_To_XYZ(kActorRachael, -60.15f, 12.0f, 60.84f, 0, false, false, false);
+			Actor_Face_Actor(kActorRachael, kActorMcCoy, true);
+			Actor_Face_Actor(kActorMcCoy, kActorRachael, true);
+			if (Player_Query_Agenda() == kPlayerAgendaSurly 
+			|| Player_Query_Agenda() == kPlayerAgendaErratic) {
+				Actor_Says(kActorMcCoy, 5330, 14);
+				Actor_Says(kActorRachael, 510, 12); //57-0510.AUD	Dr. Tyrell.
+				Actor_Says(kActorMcCoy, 5335, 16);
+				Actor_Says(kActorRachael, 520, 17); //57-0520.AUD	Eldon wouldn't make up something like that.
+			}
+		}
+	} else {
+		Actor_Face_Heading(kActorMcCoy, 178, true);
+		Actor_Says(kActorMcCoy, 5320, 15);
+		Actor_Says_With_Pause(kActorMcCoy, 5325, 1.0f, 19);
+		Actor_Start_Speech_Sample(kActorRachael, 500); 
+		Loop_Actor_Walk_To_XYZ(kActorRachael, -60.15f, 12.0f, 60.84f, 0, false, false, false);
+		Actor_Face_Actor(kActorRachael, kActorMcCoy, true);
+		Actor_Face_Actor(kActorMcCoy, kActorRachael, true);
+		Actor_Says(kActorMcCoy, 5330, 14);
+		Actor_Says(kActorRachael, 510, 12);
+		Actor_Says(kActorMcCoy, 5335, 16);
+		Actor_Says(kActorRachael, 520, 17);
+	}
 	Actor_Says(kActorMcCoy, 5340, kAnimationModeTalk);
-	Actor_Start_Speech_Sample(kActorRachael, 530);
+	Actor_Start_Speech_Sample(kActorRachael, 530); //57-0530.AUD	Yes, I'm Rachael. Dr. Tyrell is very busy.
 	Loop_Actor_Walk_To_XYZ(kActorRachael, -4.15f, 12.0f, 54.73f, 0, false, false, false);
 	Actor_Says(kActorRachael, 540, 16);
 	Actor_Says(kActorMcCoy, 5345, 18);
@@ -289,33 +303,56 @@ void SceneScriptTB07::McCoyTalkWithRachaelAndTyrell() {
 	Actor_Says(kActorMcCoy, 5370, kAnimationModeTalk); //00-5370.AUD	Oh, yeah? Why is that?
 	Loop_Actor_Walk_To_XYZ(kActorRachael, -24.15f, 12.0f, -10.84f, 0, false, false, false);
 	Actor_Says(kActorRachael, 610, 13); //57-0610.AUD	Your suspect is obviously a Replicant. A very dangerous one.
-	Actor_Face_Actor(kActorMcCoy, kActorRachael, true);
-	Actor_Says(kActorMcCoy, 5375, 18); //00-5375.AUD	I thought Replicants were safe! “More human than human”.
-	Actor_Says(kActorMcCoy, 5380, 19); //00-5380.AUD	Isn't Dr. Tyrell pushing to make it legal to use Rep labor to clean up the Kipple?
-	Actor_Face_Actor(kActorRachael, kActorMcCoy, true);
-	Actor_Says(kActorRachael, 620, 18); //57-0620.AUD	Are we here to discuss corporate policy or Marcus Eisenduller's murder?
-	Actor_Says_With_Pause(kActorMcCoy, 5385, 2.0f, 12); //00-5385.AUD	A little of both.
+	if (_vm->_cutContent) {
+		if (!Game_Flag_Query(kFlagMcCoyIsHelpingReplicants)) {
+			Actor_Face_Actor(kActorMcCoy, kActorRachael, true);
+			Actor_Says(kActorMcCoy, 5375, 18); //00-5375.AUD	I thought Replicants were safe! “More human than human”.
+			Actor_Says(kActorMcCoy, 5380, 19); //00-5380.AUD	Isn't Dr. Tyrell pushing to make it legal to use Rep labor to clean up the Kipple?
+			Actor_Face_Actor(kActorRachael, kActorMcCoy, true);
+			Actor_Says(kActorRachael, 620, 18); //57-0620.AUD	Are we here to discuss corporate policy or Marcus Eisenduller's murder?
+			Actor_Says_With_Pause(kActorMcCoy, 5385, 2.0f, 12); //00-5385.AUD	A little of both.
+		}
+	} else {
+		Actor_Says(kActorMcCoy, 5375, 18); //00-5375.AUD	I thought Replicants were safe! “More human than human”.
+		Actor_Says(kActorMcCoy, 5380, 19); //00-5380.AUD	Isn't Dr. Tyrell pushing to make it legal to use Rep labor to clean up the Kipple?
+		Actor_Face_Actor(kActorRachael, kActorMcCoy, true);
+		Actor_Says(kActorRachael, 620, 18); //57-0620.AUD	Are we here to discuss corporate policy or Marcus Eisenduller's murder?
+		Actor_Says_With_Pause(kActorMcCoy, 5385, 2.0f, 12); //00-5385.AUD	A little of both.
+	}
 	Actor_Says_With_Pause(kActorMcCoy, 5390, 2.0f, 14); //00-5390.AUD	You heard about the moonbus hijacking?
 	Actor_Says(kActorMcCoy, 5395, 15);
 	Actor_Says_With_Pause(kActorRachael, 630, 0.0f, 14);
-	Actor_Says(kActorMcCoy, 5400, 18); //00-5400.AUD	I'm surprised you are not doing spin control.
 	// Made it so McCoy only refers to repliacants as pets if he is sury or erratic. Since McCoy is more sympathetic towards replicants when speaking to Rachael later
 	// on based on his agenda this change feels appropraiate. 
 	if (_vm->_cutContent) {
 		if (!Game_Flag_Query(kFlagMcCoyIsHelpingReplicants)) {
+			Actor_Says(kActorMcCoy, 5400, 18); //00-5400.AUD	I'm surprised you are not doing spin control.
 			Actor_Says(kActorMcCoy, 5405, kAnimationModeTalk); //00-5405.AUD	The public gets nervous when your pets wander around the city without a leash.
 			Actor_Says(kActorRachael, 640, 12); //57-0640.AUD	Replicants aren't pets.
 			Actor_Says(kActorMcCoy, 5410, 16); //00-5410.AUD	Right. Pets live longer and don't go around killing people.
+		} else { 
+			Delay (2000);
 		}
 	} else {
+		Actor_Says(kActorMcCoy, 5400, 18); //00-5400.AUD	I'm surprised you are not doing spin control.
 		Actor_Says(kActorMcCoy, 5405, kAnimationModeTalk); //00-5405.AUD	The public gets nervous when your pets wander around the city without a leash.
 		Actor_Says(kActorRachael, 640, 12); //57-0640.AUD	Replicants aren't pets.
 		Actor_Says(kActorMcCoy, 5410, 16); //00-5410.AUD	Right. Pets live longer and don't go around killing people.
 	}
 	Actor_Says(kActorRachael, 650, 15); //57-0650.AUD	They-- There are safeguards in the design.
 	Actor_Says_With_Pause(kActorMcCoy, 5415, 1.0f, 17);
-	Actor_Says(kActorMcCoy, 5420, 14);
-	Actor_Says(kActorRachael, 660, 15);
+	if (_vm->_cutContent) {
+		if (Player_Query_Agenda() != kPlayerAgendaSurly 
+		&& Player_Query_Agenda() != kPlayerAgendaErratic) {
+			Actor_Says(kActorMcCoy, 5420, 14);
+			Actor_Says(kActorRachael, 660, 15);
+		} else { 
+			Actor_Says(kActorRachael, 290, 12);  //57-0290.AUD	That's right.
+		}
+	} else {
+		Actor_Says(kActorMcCoy, 5420, 14);
+		Actor_Says(kActorRachael, 660, 15);
+	}
 	Actor_Put_In_Set(kActorTyrell, kSetTB07);
 	Actor_Set_At_XYZ(kActorTyrell, 68.0f, 12.0f, 288.0f, 0);
 	Actor_Change_Animation_Mode(kActorTyrell, kAnimationModeIdle);
@@ -336,14 +373,30 @@ void SceneScriptTB07::McCoyTalkWithRachaelAndTyrell() {
 	Loop_Actor_Walk_To_XYZ(kActorTyrell, -10.0f, 12.0f, 100.0f, 0, false, false, false);
 	Actor_Face_Actor(kActorTyrell, kActorMcCoy, true);
 	Actor_Face_Actor(kActorMcCoy, kActorTyrell, true);
-	Actor_Says(kActorMcCoy, 5430, 17);
-	Actor_Says(kActorMcCoy, 5435, 16);
+	if (_vm->_cutContent) {
+		if (!Game_Flag_Query(kFlagMcCoyIsHelpingReplicants)) {
+			Actor_Says(kActorMcCoy, 5430, 17); //00-5430.AUD	Not really, no.
+		} else {
+			Actor_Says(kActorMcCoy, 7980, 19); //00-7980.AUD	Yeah. Maybe.
+		}
+	} else {
+		Actor_Says(kActorMcCoy, 5430, 17); //00-5430.AUD	Not really, no.
+	}
+	Actor_Says(kActorMcCoy, 5435, 16); //00-5435.AUD	I do see why a Replicant who has an identity would want to steal Eisenduller's files.
 	Actor_Says(kActorTyrell, 60, 14);
 	Actor_Face_Actor(kActorMcCoy, kActorTyrell, true);
-	Actor_Says(kActorMcCoy, 5440, 14);
+	Actor_Says(kActorMcCoy, 5440, 14); //00-5440.AUD	They want more life.
 	Actor_Says(kActorTyrell, 70, 13);
-	Actor_Says(kActorMcCoy, 5445, 15);
-	Actor_Says_With_Pause(kActorTyrell, 80, 1.0f, 12);
+	if (_vm->_cutContent) {
+		if (Player_Query_Agenda() != kPlayerAgendaSurly 
+		&& Player_Query_Agenda() != kPlayerAgendaErratic) {
+			Actor_Says(kActorMcCoy, 5445, 15); //00-5445.AUD	They're gonna come for you. Just like they came for Eisenduller.
+			Actor_Says_With_Pause(kActorTyrell, 80, 1.0f, 12);
+		}
+	} else {
+		Actor_Says(kActorMcCoy, 5445, 15); //00-5445.AUD	They're gonna come for you. Just like they came for Eisenduller.
+		Actor_Says_With_Pause(kActorTyrell, 80, 1.0f, 12);
+	}
 	Actor_Says(kActorTyrell, 90, 15);
 	Actor_Says_With_Pause(kActorMcCoy, 5450, 1.0f, 15);
 	Actor_Says(kActorMcCoy, 5455, 12);

@@ -449,9 +449,17 @@ void SceneScriptNR03::PlayerWalkedIn() {
 		Game_Flag_Set(kFlagNR03Entered);
 		Async_Actor_Walk_To_XYZ(kActorMcCoy, 206.0f, -70.19f, -643.0f, 0, false);
 		Game_Flag_Reset(kFlagNR01toNR03);
-		Actor_Voice_Over(1490, kActorVoiceOver);
-		Actor_Voice_Over(1510, kActorVoiceOver);
-		Actor_Voice_Over(1520, kActorVoiceOver);
+		if (_vm->_cutContent) {
+			if (!Game_Flag_Query(kFlagEarlyQIsReplicant)) {
+				Actor_Voice_Over(1490, kActorVoiceOver);
+				Actor_Voice_Over(1510, kActorVoiceOver);
+				Actor_Voice_Over(1520, kActorVoiceOver);
+			}
+		} else {
+			Actor_Voice_Over(1490, kActorVoiceOver);
+			Actor_Voice_Over(1510, kActorVoiceOver);
+			Actor_Voice_Over(1520, kActorVoiceOver);
+		}
 	} else if (Game_Flag_Query(kFlagNR01toNR03) ) {
 		Loop_Actor_Walk_To_XYZ(kActorMcCoy, 302.0f, -70.19f, -715.0f, 0, false, false, false);
 		Game_Flag_Reset(kFlagNR01toNR03);

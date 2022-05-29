@@ -189,7 +189,7 @@ void SceneScriptKP06::PlayerWalkedIn() {
 					Actor_Says(kActorSteele, 2580, 15); //01-2580.AUD	I gotta say, McCoy. You had me fooled. I thought for sure you were a Rep.
 					Actor_Says(kActorSteele, 2590, 12); //01-2590.AUD	Don’t get me wrong. I mean, you’re one crazy dude. But I like that.
 					// Made it so Crystal or Gaff only mentions McCoy getting a promotion and having a lot of bonuses if he retires enough reps to earn 1500 chinyen.
-					if (Global_Variable_Query(kVariableChinyen) >= 1200) {
+					if (Actor_Query_Friendliness_To_Other(kActorGaff, kActorMcCoy) > 60) {
 						Actor_Says(kActorSteele, 2550, 12); //01-2550.AUD	I think you got a promotion coming. Not to mention all those retirement bonuses.
 						Actor_Says(kActorMcCoy, 6205, 14); //00-6205.AUD	As long as I get something like… twenty hours of sleep in the process.
 					}
@@ -209,7 +209,7 @@ void SceneScriptKP06::PlayerWalkedIn() {
 					Actor_Says(kActorMcCoy, 6200, 11);
 					Actor_Says(kActorSteele, 2540, 15);
 					Delay(1000);
-					if (Global_Variable_Query(kVariableChinyen) >= 1200) {
+					if (Actor_Query_Friendliness_To_Other(kActorGaff, kActorMcCoy) > 60) {
 						Actor_Says(kActorSteele, 2550, 12); //01-2550.AUD	I think you got a promotion coming. Not to mention all those retirement bonuses.
 						Actor_Says(kActorMcCoy, 6205, 14); //00-6205.AUD	As long as I get something like… twenty hours of sleep in the process.
 					} 
@@ -247,7 +247,7 @@ void SceneScriptKP06::PlayerWalkedIn() {
 				}
 				Actor_Says(kActorGaff, 260, 12);
 				Actor_Says(kActorMcCoy, 6260, 15);
-				if (Global_Variable_Query(kVariableChinyen) >= 1200) {
+				if (Actor_Query_Friendliness_To_Other(kActorGaff, kActorMcCoy) > 60) {
 					Actor_Says(kActorGaff, 270, 13); //53-0270.AUD	Uh-uh,  you're a real Blade Runner now. Full retirement bonuses and everything.
 				}
 				Actor_Says(kActorGaff, 280, 15); 

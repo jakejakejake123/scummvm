@@ -108,6 +108,9 @@ void SceneScriptMA06::ActorChangedGoal(int actorId, int newGoal, int oldGoal, bo
 void SceneScriptMA06::PlayerWalkedIn() {
 	Loop_Actor_Walk_To_XYZ(kActorMcCoy, 40.0f, 1.35f, 0.0f, 0, false, false, false);
 	Actor_Face_Object(kActorMcCoy, "panel", true);
+	if (_vm->_cutContent) {
+		Music_Stop(3u);
+	}
 	Delay(500);
 	bool normalElevatorBusiness = true;
 	if (_vm->_cutContent) {

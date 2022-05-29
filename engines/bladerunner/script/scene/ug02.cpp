@@ -141,6 +141,7 @@ bool SceneScriptUG02::ClickedOn3DObject(const char *objectName, bool a2) {
 			} else if (!Actor_Clue_Query(kActorMcCoy, kClueWeaponsCache)) {
 				Actor_Voice_Over(2510, kActorVoiceOver);
 				Actor_Voice_Over(2520, kActorVoiceOver);
+				Actor_Voice_Over(2530, kActorVoiceOver);
 #if BLADERUNNER_ORIGINAL_BUGS
 				Actor_Voice_Over(2530, kActorVoiceOver); // But there was no way to tell what was missing without Izo standing there checking his inventory.
 #else
@@ -189,6 +190,7 @@ bool SceneScriptUG02::ClickedOnItem(int itemId, bool a2) {
 		Actor_Clue_Acquire(kActorMcCoy, kClueIzoIncept, true, kActorIzo);
 		Item_Remove_From_World(kItemNote);
 		Item_Pickup_Spin_Effect(kModelAnimationPhoto, 462, 252);
+		Actor_Voice_Over(4080, kActorVoiceOver);
 		return true;
 	}
 	return false;

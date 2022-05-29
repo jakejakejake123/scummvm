@@ -105,11 +105,6 @@ int AIScriptShoeshineMan::GetFriendlinessModifierIfGetsClue(int otherActorId, in
 bool AIScriptShoeshineMan::GoalChanged(int currentGoalNumber, int newGoalNumber) {
 	switch (newGoalNumber) {
 	case 100:
-		Actor_Put_In_Set(kActorShoeshineMan, kSetDR01_DR02_DR04);
-		Actor_Set_At_XYZ(kActorShoeshineMan, -1160.0f, -0.04f, -235.0f, 524);
-		break;
-
-	case 101:
 		AI_Movement_Track_Flush(kActorShoeshineMan);
 		AI_Movement_Track_Append(kActorShoeshineMan, 281, 0);
 		AI_Movement_Track_Append(kActorShoeshineMan, 40, 0);
@@ -120,6 +115,63 @@ bool AIScriptShoeshineMan::GoalChanged(int currentGoalNumber, int newGoalNumber)
 }
 
 bool AIScriptShoeshineMan::UpdateAnimation(int *animation, int *frame) {
+	switch (_animationState) {
+	case 0:
+		*animation = kModelAnimationShoeshineManSitsIdle;
+		++_animationFrame;
+		if (_animationFrame >= Slice_Animation_Query_Number_Of_Frames(kModelAnimationShoeshineManSitsIdle)) {
+			_animationFrame = 0;			
+		}
+		break;
+
+	case 1:
+		*animation = kModelAnimationShoeshineManWalking;
+		++_animationFrame;
+		if (_animationFrame >= Slice_Animation_Query_Number_Of_Frames(kModelAnimationShoeshineManWalking)) {
+			_animationFrame = 0;
+		}
+		break;
+
+	case 2:
+		*animation = kModelAnimationShoeshineManSitsGestureGive;
+		++_animationFrame;
+		if (_animationFrame >= Slice_Animation_Query_Number_Of_Frames(kModelAnimationShoeshineManSitsGestureGive)) {
+			_animationFrame = 0;
+		}
+		break;
+
+	case 3:
+		*animation = kModelAnimationShoeshineManSitsCalmTalk;
+		++_animationFrame;
+		if (_animationFrame >= Slice_Animation_Query_Number_Of_Frames(kModelAnimationShoeshineManSitsCalmTalk)) {
+			_animationFrame = 0;
+		}
+		break;
+
+	case 4:
+		*animation = kModelAnimationShoeshineManSitsMoreHeadMoveTalk;
+		++_animationFrame;
+		if (_animationFrame >= Slice_Animation_Query_Number_Of_Frames(kModelAnimationShoeshineManSitsMoreHeadMoveTalk)) {
+			_animationFrame = 0;
+		}
+		break;
+
+	case 5:
+		*animation = kModelAnimationShoeshineManSitsViolentHeadMove;
+		++_animationFrame;
+		if (_animationFrame >= Slice_Animation_Query_Number_Of_Frames(kModelAnimationShoeshineManSitsViolentHeadMove)) {
+			_animationFrame = 0;
+		}
+		break;
+
+	case 6:
+		*animation = kModelAnimationShoeshineManSitsGetsUp;
+		++_animationFrame;
+		if (_animationFrame >= Slice_Animation_Query_Number_Of_Frames(kModelAnimationShoeshineManSitsGetsUp)) {
+			_animationFrame = 0;
+		}
+		break;
+	}
 	return true;
 }
 

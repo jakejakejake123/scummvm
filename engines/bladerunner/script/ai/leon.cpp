@@ -210,24 +210,42 @@ bool AIScriptLeon::GoalChanged(int currentGoalNumber, int newGoalNumber) {
 		Actor_Face_Actor(kActorLeon, kActorMcCoy, true);
 		Actor_Face_Actor(kActorMcCoy, kActorLeon, true);
 		if (Actor_Clue_Query(kActorMcCoy, kClueWantedPoster)) { // there is no way how to obtain this poster
-			Music_Play(kMusicBatl226M, 50, 0, 2, -1, kMusicLoopPlayOnce, 0);
 			Actor_Says_With_Pause(kActorMcCoy, 525, 0.2f, 14);
 			Actor_Says(kActorLeon, 90, 13);
 			Actor_Says(kActorMcCoy, 530, 16);
 			Actor_Set_Goal_Number(kActorLeon, kGoalLeonApproachMcCoy);
 		} else {
-			Actor_Says_With_Pause(kActorMcCoy, 535, 0.8f, 17);
-			Actor_Says(kActorLeon, 100, 13);
-			Actor_Says_With_Pause(kActorMcCoy, 540, 0.0f, 19);
-			Actor_Says(kActorLeon, 110, kAnimationModeTalk);
-			Actor_Says(kActorMcCoy, 550, 17);
-			Actor_Says(kActorMcCoy, 555, 18);
-			Actor_Says(kActorLeon, 120, 13);
-			Actor_Says(kActorMcCoy, 560, kAnimationModeTalk);
-			Actor_Says_With_Pause(kActorLeon, 130, 0.8f, kAnimationModeTalk);
-			Actor_Face_Current_Camera(kActorMcCoy, true);
-			Actor_Says(kActorMcCoy, 565, 18);
-			Actor_Face_Actor(kActorMcCoy, kActorLeon, true);
+			Actor_Says_With_Pause(kActorMcCoy, 535, 0.8f, 17); //00-0535.AUD	What about him?
+			Actor_Says(kActorLeon, 100, 13); //62-0100.AUD	Nothing, I just thought you were gonna arrest me. That's all.
+			if (_vm->_cutContent) {
+				if (!Game_Flag_Query(kFlagCT09LeonInterrupted)) {
+					Actor_Says_With_Pause(kActorMcCoy, 540, 0.0f, 19); //00-0540.AUD	I don't care about your little run-in with the manager, okay? I'm looking for a couple of Replicants.
+					Actor_Says(kActorLeon, 110, kAnimationModeTalk); //62-0110.AUD	Can't help you there, friend.
+				}
+			} else {
+				Actor_Says_With_Pause(kActorMcCoy, 540, 0.0f, 19); //00-0540.AUD	I don't care about your little run-in with the manager, okay? I'm looking for a couple of Replicants.
+				Actor_Says(kActorLeon, 110, kAnimationModeTalk); //62-0110.AUD	Can't help you there, friend.
+			}
+			Actor_Says(kActorMcCoy, 550, 17); //00-0550.AUD	Maybe the clerk can tell me who was renting that room back there.
+			if (_vm->_cutContent) {
+				if (Game_Flag_Query(kFlagCT09LeonInterrupted)) {
+					Actor_Says(kActorMcCoy, 555, 18); //00-0555.AUD	Why were you hassling him?
+					Actor_Says(kActorLeon, 120, 13); //62-0120.AUD	He let these creeps in my room. I'm a very private person.
+					Actor_Says(kActorMcCoy, 560, kAnimationModeTalk);
+					Actor_Says_With_Pause(kActorLeon, 130, 0.8f, kAnimationModeTalk); //62-0130.AUD	Nothing, friend. I ain't done nothing.
+					Actor_Face_Current_Camera(kActorMcCoy, true);
+					Actor_Says(kActorMcCoy, 565, 18);
+					Actor_Face_Actor(kActorMcCoy, kActorLeon, true);
+				}
+			} else {
+				Actor_Says(kActorMcCoy, 555, 18); //00-0555.AUD	Why were you hassling him?
+				Actor_Says(kActorLeon, 120, 13); //62-0120.AUD	He let these creeps in my room. I'm a very private person.
+				Actor_Says(kActorMcCoy, 560, kAnimationModeTalk);
+				Actor_Says_With_Pause(kActorLeon, 130, 0.8f, kAnimationModeTalk); //62-0130.AUD	Nothing, friend. I ain't done nothing.
+				Actor_Face_Current_Camera(kActorMcCoy, true);
+				Actor_Says(kActorMcCoy, 565, 18);
+				Actor_Face_Actor(kActorMcCoy, kActorLeon, true);
+			}
 			Actor_Says(kActorLeon, 140, 12);
 			Actor_Says_With_Pause(kActorMcCoy, 570, 0.0f, 17); //00-0570.AUD	Just help me out here a little more. You seen a big Rasta guy around here?
 			// Made it so McCoy only mentions Clovis' description if he has a clue which gave him that information.

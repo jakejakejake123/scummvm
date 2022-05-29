@@ -180,6 +180,24 @@ void SceneScriptPS05::ActorChangedGoal(int actorId, int newGoal, int oldGoal, bo
 }
 
 void SceneScriptPS05::PlayerWalkedIn() {
+	if (_vm->_cutContent) {
+		if (!Game_Flag_Query(kFlagPS15Entered)) {
+			Player_Loses_Control();
+			Delay(1000);
+			Actor_Face_Object(kActorMcCoy, "ASHTRAY", true);
+			Actor_Says(kActorMcCoy, 8525, -1); // 00-8525.AUD	Hmph.
+			Delay(1000);
+			Loop_Actor_Walk_To_XYZ(kActorMcCoy, 662.0f, 0.37f, -180.0f, 0, true, false, false);
+			Actor_Voice_Over(1770, kActorVoiceOver);
+			Actor_Voice_Over(1780, kActorVoiceOver);
+			Actor_Voice_Over(1790, kActorVoiceOver);
+			Delay(2000);
+			Loop_Actor_Walk_To_Waypoint(kActorMcCoy, 2, 24, true, false);
+			Ambient_Sounds_Remove_All_Non_Looping_Sounds(true);
+			Ambient_Sounds_Remove_All_Looping_Sounds(1u);
+			Set_Enter(kSetPS15, kScenePS15);
+		}
+	}
 	if (Game_Flag_Query(kFlagPS06toPS05)) {
 #if BLADERUNNER_ORIGINAL_BUGS
 		Actor_Set_At_XYZ(kActorMcCoy, 718.72f, 0.37f, -461.26f, 600);
@@ -252,17 +270,22 @@ void SceneScriptPS05::turnOnTV() {
 	case 2:
 		if (!Game_Flag_Query(kFlagPS05TV2)) {
 			Overlay_Play("PS05OVER", 0, true, false, 0);
+			if (_vm->_cutContent) {
+				Game_Flag_Set(kFlagZhoraNewsReport);
+			}
 			if (Actor_Query_Friendliness_To_Other(kActorClovis, kActorMcCoy) > Actor_Query_Friendliness_To_Other(kActorSteele, kActorMcCoy)) {
 				ADQ_Add(kActorNewscaster, 120, kAnimationModeTalk);
 				ADQ_Add(kActorNewscaster, 130, kAnimationModeTalk);
 				ADQ_Add(kActorNewscaster, 140, kAnimationModeTalk);
 				ADQ_Add(kActorNewscaster, 150, kAnimationModeTalk);
-				if (_vm->_cutContent && Random_Query(1, 3) == 1) {
-					ADQ_Add(kActorGuzza, 1600, kAnimationModeTalk);
-				} else {
-					ADQ_Add(kActorGuzza, 1570, kAnimationModeTalk);
-					ADQ_Add(kActorGuzza, 1580, kAnimationModeTalk);
-					ADQ_Add(kActorGuzza, 1590, kAnimationModeTalk);
+				if (_vm->_cutContent) {
+					if (Actor_Query_Friendliness_To_Other(kActorGuzza, kActorMcCoy) < 51) {
+						ADQ_Add(kActorGuzza, 1600, kAnimationModeTalk);
+					} else {
+						ADQ_Add(kActorGuzza, 1570, kAnimationModeTalk);
+						ADQ_Add(kActorGuzza, 1580, kAnimationModeTalk);
+						ADQ_Add(kActorGuzza, 1590, kAnimationModeTalk);
+					}
 				}
 			} else {
 				ADQ_Add(kActorNewscaster, 90, kAnimationModeTalk);
@@ -271,12 +294,6 @@ void SceneScriptPS05::turnOnTV() {
 				ADQ_Add(kActorGuzza, 1540, kAnimationModeTalk);
 				ADQ_Add(kActorGuzza, 1550, kAnimationModeTalk);
 				ADQ_Add(kActorGuzza, 1560, kAnimationModeTalk);
-				//Jake - Added in a line for Guzza when he is being interviewed by the news.
-				// Removed delay code so the player doesn't lose control for a second.
-				if (_vm->_cutContent) {
-					ADQ_Add(kActorGuzza, 1600, kAnimationModeTalk); //	04-1600.AUD	No comment.
-				}
-
 			}
 			Game_Flag_Set(kFlagPS05TV2);
 		}

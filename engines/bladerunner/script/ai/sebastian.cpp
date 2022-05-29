@@ -96,22 +96,38 @@ void AIScriptSebastian::OtherAgentEnteredCombatMode(int otherActorId, int combat
 	&& !Game_Flag_Query(kFlagSebastianKnockedOut)
 	 && combatMode
 	) {
-		Global_Variable_Increment(kVariableGunPulledInFrontOfSebastian, 1);
-		Actor_Modify_Friendliness_To_Other(kActorSebastian, kActorMcCoy, -5);
-		AI_Movement_Track_Pause(kActorSebastian);
-		Actor_Face_Actor(kActorSebastian, kActorMcCoy, true);
-
-		if (Global_Variable_Query(kVariableGunPulledInFrontOfSebastian) == 1) {
-			Actor_Says(kActorSebastian, 680, 12);
-			Actor_Face_Actor(kActorMcCoy, kActorSebastian, true);
-			Actor_Says_With_Pause(kActorMcCoy, 7265, 0.0f, kAnimationModeCombatIdle);
-			Actor_Change_Animation_Mode(kActorMcCoy, kAnimationModeCombatIdle);
-			Delay(500);
-			Actor_Says(kActorSebastian, 690, 16);
+		if (_vm->_cutContent) {
+			if (Player_Query_Agenda() == kPlayerAgendaSurly 
+			|| Player_Query_Agenda() == kPlayerAgendaErratic) {
+				Actor_Says(kActorSebastian, 680, 12);
+				Actor_Face_Actor(kActorMcCoy, kActorSebastian, true);
+				Actor_Says_With_Pause(kActorMcCoy, 7265, 0.0f, kAnimationModeCombatIdle); //00-7265.AUD	Think real hard JF. You got anything here that someone would want?
+				Actor_Change_Animation_Mode(kActorMcCoy, kAnimationModeCombatIdle);
+				Delay(500);
+				Actor_Says(kActorSebastian, 690, 16);
+			} else {
+				Actor_Says(kActorSebastian, 700, 15);
+				Actor_Says_With_Pause(kActorMcCoy, 7270, 0.0f, kAnimationModeCombatIdle);
+				Actor_Change_Animation_Mode(kActorMcCoy, kAnimationModeCombatIdle);
+			}
 		} else {
-			Actor_Says(kActorSebastian, 700, 15);
-			Actor_Says_With_Pause(kActorMcCoy, 7270, 0.0f, kAnimationModeCombatIdle);
-			Actor_Change_Animation_Mode(kActorMcCoy, kAnimationModeCombatIdle);
+			Global_Variable_Increment(kVariableGunPulledInFrontOfSebastian, 1);
+			Actor_Modify_Friendliness_To_Other(kActorSebastian, kActorMcCoy, -5);
+			AI_Movement_Track_Pause(kActorSebastian);
+			Actor_Face_Actor(kActorSebastian, kActorMcCoy, true);
+
+			if (Global_Variable_Query(kVariableGunPulledInFrontOfSebastian) == 1) {
+				Actor_Says(kActorSebastian, 680, 12);
+				Actor_Face_Actor(kActorMcCoy, kActorSebastian, true);
+				Actor_Says_With_Pause(kActorMcCoy, 7265, 0.0f, kAnimationModeCombatIdle);
+				Actor_Change_Animation_Mode(kActorMcCoy, kAnimationModeCombatIdle);
+				Delay(500);
+				Actor_Says(kActorSebastian, 690, 16);
+			} else {
+				Actor_Says(kActorSebastian, 700, 15);
+				Actor_Says_With_Pause(kActorMcCoy, 7270, 0.0f, kAnimationModeCombatIdle);
+				Actor_Change_Animation_Mode(kActorMcCoy, kAnimationModeCombatIdle);
+			}
 		}
 		AI_Movement_Track_Unpause(kActorSebastian);
 
@@ -423,7 +439,14 @@ void AIScriptSebastian::dialogue() {
 			Actor_Says(kActorMcCoy, 7125, 13);
 			Actor_Says(kActorSebastian, 360, 17);
 			Actor_Says_With_Pause(kActorMcCoy, 7130, 1.0f, kAnimationModeTalk);
-			Actor_Says(kActorMcCoy, 7135, 18);
+			if (_vm->_cutContent) {
+				if (Player_Query_Agenda() != kPlayerAgendaSurly 
+				&& Player_Query_Agenda() != kPlayerAgendaErratic) {
+					Actor_Says(kActorMcCoy, 7135, 18);
+				} 
+			} else {
+				Actor_Says(kActorMcCoy, 7135, 18);
+			}
 			break;
 
 		case 950: // TYRELL

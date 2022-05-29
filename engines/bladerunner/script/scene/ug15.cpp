@@ -187,27 +187,28 @@ void SceneScriptUG15::SceneFrameAdvanced(int frame) {
 	if (frame == 61) {
 		Ambient_Sounds_Play_Sound(kSfxPLANKDWN, 80, 0, 0, 99);
 	}
-
-	if ( Game_Flag_Query(kFlagUG15BridgeWillBreak)
-	 && !Game_Flag_Query(kFlagUG15BridgeBroken)
-	) {
-		float x, y, z;
-		Actor_Query_XYZ(kActorMcCoy, &x, &y, &z);
-		if ( -180.0f <= x
-		 &&   220.0f > z
-		 && !Game_Flag_Query(kFlagUG15BridgeBreaks)
+	if (!_vm->_cutContent) {
+		if ( Game_Flag_Query(kFlagUG15BridgeWillBreak)
+		&& !Game_Flag_Query(kFlagUG15BridgeBroken)
 		) {
-			Game_Flag_Set(kFlagUG15BridgeBreaks);
-			Game_Flag_Set(kFlagUG15BridgeBroken);
-			Scene_Loop_Set_Default(kUG15LoopMainLoopBridgeBroken);
-			Scene_Loop_Start_Special(kSceneLoopModeOnce, kUG15LoopBridgeBreaks, true);
-			Actor_Set_Goal_Number(kActorMcCoy, kGoalMcCoyUG15Fall);
-			Actor_Query_XYZ(kActorFreeSlotA, &x, &y, &z);
-
-			if (-200.0f < x
-			 &&  -62.0f > x
+			float x, y, z;
+			Actor_Query_XYZ(kActorMcCoy, &x, &y, &z);
+			if ( -180.0f <= x
+			&&   220.0f > z
+			&& !Game_Flag_Query(kFlagUG15BridgeBreaks)
 			) {
-				Actor_Set_Goal_Number(kActorFreeSlotA, kGoalFreeSlotAUG15Fall);
+				Game_Flag_Set(kFlagUG15BridgeBreaks);
+				Game_Flag_Set(kFlagUG15BridgeBroken);
+				Scene_Loop_Set_Default(kUG15LoopMainLoopBridgeBroken);
+				Scene_Loop_Start_Special(kSceneLoopModeOnce, kUG15LoopBridgeBreaks, true);
+				Actor_Set_Goal_Number(kActorMcCoy, kGoalMcCoyUG15Fall);
+				Actor_Query_XYZ(kActorFreeSlotA, &x, &y, &z);
+
+				if (-200.0f < x
+				&&  -62.0f > x
+				) {
+					Actor_Set_Goal_Number(kActorFreeSlotA, kGoalFreeSlotAUG15Fall);
+				}
 			}
 		}
 	}

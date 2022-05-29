@@ -90,10 +90,56 @@ void AIScriptCrazylegs::OtherAgentEnteredCombatMode(int otherActorId, int combat
 		    && (!_vm->_cutContent || Actor_Query_In_Set(kActorCrazylegs, kSetHF05))) {
 			Actor_Face_Actor(kActorCrazylegs, kActorMcCoy, true);
 			Actor_Face_Actor(kActorMcCoy, kActorCrazylegs, true);
-			Actor_Says(kActorCrazylegs, 430, 3);
-			Actor_Says_With_Pause(kActorCrazylegs, 440, 0.0f, 3);
-			Actor_Says(kActorMcCoy, 1870, -1);
-			Actor_Says(kActorCrazylegs, 450, 3);
+			if (_vm->_cutContent) {
+				if (!Game_Flag_Query(kFlagCrazylegsIsReplicant)) {
+					Actor_Says(kActorCrazylegs, 430, 3);
+					Actor_Says_With_Pause(kActorCrazylegs, 440, 0.0f, 3);
+					Actor_Says(kActorMcCoy, 1870, -1);
+					Actor_Says(kActorCrazylegs, 450, 3);
+				} else {
+					if (Actor_Clue_Query(kActorMcCoy, kClueCrazysInvolvement)) {
+						Actor_Says(kActorMcCoy, 525, -1); //00-0525.AUD	I've seen you before...
+						Actor_Says(kActorCrazylegs, 540, 12); //09-0540.AUD	Huh, what--?
+						Actor_Says(kActorMcCoy, 7260, -1); //00-7260.AUD	Didn't I see an incept tape at the—
+						Actor_Says(kActorCrazylegs, 1120, 14); //09-1120.AUD	I don’t know what you’re talking about.
+						Delay (1000);
+						Actor_Says(kActorMcCoy, 6865, -1); //00-6865.AUD	You're a Replicant.
+						Actor_Says(kActorCrazylegs, 550, 13); //09-0550.AUD	That’s impossible.
+						Delay (1000);
+						Actor_Says(kActorMcCoy, 2755, -1); //00-2755.AUD	You all right? You look a little pale.
+						Delay (2000);
+						Actor_Says(kActorCrazylegs, 1000, 12); //09-1000.AUD	I got customers on the line, so I ain’t got time to chit chat.
+						Actor_Set_Goal_Number(kActorCrazylegs, kGoalCrazyLegsLeavesShowroom);
+						Actor_Says(kActorMcCoy, 8955, -1); //00-8955.AUD	Stop!
+						Actor_Set_Targetable(kActorCrazylegs, true);
+						Player_Gains_Control();
+					} else if (Actor_Clue_Query(kActorMcCoy, kClueGrigoriansResources) 
+	   				&& Actor_Clue_Query(kActorMcCoy, kClueGrigoriansNote)) {
+						Actor_Says(kActorMcCoy, 525, -1); //00-0525.AUD	I've seen you before...
+						Actor_Says(kActorCrazylegs, 540, 12); //09-0540.AUD	Huh, what--?
+						Actor_Says(kActorMcCoy, 7260, -1); //00-7260.AUD	Didn't I see an incept tape at the—
+						Actor_Says(kActorCrazylegs, 1120, 14); //09-1120.AUD	I don’t know what you’re talking about.
+						Delay (1000);
+						Actor_Says(kActorMcCoy, 6865, -1); //00-6865.AUD	You're a Replicant.
+						Actor_Says(kActorCrazylegs, 550, 13); //09-0550.AUD	That’s impossible.
+						Delay (1000);
+						Actor_Says(kActorMcCoy, 2755, -1); //00-2755.AUD	You all right? You look a little pale.
+						Delay (2000);
+						Actor_Says(kActorCrazylegs, 1000, 12); //09-1000.AUD	I got customers on the line, so I ain’t got time to chit chat.
+						Actor_Set_Goal_Number(kActorCrazylegs, kGoalCrazyLegsLeavesShowroom);
+						Actor_Says(kActorMcCoy, 8955, -1); //00-8955.AUD	Stop!
+						Actor_Set_Targetable(kActorCrazylegs, true);
+						Player_Gains_Control();
+				    } else {
+						Actor_Says(kActorCrazylegs, 480, 13); //09-0480.AUD	Hey, keep your paws off that, Ray!
+					}
+				}
+			} else {
+				Actor_Says(kActorCrazylegs, 430, 3);
+				Actor_Says_With_Pause(kActorCrazylegs, 440, 0.0f, 3);
+				Actor_Says(kActorMcCoy, 1870, -1);
+				Actor_Says(kActorCrazylegs, 450, 3);
+			}
 			Actor_Set_Goal_Number(kActorCrazylegs, kGoalCrazyLegsMcCoyDrewHisGun);
 		} else if (Actor_Query_Goal_Number(kActorCrazylegs) == kGoalCrazyLegsMcCoyDrewHisGun) {
 			Actor_Face_Actor(kActorCrazylegs, kActorMcCoy, true);
@@ -119,6 +165,10 @@ bool AIScriptCrazylegs::ShotAtAndHit() {
 		Game_Flag_Set(kFlagCrazylegsDead);
 		Game_Flag_Set(kFlagCrazylegsShot);
 		Player_Set_Combat_Mode(false);
+		Actor_Modify_Friendliness_To_Other(kActorSteele, kActorMcCoy, 2);
+		Actor_Modify_Friendliness_To_Other(kActorClovis, kActorMcCoy, -2);
+		Actor_Modify_Friendliness_To_Other(kActorGuzza, kActorMcCoy, 2);
+		Actor_Modify_Friendliness_To_Other(kActorGaff, kActorMcCoy, 2);
 		Game_Flag_Set(kFlagHF05toHF01);
 		Set_Enter(kSetHF01, kSceneHF01);
 	}

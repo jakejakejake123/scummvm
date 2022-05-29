@@ -62,18 +62,19 @@ void AIScriptHasan::Initialize() {
 
 bool AIScriptHasan::Update() {
 	if (_vm->_cutContent) {
-		if (Global_Variable_Query(kVariableChapter) > 3
-		    && Actor_Query_Goal_Number(kActorHasan) != kGoalHasanIsAway)
-		{
+		if (Actor_Query_Goal_Number(kActorHasan) != kGoalHasanIsAway 
+		&& !Game_Flag_Query(kFlagBulletBobArrested)
+		&& !Actor_Clue_Query(kActorMcCoy, kClueBobShotInSelfDefense)
+		&& Global_Variable_Query(kVariableChapter) > 2) {
 			// use this goal to put Hasan in a FreeSlot set for Act 1
-			Actor_Set_Goal_Number(kActorHasan, kGoalHasanDefault);
+			Actor_Set_Goal_Number(kActorHasan, kGoalHasanIsAway);
 			return true;
 		} else if (Global_Variable_Query(kVariableChapter) == 2
 		           && Actor_Query_Goal_Number(kActorHasan) != kGoalHasanDefault
 		) {
 			Actor_Set_Goal_Number(kActorHasan, kGoalHasanDefault);
 			return true;
-		} else if (Global_Variable_Query(kVariableChapter) > 2
+		} else if (Global_Variable_Query(kVariableChapter) > 3
 		           && Actor_Query_Goal_Number(kActorHasan) < kGoalHasanIsWalkingAroundIsAtAR02) {
 			Actor_Set_Goal_Number(kActorHasan, kGoalHasanIsWalkingAroundIsAtAR02);
 			return true;
@@ -191,13 +192,8 @@ bool AIScriptHasan::GoalChanged(int currentGoalNumber, int newGoalNumber) {
 			break;
 
 		case kGoalHasanIsAway:
-			if (_vm->_cutContent) {
-				Actor_Put_In_Set(kActorHasan, kSetAR01_AR02);
-				Actor_Set_At_XYZ(kActorHasan, 360.77f, 4.4f, -806.67f, 126);
-			} else {
-				Actor_Put_In_Set(kActorHasan, kSetFreeSlotH);
-				Actor_Set_At_Waypoint(kActorHasan, 40, 0); // kSetFreeSlotH
-			}
+			Actor_Put_In_Set(kActorHasan, kSetFreeSlotH);
+			Actor_Set_At_Waypoint(kActorHasan, 40, 0); // kSetFreeSlotH
 			break;
 
 		case kGoalHasanIsWalkingAroundIsAtAR02:

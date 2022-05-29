@@ -156,8 +156,7 @@ bool SceneScriptPS04::ClickedOnActor(int actorId) {
 					//he killed the homeless guy and told Guzza about it. Guzza ends up using it against McCoy to get him out of the way.
 					//Also if Guzza liked you he will now be angry with you and the next dialogues you receive is him being angry with McCoy.
 					Game_Flag_Set(kFlagGuzzaInformed);
-					Game_Flag_Reset(kFlagCT04HomelessKilledByMcCoy);
-					Actor_Modify_Friendliness_To_Other(kActorGuzza, kActorMcCoy, -6);
+					Actor_Modify_Friendliness_To_Other(kActorGuzza, kActorMcCoy, -2);
 				} else if (Game_Flag_Query(kFlagTyrellGuardTalkMeeting) 	
 				&& !Game_Flag_Query(kFlagTB07TyrellMeeting)) {
 					Actor_Says(kActorGuzza, 420, 31);
@@ -170,7 +169,10 @@ bool SceneScriptPS04::ClickedOnActor(int actorId) {
 					Actor_Says(kActorMcCoy, 4035, 13);
 					Actor_Says(kActorGuzza, 450, 34);
 					Actor_Says(kActorGuzza, 460, 33);
-					Actor_Says(kActorMcCoy, 4040, 17);
+					if (Player_Query_Agenda() != kPlayerAgendaSurly
+					&& (Player_Query_Agenda() != kPlayerAgendaErratic)) {
+						Actor_Says(kActorMcCoy, 4040, 17); //00-4040.AUD	Appreciate it, Lieutenant.
+					}
 					Game_Flag_Set(kFlagTB07TyrellMeeting);
 					Game_Flag_Reset(kFlagTyrellGuardTalkMeeting);
 				} else if (Actor_Clue_Query(kActorMcCoy, kClueHoldensBadge)) {
@@ -187,10 +189,11 @@ bool SceneScriptPS04::ClickedOnActor(int actorId) {
 					Actor_Clue_Acquire(kActorMcCoy, kClueMcCoyRecoveredHoldensBadge, true, kActorGuzza);
 					Actor_Clue_Lose(kActorMcCoy, kClueHoldensBadge);
 					Actor_Clue_Acquire(kActorGuzza, kClueHoldensBadge, true, kActorMcCoy);
-					Actor_Modify_Friendliness_To_Other(kActorGuzza, kActorMcCoy, 6);
-				} else if (Actor_Clue_Query(kActorMcCoy, kClueZubenRunsAway)) {
+					Actor_Modify_Friendliness_To_Other(kActorGuzza, kActorMcCoy, 2);
+				} else if (Game_Flag_Query(kFlagCT01TalkToHowieAfterZubenMissing)
+				&& !Game_Flag_Query(kFlagGuzzaLoanTalk)) {
 					Actor_Says(kActorMcCoy, 4000, 18);
-					Actor_Clue_Lose(kActorMcCoy, kClueZubenRunsAway);
+					Game_Flag_Set(kFlagGuzzaLoanTalk);
 					if (Actor_Query_Friendliness_To_Other(kActorGuzza, kActorMcCoy) > 50) {
 						Actor_Clue_Acquire(kActorMcCoy, kClueGuzzasCash, true, kActorGuzza);
 						Actor_Says(kActorGuzza, 520, 33);
@@ -200,8 +203,13 @@ bool SceneScriptPS04::ClickedOnActor(int actorId) {
 						Actor_Says(kActorMcCoy, 4060, 13);
 						Actor_Says(kActorGuzza, 540, 31); //04-0540.AUD	Trust me. Ain't nobody getting rich unless they're sneaking some on the side.
 						Actor_Says(kActorGuzza, 550, 32);
-						Actor_Says(kActorMcCoy, 4065, 18);
-						Actor_Says(kActorGuzza, 560, 34);
+						if (Player_Query_Agenda() == kPlayerAgendaSurly 
+						|| Player_Query_Agenda() == kPlayerAgendaErratic) {
+							Actor_Says(kActorMcCoy, 4065, 18);
+							Actor_Says(kActorGuzza, 560, 34);
+						} else {
+							Actor_Says(kActorMcCoy, 2305, 14); //00-2305.AUD	I’m sorry.
+						}
 						if (Query_Difficulty_Level() != kGameDifficultyEasy) {
 							Global_Variable_Increment(kVariableChinyen, 100);
 						}
@@ -211,9 +219,17 @@ bool SceneScriptPS04::ClickedOnActor(int actorId) {
 						Actor_Says(kActorGuzza, 480, 31);
 						Actor_Says(kActorGuzza, 490, 31);
 						Actor_Says(kActorGuzza, 500, 32);
-						Actor_Says(kActorMcCoy, 4045, 16);
+						if (Player_Query_Agenda() != kPlayerAgendaSurly
+						&& (Player_Query_Agenda() != kPlayerAgendaErratic)) {
+							Actor_Says(kActorMcCoy, 4045, 16); //00-4045.AUD	Okay, okay. Sorry I asked!
+						} else {
+							Actor_Says(kActorMcCoy, 4880, 13); //00-4880.AUD	Is that right?
+						}
 						Actor_Says(kActorGuzza, 510, 31);	// Hey, you track down a Rep, you get an advance.
-						Actor_Says(kActorMcCoy, 4050, 18);
+						if (Player_Query_Agenda() == kPlayerAgendaSurly 
+						|| Player_Query_Agenda() == kPlayerAgendaErratic) {
+							Actor_Says(kActorMcCoy, 4050, 18);
+						}
 					}
 				} else  {
 					dialogueWithGuzza();
@@ -326,7 +342,7 @@ void SceneScriptPS04::dialogueWithGuzza() {
 			DM_Add_To_List_Never_Repeat_Once_Selected(110, 5, 7, 4); // REQUEST TYRELL MEETING
 		}
 		if (_vm->_cutContent) {
-			if (Actor_Clue_Query(kActorMcCoy, kClueZubenRunsAway)) {
+			if (Game_Flag_Query(kFlagCT01TalkToHowieAfterZubenMissing)) {
 				DM_Add_To_List_Never_Repeat_Once_Selected(120, 1, -1, -1); // MONEY
 			}
 		} else {
@@ -362,7 +378,14 @@ void SceneScriptPS04::dialogueWithGuzza() {
 		Actor_Says(kActorMcCoy, 4035, 13);
 		Actor_Says(kActorGuzza, 450, 34);
 		Actor_Says(kActorGuzza, 460, 33);
-		Actor_Says(kActorMcCoy, 4040, 17);
+		if (_vm->_cutContent) {
+			if (Player_Query_Agenda() != kPlayerAgendaSurly
+			&& (Player_Query_Agenda() != kPlayerAgendaErratic)) {
+				Actor_Says(kActorMcCoy, 4040, 17); //00-4040.AUD	Appreciate it, Lieutenant.
+			}
+		} else {
+			Actor_Says(kActorMcCoy, 4040, 17); //00-4040.AUD	Appreciate it, Lieutenant.
+		}
 		Game_Flag_Set(kFlagTB07TyrellMeeting);
 		Game_Flag_Reset(kFlagTyrellGuardTalkMeeting);
 		break;
@@ -370,7 +393,7 @@ void SceneScriptPS04::dialogueWithGuzza() {
 	case 120: // MONEY
 		Actor_Says(kActorMcCoy, 4000, 18);
 		if (_vm->_cutContent) {
-			Actor_Clue_Lose(kActorMcCoy, kClueZubenRunsAway);
+			Game_Flag_Set(kFlagGuzzaLoanTalk);
 			// Using cut content we have two cases:
 			// 1. Guzza can accept the loan (as in ORIGINAL)
 			// 2. Guzza can refuse the loan (CUT)
@@ -391,6 +414,18 @@ void SceneScriptPS04::dialogueWithGuzza() {
 				Actor_Says(kActorMcCoy, 4060, 13);
 				Actor_Says(kActorGuzza, 540, 31); //04-0540.AUD	Trust me. Ain't nobody getting rich unless they're sneaking some on the side.
 				Actor_Says(kActorGuzza, 550, 32);
+				if (_vm->_cutContent) { 
+					if (Player_Query_Agenda() == kPlayerAgendaSurly 
+					|| Player_Query_Agenda() == kPlayerAgendaErratic) {
+						Actor_Says(kActorMcCoy, 4065, 18);
+						Actor_Says(kActorGuzza, 560, 34);
+					} else {
+						Actor_Says(kActorMcCoy, 2305, 14); //00-2305.AUD	I’m sorry.
+					}
+				} else {
+					Actor_Says(kActorMcCoy, 4065, 18);
+					Actor_Says(kActorGuzza, 560, 34);
+				}
 				Actor_Says(kActorMcCoy, 4065, 18);
 				Actor_Says(kActorGuzza, 560, 34);
 				if (Query_Difficulty_Level() != kGameDifficultyEasy) {
@@ -402,9 +437,23 @@ void SceneScriptPS04::dialogueWithGuzza() {
 				Actor_Says(kActorGuzza, 480, 31);
 				Actor_Says(kActorGuzza, 490, 31);
 				Actor_Says(kActorGuzza, 500, 32);
-				Actor_Says(kActorMcCoy, 4045, 16);
-				Actor_Says(kActorGuzza, 510, 31);	// Hey, you track down a Rep, you get an advance.
-				Actor_Says(kActorMcCoy, 4050, 18);
+				if (_vm->_cutContent) {
+					if (Player_Query_Agenda() != kPlayerAgendaSurly
+					&& (Player_Query_Agenda() != kPlayerAgendaErratic)) {
+						Actor_Says(kActorMcCoy, 4045, 16); //00-4045.AUD	Okay, okay. Sorry I asked!
+					} else {
+						Actor_Says(kActorMcCoy, 4880, 13); //00-4880.AUD	Is that right?
+					}
+					Actor_Says(kActorGuzza, 510, 31);	// Hey, you track down a Rep, you get an advance.
+					if (Player_Query_Agenda() == kPlayerAgendaSurly 
+					|| Player_Query_Agenda() == kPlayerAgendaErratic) {
+						Actor_Says(kActorMcCoy, 4050, 18);
+					}
+				} else {
+					Actor_Says(kActorMcCoy, 4045, 16); //00-4045.AUD	Okay, okay. Sorry I asked!
+					Actor_Says(kActorGuzza, 510, 31);
+					Actor_Says(kActorMcCoy, 4050, 18);
+				}
 			}
 		} else {
 			Actor_Clue_Acquire(kActorMcCoy, kClueGuzzasCash, true, kActorGuzza);
@@ -438,13 +487,18 @@ void SceneScriptPS04::dialogueWithGuzza() {
 				Actor_Says(kActorGuzza, 370, 33);
 				Actor_Says(kActorGuzza, 380, 32);
 				Actor_Says(kActorGuzza, 390, 31);
-				Actor_Says(kActorMcCoy, 3985, 18);
-				Actor_Says(kActorGuzza, 400, 34);
-				Actor_Says(kActorGuzza, 410, 31);
-				// Lowered friendlines towards Guzza and McCoy so a conversation where Guzza tells you to go away will now play.
-				Actor_Modify_Friendliness_To_Other(kActorGuzza, kActorMcCoy, -5);
-				Game_Flag_Set(kFlagPS04GuzzaTalkIsFurious);
-				// Made so Guzza will also not get angry with McCoy if he at least retired  Runciter. Also since Runciter is a nexus 5 Guzza won't say the line about the nexus 6's being unpredictable.
+				if (Player_Query_Agenda() == kPlayerAgendaSurly 
+				|| Player_Query_Agenda() == kPlayerAgendaErratic) {
+					Actor_Says(kActorMcCoy, 4320, 14); //00-4320.AUD	Save the pitch for someone who gives a shit.
+					Actor_Says(kActorGuzza, 410, 31);
+					Actor_Modify_Friendliness_To_Other(kActorGuzza, kActorMcCoy, -2);
+					Game_Flag_Set(kFlagPS04GuzzaTalkIsFurious);
+				} else {	
+					Actor_Says(kActorMcCoy, 3985, 18);
+					Actor_Says(kActorGuzza, 400, 34);
+					Actor_Says(kActorGuzza, 410, 31);
+					Game_Flag_Set(kFlagPS04GuzzaTalkIsFurious);
+				}
 			} else if 
 			((Game_Flag_Query(kFlagZubenRetired)
 			|| Game_Flag_Query(kFlagMcCoyRetiredRunciter))
@@ -456,13 +510,17 @@ void SceneScriptPS04::dialogueWithGuzza() {
 				Actor_Face_Current_Camera(kActorGuzza, true);
 				Actor_Says(kActorGuzza, 150, 31);
 				Actor_Says(kActorGuzza, 160, 32);
-				Actor_Says(kActorMcCoy, 3925, 18);
-				Actor_Face_Actor(kActorGuzza, kActorMcCoy, true);
-				if (!Game_Flag_Query(kFlagMcCoyRetiredRunciter)) {
-					Actor_Says(kActorGuzza, 170, 33); //04-0170.AUD	Yeah, well don't get too cocky. Those Sixes can be damn unpredictable.
-					Loop_Actor_Walk_To_XYZ(kActorMcCoy, -716.0f, -354.85f, 1042.0f, 0, false, false, true);
-					Actor_Face_Actor(kActorMcCoy, kActorGuzza, true);
-					Actor_Says(kActorMcCoy, 3930, 13); 
+				if (!Game_Flag_Query(kFlagMcCoyIsHelpingReplicants)) {
+					Actor_Says(kActorMcCoy, 3925, 18);
+					Actor_Face_Actor(kActorGuzza, kActorMcCoy, true);
+					if (!Game_Flag_Query(kFlagMcCoyRetiredRunciter)) {
+						Actor_Says(kActorGuzza, 170, 33); //04-0170.AUD	Yeah, well don't get too cocky. Those Sixes can be damn unpredictable.
+						Loop_Actor_Walk_To_XYZ(kActorMcCoy, -716.0f, -354.85f, 1042.0f, 0, false, false, true);
+						Actor_Face_Actor(kActorMcCoy, kActorGuzza, true);
+						Actor_Says(kActorMcCoy, 3930, 13); 
+					}
+				} else {
+					Actor_Says(kActorMcCoy, 4880, 13); //00-4880.AUD	Is that right?
 				}
 				Game_Flag_Set(kFlagPS04GuzzaTalkZubenRetired);
 				Actor_Face_Actor(kActorGuzza, kActorMcCoy, true);
@@ -472,7 +530,10 @@ void SceneScriptPS04::dialogueWithGuzza() {
 	#else
 				if (Global_Variable_Query(kVariableChapter) == 1) { // only play this dialogue (about day off) on day one. It doesn't fit in the next days
 					Actor_Says(kActorGuzza, 180, 34);	// But I'm proud of you McCoy. Why don't you take the rest of the day off?
-					Actor_Says(kActorMcCoy, 3935, 13);	// Thanks.
+					if (Player_Query_Agenda() != kPlayerAgendaSurly
+					&& (Player_Query_Agenda() != kPlayerAgendaErratic)) {
+						Actor_Says(kActorMcCoy, 3935, 13);	// Thanks.
+					}
 				}
 	#endif // BLADERUNNER_ORIGINAL_BUGS
 				Actor_Says(kActorGuzza, 190, 30);
@@ -511,9 +572,12 @@ void SceneScriptPS04::dialogueWithGuzza() {
 				if (Global_Variable_Query(kVariableChapter) == 1) { // only play this dialogue (about day off) on day one. It doesn't fit in the next days
 					Actor_Says(kActorGuzza, 290, 32);	// Don't push it kid. You look like you're beat anyway.
 					Actor_Says(kActorGuzza, 300, 31);	// Why don't you rest them dogs the rest of the day.
-					Actor_Says(kActorMcCoy, 3965, 13);	// I still got plenty energy.
-					Actor_Says(kActorGuzza, 310, 33);	// That's an order McCoy.
-					Actor_Says(kActorGuzza, 320, 34);	// I'm ordering you to relax.
+					if (Player_Query_Agenda() != kPlayerAgendaSurly
+					&& (Player_Query_Agenda() != kPlayerAgendaErratic)) {
+						Actor_Says(kActorMcCoy, 3965, 13);	// I still got plenty energy.
+						Actor_Says(kActorGuzza, 310, 33);	// That's an order McCoy.
+						Actor_Says(kActorGuzza, 320, 34);	// I'm ordering you to relax.
+					}
 				}
 			} else if (!Game_Flag_Query(kFlagPS04GuzzaTalkDumpToMainframe)) {
 				Actor_Says(kActorMcCoy, 3920, 13); //00-3920.AUD	Bryant go on permanent leave and you get full use of the office, Lieutenant?
@@ -524,14 +588,20 @@ void SceneScriptPS04::dialogueWithGuzza() {
 			&& Actor_Query_Friendliness_To_Other(kActorGuzza, kActorMcCoy) > 50) {
 				Actor_Says(kActorMcCoy, 8514, 18); //00-8514.AUD	Got anything new to tell me?
 				Actor_Says(kActorGuzza, 1510, 30); //04-1510.AUD	You’re the one on the job, kid. My own case looks stacked up on a desk a yard high. 
-				Actor_Says(kActorMcCoy, 2305, 16); //00-2305.AUD	I’m sorry.
+				if (Player_Query_Agenda() != kPlayerAgendaSurly
+				&& (Player_Query_Agenda() != kPlayerAgendaErratic)) {
+					Actor_Says(kActorMcCoy, 2305, 16); //00-2305.AUD	I’m sorry.
+				}
 				Actor_Says(kActorGuzza, 1500, 30); //04-1500.AUD	Anything comes up, kid, you’ll be the first to know.
 			} else if (Game_Flag_Query(kFlagPS04GuzzaTalkDumpToMainframe)
 			&& Actor_Query_Friendliness_To_Other(kActorGuzza, kActorMcCoy) < 51) {
-				Actor_Says(kActorMcCoy, 4020, 13);
-				Actor_Says(kActorGuzza, 580, 34);
-				Actor_Says(kActorMcCoy, 4075, 16);
-				Actor_Says(kActorGuzza, 590, 33);	
+				if (Player_Query_Agenda() != kPlayerAgendaSurly
+				&& (Player_Query_Agenda() != kPlayerAgendaErratic)) {
+					Actor_Says(kActorMcCoy, 4020, 13);
+					Actor_Says(kActorGuzza, 580, 34);
+					Actor_Says(kActorMcCoy, 4075, 16);
+					Actor_Says(kActorGuzza, 590, 33);	
+				}
 				Actor_Says(kActorMcCoy, 5150, 16); //00-5150.AUD	One more thing.
 				Actor_Says(kActorGuzza, 130, 30); //04-0130.AUD	Don't got time for you now, McCoy. Hit me later.
 				Actor_Face_Current_Camera(kActorGuzza, true);
@@ -670,8 +740,7 @@ void SceneScriptPS04::dialogueWithGuzza() {
 		//Also if Guzza liked you he will now be angry with you and the next dialogues you receive is him being angry with McCoy.
 		if (_vm->_cutContent) {
 			Game_Flag_Set(kFlagGuzzaInformed);
-			Game_Flag_Reset(kFlagCT04HomelessKilledByMcCoy);
-			Actor_Modify_Friendliness_To_Other(kActorGuzza, kActorMcCoy, -6);
+			Actor_Modify_Friendliness_To_Other(kActorGuzza, kActorMcCoy, -2);
 		}
 		break;
 
@@ -693,7 +762,7 @@ void SceneScriptPS04::dialogueWithGuzza() {
 			Actor_Clue_Acquire(kActorMcCoy, kClueMcCoyRecoveredHoldensBadge, true, kActorGuzza);
 			Actor_Clue_Lose(kActorMcCoy, kClueHoldensBadge);
 			Actor_Clue_Acquire(kActorGuzza, kClueHoldensBadge, true, kActorMcCoy);
-			Actor_Modify_Friendliness_To_Other(kActorGuzza, kActorMcCoy, 6);
+			Actor_Modify_Friendliness_To_Other(kActorGuzza, kActorMcCoy, 2);
 		}
 		break;
 

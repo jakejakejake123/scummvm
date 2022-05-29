@@ -141,7 +141,16 @@ void AIScriptTransient::OtherAgentExitedThisSet(int otherActorId) {
 }
 
 void AIScriptTransient::OtherAgentEnteredCombatMode(int otherActorId, int combatMode) {
-	// return false;
+	if (_vm->_cutContent) {
+		if (otherActorId == kActorMcCoy
+		&& combatMode
+		) {
+			Actor_Face_Actor(kActorMcCoy, kActorTransient, true);
+			Actor_Says(kActorMcCoy, 5720, -1);
+			Delay(3000);
+			Actor_Says(kActorMcCoy, 8525, -1); //00-8525.AUD	Hmph.	
+		}
+	}
 }
 
 void AIScriptTransient::ShotAtAndMissed() {

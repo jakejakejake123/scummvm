@@ -71,12 +71,26 @@ bool AIScriptOfficerLeary::Update() {
 		return false;
 	}
 
-	if (!Game_Flag_Query(kFlagMcCoyInRunciters)
-	 &&  Game_Flag_Query(kFlagRC51ChopstickWrapperTaken)
-	 &&  Game_Flag_Query(kFlagRC01ChromeDebrisTaken)
-	 &&  Player_Query_Current_Scene() != kSceneRC01
-	 &&  !Game_Flag_Query(kFlagRC01PoliceDone)          // otherwise this clause keeps repeating
-	 &&  Global_Variable_Query(kVariableChapter) < 3
+	if (_vm->_cutContent) {
+		if (!Game_Flag_Query(kFlagMcCoyInRunciters)
+		&&  Game_Flag_Query(kFlagRC51ChopstickWrapperTaken)
+		&&  Actor_Clue_Query(kActorMcCoy, kClueCrowdInterviewA)
+		&&  Actor_Clue_Query(kActorMcCoy, kClueRuncitersVideo)
+		&&  Actor_Clue_Query(kActorMcCoy, kClueDoorForced2)
+		&&  Player_Query_Current_Scene() != kSceneRC01
+		&&  !Game_Flag_Query(kFlagRC01PoliceDone)          // otherwise this clause keeps repeating
+		&&  Global_Variable_Query(kVariableChapter) < 3
+		) {
+			Game_Flag_Set(kFlagRC01PoliceDone);
+			Actor_Set_Goal_Number(kActorOfficerLeary, kGoalOfficerLearyPoliceDoneFromRC01);
+			return false;
+		}
+	} else if (!Game_Flag_Query(kFlagMcCoyInRunciters)
+	&&  Game_Flag_Query(kFlagRC51ChopstickWrapperTaken)
+	&&  Game_Flag_Query(kFlagRC01ChromeDebrisTaken)
+	&&  Player_Query_Current_Scene() != kSceneRC01
+	&&  !Game_Flag_Query(kFlagRC01PoliceDone)          // otherwise this clause keeps repeating
+	&&  Global_Variable_Query(kVariableChapter) < 3
 	) {
 		Game_Flag_Set(kFlagRC01PoliceDone);
 		Actor_Set_Goal_Number(kActorOfficerLeary, kGoalOfficerLearyPoliceDoneFromRC01);

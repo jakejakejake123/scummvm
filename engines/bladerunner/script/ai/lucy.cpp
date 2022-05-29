@@ -268,17 +268,6 @@ bool AIScriptLucy::ShotAtAndHit() {
 }
 
 void AIScriptLucy::Retired(int byActorId) {
-	if (byActorId == kActorMcCoy) {
-		// Made it so when McCoy retired Lucy Clovis gains the McCoy retired Lucy clue which leads him to breaking one of McCoys fingers.
-		if (_vm->_cutContent) {
-			Actor_Clue_Acquire(kActorClovis, kClueMcCoyRetiredLucy, true, -1);
-			Actor_Modify_Friendliness_To_Other(kActorClovis, kActorMcCoy, -6);
-			Game_Flag_Reset(kFlagMcCoyIsHelpingReplicants);
-			Actor_Modify_Friendliness_To_Other(kActorSteele, kActorMcCoy, 2);
-			// Made it so you lose affection to both Lucy and Dektora if you retire Lucy.
-			Global_Variable_Set(kVariableAffectionTowards, kAffectionTowardsNone);
-		}
-	}
 
 #if BLADERUNNER_ORIGINAL_BUGS
 #else
@@ -286,32 +275,32 @@ void AIScriptLucy::Retired(int byActorId) {
 		Global_Variable_Decrement(kVariableReplicantsSurvivorsAtMoonbus, 1);
 		Actor_Set_Goal_Number(kActorLucy, kGoalLucyGone);
 		if (_vm->_cutContent) {
-				if (Query_Difficulty_Level() != kGameDifficultyEasy) {
-					Global_Variable_Increment (kVariableChinyen, 200);
-				}
+			if (Query_Difficulty_Level() != kGameDifficultyEasy) {
+				Global_Variable_Increment (kVariableChinyen, 200);
 			}
+			Actor_Modify_Friendliness_To_Other(kActorGaff, kActorMcCoy, 2);
+		}
 
-			if (Global_Variable_Query(kVariableReplicantsSurvivorsAtMoonbus) == 0) {
-				Player_Loses_Control();
-				// Made it so if Crazylegs is in the moonbus, after all the reps are retired he flees and is never seen again.
-				// This was done because he has no death animation so this seemed to be a reasonable solution.
-				if (_vm->_cutContent) {
-					if (Game_Flag_Query(kFlagCrazylegsIsReplicant)) {
-						if (!Game_Flag_Query(kFlagCrazylegsDead)) {
-							Loop_Actor_Walk_To_XYZ(kActorCrazylegs, -12.0f, -41.58f, 72.0f, 0, true, false, false);
-							Actor_Put_In_Set(kActorCrazylegs, kSceneKP06);
-						}
+		if (Global_Variable_Query(kVariableReplicantsSurvivorsAtMoonbus) == 0) {
+			Player_Loses_Control();
+			// Made it so if Crazylegs is in the moonbus, after all the reps are retired he flees and is never seen again.
+			// This was done because he has no death animation so this seemed to be a reasonable solution.
+			if (_vm->_cutContent) {
+				if (Game_Flag_Query(kFlagCrazylegsIsReplicant)) {
+					if (!Game_Flag_Query(kFlagCrazylegsDead)) {
+						Loop_Actor_Walk_To_XYZ(kActorCrazylegs, -12.0f, -41.58f, 72.0f, 0, true, false, false);
+						Actor_Put_In_Set(kActorCrazylegs, kSceneKP06);
 					}
-					Delay(2000);
-					Player_Set_Combat_Mode(false);
-					Delay(1000); 
 				}
-				Ambient_Sounds_Remove_All_Non_Looping_Sounds(true);
-				Ambient_Sounds_Remove_All_Looping_Sounds(1u);
-				Game_Flag_Set(kFlagKP07toKP06);
-				Game_Flag_Reset(kFlagMcCoyIsHelpingReplicants);
-				Set_Enter(kSetKP05_KP06, kSceneKP06);
-
+				Delay(2000);
+				Player_Set_Combat_Mode(false);
+				Delay(2000); 
+			}
+			Ambient_Sounds_Remove_All_Non_Looping_Sounds(true);
+			Ambient_Sounds_Remove_All_Looping_Sounds(1u);
+			Game_Flag_Set(kFlagKP07toKP06);
+			Game_Flag_Reset(kFlagMcCoyIsHelpingReplicants);
+			Set_Enter(kSetKP05_KP06, kSceneKP06);
 			return; //true;
 		}
 	}
@@ -326,26 +315,33 @@ void AIScriptLucy::Retired(int byActorId) {
 		Non_Player_Actor_Combat_Mode_On(kActorSteele, kActorCombatStateUncover, true, kActorMcCoy, 15, kAnimationModeCombatIdle, kAnimationModeCombatWalk, kAnimationModeCombatRun, 0, 0, 100, 25, 300, false);
 	}
 
-	if (Query_Difficulty_Level() != kGameDifficultyEasy
-	 && byActorId == kActorMcCoy
-	 && Game_Flag_Query(kFlagLucyIsReplicant)
-	) {
-		Global_Variable_Increment(kVariableChinyen, 200);
-	}
-
-	Actor_Set_Goal_Number(kActorLucy, kGoalLucyGone);
-	// McCoy now makes a comment when retiring Lucy
-	if (_vm->_cutContent) {
-		// Sad music will play when Lucy dies.
-		Music_Stop(3u);
-		Music_Play(kMusicCrysDie1, 25, 0, 1, -1, kMusicLoopPlayOnce, 0);
-		if (Player_Query_Agenda() == kPlayerAgendaSurly 
+	if (byActorId == kActorMcCoy
+	&& Actor_Query_In_Set(kActorLucy, kSetHF04)
+	&& Game_Flag_Query(kFlagLucyIsReplicant)) { 
+		if (Query_Difficulty_Level() != kGameDifficultyEasy) {
+			Global_Variable_Increment(kVariableChinyen, 200);
+		}
+		if (_vm->_cutContent) {
+			// Sad music will play when Lucy dies.
+			Music_Stop(3u);
+			Music_Play(kMusicCrysDie1, 25, 0, 1, -1, kMusicLoopPlayOnce, 0);
+			if (Player_Query_Agenda() == kPlayerAgendaSurly 
 			|| Player_Query_Agenda() == kPlayerAgendaErratic) {
-			Actor_Voice_Over(920, kActorVoiceOver); // 99-0920.AUD	Easy money.
-		} else {
-			Actor_Voice_Over(930, kActorVoiceOver); // 99-0930.AUD	Hope I was right about her.	
-		}	
+				Actor_Voice_Over(920, kActorVoiceOver); // 99-0920.AUD	Easy money.
+			} else {
+				Actor_Voice_Over(930, kActorVoiceOver); // 99-0930.AUD	Hope I was right about her.	
+			}	
+			Actor_Clue_Acquire(kActorClovis, kClueMcCoyRetiredLucy, true, -1);
+			Actor_Modify_Friendliness_To_Other(kActorClovis, kActorMcCoy, -2);
+			Game_Flag_Reset(kFlagMcCoyIsHelpingReplicants);
+			Actor_Modify_Friendliness_To_Other(kActorSteele, kActorMcCoy, 2);
+			Actor_Modify_Friendliness_To_Other(kActorGuzza, kActorMcCoy, 2);
+			Actor_Modify_Friendliness_To_Other(kActorGaff, kActorMcCoy, 2);
+			// Made it so you lose affection to both Lucy and Dektora if you retire Lucy.
+			Global_Variable_Set(kVariableAffectionTowards, kAffectionTowardsNone);
+		}
 	}
+	Actor_Set_Goal_Number(kActorLucy, kGoalLucyGone);
 }
 
 int AIScriptLucy::GetFriendlinessModifierIfGetsClue(int otherActorId, int clueId) {
@@ -471,7 +467,14 @@ bool AIScriptLucy::GoalChanged(int currentGoalNumber, int newGoalNumber) {
 		// Added in a line and made it so Lucy approaches McCoy when he talks to her in the maze.
 		if (_vm->_cutContent) {
 			Actor_Says(kActorMcCoy, 1695, 16); //00-1695.AUD	Lucy? Come on out. I’m not the hunter anymore.
+			Actor_Modify_Friendliness_To_Other(kActorClovis, kActorMcCoy, 2);
+			Actor_Modify_Friendliness_To_Other(kActorSteele, kActorMcCoy, -2);
+			Actor_Modify_Friendliness_To_Other(kActorGuzza, kActorMcCoy, -2);
 			Actor_Clue_Acquire(kActorMcCoy, kClueMcCoyHelpedLucy, true, kActorLucy);
+			if (Global_Variable_Query(kVariableAffectionTowards) == kAffectionTowardsNone
+			) {
+				Global_Variable_Set(kVariableAffectionTowards, kAffectionTowardsLucy);
+			}
 		}
 		Actor_Says(kActorMcCoy, 1700, 16); //00-1700.AUD	I put my gun away.
 		AI_Movement_Track_Flush(kActorLucy);

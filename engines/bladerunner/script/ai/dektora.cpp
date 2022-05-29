@@ -162,7 +162,8 @@ void AIScriptDektora::CompletedMovementTrack() {
 
 	case kGoalDektoraWalkAroundAsReplicant:
 	if (_vm->_cutContent) {
-		if (!Game_Flag_Query(kFlagEarlyQIsReplicant)  
+		if (Random_Query(1, 2) == 1
+		&& !Game_Flag_Query(kFlagEarlyQIsReplicant)  
 		&& Actor_Query_Goal_Number(kActorEarlyQ) != 1
 		&& Actor_Query_Goal_Number(kActorEarlyQ) != 101
 		) {
@@ -342,18 +343,8 @@ bool AIScriptDektora::ShotAtAndHit() {
 
 void AIScriptDektora::Retired(int byActorId) {
 	if (byActorId == kActorMcCoy) {
-		Actor_Modify_Friendliness_To_Other(kActorClovis, kActorMcCoy, -5);
-		// Added in some code so when you retire Dektora the McCoy is helping replicnants flag is reset and he receives 200 chinyen.
-		// Made it so when McCoy retired Dektora Clovis gains the McCoy retired Dektora clue which leads him to breaking one of McCoys fingers.
-		if (_vm->_cutContent) {
-			Actor_Clue_Acquire(kActorClovis, kClueMcCoyRetiredDektora, true, kActorSteele);
-			Game_Flag_Reset(kFlagMcCoyIsHelpingReplicants);
-			// Made it so you lose affection to both Dektora and Lucy if you retired Dektora.
-			Global_Variable_Set(kVariableAffectionTowards, kAffectionTowardsNone);
-			Actor_Modify_Friendliness_To_Other(kActorSteele, kActorMcCoy, 2);
-			if (Query_Difficulty_Level() != kGameDifficultyEasy) {
-				Global_Variable_Increment(kVariableChinyen, 200);
-			}
+		if (!_vm->_cutContent) {
+			Actor_Modify_Friendliness_To_Other(kActorClovis, kActorMcCoy, -5);
 		}
 	}
 
@@ -371,6 +362,7 @@ void AIScriptDektora::Retired(int byActorId) {
 			if (Query_Difficulty_Level() != kGameDifficultyEasy) {
 				Global_Variable_Increment (kVariableChinyen, 200);
 			}
+			Actor_Modify_Friendliness_To_Other(kActorGaff, kActorMcCoy, 2);
 		}
 
 		if (Global_Variable_Query(kVariableReplicantsSurvivorsAtMoonbus) == 0) {
@@ -384,7 +376,7 @@ void AIScriptDektora::Retired(int byActorId) {
 				}
 				Delay(2000);
 				Player_Set_Combat_Mode(false);
-				Delay(1000); 
+				Delay(2000);
 			}
 			Ambient_Sounds_Remove_All_Non_Looping_Sounds(true);
 			Ambient_Sounds_Remove_All_Looping_Sounds(1u);
@@ -433,13 +425,15 @@ bool AIScriptDektora::GoalChanged(int currentGoalNumber, int newGoalNumber) {
 		// Also removed the random chance of Dektora buying the scorpions since the random chance of Early Q being a replicant has been added to the equation.
 		if (_vm->_cutContent) {
 			if (!Game_Flag_Query(kFlagEarlyQIsReplicant)) { 
-				 if (Game_Flag_Query(kFlagAR02DektoraWillBuyScorpions)) {
-					AI_Movement_Track_Append(kActorDektora, 289, 0);
-					AI_Movement_Track_Append_With_Facing(kActorDektora, 290, 2, 979);
-					AI_Movement_Track_Append(kActorDektora, 289, 0);
-					AI_Movement_Track_Append(kActorDektora, 39, 120);
-				} else {
-					AI_Movement_Track_Append(kActorDektora, 39, 180);
+				if (Random_Query(1, 2) == 1) {
+					if (Game_Flag_Query(kFlagAR02DektoraWillBuyScorpions)) {
+						AI_Movement_Track_Append(kActorDektora, 289, 0);
+						AI_Movement_Track_Append_With_Facing(kActorDektora, 290, 2, 979);
+						AI_Movement_Track_Append(kActorDektora, 289, 0);
+						AI_Movement_Track_Append(kActorDektora, 39, 120);
+					} else {
+						AI_Movement_Track_Append(kActorDektora, 39, 180);
+					}
 				}
 			}
 		} else if (Random_Query(1, 2) == 1

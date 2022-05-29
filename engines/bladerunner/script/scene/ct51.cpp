@@ -26,7 +26,6 @@ namespace BladeRunner {
 
 void SceneScriptCT51::InitializeScene() {
 	Setup_Scene_Information(0.0f, 0.0f, -102.0f, 470);
-	Game_Flag_Reset(kFlagCT08toCT51);
 
 	Scene_Exit_Add_2D_Exit(1, 0, 0, 30, 479, 3);
 

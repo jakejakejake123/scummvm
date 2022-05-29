@@ -130,11 +130,15 @@ bool SceneScriptTB02::ClickedOnActor(int actorId) {
 					} else {
 						Actor_Says(kActorMcCoy, 5155, 13); //00-5155.AUD	Yeah. It's a tough gig.
 					}		
-					Actor_Face_Heading(kActorTyrellGuard, 788, false);			
-					Actor_Modify_Friendliness_To_Other(kActorTyrellGuard, kActorMcCoy, -1);
+					if (_vm->_cutContent) {
+						Actor_Modify_Friendliness_To_Other(kActorTyrellGuard, kActorMcCoy, -2);
+					} else {
+						Actor_Modify_Friendliness_To_Other(kActorTyrellGuard, kActorMcCoy, -1);
+					}
+					Actor_Face_Heading(kActorTyrellGuard, 788, false);
 					return true;
 				}
-				if (_vm->_cutContent) {
+				if (!_vm->_cutContent) {
 					if (!Game_Flag_Query(kFlagTB02ElevatorToTB05)
 					&& !Game_Flag_Query(kFlagTB05Entered)
 					) {
@@ -149,11 +153,30 @@ bool SceneScriptTB02::ClickedOnActor(int actorId) {
 					dialogueWithTyrellGuard();
 				} else {
 					Actor_Face_Actor(kActorTyrellGuard, kActorMcCoy, true);
-					Actor_Says(kActorMcCoy, 5150, 18);
-					Actor_Says(kActorTyrellGuard, 60, 13);
-					Actor_Says(kActorTyrellGuard, 70, 12);
-					Actor_Says(kActorMcCoy, 5155, 13);
-					Actor_Modify_Friendliness_To_Other(kActorTyrellGuard, kActorMcCoy, -1);
+					Actor_Says(kActorMcCoy, 5150, 18); //00-5150.AUD	One more thing.
+					Actor_Says(kActorTyrellGuard, 60, 12); //17-0060.AUD	I've told you everything I know, detective.
+					if (Player_Query_Agenda() == kPlayerAgendaSurly 
+					|| Player_Query_Agenda() == kPlayerAgendaErratic) {
+						Actor_Says(kActorMcCoy, 3910, 13); //00-3910.AUD	You’re lying.
+						Actor_Says(kActorTyrellGuard, 410, 12);	//17-0410.AUD	What I said is the truth, sir.
+					} 
+					if (_vm->_cutContent) {
+						Actor_Says(kActorMcCoy, 4880, 18); //00-4880.AUD	Is that right?
+					}
+					Actor_Says(kActorTyrellGuard, 70, 13); //17-0070.AUD	I gotta work! These monitors don't watch themselves.
+					if (_vm->_cutContent) {
+						if (Player_Query_Agenda() == kPlayerAgendaSurly 
+						|| Player_Query_Agenda() == kPlayerAgendaErratic) {
+							Actor_Says(kActorMcCoy, 5155, 13); //00-5155.AUD	Yeah. It's a tough gig.
+						}
+					} else {
+						Actor_Says(kActorMcCoy, 5155, 13); //00-5155.AUD	Yeah. It's a tough gig.
+					}		
+					if (_vm->_cutContent) {
+						Actor_Modify_Friendliness_To_Other(kActorTyrellGuard, kActorMcCoy, -2);
+					} else {
+						Actor_Modify_Friendliness_To_Other(kActorTyrellGuard, kActorMcCoy, -1);
+					}
 					Actor_Face_Heading(kActorTyrellGuard, 788, false);
 				}
 				return true;
@@ -164,7 +187,7 @@ bool SceneScriptTB02::ClickedOnActor(int actorId) {
 				Actor_Says(kActorTyrellGuard, 280, 13);
 				// Depending on your friendliness rating with the guard he will either tell you to leave or he will leave you alone. 
 				if (_vm->_cutContent) {
-					if (Actor_Query_Friendliness_To_Other(kActorTyrellGuard, kActorMcCoy) < 49) {
+					if (Actor_Query_Friendliness_To_Other(kActorTyrellGuard, kActorMcCoy) < 50) {
 						Actor_Says(kActorTyrellGuard, 290, 12); //17-0290.AUD	I'm gonna have to ask you to leave, sir.
 						Actor_Says(kActorMcCoy, 5240, 18); //00-5240.AUD	You're gonna throw me out?
 						Actor_Says(kActorTyrellGuard, 300, 12); // 17-0300.AUD	If need be.
@@ -397,9 +420,13 @@ void SceneScriptTB02::PlayerWalkedIn() {
 	if (chapter == 2) {
 		if (!Game_Flag_Query(kFlagTB02GuardTalk1)) {
 			Player_Loses_Control();
+			if (_vm->_cutContent) {	
+				Actor_Face_Actor(kActorMcCoy, kActorTyrellGuard, true);
+				Actor_Face_Actor(kActorTyrellGuard, kActorMcCoy, true);
+			}
 			Actor_Says(kActorMcCoy, 5125, 18);
-			if (_vm->_cutContent) {
-				Actor_Says(kActorTyrellGuard, 0, 14);
+			Actor_Says(kActorTyrellGuard, 0, 14);
+			if (_vm->_cutContent) {	
 				Actor_Change_Animation_Mode(kActorTyrellGuard, 50);
 				Delay (800);
 				Sound_Play(kSfxLABBUZZ1, 90, 0, 0, 50);
@@ -457,6 +484,7 @@ void SceneScriptTB02::PlayerWalkedIn() {
 			Loop_Actor_Walk_To_Actor(kActorSteele, kActorMcCoy, 36, true, false);
 			if (_vm->_cutContent) {
 				Actor_Face_Actor(kActorMcCoy, kActorSteele, true);
+				Actor_Face_Actor(kActorSteele, kActorMcCoy, true);
 			}
 			// Made it so Crystal is a 'little' nicer to you if you have high friendliness with her. The friendliness increase will be a result of you retiring Zuben
 			// which will be added into his script page.
@@ -480,7 +508,31 @@ void SceneScriptTB02::PlayerWalkedIn() {
 				Actor_Says(kActorSteele, 2240, 13); //01-2240.AUD	Could be it's linked to this Tyrell debacle.
 			}
 			dialogueWithSteele();
-			//return true;
+			if (_vm->_cutContent) {
+				Player_Loses_Control();
+				Delay(7000);
+				Loop_Actor_Walk_To_XYZ(kActorMcCoy, -76.35f, 0.15f, 1564.2f, 0, true, false, false); 
+				Actor_Face_Actor(kActorMcCoy, kActorTyrellGuard, true);
+				Actor_Says(kActorMcCoy, 5165, 11);
+				Actor_Says(kActorTyrellGuard, 100, 13);
+				Actor_Says(kActorTyrellGuard, 110, 12);
+				Actor_Says(kActorMcCoy, 5185, 15);
+				if (Actor_Query_Friendliness_To_Other(kActorTyrellGuard, kActorMcCoy) > 49) {
+					Actor_Says(kActorTyrellGuard, 120, 12);
+					Actor_Says(kActorTyrellGuard, 130, 14);
+					Actor_Says(kActorMcCoy, 5190, 16);
+					Actor_Says(kActorTyrellGuard, 140, 13); //17-0140.AUD	Grav Test Chief Engineer.
+					Actor_Says(kActorMcCoy, 8320, 13); //	00-8320.AUD	Really?
+					Actor_Says(kActorTyrellGuard, 430, 13);	//17-0430.AUD	Here's what I heard just a little while ago.
+					Actor_Says(kActorTyrellGuard, 150, 14); //17-0150.AUD	The lab runs tests to see how a Replicant would perform in different planetary gravitational fields. That kind of thing.
+					Actor_Says(kActorTyrellGuard, 170, 12);
+					Player_Loses_Control();
+					Actor_Clue_Acquire(kActorMcCoy, kClueVictimInformation, true, kActorTyrellGuard);
+				} else {
+					Actor_Says(kActorTyrellGuard, 400, 13); //17-0400.AUD	I'm a little busy for this, sir.
+					Player_Gains_Control();
+				}
+			}
 		}
 		//return false;
 		return;
@@ -492,13 +544,18 @@ void SceneScriptTB02::PlayerWalkedIn() {
 		Loop_Actor_Walk_To_XYZ(kActorMcCoy, -131.28f, 0.79f, 1448.25f, 12, true, false, false);
 		Actor_Says(kActorTyrellGuard, 260, 15);
 		Actor_Says(kActorMcCoy, 5225, 16);
-		Actor_Says(kActorTyrellGuard, 270, 14); //17-0270.AUD	So why you're here?
-		// Added in a line for McCoy.
 		if (_vm->_cutContent) {
-			Actor_Says(kActorMcCoy, 5230, 15); //00-5230.AUD	Just looking around.
+			if (Actor_Query_Friendliness_To_Other(kActorTyrellGuard, kActorMcCoy) < 50) {
+				Actor_Says(kActorTyrellGuard, 270, 14); //17-0270.AUD	So why you're here?
+				Actor_Says(kActorMcCoy, 5230, 15); //00-5230.AUD	Just looking around.
+			}
+		} else {
+			Actor_Says(kActorTyrellGuard, 270, 14); //17-0270.AUD	So why you're here?
 		}
 		Game_Flag_Set(kFlagTB02GuardTalk2);
-		Actor_Modify_Friendliness_To_Other(kActorTyrellGuard, kActorMcCoy, -1);
+		if (!_vm->_cutContent) {
+			Actor_Modify_Friendliness_To_Other(kActorTyrellGuard, kActorMcCoy, -1);
+		}
 	}
 	//return false;
 }
@@ -522,7 +579,9 @@ void SceneScriptTB02::DialogueQueueFlushed(int a1) {
 
 void SceneScriptTB02::dialogueWithTyrellGuard() {
 	Dialogue_Menu_Clear_List();
-	DM_Add_To_List_Never_Repeat_Once_Selected(700, 4, 5, 6); // VICTIM
+	if (!_vm->_cutContent) {
+		DM_Add_To_List_Never_Repeat_Once_Selected(700, 4, 5, 6); // VICTIM
+	}
 
 	if (Actor_Clue_Query(kActorMcCoy, kClueDragonflyEarring)) {
 		DM_Add_To_List_Never_Repeat_Once_Selected(710, 5, 5, 4); // EARRING
@@ -562,56 +621,42 @@ void SceneScriptTB02::dialogueWithTyrellGuard() {
 
 	case 700: // VICTIM
 		Actor_Says(kActorMcCoy, 5165, 11);
-		// Made it so the guard will not have a friendly conversation with McCoy is he has low friendlines with him.
-		if (_vm->_cutContent) {
-			if (Actor_Query_Friendliness_To_Other(kActorTyrellGuard, kActorMcCoy) > 49) {
-				Actor_Says(kActorTyrellGuard, 100, 13);
-				Actor_Says(kActorTyrellGuard, 110, 12);
-				Actor_Says(kActorMcCoy, 5185, 15);
-				Actor_Says(kActorTyrellGuard, 120, 12);
-				Actor_Says(kActorTyrellGuard, 130, 14);
-				Actor_Says(kActorMcCoy, 5190, 16);
-				Actor_Says(kActorTyrellGuard, 140, 13); //17-0140.AUD	Grav Test Chief Engineer.
-				if (_vm->_cutContent) {
-					Actor_Says(kActorMcCoy, 8320, 13); //	00-8320.AUD	Really?
-					Actor_Says(kActorTyrellGuard, 430, 13);	//17-0430.AUD	Here's what I heard just a little while ago.
-				}
-				Actor_Says(kActorTyrellGuard, 150, 14); //17-0150.AUD	The lab runs tests to see how a Replicant would perform in different planetary gravitational fields. That kind of thing.
-				Actor_Says(kActorTyrellGuard, 170, 12);
-				Actor_Clue_Acquire(kActorMcCoy, kClueVictimInformation, true, kActorTyrellGuard);
-			} else {
-				Actor_Says(kActorTyrellGuard, 400, 13); //17-0400.AUD	I'm a little busy for this, sir.
-			}
-		} else {
-			Actor_Says(kActorTyrellGuard, 100, 13);
-			Actor_Says(kActorTyrellGuard, 110, 12);
-			Actor_Says(kActorMcCoy, 5185, 15);
-			Actor_Says(kActorTyrellGuard, 120, 12);
-			Actor_Says(kActorTyrellGuard, 130, 14);
-			Actor_Says(kActorMcCoy, 5190, 16);
-			Actor_Says(kActorTyrellGuard, 140, 13);
-			Actor_Says(kActorTyrellGuard, 150, 14);
-			Actor_Says(kActorTyrellGuard, 170, 12);
-			Actor_Clue_Acquire(kActorMcCoy, kClueVictimInformation, true, kActorTyrellGuard);
-		}
+		Actor_Says(kActorTyrellGuard, 100, 13);
+		Actor_Says(kActorTyrellGuard, 110, 12);
+		Actor_Says(kActorMcCoy, 5185, 15);
+		Actor_Says(kActorTyrellGuard, 120, 12);
+		Actor_Says(kActorTyrellGuard, 130, 14);
+		Actor_Says(kActorMcCoy, 5190, 16);
+		Actor_Says(kActorTyrellGuard, 140, 13); //17-0140.AUD	Grav Test Chief Engineer.
+		Actor_Says(kActorMcCoy, 8320, 13); //	00-8320.AUD	Really?
+		Actor_Says(kActorTyrellGuard, 430, 13);	//17-0430.AUD	Here's what I heard just a little while ago.
+		Actor_Says(kActorTyrellGuard, 150, 14); //17-0150.AUD	The lab runs tests to see how a Replicant would perform in different planetary gravitational fields. That kind of thing.
+		Actor_Says(kActorTyrellGuard, 170, 12);
+		Actor_Clue_Acquire(kActorMcCoy, kClueVictimInformation, true, kActorTyrellGuard);
 		break;
 
 	case 710: // EARRING
 		Actor_Says(kActorMcCoy, 5170, 12);
-		Actor_Says(kActorTyrellGuard, 180, 12);
-		Actor_Says(kActorTyrellGuard, 190, 14);
-		// Made it so McCoy also makes the Eisenduller mumu comment if he just saw the Tyrell security photo.
-		// Also made it so McCoy and the guard won't pleasantly joke about Eisendullers mumu if they have low friendliness. 
 		if (_vm->_cutContent) {
-			if (Game_Flag_Query(kFlagTB06Visited) || Actor_Clue_Query(kActorMcCoy, kClueTyrellSecurityPhoto)) {
-				if (Actor_Query_Friendliness_To_Other(kActorTyrellGuard, kActorMcCoy) > 49) {
+			if (Actor_Query_Friendliness_To_Other(kActorTyrellGuard, kActorMcCoy) > 49) {
+				Actor_Says(kActorTyrellGuard, 180, 12);
+				Actor_Says(kActorTyrellGuard, 190, 14);
+				// Made it so McCoy also makes the Eisenduller mumu comment if he just saw the Tyrell security photo.
+				// Also made it so McCoy and the guard won't pleasantly joke about Eisendullers mumu if they have low friendliness. 
+				if (Game_Flag_Query(kFlagTB06Visited) || Actor_Clue_Query(kActorMcCoy, kClueTyrellSecurityPhoto)) {
 					Actor_Says(kActorMcCoy, 5195, 13); //00-5195.AUD	How did Eisenduller's muumuu fit in?
 					Actor_Says(kActorTyrellGuard, 200, 13); //17-0200.AUD	Heh. Hey, you know company rules only apply to the lesser mortals.
 				}
+			} else {
+				Actor_Says(kActorTyrellGuard, 400, 12); //17-0400.AUD	I'm a little busy for this, sir.
 			}
-		} else if (Game_Flag_Query(kFlagTB06Visited)) {
-			Actor_Says(kActorMcCoy, 5195, 13); //00-5195.AUD	How did Eisenduller's muumuu fit in?
-			Actor_Says(kActorTyrellGuard, 200, 13); //17-0200.AUD	Heh. Hey, you know company rules only apply to the lesser mortals.
+		} else {
+			Actor_Says(kActorTyrellGuard, 180, 12);
+			Actor_Says(kActorTyrellGuard, 190, 14);
+			if (Game_Flag_Query(kFlagTB06Visited)) {
+				Actor_Says(kActorMcCoy, 5195, 13); //00-5195.AUD	How did Eisenduller's muumuu fit in?
+				Actor_Says(kActorTyrellGuard, 200, 13); //17-0200.AUD	Heh. Hey, you know company rules only apply to the lesser mortals.
+			}
 		}
 		// Added in some lines. I'm assuming pickup is some kind of lost and found.
 		if (_vm->_cutContent) {
@@ -627,7 +672,7 @@ void SceneScriptTB02::dialogueWithTyrellGuard() {
 		// Made it so if McCoy and the guard have low friendliness he will not elaborate on how to arrange a meeting with Tyrell.
 		if (_vm->_cutContent) {
 			if (Actor_Query_Friendliness_To_Other(kActorTyrellGuard, kActorMcCoy) < 50) {
-				Actor_Says(kActorTyrellGuard, 390, 13); //17-0390.AUD	I've told you everything I know, sir.
+				Actor_Says(kActorTyrellGuard, 400, 12); //17-0400.AUD	I'm a little busy for this, sir.
 				Game_Flag_Set(kFlagTyrellGuardTalkMeeting);
 			} else {
 				Actor_Says(kActorTyrellGuard, 220, 13); //17-0220.AUD	Well, you could call his personal assistant.
@@ -650,10 +695,21 @@ void SceneScriptTB02::dialogueWithTyrellGuard() {
 
 	case 730: // SECURITY
 		Actor_Says(kActorMcCoy, 5180, 16);
-		Actor_Says(kActorTyrellGuard, 240, 12);
-		Actor_Says(kActorMcCoy, 5215, 18);
-		Actor_Says(kActorTyrellGuard, 250, 13);
-		Actor_Says(kActorMcCoy, 5220, 16);
+		if (_vm->_cutContent) {
+			if (Actor_Query_Friendliness_To_Other(kActorTyrellGuard, kActorMcCoy) < 50) {
+				Actor_Says(kActorTyrellGuard, 390, 13); //17-0390.AUD	I've told you everything I know, sir.
+			} else {
+				Actor_Says(kActorTyrellGuard, 240, 12);
+				Actor_Says(kActorMcCoy, 5215, 18);
+				Actor_Says(kActorTyrellGuard, 250, 13);
+				Actor_Says(kActorMcCoy, 5220, 16);
+			}
+		} else {
+			Actor_Says(kActorTyrellGuard, 240, 12);
+			Actor_Says(kActorMcCoy, 5215, 18);
+			Actor_Says(kActorTyrellGuard, 250, 13);
+			Actor_Says(kActorMcCoy, 5220, 16);
+		}
 		break;
 	}
 }

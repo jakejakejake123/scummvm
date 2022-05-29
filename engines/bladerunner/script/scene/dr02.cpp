@@ -44,6 +44,8 @@ void SceneScriptDR02::InitializeScene() {
 		// improved navigation of this set of scenes
 		Scene_Exit_Add_2D_Exit(3,  0,   0,  34, 479, 3);
 		Scene_Exit_Add_2D_Exit(4, 34, 445, 605, 479, 2);
+		Actor_Put_In_Set(kActorShoeshineMan, kSetDR01_DR02_DR04);
+		Actor_Set_At_XYZ(kActorShoeshineMan, -1160.0f, -0.04f, -235.0f, 524);
 	}
 
 	Ambient_Sounds_Remove_All_Non_Looping_Sounds(false);
@@ -145,6 +147,137 @@ bool SceneScriptDR02::ClickedOn3DObject(const char *objectName, bool a2) {
 }
 
 bool SceneScriptDR02::ClickedOnActor(int actorId) {
+	if (actorId == kActorShoeshineMan) {
+		if (!Loop_Actor_Walk_To_XYZ(kActorMcCoy, -1098.15f, -0.04f, -201.53f, 0, true, false, false)) {
+			if (!Game_Flag_Query(kFlagShoeshineManTalk)) {
+				Actor_Face_Actor(kActorMcCoy, kActorShoeshineMan, true);
+				Actor_Face_Actor(kActorShoeshineMan, kActorMcCoy, true);
+				Game_Flag_Set(kFlagShoeshineManTalk);
+				Actor_Says(kActorMcCoy, 730, 17); //00-0730.AUD	What are we talking about?
+				Delay(1000);
+				Actor_Says(kActorMcCoy, 4515, 13); //00-4515.AUD	What do you know?
+				Delay(3000);
+				Actor_Says(kActorMcCoy, 8590, 18);//00-8590.AUD	Not the talkative type.
+				Delay(2000);
+				if (Player_Query_Agenda() != kPlayerAgendaSurly 
+				&& Player_Query_Agenda() != kPlayerAgendaErratic) {
+					if (Global_Variable_Query(kVariableChinyen) >= 10
+					|| Query_Difficulty_Level() == kGameDifficultyEasy) {
+						Global_Variable_Decrement(kVariableChinyen, 10);
+						Actor_Says(kActorMcCoy, 340, 13); //00-0340.AUD	You're a pretty smart looking cat.
+						Actor_Says(kActorMcCoy, 345, 16); //00-0345.AUD	Wanna make some money?
+						Delay(2000);
+						Actor_Change_Animation_Mode(kActorMcCoy, 23);
+						Delay(2000);
+						Actor_Says(kActorMcCoy, 8170, 13); //00-8170.AUD	There you go.
+						Delay(1000);
+						Actor_Says(kActorMcCoy, 8502, 15); //00-8502.AUD	I hope it's enough.
+						Delay(3000);
+						Actor_Says(kActorMcCoy, 8395, 13); //00-8395.AUD	You don't have anything to say?
+						Delay(2000);
+						Actor_Says(kActorMcCoy, 2860, 14); //00-2860.AUD	You take care of yourself.
+						Delay(2000);
+						Actor_Face_Heading(kActorShoeshineMan, 524, false);
+						Game_Flag_Set(kFlagMcCoyHelpedShoeshineMan);
+					}
+				} else { 
+					Actor_Says_With_Pause(kActorMcCoy, 735, 1.0f, 14);//00-0735.AUD	Beat it.
+					Loop_Actor_Walk_To_XYZ(kActorMcCoy, -921.11f, 0.44f, -155.89f, 0, true, false, false);
+					Delay(1000);
+					Actor_Face_Actor(kActorMcCoy, kActorShoeshineMan, true);
+					Actor_Face_Actor(kActorShoeshineMan, kActorMcCoy, true);
+					Delay(2000);
+					Actor_Says(kActorMcCoy, 740, 15); //00-0740.AUD	I thought I told you to take a hike.
+					Delay(2000);
+					Actor_Face_Heading(kActorShoeshineMan, 524, false);	
+				}
+			} else {
+				if (Game_Flag_Query(kFlagMcCoyHelpedShoeshineMan)) {
+					Actor_Face_Actor(kActorMcCoy, kActorShoeshineMan, true);
+					Actor_Face_Actor(kActorShoeshineMan, kActorMcCoy, true);
+					Actor_Says(kActorMcCoy, 3210, kAnimationModeTalk); //00-3210.AUD	Hey, man.
+					Delay(1000);
+					if (!Actor_Clue_Query(kActorMcCoy, kClueOriginalShippingForm)) {
+						Actor_Says(kActorMcCoy, 8990, 17);//00-8990.AUD	What have you got there?
+						Delay(2000);
+						Item_Pickup_Spin_Effect(kModelAnimationOriginalShippingForm, 123, 291);
+						Actor_Clue_Acquire(kActorMcCoy, kClueOriginalShippingForm, true, kActorShoeshineMan);
+						Actor_Says(kActorMcCoy, 8805, 13); //00-8805.AUD	A requisition form.
+						Actor_Says(kActorMcCoy, 3935, kAnimationModeTalk); //00-3935.AUD	Thanks.
+						Actor_Face_Heading(kActorShoeshineMan, 524, false);
+					} else if (Game_Flag_Query(kFlagChewTalkGiveData) 
+					&& !Actor_Clue_Query(kActorMcCoy, kClueDNAChew)) {
+						Actor_Says(kActorMcCoy, 8990, 17);//00-8990.AUD	What have you got there?
+						Delay(2000);
+						Item_Pickup_Spin_Effect(kModelAnimationDNADataDisc, 123, 291);
+						Actor_Clue_Acquire(kActorMcCoy, kClueDNAChew, true, kActorShoeshineMan);
+						Actor_Says(kActorMcCoy, 8501, 17); //00-8501.AUD	DNA information?
+						Delay(1000);
+						Actor_Says(kActorMcCoy, 3935, kAnimationModeTalk); //00-3935.AUD	Thanks.
+						Actor_Face_Heading(kActorShoeshineMan, 524, false);
+					} else if (Game_Flag_Query(kFlagGordoIsReplicant) 
+					&& Game_Flag_Query(kFlagGordoRanAway)
+					&& !Actor_Clue_Query(kActorMcCoy, kClueGordoIncept)) {
+						Actor_Says(kActorMcCoy, 8990, 17);//00-8990.AUD	What have you got there?
+						Delay(2000);
+						Item_Pickup_Spin_Effect(kModelAnimationPhoto, 123, 291);
+						Actor_Clue_Acquire(kActorMcCoy, kClueGordoIncept, true, kActorShoeshineMan);
+						Actor_Voice_Over(4080, kActorVoiceOver);
+						Delay(1000);
+						Actor_Says(kActorMcCoy, 3935, kAnimationModeTalk); //00-3935.AUD	Thanks.
+						Actor_Face_Heading(kActorShoeshineMan, 524, false);
+					} else if (!Actor_Clue_Query(kActorMcCoy, kClueMcCoyIncept)
+					&& Global_Variable_Query(kVariableChapter) > 3) {
+						Actor_Says(kActorMcCoy, 8990, 17);//00-8990.AUD	What have you got there?
+						Delay(2000);
+						Item_Pickup_Spin_Effect(kModelAnimationPhoto, 123, 291);
+						Actor_Clue_Acquire(kActorMcCoy, kClueMcCoyIncept, true, kActorShoeshineMan);
+						Actor_Voice_Over(4240, kActorVoiceOver); //99-4240.AUD	That can't be me.
+						Actor_Says(kActorMcCoy, 5850, 14); //00-5850.AUD	Where did you get this?
+						Delay(2000);
+						Actor_Says(kActorMcCoy, 2750, kAnimationModeTalk); //00-2750.AUD	Okay, I get the picture.
+						Actor_Face_Heading(kActorShoeshineMan, 524, false);
+					} else if (!Actor_Clue_Query(kActorMcCoy, kClueGrigoriansNote)
+					&& Global_Variable_Query(kVariableChapter) > 2)  {
+						Actor_Says(kActorMcCoy, 8990, 17);//00-8990.AUD	What have you got there?
+						Delay(2000);
+						Item_Pickup_Spin_Effect(kModelAnimationGrigoriansNote, 123, 291);
+						Actor_Clue_Acquire(kActorMcCoy, kClueGrigoriansNote, true, kActorShoeshineMan);
+						Actor_Says(kActorMcCoy, 8840, kAnimationModeTalk); //00-8840.AUD	A note.
+						Delay(1000);
+						Actor_Says(kActorMcCoy, 3935, kAnimationModeTalk); //00-3935.AUD	Thanks.
+						Actor_Face_Heading(kActorShoeshineMan, 524, false);
+					} else if (!Actor_Clue_Query(kActorMcCoy, kCluePartialLicenseNumber)
+					&& Global_Variable_Query(kVariableChapter) > 2)  {
+						Actor_Says(kActorMcCoy, 8990, 17);//00-8990.AUD	What have you got there?
+						Delay(2000);
+						Item_Pickup_Spin_Effect(kModelAnimationLicensePlate, 123, 291);
+						Actor_Clue_Acquire(kActorMcCoy, kClueLicensePlate, true, kActorShoeshineMan);
+						Actor_Says(kActorMcCoy, 8760, 13);//00-8760.AUD	A license plate.
+						Delay(2000);
+						Actor_Says(kActorMcCoy, 8525, 9); //00-8525.AUD	Hmph.
+						Actor_Says(kActorAnsweringMachine, 390, kAnimationModeTalk); // 39-0390.AUD	Begin test.
+						Ambient_Sounds_Play_Sound(kSfxDATALOAD, 50, 0, 0, 99);
+						Delay(2000);
+						Ambient_Sounds_Play_Sound(kSfxBEEPNEAT, 80, 0, 0, 99);
+						Actor_Says(kActorAnsweringMachine, 420, 19); //39-0420.AUD	Positive result.
+						Actor_Says(kActorAnsweringMachine, 470, kAnimationModeTalk); //39-0470.AUD	End test.
+						Actor_Says(kActorMcCoy, 7200, 13); //00-7200.AUD	Bingo.
+						Actor_Clue_Acquire(kActorMcCoy, kClueLicensePlateMatch, true, -1); 
+						Actor_Says(kActorMcCoy, 3935, kAnimationModeTalk); //00-3935.AUD	Thanks.
+						Actor_Face_Heading(kActorShoeshineMan, 524, false);
+					}
+					Actor_Face_Heading(kActorShoeshineMan, 524, false);
+				} else {
+					Actor_Face_Actor(kActorMcCoy, kActorShoeshineMan, true);
+					Actor_Face_Actor(kActorShoeshineMan, kActorMcCoy, true);
+					Actor_Says(kActorMcCoy, 745, 14); //00-0745.AUD	I'm watching you, pal.
+					Delay(2000);
+					Actor_Face_Heading(kActorShoeshineMan, 524, false);
+				}
+			}
+		}
+	}
 	return false;
 }
 

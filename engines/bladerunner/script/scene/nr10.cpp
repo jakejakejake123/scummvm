@@ -146,7 +146,9 @@ void SceneScriptNR10::SceneFrameAdvanced(int frame) {
 		Game_Flag_Set(kFlagNR10McCoyBlinded);
 		// This track plays when McCoy is blinded.
 		if (_vm->_cutContent) {
-			Music_Play(kMusicBeating1, 61, 0, 1, -1, kMusicLoopPlayOnce, 0);
+			if (!Actor_Clue_Query(kActorDektora, kClueMcCoyHelpedDektora)) {
+				Music_Play(kMusicBeating1, 61, 0, 1, -1, kMusicLoopPlayOnce, 0);
+			}
 		}
 		Actor_Set_Invisible(kActorMcCoy, true);
 		Actor_Set_Invisible(kActorDektora, true);
@@ -161,7 +163,13 @@ void SceneScriptNR10::SceneFrameAdvanced(int frame) {
 		Game_Flag_Reset(kFlagNR10McCoyBlinded);
 		Player_Set_Combat_Mode(false);
 		Actor_Set_Invisible(kActorMcCoy, false);
-		Actor_Set_Goal_Number(kActorDektora, kGoalDektoraNR10AttackMcCoy);
+		if (_vm->_cutContent) {
+			if (!Actor_Clue_Query(kActorDektora, kClueMcCoyHelpedDektora)) {
+				Actor_Set_Goal_Number(kActorDektora, kGoalDektoraNR10AttackMcCoy);
+			}
+		} else {
+			Actor_Set_Goal_Number(kActorDektora, kGoalDektoraNR10AttackMcCoy);
+		}
 		//return true;
 		return;
 	}

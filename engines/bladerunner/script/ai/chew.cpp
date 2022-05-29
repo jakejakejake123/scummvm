@@ -77,7 +77,18 @@ void AIScriptChew::OtherAgentExitedThisSet(int otherActorId) {
 }
 
 void AIScriptChew::OtherAgentEnteredCombatMode(int otherActorId, int combatMode) {
-	// return false;
+	if (_vm->_cutContent) {
+		if (otherActorId == kActorMcCoy
+		&& combatMode
+		) {
+			Actor_Face_Actor(kActorChew, kActorMcCoy, true);
+			Actor_Says(kActorChew, 660, 14); //52-0660.AUD	(yells) Ah!
+			Actor_Face_Actor(kActorMcCoy, kActorChew, true);
+			Delay(1000);
+			Actor_Says(kActorMcCoy, 1870, -1); //00-1870.AUD	I’m a cop.
+			Actor_Says(kActorChew, 100, 14); //52-0100.AUD	You leave now, okay? Very busy. Must work. Must work, ah.
+		}
+	}
 }
 
 void AIScriptChew::ShotAtAndMissed() {

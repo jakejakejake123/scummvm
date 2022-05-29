@@ -370,14 +370,17 @@ void SceneScriptHF01::PlayerWalkedIn() {
 	// hall there is a high chance that he won't appear at all. Heck even though I knew what to do he almost never showed up so this change feels neccessary 
 	// especially for a scene where McCoy learns some very important information.
 	if (_vm->_cutContent) {
-		if  (!Game_Flag_Query(kFlagZubenTalkAct4)
+		if (!Game_Flag_Query(kFlagZubenTalkAct4)
 		&& !Game_Flag_Query(kFlagZubenRetired)
 		&& (Global_Variable_Query(kVariableChapter) == 4)) {
+			Actor_Put_In_Set(kActorZuben, kSetHF01);
+			Actor_Set_At_XYZ(kActorZuben, 500.07f, -0.01f, -205.43f, 0);
+			Actor_Face_Current_Camera(kActorZuben, true);
 			Actor_Face_Actor(kActorMcCoy, kActorZuben, true);
 			Delay(1000);
 			Actor_Says(kActorMcCoy, 3970, 14); //00-3970.AUD	Hey.
 			Player_Loses_Control();
-			Loop_Actor_Walk_To_Actor(kActorMcCoy, kActorZuben, 24, true, false);
+			Loop_Actor_Walk_To_Actor(kActorMcCoy, kActorZuben, 24, false, true);
 			Actor_Face_Actor(kActorZuben, kActorMcCoy, true);
 			Actor_Says(kActorMcCoy, 8910, 11); //00-8910.AUD	Hey you.
 			Actor_Says(kActorZuben, 140, 14); //19-0140.AUD	Stay away!
@@ -398,47 +401,65 @@ void SceneScriptHF01::PlayerWalkedIn() {
 				Actor_Says(kActorMcCoy, 7320, 17); //00-7320.AUD	Is she a Replicant?
 				if (Game_Flag_Query(kFlagLucyIsReplicant)) {
 					Actor_Says(kActorZuben, 230, 14); //19-0230.AUD	Daughter sick. Only four years to live. Four years. Daughter Zuben whole family.
-					Actor_Says(kActorMcCoy, 7325, 17); //00-7325.AUD	I know.
+					if (Actor_Clue_Query(kActorMcCoy, kClueLucyIncept)
+					|| Actor_Clue_Query(kActorMcCoy, kClueVKLucyReplicant)) {
+						Actor_Says(kActorMcCoy, 7325, 17); //00-7325.AUD	I know.
+					}
 					Actor_Says(kActorZuben, 240, 15); //19-0240.AUD	But Clovis he fix.
-					Actor_Says(kActorMcCoy, 7330, 16); //00-7330.AUD	Let's hope so.
+					if (Game_Flag_Query(kFlagMcCoyIsHelpingReplicants)) {
+						Actor_Says(kActorMcCoy, 7330, 16); //00-7330.AUD	Let's hope so.
+					}
 					Actor_Clue_Acquire(kActorMcCoy, kClueZubenTalksAboutLucy1, false, kActorZuben);
 				} else {
 					Actor_Says(kActorZuben, 250, 14); //19-0250.AUD	Daughter not like me.
-					Actor_Says(kActorMcCoy, 7335, 14); //00-7335.AUD	She's not a Replicant?
+					if (!Actor_Clue_Query(kActorMcCoy, kClueLucyIncept)
+					&& !Actor_Clue_Query(kActorMcCoy, kClueVKLucyReplicant)) {
+						Actor_Says(kActorMcCoy, 7335, 14); //00-7335.AUD	She's not a Replicant?
+					}
 					Actor_Says(kActorZuben, 260, 15); //19-0260.AUD	She good girl. She stay with Clovis.
 					Actor_Says(kActorMcCoy, 7340, 16); //00-7340.AUD	I know.
 					Actor_Says(kActorZuben, 340, 15); //19-0340.AUD	You promise no hurt.
-					Actor_Says(kActorMcCoy, 7345, 12); //00-7345.AUD	Right, no hurt. No hurt anymore.
+					if (Game_Flag_Query(kFlagMcCoyIsHelpingReplicants)) {	
+						Actor_Says(kActorMcCoy, 7345, 12); //00-7345.AUD	Right, no hurt. No hurt anymore.
+					} else {
+						Delay(2000);
+					}
 					Actor_Clue_Acquire(kActorMcCoy, kClueZubenTalksAboutLucy2, false, kActorZuben);
 				}
 			}
 			Delay(1000);
-			Actor_Says(kActorMcCoy, 7300, 13); //00-7300.AUD	Did you kill the animals?
+			if (!Actor_Clue_Query(kActorMcCoy, kClueLucyInterview)) {
+				Actor_Says(kActorMcCoy, 7300, 13); //00-7300.AUD	Did you kill the animals?
+			} else {
+				Actor_Says(kActorMcCoy, 7355, 14); //00-7355.AUD	All those animals died.
+			}
 			Actor_Says(kActorZuben, 270, 15); //19-0270.AUD	Because he bad.
 			Actor_Says(kActorMcCoy, 7350, 14);	//00-7350.AUD	Runciter?
 			Actor_Says(kActorZuben, 280, 12); //19-0280.AUD	He not pay. Bad to Lucy. Bad to everybody. Make people starve.
-			Actor_Says(kActorMcCoy, 7355, 14); //00-7355.AUD	All those animals died.
 			Actor_Says(kActorZuben, 290, 15); //19-0290.AUD	He made Lucy do bad things. Lucy hurt. Clovis more angry.
 			Actor_Says(kActorZuben, 300, 14); //19-0300.AUD	Girl was forced to do bad things Off-World. Clovis thought Terra better.
 			Actor_Says(kActorZuben, 310, 13); //19-0310.AUD	But Terra's no better for young girls. Runciter bad to Lucy.
 			Delay(2000);
-			if (Player_Query_Agenda() == kPlayerAgendaSurly 
-			|| Player_Query_Agenda() == kPlayerAgendaErratic) {
-				Actor_Says(kActorMcCoy, 7365, 12);	//00-7365.AUD	You should have killed him.
-			} else {
-				Actor_Says(kActorMcCoy, 7360, 11); //00-7360.AUD	Did he do things to Lucy?
+			if (Actor_Query_Goal_Number(kActorLucy) != kGoalLucyGone) {
+				if (Player_Query_Agenda() == kPlayerAgendaSurly 
+				|| Player_Query_Agenda() == kPlayerAgendaErratic) {
+					Actor_Says(kActorMcCoy, 7365, 12);	//00-7365.AUD	You should have killed him.
+				} else {
+					Actor_Says(kActorMcCoy, 7360, 11); //00-7360.AUD	Did he do things to Lucy?
+				}
 			}
 			Actor_Says(kActorZuben, 320, 12); //19-0320.AUD	Clovis say Runciter love animals. Runciter still alive so he hurt now. Know what pain is.
 			Actor_Says(kActorZuben, 330, 12); //19-0330.AUD	Kill him, he not hurt. Just dead.
 			Actor_Clue_Acquire(kActorMcCoy, kClueZubensMotive, false, kActorZuben);
 			Actor_Says(kActorMcCoy, 7290, 12); //00-7290.AUD	Listen it's very important I talked to Clovis.
 			Actor_Says(kActorZuben, 180, 15); //19-0180.AUD	No way. You enemy of Clovis.
-			Actor_Says(kActorMcCoy, 7310, 16); //00-7310.AUD	No, I'm trying to help him and you.
-			Actor_Says(kActorZuben, 190, 15); //19-0190.AUD	We do good without you. Do good without anybody.
-			Actor_Says(kActorMcCoy, 7835, 14);	//00-7835.AUD	Is that so?
+			if (Game_Flag_Query(kFlagMcCoyIsHelpingReplicants)) {
+				Actor_Says(kActorMcCoy, 7310, 16); //00-7310.AUD	No, I'm trying to help him and you.
+				Actor_Says(kActorZuben, 190, 15); //19-0190.AUD	We do good without you. Do good without anybody.
+				Actor_Says(kActorMcCoy, 7835, 14);	//00-7835.AUD	Is that so?
+			}
 			Actor_Says(kActorZuben, 170, 14); //19-0170.AUD	Now I go.
 			Loop_Actor_Walk_To_XYZ(kActorZuben,  200.17, 0.29, -190.72 , 0, true, false, false);
-			Actor_Set_Invisible(kActorZuben, true);
 			Player_Gains_Control();
 			Game_Flag_Set(kFlagZubenTalkAct4);
 		}
@@ -510,15 +531,14 @@ void SceneScriptHF01::PlayerWalkedIn() {
 			Game_Flag_Reset(kFlagCrazylegsArrestedTalk);
 			if (Player_Query_Agenda() != kPlayerAgendaSurly 
 			|| Player_Query_Agenda() != kPlayerAgendaErratic) {
-				Music_Play(kMusicBRBlues, 52, 0, 2, -1, kMusicLoopPlayOnce, 0);
 				Actor_Voice_Over(1410, kActorVoiceOver); //99-1410.AUD	I’d retired another Replicant so more money was headed my way but I didn’t feel so good about it.
 				Actor_Voice_Over(1670, kActorVoiceOver); //99-1670.AUD	Still it was a hell of a way to go.
+				Music_Play(kMusicBRBlues, 52, 0, 2, -1, kMusicLoopPlayOnce, 0);
 			} else {
 				Actor_Voice_Over(920, kActorVoiceOver); //99-0920.AUD	Easy money.
 			}
 			Actor_Set_Goal_Number(kActorCrazylegs, kGoalCrazyLegsLeavesShowroom);
 			Game_Flag_Reset(kFlagCrazylegsShot);
-			Actor_Modify_Friendliness_To_Other(kActorSteele, kActorMcCoy, 2);
 			if (Query_Difficulty_Level() != kGameDifficultyEasy) {
 				Global_Variable_Increment (kVariableChinyen, 200);
 			}		
@@ -602,8 +622,9 @@ void SceneScriptHF01::dialogueWithMiaAndMurray() {
 	// Made it so no further option will be available if McCoy threatened Mia and Murray when asking about the cheese.
 	Dialogue_Menu_Clear_List();
 	if (_vm->_cutContent) {
-		if (Actor_Query_Friendliness_To_Other(kActorMurray, kActorMcCoy) > 46) {
-			if (Actor_Clue_Query(kActorMcCoy, kClueLucy)) {
+		if (Actor_Query_Friendliness_To_Other(kActorMurray, kActorMcCoy) > 49) {
+			if (Actor_Clue_Query(kActorMcCoy, kClueLucy) 
+			&& Actor_Query_Goal_Number(kActorLucy) != kGoalLucyGone) {
 				DM_Add_To_List_Never_Repeat_Once_Selected(440, 8, 6, 3); // LUCY PHOTO
 			}
 		}
@@ -611,7 +632,7 @@ void SceneScriptHF01::dialogueWithMiaAndMurray() {
 		DM_Add_To_List_Never_Repeat_Once_Selected(440, 8, 6, 3); // LUCY PHOTO
 	}
 	if (_vm->_cutContent) {
-		if (Actor_Query_Friendliness_To_Other(kActorMurray, kActorMcCoy) > 46) {
+		if (Actor_Query_Friendliness_To_Other(kActorMurray, kActorMcCoy) > 49) {
 			if (!Actor_Clue_Query(kActorMcCoy, kClueLucy)
 			&& Actor_Query_Goal_Number(kActorLucy) != kGoalLucyGone) {
 				 DM_Add_To_List_Never_Repeat_Once_Selected(450, 7, 6, 3); // LUCY
@@ -626,16 +647,15 @@ void SceneScriptHF01::dialogueWithMiaAndMurray() {
 	}
 	// Restored the black sedan option.
 	if (_vm->_cutContent) {
-		if (Actor_Query_Friendliness_To_Other(kActorMurray, kActorMcCoy) > 46) {
+		if (Actor_Query_Friendliness_To_Other(kActorMurray, kActorMcCoy) > 49) {
 			if (Actor_Clue_Query(kActorMcCoy, kClueCarRegistration1)
-			|| Actor_Clue_Query(kActorMcCoy, kClueCarRegistration2)
 			|| Actor_Clue_Query(kActorMcCoy, kClueCarRegistration3)) {
 				DM_Add_To_List_Never_Repeat_Once_Selected(1130, -1, 3, 8); // BLACK SEDAN
 			}
 		}
 	}
 	if (_vm->_cutContent) {
-		if (Actor_Query_Friendliness_To_Other(kActorMurray, kActorMcCoy) > 46) {
+		if (Actor_Query_Friendliness_To_Other(kActorMurray, kActorMcCoy) > 49) {
 			if (Actor_Clue_Query(kActorMcCoy, kClueLichenDogWrapper)) {
 				DM_Add_To_List_Never_Repeat_Once_Selected(470, -1, 3, 8); // LICHEN DOG WRAPPER
 			}
@@ -746,14 +766,14 @@ void SceneScriptHF01::dialogueWithMiaAndMurray() {
 				Delay (1000);
 				Actor_Face_Actor(kActorMcCoy, kActorMia, true);
 				Actor_Says(kActorMcCoy, 4360, 16); //00-4360.AUD	Tell it straight or I'm gonna make sure you get the same as he gets. Full conspiracy, payable for 25.
-				Actor_Modify_Friendliness_To_Other(kActorMurray, kActorMcCoy, -10);
+				Actor_Modify_Friendliness_To_Other(kActorMurray, kActorMcCoy, -2);
 				Delay (1000);
 				Actor_Face_Actor(kActorMurray, kActorMia, true);
 				Actor_Face_Heading(kActorMia, 511, false);
 			} else {
 				Actor_Says(kActorMcCoy, 1520, 15); //00-1520.AUD	I'm not working Bunco. I just want some information
 				Actor_Says(kActorMia, 180, 12); //22-0180.AUD	Well, we did hear something, Ray. I hope this won't get anybody into trouble.
-				Actor_Says(kActorMcCoy, 1845, 14); //00-1845.AUD	I’ll have to think about it.
+				Actor_Says(kActorMcCoy, 1845, 19); //00-1845.AUD	I’ll have to think about it.
 				Actor_Says(kActorMia, 250, 12); //22-0250.AUD	All right, then. Ray, here's the truth.
 				Delay (1000);
 				Actor_Says(kActorMurray, 210, 13);
@@ -789,14 +809,16 @@ void SceneScriptHF01::dialogueWithMiaAndMurray() {
 		Actor_Says(kActorMia, 170, kAnimationModeTalk); //22-0170.AUD	Oh, and yesterday was even busier.
 		Delay (2000);
 		Actor_Says(kActorMcCoy, 1535, 16); //00-1535.AUD	Ah, never mind.
-		if (_vm->_cutContent) {
-			Actor_Face_Actor(kActorMurray, kActorMia, true);
-			Actor_Face_Heading(kActorMia, 511, false);
-		}
+		Actor_Face_Actor(kActorMurray, kActorMia, true);
+		Actor_Face_Heading(kActorMia, 511, false);
 		break;
 
 
 	case 470: // LICHEN DOG WRAPPER
+		if (_vm->_cutContent) {
+			Actor_Face_Actor(kActorMurray, kActorMcCoy, true);
+			Actor_Face_Actor(kActorMia, kActorMcCoy, true);
+		}
 		Actor_Says(kActorMcCoy, 1495, 14);
 		Actor_Face_Actor(kActorMurray, kActorMcCoy, true);
 		Actor_Says(kActorMurray, 240, 13);
@@ -808,7 +830,7 @@ void SceneScriptHF01::dialogueWithMiaAndMurray() {
 
 	case 480: // DONE
 		if (_vm->_cutContent) {
-			if (Actor_Query_Friendliness_To_Other(kActorMurray, kActorMcCoy) > 46) {
+			if (Actor_Query_Friendliness_To_Other(kActorMurray, kActorMcCoy) > 49) {
 				Actor_Face_Actor(kActorMurray, kActorMcCoy, true);
 				Actor_Face_Actor(kActorMia, kActorMcCoy, true);
 				Actor_Says(kActorMcCoy, 8514, 16); //00-8514.AUD	Got anything new to tell me?
@@ -820,12 +842,10 @@ void SceneScriptHF01::dialogueWithMiaAndMurray() {
 				Actor_Says(kActorMcCoy, 1500, 16);
 				Actor_Face_Actor(kActorMurray, kActorMia, true);
 				Actor_Face_Heading(kActorMia, 511, false);
-				if (_vm->_cutContent) {
-					Actor_Face_Actor(kActorMurray, kActorMia, true);
-					Actor_Face_Heading(kActorMia, 511, false);
-				}
+				Actor_Face_Actor(kActorMurray, kActorMia, true);
+				Actor_Face_Heading(kActorMia, 511, false);
 			} else if (!Game_Flag_Query(kFlagMiaMurrayAnnoyedTalk)
-			&&	(Actor_Query_Friendliness_To_Other(kActorMurray, kActorMcCoy) < 46)) {
+			&& (Actor_Query_Friendliness_To_Other(kActorMurray, kActorMcCoy) < 50)) {
 				Actor_Face_Actor(kActorMurray, kActorMia, true);
 				Actor_Face_Heading(kActorMia, 511, false);
 				Actor_Says(kActorMcCoy, 3970, 14); //00-3970.AUD	Hey.

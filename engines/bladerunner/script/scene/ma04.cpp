@@ -216,11 +216,7 @@ bool SceneScriptMA04::ClickedOn2DRegion(int region) {
 				} else {
 					phoneCallWithSteele();
 				}
-				if (_vm->_cutContent) {
-					Music_Play(kMusicBRBlues, 52, 0, 3, -1, kMusicLoopPlayOnceRandomStart, 0);
-				} else {
-					Music_Play(kMusicBRBlues, 52, 0, 3, -1, kMusicLoopPlayOnce, 0);
-				}
+				Music_Play(kMusicBRBlues, 52, 0, 3, -1, kMusicLoopPlayOnce, 0);
 				return false;
 			}
 			if (Actor_Clue_Query(kActorClovis, kClueMcCoyRetiredZuben) && !Game_Flag_Query(kFlagMA04PhoneMessageFromClovis)) {
@@ -328,10 +324,27 @@ void SceneScriptMA04::PlayerWalkedIn() {
 			Actor_Says(kActorMcCoy, 2680, kAnimationModeIdle);
 			Sound_Play(kSfxSPNBEEP9, 100, 0, 0, 50);
 			Delay(500);
-			Actor_Says(kActorGuzza, 0, 3);
-			Actor_Says(kActorMcCoy, 2685, 13);
-			Actor_Says(kActorGuzza, 10, 3);
-			Actor_Says(kActorMcCoy, 2690, 17);
+			if (_vm->_cutContent) {
+				if (Actor_Query_Friendliness_To_Other(kActorGuzza, kActorMcCoy) < 51) {
+					Actor_Says(kActorGuzza, 10, 3); //04-1390.AUD	McCoy! Where the hell have you been? We’ve been looking all over for you.
+					if (Player_Query_Agenda() != kPlayerAgendaSurly 
+					&& Player_Query_Agenda() != kPlayerAgendaErratic) {
+						Actor_Says(kActorMcCoy, 2545, 13); //00-2545.AUD	Sorry, but I-- I was just… sleeping. What’s going on?
+					} else {
+						Actor_Says(kActorMcCoy, 2690, 17);
+					}
+				} else {
+					Actor_Says(kActorGuzza, 0, 3);
+					Actor_Says(kActorMcCoy, 2685, 13);
+					Actor_Says(kActorGuzza, 10, 3);
+					Actor_Says(kActorMcCoy, 2690, 17);
+				}
+			} else {
+				Actor_Says(kActorGuzza, 0, 3);
+				Actor_Says(kActorMcCoy, 2685, 13);
+				Actor_Says(kActorGuzza, 10, 3);
+				Actor_Says(kActorMcCoy, 2690, 17);
+			}
 			Actor_Says(kActorGuzza, 30, 3);
 			Actor_Says(kActorMcCoy, 2695, 12);
 			Actor_Says(kActorGuzza, 40, 3);
@@ -421,7 +434,14 @@ void SceneScriptMA04::phoneCallWithDektora() {
 	Actor_Says(kActorMcCoy, 2480, 0);
 	Actor_Says(kActorDektora, 280, 3);
 	Actor_Says(kActorDektora, 290, 3);
-	Actor_Says(kActorMcCoy, 2485, 19);
+	if (_vm->_cutContent) {
+		if (Player_Query_Agenda() == kPlayerAgendaSurly 
+		|| Player_Query_Agenda() == kPlayerAgendaErratic) {
+			Actor_Says(kActorMcCoy, 2485, 19); //00-2485.AUD	I’ve a hard time believing that.
+		}
+	} else {
+		Actor_Says(kActorMcCoy, 2485, 19); //00-2485.AUD	I’ve a hard time believing that.
+	}
 	Actor_Says(kActorDektora, 300, 3);
 	Actor_Says(kActorDektora, 310, 3);
 	Actor_Says(kActorMcCoy, 2490, 0);
@@ -457,10 +477,10 @@ void SceneScriptMA04::phoneCallWithDektora() {
 		}
 		Actor_Says(kActorMcCoy, 2515, 12);
 		Actor_Says(kActorDektora, 390, 3);
-		Actor_Says(kActorMcCoy, 2520, 13);
+		Actor_Says(kActorMcCoy, 2520, 13); 
 		Actor_Says(kActorDektora, 400, 3);
 		Actor_Says(kActorDektora, 410, 3);
-		Actor_Says(kActorMcCoy, 2525, 15);
+		Actor_Says(kActorMcCoy, 2525, 15); 
 		Actor_Says(kActorDektora, 420, 3);
 		Sound_Play(kSfxSPNBEEP9, 100, 0, 0, 50);
 		if (_vm->_cutContent) {
@@ -570,13 +590,20 @@ void SceneScriptMA04::phoneCallWithSteele() {
 	Actor_Says(kActorSteele, 690, 3);
 	Actor_Says(kActorMcCoy, 2635, 18);
 	Actor_Says(kActorSteele, 700, 3);
-	Actor_Says(kActorMcCoy, 2640, 14);
+	Actor_Says(kActorMcCoy, 2640, 14); //00-2640.AUD	Not the Yukon?
 	Actor_Says(kActorSteele, 710, 3);
-	Actor_Says(kActorSteele, 720, 3);
-	Actor_Says(kActorMcCoy, 2645, 13);
-	Actor_Says(kActorSteele, 740, 3);
-	Actor_Says(kActorSteele, 750, 3);
-	Actor_Says(kActorMcCoy, 2650, 12);
+	Actor_Says(kActorSteele, 720, 3); //01-0720.AUD	I found out where they crash-landed it. And five will get you ten they’ll be licking their wounds there.
+	if (_vm->_cutContent) {
+		if (!Game_Flag_Query(kFlagMcCoyIsHelpingReplicants)) {
+			Actor_Says(kActorMcCoy, 2645, 13); //00-2645.AUD	Excellent. Where do we go?
+			Actor_Says(kActorSteele, 740, 3); //01-0740.AUD	We? How about moi? Here’s a hint, Slim.
+		}
+	} else {
+		Actor_Says(kActorMcCoy, 2645, 13); //00-2645.AUD	Excellent. Where do we go?
+		Actor_Says(kActorSteele, 740, 3); //01-0740.AUD	We? How about moi? Here’s a hint, Slim.
+	}
+	Actor_Says(kActorSteele, 750, 3); //01-0750.AUD	It’s way the shit out there in the Kipple. Way, way out.
+	Actor_Says(kActorMcCoy, 2650, 12); //
 	Actor_Says(kActorSteele, 760, 3); //01-0760.AUD	They’ve been accessing through an old sewer tunnel.
 	
 	// Restored some of the dialogue for the phone conversation with Crystal.
@@ -587,14 +614,26 @@ void SceneScriptMA04::phoneCallWithSteele() {
 		if (Game_Flag_Query(kFlagGuzzaSaved)) {
 			if (Actor_Clue_Query(kActorMcCoy, kClueFolder)) {
 				Actor_Says(kActorSteele, 790, 3); //01-0790.AUD	I think we can forget about Guzza. That guy’s gonna be fed to the barracudas.
-				Actor_Says(kActorMcCoy, 2660, 18); //00-2660.AUD	That breaks my heart.
-				Actor_Says(kActorSteele, 800, 3); //01-0800.AUD	I knew it would.
+				if (Player_Query_Agenda() == kPlayerAgendaSurly 
+				|| Player_Query_Agenda() == kPlayerAgendaErratic) {
+					Actor_Says(kActorMcCoy, 2660, 18); //00-2660.AUD	That breaks my heart.
+					Actor_Says(kActorSteele, 800, 3); //01-0800.AUD	I knew it would.
+				}
 			}
 		}
-	}
+	} 
 	Actor_Says(kActorMcCoy, 2665, 13); //00-2665.AUD	We’re gonna air out the Reps together or what?
-	Actor_Says(kActorSteele, 810, 3);
-	Actor_Says(kActorSteele, 820, 3);
+	if (_vm->_cutContent) {
+		if (Actor_Query_Friendliness_To_Other(kActorSteele, kActorMcCoy) > 50) {
+			Actor_Says(kActorSteele, 810, 3); //01-0810.AUD	Mm. I’m liking your style more and more.
+			Actor_Says(kActorMcCoy, 1885, 13); //00-1885.AUD	I’ll take that as a yes.
+		} else {
+			Actor_Says(kActorSteele, 820, 3); //01-0820.AUD	But first come, first serve. I share my bonuses with nobody. See you on the other side, Slim.
+		}
+	} else {
+		Actor_Says(kActorSteele, 810, 3); //01-0810.AUD	Mm. I’m liking your style more and more.
+		Actor_Says(kActorSteele, 820, 3); //01-0820.AUD	But first come, first serve. I share my bonuses with nobody. See you on the other side, Slim.
+	}
 	Sound_Play(kSfxSPNBEEP9, 100, 0, 0, 50);
 	if (_vm->_cutContent) {
 		Actor_Clue_Acquire(kActorMcCoy, kCluePhoneCallCrystal, true, kActorSteele);
@@ -613,10 +652,9 @@ void SceneScriptMA04::phoneCallWithClovis() {
 	// Altered code so Clovis and McCoy will be angry with each other if McCoy retired Dektora Lucy or Zuben or he didn't kill Guzza.
 	// If he didn't do any of that Clovis is nicer to him.
 	if (_vm->_cutContent) {
-		if (Actor_Clue_Query(kActorMcCoy, kClueClovisOrdersMcCoysDeath)
-		|| Actor_Clue_Query(kActorClovis, kClueMcCoyRetiredLucy) 
-		|| Actor_Clue_Query(kActorClovis, kClueMcCoyRetiredDektora)
-		|| Actor_Clue_Query(kActorMcCoy, kClueMcCoyRetiredZuben)) {
+		if (Actor_Clue_Query(kActorClovis, kClueMcCoyRetiredLucy) 
+		|| Actor_Clue_Query(kActorClovis, kClueMcCoyRetiredDektora) 
+		|| Actor_Query_Friendliness_To_Other(kActorClovis, kActorMcCoy) < 51) {
 			Actor_Says(kActorMcCoy, 2580, 14); //00-2580.AUD	No thanks to you.
 			Actor_Says(kActorClovis, 340, 3); //05-0340.AUD	Don’t you think you’d already be dead, if that’s what I so desired?
 			Actor_Says(kActorMcCoy, 2585, 19); //00-2585.AUD	Talking like a god, Clovis. Isn’t that a little over the top? Even for you?
@@ -709,6 +747,9 @@ void SceneScriptMA04::turnOnTV() {
 		ADQ_Add(kActorNewscaster, 80, kAnimationModeTalk);
 		break;
 	case 2:
+		if (_vm->_cutContent) {
+			Game_Flag_Set(kFlagZhoraNewsReport);
+		}
 		if (Actor_Query_Friendliness_To_Other(kActorClovis, kActorMcCoy) <= Actor_Query_Friendliness_To_Other(kActorSteele, kActorMcCoy)) {
 			ADQ_Add(kActorNewscaster, 90, kAnimationModeTalk);
 			ADQ_Add(kActorNewscaster, 100, kAnimationModeTalk);

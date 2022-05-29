@@ -98,8 +98,7 @@ void SceneScriptUG13::SceneLoaded() {
 	// sense as a condition for it to appear. However the player must still have found one of the other forms since the dialogue of McCoy comparing the 
 	// the form to the other forms won't make sense.
 	if (_vm->_cutContent) {
-		if (Game_Flag_Query(kFlagCT04HomelessKilledByMcCoy)
-		&& Actor_Clue_Query(kActorMcCoy, kClueRequisitionForm)) {
+		if (Game_Flag_Query(kFlagCT04HomelessKilledByMcCoy)) {
 			Game_Flag_Set(kFlagUG13OriginalRequisitionFormPlaced);
 			Item_Add_To_World(kItemWeaponsOrderForm, kModelAnimationOriginalRequisitionForm, kSetUG13, -209.01f, 70.76f, -351.79f, 0, 16, 12, false, true, false, true);
 		}
@@ -183,7 +182,7 @@ bool SceneScriptUG13::ClickedOnActor(int actorId) {
 							Actor_Says(kActorTransient, 90, 32); // Hm, guess so
 						 } else {
 							Actor_Says(kActorMcCoy, 5560, 13); // hey
-							Actor_Says(kActorMcCoy, 8920, 14); // 00-8920.AUD	I gotta ask you a question.
+							Actor_Says(kActorMcCoy, 8915, 11); //00-8915.AUD	You got a minute, pal?
 							Actor_Says(kActorTransient, 130, 31); // You got something...?
 							Actor_Says(kActorMcCoy, 7815, 15); //00-7815.AUD	No.
 						 }
@@ -392,15 +391,15 @@ void SceneScriptUG13::PlayerWalkedIn() {
 				Loop_Actor_Walk_To_XYZ(kActorMcCoy, -248.0f, 44.0f, -390.0f, 12, true, false, false);
 				Actor_Face_Actor(kActorMcCoy, kActorTransient, true);
 				if (Player_Query_Agenda() != kPlayerAgendaSurly 
-				|| Player_Query_Agenda() != kPlayerAgendaErratic) {
+				&& Player_Query_Agenda() != kPlayerAgendaErratic) {
 					Actor_Says(kActorMcCoy, 2175, 13); //00-2175.AUD	Hold on, I’ll get an ambulance out here.
-					Music_Play(kMusicBRBlues, 52, 0, 2, -1, kMusicLoopPlayOnce, 0);
+					Music_Play(kMusicBRBlues, 52, 0, 2, -1, kMusicLoopPlayOnce, 1);
 				}
 				Delay(2000);
 				Actor_Says(kActorMcCoy, 3970, 14); //00-3970.AUD	Hey.
 				Delay(2000);
 				if (Player_Query_Agenda() != kPlayerAgendaSurly 
-				|| Player_Query_Agenda() != kPlayerAgendaErratic) {
+				&& Player_Query_Agenda() != kPlayerAgendaErratic) {
 					Actor_Says(kActorMcCoy, 2390, kAnimationModeIdle); //00-2390.AUD	Oh, God. No.
 					Delay(2000);
 				}
@@ -409,7 +408,7 @@ void SceneScriptUG13::PlayerWalkedIn() {
 				Actor_Face_Actor(kActorMcCoy, kActorTransient, true);
 				Delay(2000);
 				if (Player_Query_Agenda() != kPlayerAgendaSurly 
-				|| Player_Query_Agenda() != kPlayerAgendaErratic) {
+				&& Player_Query_Agenda() != kPlayerAgendaErratic) {
 					Actor_Says(kActorMcCoy, 2305, 13); //00-2305.AUD	I’m sorry.
 				} else {
 					Actor_Says(kActorMcCoy, 170, -1); //00-0170.AUD	Damn.
@@ -482,7 +481,7 @@ void SceneScriptUG13::PlayerWalkedIn() {
 			Sound_Play(kSfxBANGDOOR, 50, 0, 0, 50);
 			Actor_Face_Heading(kActorMcCoy, 830, false);
 			Delay (1000);
-			Actor_Says(kActorMcCoy, 8525, 19); //00-8525.AUD	Hmph.
+			Actor_Says(kActorMcCoy, 8525, 13); //00-8525.AUD	Hmph.
 			Player_Loses_Control();
 			Loop_Actor_Walk_To_XYZ(kActorMcCoy, -267.0f, 44.0f, -795.0f, 0, true, false, false);
 			Footstep_Sound_Override_On(3);
@@ -498,7 +497,7 @@ void SceneScriptUG13::PlayerWalkedIn() {
 				Actor_Says(kActorMcCoy, 5555, 14); // How do I get this thing open?
 				Actor_Says(kActorTransient, 60, 31); // Nah, it only happens when they want it to open.
 				Actor_Face_Heading(kActorMcCoy, 830, false);
-				Actor_Says(kActorMcCoy, 8525, 19); //00-8525.AUD	Hmph.
+				Actor_Says(kActorMcCoy, 8525, 13); //00-8525.AUD	Hmph.
 				Player_Set_Combat_Mode(true);
 				Game_Flag_Set(kFlagUG13Entered);
 			}				

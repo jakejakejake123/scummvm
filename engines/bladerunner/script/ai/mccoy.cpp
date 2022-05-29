@@ -499,31 +499,59 @@ bool AIScriptMcCoy::GoalChanged(int currentGoalNumber, int newGoalNumber) {
 		Actor_Says(kActorGuzza, 1380, kAnimationModeTalk);
 		Actor_Says(kActorMcCoy, 6610, 13);
 		Actor_Says(kActorGuzza, 1390, kAnimationModeTalk);
-		Actor_Says(kActorMcCoy, 6615, 18);
+		Actor_Says(kActorMcCoy, 6615, 18); //00-6615.AUD	Yeah? Am I wanted dead or alive?
 		if (_vm->_cutContent) {
-			Actor_Says(kActorGuzza, 1400, kAnimationModeTalk);
-			Actor_Says(kActorGuzza, 1410, kAnimationModeTalk);
-			Actor_Says(kActorMcCoy, 6620, 15);
+			if (Actor_Query_Friendliness_To_Other(kActorGuzza, kActorMcCoy) > 50) {
+				Actor_Says(kActorGuzza, 1400, kAnimationModeTalk); //04-1400.AUD	I know there’s been some confusion, kid.
+				Actor_Says(kActorGuzza, 1410, kAnimationModeTalk); //04-1410.AUD	Come on downtown and we’ll sit down like gentlemen and figure this out.
+				Actor_Says(kActorMcCoy, 6620, 15); //00-6620.AUD	If you’re a gentleman, I’m a St. Bernard.
+				Delay(1000);
+			} else {
+				Actor_Says(kActorGuzza, 1420, kAnimationModeTalk); //04-1420.AUD	You don’t know what you are, kid.
+				Actor_Says(kActorMcCoy, 6625, 11); //00-6625.AUD	You can sell that Replicant shit to everybody else but I ain’t buying.
+				Actor_Says(kActorGuzza, 1430, kAnimationModeTalk); //04-1430.AUD	If you’re so clean, let’s put you on the Machine. That will decide once and for all.
+			}
+		} else {
+			Actor_Says(kActorGuzza, 1420, kAnimationModeTalk); //04-1420.AUD	You don’t know what you are, kid.
+			Actor_Says(kActorMcCoy, 6625, 11); //00-6625.AUD	You can sell that Replicant shit to everybody else but I ain’t buying.
+			Actor_Says(kActorGuzza, 1430, kAnimationModeTalk); //04-1430.AUD	If you’re so clean, let’s put you on the Machine. That will decide once and for all.
 		}
-		Actor_Says(kActorGuzza, 1420, kAnimationModeTalk);
-		Actor_Says(kActorMcCoy, 6625, 11);
-		Actor_Says(kActorGuzza, 1430, kAnimationModeTalk);
-		Actor_Says(kActorMcCoy, 6630, 12);
-		Actor_Says(kActorMcCoy, 6635, 17);
-		Actor_Says(kActorMcCoy, 6640, 13);
+		Actor_Says(kActorMcCoy, 6630, 12); //00-6630.AUD	I’m through listening, Guzza. Now it’s your turn.
+		Actor_Says(kActorMcCoy, 6635, 17); //00-6635.AUD	I’ve been doing some investigating on my own. Came across some prime sources.
+		Actor_Says(kActorMcCoy, 6640, 13); //00-6640.AUD	You know what I’m talking about. Those little illegal weapons deals with Izo.
 		Actor_Says(kActorMcCoy, 6645, 19);
 		Actor_Says(kActorMcCoy, 6650, 18);
-		Actor_Says(kActorMcCoy, 6655, 11);
-		Actor_Says(kActorGuzza, 1440, kAnimationModeTalk);
-		Actor_Says(kActorMcCoy, 6660, 17);
-		Actor_Says(kActorMcCoy, 6665, 13);
-		Delay(1000);
-		Actor_Says(kActorGuzza, 1450, kAnimationModeTalk);
+		Actor_Says(kActorMcCoy, 6655, 11); //00-6655.AUD	The department is gonna eat it up when they hear just how deep that corruption goes.
+		if (_vm->_cutContent) {
+			if (Actor_Query_Friendliness_To_Other(kActorGuzza, kActorMcCoy) < 51) {
+				Actor_Says(kActorGuzza, 1440, kAnimationModeTalk); //04-1440.AUD	That’s a load of crap.
+				Actor_Says(kActorMcCoy, 6660, 17); //00-6660.AUD	Let’s hope for your sake Bryant and the brass feel that way, when I lay this file on ‘em.
+				Actor_Says(kActorMcCoy, 6665, 13); //00-6665.AUD	Otherwise, it’s a one-way ticket to the Off-World penal colony, fat man.
+				Delay(1000);
+			}
+		} else {
+			Actor_Says(kActorGuzza, 1440, kAnimationModeTalk); //04-1440.AUD	That’s a load of crap.
+			Actor_Says(kActorMcCoy, 6660, 17); //00-6660.AUD	Let’s hope for your sake Bryant and the brass feel that way, when I lay this file on ‘em.
+			Actor_Says(kActorMcCoy, 6665, 13); //00-6665.AUD	Otherwise, it’s a one-way ticket to the Off-World penal colony, fat man.
+			Delay(1000);
+		}
+		Actor_Says(kActorGuzza, 1450, kAnimationModeTalk); //04-1450.AUD	What do you want, McCoy?
 		Actor_Says(kActorMcCoy, 6670, 14);
 		Actor_Says(kActorMcCoy, 6675, 11);
-		Actor_Says(kActorGuzza, 1460, kAnimationModeTalk);
-		Actor_Says(kActorMcCoy, 6680, 12);
-		Actor_Says(kActorGuzza, 1470, kAnimationModeTalk);
+		if (_vm->_cutContent) {
+			if (Actor_Query_Friendliness_To_Other(kActorGuzza, kActorMcCoy) < 51) {
+				Actor_Says(kActorGuzza, 1460, kAnimationModeTalk); //04-1460.AUD	I can’t do that.
+				Actor_Says(kActorMcCoy, 6680, 12); //00-6680.AUD	You better start finding a way ‘cause I got another call to make.
+				Actor_Says(kActorGuzza, 1470, kAnimationModeTalk); //04-1470.AUD	Okay, okay. How do we work this out? We can’t talk over the damn phone.
+			} else {
+				Delay(2000);
+				Actor_Says(kActorMcCoy, 8519, 14); //00-8519.AUD	What do you say we dish each other the straight goods.
+			}
+		} else {
+			Actor_Says(kActorGuzza, 1460, kAnimationModeTalk); //04-1460.AUD	I can’t do that.
+			Actor_Says(kActorMcCoy, 6680, 12); //00-6680.AUD	You better start finding a way ‘cause I got another call to make.
+			Actor_Says(kActorGuzza, 1470, kAnimationModeTalk); //04-1470.AUD	Okay, okay. How do we work this out? We can’t talk over the damn phone.
+		}
 		Actor_Says(kActorMcCoy, 6685, 13);
 		Delay(500);
 		Actor_Says(kActorMcCoy, 6695, 16);

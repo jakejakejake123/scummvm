@@ -89,8 +89,8 @@ bool SceneScriptHF02::ClickedOn3DObject(const char *objectName, bool a2) {
 					Global_Variable_Decrement(kVariableChinyen, 2);
 				}
 			} else {
-				Actor_Says(kActorMcCoy, 8525, 3); //00-8525.AUD	Hmph.
-				Actor_Says(kActorMcCoy, 250, 3); //00-0250.AUD	Frog and toad are friends. What the hell is that?
+				Actor_Says(kActorMcCoy, 8525, 13); //00-8525.AUD	Hmph.
+				Actor_Says(kActorMcCoy, 250, 15); //00-0250.AUD	Frog and toad are friends. What the hell is that?
 				// So this is where Lucy got this line from that we found written on the poster at Runciters.
 				Delay (1000);
 				Actor_Says(kActorMcCoy, 2340, kAnimationModeTalk); // 00-2340.AUD	I never did like poetry.

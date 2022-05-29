@@ -331,46 +331,19 @@ void SceneScriptNR04::ActorChangedGoal(int actorId, int newGoal, int oldGoal, bo
 			Actor_Says(kActorMcCoy, 3415, kAnimationModeTalk); //00-3415.AUD	Let’s hear what you got.
 			Actor_Says(kActorEarlyQ, 180, 30);
 			Actor_Says_With_Pause(kActorMcCoy, 3420, 1.5f, kAnimationModeTalk);
+			Actor_Says(kActorEarlyQ, 190, 30); //18-0190.AUD	You’re cold, General.
 			if (_vm->_cutContent) {
-				if (!Game_Flag_Query(kFlagEarlyQIsReplicant)) {
-					Delay(2000);
-					Player_Set_Combat_Mode(false);
-					Actor_Clue_Acquire(kActorMcCoy, kClueDektorasDressingRoom, false, kActorEarlyQ);
-					Item_Pickup_Spin_Effect(kModelAnimationPhoto, 200, 160);
-					Actor_Says(kActorEarlyQ, 200, 30);
-					Actor_Says(kActorEarlyQ, 210, 30);
-					Actor_Says(kActorEarlyQ, 220, 30);
-					// McCoy will only say that he has seen Clovis before if he has a clue which tells him of Clovis' appearance.
-					if (Actor_Clue_Query(kActorMcCoy, kClueAnimalMurderSuspect)
-					|| Actor_Clue_Query(kActorMcCoy, kClueMorajiInterview)
-					|| Actor_Clue_Query(kActorMcCoy, kClueClovisAtMoonbus)
-					|| Actor_Clue_Query(kActorMcCoy, kClueIzosFriend)) {
-						Actor_Says_With_Pause(kActorMcCoy, 3425, 1.5f, 23); //00-3425.AUD	I’ve seen them before.
-					} else {
-						Actor_Says_With_Pause(kActorMcCoy, 3425, 1.5f, 23);
-					}
-					Actor_Says(kActorMcCoy, 3430, kAnimationModeTalk);
-					Actor_Says(kActorEarlyQ, 240, 30);
-					Actor_Says(kActorMcCoy, 3435, kAnimationModeTalk);
-					Actor_Says(kActorEarlyQ, 250, 30);
-					Actor_Says(kActorMcCoy, 3440, kAnimationModeTalk);
-					Actor_Says(kActorEarlyQ, 280, 30);
-					Actor_Says(kActorMcCoy, 3445, kAnimationModeTalk);
-					// Added in a clue.
-					Actor_Clue_Acquire(kActorMcCoy, kClueEarlyInterviewB2, true, kActorEarlyQ);
-					CDB_Set_Crime(kClueDektorasDressingRoom, kCrimeReplicantHarboring);
-					Actor_Set_Goal_Number(kActorEarlyQ, kGoalEarlyQNR04AskForDisk);
-				} else {
-					Actor_Says(kActorEarlyQ, 190, 30); //18-0190.AUD	You’re cold, General.
+				if (Game_Flag_Query(kFlagEarlyQIsReplicant)) {	
 					// After Early Q says you're cold general, McCoy realizes that Early Q is a replicant.
 					Delay (2000);
 					Actor_Says(kActorMcCoy, 6865, -1); //00-6865.AUD	You're a Replicant.
-					Delay (1000);
+					Delay (2000);
 					Actor_Says(kActorEarlyQ, 90, 30);
+					Actor_Set_Goal_Number(kActorEarlyQ, kGoalEarlyQNR04WaitForPulledGun);
+				} else {
 					Actor_Set_Goal_Number(kActorEarlyQ, kGoalEarlyQNR04WaitForPulledGun);
 				}
 			} else {
-				Actor_Says(kActorEarlyQ, 190, 30); //18-0190.AUD	You’re cold, General.
 				Actor_Set_Goal_Number(kActorEarlyQ, kGoalEarlyQNR04WaitForPulledGun);
 			}
 			//return true;
@@ -399,9 +372,15 @@ void SceneScriptNR04::ActorChangedGoal(int actorId, int newGoal, int oldGoal, bo
 					Delay (1000);
 					Actor_Says(kActorMcCoy, 4130, 18); //00-4130.AUD	Anything else?
 					Actor_Says(kActorEarlyQ, 280, 30); //18-0280.AUD	No, General. I ain’t the nosy type.
+					Actor_Modify_Friendliness_To_Other(kActorClovis, kActorMcCoy, 2);
+					Actor_Modify_Friendliness_To_Other(kActorSteele, kActorMcCoy, -2);
+					Actor_Modify_Friendliness_To_Other(kActorGuzza, kActorMcCoy, -2);
 					Actor_Says(kActorMcCoy, 3445, kAnimationModeTalk);
 					Actor_Set_Goal_Number(kActorEarlyQ, kGoalEarlyQNR04AskForDisk);
-				} else {
+				} else { 
+					Delay(2000);
+					Actor_Says(kActorMcCoy, 4940, 13); //00-4940.AUD	Okay, let's have it.
+					Player_Set_Combat_Mode(false);
 					Actor_Clue_Acquire(kActorMcCoy, kClueDektorasDressingRoom, false, kActorEarlyQ);
 					Item_Pickup_Spin_Effect(kModelAnimationPhoto, 200, 160);
 					Actor_Says(kActorEarlyQ, 200, 30);
@@ -409,8 +388,8 @@ void SceneScriptNR04::ActorChangedGoal(int actorId, int newGoal, int oldGoal, bo
 					Actor_Says(kActorEarlyQ, 220, 30);
 					// McCoy will only say that he has seen Clovis before if he has a clue which tells him of Clovis' appearance.
 					if (Actor_Clue_Query(kActorMcCoy, kClueAnimalMurderSuspect)
+					|| Actor_Clue_Query(kActorMcCoy, kClueMorajiInterview)
 					|| Actor_Clue_Query(kActorMcCoy, kClueClovisAtMoonbus)
-					|| Actor_Clue_Query(kActorMcCoy, kClueMoonbus1)
 					|| Actor_Clue_Query(kActorMcCoy, kClueIzosFriend)) {
 						Actor_Says_With_Pause(kActorMcCoy, 3425, 1.5f, 23); //00-3425.AUD	I’ve seen them before.
 					} else {
@@ -423,6 +402,7 @@ void SceneScriptNR04::ActorChangedGoal(int actorId, int newGoal, int oldGoal, bo
 					Actor_Says(kActorMcCoy, 3440, kAnimationModeTalk);
 					Actor_Says(kActorEarlyQ, 280, 30);
 					Actor_Says(kActorMcCoy, 3445, kAnimationModeTalk);
+					// Added in a clue.
 					Actor_Clue_Acquire(kActorMcCoy, kClueEarlyInterviewB2, true, kActorEarlyQ);
 					CDB_Set_Crime(kClueDektorasDressingRoom, kCrimeReplicantHarboring);
 					Actor_Set_Goal_Number(kActorEarlyQ, kGoalEarlyQNR04AskForDisk);
@@ -482,52 +462,54 @@ if (_vm->_cutContent) {
 	if (_vm->_cutContent) {
 		if (Actor_Clue_Query(kActorMcCoy, kClueEarlyQAndLucy)) {
 			if (!Game_Flag_Query(kFlagNR04EarlyQStungByScorpions)) {
-				if (!Game_Flag_Query(kFlagEarlyQDead)) {
-					Actor_Put_In_Set(kActorEarlyQ, kSetNR04);
-					Actor_Set_At_XYZ(kActorEarlyQ,  48.79, 0.32, 34.30, 126);
-					Actor_Face_Actor(kActorMcCoy, kActorEarlyQ, true);
-					Actor_Face_Actor(kActorEarlyQ, kActorMcCoy, true);
-					Actor_Says(kActorEarlyQ, 30, 13); //18-0030.AUD	How’re you doing, General? You got a warrant to show me or you’re just breaking and entering?
-					Actor_Voice_Over(4260, kActorVoiceOver); //99-4260.AUD	Early, you sick bastard.
-					Actor_Says(kActorEarlyQ, 750, 12); //18-0750.AUD	Look, General. No reason to get your panties in a bind. If I’d known you were gonna get so testy, I would have tossed you the straight dope to begin with.
-					Actor_Says(kActorMcCoy, 8519, 13); //00-8519.AUD	What do you say we dish each other the straight goods.
-					Actor_Says(kActorEarlyQ, 700, 15); //18-0700.AUD	I heard some things, yeah. I’m the kind of guy people confide in, you know.
-					Actor_Says(kActorMcCoy, 4760, 12); // 00-4760.AUD	About the girl.
-					Actor_Says(kActorMcCoy, 4765, 15); // 00-4765.AUD	Lucy. I know what you did.
-					// Removed a line for the sake of the clue that I added in.
-					Delay (2000);
-					Actor_Says(kActorMcCoy, 840, 14); //00-0840.AUD	Did you hear me?
-					Delay (2000);
-					Actor_Says(kActorEarlyQ, 540, 12); //18-0540.AUD	Of course, she ain’t half bad looking. My pappy always used to say ‘if there’s grass on the field, it’s time to play ball’.
-					Actor_Says(kActorMcCoy, 4800, 14); //00-4800.AUD	You son of a bitch she couldn't object.
-					Actor_Says(kActorEarlyQ, 50, 16); //18-0050.AUD	Hey, hey, I don’t hassle you about your private life.
-					Actor_Says(kActorMcCoy, 2255, 15); //00-2255.AUD	She was innocent, you bastard!
-					Actor_Says(kActorEarlyQ, 530, 12); //18-0530.AUD	This ain’t no daycare center, General.
-					Actor_Clue_Acquire(kActorMcCoy, kClueEarlyAttemptedToSeduceLucy, true, kActorEarlyQ);
-					Delay (1000);
-					Actor_Says(kActorMcCoy, 3405, 13); //00-3405.AUD	Sit down.
-					Actor_Says(kActorMcCoy, 4680, 15); // 00-4680.AUD	We're gonna have a little chat.
-					Actor_Says(kActorEarlyQ, 410, 12); //18-0410.AUD	Sorry, General. I’ve got a major crisis backstage. One of my girls ran full steam into a pencil and we’re fresh out of tampons.
-					Loop_Actor_Walk_To_XYZ(kActorEarlyQ, 45.02, 0.33, 5.52, 0, false, false, false);
-					Actor_Face_Actor(kActorMcCoy, kActorEarlyQ, true);
-					Actor_Says(kActorMcCoy, 460, 14); //00-0460.AUD	Hold it right there!
-					// If Lucy is a rep McCoy arrests Early for being a rep sympathizier. If not he arrests him for what he did to her.
-					if (Game_Flag_Query(kFlagLucyIsReplicant)) {
-						Actor_Says(kActorMcCoy, 3090, 15); //00-3090.AUD	You may not be a Rep but you’re a damn Rep sympathizer for sure.
-					}
-					Actor_Says(kActorMcCoy, 3095, -15); //00-3095.AUD	Now we’re gonna take a little ride downtown.
-					Delay (1000);
-					Music_Stop(1u);
-					Actor_Put_In_Set(kActorEarlyQ, kSetPS09);
-					Actor_Set_At_XYZ(kActorEarlyQ, -425.88f, 0.15f, -220.74f, 512);
-					Game_Flag_Reset(kFlagSpinnerAtNR01);
-					Game_Flag_Reset(kFlagSpinnerAtHF01);
-					Game_Flag_Set(kFlagSpinnerAtPS01);
-					Scene_Exits_Enable();
-					Game_Flag_Reset(kFlagMcCoyInNightclubRow);
-					Game_Flag_Set(kFlagMcCoyInPoliceStation);
-					Set_Enter(kSetPS09, kScenePS09);
+				Actor_Put_In_Set(kActorEarlyQ, kSetNR04);
+				Actor_Set_At_XYZ(kActorEarlyQ,  48.79, 0.32, 34.30, 126);
+				Actor_Face_Actor(kActorMcCoy, kActorEarlyQ, true);
+				Actor_Face_Actor(kActorEarlyQ, kActorMcCoy, true);
+				Actor_Says(kActorEarlyQ, 30, 13); //18-0030.AUD	How’re you doing, General? You got a warrant to show me or you’re just breaking and entering?
+				Actor_Voice_Over(4260, kActorVoiceOver); //99-4260.AUD	Early, you sick bastard.
+				Actor_Says(kActorEarlyQ, 750, 12); //18-0750.AUD	Look, General. No reason to get your panties in a bind. If I’d known you were gonna get so testy, I would have tossed you the straight dope to begin with.
+				Actor_Says(kActorMcCoy, 8519, 13); //00-8519.AUD	What do you say we dish each other the straight goods.
+				Actor_Says(kActorEarlyQ, 700, 15); //18-0700.AUD	I heard some things, yeah. I’m the kind of guy people confide in, you know.
+				Actor_Says(kActorMcCoy, 4760, 12); // 00-4760.AUD	About the girl.
+				Actor_Says(kActorMcCoy, 4765, 15); // 00-4765.AUD	Lucy. I know what you did.
+				// Removed a line for the sake of the clue that I added in.
+				Delay (2000);
+				Actor_Says(kActorMcCoy, 840, 14); //00-0840.AUD	Did you hear me?
+				Delay (2000);
+				Actor_Says(kActorEarlyQ, 540, 12); //18-0540.AUD	Of course, she ain’t half bad looking. My pappy always used to say ‘if there’s grass on the field, it’s time to play ball’.
+				Actor_Says(kActorMcCoy, 4800, 14); //00-4800.AUD	You son of a bitch she couldn't object.
+				Actor_Says(kActorEarlyQ, 50, 16); //18-0050.AUD	Hey, hey, I don’t hassle you about your private life.
+				Actor_Says(kActorMcCoy, 2255, 15); //00-2255.AUD	She was innocent, you bastard!
+				Actor_Says(kActorEarlyQ, 530, 12); //18-0530.AUD	This ain’t no daycare center, General.
+				Actor_Clue_Acquire(kActorMcCoy, kClueEarlyAttemptedToSeduceLucy, true, kActorEarlyQ);
+				Delay (1000);
+				Actor_Says(kActorMcCoy, 3405, 13); //00-3405.AUD	Sit down.
+				Actor_Says(kActorMcCoy, 4680, 15); // 00-4680.AUD	We're gonna have a little chat.
+				Actor_Says(kActorEarlyQ, 410, 12); //18-0410.AUD	Sorry, General. I’ve got a major crisis backstage. One of my girls ran full steam into a pencil and we’re fresh out of tampons.
+				Loop_Actor_Walk_To_XYZ(kActorEarlyQ, 45.02, 0.33, 5.52, 0, false, false, false);
+				Actor_Face_Actor(kActorMcCoy, kActorEarlyQ, true);
+				Actor_Says(kActorMcCoy, 460, 14); //00-0460.AUD	Hold it right there!
+				// If Lucy is a rep McCoy arrests Early for being a rep sympathizier. If not he arrests him for what he did to her.
+				if (Game_Flag_Query(kFlagLucyIsReplicant)) {
+					Actor_Says(kActorMcCoy, 3090, 15); //00-3090.AUD	You may not be a Rep but you’re a damn Rep sympathizer for sure.
 				}
+				Actor_Says(kActorMcCoy, 3095, -15); //00-3095.AUD	Now we’re gonna take a little ride downtown.
+				Actor_Modify_Friendliness_To_Other(kActorClovis, kActorMcCoy, 2);
+				Actor_Modify_Friendliness_To_Other(kActorSteele, kActorMcCoy, 1);
+				Actor_Modify_Friendliness_To_Other(kActorGuzza, kActorMcCoy, 1);
+				Delay (1000);
+				Music_Stop(1u);
+				Actor_Put_In_Set(kActorEarlyQ, kSetPS09);
+				Actor_Set_At_XYZ(kActorEarlyQ, -428.88f, 0.15f, -220.74f, 512);
+				Game_Flag_Reset(kFlagSpinnerAtNR01);
+				Game_Flag_Reset(kFlagSpinnerAtHF01);
+				Game_Flag_Set(kFlagSpinnerAtPS01);
+				Scene_Exits_Enable();
+				Game_Flag_Reset(kFlagMcCoyInNightclubRow);
+				Game_Flag_Set(kFlagMcCoyInPoliceStation);
+				Outtake_Play(kOuttakeAway1, true, -1);
+				Set_Enter(kSetPS09, kScenePS09);
 			}
 		}
 	}

@@ -440,6 +440,11 @@ void VKScript::SCRIPT_VK_DLL_McCoy_Asks_Question(int actorId, int questionId) {
 		VK_Play_Speech_Line(kActorMcCoy, 7705, 0.5f);
 #else
 		VK_Play_Speech_Line(kActorMcCoy, 7705, 0.1f);
+		if (_vm->_cutContent) {
+			if (actorId == kActorDektora) {
+				VK_Play_Speech_Line(kActorDektora, 2570, 0.5f); //03-2570.AUD	(scoffs) In this outfit?
+			}
+		}
 #endif // BLADERUNNER_ORIGINAL_BUGS
 		VK_Play_Speech_Line(kActorMcCoy, 7710, 0.5f);
 		VK_Play_Speech_Line(kActorMcCoy, 7715, 0.5f);
@@ -679,10 +684,18 @@ void VKScript::askLucy(int questionId) {
 		break;
 	case 7415:                          // Low 04
 		if (Game_Flag_Query(kFlagLucyIsReplicant)) {
-			VK_Play_Speech_Line(kActorLucy, 1340, 0.5f);
+			VK_Play_Speech_Line(kActorLucy, 1340, 0.5f); //06-1340.AUD	Antibiotics. I've been sick.
 			VK_Subject_Reacts(50, 1, 11, -5);
-			VK_Play_Speech_Line(kActorMcCoy, 7935, 0.5f);
-			VK_Play_Speech_Line(kActorLucy, 1350, 0.5f);
+			if (_vm->_cutContent) {
+				if (Player_Query_Agenda() != kPlayerAgendaSurly 
+				&& Player_Query_Agenda() != kPlayerAgendaErratic) {
+					VK_Play_Speech_Line(kActorMcCoy, 7935, 0.5f); //00-7935.AUD	Are they helping?
+					VK_Play_Speech_Line(kActorLucy, 1350, 0.5f);
+				}
+			} else {
+				VK_Play_Speech_Line(kActorMcCoy, 7935, 0.5f); //00-7935.AUD	Are they helping?
+				VK_Play_Speech_Line(kActorLucy, 1350, 0.5f);
+			}
 		} else {
 			VK_Play_Speech_Line(kActorLucy, 1360, 0.5f);
 			VK_Subject_Reacts(20, 9, -2, -5);
@@ -858,9 +871,18 @@ void VKScript::askLucy(int questionId) {
 			VK_Subject_Reacts(40, 11, 1, 8);
 		}
 		VK_Play_Speech_Line(kActorLucy, 1750, 0.5f);
-		VK_Play_Speech_Line(kActorMcCoy, 7985, 0.5f);
-		VK_Play_Speech_Line(kActorMcCoy, 7990, 0.5f);
-		VK_Play_Speech_Line(kActorLucy, 1760, 0.5f);
+		if (_vm->_cutContent) {
+			if (Player_Query_Agenda() != kPlayerAgendaSurly 
+			&& Player_Query_Agenda() != kPlayerAgendaErratic) {
+				VK_Play_Speech_Line(kActorMcCoy, 7985, 0.5f);
+				VK_Play_Speech_Line(kActorMcCoy, 7990, 0.5f);
+				VK_Play_Speech_Line(kActorLucy, 1760, 0.5f);
+			}
+		} else {
+			VK_Play_Speech_Line(kActorMcCoy, 7985, 0.5f);
+			VK_Play_Speech_Line(kActorMcCoy, 7990, 0.5f);
+			VK_Play_Speech_Line(kActorLucy, 1760, 0.5f);
+		}
 		break;
 	case 7495:                          // Medium 05
 		if (Game_Flag_Query(kFlagLucyIsReplicant)) {
@@ -925,7 +947,14 @@ void VKScript::askLucy(int questionId) {
 			VK_Subject_Reacts(10, 8, -1, -2);
 		}
 		VK_Play_Speech_Line(kActorLucy, 1900, 0.5f);
-		VK_Play_Speech_Line(kActorMcCoy, 8015, 0.5f);
+		if (_vm->_cutContent) {
+			if (Player_Query_Agenda() != kPlayerAgendaSurly 
+			&& Player_Query_Agenda() != kPlayerAgendaErratic) {
+				VK_Play_Speech_Line(kActorMcCoy, 8015, 0.5f); 
+			}
+		} else {
+			VK_Play_Speech_Line(kActorMcCoy, 8015, 0.5f);
+		}
 		break;
 	case 7565:                          // Medium 11
 		VK_Play_Speech_Line(kActorLucy, 1910, 0.5f);
@@ -968,9 +997,18 @@ void VKScript::askLucy(int questionId) {
 			VK_Subject_Reacts(50, 12, -3, 5);
 		}
 		VK_Play_Speech_Line(kActorLucy, 1990, 0.5f);
-		VK_Play_Speech_Line(kActorMcCoy, 8040, 0.5f);
-		VK_Eye_Animates(2);
-		VK_Play_Speech_Line(kActorLucy, 2000, 0.5f);
+		if (_vm->_cutContent) {
+			if (Player_Query_Agenda() != kPlayerAgendaSurly 
+			&& Player_Query_Agenda() != kPlayerAgendaErratic) {
+				VK_Play_Speech_Line(kActorMcCoy, 8040, 0.5f);
+				VK_Eye_Animates(2);
+				VK_Play_Speech_Line(kActorLucy, 2000, 0.5f);
+			}
+		} else {
+			VK_Play_Speech_Line(kActorMcCoy, 8040, 0.5f);
+			VK_Eye_Animates(2);
+			VK_Play_Speech_Line(kActorLucy, 2000, 0.5f);
+		}
 		break;
 	case 7595:                          // Medium 14
 		if (Game_Flag_Query(kFlagLucyIsReplicant)) {
@@ -1081,11 +1119,22 @@ void VKScript::askLucy(int questionId) {
 			VK_Play_Speech_Line(kActorMcCoy, 7735, 0.5f);
 			VK_Subject_Reacts(50, 2, 10, 12);
 			VK_Play_Speech_Line(kActorLucy, 2230, 0.5f);
-			VK_Play_Speech_Line(kActorMcCoy, 8065, 0.5f);
-			VK_Eye_Animates(2);
-			VK_Play_Speech_Line(kActorLucy, 2240, 0.5f);
-			VK_Play_Speech_Line(kActorMcCoy, 8070, 0.5f);
-			VK_Play_Speech_Line(kActorMcCoy, 8075, 0.5f);
+			if (_vm->_cutContent) {
+				if (Player_Query_Agenda() != kPlayerAgendaSurly 
+				&& Player_Query_Agenda() != kPlayerAgendaErratic) {
+					VK_Play_Speech_Line(kActorMcCoy, 8065, 0.5f);
+					VK_Eye_Animates(2);
+					VK_Play_Speech_Line(kActorLucy, 2240, 0.5f);
+					VK_Play_Speech_Line(kActorMcCoy, 8070, 0.5f);
+					VK_Play_Speech_Line(kActorMcCoy, 8075, 0.5f);
+				}
+			} else {
+				VK_Play_Speech_Line(kActorMcCoy, 8065, 0.5f);
+				VK_Eye_Animates(2);
+				VK_Play_Speech_Line(kActorLucy, 2240, 0.5f);
+				VK_Play_Speech_Line(kActorMcCoy, 8070, 0.5f);
+				VK_Play_Speech_Line(kActorMcCoy, 8075, 0.5f);
+			}
 		} else {
 			VK_Eye_Animates(2);
 			VK_Subject_Reacts(50, 0, 0, 0);
@@ -1096,7 +1145,10 @@ void VKScript::askLucy(int questionId) {
 			VK_Subject_Reacts(60, 12, 2, 12);
 			VK_Play_Speech_Line(kActorLucy, 2230, 0.5f);
 			if (_vm->_cutContent) {
-				VK_Play_Speech_Line(kActorMcCoy, 8537, 0.5f);
+				if (Player_Query_Agenda() != kPlayerAgendaSurly 
+				&& Player_Query_Agenda() != kPlayerAgendaErratic) {
+					VK_Play_Speech_Line(kActorMcCoy, 8537, 0.5f);
+				}
 			}
 			VK_Play_Speech_Line(kActorLucy, 2270, 0.5f);
 			VK_Play_Speech_Line(kActorMcCoy, 8080, 0.5f);
@@ -1143,7 +1195,10 @@ void VKScript::askLucy(int questionId) {
 		}
 		VK_Play_Speech_Line(kActorLucy, 2360, 0.5f);
 		if (_vm->_cutContent) {
-			VK_Play_Speech_Line(kActorMcCoy, 8538, 0.5f);
+			if (Player_Query_Agenda() != kPlayerAgendaSurly 
+			&& Player_Query_Agenda() != kPlayerAgendaErratic) {
+				VK_Play_Speech_Line(kActorMcCoy, 8538, 0.5f);
+			}
 		}
 		break;
 	default:
@@ -1156,9 +1211,18 @@ void VKScript::askGrigorian(int questionId) {
 	case 7385:                          // Calibration 01
 		VK_Subject_Reacts(20, 0, 0, 5);
 		VK_Play_Speech_Line(kActorGrigorian, 440, 0.5f);
-		VK_Play_Speech_Line(kActorMcCoy, 8100, 0.5f);
-		VK_Play_Speech_Line(kActorGrigorian, 450, 0.5f);
-		VK_Play_Speech_Line(kActorMcCoy, 8105, 0.5f);
+		if (_vm->_cutContent) {
+			if (Player_Query_Agenda() != kPlayerAgendaSurly 
+			&& Player_Query_Agenda() != kPlayerAgendaErratic) {
+				VK_Play_Speech_Line(kActorMcCoy, 8100, 0.5f);
+				VK_Play_Speech_Line(kActorGrigorian, 450, 0.5f);
+				VK_Play_Speech_Line(kActorMcCoy, 8105, 0.5f);
+			}
+		} else {
+			VK_Play_Speech_Line(kActorMcCoy, 8100, 0.5f);
+			VK_Play_Speech_Line(kActorGrigorian, 450, 0.5f);
+			VK_Play_Speech_Line(kActorMcCoy, 8105, 0.5f);
+		}
 		break;
 	case 7390:                          // Calibration 02
 		VK_Subject_Reacts(20, 0, 0, 3);
@@ -1170,7 +1234,10 @@ void VKScript::askGrigorian(int questionId) {
 		VK_Play_Speech_Line(kActorGrigorian, 470, 0.5f);
 		VK_Play_Speech_Line(kActorGrigorian, 480, 0.5f);
 		if (_vm->_cutContent) {
-			VK_Play_Speech_Line(kActorMcCoy, 8110, 0.5f);
+			if (Player_Query_Agenda() != kPlayerAgendaSurly 
+			&& Player_Query_Agenda() != kPlayerAgendaErratic) {
+				VK_Play_Speech_Line(kActorMcCoy, 8110, 0.5f);
+			}
 		} else {
 			VK_Play_Speech_Line(kActorMcCoy, 8105, 0.5f);
 		}
@@ -1184,7 +1251,14 @@ void VKScript::askGrigorian(int questionId) {
 		VK_Play_Speech_Line(kActorGrigorian, 510, 0.5f);
 		VK_Subject_Reacts(30, 10, 7, 0);
 		VK_Play_Speech_Line(kActorGrigorian, 520, 0.5f);
-		VK_Play_Speech_Line(kActorMcCoy, 8115, 0.5f);
+		if (_vm->_cutContent) {
+			if (Player_Query_Agenda() == kPlayerAgendaSurly 
+			|| Player_Query_Agenda() == kPlayerAgendaErratic) {
+				VK_Play_Speech_Line(kActorMcCoy, 8115, 0.5f);
+			}
+		} else {
+			VK_Play_Speech_Line(kActorMcCoy, 8115, 0.5f);
+		}
 		break;
 	case 7410:                          // Low 03
 		VK_Subject_Reacts(20, 12, -3, -3);
@@ -1196,9 +1270,18 @@ void VKScript::askGrigorian(int questionId) {
 		VK_Subject_Reacts(25, 7, 8, 8);
 		VK_Play_Speech_Line(kActorGrigorian, 560, 0.5f);
 		VK_Play_Speech_Line(kActorMcCoy, 8120, 0.5f);
-		VK_Play_Speech_Line(kActorMcCoy, 8125, 0.5f);
-		VK_Subject_Reacts(75, 8, 0, 0);
-		VK_Play_Speech_Line(kActorGrigorian, 570, 0.5f);
+		if (_vm->_cutContent) {
+			if (Player_Query_Agenda() == kPlayerAgendaSurly 
+			|| Player_Query_Agenda() == kPlayerAgendaErratic) {
+				VK_Play_Speech_Line(kActorMcCoy, 8125, 0.5f);
+				VK_Subject_Reacts(75, 8, 0, 0);
+				VK_Play_Speech_Line(kActorGrigorian, 570, 0.5f);
+			}
+		} else {
+			VK_Play_Speech_Line(kActorMcCoy, 8125, 0.5f);
+			VK_Subject_Reacts(75, 8, 0, 0);
+			VK_Play_Speech_Line(kActorGrigorian, 570, 0.5f);
+		}
 		break;
 	case 7420:                          // Low 05
 		VK_Subject_Reacts(10, 6, 8, -5);
@@ -1221,7 +1304,14 @@ void VKScript::askGrigorian(int questionId) {
 		VK_Eye_Animates(2);
 		VK_Play_Speech_Line(kActorGrigorian, 610, 0.5f);
 		VK_Play_Speech_Line(kActorMcCoy, 8135, 0.5f);
-		VK_Play_Speech_Line(kActorMcCoy, 8140, 0.5f);
+		if (_vm->_cutContent) {
+			if (Player_Query_Agenda() == kPlayerAgendaSurly 
+			|| Player_Query_Agenda() == kPlayerAgendaErratic) {
+				VK_Play_Speech_Line(kActorMcCoy, 8140, 0.5f); 
+			}
+		} else {
+			VK_Play_Speech_Line(kActorMcCoy, 8140, 0.5f); 
+		}
 		break;
 	case 7435:                          // Low 08
 		VK_Play_Speech_Line(kActorGrigorian, 620, 0.5f);
@@ -1239,8 +1329,15 @@ void VKScript::askGrigorian(int questionId) {
 	case 7450:                          // Low 11
 		VK_Play_Speech_Line(kActorGrigorian, 660, 0.5f);
 		VK_Subject_Reacts(35, 4, 8, 3);
-		VK_Play_Speech_Line(kActorMcCoy, 8145, 0.5f);
-		VK_Play_Speech_Line(kActorGrigorian, 670, 0.5f);
+		if (_vm->_cutContent) {
+			if (!Game_Flag_Query(kFlagMcCoyIsHelpingReplicants)) {
+				VK_Play_Speech_Line(kActorMcCoy, 8145, 0.5f);
+				VK_Play_Speech_Line(kActorGrigorian, 670, 0.5f);
+			}
+		} else {
+			VK_Play_Speech_Line(kActorMcCoy, 8145, 0.5f);
+			VK_Play_Speech_Line(kActorGrigorian, 670, 0.5f);
+		}
 		break;
 	case 7455:                          // Low 12
 		VK_Play_Speech_Line(kActorGrigorian, 680, 0.5f);
@@ -1266,7 +1363,13 @@ void VKScript::askGrigorian(int questionId) {
 	case 7480:                          // Medium 02
 		VK_Subject_Reacts(20, 9, 4, 8);
 		VK_Play_Speech_Line(kActorGrigorian, 740, 0.5f);
-		VK_Play_Speech_Line(kActorGrigorian, 750, 0.5f);
+		if (_vm->_cutContent) {
+			if (Actor_Query_Friendliness_To_Other(kActorGrigorian, kActorMcCoy) < 50) {
+				VK_Play_Speech_Line(kActorGrigorian, 750, 0.5f);
+			}
+		} else {
+			VK_Play_Speech_Line(kActorGrigorian, 750, 0.5f);
+		}
 		break;
 	case 7485:                          // Medium 03
 		VK_Subject_Reacts(15, 8, 8, 5);
@@ -1285,16 +1388,27 @@ void VKScript::askGrigorian(int questionId) {
 	case 7515:                          // Medium 06
 		VK_Eye_Animates(2);
 		VK_Play_Speech_Line(kActorGrigorian, 800, 0.5f);
-		VK_Play_Speech_Line(kActorMcCoy, 8150, 0.5f);
-		VK_Play_Speech_Line(kActorMcCoy, 8155, 0.5f);
-		VK_Subject_Reacts(30, 9, -5, 12);
+		if (_vm->_cutContent) {
+			if (Player_Query_Agenda() == kPlayerAgendaSurly 
+			|| Player_Query_Agenda() == kPlayerAgendaErratic) {
+				VK_Play_Speech_Line(kActorMcCoy, 8150, 0.5f);
+				VK_Play_Speech_Line(kActorMcCoy, 8155, 0.5f);
+				VK_Subject_Reacts(30, 9, -5, 12);
+				VK_Play_Speech_Line(kActorGrigorian, 810, 0.0f);
+				VK_Play_Speech_Line(kActorMcCoy, 8160, 0.5f);
+			}
+		} else {
+			VK_Play_Speech_Line(kActorMcCoy, 8150, 0.5f);
+			VK_Play_Speech_Line(kActorMcCoy, 8155, 0.5f);
+			VK_Subject_Reacts(30, 9, -5, 12);
 #if BLADERUNNER_ORIGINAL_BUGS
 		VK_Play_Speech_Line(kActorGrigorian, 810, 0.5f);
 #else
-		// Grigorian is interrupted here
-		VK_Play_Speech_Line(kActorGrigorian, 810, 0.0f);
+			// Grigorian is interrupted here
+			VK_Play_Speech_Line(kActorGrigorian, 810, 0.0f);
 #endif // BLADERUNNER_ORIGINAL_BUGS
-		VK_Play_Speech_Line(kActorMcCoy, 8160, 0.5f);
+			VK_Play_Speech_Line(kActorMcCoy, 8160, 0.5f);
+		}
 		break;
 	case 7525:                          // Medium 07
 		VK_Subject_Reacts(30, 8, 5, 8);
@@ -1313,17 +1427,34 @@ void VKScript::askGrigorian(int questionId) {
 		VK_Play_Speech_Line(kActorGrigorian, 850, 0.5f);
 		VK_Play_Speech_Line(kActorMcCoy, 8165, 0.5f);
 		VK_Subject_Reacts(60, 6, 2, 15);
-		VK_Play_Speech_Line(kActorGrigorian, 860, 0.5f);
-		VK_Play_Speech_Line(kActorMcCoy, 8170, 0.5f);
-		VK_Eye_Animates(3);
+		if (_vm->_cutContent) {
+			if (Actor_Query_Friendliness_To_Other(kActorGrigorian, kActorMcCoy) < 50) {
+				VK_Play_Speech_Line(kActorGrigorian, 860, 0.5f);
+				VK_Play_Speech_Line(kActorMcCoy, 8170, 0.5f);
+				VK_Eye_Animates(3);
+			}
+		} else {
+			VK_Play_Speech_Line(kActorGrigorian, 860, 0.5f);
+			VK_Play_Speech_Line(kActorMcCoy, 8170, 0.5f);
+			VK_Eye_Animates(3);
+		}
 		break;
 	case 7565:                          // Medium 11
 		VK_Subject_Reacts(40, 8, 8, 12);
 		VK_Eye_Animates(2);
 		VK_Play_Speech_Line(kActorGrigorian, 870, 0.5f);
-		VK_Play_Speech_Line(kActorMcCoy, 8175, 0.5f);
-		VK_Play_Speech_Line(kActorGrigorian, 880, 0.5f);
-		VK_Play_Speech_Line(kActorGrigorian, 890, 0.5f);
+		if (_vm->_cutContent) {
+			if (Player_Query_Agenda() == kPlayerAgendaSurly 
+			|| Player_Query_Agenda() == kPlayerAgendaErratic) {
+				VK_Play_Speech_Line(kActorMcCoy, 8175, 0.5f);
+				VK_Play_Speech_Line(kActorGrigorian, 880, 0.5f);
+				VK_Play_Speech_Line(kActorGrigorian, 890, 0.5f);
+			}
+		} else {
+			VK_Play_Speech_Line(kActorMcCoy, 8175, 0.5f);
+			VK_Play_Speech_Line(kActorGrigorian, 880, 0.5f);
+			VK_Play_Speech_Line(kActorGrigorian, 890, 0.5f);
+		}
 		break;
 	case 7580:                          // Medium 12
 		VK_Play_Speech_Line(kActorGrigorian, 900, 0.5f);
@@ -1338,8 +1469,16 @@ void VKScript::askGrigorian(int questionId) {
 	case 7595:                          // Medium 14
 		VK_Subject_Reacts(25, 8, -3, 5);
 		VK_Play_Speech_Line(kActorGrigorian, 920, 0.5f);
-		VK_Play_Speech_Line(kActorMcCoy, 8185, 0.5f);
-		VK_Play_Speech_Line(kActorGrigorian, 930, 0.5f);
+		if (_vm->_cutContent) {
+			if (Player_Query_Agenda() != kPlayerAgendaSurly 
+			&& Player_Query_Agenda() != kPlayerAgendaErratic) {
+				VK_Play_Speech_Line(kActorMcCoy, 8185, 0.5f);
+				VK_Play_Speech_Line(kActorGrigorian, 930, 0.5f);
+			}
+		} else {
+			VK_Play_Speech_Line(kActorMcCoy, 8185, 0.5f);
+			VK_Play_Speech_Line(kActorGrigorian, 930, 0.5f);
+		}
 		break;
 	case 7600:                          // Medium 15
 		VK_Subject_Reacts(20, 5, 9, 2);
@@ -1350,7 +1489,10 @@ void VKScript::askGrigorian(int questionId) {
 		VK_Subject_Reacts(40, 10, -3, 15);
 		VK_Play_Speech_Line(kActorGrigorian, 950, 0.5f);
 		if (_vm->_cutContent) {
-			VK_Play_Speech_Line(kActorMcCoy, 7375, 0.5f);     //  M: They're just questions
+			if (Player_Query_Agenda() != kPlayerAgendaSurly 
+			&& Player_Query_Agenda() != kPlayerAgendaErratic) {
+				VK_Play_Speech_Line(kActorMcCoy, 7375, 0.5f);     //  M: They're just questions
+			}
 		}
 		break;
 	case 7620:                          // High 02
@@ -1377,12 +1519,19 @@ void VKScript::askGrigorian(int questionId) {
 		VK_Play_Speech_Line(kActorGrigorian, 1000, 0.5f);
 		VK_Subject_Reacts(30, 9, 3, 10);
 		VK_Play_Speech_Line(kActorGrigorian, 1010, 0.5f);
-		VK_Play_Speech_Line(kActorMcCoy, 8190, 0.5f);
-		VK_Play_Speech_Line(kActorGrigorian, 1020, 0.5f);
-		VK_Play_Speech_Line(kActorGrigorian, 1030, 0.5f);
-		VK_Play_Speech_Line(kActorGrigorian, 1040, 0.5f);
 		if (_vm->_cutContent) {
-			VK_Play_Speech_Line(kActorMcCoy, 8535, 0.5f);     // M: yeah...
+			if (!Game_Flag_Query(kFlagMcCoyIsHelpingReplicants)) {
+				VK_Play_Speech_Line(kActorMcCoy, 8190, 0.5f);
+				VK_Play_Speech_Line(kActorGrigorian, 1020, 0.5f);
+				VK_Play_Speech_Line(kActorGrigorian, 1030, 0.5f);
+				VK_Play_Speech_Line(kActorGrigorian, 1040, 0.5f);
+				VK_Play_Speech_Line(kActorMcCoy, 8535, 0.5f);     // M: yeah...
+			}
+		} else {
+			VK_Play_Speech_Line(kActorMcCoy, 8190, 0.5f);
+				VK_Play_Speech_Line(kActorGrigorian, 1020, 0.5f);
+				VK_Play_Speech_Line(kActorGrigorian, 1030, 0.5f);
+				VK_Play_Speech_Line(kActorGrigorian, 1040, 0.5f);
 		}
 		break;
 	case 7690:                          // High 06
@@ -1390,7 +1539,13 @@ void VKScript::askGrigorian(int questionId) {
 		VK_Play_Speech_Line(kActorMcCoy, 7695, 0.5f);
 		VK_Play_Speech_Line(kActorMcCoy, 7700, 0.5f);
 		VK_Subject_Reacts(60, 11, 9, 100);
-		VK_Play_Speech_Line(kActorGrigorian, 1060, 0.5f);
+		if (_vm->_cutContent) {
+			if (Actor_Query_Friendliness_To_Other(kActorGrigorian, kActorMcCoy) < 50) {
+				VK_Play_Speech_Line(kActorGrigorian, 1060, 0.5f);
+			}
+		} else {
+			VK_Play_Speech_Line(kActorGrigorian, 1060, 0.5f);
+		}
 		break;
 	case 7705:                          // High 07
 		VK_Eye_Animates(3);
@@ -1402,34 +1557,62 @@ void VKScript::askGrigorian(int questionId) {
 		VK_Play_Speech_Line(kActorMcCoy, 7725, 0.5f);
 		VK_Play_Speech_Line(kActorMcCoy, 7730, 0.5f);
 		VK_Play_Speech_Line(kActorMcCoy, 7735, 0.5f);
-		VK_Subject_Reacts(60, 14, 3, 20);
-		VK_Play_Speech_Line(kActorGrigorian, 1080, 0.5f);
+		if (_vm->_cutContent) {
+			if (Actor_Query_Friendliness_To_Other(kActorGrigorian, kActorMcCoy) < 50) {
+				VK_Subject_Reacts(60, 14, 3, 20);
+				VK_Play_Speech_Line(kActorGrigorian, 1080, 0.5f);
+				VK_Play_Speech_Line(kActorMcCoy, 8195, 0.0f); //00-8195.AUD	They're just--
+			}
+		} else {
+			VK_Subject_Reacts(60, 14, 3, 20);
+			VK_Play_Speech_Line(kActorGrigorian, 1080, 0.5f); //11-1080.AUD	You bastard.
 #if BLADERUNNER_ORIGINAL_BUGS
 		VK_Play_Speech_Line(kActorMcCoy, 8195, 0.5f);
 #else
 		// McCoy is interrupted here
-		VK_Play_Speech_Line(kActorMcCoy, 8195, 0.0f);
+		VK_Play_Speech_Line(kActorMcCoy, 8195, 0.0f); //00-8195.AUD	They're just--
 #endif // BLADERUNNER_ORIGINAL_BUGS
+		}
 		VK_Eye_Animates(3);
-		VK_Play_Speech_Line(kActorGrigorian, 1090, 0.5f);
-		VK_Play_Speech_Line(kActorMcCoy, 8200, 0.5f);
+		VK_Play_Speech_Line(kActorGrigorian, 1090, 0.5f); //11-1090.AUD	I wanna see my attorney, now!
+		if (_vm->_cutContent) {
+			if (Player_Query_Agenda() == kPlayerAgendaSurly 
+			|| Player_Query_Agenda() == kPlayerAgendaErratic) {
+				VK_Play_Speech_Line(kActorMcCoy, 8200, 0.5f);
+			}
+		} else {
+			VK_Play_Speech_Line(kActorMcCoy, 8200, 0.5f);
+		}
 		break;
 	case 7740:                          // High 08
 		VK_Subject_Reacts(40, 10, 1, 15);
 		VK_Play_Speech_Line(kActorGrigorian, 1100, 0.5f);
-		VK_Play_Speech_Line(kActorMcCoy, 8205, 0.5f);
-		VK_Eye_Animates(2);
-		VK_Play_Speech_Line(kActorGrigorian, 1110, 0.5f);
-		VK_Play_Speech_Line(kActorMcCoy, 8210, 0.5f);
 		if (_vm->_cutContent) {
-			VK_Play_Speech_Line(kActorMcCoy, 8215, 0.5f);
+			if (!Game_Flag_Query(kFlagMcCoyIsHelpingReplicants)) {
+				VK_Play_Speech_Line(kActorMcCoy, 8205, 0.5f);
+				VK_Eye_Animates(2);
+				VK_Play_Speech_Line(kActorGrigorian, 1110, 0.5f);
+				VK_Play_Speech_Line(kActorMcCoy, 8210, 0.5f);
+				VK_Play_Speech_Line(kActorMcCoy, 8215, 0.5f);
+			}
+		} else {
+			VK_Play_Speech_Line(kActorMcCoy, 8205, 0.5f);
+			VK_Eye_Animates(2);
+			VK_Play_Speech_Line(kActorGrigorian, 1110, 0.5f);
+			VK_Play_Speech_Line(kActorMcCoy, 8210, 0.5f);
 		}
 		break;
 	case 7750:                          // High 09
 		VK_Eye_Animates(2);
 		VK_Subject_Reacts(50, 9, -4, 20);
 		VK_Play_Speech_Line(kActorGrigorian, 1120, 0.5f);
-		VK_Play_Speech_Line(kActorGrigorian, 1130, 0.5f);
+		if (_vm->_cutContent) {
+			if (Actor_Query_Friendliness_To_Other(kActorGrigorian, kActorMcCoy) < 50) {
+				VK_Play_Speech_Line(kActorGrigorian, 1130, 0.5f);
+			}
+		} else {
+			VK_Play_Speech_Line(kActorGrigorian, 1130, 0.5f);
+		}
 		VK_Play_Speech_Line(kActorGrigorian, 1140, 0.5f);
 		VK_Play_Speech_Line(kActorMcCoy, 8220, 0.5f);
 		VK_Play_Speech_Line(kActorGrigorian, 1150, 0.5f);
@@ -1451,7 +1634,15 @@ void VKScript::askDektora(int questionId) {
 		break;
 	case 7390:                          // Calibration 02
 		VK_Subject_Reacts(40, 2, 2, 0);
-		VK_Play_Speech_Line(kActorDektora, 1450, 0.5f);
+		if (_vm->_cutContent) {
+			if (Actor_Query_Friendliness_To_Other(kActorDektora, kActorMcCoy) < 51) {
+				VK_Play_Speech_Line(kActorDektora, 2410, 0.5f);
+			} else {
+				VK_Play_Speech_Line(kActorDektora, 1450, 0.5f);
+			}
+		} else {
+			VK_Play_Speech_Line(kActorDektora, 1450, 0.5f);
+		}
 		VK_Play_Speech_Line(kActorMcCoy, 7785, 0.5f);
 		VK_Play_Speech_Line(kActorDektora, 1460, 0.5f);
 		VK_Play_Speech_Line(kActorMcCoy, 7790, 0.5f);
@@ -1540,7 +1731,12 @@ void VKScript::askDektora(int questionId) {
 		VK_Play_Speech_Line(kActorDektora, 1720, 0.5f);
 		VK_Subject_Reacts(45, 4, 6, 0);
 		if (_vm->_cutContent) {
-			VK_Play_Speech_Line(kActorMcCoy, 7380, 0.5f); // M: Just answer the question please.
+			if (Player_Query_Agenda() != kPlayerAgendaSurly 
+			&& Player_Query_Agenda() != kPlayerAgendaErratic) {
+				VK_Play_Speech_Line(kActorMcCoy, 7380, 0.5f); // M: Just answer the question please.
+			} else {
+				VK_Play_Speech_Line(kActorMcCoy, 7805, 0.5f); //00-7805.AUD	Answer the question.
+			}
 		}
 		VK_Play_Speech_Line(kActorDektora, 1730, 0.5f);
 		break;
@@ -1548,11 +1744,30 @@ void VKScript::askDektora(int questionId) {
 		VK_Eye_Animates(2);
 		VK_Subject_Reacts(60, 7, 7, 20);
 		VK_Play_Speech_Line(kActorDektora, 1740, 0.5f);
-		VK_Play_Speech_Line(kActorMcCoy, 7805, 0.5f);
+		if (_vm->_cutContent) {
+			if (Player_Query_Agenda() != kPlayerAgendaSurly 
+			&& Player_Query_Agenda() != kPlayerAgendaErratic) {
+				VK_Play_Speech_Line(kActorMcCoy, 7380, 0.5f); // M: Just answer the question please.
+			} else {
+				VK_Play_Speech_Line(kActorMcCoy, 7805, 0.5f); //00-7805.AUD	Answer the question.
+			}
+		} else {
+			VK_Play_Speech_Line(kActorMcCoy, 7805, 0.5f);
+		}
 		VK_Eye_Animates(2);
 		VK_Play_Speech_Line(kActorDektora, 1750, 0.9f);
-		VK_Play_Speech_Line(kActorDektora, 1760, 0.5f);
 		if (_vm->_cutContent) {
+			if (Actor_Query_Friendliness_To_Other(kActorDektora, kActorMcCoy) < 51) {
+				VK_Play_Speech_Line(kActorDektora, 1760, 0.5f);
+			} else {
+				VK_Play_Speech_Line(kActorDektora, 1760, 0.5f);
+				if (Player_Query_Agenda() != kPlayerAgendaSurly 
+				&& Player_Query_Agenda() != kPlayerAgendaErratic) {
+					VK_Play_Speech_Line(kActorMcCoy, 7806, 0.5f); // M: They are meant to provoke a reaction.
+				}
+			}
+		} else {
+			VK_Play_Speech_Line(kActorDektora, 1760, 0.5f);
 			VK_Play_Speech_Line(kActorMcCoy, 7806, 0.5f); // M: They are meant to provoke a reaction.
 		}
 		break;
@@ -1560,9 +1775,18 @@ void VKScript::askDektora(int questionId) {
 		VK_Play_Speech_Line(kActorDektora, 1780, 0.5f);
 		VK_Subject_Reacts(35, 3, 5, 0);
 		VK_Play_Speech_Line(kActorDektora, 1790, 0.5f);
-		VK_Play_Speech_Line(kActorMcCoy, 7810, 0.5f);
-		VK_Play_Speech_Line(kActorDektora, 1800, 0.5f);
-		VK_Play_Speech_Line(kActorMcCoy, 7815, 0.5f);
+		if (_vm->_cutContent) {
+			if (Player_Query_Agenda() == kPlayerAgendaSurly 
+			|| Player_Query_Agenda() == kPlayerAgendaErratic) {
+				VK_Play_Speech_Line(kActorMcCoy, 7810, 0.5f);
+				VK_Play_Speech_Line(kActorDektora, 1800, 0.5f);
+				VK_Play_Speech_Line(kActorMcCoy, 7815, 0.5f);
+			}
+		} else {
+			VK_Play_Speech_Line(kActorMcCoy, 7810, 0.5f);
+			VK_Play_Speech_Line(kActorDektora, 1800, 0.5f);
+			VK_Play_Speech_Line(kActorMcCoy, 7815, 0.5f);
+		}
 		break;
 	case 7460:                          // Low 13
 		if (Game_Flag_Query(kFlagDektoraIsReplicant)) {
@@ -1654,9 +1878,18 @@ void VKScript::askDektora(int questionId) {
 	case 7525:                          // Medium 07
 		VK_Subject_Reacts(40, 6, 6, 0);
 		VK_Play_Speech_Line(kActorDektora, 2040, 0.5f);
-		VK_Play_Speech_Line(kActorMcCoy, 8533, 0.5f);
-		VK_Play_Speech_Line(kActorDektora, 2060, 0.5f);
-		VK_Play_Speech_Line(kActorDektora, 2070, 0.5f);
+		if (_vm->_cutContent) {
+			if (Player_Query_Agenda() != kPlayerAgendaSurly 
+			&& Player_Query_Agenda() != kPlayerAgendaErratic) {
+				VK_Play_Speech_Line(kActorMcCoy, 8533, 0.5f);
+				VK_Play_Speech_Line(kActorDektora, 2060, 0.5f);
+				VK_Play_Speech_Line(kActorDektora, 2070, 0.5f);
+			}
+		} else {
+			VK_Play_Speech_Line(kActorMcCoy, 8533, 0.5f);
+			VK_Play_Speech_Line(kActorDektora, 2060, 0.5f);
+			VK_Play_Speech_Line(kActorDektora, 2070, 0.5f);
+		}
 		break;
 	case 7535:                          // Medium 08
 		if (Game_Flag_Query(kFlagDektoraIsReplicant)) {
@@ -1682,13 +1915,34 @@ void VKScript::askDektora(int questionId) {
 		} else {
 			VK_Subject_Reacts(80, 17, -1, 80);
 			VK_Play_Speech_Line(kActorDektora, 2150, 1.0f);
-			VK_Play_Speech_Line(kActorDektora, 2160, 0.5f);
-			VK_Play_Speech_Line(kActorMcCoy, 7860, 0.5f);
+			if (_vm->_cutContent) {
+				if (Actor_Query_Friendliness_To_Other(kActorDektora, kActorMcCoy) < 51) {
+					VK_Play_Speech_Line(kActorDektora, 2160, 0.5f);
+					if (Player_Query_Agenda() == kPlayerAgendaSurly 
+					|| Player_Query_Agenda() == kPlayerAgendaErratic) {
+						VK_Play_Speech_Line(kActorMcCoy, 7860, 0.5f);
+					} else {
+						Actor_Says(kActorMcCoy, 7915, 14);	//00-7915.AUD	We're not finished yet.
+					}
+				}
+			} else {
+				VK_Play_Speech_Line(kActorDektora, 2160, 0.5f);
+				VK_Play_Speech_Line(kActorMcCoy, 7860, 0.5f);
+			}
 		}
 		break;
 	case 7550:                          // Medium 10
 		VK_Play_Speech_Line(kActorDektora, 2170, 0.5f);
-		VK_Play_Speech_Line(kActorMcCoy, 7865, 0.5f);
+		if (_vm->_cutContent) {
+			if (Player_Query_Agenda() == kPlayerAgendaSurly 
+			|| Player_Query_Agenda() == kPlayerAgendaErratic) {
+				VK_Play_Speech_Line(kActorMcCoy, 7865, 0.5f);
+			} else {
+				VK_Play_Speech_Line(kActorMcCoy, 7380, 0.5f); // M: Just answer the question please.
+			}
+		} else {
+			VK_Play_Speech_Line(kActorMcCoy, 7865, 0.5f);
+		}
 		VK_Play_Speech_Line(kActorDektora, 2180, 0.5f);
 		VK_Subject_Reacts(55, 6, 5, 0);
 		VK_Play_Speech_Line(kActorDektora, 2190, 0.5f);
@@ -1700,10 +1954,20 @@ void VKScript::askDektora(int questionId) {
 		VK_Play_Speech_Line(kActorDektora, 2220, 0.5f);
 		VK_Subject_Reacts(70, 8, 7, 10);
 		VK_Play_Speech_Line(kActorDektora, 2230, 0.5f);
-		VK_Play_Speech_Line(kActorMcCoy, 7875, 0.5f);
-		VK_Eye_Animates(2);
-		VK_Play_Speech_Line(kActorDektora, 2240, 0.5f);
-		VK_Play_Speech_Line(kActorDektora, 2250, 0.5f);
+		if (_vm->_cutContent) {
+			if (Player_Query_Agenda() == kPlayerAgendaSurly 
+			|| Player_Query_Agenda() == kPlayerAgendaErratic) {
+				VK_Play_Speech_Line(kActorMcCoy, 7875, 0.5f);
+				VK_Eye_Animates(2);
+				VK_Play_Speech_Line(kActorDektora, 2240, 0.5f);
+				VK_Play_Speech_Line(kActorDektora, 2250, 0.5f);
+			}
+		} else {
+			VK_Play_Speech_Line(kActorMcCoy, 7875, 0.5f);
+			VK_Eye_Animates(2);
+			VK_Play_Speech_Line(kActorDektora, 2240, 0.5f);
+			VK_Play_Speech_Line(kActorDektora, 2250, 0.5f);
+		}
 		break;
 	case 7580:                          // Medium 12
 		VK_Play_Speech_Line(kActorDektora, 2260, 0.5f);
@@ -1734,8 +1998,16 @@ void VKScript::askDektora(int questionId) {
 		VK_Play_Speech_Line(kActorDektora, 2340, 0.5f);
 		VK_Subject_Reacts(72, 9, 9, 5);
 		VK_Play_Speech_Line(kActorDektora, 2350, 0.5f);
-		VK_Play_Speech_Line(kActorMcCoy, 7885, 0.5f);
-		VK_Play_Speech_Line(kActorDektora, 2360, 0.5f);
+		if (_vm->_cutContent) {
+			if (Player_Query_Agenda() != kPlayerAgendaSurly 
+			&& Player_Query_Agenda() != kPlayerAgendaErratic) {
+				VK_Play_Speech_Line(kActorMcCoy, 7885, 0.5f);
+				VK_Play_Speech_Line(kActorDektora, 2360, 0.5f);
+			}
+		} else {
+			VK_Play_Speech_Line(kActorMcCoy, 7885, 0.5f);
+			VK_Play_Speech_Line(kActorDektora, 2360, 0.5f);
+		}
 		break;
 	case 7635:                          // High 03
 		VK_Subject_Reacts(60, 6, 7, 0);
@@ -1743,14 +2015,32 @@ void VKScript::askDektora(int questionId) {
 		break;
 	case 7670:                          // High 04
 		VK_Eye_Animates(3);
-		if (Game_Flag_Query(kFlagDektoraIsReplicant)) {
+		if (_vm->_cutContent) {
+			if (Game_Flag_Query(kFlagDektoraIsReplicant)) {
+				VK_Play_Speech_Line(kActorDektora, 2380, 0.5f);
+				VK_Play_Speech_Line(kActorMcCoy, 7890, 0.5f);
+				VK_Play_Speech_Line(kActorDektora, 2390, 0.5f);
+				VK_Subject_Reacts(90, -3, 14, 50);
+				if (Actor_Query_Friendliness_To_Other(kActorDektora, kActorMcCoy) < 51) {
+					VK_Play_Speech_Line(kActorDektora, 2400, 0.5f); // D: You want to kidnap me, don't you.
+					VK_Play_Speech_Line(kActorMcCoy, 7895, 0.0f);
+				}
+			} else {
+				VK_Subject_Reacts(80, 18, -3, 10);
+				VK_Play_Speech_Line(kActorDektora, 2410, 0.5f);
+				VK_Play_Speech_Line(kActorMcCoy, 8534, 0.0f);
+				if (Actor_Query_Friendliness_To_Other(kActorDektora, kActorMcCoy) < 51) {
+					VK_Play_Speech_Line(kActorDektora, 2430, 0.5f);
+				} else {
+					VK_Play_Speech_Line(kActorDektora, 2060, 0.5f); //03-2060.AUD	No.
+				}
+			}
+		} else if (Game_Flag_Query(kFlagDektoraIsReplicant)) {
 			VK_Play_Speech_Line(kActorDektora, 2380, 0.5f);
 			VK_Play_Speech_Line(kActorMcCoy, 7890, 0.5f);
 			VK_Play_Speech_Line(kActorDektora, 2390, 0.5f);
 			VK_Subject_Reacts(90, -3, 14, 50);
-			if (_vm->_cutContent) {
-				VK_Play_Speech_Line(kActorDektora, 2400, 0.5f); // D: You want to kidnap me, don't you.
-			}
+			VK_Play_Speech_Line(kActorDektora, 2400, 0.5f); // D: You want to kidnap me, don't you.
 #if BLADERUNNER_ORIGINAL_BUGS
 			VK_Play_Speech_Line(kActorMcCoy, 7895, 0.5f);
 #else
@@ -1783,26 +2073,54 @@ void VKScript::askDektora(int questionId) {
 		break;
 	case 7690:                          // High 06
 		VK_Play_Speech_Line(kActorDektora, 2470, 0.5f);
-		VK_Subject_Reacts(20, 9, 8, 5);
-		VK_Play_Speech_Line(kActorDektora, 2480, 0.5f);
-		VK_Play_Speech_Line(kActorMcCoy, 7900, 0.5f);
+		if (!_vm->_cutContent) {
+			VK_Subject_Reacts(20, 9, 8, 5);
+		}
+		if (_vm->_cutContent) {
+			if (Actor_Query_Friendliness_To_Other(kActorDektora, kActorMcCoy) < 51) {
+				VK_Subject_Reacts(20, 9, 8, 5);
+				VK_Play_Speech_Line(kActorDektora, 2480, 0.5f); //03-2480.AUD	You don't really expect an answer, do you?
+			}
+		} else {
+			VK_Play_Speech_Line(kActorDektora, 2480, 0.5f); //03-2480.AUD	You don't really expect an answer, do you?
+		}
+		if (_vm->_cutContent) {
+			if (Player_Query_Agenda() == kPlayerAgendaSurly 
+			|| Player_Query_Agenda() == kPlayerAgendaErratic) {
+				VK_Play_Speech_Line(kActorMcCoy, 7900, 0.5f); //00-7900.AUD	Got one, thanks.
+				VK_Play_Speech_Line(kActorDektora, 2490, 0.5f); //03-2490.AUD	Is this going anywhere?
+			}
+		} else {
+			VK_Play_Speech_Line(kActorMcCoy, 7900, 0.5f);
+		}
 		break;
 	case 7705:                          // High 07
 		VK_Eye_Animates(3);
 		if (Game_Flag_Query(kFlagDektoraIsReplicant)) {
 			VK_Play_Speech_Line(kActorDektora, 2500, 0.5f);
 			VK_Subject_Reacts(85, 7, 14, 20);
-			VK_Play_Speech_Line(kActorDektora, 2510, 0.5f);
 			if (_vm->_cutContent) {
+				if (Actor_Query_Friendliness_To_Other(kActorDektora, kActorMcCoy) < 51) {
+					VK_Play_Speech_Line(kActorDektora, 2510, 0.5f); //03-2510.AUD	You create these… these situations and expect a response.
+					VK_Play_Speech_Line(kActorMcCoy, 7905, 0.5f); // M: Let's keep going, all right?
+				}
+			} else {
+				VK_Play_Speech_Line(kActorDektora, 2510, 0.5f); //03-2510.AUD	You create these… these situations and expect a response.
 				VK_Play_Speech_Line(kActorMcCoy, 7905, 0.5f); // M: Let's keep going, all right?
 			}
 		} else {
 			VK_Subject_Reacts(99, 18, 7, 20);
 			VK_Play_Speech_Line(kActorDektora, 2530, 0.5f);
 			if (_vm->_cutContent) {
-				VK_Play_Speech_Line(kActorMcCoy, 7909, 0.5f); // M: Went off the scale on that one.
+				if (Player_Query_Agenda() == kPlayerAgendaSurly 
+				|| Player_Query_Agenda() == kPlayerAgendaErratic) {
+					VK_Play_Speech_Line(kActorMcCoy, 7909, 0.5f); // M: Went off the scale on that one.
+				} else {
+					VK_Play_Speech_Line(kActorMcCoy, 7910, 0.5f);
+				}
+			} else {
+				VK_Play_Speech_Line(kActorMcCoy, 7910, 0.5f);
 			}
-			VK_Play_Speech_Line(kActorMcCoy, 7910, 0.5f);
 			VK_Play_Speech_Line(kActorDektora, 2550, 0.5f);
 			VK_Eye_Animates(3);
 			VK_Play_Speech_Line(kActorMcCoy, 7915, 0.5f);
@@ -1810,21 +2128,45 @@ void VKScript::askDektora(int questionId) {
 		break;
 	case 7740:                          // High 08
 		VK_Subject_Reacts(60, 5, 6, 0);
-		VK_Play_Speech_Line(kActorDektora, 2560, 0.5f);
+		//03-2570.AUD	(scoffs) In this outfit?
+		VK_Play_Speech_Line(kActorDektora, 2560, 0.5f); //03-2560.AUD	I'd walk out.
 		break;
 	case 7750:                          // High 09
 		if (Game_Flag_Query(kFlagDektoraIsReplicant)) {
-			VK_Play_Speech_Line(kActorDektora, 2580, 0.5f);
-			VK_Subject_Reacts(90, -5, 14, 20);
-			VK_Play_Speech_Line(kActorDektora, 2590, 0.5f);
-			VK_Play_Speech_Line(kActorMcCoy, 7920, 0.5f);
+			VK_Play_Speech_Line(kActorDektora, 2580, 0.5f); //03-2580.AUD	Well, that's a charming little scenario you've created.
+			if (_vm->_cutContent) {
+				if (Actor_Query_Friendliness_To_Other(kActorDektora, kActorMcCoy) < 51) {
+					VK_Subject_Reacts(90, -5, 14, 20);
+					VK_Play_Speech_Line(kActorDektora, 2590, 0.5f); //03-2590.AUD	You make me sick.
+					if (Player_Query_Agenda() == kPlayerAgendaSurly 
+					|| Player_Query_Agenda() == kPlayerAgendaErratic) {
+						VK_Play_Speech_Line(kActorMcCoy, 7920, 0.5f);
+						VK_Play_Speech_Line(kActorMcCoy, 7920, 0.5f);
+					}
+				}
+			} else {
+				VK_Subject_Reacts(90, -5, 14, 20);
+				VK_Play_Speech_Line(kActorDektora, 2590, 0.5f); //03-2590.AUD	You make me sick.
+			}
 		} else {
 			VK_Subject_Reacts(90, 17, 3, 20);
-			VK_Play_Speech_Line(kActorDektora, 2600, 0.5f);
+			VK_Play_Speech_Line(kActorDektora, 2600, 0.5f); //03-2600.AUD	My God! You're insane.
 			VK_Play_Speech_Line(kActorMcCoy, 7925, 0.5f);
-			VK_Eye_Animates(3);
-			VK_Play_Speech_Line(kActorDektora, 2610, 0.5f);
-			VK_Play_Speech_Line(kActorMcCoy, 7930, 0.5f);
+			if (_vm->_cutContent) {
+				if (Actor_Query_Friendliness_To_Other(kActorDektora, kActorMcCoy) < 51) {
+					VK_Eye_Animates(3);
+					VK_Play_Speech_Line(kActorDektora, 2610, 0.5f); //03-2610.AUD	I… I've got to get out of here.
+					if (Player_Query_Agenda() == kPlayerAgendaSurly 
+					|| Player_Query_Agenda() == kPlayerAgendaErratic) {
+						VK_Play_Speech_Line(kActorMcCoy, 7930, 0.5f);
+					} else {
+						Actor_Says(kActorMcCoy, 7915, 14);	//00-7915.AUD	We're not finished yet.
+					}
+				}
+			} else {
+				VK_Play_Speech_Line(kActorDektora, 2610, 0.5f);
+				VK_Play_Speech_Line(kActorMcCoy, 7930, 0.5f);
+			}
 		}
 		break;
 	case 7770:                          // High 10
@@ -1876,9 +2218,12 @@ void VKScript::askRunciter(int questionId) {
 			// Runciter is interrupted here
 			VK_Play_Speech_Line(kActorRunciter, 940, 0.0f); // R: Capture it
 #endif // BLADERUNNER_ORIGINAL_BUGS
-			VK_Play_Speech_Line(kActorMcCoy, 8340, 0.5f);
-			VK_Subject_Reacts(11, 8, 8, 0);
-			VK_Play_Speech_Line(kActorRunciter, 950, 0.5f); // R: Oh I do that first
+			if (Player_Query_Agenda() == kPlayerAgendaSurly 
+			|| Player_Query_Agenda() == kPlayerAgendaErratic) {
+				VK_Play_Speech_Line(kActorMcCoy, 8340, 0.5f);
+				VK_Subject_Reacts(11, 8, 8, 0);
+				VK_Play_Speech_Line(kActorRunciter, 950, 0.5f); // R: Oh I do that first
+			}
 			break;
 		case 7415:                          // Low 04
 			VK_Subject_Reacts(20, 6, 3, 0);                 // custom
@@ -1888,7 +2233,10 @@ void VKScript::askRunciter(int questionId) {
 			VK_Eye_Animates(2);
 			VK_Subject_Reacts(40, 12, 7, 0);                // custom
 			VK_Play_Speech_Line(kActorRunciter, 970, 0.5f); // R: Sidney for resale
-			VK_Play_Speech_Line(kActorMcCoy, 8345, 0.5f);   // R: I wouldn't know
+			if (Player_Query_Agenda() == kPlayerAgendaSurly 
+			|| Player_Query_Agenda() == kPlayerAgendaErratic) {
+				VK_Play_Speech_Line(kActorMcCoy, 8345, 0.5f);   // R: I wouldn't know
+			}
 			break;
 		case 7425:                          // Low 06
 			VK_Eye_Animates(1);
@@ -1919,12 +2267,17 @@ void VKScript::askRunciter(int questionId) {
 		case 7450:                          // Low 11
 			VK_Subject_Reacts(15, 9, 10, 2);
 			VK_Play_Speech_Line(kActorRunciter, 1050, 0.5f); // R: Perhaps I'm being threatened...
-			VK_Play_Speech_Line(kActorMcCoy, 8355, 0.5f);    // M: I'm not threatening you.
-			VK_Eye_Animates(2);
-			VK_Subject_Reacts(45, 17, 8, 2);
-			VK_Play_Speech_Line(kActorRunciter, 1060, 0.5f); // R: Stop playing games...
-			VK_Play_Speech_Line(kActorRunciter, 1070, 0.5f); // R: I'm not a Replicant...
-			VK_Play_Speech_Line(kActorMcCoy, 8360, 0.5f);    // M: We'll let the Machine decide that.
+			if (Player_Query_Agenda() != kPlayerAgendaSurly 
+			&& Player_Query_Agenda() != kPlayerAgendaErratic) {
+				VK_Play_Speech_Line(kActorMcCoy, 8355, 0.5f);    // M: I'm not threatening you.
+				if (Actor_Query_Friendliness_To_Other(kActorRunciter, kActorMcCoy) < 50) {
+					VK_Eye_Animates(2);
+					VK_Subject_Reacts(45, 17, 8, 2);
+					VK_Play_Speech_Line(kActorRunciter, 1060, 0.5f); // R: Stop playing games...
+					VK_Play_Speech_Line(kActorRunciter, 1070, 0.5f); // R: I'm not a Replicant...
+					VK_Play_Speech_Line(kActorMcCoy, 8360, 0.5f);    // M: We'll let the Machine decide that.
+				}
+			}
 			break;
 		case 7455:                          // Low 12
 			VK_Subject_Reacts(7, 7, 2, 0);
@@ -1938,7 +2291,10 @@ void VKScript::askRunciter(int questionId) {
 			VK_Subject_Reacts(15, 7, 5, 1);
 			VK_Play_Speech_Line(kActorRunciter, 1100, 0.5f); // R: I'd probably already know...
 			VK_Play_Speech_Line(kActorRunciter, 1110, 0.5f); // R: Why would I feel anything
-			VK_Play_Speech_Line(kActorMcCoy, 8370, 0.5f);    // M: It's ok...
+			if (Player_Query_Agenda() != kPlayerAgendaSurly 
+			&& Player_Query_Agenda() != kPlayerAgendaErratic) {
+				VK_Play_Speech_Line(kActorMcCoy, 8370, 0.5f);    // M: It's ok...
+			}
 			break;
 		case 7465:                          // Low 14
 			VK_Eye_Animates(2);
@@ -1978,7 +2334,10 @@ void VKScript::askRunciter(int questionId) {
 		case 7515:                          // Medium 06
 			VK_Subject_Reacts(4, 8, 2, 0);
 			VK_Play_Speech_Line(kActorRunciter, 1210, 0.5f); // R: Adversity builds character-
-			VK_Play_Speech_Line(kActorMcCoy, 8375, 0.5f);    // M: Let me finish-
+			if (Player_Query_Agenda() == kPlayerAgendaSurly 
+			|| Player_Query_Agenda() == kPlayerAgendaErratic) {
+				VK_Play_Speech_Line(kActorMcCoy, 8375, 0.5f);    // M: Let me finish-
+			}
 			VK_Eye_Animates(1);
 			VK_Play_Speech_Line(kActorMcCoy, 7520, 0.5f);    // M: During a boot-camp hazing...
 			VK_Subject_Reacts(14, 10, 4, 0);
@@ -2077,10 +2436,12 @@ void VKScript::askRunciter(int questionId) {
 			VK_Play_Speech_Line(kActorRunciter, 1420, 0.5f); // R: How would I know
 			VK_Play_Speech_Line(kActorMcCoy, 8541, 0.5f);    // M: How do you think it would feel...
 			VK_Play_Speech_Line(kActorRunciter, 1430, 0.5f); // R: They're just machines
-			VK_Play_Speech_Line(kActorMcCoy, 8400, 0.5f);    // M: So you don't have any sympathy for them
-			VK_Subject_Reacts(8, 4, -2, 0);
-			VK_Play_Speech_Line(kActorRunciter, 1450, 0.5f); // R: I suppose it might be--
-			VK_Play_Speech_Line(kActorRunciter, 1460, 0.5f); // R: Bad--
+			if (Game_Flag_Query(kFlagMcCoyIsHelpingReplicants)) {
+				VK_Play_Speech_Line(kActorMcCoy, 8400, 0.5f);    // M: So you don't have any sympathy for them
+				VK_Subject_Reacts(8, 4, -2, 0);
+				VK_Play_Speech_Line(kActorRunciter, 1450, 0.5f); // R: I suppose it might be--
+				VK_Play_Speech_Line(kActorRunciter, 1460, 0.5f); // R: Bad--
+			}
 			break;
 		case 7690:                          // High 06
 			VK_Subject_Reacts(25, 17, 4, 4);
@@ -2101,16 +2462,25 @@ void VKScript::askRunciter(int questionId) {
 			VK_Play_Speech_Line(kActorMcCoy, 8410, 0.5f);  // M: Hey I didn't
 #else
 			// McCoy is interrupted here
-			VK_Play_Speech_Line(kActorMcCoy, 8410, 0.0f);  // M: Hey I didn't
+			if (Player_Query_Agenda() != kPlayerAgendaSurly 
+			&& Player_Query_Agenda() != kPlayerAgendaErratic) {
+				VK_Play_Speech_Line(kActorMcCoy, 8410, 0.0f);  // M: Hey I didn't
+			}
 #endif // BLADERUNNER_ORIGINAL_BUGS
 			VK_Play_Speech_Line(kActorRunciter, 1500, 0.5f); // R: I've always loved animals...
 			VK_Play_Speech_Line(kActorMcCoy, 8415, 0.5f);    // M: No one is saying otherwise...
 			VK_Subject_Reacts(60, 18, -3, 1);
 			VK_Play_Speech_Line(kActorRunciter, 1510, 0.5f); // R: Can you even begin to understand...
 			VK_Play_Speech_Line(kActorRunciter, 1520, 0.5f); // R: All at once
-			VK_Play_Speech_Line(kActorMcCoy, 8420, 0.5f);    // M: Must be rough
-			VK_Subject_Reacts(40, 11, 6, 1);
-			VK_Play_Speech_Line(kActorRunciter, 1530, 0.5f); // R: Get out of here!
+			if (Player_Query_Agenda() != kPlayerAgendaSurly 
+			&& Player_Query_Agenda() != kPlayerAgendaErratic) {
+				VK_Play_Speech_Line(kActorMcCoy, 8420, 0.5f);    // M: Must be rough
+			} else {
+				if (Actor_Query_Friendliness_To_Other(kActorRunciter, kActorMcCoy) < 50) {
+					VK_Subject_Reacts(40, 11, 6, 1);
+					VK_Play_Speech_Line(kActorRunciter, 1530, 0.5f); // R: Get out of here!
+				}
+			}
 			break;
 		case 7740:                          // High 08
 			VK_Subject_Reacts(11, 8, -10, 4);
@@ -2120,7 +2490,10 @@ void VKScript::askRunciter(int questionId) {
 			VK_Subject_Reacts(25, 13, -9, 2);
 			VK_Play_Speech_Line(kActorRunciter, 1550, 0.5f); // R: I could never...
 			VK_Play_Speech_Line(kActorRunciter, 1560, 0.5f); // R: Who could?
-			VK_Play_Speech_Line(kActorMcCoy, 8425, 0.5f);    // M: No one I know
+			if (Player_Query_Agenda() == kPlayerAgendaSurly 
+			|| Player_Query_Agenda() == kPlayerAgendaErratic) {
+				VK_Play_Speech_Line(kActorMcCoy, 8425, 0.5f);    // M: No one I know
+			}
 			break;
 		case 7770:                          // High 10
 			VK_Eye_Animates(2);
@@ -2131,7 +2504,10 @@ void VKScript::askRunciter(int questionId) {
 			VK_Eye_Animates(1);
 			VK_Subject_Reacts(58, 14, -6, 4);
 			VK_Play_Speech_Line(kActorRunciter, 1580, 0.5f); // R: You're a sick man
-			VK_Play_Speech_Line(kActorMcCoy, 8430, 0.5f);    // M: Yeah, but doctors...
+			if (Player_Query_Agenda() == kPlayerAgendaSurly 
+			|| Player_Query_Agenda() == kPlayerAgendaErratic) {
+				VK_Play_Speech_Line(kActorMcCoy, 8430, 0.5f);    // M: Yeah, but doctors...
+			}
 			VK_Play_Speech_Line(kActorMcCoy, 8435, 0.5f);    // M: You're ready for the next one?
 			VK_Play_Speech_Line(kActorRunciter, 1590, 0.5f); // R: Let's get this over with
 			break;
@@ -2327,7 +2703,14 @@ void VKScript::askBulletBob(int questionId) {
 		VK_Subject_Reacts(54, 0, 0, 0);
 		VK_Play_Speech_Line(kActorBulletBob, 900, 0.5f);
 		VK_Play_Speech_Line(kActorBulletBob, 910, 0.5f);
-		VK_Play_Speech_Line(kActorMcCoy, 8225, 0.5f);
+		if (_vm->_cutContent) {
+			if (Player_Query_Agenda() != kPlayerAgendaSurly 
+			&& Player_Query_Agenda() != kPlayerAgendaErratic) {
+				VK_Play_Speech_Line(kActorMcCoy, 8225, 0.5f);
+			}
+		} else {
+			VK_Play_Speech_Line(kActorMcCoy, 8225, 0.5f);
+		}
 		break;
 	case 7390:                          // Calibration 02
 		VK_Subject_Reacts(48, 0, 0, 3);
@@ -2338,20 +2721,40 @@ void VKScript::askBulletBob(int questionId) {
 		VK_Play_Speech_Line(kActorBulletBob, 930, 0.5f);
 		VK_Eye_Animates(1);
 		VK_Subject_Reacts(50, 0, 0, 8);
-		VK_Play_Speech_Line(kActorBulletBob, 940, 0.5f);
-		VK_Play_Speech_Line(kActorMcCoy, 8235, 0.5f);
+		if (_vm->_cutContent) {
+			if (Actor_Query_Friendliness_To_Other(kActorBulletBob, kActorMcCoy) < 50) {
+				VK_Play_Speech_Line(kActorBulletBob, 940, 0.5f);
+				VK_Play_Speech_Line(kActorMcCoy, 8235, 0.5f);
+			}
+		} else {
+			VK_Play_Speech_Line(kActorBulletBob, 940, 0.5f);
+			VK_Play_Speech_Line(kActorMcCoy, 8235, 0.5f);
+		}
 		break;
 	case 7400:                          // Low 01
 		VK_Play_Speech_Line(kActorBulletBob, 950, 0.5f);
 		VK_Eye_Animates(1);
 		VK_Subject_Reacts(10, -5, -6, 2);
-		VK_Play_Speech_Line(kActorBulletBob, 960, 0.5f);
+		if (_vm->_cutContent) {
+			if (Player_Query_Agenda() != kPlayerAgendaSurly 
+			&& Player_Query_Agenda() != kPlayerAgendaErratic) {
+				VK_Play_Speech_Line(kActorBulletBob, 960, 0.5f);
+			}
+		} else {
+			VK_Play_Speech_Line(kActorBulletBob, 960, 0.5f);
+		}
 		break;
 	case 7405:                          // Low 02
 		VK_Subject_Reacts(25, 8, 7, 4);
 		VK_Play_Speech_Line(kActorBulletBob, 970, 0.5f);
 		VK_Play_Speech_Line(kActorMcCoy, 8240, 0.5f);
-		VK_Play_Speech_Line(kActorBulletBob, 980, 0.5f);
+		if (_vm->_cutContent) {
+			if (Actor_Query_Friendliness_To_Other(kActorBulletBob, kActorMcCoy) < 50) {
+				VK_Play_Speech_Line(kActorBulletBob, 980, 0.5f);
+			}
+		} else {
+			VK_Play_Speech_Line(kActorBulletBob, 980, 0.5f);
+		}
 		break;
 	case 7410:                          // Low 03
 		VK_Subject_Reacts(40, -6, -5, 5);
@@ -2362,7 +2765,13 @@ void VKScript::askBulletBob(int questionId) {
 		VK_Play_Speech_Line(kActorMcCoy, 8250, 0.5f);
 		VK_Eye_Animates(1);
 		VK_Subject_Reacts(70, 8, 6, 0);
-		VK_Play_Speech_Line(kActorBulletBob, 1010, 0.5f);
+		if (_vm->_cutContent) {
+			if (Actor_Query_Friendliness_To_Other(kActorBulletBob, kActorMcCoy) < 50) {
+				VK_Play_Speech_Line(kActorBulletBob, 1010, 0.5f);
+			}
+		} else {
+			VK_Play_Speech_Line(kActorBulletBob, 1010, 0.5f);
+		}
 		if (_vm->_cutContent) {
 			VK_Play_Speech_Line(kActorMcCoy, 8539, 0.5f); // M: Let's keep going
 		}
@@ -2394,9 +2803,18 @@ void VKScript::askBulletBob(int questionId) {
 		VK_Eye_Animates(1);
 		VK_Play_Speech_Line(kActorBulletBob, 1100, 0.5f);
 		VK_Subject_Reacts(25, 8, 5, -7);
-		VK_Play_Speech_Line(kActorMcCoy, 8265, 0.5f);
-		VK_Play_Speech_Line(kActorBulletBob, 1110, 0.5f);
-		VK_Play_Speech_Line(kActorBulletBob, 1120, 0.5f);
+		if (_vm->_cutContent) {
+			if (Player_Query_Agenda() != kPlayerAgendaSurly 
+			&& Player_Query_Agenda() != kPlayerAgendaErratic) {
+				VK_Play_Speech_Line(kActorMcCoy, 8265, 0.5f);
+				VK_Play_Speech_Line(kActorBulletBob, 1110, 0.5f);
+				VK_Play_Speech_Line(kActorBulletBob, 1120, 0.5f);
+			}
+		} else {
+			VK_Play_Speech_Line(kActorMcCoy, 8265, 0.5f);
+			VK_Play_Speech_Line(kActorBulletBob, 1110, 0.5f);
+			VK_Play_Speech_Line(kActorBulletBob, 1120, 0.5f);
+		}
 		break;
 	case 7440:                          // Low 09
 		VK_Subject_Reacts(30, 8, 6, 0);
@@ -2427,8 +2845,13 @@ void VKScript::askBulletBob(int questionId) {
 	case 7465:                          // Low 14
 		VK_Subject_Reacts(15, 5, 3, -5);
 		VK_Play_Speech_Line(kActorBulletBob, 1200, 0.5f);
-		if (Actor_Query_Friendliness_To_Other(kActorBulletBob, kActorMcCoy) <= 40) {
-			VK_Eye_Animates(2);
+		VK_Eye_Animates(2);
+		if (_vm->_cutContent) {
+			if (Actor_Query_Friendliness_To_Other(kActorBulletBob, kActorMcCoy) < 50) {
+				VK_Play_Speech_Line(kActorBulletBob, 1210, 0.5f);
+				VK_Eye_Animates(1);
+			}
+		} else {
 			VK_Play_Speech_Line(kActorBulletBob, 1210, 0.5f);
 			VK_Eye_Animates(1);
 		}
@@ -2507,9 +2930,9 @@ void VKScript::askBulletBob(int questionId) {
 		VK_Play_Speech_Line(kActorBulletBob, 1360, 0.5f);
 		VK_Play_Speech_Line(kActorMcCoy, 8275, 0.5f);
 		if (_vm->_cutContent) {
-				VK_Play_Speech_Line(kActorBulletBob, 1370, 0.5f); // B: they ain't animals. we eat plants
-				VK_Subject_Reacts(10, 9, 7, -4);
-				VK_Play_Speech_Line(kActorMcCoy, 8540, 0.5f);     // M: actually they are organic
+			VK_Play_Speech_Line(kActorBulletBob, 1370, 0.5f); // B: they ain't animals. we eat plants
+			VK_Subject_Reacts(10, 9, 7, -4);
+			VK_Play_Speech_Line(kActorMcCoy, 8540, 0.5f);     // M: actually they are organic
 		} else {
 				VK_Subject_Reacts(10, 9, 7, -4);
 		}
@@ -2517,12 +2940,25 @@ void VKScript::askBulletBob(int questionId) {
 		VK_Eye_Animates(1);
 		VK_Play_Speech_Line(kActorBulletBob, 1380, 0.5f);
 		VK_Play_Speech_Line(kActorBulletBob, 1390, 0.5f);
-		VK_Play_Speech_Line(kActorMcCoy, 8285, 0.5f);
+		if (_vm->_cutContent) {
+			if (Player_Query_Agenda() != kPlayerAgendaSurly 
+			&& Player_Query_Agenda() != kPlayerAgendaErratic) {
+				VK_Play_Speech_Line(kActorMcCoy, 8285, 0.5f);
+			}
+		} else {
+			VK_Play_Speech_Line(kActorMcCoy, 8285, 0.5f);
+		}
 		break;
 	case 7540:                          // Medium 09
 		VK_Play_Speech_Line(kActorBulletBob, 1400, 0.5f);
 		VK_Subject_Reacts(30, 10, 9, 10);
-		VK_Play_Speech_Line(kActorBulletBob, 1410, 0.5f);
+		if (_vm->_cutContent) {
+			if (Actor_Query_Friendliness_To_Other(kActorBulletBob, kActorMcCoy) < 50) {
+				VK_Play_Speech_Line(kActorBulletBob, 1410, 0.5f);
+			}
+		} else {
+			VK_Play_Speech_Line(kActorBulletBob, 1410, 0.5f);
+		}
 		break;
 	case 7550:                          // Medium 10
 		VK_Eye_Animates(1);
@@ -2598,14 +3034,23 @@ void VKScript::askBulletBob(int questionId) {
 		VK_Play_Speech_Line(kActorMcCoy, 7665, 0.5f);
 		VK_Eye_Animates(2);
 		VK_Subject_Reacts(60, 8, 8, 40);
-		VK_Play_Speech_Line(kActorBulletBob, 1590, 0.5f);
-		VK_Play_Speech_Line(kActorMcCoy, 8315, 0.5f);
-		VK_Eye_Animates(1);
-		VK_Subject_Reacts(85, 10, 11, 0);
-		VK_Play_Speech_Line(kActorBulletBob, 1600, 0.5f);
-		VK_Eye_Animates(3);
 		if (_vm->_cutContent) {
-			VK_Play_Speech_Line(kActorBulletBob, 1610, 0.5f); // B: I've had enough McCoy
+			if (Actor_Query_Friendliness_To_Other(kActorBulletBob, kActorMcCoy) < 50) {
+				VK_Play_Speech_Line(kActorBulletBob, 1590, 0.5f);
+				VK_Play_Speech_Line(kActorMcCoy, 8315, 0.5f);
+				VK_Eye_Animates(1);
+				VK_Subject_Reacts(85, 10, 11, 0);
+				VK_Play_Speech_Line(kActorBulletBob, 1600, 0.5f);
+				VK_Eye_Animates(3);
+				VK_Play_Speech_Line(kActorBulletBob, 1610, 0.5f); // B: I've had enough McCoy
+			}
+		} else {
+			VK_Play_Speech_Line(kActorBulletBob, 1590, 0.5f);
+			VK_Play_Speech_Line(kActorMcCoy, 8315, 0.5f);
+			VK_Eye_Animates(1);
+			VK_Subject_Reacts(85, 10, 11, 0);
+			VK_Play_Speech_Line(kActorBulletBob, 1600, 0.5f);
+			VK_Eye_Animates(3);
 		}
 		break;
 	case 7670:                          // High 04
@@ -2620,16 +3065,31 @@ void VKScript::askBulletBob(int questionId) {
 		if (Random_Query(0, 1) == 1) {
 			VK_Eye_Animates(1);
 		}
-		VK_Play_Speech_Line(kActorMcCoy, 8320, 0.5f);
-		VK_Play_Speech_Line(kActorBulletBob, 1650, 0.5f);
+		if (!Game_Flag_Query(kFlagMcCoyIsHelpingReplicants)) {
+			VK_Play_Speech_Line(kActorMcCoy, 8320, 0.5f);
+			VK_Play_Speech_Line(kActorBulletBob, 1650, 0.5f);
+		}
 		break;
 	case 7690:                          // High 06
 		VK_Eye_Animates(2);
 		VK_Subject_Reacts(50, 14, 13, 15);
 		VK_Play_Speech_Line(kActorBulletBob, 1660, 0.5f);
 		VK_Eye_Animates(1);
-		VK_Play_Speech_Line(kActorMcCoy, 8325, 0.5f);
-		VK_Play_Speech_Line(kActorBulletBob, 1670, 0.5f);
+		if (_vm->_cutContent) {
+			if (Player_Query_Agenda() != kPlayerAgendaSurly 
+			&& Player_Query_Agenda() != kPlayerAgendaErratic) {
+				VK_Play_Speech_Line(kActorMcCoy, 8325, 0.5f);
+			}
+		} else {
+			VK_Play_Speech_Line(kActorMcCoy, 8325, 0.5f);
+		}
+		if (_vm->_cutContent) {
+			if (Actor_Query_Friendliness_To_Other(kActorBulletBob, kActorMcCoy) < 50) {
+				VK_Play_Speech_Line(kActorBulletBob, 1670, 0.5f);
+			}
+		} else {
+			VK_Play_Speech_Line(kActorBulletBob, 1670, 0.5f);
+		}
 		break;
 	case 7705:                          // High 07
 		VK_Play_Speech_Line(kActorBulletBob, 1680, 0.5f);
@@ -2674,14 +3134,27 @@ void VKScript::askBulletBob(int questionId) {
 		VK_Play_Speech_Line(kActorBulletBob, 1750, 0.5f);
 		VK_Subject_Reacts(25, 7, 5, 8);
 		VK_Play_Speech_Line(kActorBulletBob, 1760, 0.5f);
-		VK_Play_Speech_Line(kActorBulletBob, 1770, 0.5f);
+		if (_vm->_cutContent) {
+			if (Actor_Query_Friendliness_To_Other(kActorBulletBob, kActorMcCoy) < 50) {
+				VK_Play_Speech_Line(kActorBulletBob, 1770, 0.5f);
+			}
+		} else {
+			VK_Play_Speech_Line(kActorBulletBob, 1770, 0.5f);
+		}
 		break;
 	case 7770:                          // High 10
 		VK_Play_Speech_Line(kActorBulletBob, 1780, 0.5f);
 		if (Random_Query(0, 1) == 1) {
 			VK_Eye_Animates(1);
 		}
-		VK_Play_Speech_Line(kActorMcCoy, 8335, 0.5f);
+		if (_vm->_cutContent) {
+			if (Player_Query_Agenda() != kPlayerAgendaSurly 
+			&& Player_Query_Agenda() != kPlayerAgendaErratic) {	
+				VK_Play_Speech_Line(kActorMcCoy, 8335, 0.5f);
+			}
+		} else {
+			VK_Play_Speech_Line(kActorMcCoy, 8335, 0.5f);
+		}
 		VK_Eye_Animates(2);
 		VK_Play_Speech_Line(kActorBulletBob, 1790, 0.5f);
 		if (Random_Query(0, 1) == 1) {

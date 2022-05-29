@@ -164,8 +164,11 @@ void SceneScriptKP05::PlayerWalkedIn() {
 	// Changed the conditions for which Steele will confront McCoy during the Clovis ending.
 	if (_vm->_cutContent) {
 		if (Game_Flag_Query(kFlagMcCoyRetiredHuman)
-			|| Global_Variable_Query(kVariableAffectionTowards) == kAffectionTowardsDektora
-			|| Global_Variable_Query(kVariableAffectionTowards) == kAffectionTowardsLucy) {
+		|| Global_Variable_Query(kVariableAffectionTowards) == kAffectionTowardsDektora
+		|| Global_Variable_Query(kVariableAffectionTowards) == kAffectionTowardsLucy) {
+			Actor_Put_In_Set(kActorSteele, kSetKP05_KP06);
+			Actor_Set_At_XYZ(kActorSteele, -947.39f, 0.0f, 728.89f, 0);
+			Actor_Change_Animation_Mode(kActorSteele, kAnimationModeCombatIdle);
 			Scene_Exits_Disable();
 			Actor_Face_Actor(kActorSteele, kActorMcCoy, true);
 			Actor_Says(kActorSteele, 530, 15);

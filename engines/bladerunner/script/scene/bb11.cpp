@@ -98,6 +98,7 @@ bool SceneScriptBB11::ClickedOnItem(int itemId, bool a2) {
 				Actor_Clue_Acquire(kActorMcCoy, kClueSadikIncept, true, kActorSadik);
 				Item_Pickup_Spin_Effect(kModelAnimationPhoto, 502, 423);
 				Item_Remove_From_World(kItemNote);
+				Actor_Voice_Over(4080, kActorVoiceOver);
 				return true;
 			}			
 		}	

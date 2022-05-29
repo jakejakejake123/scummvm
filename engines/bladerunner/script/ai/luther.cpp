@@ -103,15 +103,21 @@ bool AIScriptLuther::Update() {
 				Delay(1000);
 				Actor_Says(kActorMcCoy, 8508, 12); //00-8508.AUD	No retirement swag.
 				Game_Flag_Reset(kFlagMcCoyIsHelpingReplicants);
+				Actor_Modify_Friendliness_To_Other(kActorClovis, kActorMcCoy, -4);
+				Actor_Modify_Friendliness_To_Other(kActorSteele, kActorMcCoy, 4);
+				Actor_Modify_Friendliness_To_Other(kActorGuzza, kActorMcCoy, 4);
+				Actor_Modify_Friendliness_To_Other(kActorGaff, kActorMcCoy, 4);
 				Actor_Clue_Acquire(kActorMcCoy, kClueMcCoyRetiredLutherLance, true, -1);
 			} else {
-				Actor_Says(kActorVoiceOver, 2100, 12); //99-2100.AUD	I'd crossed the line.
+				Actor_Voice_Over(2100, kActorVoiceOver); //99-2100.AUD	I'd crossed the line.
 				Player_Set_Combat_Mode(false);
-				Delay(1000);
-				Actor_Says(kActorVoiceOver, 300, 12); //99-0300.AUD	I'd screwed up. Plain and simple.
-				Actor_Says(kActorVoiceOver, 2120, 12); //99-2120.AUD	I didn't have a lot of time and my options were pretty lousy.
-				Actor_Says(kActorVoiceOver, 2130, 12); //99-2130.AUD	Stay and face the music or take off and hope I didn't get caught.
+				Delay(2000);
+				Actor_Voice_Over(300, kActorVoiceOver); //99-0300.AUD	I'd screwed up. Plain and simple.
+				Actor_Voice_Over(2120, kActorVoiceOver); //99-2120.AUD	I didn't have a lot of time and my options were pretty lousy.
+				Actor_Voice_Over(2130, kActorVoiceOver); //99-2130.AUD	Stay and face the music or take off and hope I didn't get caught.
 				Game_Flag_Set(kFlagMcCoyRetiredHuman);
+				Actor_Modify_Friendliness_To_Other(kActorClovis, kActorMcCoy, -4);
+				Actor_Modify_Friendliness_To_Other(kActorSteele, kActorMcCoy, -4);
 			}
 		}
 		Scene_Loop_Set_Default(5); // UG16MainLoopNoComputerLight
@@ -236,7 +242,7 @@ void AIScriptLuther::Retired(int byActorId) {
 				}
 				Delay(2000);
 				Player_Set_Combat_Mode(false);
-				Delay(1000); 
+				Delay(2000);
 			}
 			Ambient_Sounds_Remove_All_Non_Looping_Sounds(true);
 			Ambient_Sounds_Remove_All_Looping_Sounds(1u);

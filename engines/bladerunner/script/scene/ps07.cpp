@@ -79,7 +79,7 @@ bool SceneScriptPS07::ClickedOnActor(int actorId) {
 		if (_vm->_cutContent
 		    && (Actor_Query_Goal_Number(kActorKlein) >= kGoalKleinIsAnnoyedByMcCoyInit
 		        || (Actor_Query_Goal_Number(kActorKlein) < kGoalKleinIsAnnoyedByMcCoyInit
-		            && Actor_Query_Friendliness_To_Other(kActorKlein, kActorMcCoy) < 40))
+		            && Actor_Query_Friendliness_To_Other(kActorKlein, kActorMcCoy) < 41))
 		) {
 			// Annoyed Dino ignores McCoy
 			return true;
@@ -140,7 +140,7 @@ bool SceneScriptPS07::ClickedOnActor(int actorId) {
 				return true;
 			}
 			// Made it so Klein only talks about the animal corpses if McCoy has already seen them and he can talk about the wounds.
-			if (((_vm->_cutContent && Game_Flag_Query(kFlagRC01PoliceDone))
+			if (((_vm->_cutContent && Game_Flag_Query(kFlagRC02Entered))
 			      || (!_vm->_cutContent && Game_Flag_Query(kFlagMcCoyHasOfficersStatement)))
 			   		 && !Game_Flag_Query(kFlagPS07KleinTalkOfficersStatement)
 			) {
@@ -156,7 +156,7 @@ bool SceneScriptPS07::ClickedOnActor(int actorId) {
 						Actor_Says(kActorMcCoy, 620, 18); //-	00-0620.AUD	Try me.
 					} else {
 						Actor_Says(kActorMcCoy, 8445, 14); //00-8445.AUD	Cough it up!
-						Actor_Modify_Friendliness_To_Other(kActorKlein, kActorMcCoy, -6);
+						Actor_Modify_Friendliness_To_Other(kActorKlein, kActorMcCoy, -3);
 					}
 				}
 				Actor_Says(kActorKlein, 110, 12); //-	30-0110.AUD	About 50% were real. The rest were fakes.
@@ -181,15 +181,20 @@ bool SceneScriptPS07::ClickedOnActor(int actorId) {
 					|| Player_Query_Agenda() == kPlayerAgendaErratic) {
 						Actor_Says(kActorMcCoy, 3725, 18); //00-3725.AUD	Is that right? Any reason you didn’t tell me that right off?
 						Actor_Says(kActorKlein, 300, 17); //30-0300.AUD	I didn’t think you needed to hear about this.
-						Actor_Modify_Friendliness_To_Other(kActorKlein, kActorMcCoy, -6);
+						Actor_Modify_Friendliness_To_Other(kActorKlein, kActorMcCoy, -3);
 						Actor_Set_Goal_Number(kActorKlein, kGoalKleinMovingInLab01); 
 					} else {
 						Actor_Says(kActorMcCoy, 4165, 18);
 						Actor_Says(kActorKlein, 160, 13);
-						Actor_Says(kActorMcCoy, 4170, 19); // 00-4170.AUD	Nice bunch of Reps I'm tailing.
-						Actor_Says(kActorMcCoy, 4175, 19); // 00-4175.AUD	Hope you're not pulling a meat cleaver out of my back next week.
-						Actor_Set_Goal_Number(kActorKlein, kGoalKleinMovingInLab01);
-			   		}		
+						if (Player_Query_Agenda() != kPlayerAgendaSurly
+						&& (Player_Query_Agenda() != kPlayerAgendaErratic)) {
+							Actor_Says(kActorMcCoy, 4170, 19); // 00-4170.AUD	Nice bunch of Reps I'm tailing.
+							Actor_Says(kActorMcCoy, 4175, 19); // 00-4175.AUD	Hope you're not pulling a meat cleaver out of my back next week.
+							Actor_Says(kActorKlein, 210, 12); //30-0210.AUD  	Ha, you're a real funny guy, McCoy.
+							Actor_Modify_Friendliness_To_Other(kActorKlein, kActorMcCoy, 3);
+							Actor_Set_Goal_Number(kActorKlein, kGoalKleinMovingInLab01);
+						}
+					}	
 				} else {
 					Actor_Says(kActorMcCoy, 4165, 18);
 					Actor_Says(kActorKlein, 160, 13);
@@ -215,6 +220,7 @@ bool SceneScriptPS07::ClickedOnActor(int actorId) {
 					if (Player_Query_Agenda() == kPlayerAgendaSurly 
 					|| Player_Query_Agenda() == kPlayerAgendaErratic) {
 						Actor_Says(kActorMcCoy, 8295, 13); //00-8295.AUD	You tell me.
+						Actor_Modify_Friendliness_To_Other(kActorKlein, kActorMcCoy, -3);
 						Delay (1000);
 					} else {
 						Actor_Says(kActorMcCoy, 3530, 13); //00-3530.AUD	No, sir.
@@ -235,8 +241,9 @@ bool SceneScriptPS07::ClickedOnActor(int actorId) {
 					|| Player_Query_Agenda() == kPlayerAgendaErratic) {
 						Actor_Says(kActorKlein, 200, 16);
 						Actor_Says(kActorMcCoy, 4185, 18); //00-4185.AUD	I heard your wife got her license back.
-						Actor_Says(kActorKlein, 210, 12); //30-0210.AUD  	Ha, you're a real funny guy, McCoy.	
-						Actor_Modify_Friendliness_To_Other(kActorKlein, kActorMcCoy, -6);
+						Delay(2000);
+						Actor_Says(kActorKlein, 280, 13); //30-0280.AUD	Come back at me when you got something worthwhile, McCoy.
+						Actor_Modify_Friendliness_To_Other(kActorKlein, kActorMcCoy, -3);
 						Actor_Set_Goal_Number(kActorKlein, kGoalKleinMovingInLab01);
 			  	    } else {
 					    Actor_Says(kActorKlein, 200, 16);
@@ -283,7 +290,7 @@ bool SceneScriptPS07::ClickedOnActor(int actorId) {
 			if (_vm->_cutContent 
 			&& Actor_Clue_Query(kActorMcCoy, kClueTyrellSecurityPhoto)	
 			&& !Actor_Clue_Query(kActorMcCoy, kClueLabAnalysisGoldChain)
-			&& (Actor_Query_Friendliness_To_Other(kActorKlein, kActorMcCoy) > 49)) {
+			&& (Actor_Query_Friendliness_To_Other(kActorKlein, kActorMcCoy) > 50)) {
 				Actor_Says(kActorKlein, 260, 12); //30-0260.AUD Yeah, dig this. It's been doing the circuits throughout the station.
 				Item_Pickup_Spin_Effect(kModelAnimationMaggieBracelet, 180, 228); 
 				Actor_Voice_Over(4190, kActorVoiceOver); //99-4190.AUD	Where have I seen that before?

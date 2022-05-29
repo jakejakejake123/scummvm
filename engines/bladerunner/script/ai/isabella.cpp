@@ -61,7 +61,82 @@ void AIScriptIsabella::ReceivedClue(int clueId, int fromActorId) {
 }
 
 void AIScriptIsabella::ClickedByPlayer() {
+	if (_vm->_cutContent) {
+		if (Actor_Query_In_Set(kActorIsabella, kSetPS09)) {
+			if (!Loop_Actor_Walk_To_XYZ(kActorMcCoy, -473.0f, 0.2f, -133.0f, 12, false, false, false)) {
+				Actor_Face_Actor(kActorMcCoy, kActorIsabella, true);
+				Actor_Face_Actor(kActorIsabella, kActorMcCoy, true);
+				Actor_Says(kActorMcCoy, 8605, kAnimationModeTalk);//00-8605.AUD	You staying out of trouble, buddy?
+				Actor_Says(kActorIsabella, 170, kAnimationModeTalk); //59-0170.AUD	Why you pick on Mama Isabella? I never do you no harm.
+				if (Actor_Clue_Query(kActorMcCoy, kClueSpecialIngredient)
+				&& !Actor_Clue_Query(kActorMcCoy, kClueStolenCheese)) {
+					Actor_Says(kActorMcCoy, 1305, kAnimationModeTalk);
+					Actor_Says(kActorIsabella, 160, kAnimationModeTalk);
+					Actor_Says(kActorMcCoy, 1305, kAnimationModeTalk); //00-1305.AUD	Mia and Murray tell me you're using cheese in your stew. Real cheese.
+					Actor_Says(kActorIsabella, 160, kAnimationModeTalk); //59-0160.AUD	Them old buzzards. What they know?
+					Actor_Says(kActorMcCoy, 1365, kAnimationModeTalk); //00-1365.AUD	I'm not looking to bust the dealer. I just want to know who bought it.
+					Delay (1000);
+					if (Player_Query_Agenda() == kPlayerAgendaSurly 
+					|| Player_Query_Agenda() == kPlayerAgendaErratic) {
+						Actor_Says(kActorMcCoy, 4360, 16); //00-4360.AUD	Tell it straight or I'm gonna make sure you get the same as he gets. Full conspiracy, payable for 25.
+						Delay(2000);
+						Actor_Says(kActorIsabella, 210, kAnimationModeTalk); //59-0210.AUD	You know, funny thing you asking about the cheese. Last week this ugly little man, he ran by. Grab whole box of empty takeout cartons right off the counter.
+						Actor_Says(kActorIsabella, 240, kAnimationModeTalk);
+						Actor_Says(kActorMcCoy, 1385, kAnimationModeTalk);
+						Actor_Says(kActorIsabella, 260, kAnimationModeTalk);
+						Actor_Says(kActorMcCoy, 1390, kAnimationModeTalk);
+						if (Actor_Query_Is_In_Current_Set(kActorGordo)) {
+							Actor_Face_Actor(kActorIsabella, kActorGordo, true);
+							Delay(2000);
+							Actor_Face_Actor(kActorGordo, kActorIsabella, true);
+							Delay(2000);
+						}
+						Actor_Says(kActorIsabella, 300, kAnimationModeTalk); //59-0300.AUD	Short, real short. Bad clothes, colors way too bright. Funny bow tie.
+						Actor_Clue_Acquire(kActorMcCoy, kClueStolenCheese, false, kActorIsabella);
+						CDB_Set_Crime(kClueStolenCheese, kCrimeCheeseTheft);
+						if (Actor_Query_Is_In_Current_Set(kActorGordo)) {
+							Actor_Face_Actor(kActorMcCoy, kActorGordo, true);
+							Delay(2000);
+							Actor_Face_Actor(kActorGordo, kActorMcCoy, true);
+							Delay(2000);
+							Actor_Clue_Acquire(kActorMcCoy, kClueGordoInterview2, true, kActorGordo);
+							Actor_Face_Actor(kActorIsabella, kActorMcCoy, true);
+							Actor_Says(kActorMcCoy, 6540, 15); //00-6540.AUD	Did you steal this cheese from Kingston Kitchen?	
+							Actor_Face_Actor(kActorIsabella, kActorGordo, true);
+							Actor_Says(kActorGordo, 1280, 13); //02-1280.AUD	Hey, baby. I may steal a line or two. But I’d never steal some cheese. I don’t do dairy.
+							Actor_Says(kActorMcCoy, 6600, 13); //00-6600.AUD	Why the big deal over food?
+							Actor_Says(kActorGordo, 1310, 14); //02-1310.AUD	It was just some cheese, McCoy. And some takeout cartons.
+							Actor_Face_Actor(kActorIsabella, kActorMcCoy, true);
+							Actor_Says(kActorMcCoy, 6595, 15); //00-6595.AUD	And you gave the takeout cartons to Sadik. 
+							Actor_Says(kActorMcCoy, 6555, 15); //00-6555.AUD	Let’s hear the rest of it.
+							if (Game_Flag_Query(kFlagLucyIsReplicant)) {
+								Actor_Face_Actor(kActorIsabella, kActorGordo, true);
+								Actor_Says(kActorGordo, 1330, 16); //02-1330.AUD	Anything good is damn hard to come by. Poor Lucy wasn’t doing so hot.
+								Actor_Says(kActorGordo, 1340, 12); //02-1340.AUD	She couldn’t keep anything down.
+								Actor_Says(kActorGordo, 1350, 11); //02-1350.AUD	So, I thought… maybe something different to eat would help.
+								Actor_Says(kActorGordo, 1380, 16); //02-1380.AUD	It’s the way of all flesh, baby. Just the issue of when that’s got us concerned.
+								Delay (2000);
+								Actor_Says(kActorMcCoy, 1970, 13); //00-1970.AUD	You should start thinking about the company you keep.
+								Actor_Says(kActorIsabella, 330, kAnimationModeTalk); //59-0330.AUD	You bet, mon. That cheese’s been nothing but trouble for Mama Isabella.
+							} else {
+								Actor_Face_Actor(kActorIsabella, kActorGordo, true);
+								Actor_Says(kActorGordo, 1360, 11); //02-1360.AUD	Clovis… well, he’s been getting sick. He can’t keep anything down.
+								Actor_Says(kActorGordo, 1370, 13); //02-1370.AUD	I thought… maybe something a little different to eat.
+								if (Game_Flag_Query(kFlagMcCoyIsHelpingReplicants)) {
+									Actor_Says(kActorGordo, 6605, 15); //00-6605.AUD	He’s dying, isn’t he?
+									Actor_Says(kActorGordo, 1380, 16); //02-1380.AUD	It’s the way of all flesh, baby. Just the issue of when that’s got us concerned.
+								}
+								Delay (2000);
+								Actor_Says(kActorMcCoy, 1970, 13); //00-1970.AUD	You should start thinking about the company you keep.
+								Actor_Says(kActorIsabella, 330, kAnimationModeTalk); //59-0330.AUD	You bet, mon. That cheese’s been nothing but trouble for Mama Isabella.
+							}
+						}
+					}
+				}
+			}
+		}
 	//return false;
+	}
 }
 
 void AIScriptIsabella::EnteredSet(int setId) {

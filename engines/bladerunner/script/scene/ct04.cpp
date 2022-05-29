@@ -112,7 +112,6 @@ bool SceneScriptCT04::ClickedOn3DObject(const char *objectName, bool a2) {
 					Actor_Voice_Over(340, kActorVoiceOver);
 				}
 				Game_Flag_Set(kFlagCT04HomelessBodyInDumpster);
-				Game_Flag_Set(kFlagCT04HomelessBodyInDumpsterNotChecked);
 			}
 			return false;
 		}
@@ -147,7 +146,6 @@ bool SceneScriptCT04::ClickedOn3DObject(const char *objectName, bool a2) {
 				} else {
 					Actor_Voice_Over(240, kActorVoiceOver);	
 				}
-				Game_Flag_Reset(kFlagCT04HomelessBodyInDumpsterNotChecked);
 			}
 			return true;
 		}
@@ -215,6 +213,11 @@ void SceneScriptCT04::dialogueWithHomeless() {
 
 	switch (answer) {
 	case 410: // YES
+		if (_vm->_cutContent) {
+			Actor_Change_Animation_Mode(kActorMcCoy, 23);
+			Delay(2000);
+			Actor_Says(kActorMcCoy, 8170, 13); //00-8170.AUD	There you go.
+		}
 		Actor_Says(kActorTransient, 10, 13); // Thanks. The big man. He kind of limping.
 		if (_vm->_cutContent) {
 			Actor_Says(kActorTransient, 20, 14); // That way.

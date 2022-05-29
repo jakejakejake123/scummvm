@@ -184,7 +184,16 @@ void AIScriptEarlyQ::ReceivedClue(int clueId, int fromActorId) {
 }
 
 void AIScriptEarlyQ::ClickedByPlayer() {
-	//return false;
+	if (_vm->_cutContent) {
+		if (Actor_Query_In_Set(kActorEarlyQ, kSetPS09)) {
+			if (!Loop_Actor_Walk_To_XYZ(kActorMcCoy, -381.11f, 0.0f, -135.55f, 0, false, false, false)) {
+				Actor_Face_Actor(kActorMcCoy, kActorEarlyQ, true);
+				Actor_Face_Actor(kActorEarlyQ, kActorMcCoy, true);
+				Actor_Says(kActorMcCoy, 8513, 18); //00-8513.AUD	Early, how's it hanging?
+				Actor_Says(kActorEarlyQ, 340, kAnimationModeTalk); //18-0340.AUD	No more free drinks for you, buddy boy.
+			}
+		}
+	}
 }
 
 void AIScriptEarlyQ::EnteredSet(int setId) {
@@ -247,7 +256,6 @@ bool AIScriptEarlyQ::ShotAtAndHit() {
 			return true;
 		}
 	}
-
 	return false;
 }
 
@@ -261,6 +269,7 @@ void AIScriptEarlyQ::Retired(int byActorId) {
 				if (Query_Difficulty_Level() != kGameDifficultyEasy) {
 					Global_Variable_Increment (kVariableChinyen, 200);
 				}
+				Actor_Modify_Friendliness_To_Other(kActorGaff, kActorMcCoy, 2);
 			}
 
 			if (Global_Variable_Query(kVariableReplicantsSurvivorsAtMoonbus) == 0) {
@@ -274,7 +283,7 @@ void AIScriptEarlyQ::Retired(int byActorId) {
 					}
 					Delay(2000);
 					Player_Set_Combat_Mode(false);
-					Delay(1000); 
+					Delay(2000); 
 				}
 				Ambient_Sounds_Remove_All_Non_Looping_Sounds(true);
 				Ambient_Sounds_Remove_All_Looping_Sounds(1u);
@@ -496,16 +505,29 @@ bool AIScriptEarlyQ::GoalChanged(int currentGoalNumber, int newGoalNumber) {
 		// Hanoi will show up to shoot McCoy after these two scenarios if he is a replicant and if he is human he will not show up at all.
 		if (_vm->_cutContent) {
 			if (Actor_Query_In_Set(kActorEarlyQ, kSetNR04)) {
-				Game_Flag_Set(kFlagEarlyQDead);
-				Game_Flag_Reset(kFlagMcCoyIsHelpingReplicants);
-				Actor_Voice_Over(920, kActorVoiceOver); //99-0920.AUD	Easy money.
-				Actor_Modify_Friendliness_To_Other(kActorSteele, kActorMcCoy, 2);
-				Actor_Set_Targetable(kActorEarlyQ, false);
-				if (Query_Difficulty_Level() != kGameDifficultyEasy) {
-					Global_Variable_Increment (kVariableChinyen, 200);
-				}
-				if (Game_Flag_Query(kFlagHanoiIsReplicant)) {
-					Actor_Set_Goal_Number(kActorHanoi, kGoalHanoiNR04Enter);
+				if (Game_Flag_Query(kFlagEarlyQIsReplicant)) {
+					Game_Flag_Set(kFlagEarlyQDead);
+					Game_Flag_Reset(kFlagMcCoyIsHelpingReplicants);
+					Actor_Voice_Over(920, kActorVoiceOver); //99-0920.AUD	Easy money.
+					Actor_Modify_Friendliness_To_Other(kActorSteele, kActorMcCoy, 2);
+					Actor_Modify_Friendliness_To_Other(kActorClovis, kActorMcCoy, -2);
+					Actor_Modify_Friendliness_To_Other(kActorGuzza, kActorMcCoy, 2);
+					Actor_Modify_Friendliness_To_Other(kActorGaff, kActorMcCoy, 2);
+					Actor_Set_Targetable(kActorEarlyQ, false);
+					if (Query_Difficulty_Level() != kGameDifficultyEasy) {
+						Global_Variable_Increment (kVariableChinyen, 200);
+					}
+					if (Game_Flag_Query(kFlagHanoiIsReplicant)) {
+						Actor_Set_Goal_Number(kActorHanoi, kGoalHanoiNR04Enter);
+					}
+				} else {
+					Delay(2000);
+					Actor_Voice_Over(2080, kActorVoiceOver); //99-2080.AUD	I’d done the city a favor.
+					Actor_Modify_Friendliness_To_Other(kActorSteele, kActorMcCoy, -2);
+					Actor_Modify_Friendliness_To_Other(kActorClovis, kActorMcCoy, 2);
+					Actor_Modify_Friendliness_To_Other(kActorGuzza, kActorMcCoy, -2);
+					Actor_Set_Targetable(kActorEarlyQ, false);
+					Game_Flag_Set(kFlagMcCoyRetiredHuman);
 				}
 			}
 		} else {
@@ -533,7 +555,7 @@ bool AIScriptEarlyQ::GoalChanged(int currentGoalNumber, int newGoalNumber) {
 
 	case kGoalEarlyQNR05WillLeave:
 		AI_Countdown_Timer_Reset(kActorEarlyQ, kActorTimerAIScriptCustomTask0);
-		AI_Countdown_Timer_Start(kActorEarlyQ, kActorTimerAIScriptCustomTask0, 20);
+		AI_Countdown_Timer_Start(kActorEarlyQ, kActorTimerAIScriptCustomTask0, 5);
 		break;
 
 	case kGoalEarlyQNR05Leave:

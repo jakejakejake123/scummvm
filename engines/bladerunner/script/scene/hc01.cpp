@@ -134,7 +134,16 @@ bool SceneScriptHC01::ClickedOnActor(int actorId) {
 					Actor_Face_Actor(kActorMcCoy, kActorIzo, true);
 				}
 				Actor_Says(kActorIzo, 20, 17);
-				Actor_Says(kActorMcCoy, 1035, 18);
+				if (_vm->_cutContent) {
+					if (Player_Query_Agenda() == kPlayerAgendaSurly 
+					|| Player_Query_Agenda() == kPlayerAgendaErratic) {
+						Actor_Says(kActorMcCoy, 1035, 18); //00-1035.AUD	Sell a lot of stuff that way?
+					} else {
+						Actor_Says(kActorMcCoy, 4880, 13); //00-4880.AUD	Is that right?
+					}
+				} else {
+					Actor_Says(kActorMcCoy, 1035, 18); //00-1035.AUD	Sell a lot of stuff that way?
+				}
 				Actor_Says_With_Pause(kActorIzo, 30, 0.2f, 17);
 				Actor_Says_With_Pause(kActorIzo, 40, 0.0f, 13);
 				Actor_Says(kActorIzo, 50, 12);
@@ -174,7 +183,7 @@ bool SceneScriptHC01::ClickedOnActor(int actorId) {
 			Actor_Says(kActorIzo, 710, 17); //07-0710.AUD	You’re a better man than I imagined.
 			Game_Flag_Set(kFlagIzoPrepared);
 		} else {
-			Actor_Says(kActorMcCoy, 2860, 14); //00-2860.AUD	You take care of yourself.
+			Actor_Says(kActorMcCoy, 8605, 18); //00-8605.AUD	You staying out of trouble, buddy?.
 		}
 	}
 #endif // BLADERUNNER_ORIGINAL_BUGS
@@ -311,7 +320,16 @@ void SceneScriptHC01::dialogueWithIzo() {
 	if (!Game_Flag_Query(kFlagHC01IzoTalk2)) {
 		Actor_Says(kActorMcCoy, 1055, 13);
 		Actor_Says(kActorIzo, 130, 13);
-		Actor_Says_With_Pause(kActorMcCoy, 1060, 0.2f, 13);
+		if (_vm->_cutContent) {
+			if (Player_Query_Agenda() == kPlayerAgendaSurly 
+			|| Player_Query_Agenda() == kPlayerAgendaErratic) {
+				Actor_Says_With_Pause(kActorMcCoy, 1060, 0.2f, 13); //00-1060.AUD	Doesn't matter. I don't read anyhow. What's your name?
+			} else {
+				Actor_Says(kActorMcCoy, 7395, 13); //00-7395.AUD	What's your name?
+			}
+		} else {
+			Actor_Says_With_Pause(kActorMcCoy, 1060, 0.2f, 13); //00-1060.AUD	Doesn't matter. I don't read anyhow. What's your name?
+		}
 		Actor_Says(kActorIzo, 140, 13);
 		Game_Flag_Set(kFlagHC01IzoTalk2);
 	}
@@ -333,9 +351,7 @@ void SceneScriptHC01::dialogueWithIzo() {
 	// Added in the options to VK Izo and warn him about Crystal.
 	if (_vm->_cutContent) {
 		if (Actor_Clue_Query(kActorMcCoy, kClueGrigorianInterviewB1)
-		|| Actor_Clue_Query(kActorMcCoy, kClueGrigorianInterviewB2)
-		|| Actor_Clue_Query(kActorMcCoy, kClueBobInterview1))
-		 {
+		|| Actor_Clue_Query(kActorMcCoy, kClueGrigorianInterviewB2)) {
 			DM_Add_To_List_Never_Repeat_Once_Selected(1100, -1, 3, 8); // VOIGT-KAMPFF
 			DM_Add_To_List_Never_Repeat_Once_Selected(1110, 8, -1, -1); // CRYSTAL
 		 }
@@ -483,12 +499,6 @@ void SceneScriptHC01::dialogueWithIzo() {
 				Actor_Says(kActorIzo, 340, 13); //07-0340.AUD	My friend Shoshane Yuri picked up the EOS plague from some gunner's space helmet.
 				Actor_Says(kActorIzo, 350, 12); //07-0350.AUD	He was vomiting blood for days.
 			}
-			if (_vm->_cutContent) {
-				Actor_Modify_Friendliness_To_Other(kActorIzo, kActorMcCoy, -2);
-				if (Actor_Query_Friendliness_To_Other(kActorIzo, kActorMcCoy) < 60) {
-					takePhotoAndRunAway();
-				}
-			}
 			end = true;
 		}
 		// When you choose to VK or warn Izo he immediately flashes you with his camera so since he knows that you are a blade runner.
@@ -498,6 +508,7 @@ void SceneScriptHC01::dialogueWithIzo() {
 		if (answer == 1100) { // VK
 			Dialogue_Menu_Remove_From_List(1100);
 			Actor_Says(kActorMcCoy, 5480, 15); //00-5480.AUD	Look, just come along with me. You’re gonna have to take a little personality test.
+			Actor_Modify_Friendliness_To_Other(kActorIzo, kActorMcCoy, -2);
 			Game_Flag_Set(kFlagIzoEscaped);
 			Game_Flag_Set(kFlagIzoGotAway);
 			if (Actor_Query_Friendliness_To_Other(kActorIzo, kActorMcCoy) < 60) {
@@ -526,8 +537,16 @@ void SceneScriptHC01::dialogueWithIzo() {
 			Actor_Says(kActorMcCoy, 1155, 15);
 			Actor_Says(kActorIzo, 380, 12);
 			Actor_Says(kActorMcCoy, 1160, 14); // He described you to a tee
-			Actor_Says(kActorMcCoy, 1165, 18); // Even down to that stupid little ponytail you got.
-			Actor_Says(kActorIzo, 390, 16);
+			if (_vm->_cutContent) {
+				if (Player_Query_Agenda() == kPlayerAgendaSurly 
+				|| Player_Query_Agenda() == kPlayerAgendaErratic) {	
+					Actor_Says(kActorMcCoy, 1165, 18); // Even down to that stupid little ponytail you got.
+					Actor_Says(kActorIzo, 390, 16);
+				}
+			} else {
+				Actor_Says(kActorMcCoy, 1165, 18); // Even down to that stupid little ponytail you got.
+				Actor_Says(kActorIzo, 390, 16);
+			}
 			Actor_Says(kActorMcCoy, 1170, 12); // What would you say if I told you Grigorian named you
 			Actor_Says(kActorIzo, 400, 13);
 			Actor_Says(kActorMcCoy, 1180, 14); // So, you're denying all involvement?
@@ -535,7 +554,7 @@ void SceneScriptHC01::dialogueWithIzo() {
 			Actor_Says(kActorIzo, 420, 16);
 			Actor_Says(kActorIzo, 430, 17);
 			Actor_Says(kActorIzo, 440, 13);
-			Actor_Modify_Friendliness_To_Other(kActorIzo, kActorMcCoy, -4);
+			Actor_Modify_Friendliness_To_Other(kActorIzo, kActorMcCoy, -2);
 			if (_vm->_cutContent) {
 				if (Actor_Query_Friendliness_To_Other(kActorIzo, kActorMcCoy) < 60) {
 					takePhotoAndRunAway();

@@ -105,14 +105,14 @@ bool SceneScriptMA01::ClickedOnActor(int actorId) {
 					Actor_Voice_Over(350, kActorVoiceOver);
 					Actor_Voice_Over(360, kActorVoiceOver);
 					Actor_Voice_Over(370, kActorVoiceOver);
-					if (!Game_Flag_Query(kFlagDirectorsCut)) {
-						Actor_Voice_Over(380, kActorVoiceOver);
+					if (Player_Query_Agenda() != kPlayerAgendaSurly 
+					&& Player_Query_Agenda() != kPlayerAgendaErratic) {
+						Actor_Voice_Over(380, kActorVoiceOver); //99-0380.AUD	The poor guy kind of reminded me of one of those Buffalo Soldiers...
 						Actor_Voice_Over(390, kActorVoiceOver);
 						Actor_Voice_Over(400, kActorVoiceOver);
 						Actor_Voice_Over(410, kActorVoiceOver);
 					}
 					Game_Flag_Set(kFlagCT06ZubenPhoto);
-					return true;
 				} else { 
 					if (Player_Query_Agenda() != kPlayerAgendaSurly 
 					|| Player_Query_Agenda() != kPlayerAgendaErratic) {

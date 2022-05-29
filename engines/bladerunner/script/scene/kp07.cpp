@@ -243,20 +243,78 @@ bool SceneScriptKP07::ClickedOnActor(int actorId) {
 			}
 			return true;
 		}
-	} else {
-#if BLADERUNNER_ORIGINAL_BUGS
+		#if BLADERUNNER_ORIGINAL_BUGS
 		Actor_Face_Actor(kActorMcCoy, actorId, true);
 		Actor_Says(kActorMcCoy, 8590, 14);
 		return true;
-#else
-		if (!Player_Query_Combat_Mode()) {
-			Actor_Face_Actor(kActorMcCoy, actorId, true);
-			Actor_Says(kActorMcCoy, 8590, 14);
-			return true;
-		}
+	#else
+		if (!_vm->_cutContent) {
+			if (!Player_Query_Combat_Mode()) {
+				Actor_Face_Actor(kActorMcCoy, actorId, true);
+				Actor_Says(kActorMcCoy, 8590, 14);
+				return true;
+			}
 #endif // BLADERUNNER_ORIGINAL_BUGS
+		} else if (actorId == kActorCrazylegs) {
+			Actor_Face_Actor(kActorMcCoy, kActorCrazylegs, true);
+			Actor_Face_Actor(kActorCrazylegs, kActorMcCoy, true);
+			Actor_Says(kActorMcCoy, 1730, kAnimationModeTalk); //00-1730.AUD	You’re a stand up guy, Crazy.
+			Actor_Says(kActorCrazylegs, 80, 23); //09-0080.AUD	That I am.
+		} else if (actorId == kActorDektora) {
+			Actor_Face_Actor(kActorMcCoy, kActorDektora, true);
+			Actor_Face_Actor(kActorDektora, kActorMcCoy, true);
+			Actor_Says(kActorMcCoy, 6860, 13); //00-6860.AUD	Are you ready?
+			Actor_Says(kActorDektora, 1110, kAnimationModeTalk); //03-1110.AUD	Yes, I am.
+		} else if (actorId == kActorIzo) {
+			Actor_Face_Actor(kActorMcCoy, kActorIzo, true);
+			Actor_Face_Actor(kActorIzo, kActorMcCoy, true);
+			Actor_Says(kActorMcCoy, 3210, kAnimationModeTalk); //00-3210.AUD	Hey, man.
+			Actor_Says(kActorIzo, 710, 17); //07-0710.AUD	You’re a better man than I imagined.
+		} else if (actorId == kActorBulletBob) {
+			Actor_Face_Actor(kActorMcCoy, kActorBulletBob, true);
+			Actor_Says(kActorMcCoy, 8915, 16); //00-8915.AUD	You got a minute, pal?
+			Actor_Says(kActorBulletBob, 1920, 36); //14-1920.AUD	Hey, Ray, relax! I'm your pal, ain't I?
+			Actor_Says(kActorBulletBob, 1930, 33); //14-1930.AUD	You don't have to step soft around me.
+		} else if (actorId == kActorHanoi) {
+			Actor_Face_Actor(kActorMcCoy, kActorHanoi, true);
+			Actor_Face_Actor(kActorHanoi, kActorMcCoy, true);
+			Actor_Says(kActorMcCoy, 8915, 11); //00-8915.AUD	You got a minute, pal?
+			Actor_Says(kActorHanoi, 210, kAnimationModeTalk); //25-0210.AUD	Sod off, McCoy. I got no time for you.
+		} else if (actorId == kActorGordo) { 
+			Actor_Face_Actor(kActorMcCoy, kActorGordo, true);
+			Actor_Face_Actor(kActorGordo, kActorMcCoy, true);
+			Actor_Says(kActorMcCoy, 6515, 15); //00-6515.AUD	Gordo. I was wondering when you’d show your face again. –	
+			Actor_Says(kActorGordo, 1100, 11); //02-1100.AUD	Still swinging, baby. And I probably got you to thank.
+		} else if (actorId == kActorEarlyQ) { 
+			Actor_Face_Actor(kActorMcCoy, kActorEarlyQ, true);
+			Actor_Says(kActorMcCoy, 8513, 18); //00-8513.AUD	Early, how's it hanging?
+			Actor_Says(kActorEarlyQ, 360, kAnimationModeTalk); //18-0360.AUD	Thick, slick and hard as a brick. How’s yours, General?
+		} else if (actorId == kActorLuther) { 
+			Actor_Face_Actor(kActorMcCoy, kActorLuther, true);
+			Actor_Says(kActorMcCoy, 3970, 14);
+			Actor_Says(kActorLance, 0, 17); //13-0000.AUD	Hey, it’s about time you showed up.
+			Actor_Says(kActorLuther, 320, 6); //10-0320.AUD	No question.
+		} else if (actorId == kActorLucy) { 
+			Actor_Face_Actor(kActorMcCoy, kActorLucy, true);
+			Actor_Face_Actor(kActorLucy, kActorMcCoy, true);
+			Actor_Says(kActorMcCoy, 4775, kAnimationModeTalk); //00-4775.AUD	Lucy.
+			Actor_Says(kActorLucy, 0, 17); //06-0000.AUD	I knew you’d come.
+		} else if (actorId == kActorMaggie) {
+			Actor_Face_Actor(kActorMcCoy, kActorMaggie, true);
+			Actor_Face_Actor(kActorMaggie, kActorMcCoy, true);
+			Actor_Says(kActorMcCoy, 2400, kAnimationModeFeeding);
+		} else if (actorId == kActorZuben) {
+			Actor_Face_Actor(kActorMcCoy, kActorZuben, true);
+			Actor_Face_Actor(kActorZuben, kActorMcCoy, true);
+			Actor_Says(kActorMcCoy, 355, 18);
+			Actor_Says(kActorZuben, 120, 18); //19-0120.AUD	Aah, police...
+		} else if (actorId == kActorSadik) {
+			Actor_Face_Actor(kActorMcCoy, kActorSadik, true);
+			Actor_Face_Actor(kActorSadik, kActorMcCoy, true);
+			Actor_Says(kActorMcCoy, 3210, kAnimationModeTalk); //00-3210.AUD	Hey, man.
+			Actor_Says(kActorSadik, 280, kAnimationModeTalk); //08-0280.AUD	You for real I’m thinking.
+		}
 	}
-
 	return false;
 }
 
@@ -303,12 +361,16 @@ void SceneScriptKP07::PlayerWalkedIn() {
 	Loop_Actor_Walk_To_XYZ(kActorMcCoy, 9.0f, -41.88f, -81.0f, 0, false, false, false);
 	if (!Game_Flag_Query(kFlagKP07Entered)) {
 		if (Game_Flag_Query(kFlagMcCoyIsHelpingReplicants)) {
+			if (_vm->_cutContent) {
+				Player_Set_Combat_Mode(false);
+			}	
 			// If Maggie is alive and in the set McCoy will call her and Maggie will look at him.
 			if (_vm->_cutContent) {
 				if (Actor_Query_Is_In_Current_Set(kActorMaggie)) {
 					Actor_Face_Actor(kActorMcCoy, kActorMaggie, true);
 					Actor_Face_Actor(kActorMaggie, kActorMcCoy, true);
 					Actor_Says(kActorMcCoy, 2385, 14); //00-2385.AUD	Maggie! Come here girl.
+					Loop_Actor_Walk_To_Actor(kActorMaggie, kActorMcCoy, 24, true, false);
 				}
 			}
 			// Added in some dialogue for McCoy, Lucy and Dektora. If McCoy enters the moonbus and is helping the replicants and has an affection rating

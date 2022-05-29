@@ -223,8 +223,15 @@ void SceneScriptCT02::dialogueWithZuben() {
 	// -. Steele will acquire the officer's statement clue if McCoy did not and will upload it to the mainframe
 	// -. Make McCoy able to VK Zuben even in Polite mode
 	//
-	if (evidenceCount > 3) {
-		DM_Add_To_List_Never_Repeat_Once_Selected(290, 0, 4, 8); // VOIGT-KAMPFF
+	if (_vm->_cutContent) {
+		if (evidenceCount > 1
+		&& (Actor_Clue_Query(kActorMcCoy, kClueSushiMenu))) { 
+			DM_Add_To_List_Never_Repeat_Once_Selected(290, 0, 4, 8); // VOIGT-KAMPFF
+		}
+	} else {
+		if (evidenceCount > 3) {
+			DM_Add_To_List_Never_Repeat_Once_Selected(290, 0, 4, 8); // VOIGT-KAMPFF
+		}
 	}
 #endif // BLADERUNNER_ORIGINAL_BUGS
 	Dialogue_Menu_Add_DONE_To_List(300); // DONE
@@ -257,10 +264,32 @@ void SceneScriptCT02::dialogueWithZuben() {
 
 	case 290: // VOIGT-KAMPFF
 		Actor_Says(kActorMcCoy, 395, 9);
-		Actor_Says(kActorMcCoy, 400, 9);
+		if (_vm->_cutContent) {
+			if (Player_Query_Agenda() != kPlayerAgendaSurly 
+			&& Player_Query_Agenda() != kPlayerAgendaErratic) {
+				Actor_Says(kActorMcCoy, 400, 9);
+			}
+		} else {
+			Actor_Says(kActorMcCoy, 400, 9);
+		}
 		Actor_Says(kActorZuben, 70, 17);
-		Actor_Says(kActorMcCoy, 420, 10);
-		Actor_Says(kActorZuben, 80, 14);
+		if (_vm->_cutContent) {
+			if (Player_Query_Agenda() == kPlayerAgendaSurly 
+			|| Player_Query_Agenda() == kPlayerAgendaErratic) {
+				Actor_Says(kActorMcCoy, 3405, 13);
+				Delay(2000);
+				Actor_Says(kActorMcCoy, 3410, 14);
+			} else {
+				Actor_Says(kActorMcCoy, 420, 10);
+				Actor_Says(kActorZuben, 80, 14);
+			}
+		} else {
+			Actor_Says(kActorMcCoy, 420, 10);
+			Actor_Says(kActorZuben, 80, 14);
+		}
+		if (_vm->_cutContent) {
+			Actor_Set_Goal_Number(kActorMcCoy, kGoalMcCoyDodge);
+		}
 		Actor_Modify_Friendliness_To_Other(kActorZuben, kActorMcCoy, -10);
 		break;
 
@@ -304,11 +333,17 @@ bool SceneScriptCT02::ClickedOnActor(int actorId) {
 					}
 					// Made it Zuben mentions his name when McCoy firsts talks to him. In the original game it was possible for McCoy to mis the Howie Lee interview clue
 					// where he mentions Zuben by name yet somehow McCoy would still know Zubens name anyway. This change fixes that.
-					Actor_Says(kActorZuben, 20, 19); //19-0020.AUD	You not come back here. Air bad.
+					Actor_Says(kActorZuben, 20, 9); //19-0020.AUD	You not come back here. Air bad.
 					Actor_Says(kActorMcCoy, 4880, 18); // 00-4880.AUD	Is that right?
 					Actor_Says(kActorZuben, 100, 19); //19-0100.AUD	What do you want from Zuben?
-					Actor_Says(kActorMcCoy, 8225, 14); //00-8225.AUD	Just relax.
-					Actor_Says(kActorMcCoy, 375, 13); //00-0375.AUD	This will only take a minute.
+					if (Player_Query_Agenda() == kPlayerAgendaSurly 
+					|| Player_Query_Agenda() == kPlayerAgendaErratic) {
+						Actor_Says(kActorMcCoy, 4810, 11); //00-4810.AUD	Listen up!
+						Delay(1000);
+					} else {
+						Actor_Says(kActorMcCoy, 8225, 14); //00-8225.AUD	Just relax.
+						Actor_Says(kActorMcCoy, 375, 13); //00-0375.AUD	This will only take a minute.
+					}
 					Actor_Says(kActorMcCoy, 385, 9);
 					Actor_Says(kActorZuben, 40, 19);
 					Actor_Modify_Friendliness_To_Other(kActorZuben, kActorMcCoy, -2);

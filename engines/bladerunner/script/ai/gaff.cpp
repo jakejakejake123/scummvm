@@ -70,9 +70,25 @@ void AIScriptGaff::CompletedMovementTrack() {
 		Actor_Says(kActorGaff, 0, kAnimationModeTalk);
 		Loop_Actor_Walk_To_Actor(kActorMcCoy, kActorGaff, 36, false, true);
 		Actor_Face_Actor(kActorMcCoy, kActorGaff, true);
-		Actor_Says(kActorMcCoy, 670, kAnimationModeTalk);
+		if (_vm->_cutContent) {
+			if (!Game_Flag_Query(kFlagMcCoyIsHelpingReplicants)) {
+				Actor_Says(kActorMcCoy, 670, kAnimationModeTalk); //00-0670.AUD	Working on it.
+			} else {
+				Delay(1000);
+			}
+		} else {
+			Actor_Says(kActorMcCoy, 670, kAnimationModeTalk);
+		}
 		Actor_Says(kActorGaff, 10, kAnimationModeTalk);
-		Actor_Says(kActorMcCoy, 675, kAnimationModeTalk);
+		if (_vm->_cutContent) {
+			if (!Game_Flag_Query(kFlagMcCoyIsHelpingReplicants)) {
+				Actor_Says(kActorMcCoy, 675, kAnimationModeTalk); //00-0675.AUD	I understand it's got a hell of a retirement plan.
+			} else {	
+				Actor_Says(kActorMcCoy, 8610, 18); //00-8610.AUD	What's the word, friend?
+			}
+		} else {
+			Actor_Says(kActorMcCoy, 675, kAnimationModeTalk);
+		}
 		Actor_Says(kActorGaff, 20, kAnimationModeTalk);
 		Actor_Says(kActorMcCoy, 680, kAnimationModeTalk);
 		Actor_Says(kActorGaff, 30, kAnimationModeTalk);
@@ -187,11 +203,23 @@ void AIScriptGaff::ClickedByPlayer() {
 			if (!Game_Flag_Query(kFlagGaffTalk)) {
 				Actor_Says(kActorMcCoy, 8610, 13); //00-8610.AUD	What's the word, friend?
 				Actor_Says(kActorGaff, 320, 13); //53-0320.AUD	Someone said you've been earning your stripes, McCoy.
-				Actor_Says(kActorMcCoy, 6915, 14); //00-6915.AUD	Trying to.
+				if (!Game_Flag_Query(kFlagMcCoyIsHelpingReplicants)) {
+					Actor_Says(kActorMcCoy, 6915, 14); //00-6915.AUD	Trying to.
+				} else {
+					Actor_Says(kActorMcCoy, 4880, 13); //00-4880.AUD	Is that right?
+				}
 				Actor_Says(kActorGaff, 330, 13); //53-0330.AUD	You just might have a future in this business.
-				Actor_Says(kActorMcCoy, 6920, 16); //00-6920.AUD	I like to hear that.
+				if (!Game_Flag_Query(kFlagMcCoyIsHelpingReplicants)) {
+					Actor_Says(kActorMcCoy, 6920, 16); //00-6920.AUD	I like to hear that.
+				} else {
+					Actor_Says(kActorMcCoy, 7980, 19); //00-7980.AUD	Yeah. Maybe.
+				}
 				Actor_Says(kActorGaff, 340, 13); //53-0340.AUD	Don't crack a bottle too soon. Steele is still way ahead on points.
-				Actor_Says(kActorMcCoy, 6925, 18); //00-6925.AUD	Don't bet on it.
+				if (!Game_Flag_Query(kFlagMcCoyIsHelpingReplicants)) {
+					Actor_Says(kActorMcCoy, 6925, 18); //00-6925.AUD	Don't bet on it.
+				} else {
+					Actor_Says(kActorMcCoy, 6915, 14); //00-8265.AUD	Really?
+				}
 				Actor_Says(kActorGaff, 190, kAnimationModeTalk); //53-0190.AUD	It's like I said before. You retire a human, your career is over.
 				Actor_Says(kActorGaff, 200, kAnimationModeTalk); //53-0200.AUD	Your life too, maybe.
 				Delay (1000);

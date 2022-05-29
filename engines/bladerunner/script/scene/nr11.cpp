@@ -177,12 +177,13 @@ bool SceneScriptNR11::ClickedOn3DObject(const char *objectName, bool combatMode)
 					Actor_Set_Goal_Number(kActorMcCoy, kGoalMcCoyNR10Fall);
 				} else {
 					Actor_Says(kActorMcCoy, 3840, 18);
-					// Made it so this track plays when you talk to Dektora. This exotic track fits her character perfectly.
-					if (_vm->_cutContent) {
-						Music_Play(kMusicTaffy3, 41, 0, 2, -1, kMusicLoopPlayOnce, 0);
-					}
 					Delay(1000);
-					if (Actor_Query_Friendliness_To_Other(kActorDektora, kActorMcCoy) > 59
+					if (_vm->_cutContent) {
+						if (Global_Variable_Query(kVariableAffectionTowards) == kAffectionTowardsDektora
+						) {
+							Music_Play(kMusicLoveSong, 35, 0, 3, -1, kMusicLoopPlayOnce, 0);
+						}
+					} else if (Actor_Query_Friendliness_To_Other(kActorDektora, kActorMcCoy) > 59
 					 && Global_Variable_Query(kVariableAffectionTowards) == kAffectionTowardsNone
 					) {
 						Music_Play(kMusicLoveSong, 35, 0, 3, -1, kMusicLoopPlayOnce, 0);
@@ -196,8 +197,15 @@ bool SceneScriptNR11::ClickedOn3DObject(const char *objectName, bool combatMode)
 					} else {
 						Actor_Clue_Acquire(kActorMcCoy, kClueDektoraInterview4, true, kActorDektora);
 					}
-					Actor_Says(kActorDektora, 990, 13);
-					Actor_Says(kActorDektora, 1000, 14);
+					if (_vm->_cutContent) {
+						if (Actor_Query_Friendliness_To_Other(kActorDektora, kActorMcCoy) < 51) {
+							Actor_Says(kActorDektora, 990, 13); //03-0990.AUD	You say a lot of things, Mr. McCoy.
+							Actor_Says(kActorDektora, 1000, 14); //03-1000.AUD	But you’re a Blade Runner. It’s hard to know what’s real.
+						}
+					} else {
+						Actor_Says(kActorDektora, 990, 13); //03-0990.AUD	You say a lot of things, Mr. McCoy.
+						Actor_Says(kActorDektora, 1000, 14); //03-1000.AUD	But you’re a Blade Runner. It’s hard to know what’s real.
+					}
 					Loop_Actor_Walk_To_Actor(kActorDektora, kActorMcCoy, 108, false, false);
 					Actor_Says(kActorMcCoy, 3845, 13);
 					Actor_Says(kActorMcCoy, 3850, 15);
@@ -212,17 +220,22 @@ bool SceneScriptNR11::ClickedOn3DObject(const char *objectName, bool combatMode)
 					Actor_Says(kActorDektora, 1060, 13);
 					Actor_Says(kActorMcCoy, 3870, 3);
 					Actor_Says(kActorDektora, 1070, 14);
+					if (_vm->_cutContent) {
+						Game_Flag_Set(kFlagMcCoyIsHelpingReplicants);
+						Actor_Modify_Friendliness_To_Other(kActorSteele, kActorMcCoy, 2);
+						Actor_Modify_Friendliness_To_Other(kActorClovis, kActorMcCoy, -2);
+						Actor_Modify_Friendliness_To_Other(kActorGuzza, kActorMcCoy, 2);
+					}
 					Actor_Modify_Friendliness_To_Other(kActorDektora, kActorMcCoy, 5);
-					if (Actor_Query_Friendliness_To_Other(kActorDektora, kActorMcCoy) > 55
+					if (_vm->_cutContent) {
+						if (Actor_Query_Friendliness_To_Other(kActorDektora, kActorMcCoy) > 50
+						 && Global_Variable_Query(kVariableAffectionTowards) == kAffectionTowardsNone) {
+							Global_Variable_Set(kVariableAffectionTowards, kAffectionTowardsDektora);
+						}
+					} else if (Actor_Query_Friendliness_To_Other(kActorDektora, kActorMcCoy) >= 55
 					 && Global_Variable_Query(kVariableAffectionTowards) == kAffectionTowardsNone
 					) {
 						Global_Variable_Set(kVariableAffectionTowards, kAffectionTowardsDektora);
-						// Added in a flag here. Also removed several lines where Dektora mentions Clovis' jealousy and how she's worried that he may suspect something is going on
-						// between her and McCoy. Considering they just met and Dektora just tried to kill McCoy this dialogue about a romannce feels out of place here so instead I
-						// i'll put it in the conversation that you have with her in act 4.
-						if (_vm->_cutContent) {
-							Game_Flag_Set(kFlagMcCoyIsHelpingReplicants);
-						}
 					}
 					Actor_Says(kActorDektora, 1080, 13);
 					Actor_Says(kActorMcCoy, 3875, 14);
@@ -415,12 +428,6 @@ void SceneScriptNR11::PlayerWalkedIn() {
 				Actor_Face_Actor(kActorMcCoy, kActorSteele, true);
 			} else {
 				Actor_Set_At_XYZ(kActorMcCoy, -15.53f, 0.33f, 73.49f, 954);
-				if (_vm->_cutContent) {
-					if (Player_Query_Agenda() != kPlayerAgendaSurly 
-					&& Player_Query_Agenda() != kPlayerAgendaErratic) {
-						Music_Play(kMusicBRBlues, 52, 0, 2, -1, kMusicLoopPlayOnce, 0);
-					}
-				}
 				if (!_vm->_cutContent) {
 					Actor_Modify_Friendliness_To_Other(kActorSteele, kActorMcCoy, 3);
 				}
@@ -441,6 +448,9 @@ void SceneScriptNR11::PlayerWalkedIn() {
 					Actor_Says_With_Pause(kActorSteele, 1730, 0.2f, 14); //01-1730.AUD	What’s this "her" crap? It’s an "it", remember? A goddamn machine.
 				}
 				Actor_Says(kActorSteele, 1740, 15); //01-1740.AUD	Come on, let’s blow while the getting's good.
+				if (_vm->_cutContent) {
+					Game_Flag_Reset(kFlagMcCoyIsHelpingReplicants);
+				}
 				Actor_Set_Goal_Number(kActorDektora, kGoalDektoraGone);
 				Actor_Put_In_Set(kActorDektora, kSetFreeSlotI);
 				Actor_Set_At_Waypoint(kActorDektora, 41, 0);

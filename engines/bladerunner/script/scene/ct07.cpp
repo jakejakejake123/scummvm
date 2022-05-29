@@ -96,6 +96,45 @@ void SceneScriptCT07::PlayerWalkedIn() {
 	Non_Player_Actor_Combat_Mode_On(kActorZuben, kActorCombatStateIdle, false, kActorMcCoy, 2, kAnimationModeCombatIdle, kAnimationModeCombatWalk, kAnimationModeCombatRun, 0, 0, 100, 15, 300, false);
 	Game_Flag_Set(kFlagCT07ZubenAttack);
 	Actor_Face_Actor(kActorMcCoy, kActorZuben, true);
+	if (_vm->_cutContent) {
+		if (Game_Flag_Query(kFlagMcCoyIsHelpingReplicants)	
+		&& !Game_Flag_Query(kFlagMcCoyShotAtZuben)) {
+			Delay(1000);
+			Non_Player_Actor_Combat_Mode_Off(kActorZuben);
+			Game_Flag_Reset(kFlagCT07ZubenAttack);
+			AI_Movement_Track_Flush(kActorZuben);
+			Actor_Modify_Friendliness_To_Other(kActorZuben, kActorMcCoy, 5);
+			Actor_Set_Goal_Number(kActorZuben, kGoalZubenCT07Spared);
+			Game_Flag_Set(kFlagCT01ZubenGone);
+			AI_Movement_Track_Flush(kActorZuben);
+			Actor_Face_Actor(kActorZuben, kActorMcCoy, true);
+			Music_Stop(3u);
+			Player_Set_Combat_Mode(false);
+			Actor_Says(kActorMcCoy, 455, -1); //00-0455.AUD	Relax. Nobody's gonna get retired. Okay?
+			Actor_Says(kActorZuben, 100, 19);
+			Actor_Says(kActorMcCoy, 470, 12); //00-0470.AUD	Just talk. That's all.
+			Actor_Says(kActorZuben, 110, 18);
+			Actor_Says(kActorMcCoy, 475, 12);
+			Actor_Says(kActorZuben, 120, 15);
+			Actor_Says(kActorMcCoy, 480, 16);
+			Actor_Says(kActorZuben, 130, 17);
+			Actor_Says(kActorMcCoy, 485, 14);
+			Game_Flag_Set(kFlagZubenSpared);
+			Game_Flag_Set(kFlagMcCoyIsHelpingReplicants);
+			Actor_Modify_Friendliness_To_Other(kActorSteele, kActorMcCoy, -2);
+			Actor_Modify_Friendliness_To_Other(kActorGuzza, kActorMcCoy, -2);
+			Actor_Modify_Friendliness_To_Other(kActorClovis, kActorMcCoy, 2);
+			Actor_Set_Goal_Number(kActorGordo, kGoalGordoCT05WalkThrough);
+		}
+		if (Random_Query(1, 3) < 3) {
+			Actor_Clue_Acquire(kActorZuben, kClueMcCoysDescription, true, -1);
+		}
+		if (Random_Query(1, 5) < 5) {
+			Actor_Clue_Acquire(kActorZuben, kClueMcCoyIsABladeRunner, true, -1);
+		}
+		Actor_Clue_Acquire(kActorZuben, kClueMcCoyLetZubenEscape, true, -1);
+		Actor_Set_Goal_Number(kActorZuben, kGoalZubenCT07RunToFreeSlotA);
+	}
 }
 
 void SceneScriptCT07::PlayerWalkedOut() {

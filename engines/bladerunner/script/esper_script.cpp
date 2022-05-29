@@ -304,7 +304,15 @@ bool ESPERScript::SCRIPT_ESPER_DLL_Special_Region_Selected(int photo, int region
 				Actor_Clue_Acquire(kActorMcCoy, kClueEarlyQAndLucy, true, -1);
 			}
 		} else if (region == 7) {
-			Actor_Voice_Over(4190, kActorVoiceOver);
+			if (_vm->_cutContent) {
+				if (Game_Flag_Query(kFlagAR02ScorpionsChecked)) {
+					Actor_Voice_Over(4190, kActorVoiceOver);
+				} else {
+					Actor_Says(kActorMcCoy, 6975, kAnimationModeTalk);
+				}
+			} else {
+				Actor_Voice_Over(4190, kActorVoiceOver);
+			}
 			if (!Actor_Clue_Query(kActorMcCoy, kClueScorpionbox)) {
 				Actor_Says(kActorMcCoy, 6945, 3);
 				Sound_Play(kSfxBR034_1A, 50, 0, 0, 50);
@@ -346,7 +354,9 @@ bool ESPERScript::SCRIPT_ESPER_DLL_Special_Region_Selected(int photo, int region
 			Actor_Voice_Over(4180, kActorVoiceOver); //99-4180.AUD	Scorpions.
 			//Added in some dialogue.
 			if (_vm->_cutContent) {
-				Actor_Voice_Over(4200, kActorVoiceOver); //99-4200.AUD	Where have I seen those before?
+				if (Game_Flag_Query(kFlagAR02ScorpionsChecked)) {
+					Actor_Voice_Over(4200, kActorVoiceOver); //99-4200.AUD	Where have I seen those before?
+				}
 			}
 			if (!Actor_Clue_Query(kActorMcCoy, kClueScorpions)) {
 				Actor_Says(kActorMcCoy, 6945, 3);			

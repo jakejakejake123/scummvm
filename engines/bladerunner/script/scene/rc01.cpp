@@ -79,11 +79,6 @@ void SceneScriptRC01::InitializeScene() {
 	Ambient_Sounds_Add_Looping_Sound(kSfxCTRAIN1, 30, 0, 1);
 
 	if (!Game_Flag_Query(kFlagRC01PoliceDone)) {
-		if (_vm->_cutContent) {
-			Ambient_Sounds_Add_Looping_Sound(kSfxRCTALK1, 30, 0, 1);
-			Ambient_Sounds_Add_Looping_Sound(kSfxRCTALK2, 30, 0, 1);
-			Ambient_Sounds_Add_Looping_Sound(kSfxRCTALK3, 30, 0, 1);
-		}
 		Ambient_Sounds_Add_Sound(kSfx67_0470R, 5, 70, 12, 12, -100, 100, -101, -101, 0, 0);
 		Ambient_Sounds_Add_Sound(kSfx67_0480R, 5, 70, 12, 12, -100, 100, -101, -101, 0, 0);
 		Ambient_Sounds_Add_Sound(kSfx67_0500R, 5, 70, 12, 12, -100, 100, -101, -101, 0, 0);
@@ -292,13 +287,13 @@ bool SceneScriptRC01::ClickedOn3DObject(const char *objectName, bool a2) {
 				// are now all placed in door forced 2. Door forced 1 will now be the cut lines of McCoy commenting on Sebastians broken door.
 				if (_vm->_cutContent) {
 					Actor_Voice_Over(1870, kActorVoiceOver); //99-1870.AUD	Whoever did it showed some serious strength. They busted the lock clean off.
+					Actor_Clue_Acquire(kActorMcCoy, kClueDoorForced2, true, -1);
 					if (Actor_Query_Friendliness_To_Other(kActorOfficerLeary, kActorMcCoy) > 49) {
 					   Actor_Face_Actor(kActorMcCoy, kActorOfficerLeary, true);
 					   Actor_Says(kActorOfficerLeary, 180, 14); //23-0180.AUD	Gaff said you didn't need to hear this, but I guess you deserve to know.
 					   Actor_Says(kActorMcCoy, 2635, 18); //00-2635.AUD	I’m all ears.. 
 					   Actor_Says(kActorOfficerLeary, 0, 12); //23-0000.AUD	I already checked for a crowbar or some kind of tool. No luck but it looks like we've got some latents. 
 				       Actor_Says(kActorMcCoy, 4495, 13); //00-4495.AUD	Make sure the lab boys run them through the mainframe. Human and Rep.
-				       Actor_Clue_Acquire(kActorMcCoy, kClueDoorForced2, true, kActorOfficerLeary);
 					}
 				} else { 
 					Actor_Says(kActorOfficerLeary, 0, 12);
@@ -405,10 +400,10 @@ bool SceneScriptRC01::ClickedOnActor(int actorId) {
 				// Jake - Made it so once Leary has shared what he learned from the crowd his banter dialogoue about not find anything is little different.
 				// It will add a bit more variety.
 				} else if (_vm->_cutContent) { 
-				 	if (Actor_Query_Friendliness_To_Other(kActorOfficerLeary, kActorMcCoy) < 48) {
+				 	if (Actor_Query_Friendliness_To_Other(kActorOfficerLeary, kActorMcCoy) < 50) {
 						Actor_Says(kActorOfficerLeary, 160, 19); //23-0160.AUD	Zero that would interest you, detective.
-						Actor_Says(kActorMcCoy, 8320, 13); //00-8320.AUD	Really?
-						Actor_Says(kActorOfficerLeary, 150, 19); //23-0150.AUD	I've hit a brick, McCoy. You're running this investigation, right?
+						Actor_Says(kActorMcCoy, 4180, 14); //00-4180.AUD	You sure?
+						Actor_Says(kActorOfficerLeary, 150, 16); //23-0150.AUD	I've hit a brick, McCoy. You're running this investigation, right?
 					} else {
 						Actor_Says(kActorOfficerLeary, 90, 16);
 						I_Sez("JM: This officer has a talent for vivid metaphors.");
@@ -439,24 +434,25 @@ bool SceneScriptRC01::ClickedOnActor(int actorId) {
 				Actor_Says(kActorMcCoy, 4515, 13);
 				Game_Flag_Set(kFlagRC01McCoyAndOfficerLearyTalking);
 				if (_vm->_cutContent) { 
-					if (Actor_Query_Friendliness_To_Other(kActorOfficerLeary, kActorMcCoy) < 48) {
+					if (Actor_Query_Friendliness_To_Other(kActorOfficerLeary, kActorMcCoy) < 50) {
 						Actor_Says(kActorOfficerLeary, 160, 19); //23-0160.AUD	Zero that would interest you, detective.
-						Actor_Says(kActorMcCoy, 8320, 13); //00-8320.AUD	Really?
-						Actor_Says(kActorOfficerLeary, 150, 19); //23-0150.AUD	I've hit a brick, McCoy. You're running this investigation, right?
+						Actor_Says(kActorMcCoy, 4180, 14); //00-4180.AUD	You sure?
+						Actor_Says(kActorOfficerLeary, 150, 16); //23-0150.AUD	I've hit a brick, McCoy. You're running this investigation, right?
 					} else {
 						Actor_Says(kActorOfficerLeary, 40, 13);
 						Actor_Says(kActorOfficerLeary, 50, 14);
 						Actor_Says(kActorOfficerLeary, 60, 15);
-						if (_vm->_cutContent) {
-							Actor_Clue_Acquire(kActorMcCoy, kClueOfficersStatement, true, kActorOfficerLeary);
-						}
+						Actor_Clue_Acquire(kActorMcCoy, kClueOfficersStatement, true, kActorOfficerLeary);
 						if (!Game_Flag_Query(kFlagRC02Entered)) {	
 							I_Sez("MG: It's all fun and games until someone loses a tiger cub.");
-							Actor_Says(kActorMcCoy, 4520, 18);
-							Actor_Says(kActorOfficerLeary, 70, 16);
-							Actor_Says(kActorMcCoy, 4525, 14);
-							Actor_Says(kActorOfficerLeary, 80, 18);
-							Actor_Says(kActorMcCoy, 4530, 15);
+							if (Player_Query_Agenda() != kPlayerAgendaSurly 
+							&& Player_Query_Agenda() != kPlayerAgendaErratic) {
+								Actor_Says(kActorMcCoy, 4520, 18);
+								Actor_Says(kActorOfficerLeary, 70, 16);
+								Actor_Says(kActorMcCoy, 4525, 14);
+								Actor_Says(kActorOfficerLeary, 80, 18);
+								Actor_Says(kActorMcCoy, 4530, 15);
+							}
 							if (!_vm->_cutContent) {
 								Actor_Clue_Acquire(kActorMcCoy, kClueOfficersStatement, true, kActorOfficerLeary);
 							}
@@ -513,17 +509,17 @@ bool SceneScriptRC01::ClickedOnItem(int itemId, bool a2) {
 					Item_Remove_From_World(kItemChromeDebris);
 					Item_Pickup_Spin_Effect(kModelAnimationChromeDebris, 426, 316);
 					I_Sez("JM: Chrome...is that what that is?");
-					Actor_Says(kActorMcCoy, 4505, -1);
+					Actor_Says(kActorMcCoy, 4505, 13);
 					// Jake - Added in a line where Leary is annoyed at McCoy for him being condescending towards him. 
 					Actor_Says(kActorOfficerLeary, 30, 14);
 					Actor_Face_Actor(kActorMcCoy, kActorOfficerLeary, true);
 					if (Player_Query_Agenda() == kPlayerAgendaSurly 
 					|| Player_Query_Agenda() == kPlayerAgendaErratic) {
-						Actor_Says(kActorMcCoy, 4510, 13); //00-4510.AUD	No, I think it's horse chrome. Bag it and tag it.
+						Actor_Says(kActorMcCoy, 4510, 14); //00-4510.AUD	No, I think it's horse chrome. Bag it and tag it.
 						Actor_Says(kActorOfficerLeary, 170, 13); //23-0170.AUD	You ain't talking to some flunky, McCoy.
-						Actor_Modify_Friendliness_To_Other(kActorOfficerLeary, kActorMcCoy, -5);
+						Actor_Modify_Friendliness_To_Other(kActorOfficerLeary, kActorMcCoy, -2);
 					} else {
-						Actor_Says(kActorMcCoy, 8535, 19); //00-8535.AUD	Yeah.
+						Actor_Says(kActorMcCoy, 1025, 13);
 						Delay (500);
 						Actor_Says(kActorMcCoy, 5310, 11); //00-5310.AUD	You spot anything you think I ought to know about, tell me.
 					}

@@ -147,6 +147,7 @@ bool SceneScriptCT05::ClickedOnItem(int itemId, bool a2) {
 				Actor_Clue_Acquire(kActorMcCoy, kClueZubenIncept, true, kActorZuben);
 				Item_Pickup_Spin_Effect(kModelAnimationPhoto, 461, 319);
 				Item_Remove_From_World(kItemNote);
+				Actor_Voice_Over(4080, kActorVoiceOver);
 				return true;
 			}			
 		}	
@@ -253,9 +254,8 @@ void SceneScriptCT05::PlayerWalkedIn() {
 		Game_Flag_Reset(kFlagCT06toCT05);
 		Footstep_Sound_Override_Off();
 		if (_vm->_cutContent) {
-			if (Actor_Query_Goal_Number(kActorGordo) == kGoalGordoCT01Left
-			 && Game_Flag_Query(kFlagZubenRetired)
-			 && !Actor_Clue_Query(kActorMcCoy, kClueGaffsInformation) 
+			if (Game_Flag_Query(kFlagZubenRetired)
+			&& !Actor_Clue_Query(kActorMcCoy, kClueGaffsInformation) 
 			) {
 				Actor_Set_Goal_Number(kActorGordo, kGoalGordoCT05WalkThrough);
 			}

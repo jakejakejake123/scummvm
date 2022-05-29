@@ -131,7 +131,6 @@ void SceneScriptNR06::PlayerWalkedIn() {
 		Loop_Actor_Walk_To_XYZ(kActorMcCoy, -81.72f, 0.12f, -323.49f, 0, false, false, false);
 		Actor_Face_Heading(kActorMcCoy, 600, false);
 		Loop_Actor_Travel_Stairs(kActorMcCoy, 8, false, kAnimationModeIdle);
-		Game_Flag_Reset(kFlagNR08toNR06);
 	}
 	//return false;
 }

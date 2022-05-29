@@ -86,7 +86,11 @@ bool SceneScriptTB06::ClickedOnActor(int actorId) {
 					Actor_Voice_Over(2340, kActorVoiceOver);
 				}
 				Actor_Voice_Over(2350, kActorVoiceOver);
-				Actor_Clue_Acquire(kActorMcCoy, kClueDetonatorWire, true, -1);
+				if (_vm->_cutContent) {
+					Actor_Clue_Acquire(kActorMcCoy, kClueDetonatorWire, true, kActorMarcus);
+				} else {
+					Actor_Clue_Acquire(kActorMcCoy, kClueDetonatorWire, true, -1);
+				}
 			} else if (_vm->_cutContent) {
 				if (Player_Query_Agenda() == kPlayerAgendaSurly 
 				|| Player_Query_Agenda() == kPlayerAgendaErratic) {
@@ -236,36 +240,36 @@ void SceneScriptTB06::PlayerWalkedIn() {
 			Actor_Face_Actor(kActorMcCoy, kActorPhotographer, true);
 			Actor_Face_Actor(kActorPhotographer, kActorMcCoy, true);
 			Actor_Says(kActorPhotographer, 0, kAnimationModeTalk); //37-0000.AUD	I've seen worse but not by much.
-			Actor_Says(kActorMcCoy, 5295, kAnimationModeTalk); //00-5295.AUD	Learn anything?
-			// Added in some dialogue for the photographer.
 			if (_vm->_cutContent) {
-				AI_Movement_Track_Pause(kActorPhotographer);
-				Actor_Says(kActorPhotographer, 50, kAnimationModeTalk); //37-0050.AUD	Yeah, I dug up a couple of leads, let me clue you in.
-				Actor_Says(kActorMcCoy, 2635, 18); //00-2635.AUD	I’m all ears.
-				Actor_Says(kActorPhotographer, 90, kAnimationModeTalk); //37-0090.AUD	Gaff said you didn't need to hear this but I guess you deserve to know.
-				Actor_Says(kActorMcCoy, 4940, 13); //00-4940.AUD	Okay, let's have it.
-			}
-			Actor_Face_Actor(kActorPhotographer, kActorMarcus, true);
-			Actor_Says(kActorPhotographer, 10, kAnimationModeTalk); //37-0010.AUD	You could strain him through a sieve.
-			if (_vm->_cutContent) {
-				AI_Movement_Track_Pause(kActorPhotographer);
-				Actor_Face_Actor(kActorPhotographer, kActorMcCoy, true);
-				Delay (1000);
-				Actor_Face_Actor(kActorMcCoy, kActorMarcus, true);
-				Delay (2000);
-				Actor_Face_Actor(kActorMcCoy, kActorPhotographer, true);
-				// Depending on McCoys agenda he will be a little more disgusted to the tastless joke that the photograher makes about Eisenduller.
-				if (Player_Query_Agenda() == kPlayerAgendaSurly
+				if (Player_Query_Agenda() == kPlayerAgendaSurly 
 				|| Player_Query_Agenda() == kPlayerAgendaErratic) {
-					// McCoy doesn't care.
-					Actor_Says(kActorMcCoy, 2685, kAnimationModeTalk); //00-2685.AUD	Hmph. Very funny.
-				} else {
-					// McCoy annoyed.
+					Actor_Says(kActorMcCoy, 6985, 16); //00-6985.AUD	Got the straight scoop for me or what?
+					Delay(2000);
+					Actor_Says(kActorPhotographer, 50, kAnimationModeTalk); //37-0050.AUD	Yeah, I dug up a couple of leads, let me clue you in.
+					Actor_Says(kActorMcCoy, 6990, 18); //00-6990.AUD	Enlighten me.
+					Actor_Says(kActorPhotographer, 90, kAnimationModeTalk); //37-0090.AUD	Gaff said you didn't need to hear this but I guess you deserve to know.
+					Actor_Says(kActorMcCoy, 4940, 13); //00-4940.AUD	Okay, let's have it.
+					Actor_Says(kActorPhotographer, 10, kAnimationModeTalk); //37-0010.AUD	You could strain him through a sieve.
+					AI_Movement_Track_Pause(kActorPhotographer);
+					Actor_Face_Actor(kActorPhotographer, kActorMcCoy, true);
+					Delay(1000);
+					Actor_Face_Actor(kActorMcCoy, kActorMarcus, true);
+					Delay(2000);
+					Actor_Face_Actor(kActorMcCoy, kActorPhotographer, true);
+					Delay(2000);
 					Actor_Says(kActorMcCoy, 665, 16); //00-0665.AUD	Real funny, pal.
+					Actor_Says(kActorMcCoy, 4130, kAnimationModeTalk); //00-4130.AUD	Anything else?
+					Actor_Says(kActorPhotographer, 60, kAnimationModeTalk); //37-0060.AUD	I've hit a brick, McCoy. You're running this investigation, right?
+					AI_Movement_Track_Unpause(kActorPhotographer);
+				} else {
+					Actor_Says(kActorMcCoy, 5295, kAnimationModeTalk); //00-5295.AUD	Learn anything?
+					Actor_Says(kActorPhotographer, 70, kAnimationModeTalk); //37-0070.AUD	Zero that would interest you, detective.
+					AI_Movement_Track_Unpause(kActorPhotographer);
 				}
-				Delay (500);
-				Actor_Says(kActorMcCoy, 4130, kAnimationModeTalk); //00-4130.AUD	Anything else?
-				Actor_Says(kActorPhotographer, 70, kAnimationModeTalk); //37-0070.AUD	Zero that would interest you, detective.
+			} else {
+				Actor_Says(kActorMcCoy, 5295, kAnimationModeTalk); //00-5295.AUD	Learn anything?
+				Actor_Face_Actor(kActorPhotographer, kActorMarcus, true);
+				Actor_Says(kActorPhotographer, 10, kAnimationModeTalk); //37-0010.AUD	You could strain him through a sieve.
 				AI_Movement_Track_Unpause(kActorPhotographer);
 			}
 		}

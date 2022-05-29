@@ -120,6 +120,7 @@ bool SceneScriptUG07::ClickedOnExit(int exitId) {
 		 &&  Game_Flag_Query(kFlagUG18GuzzaScene)
 		 &&  Global_Variable_Query(kVariableChapter) == 4
 		 && !Game_Flag_Query(kFlagUG07ClovisCaughtMcCoy)
+		 && (Actor_Query_Friendliness_To_Other(kActorClovis, kActorMcCoy) < 51)
 		) {
 			if (!Loop_Actor_Walk_To_XYZ(kActorMcCoy, 49.0f, -12.21f, -130.0f, 0, true, false, false)) {
 				Game_Flag_Set(kFlagUG07ClovisCaughtMcCoy);

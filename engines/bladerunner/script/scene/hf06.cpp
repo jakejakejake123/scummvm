@@ -312,6 +312,7 @@ void SceneScriptHF06::steelInterruption() {
 				) {
 					Actor_Face_Actor(kActorDektora, kActorMcCoy, true);
 					Actor_Says(kActorDektora, 210, 12); //03-0210.AUD	Can you get it working?
+					Actor_Face_Actor(kActorMcCoy, kActorDektora, true);
 					Actor_Says(kActorMcCoy, 2125, 12); //00-2125.AUD	Ah, we’ll have to find something else. Maybe a ground car.
 					Game_Flag_Set(kFlagHF06SteelInterruption);
 				}			
@@ -331,6 +332,7 @@ void SceneScriptHF06::steelInterruption() {
 				) {
 					Actor_Face_Actor(kActorLucy, kActorMcCoy, true);
 					Actor_Says(kActorLucy, 490, 18); //06-0490.AUD	Can you get it working?
+					Actor_Face_Actor(kActorMcCoy, kActorLucy, true);
 					Actor_Says(kActorMcCoy, 2125, 12); //00-2125.AUD	Ah, we’ll have to find something else. Maybe a ground car.
 					Game_Flag_Set(kFlagHF06SteelInterruption);
 				}
@@ -348,15 +350,17 @@ void SceneScriptHF06::steelInterruption() {
 				Actor_Set_At_XYZ(kActorSteele, 92.0f, 367.93f, 19.0f, 0);
 				Actor_Set_Targetable(kActorSteele, true);
 				Actor_Face_Actor(actorId, kActorSteele, true);
+				Actor_Face_Actor(kActorMcCoy, kActorDektora, true);
 				// If Dektora is a human she will say Ray in a terrified tone. If she is a rep she is shocked into silence.
 				if (actorId == kActorDektora) {
 					if (!Game_Flag_Query(kFlagDektoraIsReplicant)) {
 						Actor_Says(kActorDektora, 90, 13);
+						Actor_Says(kActorMcCoy, 6230, 0);
 					} else {
-						Delay (2000);
+						Delay (1000);
+						Actor_Says(kActorMcCoy, 2755, 13);
 					}
 				}
-				Actor_Says(kActorMcCoy, 6230, 0);
 				Actor_Says(kActorSteele, 280, 58);
 				Actor_Face_Actor(kActorMcCoy, kActorSteele, true);
 				Player_Set_Combat_Mode(true);
@@ -371,13 +375,19 @@ void SceneScriptHF06::steelInterruption() {
 					// This line will only be said if your companion is a replicant.
 					Actor_Says(kActorSteele, 290, 58); //01-0290.AUD	Thanks for bringing her here. Makes my end a hell of a lot easier.
 				}
-				Actor_Says(kActorMcCoy, 2130, -1); //00-2130.AUD	You’re the coldest person I’ve ever seen when it comes to killing.
-				Actor_Says(kActorSteele, 300, 59); //01-0300.AUD	I’ll take that as a compliment.
+				if (Player_Query_Agenda() != kPlayerAgendaSurly 
+				&& Player_Query_Agenda() != kPlayerAgendaErratic) {
+					Actor_Says(kActorMcCoy, 2130, -1); //00-2130.AUD	You’re the coldest person I’ve ever seen when it comes to killing.
+					Actor_Says(kActorSteele, 300, 59); //01-0300.AUD	I’ll take that as a compliment.
+				}
 				Actor_Says(kActorMcCoy, 2135, -1); //00-2135.AUD	How did it feel to kill an innocent animal.
 				if (!Game_Flag_Query(kFlagMcCoyIsInnocent)) {
 					// If McCoy proved his innocence therefore showing he is not a rep Crystal won't accuse him of being a rep.
 					Actor_Says(kActorSteele, 310, 60); //01-0310.AUD	Wake up, Slim. The mutt was a Replicant. Just like its master.
-					Actor_Says(kActorMcCoy, 2140, -1); //00-2140.AUD	Bullshit.
+					if (Player_Query_Agenda() == kPlayerAgendaSurly 
+					|| Player_Query_Agenda() == kPlayerAgendaErratic) {
+						Actor_Says(kActorMcCoy, 2140, -1); //00-2140.AUD	Bullshit.
+					}
 					Actor_Says(kActorSteele, 320, 59); //01-0320.AUD	You’re more confused than the damn dog was when I pulled the plug.
 					Actor_Says(kActorMcCoy, 2145, -1); //00-2145.AUD	She was real, Steele. No two ways about it.
 				}
@@ -415,6 +425,7 @@ void SceneScriptHF06::steelInterruption() {
 				Actor_Set_Targetable(kActorSteele, true);
 				Actor_Face_Actor(actorId, kActorSteele, true);
 				Actor_Says(kActorLucy, 380, 13);
+				Actor_Face_Actor(kActorMcCoy, kActorLucy, true);
 				Actor_Says(kActorMcCoy, 6230, 0);
 				Actor_Says(kActorSteele, 280, 58);
 				Actor_Face_Actor(kActorMcCoy, kActorSteele, true);
@@ -429,12 +440,19 @@ void SceneScriptHF06::steelInterruption() {
 				if (Game_Flag_Query(kFlagLucyIsReplicant)) {
 					Actor_Says(kActorSteele, 290, 58); ////01-0290.AUD	Thanks for bringing her here. Makes my end a hell of a lot easier.
 				}
-				Actor_Says(kActorMcCoy, 2130, -1); //00-2130.AUD	You’re the coldest person I’ve ever seen when it comes to killing.
-				Actor_Says(kActorSteele, 300, 59); //01-0300.AUD	I’ll take that as a compliment.
+				if (Player_Query_Agenda() != kPlayerAgendaSurly 
+				&& Player_Query_Agenda() != kPlayerAgendaErratic) {
+					Actor_Says(kActorMcCoy, 2130, -1); //00-2130.AUD	You’re the coldest person I’ve ever seen when it comes to killing.
+					Actor_Says(kActorSteele, 300, 59); //01-0300.AUD	I’ll take that as a compliment.
+				}
 				Actor_Says(kActorMcCoy, 2135, -1); //00-2135.AUD	How did it feel to kill an innocent animal.
 				if (!Game_Flag_Query(kFlagMcCoyIsInnocent)) {
+					// If McCoy proved his innocence therefore showing he is not a rep Crystal won't accuse him of being a rep.
 					Actor_Says(kActorSteele, 310, 60); //01-0310.AUD	Wake up, Slim. The mutt was a Replicant. Just like its master.
-					Actor_Says(kActorMcCoy, 2140, -1); //00-2140.AUD	Bullshit.
+					if (Player_Query_Agenda() == kPlayerAgendaSurly 
+					|| Player_Query_Agenda() == kPlayerAgendaErratic) {
+						Actor_Says(kActorMcCoy, 2140, -1); //00-2140.AUD	Bullshit.
+					}
 					Actor_Says(kActorSteele, 320, 59); //01-0320.AUD	You’re more confused than the damn dog was when I pulled the plug.
 					Actor_Says(kActorMcCoy, 2145, -1); //00-2145.AUD	She was real, Steele. No two ways about it.
 				}

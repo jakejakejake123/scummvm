@@ -117,6 +117,9 @@ void SceneScriptPS14::ActorChangedGoal(int actorId, int newGoal, int oldGoal, bo
 }
 
 void SceneScriptPS14::PlayerWalkedIn() {
+	if (_vm->_cutContent) {
+		Music_Stop(3u);
+	}
 	if (Game_Flag_Query(kFlagMA07toPS14)) {
 		if (_vm->_cutContent) {
 			if (Game_Flag_Query(kFlagUG18GuzzaScene)) {

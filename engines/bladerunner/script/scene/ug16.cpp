@@ -236,7 +236,6 @@ void SceneScriptUG16::PlayerWalkedIn() {
 		Actor_Change_Animation_Mode(kActorLuther, 17);
 		if (_vm->_cutContent) {
 			Actor_Says(kActorMcCoy, 755, 18);
-			Actor_Face_Actor(kActorLuther, kActorMcCoy, true);
 		}
 		Actor_Says(kActorLance, 0, 17); //13-0000.AUD	Hey, it’s about time you showed up.
 		Actor_Says(kActorMcCoy, 5710, 14);
@@ -355,7 +354,7 @@ void SceneScriptUG16::dialogueWithLuther() {
 			if (Game_Flag_Query(kFlagMorajiAlive)) { 
 				Actor_Says(kActorMcCoy, 785, 13);//00-0785.AUD	There could be a group of Nexus-6s tracking down genetic designers.
 				if (Player_Query_Agenda() != kPlayerAgendaSurly 
-				|| Player_Query_Agenda() != kPlayerAgendaErratic) {
+				&& Player_Query_Agenda() != kPlayerAgendaErratic) {
 					Actor_Says(kActorMcCoy, 790, 13);//00-0790.AUD	You might consider knocking off work early.
 				}
 				// Made it so McCoy will not mention the reps killing Eisenduller and Moraji if Moraji survived the explosion.
@@ -363,7 +362,7 @@ void SceneScriptUG16::dialogueWithLuther() {
 			} else {
 				Actor_Says(kActorMcCoy, 5730, 13); //00-5730.AUD	The Reps that killed Marcus and Moraji. They’ll be looking for you.
 				if (Player_Query_Agenda() != kPlayerAgendaSurly 
-				|| Player_Query_Agenda() != kPlayerAgendaErratic) {
+				&& Player_Query_Agenda() != kPlayerAgendaErratic) {
 					Actor_Says(kActorMcCoy, 790, 13);//00-0790.AUD	You might consider knocking off work early.
 				}
 			}
@@ -385,18 +384,34 @@ void SceneScriptUG16::dialogueWithLuther() {
 		}
 		Actor_Says(kActorMcCoy, 5780, 13); //00-5780.AUD	You’re saying you are Replicants?
 		Actor_Says(kActorLuther, 120, 16);
-		Actor_Says(kActorLance, 120, 13);
-		Actor_Says(kActorMcCoy, 5785, 13);
-		Actor_Says(kActorLuther, 130, 6);
-		Actor_Says(kActorMcCoy, 5825, 13);
+		Actor_Says(kActorLance, 120, 13); //13-0120.AUD	Clovis helped us see the light.
+		if (_vm->_cutContent) {
+			if (Player_Query_Agenda() == kPlayerAgendaSurly 
+			|| Player_Query_Agenda() == kPlayerAgendaErratic) {
+				Actor_Says(kActorMcCoy, 5785, 13); //00-5785.AUD	But that’s ridiculous. Tyrell wouldn’t design something like you. He wants perfection.
+				Actor_Says(kActorLuther, 130, 6); //10-0130.AUD	I told you we were a mistake.
+			}
+		} else {
+			Actor_Says(kActorMcCoy, 5785, 13); //00-5785.AUD	But that’s ridiculous. Tyrell wouldn’t design something like you. He wants perfection.
+			Actor_Says(kActorLuther, 130, 6); //10-0130.AUD	I told you we were a mistake.
+		}
+		Actor_Says(kActorMcCoy, 5825, 13); //00-5825.AUD	Keep talking.
 		Actor_Modify_Friendliness_To_Other(kActorLuther, kActorMcCoy, -5);
 		if (Game_Flag_Query(kFlagLutherLanceIsReplicant)) {
 			Actor_Says(kActorLuther, 140, 13);
 			Actor_Says(kActorLuther, 150, 14);
 			Actor_Says(kActorLuther, 160, 13);
 			Actor_Says(kActorLance, 140, 16);
-			Actor_Says(kActorMcCoy, 5790, 13);
-			Actor_Says(kActorLuther, 170, 14);
+			if (_vm->_cutContent) {
+				if (Player_Query_Agenda() != kPlayerAgendaSurly 
+				&& Player_Query_Agenda() != kPlayerAgendaErratic) {
+					Actor_Says(kActorMcCoy, 5790, 13); //00-5790.AUD	Maybe one of you just forgot.
+					Actor_Says(kActorLuther, 170, 14);
+				}
+			} else {
+				Actor_Says(kActorMcCoy, 5790, 13); 
+				Actor_Says(kActorLuther, 170, 14);
+			}
 			Game_Flag_Set(kFlagUG16LutherLanceTalkReplicants);
 			Actor_Modify_Friendliness_To_Other(kActorLuther, kActorMcCoy, 5);
 			// Gave McCoy the ability to shoot the twins once they say they are replicants.
@@ -407,8 +422,16 @@ void SceneScriptUG16::dialogueWithLuther() {
 			Actor_Says(kActorLuther, 180, 14);
 			Actor_Says(kActorMcCoy, 5795, 13);
 			Actor_Says(kActorLance, 150, 17);
-			Actor_Says(kActorMcCoy, 5800, 13);
-			Actor_Says(kActorLuther, 190, 15);
+			if (_vm->_cutContent) {
+				if (Player_Query_Agenda() != kPlayerAgendaSurly 
+				&& Player_Query_Agenda() != kPlayerAgendaErratic) {
+					Actor_Says(kActorMcCoy, 5800, 13); //00-5800.AUD	Photos can be doctored. It’s not proof.
+					Actor_Says(kActorLuther, 190, 15);
+				}
+			} else {
+				Actor_Says(kActorMcCoy, 5800, 13);  
+				Actor_Says(kActorLuther, 190, 15);
+			}
 			Game_Flag_Set(kFlagUG16LutherLanceTalkHumans);
 			Actor_Modify_Friendliness_To_Other(kActorLuther, kActorMcCoy, -10);
 			if (_vm->_cutContent) {
@@ -442,10 +465,17 @@ void SceneScriptUG16::dialogueWithLuther() {
 		Actor_Face_Actor(kActorMcCoy, kActorLuther, true);
 		Actor_Says(kActorLance, 180, 15);
 		Actor_Says(kActorLuther, 220, 13);
-		Actor_Says(kActorLance, 190, 17);
-		Actor_Says(kActorMcCoy, 5805, 13);
-		Actor_Says(kActorLuther, 230, 14);
-		Actor_Says(kActorLuther, 240, 13);
+		Actor_Says(kActorLance, 190, 17); //13-0190.AUD	We got the research right here that will prove it.
+		if (_vm->_cutContent) {
+			if (Game_Flag_Query(kFlagMcCoyIsHelpingReplicants)) {
+				Actor_Says(kActorMcCoy, 5805, 13); //00-5805.AUD	Is it complete? Could you extend the life of a Replicant right now?
+				Actor_Says(kActorLuther, 230, 14); //10-0230.AUD	Well, no. The four year limit is an integral part of every element of the Replicant.
+			}
+		} else {
+			Actor_Says(kActorMcCoy, 5805, 13); //00-5805.AUD	Is it complete? Could you extend the life of a Replicant right now?
+			Actor_Says(kActorLuther, 230, 14); //10-0230.AUD	Well, no. The four year limit is an integral part of every element of the Replicant.
+		}
+		Actor_Says(kActorLuther, 240, 13); //10-0240.AUD	Tyrell’s dictate was that every body part would fail. And only the designer’s of each would know exactly how it worked.
 		Actor_Says(kActorLance, 200, 17);
 		Actor_Says(kActorLuther, 260, 13);
 		Actor_Says(kActorLuther, 270, 15);
@@ -471,25 +501,26 @@ void SceneScriptUG16::dialogueWithLuther() {
 		}
 		if (_vm->_cutContent) {
 			Actor_Says(kActorLuther, 280, 15); //10-0280.AUD	We showed him how to get in through the basement.
+			Actor_Clue_Acquire(kActorMcCoy, kClueSightingClovis, true, kActorLuther);
 		}
-		Actor_Says(kActorMcCoy, 5815, 13); //00-5815.AUD	He’ll kill Tyrell, if he gets to him.
-		// Made it so if the twins are replicants the have no remorse in regards to Clovis trying to kill Tyrell. If they are human Clovis' lied about his intentions and the twins believe
-		// that Clovis won't kill Tyrell.
 		if (_vm->_cutContent) {
-			if (Game_Flag_Query(kFlagLutherLanceIsReplicant)) {
-				Actor_Says(kActorLance, 250, 16);
-				Actor_Says(kActorLuther, 290, 15);
-				Actor_Says(kActorLance, 260, 15);
-			} else {
-				Actor_Says(kActorLuther, 190, 15);	//10-0190.AUD	Clovis said you’d say that.
+			if (Player_Query_Agenda() != kPlayerAgendaSurly 
+			&& Player_Query_Agenda() != kPlayerAgendaErratic) {
+				Actor_Says(kActorMcCoy, 5815, 13); //00-5815.AUD	He’ll kill Tyrell, if he gets to him.
+				// Made it so if the twins are replicants the have no remorse in regards to Clovis trying to kill Tyrell. If they are human Clovis' lied about his intentions and the twins believe
+				// that Clovis won't kill Tyrell.
+				if (Game_Flag_Query(kFlagLutherLanceIsReplicant)) {
+					Actor_Says(kActorLance, 250, 16);
+					Actor_Says(kActorLuther, 290, 15);
+					Actor_Says(kActorLance, 260, 15);
+				} else {
+					Actor_Says(kActorLuther, 190, 15);	//10-0190.AUD	Clovis said you’d say that.
+				}
 			}
 		} else {
 			Actor_Says(kActorLance, 250, 16);
 			Actor_Says(kActorLuther, 290, 15);
 			Actor_Says(kActorLance, 260, 15);
-		}
-		if (_vm->_cutContent) {
-			Actor_Clue_Acquire(kActorMcCoy, kClueSightingClovis, true, kActorLuther);
 		}
 		break;
 
@@ -503,6 +534,7 @@ void SceneScriptUG16::dialogueWithLuther() {
 				Actor_Says(kActorLuther, 310, 15); //10-0310.AUD	Let’s get back to work.
 			} else {
 				Actor_Says(kActorLuther, 90, 15); //10-0090.AUD	Can’t talk now.
+				Delay(1000);
 				Actor_Says(kActorLuther, 310, 15); //10-0310.AUD	Let’s get back to work.
 			}
 		} else {
@@ -538,8 +570,16 @@ void SceneScriptUG16::dialogueWithLuther() {
 			Actor_Says(kActorLuther, 350, 13); //10-0350.AUD	Still the work will go on with or without Clovis.
 		}
 		Actor_Says(kActorLuther, 360, 15); //10-0360.AUD	Get us Tyrell’s files. The rest of the DNA data. And we will help you.
-		Actor_Says(kActorMcCoy, 5830, 13);
-		Actor_Says(kActorLance, 320, 16);
+		if (_vm->_cutContent) {
+			if (Player_Query_Agenda() == kPlayerAgendaSurly 
+			|| Player_Query_Agenda() == kPlayerAgendaErratic) {
+				Actor_Says(kActorMcCoy, 5830, 13); 
+				Actor_Says(kActorLance, 320, 16);
+			}
+		} else {
+			Actor_Says(kActorMcCoy, 5830, 13); //00-5830.AUD	You want me to break into the Tyrell Building for you? You’re nuts.
+			Actor_Says(kActorLance, 320, 16);
+		}
 		Actor_Says(kActorLance, 330, 15);
 		Game_Flag_Set(kFlagUG15LanceLuthorTrade);
 		break;
@@ -554,13 +594,18 @@ void SceneScriptUG16::dialogueWithLuther() {
 			Actor_Says(kActorLance, 350, 14); //13-0350.AUD	So, I sold Runciter some of Tyrell’s state of the art animals.
 			Actor_Says(kActorLance, 360, 14); //13-0360.AUD	He was going to pawn them off as real.
 		}
-		Actor_Says(kActorMcCoy, 5835, 13); //00-5835.AUD	That probably had something to do with you guys getting fired.
-		Actor_Says(kActorLuther, 380, 15); //10-0380.AUD	I’m sure he wasn’t too pleased.
 		if (_vm->_cutContent) {
-			if (Game_Flag_Query(kFlagLutherLanceIsReplicant)) {
+			if (Player_Query_Agenda() != kPlayerAgendaSurly 
+			&& Player_Query_Agenda() != kPlayerAgendaErratic) {
+				Actor_Says(kActorMcCoy, 5835, 13); //00-5835.AUD	That probably had something to do with you guys getting fired.
+			} else {
+				Actor_Says(kActorMcCoy, 5835, 13); //00-5835.AUD	That probably had something to do with you guys getting fired.
 				Actor_Says(kActorLance, 370, 6); //13-0370.AUD	Since Eldon is such a pain in the ass control freak…
+				Actor_Says(kActorLuther, 380, 15); //10-0380.AUD	I’m sure he wasn’t too pleased.
 			}
 		} else {
+			Actor_Says(kActorMcCoy, 5835, 13); //00-5835.AUD	That probably had something to do with you guys getting fired.
+			Actor_Says(kActorLuther, 380, 15); //10-0380.AUD	I’m sure he wasn’t too pleased.
 			Actor_Says(kActorLance, 370, 6); //13-0370.AUD	Since Eldon is such a pain in the ass control freak…
 		}
 		Actor_Says(kActorMcCoy, 5840, 13);
@@ -584,6 +629,9 @@ void SceneScriptUG16::dialogueWithLuther() {
 		Actor_Says(kActorLuther, 390, 23);
 		Actor_Says(kActorLance, 410, 14);
 		Actor_Says(kActorLance, 420, 17); 
+		if (_vm->_cutContent) {
+			Loop_Actor_Walk_To_Actor(kActorMcCoy, kActorLuther, 24, true, false);
+		}
 #if BLADERUNNER_ORIGINAL_BUGS
 		// This quote is repeated (also used in RUNCITER question
 		// "That probably had something to do with you guys getting fired."
@@ -592,25 +640,21 @@ void SceneScriptUG16::dialogueWithLuther() {
 #endif // BLADERUNNER_ORIGINAL_BUGS
 		Delay(1000);
 		Item_Pickup_Spin_Effect(kModelAnimationFolder, 239, 454);
-		// Made it so you receive the original shipping form from the twins when they give you the folder.
-		if (_vm->_cutContent) {
-			Delay(2000);
-			Item_Pickup_Spin_Effect(kModelAnimationOriginalShippingForm, 239, 454);
-			Actor_Clue_Acquire(kActorMcCoy, kClueOriginalShippingForm, true, -1);
-			Delay(2000);
-		}
 		Actor_Voice_Over(2740, kActorVoiceOver);
 		Actor_Voice_Over(2750, kActorVoiceOver);
 		Actor_Voice_Over(2760, kActorVoiceOver);
-		Actor_Voice_Over(3430, kActorVoiceOver); //99-3430.AUD	The info I’d gotten from Luther and Lance finally made some sense.
-		Actor_Voice_Over(3440, kActorVoiceOver); //99-3440.AUD	The Reps must had found out about Guzza’s career's sidelines…
-		Actor_Voice_Over(3450, kActorVoiceOver); //99-3450.AUD	and pressured him to set me up in order to get me off their backs.
-		Actor_Voice_Over(3460, kActorVoiceOver); //99-3460.AUD	This nasty business he was only too willing to do.
-		Actor_Voice_Over(3470, kActorVoiceOver); //99-3470.AUD	But I wasn’t gonna eat crow that easily.
-		Actor_Voice_Over(2870, kActorVoiceOver); //99-2870.AUD	When my stomach stopped churning…
-		Actor_Voice_Over(2880, kActorVoiceOver); //99-2880.AUD	I realized I could use this to force the bastard to give me my life back.
-		Actor_Voice_Over(3490, kActorVoiceOver); //99-3490.AUD	It was time to have my own little fun with Guzza.
-		Actor_Voice_Over(3500, kActorVoiceOver); //99-3500.AUD	All I had to do was place a call and make the worm squirm.
+		if (_vm->_cutContent) {
+			Delay(2000);
+			Actor_Voice_Over(3430, kActorVoiceOver); //99-3430.AUD	The info I’d gotten from Luther and Lance finally made some sense.
+			Actor_Voice_Over(3440, kActorVoiceOver); //99-3440.AUD	The Reps must had found out about Guzza’s career's sidelines…
+			Actor_Voice_Over(3450, kActorVoiceOver); //99-3450.AUD	and pressured him to set me up in order to get me off their backs.
+			Actor_Voice_Over(3460, kActorVoiceOver); //99-3460.AUD	This nasty business he was only too willing to do.
+			Actor_Voice_Over(3470, kActorVoiceOver); //99-3470.AUD	But I wasn’t gonna eat crow that easily.
+			Actor_Voice_Over(2870, kActorVoiceOver); //99-2870.AUD	When my stomach stopped churning…
+			Actor_Voice_Over(2880, kActorVoiceOver); //99-2880.AUD	I realized I could use this to force the bastard to give me my life back.
+			Actor_Voice_Over(3490, kActorVoiceOver); //99-3490.AUD	It was time to have my own little fun with Guzza.
+			Actor_Voice_Over(3500, kActorVoiceOver); //99-3500.AUD	All I had to do was place a call and make the worm squirm.
+		}
 		Actor_Says(kActorMcCoy, 5850, 13); 
 		Actor_Says(kActorLuther, 400, 15); //10-0400.AUD	From Clovis. He told us to hold it for him.
 		if (_vm->_cutContent) {

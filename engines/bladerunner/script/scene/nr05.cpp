@@ -392,7 +392,6 @@ void SceneScriptNR05::talkToEarlyQ() {
 		// However if Early Q is human he will answer McCoys question about the jewelry, he won't even resist.
 		if (_vm->_cutContent) {
 			if (Game_Flag_Query(kFlagEarlyQIsReplicant)) { 
-				Actor_Modify_Friendliness_To_Other(kActorEarlyQ, kActorMcCoy, -1);
 				Actor_Says(kActorEarlyQ, 420, 12); //18-0420.AUD	Who’s asking?
 				Actor_Says(kActorEarlyQ, 430, 13); //18-0430.AUD	You ain’t with Robbery-Homicide.
 				Actor_Says(kActorMcCoy, 3530, 15); //00-3530.AUD	No, sir.
@@ -476,7 +475,14 @@ void SceneScriptNR05::talkToEarlyQ() {
 		Actor_Says(kActorMcCoy, 3550, 13);
 		Actor_Says(kActorEarlyQ, 560, 14); //18-0560.AUD	Nah, she ain’t one of mine.
 		Actor_Says(kActorEarlyQ, 570, 13); //18-0570.AUD	Talk to Taffy. He gets most of the peddy business around here.
-		Actor_Says(kActorMcCoy, 3555, 12);
+		if (_vm->_cutContent) {
+			if (Player_Query_Agenda() != kPlayerAgendaSurly
+			&& (Player_Query_Agenda() != kPlayerAgendaErratic)) {
+				Actor_Says(kActorMcCoy, 3555, 12);
+			}
+		} else {
+			Actor_Says(kActorMcCoy, 3555, 12);
+		}
 		Actor_Face_Heading(kActorEarlyQ, 849, false);
 		break;
 

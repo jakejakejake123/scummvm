@@ -159,9 +159,7 @@ bool AIScriptRachael::GoalChanged(int currentGoalNumber, int newGoalNumber) {
 		dialogue_start(); // "I remember you mr McCoy" till "I'm fine, thank you for asking."
 
 		// the structure is simplified (maintaining the same logic flow)
-		if ((Player_Query_Agenda() == kPlayerAgendaSurly || Player_Query_Agenda() == kPlayerAgendaErratic)
-			|| (Player_Query_Agenda() != kPlayerAgendaPolite && Actor_Query_Friendliness_To_Other(kActorSteele, kActorMcCoy) > Actor_Query_Friendliness_To_Other(kActorClovis, kActorMcCoy))
-		) {
+		if (!Game_Flag_Query(kFlagMcCoyIsHelpingReplicants)) {
 			dialogue_agenda2();
 		} else {
 			dialogue_agenda1();
@@ -424,10 +422,12 @@ void AIScriptRachael::dialogue_start() {
 		Actor_Says(kActorRachael, 20, 12);                  // NoneOfYourBusiness
 		if (Player_Query_Agenda() != kPlayerAgendaSurly 
 		&& Player_Query_Agenda() != kPlayerAgendaErratic) {
+			Music_Play(kMusicBRBlues, 52, 0, 2, -1, kMusicLoopPlayOnce, 1);
 			Actor_Says_With_Pause(kActorMcCoy, 2750, 1.5f, 3); // OkGetThePicture
 			Actor_Says(kActorMcCoy, 2755, 3);                  // AreYouAlrightALittlePale
 			Actor_Says(kActorRachael, 30, 13);                  // CertainlyHadBetterDaysInMyLifeButImFine
 			Actor_Says(kActorRachael, 40, 15);                  // ThankYouForAsking
+			Actor_Modify_Friendliness_To_Other(kActorRachael, kActorMcCoy, 2);
 		}
 	} else {
 		// original code -- un-triggered
@@ -570,6 +570,7 @@ void AIScriptRachael::dialogue_act4() {
 		Delay(500);
 		AI_Movement_Track_Pause(kActorRachael);
 		Actor_Face_Actor(kActorRachael, kActorMcCoy, true);
+		Music_Play(kMusicBRBlues, 52, 0, 2, -1, kMusicLoopPlayOnce, 1);
 	}
 	Actor_Says(kActorRachael, 320, 12);  //  McCoy
 	Actor_Says(kActorRachael, 330, 17);  //  RachaelRememberMe
@@ -582,9 +583,11 @@ void AIScriptRachael::dialogue_act4() {
 	Actor_Says(kActorRachael, 350, 3);   //  YesWhatHappened
 	Actor_Says(kActorMcCoy, 2880, 16);   //  Suddenly
 	Actor_Says(kActorMcCoy, 2885, 12);   //  MyAnimalMaggiePrizedPosessionDisappeared
-	Actor_Says(kActorRachael, 360, 3);   //  ImSorry
-	Actor_Says(kActorRachael, 370, 3);   //  IKnowTheFeeling
-	Actor_Says(kActorMcCoy, 2890, 18);   //  You do?
+	if (Actor_Query_Friendliness_To_Other(kActorRachael, kActorMcCoy) > 50) {
+		Actor_Says(kActorRachael, 360, 3);   //  ImSorry
+		Actor_Says(kActorRachael, 370, 3);   //  IKnowTheFeeling
+		Actor_Says(kActorMcCoy, 2890, 18);   //  You do?
+	}
 	Actor_Says(kActorRachael, 380, 18);  //  EverythingWeBelieve
 	Actor_Says(kActorRachael, 390, 12);  //  WhatIsReality
 	Actor_Says(kActorRachael, 400, 13);  //  MaybeAllSomeoneElsesFantasy

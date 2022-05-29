@@ -65,12 +65,10 @@ bool AIScriptFishDealer::Update() {
 		Actor_Set_Goal_Number(kActorFishDealer, 1);
 		return true;
 	} else {
-		if (Actor_Query_Goal_Number(kActorFishDealer) < 400) {
-			Actor_Set_Goal_Number(kActorFishDealer, 400);
-		} else if (Actor_Query_In_Set(kActorFishDealer, kSetAR01_AR02)) {
-			// Remove the fish dealer from AR01 if she is still there in chapter 5,
-			// this can happen only with older save games.
-			GoalChanged(400, 400);
+		if (Global_Variable_Query(kVariableChapter) > 3) {
+			if (Actor_Query_Goal_Number(kActorFishDealer) < 400) {
+				Actor_Set_Goal_Number(kActorFishDealer, 400);
+			}
 		}
 		return true;
 	}

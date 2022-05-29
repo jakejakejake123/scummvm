@@ -169,18 +169,16 @@ bool SceneScriptAR01::ClickedOnActor(int actorId) {
 			Actor_Face_Actor(kActorMcCoy, kActorFishDealer, true);
 			Actor_Face_Actor(kActorFishDealer, kActorMcCoy, true);
 			if (_vm->_cutContent) { 
-			 	if ((Actor_Clue_Query(kActorMcCoy, kClueStrangeScale1)
-				|| Actor_Clue_Query(kActorMcCoy, kClueStrangeScale2))
-				&& !Actor_Clue_Query(kActorMcCoy, kClueFishLadyInterview)
+				if (!Actor_Clue_Query(kActorMcCoy, kClueFishLadyInterview)
 				&& !Game_Flag_Query(kFlagWrongInvestigation)
 				&& !Game_Flag_Query(kFlagFishLadyTalkScale)
 				&& Global_Variable_Query(kVariableChapter) < 4) {
-					Actor_Says(kActorMcCoy, 40, 11);
-					Actor_Says(kActorFishDealer, 120, 14);
-					Actor_Says(kActorMcCoy, 45, 17); //00-0045.AUD	What other one?
-					if (_vm->_cutContent) {
-						// Depending on your friendliness with the fish lady she may or may not give you some useful information.
+					if (Actor_Clue_Query(kActorMcCoy, kClueStrangeScale1)
+					|| Actor_Clue_Query(kActorMcCoy, kClueStrangeScale2)) {
+						Actor_Says(kActorMcCoy, 40, 11);
 						if (Actor_Query_Friendliness_To_Other(kActorFishDealer, kActorMcCoy) > 49) {
+							Actor_Says(kActorFishDealer, 120, 14);
+							Actor_Says(kActorMcCoy, 45, 17); //00-0045.AUD	What other one?				
 							// The fish lady will say this extra line if she told you about the Peruvian woman before.
 							if  (Game_Flag_Query(kFlagAR01FishDealerTalkInsects)) {
 								Actor_Says(kActorFishDealer, 210, 14); //29-0210.AUD	What I said before. That yesterdays news. Here real fact of it.
@@ -198,16 +196,8 @@ bool SceneScriptAR01::ClickedOnActor(int actorId) {
 							Game_Flag_Set(kFlagFishLadyTalkScale);
 							Actor_Set_Goal_Number(kActorFishDealer, 1);
 						}
-					} else {
-						Actor_Says(kActorFishDealer, 130, 14); //29-0130.AUD	Other police show me scale from same snake.
-						Actor_Says(kActorFishDealer, 140, 14);	
-						Actor_Says(kActorMcCoy, 50, 13);
-						Actor_Says(kActorFishDealer, 150, 14);
-						Actor_Clue_Acquire(kActorMcCoy, kClueFishLadyInterview, true, kActorFishDealer);
-						Actor_Set_Goal_Number(kActorFishDealer, 1);
 					}
-				} else if (Game_Flag_Query(kFlagFishDealerBuyFishTalk)
-				&& !Game_Flag_Query(kFlagAR01FishDealerTalk) 
+				} else if (!Game_Flag_Query(kFlagAR01FishDealerTalk) 
 				&& !Game_Flag_Query(kFlagAR02InsectDealerInterviewed)
 				&& Global_Variable_Query(kVariableChapter) < 4) {		
 					Actor_Says(kActorMcCoy, 0, 18);
@@ -221,27 +211,31 @@ bool SceneScriptAR01::ClickedOnActor(int actorId) {
 					Actor_Says(kActorFishDealer, 50, 14); //29-0050.AUD	Real?! Oh, you must make lots of money.
 					// If McCoy is surly or erratic their friendliness will lower and this will effect the coversation later on.
 					// It will also result in the fish lady not helping when trying to find the insect dealer and whne you ask her about the strange scale.
+					Actor_Says(kActorMcCoy, 15, 17); //00-0015.AUD	Let's get back to insects. Official LPD business.
+					Game_Flag_Set(kFlagAR01FishDealerMcCoyIsPolice);
+					Actor_Says(kActorFishDealer, 200, 14); //29-0200.AUD	Oh, all right. Where my head today?
 					if (Player_Query_Agenda() == kPlayerAgendaSurly 
 					|| Player_Query_Agenda() == kPlayerAgendaErratic) {
 						Actor_Says(kActorMcCoy, 8519, 14); //00-8519.AUD	What do you say we dish each other the straight goods.
-						Actor_Modify_Friendliness_To_Other(kActorFishDealer, kActorMcCoy, -5);
+						Actor_Modify_Friendliness_To_Other(kActorFishDealer, kActorMcCoy, -2);
 						Actor_Says(kActorFishDealer, 180, 14); //29-0180.AUD	I can't stand all day gabbing away. My fish require attention.
 						Game_Flag_Set(kFlagAR01FishDealerTalk);
 						Actor_Set_Goal_Number(kActorFishDealer, 1);
 					} else {
-						Actor_Says(kActorMcCoy, 15, 17); //00-0015.AUD	Let's get back to insects. Official LPD business.
-						Actor_Says(kActorFishDealer, 200, 14); //29-0200.AUD	Oh, all right. Where my head today?
-						Actor_Says(kActorMcCoy, 7985, 17); //00-7985.AUD	It's okay.
+						if (Player_Query_Agenda() != kPlayerAgendaSurly 
+						&& Player_Query_Agenda() != kPlayerAgendaErratic) {
+							Actor_Says(kActorMcCoy, 7985, 17); //00-7985.AUD	It's okay.
+							Actor_Modify_Friendliness_To_Other(kActorFishDealer, kActorMcCoy, 2);
+						}
 						Actor_Says(kActorFishDealer, 60, 14); //29-0060.AUD	Ah! Down that end of Animal Row. You see big green sign?
 						Actor_Says(kActorFishDealer, 70, 14);
 						Game_Flag_Set(kFlagAR01FishDealerTalk);
-						Game_Flag_Set(kFlagAR01FishDealerTalkInsects);
-						Game_Flag_Set(kFlagAR01FishDealerMcCoyIsPolice);
+						Game_Flag_Set(kFlagAR01FishDealerTalkInsects);					
 						if (Actor_Query_Friendliness_To_Other(kActorInsectDealer, kActorMcCoy) < 50) {
 							Actor_Says(kActorMcCoy, 8640, 14); // 00-8640.AUD	That's useless.
 							Actor_Says(kActorFishDealer, 190, 14); // Ah! You think you get better info somewhere else? You welcome to try.
 							Actor_Set_Goal_Number(kActorFishDealer, 1);
-							Actor_Modify_Friendliness_To_Other(kActorFishDealer, kActorMcCoy, -5);
+							Actor_Modify_Friendliness_To_Other(kActorFishDealer, kActorMcCoy, -2);
 						} else {
 							Actor_Says(kActorFishDealer, 80, 14);
 							Actor_Says(kActorFishDealer, 90, 14);
@@ -249,14 +243,24 @@ bool SceneScriptAR01::ClickedOnActor(int actorId) {
 							Game_Flag_Set(kFlagAR01FishDealerTalk);
 						}
 					}
-				} else if (Game_Flag_Query(kFlagFishDealerBuyFishTalk)
-				&& !Game_Flag_Query(kFlagFishLadyTalkFinsished)) {
-					if (!Game_Flag_Query(kFlagBoughtFish)) {
+				} else if (!Game_Flag_Query(kFlagFishLadyTalkFinsished)) {	
+					if (!Game_Flag_Query(kFlagFishDealerBuyFishTalk)) {
 						Actor_Says(kActorFishDealer, 230, 14);
-						Item_Pickup_Spin_Effect_From_Actor(kModelAnimationGoldfish, kActorFishDealer, 0, -40);
-						Game_Flag_Set(kFlagBoughtFish);
-						dialogueWithFishDealerBuyGoldfish();
-					} else if (Game_Flag_Query(kFlagBoughtFish)) {
+						if (Global_Variable_Query(kVariableChapter) < 3) {
+							Delay(2000);
+							Actor_Says(kActorMcCoy, 8514, 11); // Got anything new to tell me?
+							if (Actor_Query_Friendliness_To_Other(kActorFishDealer, kActorMcCoy) > 49) {
+								Actor_Says(kActorFishDealer, 170, 14); // Afraid not. But been busy today. Maybe you ask me later.
+							} else {
+								Actor_Says(kActorFishDealer, 220, 14); //29-0220.AUD	I haven't heard much. Row been very quiet.
+								Actor_Set_Goal_Number(kActorFishDealer, 1);
+							}
+						} else {
+							Item_Pickup_Spin_Effect_From_Actor(kModelAnimationGoldfish, kActorFishDealer, 0, -40);
+							Game_Flag_Set(kFlagFishDealerBuyFishTalk);
+							dialogueWithFishDealerBuyGoldfish();
+						}
+					} else {
 						if (Actor_Clue_Query(kActorMcCoy, kClueGoldfish)) {
 							Actor_Says(kActorMcCoy, 155, 17); //00-0155.AUD	How's business?
 							Actor_Says(kActorFishDealer, 100, 14); //29-0100.AUD	Ah, business slow today. But tonight my people bring over baby barracudas.
@@ -269,6 +273,7 @@ bool SceneScriptAR01::ClickedOnActor(int actorId) {
 							Game_Flag_Set(kFlagFishLadyTalkFinsished);
 							Delay(2000);
 							Loop_Actor_Walk_To_XYZ(kActorMcCoy, -221.49f, 0.62f, 86.42f, 48, false, false, true);
+							Actor_Face_Actor(kActorFishDealer, kActorMcCoy, true);
 							Actor_Says(kActorFishDealer, 230, 14); // 29-0230.AUD	You buy fish? Highest quality.
 							Loop_Actor_Walk_To_XYZ(kActorMcCoy, -358.0, 0.0, -149.0, 0, false, true, false);
 							Loop_Actor_Walk_To_XYZ(kActorMcCoy, -477.0, 0.0, -149.0, 0, false, true, false);
@@ -280,7 +285,7 @@ bool SceneScriptAR01::ClickedOnActor(int actorId) {
 							Actor_Set_Goal_Number(kActorFishDealer, 3);
 						}
 					}
-				} else if (Game_Flag_Query(kFlagFishLadyTalkFinsished)) {					
+				} else {					
 					// This dialogue will only happen if you have low frieneliness with the fish lady.
 					Actor_Says(kActorMcCoy, 8514, 11); // Got anything new to tell me?
 					if (Actor_Query_Friendliness_To_Other(kActorFishDealer, kActorMcCoy) > 49) {
@@ -384,10 +389,10 @@ bool SceneScriptAR01::ClickedOnExit(int exitId) {
 		}
 		int v1 = Loop_Actor_Walk_To_XYZ(kActorMcCoy, -164.0f, 0.0f, 332.0f, 0, true, false, false);
 		Actor_Face_Heading(kActorMcCoy, 545, false);
-		if (_vm->_cutContent) {
-			if (Actor_Query_Goal_Number(kActorIzo) >= kGoalIzoTakePhoto
-			&& Actor_Query_Goal_Number(kActorIzo) <= kGoalIzoEscape
-			) {
+		if (Actor_Query_Goal_Number(kActorIzo) >= kGoalIzoTakePhoto
+		&& Actor_Query_Goal_Number(kActorIzo) <= kGoalIzoEscape
+		) {
+			if (_vm->_cutContent) {
 				if (Game_Flag_Query(kFlagIzoIsReplicant)) {	
 					Player_Loses_Control();
 					Actor_Put_In_Set(kActorIzo, kSetAR01_AR02);
@@ -401,119 +406,24 @@ bool SceneScriptAR01::ClickedOnExit(int exitId) {
 					Player_Gains_Control();
 					Actor_Retired_Here(kActorMcCoy, 12, 48, 1, kActorIzo);
 				} else {
-					Actor_Says(kActorMcCoy, 3545, 15);		
+					Actor_Says(kActorMcCoy, 3545, 15); //00-3545.AUD	Not yet.
 				}
-			} else if (!v1) {
-				if ( Game_Flag_Query(kFlagDNARowAvailable)
-				&& !Game_Flag_Query(kFlagDNARowAvailableTalk)
-				) {
-					Actor_Voice_Over(4310, kActorVoiceOver);
-					Actor_Voice_Over(4320, kActorVoiceOver);
-					Actor_Voice_Over(4330, kActorVoiceOver);
-					Actor_Voice_Over(4340, kActorVoiceOver);
-					Actor_Voice_Over(4350, kActorVoiceOver);
-					Game_Flag_Set(kFlagDNARowAvailableTalk);
-					Game_Flag_Reset(kFlagIzoEscaped);
-					Game_Flag_Reset(kFlagIzoWarnedAboutCrystal);
-				}
-				Game_Flag_Reset(kFlagMcCoyInChinaTown);
-				Game_Flag_Reset(kFlagMcCoyInRunciters);
-				Game_Flag_Reset(kFlagMcCoyInMcCoyApartment);
-				Game_Flag_Reset(kFlagMcCoyInPoliceStation);
-				Game_Flag_Reset(kFlagMcCoyInBradburyBuilding);
-				Game_Flag_Reset(kFlagMcCoyInHysteriaHall);
-				Game_Flag_Reset(kFlagMcCoyInAnimoidRow);
-
-				int spinnerDest = Spinner_Interface_Choose_Dest(kAR01LoopDoorAnim, false);
-				Actor_Face_Heading(kActorMcCoy, 545, false);
-
-				switch (spinnerDest) {
-				case kSpinnerDestinationPoliceStation:
-					Game_Flag_Set(kFlagMcCoyInPoliceStation);
-					Game_Flag_Reset(kFlagSpinnerAtAR01);
-					Game_Flag_Set(kFlagSpinnerAtPS01);
-					Set_Enter(kSetPS01, kScenePS01);
-					Scene_Loop_Start_Special(kSceneLoopModeChangeSet, kAR01LoopOutshot, true);
-					break;
-				case kSpinnerDestinationMcCoysApartment:
-					Game_Flag_Set(kFlagMcCoyInMcCoyApartment);
-					Game_Flag_Reset(kFlagSpinnerAtAR01);
-					Game_Flag_Set(kFlagSpinnerAtMA01);
-					Set_Enter(kSetMA01, kSceneMA01);
-					Scene_Loop_Start_Special(kSceneLoopModeChangeSet, kAR01LoopOutshot, true);
-					break;
-				case kSpinnerDestinationRuncitersAnimals:
-					Game_Flag_Set(kFlagMcCoyInRunciters);
-					Game_Flag_Reset(kFlagSpinnerAtAR01);
-					Game_Flag_Set(kFlagSpinnerAtRC01);
-					Set_Enter(kSetRC01, kSceneRC01);
-					Scene_Loop_Start_Special(kSceneLoopModeChangeSet, kAR01LoopOutshot, true);
-					break;
-				case kSpinnerDestinationChinatown:
-					Game_Flag_Set(kFlagMcCoyInChinaTown);
-					Game_Flag_Reset(kFlagSpinnerAtAR01);
-					Game_Flag_Set(kFlagSpinnerAtCT01);
-					Set_Enter(kSetCT01_CT12, kSceneCT01);
-					Scene_Loop_Start_Special(kSceneLoopModeChangeSet, kAR01LoopOutshot, true);
-					break;
-				case kSpinnerDestinationTyrellBuilding:
-					Game_Flag_Set(kFlagMcCoyInTyrellBuilding);
-					Game_Flag_Reset(kFlagSpinnerAtAR01);
-					Game_Flag_Set(kFlagSpinnerAtTB02);
-					Set_Enter(kSetTB02_TB03, kSceneTB02);
-					Scene_Loop_Start_Special(kSceneLoopModeChangeSet, kAR01LoopOutshot, true);
-					break;
-				case kSpinnerDestinationDNARow:
-					Game_Flag_Set(kFlagMcCoyInDNARow);
-					Game_Flag_Reset(kFlagSpinnerAtAR01);
-					Game_Flag_Set(kFlagSpinnerAtDR01);
-					Set_Enter(kSetDR01_DR02_DR04, kSceneDR01);
-					Scene_Loop_Start_Special(kSceneLoopModeChangeSet, kAR01LoopOutshot, true);
-					break;
-				case kSpinnerDestinationBradburyBuilding:
-					Game_Flag_Set(kFlagMcCoyInBradburyBuilding);
-					Game_Flag_Reset(kFlagSpinnerAtAR01);
-					Game_Flag_Set(kFlagSpinnerAtBB01);
-					Set_Enter(kSetBB01, kSceneBB01);
-					Scene_Loop_Start_Special(kSceneLoopModeChangeSet, kAR01LoopOutshot, true);
-					break;
-				case kSpinnerDestinationNightclubRow:
-					Game_Flag_Set(kFlagMcCoyInNightclubRow);
-					Game_Flag_Reset(kFlagSpinnerAtAR01);
-					Game_Flag_Set(kFlagSpinnerAtNR01);
-					Set_Enter(kSetNR01, kSceneNR01);
-					Scene_Loop_Start_Special(kSceneLoopModeChangeSet, kAR01LoopOutshot, true);
-					break;
-				case kSpinnerDestinationHysteriaHall:
-					Game_Flag_Set(kFlagMcCoyInHysteriaHall);
-					Game_Flag_Reset(kFlagSpinnerAtAR01);
-					Game_Flag_Set(kFlagSpinnerAtHF01);
-					Set_Enter(kSetHF01, kSceneHF01);
-					Scene_Loop_Start_Special(kSceneLoopModeChangeSet, kAR01LoopOutshot, true);
-					break;
-				default:
-					Game_Flag_Set(kFlagMcCoyInAnimoidRow);
-					Actor_Set_Invisible(kActorMcCoy, false);
-					break;
-				}
+			} else {
+				Player_Loses_Control();
+				Actor_Put_In_Set(kActorIzo, kSetAR01_AR02);
+				Actor_Set_At_XYZ(kActorIzo, -448.0, 0.0, 130.0, 0);
+				Loop_Actor_Walk_To_XYZ(kActorIzo, -323.0f, 0.64f, 101.74f, 48, false, true, false);
+				Loop_Actor_Walk_To_Actor(kActorIzo, kActorMcCoy, 48, false, true);
+				Actor_Face_Actor(kActorIzo, kActorMcCoy, true);
+				Actor_Change_Animation_Mode(kActorIzo, kAnimationModeCombatAttack);
+				Actor_Says(kActorMcCoy, 1800, 21);
+				Actor_Change_Animation_Mode(kActorMcCoy, 39);
+				Player_Gains_Control();
+				Actor_Retired_Here(kActorMcCoy, 12, 48, 1, kActorIzo);
 			}
-		} else if (Actor_Query_Goal_Number(kActorIzo) >= kGoalIzoTakePhoto
-		 && Actor_Query_Goal_Number(kActorIzo) <= kGoalIzoEscape
-		) {
-			Player_Loses_Control();
-			Actor_Put_In_Set(kActorIzo, kSetAR01_AR02);
-			Actor_Set_At_XYZ(kActorIzo, -448.0, 0.0, 130.0, 0);
-			Loop_Actor_Walk_To_XYZ(kActorIzo, -323.0f, 0.64f, 101.74f, 48, false, true, false);
-			Loop_Actor_Walk_To_Actor(kActorIzo, kActorMcCoy, 48, false, true);
-			Actor_Face_Actor(kActorIzo, kActorMcCoy, true);
-			Actor_Change_Animation_Mode(kActorIzo, kAnimationModeCombatAttack);
-			Actor_Says(kActorMcCoy, 1800, 21);
-			Actor_Change_Animation_Mode(kActorMcCoy, 39);
-			Player_Gains_Control();
-			Actor_Retired_Here(kActorMcCoy, 12, 48, 1, kActorIzo);
 		} else if (!v1) {
 			if ( Game_Flag_Query(kFlagDNARowAvailable)
-			 && !Game_Flag_Query(kFlagDNARowAvailableTalk)
+			&& !Game_Flag_Query(kFlagDNARowAvailableTalk)
 			) {
 				Actor_Voice_Over(4310, kActorVoiceOver);
 				Actor_Voice_Over(4320, kActorVoiceOver);
@@ -521,6 +431,8 @@ bool SceneScriptAR01::ClickedOnExit(int exitId) {
 				Actor_Voice_Over(4340, kActorVoiceOver);
 				Actor_Voice_Over(4350, kActorVoiceOver);
 				Game_Flag_Set(kFlagDNARowAvailableTalk);
+				Game_Flag_Reset(kFlagIzoEscaped);
+				Game_Flag_Reset(kFlagIzoWarnedAboutCrystal);
 			}
 			Game_Flag_Reset(kFlagMcCoyInChinaTown);
 			Game_Flag_Reset(kFlagMcCoyInRunciters);
@@ -693,7 +605,7 @@ void SceneScriptAR01::PlayerWalkedIn() {
 			Delay (4000);
 			Actor_Says(kActorFishDealer, 230, 0); // 29-0230.AUD	You buy fish? Highest quality.
 			Delay (3000);	
-			Game_Flag_Set(kFlagFishDealerBuyFishTalk);
+			Game_Flag_Set(kFlagAR01Entered);
 			ADQ_Add(kActorOfficerLeary, 300, kAnimationModeTalk); //23-0300.AUD	LA, 38 Metro 3. Subject check.
 			ADQ_Add(kActorDispatcher, 480, kAnimationModeTalk); //38-0480.AUD	Sector 3 unit was under check. Go ahead.
 			ADQ_Add(kActorOfficerLeary, 290, kAnimationModeTalk);  // 23-0290.AUD	Subject check on a Willard Mack. M-A-C-K. White male, six foot, 180 pounds, brown and brown with a DOB of 10-30-1995.
@@ -702,7 +614,6 @@ void SceneScriptAR01::PlayerWalkedIn() {
 			ADQ_Add(kActorDispatcher, 500, kAnimationModeTalk); //38-0500.AUD	38 Metro 3 LA. No hits locally around CIC on subject Willard Mack. M-A-C-K.
 			ADQ_Add(kActorOfficerLeary, 450, kAnimationModeTalk);  // 23-0450.AUD	LA, 13 Metro 1. Copied. No wants.
 			ADQ_Add(kActorDispatcher, 510, kAnimationModeTalk); //38-0510.AUD	10-4. LA Copy. 10-98.
-			Game_Flag_Set(kFlagAR01Entered);
 		}
 	}
 	if (Actor_Query_Goal_Number(kActorPhotographer) < 199) {
@@ -756,16 +667,20 @@ void SceneScriptAR01::dialogueWithFishDealerBuyGoldfish() {
 
 	if (answerValue == 530) { // BUY
 	// Added in a flag so certain dialogue will trigger.
-		Actor_Says(kActorMcCoy, 7000, 12);
+		Actor_Says(kActorMcCoy, 7000, 23);
 		Game_Flag_Set(kFlagBoughtFish);
 		if (Query_Difficulty_Level() != kGameDifficultyEasy) {
 			Global_Variable_Decrement(kVariableChinyen, 105);
 		}
 		Actor_Clue_Acquire(kActorMcCoy, kClueGoldfish, true, kActorFishDealer);
-		Actor_Modify_Friendliness_To_Other(kActorFishDealer, kActorMcCoy, 5);
+		if (!_vm->_cutContent) {
+			Actor_Modify_Friendliness_To_Other(kActorFishDealer, kActorMcCoy, 5);
+		}
 	} else if (answerValue == 540) { // NO THANKS
 		Actor_Says(kActorMcCoy, 7005, 13);
-		Actor_Modify_Friendliness_To_Other(kActorFishDealer, kActorMcCoy, -5);
+		if (!_vm->_cutContent) {
+			Actor_Modify_Friendliness_To_Other(kActorFishDealer, kActorMcCoy, -5);
+		}
 	}
 }
 
