@@ -328,18 +328,19 @@ void SceneScriptNR01::PlayerWalkedIn() {
 			Actor_Face_Heading(kActorMcCoy, 768, true);
 			Delay(150);
 			Actor_Change_Animation_Mode(kActorMcCoy, kAnimationModeIdle);
-			Actor_Change_Animation_Mode(kActorMcCoy, 6);
-			Sound_Play(kSfxGUNH1A, 100, 0, 0, 50);
 			Loop_Actor_Walk_To_Actor(kActorHanoi, kActorMcCoy, 36, false, false);
 			Actor_Change_Animation_Mode(kActorHanoi, 4);
 			Actor_Face_Actor(kActorHanoi, kActorMcCoy, true);
 			Actor_Face_Actor(kActorMcCoy, kActorHanoi, true);
 			Sound_Play(kSfxSHOTCOK1, 77, 0, 0, 20);
+			Delay(1000);
 			Music_Play(kMusicMoraji, 71, 0, 0, -1, kMusicLoopPlayOnce, 2);
 			Actor_Change_Animation_Mode(kActorHanoi, 6);
 			Ambient_Sounds_Play_Sound(kSfxSHOTGUN1, 97, 0, 0, 20);
 			Loop_Actor_Walk_To_XYZ(kActorMcCoy, -173.89, 24.15, -321.90, 0, false, true, false);
 			Actor_Face_Actor(kActorHanoi, kActorMcCoy, true);
+			Player_Set_Combat_Mode(true);
+			Delay(1000);
 			Actor_Face_Actor(kActorMcCoy, kActorHanoi, true);
 			Sound_Play(kSfxGUNH1A, 100, 0, 0, 50);
 			Actor_Change_Animation_Mode(kActorMcCoy, 6);
@@ -355,7 +356,7 @@ void SceneScriptNR01::PlayerWalkedIn() {
 			Delay(1000);
 			Actor_Change_Animation_Mode(kActorHanoi, 6);
 			Ambient_Sounds_Play_Sound(kSfxSHOTGUN1, 97, 0, 0, 20);
-			Actor_Change_Animation_Mode(kActorMcCoy, 21);
+			Actor_Change_Animation_Mode(kActorMcCoy, 22);
 			Delay(1000);
 			Loop_Actor_Walk_To_XYZ(kActorMcCoy, -145.06, 24.35, -629.20, 0, false, true, false);
 			Actor_Face_Actor(kActorHanoi, kActorMcCoy, true);
@@ -373,17 +374,13 @@ void SceneScriptNR01::PlayerWalkedIn() {
 			Sound_Play(kSfxSHOTCOK1, 77, 0, 0, 20);
 			Actor_Change_Animation_Mode(kActorMcCoy, 29);
 			Delay(1000);
-			Ambient_Sounds_Play_Sound(kSfxKICK1, 90, 99, 0, 0);
-			Actor_Change_Animation_Mode(kActorHanoi, 71);
-			Actor_Change_Animation_Mode(kActorMcCoy, 21);
-			Delay(1000);
 			Sound_Play(kSfxGUNH1A, 100, 0, 0, 50);
 			Actor_Change_Animation_Mode(kActorMcCoy, 6);
 			Actor_Change_Animation_Mode(kActorHanoi, 48);
 			Delay(2000);
 			Player_Set_Combat_Mode(false);
-			Delay(1500);
-			Actor_Says(kActorMcCoy, 1275, 13); //00-1275.AUD	A real pacifist that guy.
+			Delay(1000);
+			Actor_Says(kActorMcCoy, 1275, -1); //00-1275.AUD	A real pacifist that guy.
 			Actor_Modify_Friendliness_To_Other(kActorSteele, kActorMcCoy, 2);
 			Actor_Modify_Friendliness_To_Other(kActorClovis, kActorMcCoy, -2);
 			Actor_Modify_Friendliness_To_Other(kActorGuzza, kActorMcCoy, 2);
@@ -397,7 +394,7 @@ void SceneScriptNR01::PlayerWalkedIn() {
 				Global_Variable_Increment (kVariableChinyen, 200);
 			}
 			Player_Gains_Control();
-			Delay(1000);
+			Delay(500);
 		}
 	}
 			
@@ -409,7 +406,8 @@ void SceneScriptNR01::PlayerWalkedIn() {
 		Scene_2D_Region_Add(1, 233, 321, 240, 362);
 		// Action music will play during the confrontation with Gordo.
 		if (_vm->_cutContent) {
-			Music_Stop(3u);
+			Loop_Actor_Walk_To_XYZ(kActorMcCoy, 239.0f, 31.66f, -901.0f, 0, false, false, false);
+			Music_Stop(1u);
 			Music_Play(kMusicBatl226M, 50, 0, 2, -1, kMusicLoopPlayOnce, 0);
 			if (Game_Flag_Query(kFlagMcCoyIsHelpingReplicants)) {
 				Player_Loses_Control();
@@ -462,7 +460,7 @@ void SceneScriptNR01::PlayerWalkedIn() {
 				Actor_Modify_Friendliness_To_Other(kActorClovis, kActorMcCoy, 2);
 				Actor_Modify_Friendliness_To_Other(kActorGuzza, kActorMcCoy, -2);
 				Player_Set_Combat_Mode(false);
-				Music_Stop(2u);
+				Music_Stop(1u);
 				Player_Gains_Control();
 				Actor_Set_Goal_Number(kActorSteele, kGoalSteeleTalkAboutMissingSpinner);
 			} else {
@@ -637,16 +635,19 @@ void SceneScriptNR01::PlayerWalkedIn() {
 			// will immediately attack you instead of running away.
 			if (_vm->_cutContent) {
 				if (!Game_Flag_Query(kFlagMcCoyIsHelpingReplicants)) {
-					Music_Stop(2u);
+					Music_Stop(1u);
 					Music_Play(kMusicMoraji, 71, 0, 0, -1, kMusicLoopPlayOnce, 2);
 					Player_Set_Combat_Mode(true);
 					Actor_Face_Actor(kActorMcCoy, kActorGordo, true);
 					Actor_Says(kActorMcCoy, 8945, 14); //00-8945.AUD	Freeze!
+					Actor_Change_Animation_Mode(kActorGordo, 4);
+					Delay(1000);
 					Actor_Set_Goal_Number(kActorGordo, kGoalGordoNR01Attack);
 					Non_Player_Actor_Combat_Mode_On(kActorGordo, kActorCombatStateIdle, true, kActorMcCoy, 3, kAnimationModeCombatIdle, kAnimationModeCombatWalk, kAnimationModeCombatRun, 0, -1, -1, 20, 300, false);
 				} else {
 					Actor_Face_Actor(kActorGordo, kActorMcCoy, true);
 					Actor_Face_Actor(kActorMcCoy, kActorGordo, true);
+					Player_Set_Combat_Mode(false);
 					Actor_Says(kActorMcCoy, 455, 14); //00-0455.AUD	Relax. Nobody's gonna get retired. Okay?
 					Loop_Actor_Walk_To_Actor(kActorGordo, kActorMcCoy, 60, false, true);
 					Actor_Face_Actor(kActorGordo, kActorMcCoy, true);

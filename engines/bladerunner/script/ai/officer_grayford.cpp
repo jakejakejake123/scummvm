@@ -314,10 +314,6 @@ void AIScriptOfficerGrayford::ClickedByPlayer() {
 		Actor_Face_Actor(kActorOfficerGrayford, kActorMcCoy, true);
 		if (Random_Query(1, 2) == 1) {
 			Actor_Says(kActorMcCoy, 5075, 14); //00-5075.AUD	Hey, pal.
-			// Added in some Grayford dialogue.
-			if (_vm->_cutContent) {
-				Actor_Says(kActorOfficerGrayford, 340, 13); //24-0340.AUD	Hey, you ain’t talking to some flunky, McCoy.
-			}
 		} else {
 			Actor_Says(kActorMcCoy, 4515, 13);
 			Actor_Says(kActorOfficerGrayford, 230, 13);
@@ -358,14 +354,8 @@ void AIScriptOfficerGrayford::ClickedByPlayer() {
 		Actor_Face_Actor(kActorMcCoy, kActorOfficerGrayford, true);
 		Actor_Face_Actor(kActorOfficerGrayford, kActorMcCoy, true);
 		if (Random_Query(1, 2) == 1) {
-			// Added in some Grayford dialogue.
-			if (_vm->_cutContent) {
-				Actor_Says(kActorMcCoy, 5295, 14); //00-5295.AUD	Learn anything?
-				Actor_Says(kActorOfficerGrayford, 320, 13); //24-0320.AUD	Nah, I’ve hit a brick, McCoy. You running this investigation, right?
-			} else {
-				Actor_Says(kActorMcCoy, 5075, 14);
-				Actor_Says(kActorOfficerGrayford, 160, 13);
-			}
+			Actor_Says(kActorMcCoy, 5075, 14);
+			Actor_Says(kActorOfficerGrayford, 160, 13);
 		} else {
 			Actor_Says(kActorMcCoy, 4515, 13);
 			Actor_Says(kActorOfficerGrayford, 330, 13);
@@ -380,16 +370,22 @@ void AIScriptOfficerGrayford::ClickedByPlayer() {
 		if (!_vm->_cutContent) {
 			Actor_Says(kActorMcCoy, 4515, 14);
 		}
+		// Added in some dialogue for Grayford where he screws around with McCoy by pretending that he has something to tell him, only to reveal that he knows nothing.
 		if (_vm->_cutContent) {
-			Actor_Says(kActorMcCoy, 5295, kAnimationModeTalk); //00-5295.AUD	Learn anything?
-			Actor_Says(kActorOfficerGrayford, 310, 13); //24-0310.AUD	Yeah, I dug up a couple of leads. Let me clue you in.
-			Actor_Says(kActorMcCoy, 4940, 18); //00-4940.AUD	Okay, let's have it.
-			Actor_Says(kActorOfficerGrayford, 350, 15); //24-0350.AUD	Eh, Gaff said that you didn’t need to hear this. Ah, but I guess you deserve to know.
-			Actor_Says(kActorMcCoy, 4515, 13);
-		}
-		Actor_Says(kActorOfficerGrayford, 330, 16); //24-0330.AUD	Zero that would interest you, detective.
-		if (_vm->_cutContent) {
-			Actor_Says(kActorMcCoy, 5075, 14); //00-5075.AUD	Hey, pal.
+			if (!Game_Flag_Query(kFlagGrayfordPS09Talk)) {
+				Actor_Says(kActorMcCoy, 5295, kAnimationModeTalk); //00-5295.AUD	Learn anything?
+				Actor_Says(kActorOfficerGrayford, 310, 13); //24-0310.AUD	Yeah, I dug up a couple of leads. Let me clue you in.
+				Actor_Says(kActorMcCoy, 4940, 18); //00-4940.AUD	Okay, let's have it.
+				Actor_Says(kActorOfficerGrayford, 350, 15); //24-0350.AUD	Eh, Gaff said that you didn’t need to hear this. Ah, but I guess you deserve to know.
+				Actor_Says(kActorMcCoy, 4515, 13); //00-4515.AUD	What do you know?
+				Actor_Says(kActorOfficerGrayford, 330, 16); //24-0330.AUD	Zero that would interest you, detective.
+				Actor_Says(kActorMcCoy, 5075, 14); //00-5075.AUD	Hey, pal.
+				Game_Flag_Set(kFlagGrayfordPS09Talk);
+			} else {
+				Actor_Says(kActorMcCoy, 5075, 14); //00-5075.AUD	Hey, pal.
+			}
+		} else {
+			Actor_Says(kActorOfficerGrayford, 330, 16); //24-0330.AUD	Zero that would interest you, detective.
 		}
 		Actor_Set_Goal_Number(kActorOfficerGrayford, kGoalOfficerGrayfordWalksInPS09b);
 		break;
@@ -586,7 +582,9 @@ bool AIScriptOfficerGrayford::GoalChanged(int currentGoalNumber, int newGoalNumb
 				if (Actor_Clue_Query(kActorMcCoy, kClueMorajiInterview) == 1) {
 					Actor_Says(kActorMcCoy, 980, 16);
 					Actor_Says_With_Pause(kActorOfficerGrayford, 130, 0.1f, 13);
-					Actor_Says(kActorMcCoy, 985, 14);
+					if (!Game_Flag_Query(kFlagMcCoyIsHelpingReplicants)) {
+						Actor_Says(kActorMcCoy, 985, 14); //00-0985.AUD	I'm practically waxing their tails, Officer. I'm that close.
+					}
 				}
 			}
 			// If Moraji survives, after Grayford says what do you know about this we skip straight to this dialogue.		
@@ -594,7 +592,9 @@ bool AIScriptOfficerGrayford::GoalChanged(int currentGoalNumber, int newGoalNumb
 			Actor_Says_With_Pause(kActorOfficerGrayford, 140, 1.0f, 16);
 			Actor_Says_With_Pause(kActorOfficerGrayford, 150, 0.0f, 17);
 			Actor_Says(kActorOfficerGrayford, 160, 15);
-			Actor_Says_With_Pause(kActorMcCoy, 995, 0.3f, 14);
+			if (!Game_Flag_Query(kFlagMcCoyIsHelpingReplicants)) {
+				Actor_Says_With_Pause(kActorMcCoy, 995, 0.3f, 14); //00-0995.AUD	Appreciate it.
+			}
 			// If Moraji survives McCoy depending on his agenda, comforts Moraji or tries to question him. If he comforts him Moraji gives McCoy the DNA data and if
 			// McCoy questions him Moraji doesn't give him the data. Also made it so the scene eits enable.
 			if (Game_Flag_Query(kFlagMorajiAlive)) {
@@ -668,21 +668,41 @@ bool AIScriptOfficerGrayford::GoalChanged(int currentGoalNumber, int newGoalNumb
 	case kGoalOfficerGrayfordStopPatrolToTalkToMcCoyAtDR04:
 		Actor_Face_Actor(kActorMcCoy, kActorOfficerGrayford, true);
 		if (_vm->_cutContent) {
-			if (Player_Query_Agenda() == kPlayerAgendaPolite) {
-				Actor_Says(kActorMcCoy, 1000, 14); // You got a sheet or something...?
-				AI_Movement_Track_Flush(kActorOfficerGrayford);
-				AI_Countdown_Timer_Reset(kActorOfficerGrayford, kActorTimerAIScriptCustomTask2);
+			if (!Game_Flag_Query(kFlagMorajiAlive)) {
+				if (Player_Query_Agenda() != kPlayerAgendaSurly 
+				&& Player_Query_Agenda() != kPlayerAgendaErratic) {
+					Actor_Says(kActorMcCoy, 1000, 14); // You got a sheet or something...?
+					AI_Movement_Track_Flush(kActorOfficerGrayford);
+					AI_Countdown_Timer_Reset(kActorOfficerGrayford, kActorTimerAIScriptCustomTask2);
 
-				if (_animationState == 35
-				|| _animationState == 34
-				) {
-					_animationState = 37;
-					_animationFrame = 0;
+					if (_animationState == 35
+					|| _animationState == 34
+					) {
+						_animationState = 37;
+						_animationFrame = 0;
+					}
+
+					Actor_Face_Actor(kActorOfficerGrayford, kActorMcCoy, true);
+					Actor_Says(kActorOfficerGrayford, 180, 18);
+					Actor_Set_Goal_Number(kActorOfficerGrayford, currentGoalNumber);
+				} else {
+					Actor_Says(kActorMcCoy, 5295, kAnimationModeTalk); //00-5295.AUD	Learn anything?
+					AI_Movement_Track_Flush(kActorOfficerGrayford);
+					AI_Countdown_Timer_Reset(kActorOfficerGrayford, kActorTimerAIScriptCustomTask2);
+
+					if (_animationState == 35
+					|| _animationState == 34
+					) {
+						_animationState = 37;
+						_animationFrame = 0;
+					}
+
+					Actor_Face_Actor(kActorOfficerGrayford, kActorMcCoy, true);
+					Actor_Says(kActorOfficerGrayford, 320, 19); //24-0320.AUD	Nah, I’ve hit a brick, McCoy. You running this investigation, right?
+					Actor_Says(kActorMcCoy, 8519, 14); //00-8519.AUD	What do you say we dish each other the straight goods.
+					Actor_Says(kActorOfficerGrayford, 340, 19); //24-0340.AUD	Hey, you ain’t talking to some flunky, McCoy.
+					Actor_Set_Goal_Number(kActorOfficerGrayford, currentGoalNumber);
 				}
-
-				Actor_Face_Actor(kActorOfficerGrayford, kActorMcCoy, true);
-				Actor_Says(kActorOfficerGrayford, 180, 18);
-				Actor_Set_Goal_Number(kActorOfficerGrayford, currentGoalNumber);
 			} else {
 				Actor_Says(kActorMcCoy, 1005, kAnimationModeTalk); // Don't miss anything.
 				AI_Movement_Track_Flush(kActorOfficerGrayford);
@@ -690,16 +710,9 @@ bool AIScriptOfficerGrayford::GoalChanged(int currentGoalNumber, int newGoalNumb
 				if (_animationState == 35 || _animationState == 34) {
 					_animationState = 37;
 					_animationFrame = 0;
-				}
-				Actor_Face_Actor(kActorOfficerGrayford, kActorMcCoy, true);
-				Actor_Says(kActorOfficerGrayford, 190, 19);
-				Delay(1000);
-				Actor_Says(kActorMcCoy, 5295, kAnimationModeTalk); //00-5295.AUD	Learn anything?
-				Actor_Says(kActorOfficerGrayford, 320, 19); //24-0320.AUD	Nah, I’ve hit a brick, McCoy. You running this investigation, right?
-				if (Player_Query_Agenda() == kPlayerAgendaSurly 
-				|| Player_Query_Agenda() == kPlayerAgendaErratic) {
-					Actor_Says(kActorMcCoy, 8519, 14); //00-8519.AUD	What do you say we dish each other the straight goods.
-					Actor_Says(kActorOfficerGrayford, 340, 19); //24-0340.AUD	Hey, you ain’t talking to some flunky, McCoy.
+					Actor_Face_Actor(kActorOfficerGrayford, kActorMcCoy, true);
+					Actor_Says(kActorOfficerGrayford, 190, 19);
+					Actor_Set_Goal_Number(kActorOfficerGrayford, currentGoalNumber);
 				}
 			}
 		} else {
@@ -1221,6 +1234,13 @@ bool AIScriptOfficerGrayford::UpdateAnimation(int *animation, int *frame) {
 		if (_animationFrame >= Slice_Animation_Query_Number_Of_Frames(kModelAnimationOfficerGrayfordCombatUnholsterGun)) {
 			_animationFrame = 0;
 			_animationState = 19;
+			if (_vm->_cutContent) {
+				if (Random_Query(1, 2) == 1) {
+					ADQ_Add(kActorOfficerGrayford, 290, 19); //24-0290.AUD	There’s the son of a bitch! Kill it!
+				} else {
+					ADQ_Add(kActorOfficerGrayford, 270, 0); //24-0270.AUD	There it is! Take it out!
+				}
+			}
 		}
 		break;
 
@@ -1287,7 +1307,9 @@ bool AIScriptOfficerGrayford::UpdateAnimation(int *animation, int *frame) {
 			_animationFrame = 0;
 			_animationState = 19;
 			*animation = kModelAnimationOfficerGrayfordOscillateIdle;
-			ADQ_Add(kActorOfficerGrayford, 250, 19); //24-0250.AUD	Ah, I’m hit!	
+			if (_vm->_cutContent) {
+				ADQ_Add(kActorOfficerGrayford, 250, -1); //24-0250.AUD	Ah, I’m hit!
+			}	
 			Actor_Change_Animation_Mode(kActorOfficerGrayford, kAnimationModeCombatIdle);
 		}
 		break;
@@ -1299,7 +1321,9 @@ bool AIScriptOfficerGrayford::UpdateAnimation(int *animation, int *frame) {
 			_animationFrame = 0;
 			_animationState = 19;
 			*animation = kModelAnimationOfficerGrayfordOscillateIdle;
-			ADQ_Add(kActorOfficerGrayford, 250, 19); //24-0250.AUD	Ah, I’m hit!
+			if (_vm->_cutContent) {
+				ADQ_Add(kActorOfficerGrayford, 250, -1); //24-0250.AUD	Ah, I’m hit!
+			}	
 			Actor_Change_Animation_Mode(kActorOfficerGrayford, kAnimationModeCombatIdle);
 		}
 		break;
@@ -1311,6 +1335,9 @@ bool AIScriptOfficerGrayford::UpdateAnimation(int *animation, int *frame) {
 			*animation = kModelAnimationOfficerGrayfordCombatIdle;
 			_animationFrame = 0;
 			_animationState = 0;
+			if (_vm->_cutContent) {
+				ADQ_Add(kActorOfficerGrayford, 250, -1); //24-0250.AUD	Ah, I’m hit!
+			}	
 			Actor_Change_Animation_Mode(kActorOfficerGrayford, 0);
 		}
 		break;
@@ -1322,6 +1349,9 @@ bool AIScriptOfficerGrayford::UpdateAnimation(int *animation, int *frame) {
 			*animation = kModelAnimationOfficerGrayfordCombatIdle;
 			_animationFrame = 0;
 			_animationState = 0;
+			if (_vm->_cutContent) {
+				ADQ_Add(kActorOfficerGrayford, 250, -1); //24-0250.AUD	Ah, I’m hit!
+			}	
 			Actor_Change_Animation_Mode(kActorOfficerGrayford, 0);
 		}
 		break;

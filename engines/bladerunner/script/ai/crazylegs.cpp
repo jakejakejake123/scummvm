@@ -90,6 +90,9 @@ void AIScriptCrazylegs::OtherAgentEnteredCombatMode(int otherActorId, int combat
 		    && (!_vm->_cutContent || Actor_Query_In_Set(kActorCrazylegs, kSetHF05))) {
 			Actor_Face_Actor(kActorCrazylegs, kActorMcCoy, true);
 			Actor_Face_Actor(kActorMcCoy, kActorCrazylegs, true);
+			// Since Crazylegs can now be a potential replicant in the cut content version his reaction to McCoy pulling out his gun will be a little different if Crazylegs is a replicant.
+			// First off when McCoy pulls his gun out Crazylegs will be a little calmer about it. However if the player has enough clues that indicate Crazylegs guilt McCoy confronts Crazylegs
+			// on this. This leads to Crazylegs trying to flee and the player will have a brief window of time to shoot Crazylegs before he gets away. 
 			if (_vm->_cutContent) {
 				if (!Game_Flag_Query(kFlagCrazylegsIsReplicant)) {
 					Actor_Says(kActorCrazylegs, 430, 3);
@@ -98,6 +101,7 @@ void AIScriptCrazylegs::OtherAgentEnteredCombatMode(int otherActorId, int combat
 					Actor_Says(kActorCrazylegs, 450, 3);
 				} else {
 					if (Actor_Clue_Query(kActorMcCoy, kClueCrazysInvolvement)) {
+						Actor_Says(kActorCrazylegs, 480, 13); //09-0480.AUD	Hey, keep your paws off that, Ray!
 						Actor_Says(kActorMcCoy, 525, -1); //00-0525.AUD	I've seen you before...
 						Actor_Says(kActorCrazylegs, 540, 12); //09-0540.AUD	Huh, what--?
 						Actor_Says(kActorMcCoy, 7260, -1); //00-7260.AUD	Didn't I see an incept tape at the—
@@ -111,10 +115,12 @@ void AIScriptCrazylegs::OtherAgentEnteredCombatMode(int otherActorId, int combat
 						Actor_Says(kActorCrazylegs, 1000, 12); //09-1000.AUD	I got customers on the line, so I ain’t got time to chit chat.
 						Actor_Set_Goal_Number(kActorCrazylegs, kGoalCrazyLegsLeavesShowroom);
 						Actor_Says(kActorMcCoy, 8955, -1); //00-8955.AUD	Stop!
+						Actor_Clue_Acquire(kActorMcCoy, kClueMcCoyPulledAGun, false, kActorCrazylegs);
 						Actor_Set_Targetable(kActorCrazylegs, true);
 						Player_Gains_Control();
 					} else if (Actor_Clue_Query(kActorMcCoy, kClueGrigoriansResources) 
 	   				&& Actor_Clue_Query(kActorMcCoy, kClueGrigoriansNote)) {
+						Actor_Says(kActorCrazylegs, 480, 13); //09-0480.AUD	Hey, keep your paws off that, Ray!
 						Actor_Says(kActorMcCoy, 525, -1); //00-0525.AUD	I've seen you before...
 						Actor_Says(kActorCrazylegs, 540, 12); //09-0540.AUD	Huh, what--?
 						Actor_Says(kActorMcCoy, 7260, -1); //00-7260.AUD	Didn't I see an incept tape at the—
@@ -128,6 +134,7 @@ void AIScriptCrazylegs::OtherAgentEnteredCombatMode(int otherActorId, int combat
 						Actor_Says(kActorCrazylegs, 1000, 12); //09-1000.AUD	I got customers on the line, so I ain’t got time to chit chat.
 						Actor_Set_Goal_Number(kActorCrazylegs, kGoalCrazyLegsLeavesShowroom);
 						Actor_Says(kActorMcCoy, 8955, -1); //00-8955.AUD	Stop!
+						Actor_Clue_Acquire(kActorMcCoy, kClueMcCoyPulledAGun, false, kActorCrazylegs);
 						Actor_Set_Targetable(kActorCrazylegs, true);
 						Player_Gains_Control();
 				    } else {
@@ -161,14 +168,10 @@ bool AIScriptCrazylegs::ShotAtAndHit() {
 	if (Player_Query_Current_Scene() == kSceneHF05) {
 		Actor_Set_Goal_Number(kActorCrazylegs, kGoalCrazyLegsShotAndHit);
 		// Made it so when you shoot Crazylegs McCoy immediately appears outside the shop. This is because Crazylegs has no death animation.
-		// McCoy will say a couple of things and the player will receive 200 chinyen.
+		// McCoy will say a couple of things and the player will receive 200 chinyen, the code for this will be in the HF01.cpp sheet.
 		Game_Flag_Set(kFlagCrazylegsDead);
 		Game_Flag_Set(kFlagCrazylegsShot);
 		Player_Set_Combat_Mode(false);
-		Actor_Modify_Friendliness_To_Other(kActorSteele, kActorMcCoy, 2);
-		Actor_Modify_Friendliness_To_Other(kActorClovis, kActorMcCoy, -2);
-		Actor_Modify_Friendliness_To_Other(kActorGuzza, kActorMcCoy, 2);
-		Actor_Modify_Friendliness_To_Other(kActorGaff, kActorMcCoy, 2);
 		Game_Flag_Set(kFlagHF05toHF01);
 		Set_Enter(kSetHF01, kSceneHF01);
 	}

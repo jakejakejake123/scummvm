@@ -102,7 +102,7 @@ void SceneScriptHF03::dialogueWithLucy() {
 			Actor_Says(kActorLucy, 210, 13);
 			Actor_Says(kActorMcCoy, 1655, 15);
 			Actor_Modify_Friendliness_To_Other(kActorLucy, kActorMcCoy, Random_Query(9, 10));
-			if (Actor_Query_Friendliness_To_Other(kActorLucy, kActorMcCoy) > 59
+			if (Actor_Query_Friendliness_To_Other(kActorLucy, kActorMcCoy) > 49
 			 && Global_Variable_Query(kVariableAffectionTowards) == kAffectionTowardsNone
 			) {
 				Global_Variable_Set(kVariableAffectionTowards, kAffectionTowardsLucy);
@@ -124,7 +124,15 @@ void SceneScriptHF03::dialogueWithLucy() {
 				} else {
 					Actor_Says(kActorMcCoy, 6790, 15); //00-6790.AUD	That must be tough on you.
 				}
-				Actor_Says(kActorLucy, 1000, 13);
+				if (_vm->_cutContent) {
+					if (Game_Flag_Query(kFlagDektoraIsReplicant)
+					&& Game_Flag_Query(kFlagLucyIsReplicant)
+					) {
+						Actor_Says(kActorLucy, 1000, 12); //06-1000.AUD	I’ve seen death before. But the other day…
+					}
+				} else {
+					Actor_Says(kActorLucy, 1000, 12);
+				}
 				Actor_Says(kActorLucy, 1010, 17);
 				Actor_Says(kActorLucy, 1020, 18);
 				if (_vm->_cutContent) {
@@ -302,7 +310,6 @@ bool SceneScriptHF03::ClickedOnExit(int exitId) {
 
 	if (exitId == 2) {
 		if (!Loop_Actor_Walk_To_XYZ(kActorMcCoy, 942.0f, 47.76f, -847.0f, 0, true, false, false)) {
-			Game_Flag_Set(kFlagHF03toHF04);
 			Set_Enter(kSetHF04, kSceneHF04);
 		}
 		return true;

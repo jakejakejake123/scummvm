@@ -370,8 +370,11 @@ void SceneScriptHF01::PlayerWalkedIn() {
 	// hall there is a high chance that he won't appear at all. Heck even though I knew what to do he almost never showed up so this change feels neccessary 
 	// especially for a scene where McCoy learns some very important information.
 	if (_vm->_cutContent) {
+		Music_Stop(1u);
+	}
+	if (_vm->_cutContent) {
 		if (!Game_Flag_Query(kFlagZubenTalkAct4)
-		&& !Game_Flag_Query(kFlagZubenRetired)
+		&& (Actor_Query_Goal_Number(kActorZuben) < kGoalZubenGone) 
 		&& (Global_Variable_Query(kVariableChapter) == 4)) {
 			Actor_Put_In_Set(kActorZuben, kSetHF01);
 			Actor_Set_At_XYZ(kActorZuben, 500.07f, -0.01f, -205.43f, 0);
@@ -530,13 +533,16 @@ void SceneScriptHF01::PlayerWalkedIn() {
 		if (Game_Flag_Query(kFlagCrazylegsShot)) {
 			Game_Flag_Reset(kFlagCrazylegsArrestedTalk);
 			if (Player_Query_Agenda() != kPlayerAgendaSurly 
-			|| Player_Query_Agenda() != kPlayerAgendaErratic) {
+			&& Player_Query_Agenda() != kPlayerAgendaErratic) {
 				Actor_Voice_Over(1410, kActorVoiceOver); //99-1410.AUD	I’d retired another Replicant so more money was headed my way but I didn’t feel so good about it.
 				Actor_Voice_Over(1670, kActorVoiceOver); //99-1670.AUD	Still it was a hell of a way to go.
-				Music_Play(kMusicBRBlues, 52, 0, 2, -1, kMusicLoopPlayOnce, 0);
 			} else {
 				Actor_Voice_Over(920, kActorVoiceOver); //99-0920.AUD	Easy money.
 			}
+			Actor_Modify_Friendliness_To_Other(kActorSteele, kActorMcCoy, 2);
+			Actor_Modify_Friendliness_To_Other(kActorClovis, kActorMcCoy, -2);
+			Actor_Modify_Friendliness_To_Other(kActorGuzza, kActorMcCoy, 2);
+			Actor_Modify_Friendliness_To_Other(kActorGaff, kActorMcCoy, 2);
 			Actor_Set_Goal_Number(kActorCrazylegs, kGoalCrazyLegsLeavesShowroom);
 			Game_Flag_Reset(kFlagCrazylegsShot);
 			if (Query_Difficulty_Level() != kGameDifficultyEasy) {

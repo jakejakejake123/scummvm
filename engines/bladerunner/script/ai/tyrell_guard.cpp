@@ -125,6 +125,7 @@ bool AIScriptTyrellGuard::GoalChanged(int currentGoalNumber, int newGoalNumber) 
 		return true;
 
 	case kGoalTyrellGuardWakeUp:
+		// Added in a little beep sound which wakes up the guard.
 		if (_vm->_cutContent) {
 			Delay(300);
 			Sound_Play(kSfxGUNAIM1, 100, 0, 0, 50);

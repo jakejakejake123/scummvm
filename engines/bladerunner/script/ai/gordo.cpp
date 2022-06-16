@@ -207,6 +207,7 @@ void AIScriptGordo::CompletedMovementTrack() {
 	}
 
 	if (Actor_Query_Goal_Number(kActorGordo) == kGoalGordoNR02RunAway3) {
+		// Altered the code here slightly so if McCoy doesn't have enough clues to conclude that Gordo is guilty Gordo will not attack McCoy since McCoy has nothing on him.
 		if (_vm->_cutContent) {
 			if (Game_Flag_Query(kFlagGordoIsReplicant)) {
 				if (Global_Variable_Query(kVariableHollowayArrest) == 2) {
@@ -263,10 +264,11 @@ void AIScriptGordo::ClickedByPlayer() {
 		Actor_Says(kActorGordo, 1390, 16);
 	} else if (goal == kGoalGordoGone) {
 		Actor_Face_Actor(kActorMcCoy, kActorGordo, true);
+		// Made it so Gordo will have the Crazys involvement clue on him, but only if Dektora is also a replicant and they both went to Crazylegs place.
 		 if (_vm->_cutContent) {
 			if (!Actor_Clue_Query(kActorMcCoy, kClueCrazysInvolvement)) {
 				if (Game_Flag_Query(kFlagDektoraIsReplicant)) {
-					Actor_Clue_Acquire(kActorMcCoy, kClueCrazysInvolvement, false, kActorDektora);
+					Actor_Clue_Acquire(kActorMcCoy, kClueCrazysInvolvement, false, kActorGordo);
 					Item_Pickup_Spin_Effect(kModelAnimationTyrellSalesPamphlet, 397, 353);
 					Delay(1000);
 					Actor_Says(kActorMcCoy, 6975, 12); // Interesting
@@ -341,14 +343,13 @@ void AIScriptGordo::Retired(int byActorId) {
 		Delay(2000);
 		Player_Set_Combat_Mode(false);
 		if (_vm->_cutContent) {
+			// Made it so McCoy only feels bad about retiring Gordo if he is not surly or erratic.
 			if (Player_Query_Agenda() != kPlayerAgendaSurly 
 			&& Player_Query_Agenda() != kPlayerAgendaErratic) {
 				Actor_Voice_Over(1410, kActorVoiceOver);
 				Actor_Voice_Over(1430, kActorVoiceOver);
 				Actor_Voice_Over(1440, kActorVoiceOver);
 				Actor_Clue_Acquire(kActorMcCoy, kClueMcCoyRetiredGordo, true, -1);
-				Music_Stop(2u);
-				Music_Play(kMusicBRBlues, 52, 0, 2, -1, kMusicLoopPlayOnce, 1);
 			} else {
 				Actor_Voice_Over(920, kActorVoiceOver); //99-0920.AUD	Easy money.
 			}
@@ -645,6 +646,11 @@ bool AIScriptGordo::GoalChanged(int currentGoalNumber, int newGoalNumber) {
 	case kGoalGordoNR02TalkAboutMcCoy:
 		Actor_Force_Stop_Walking(kActorMcCoy);
 		Actor_Face_Actor(kActorGordo, kActorMcCoy, true);
+		if (_vm->_cutContent) {
+			Loop_Actor_Walk_To_XYZ(kActorMcCoy, 61.05, -23.75, 343.72, 0, false, false, false);
+			Actor_Face_Actor(kActorMcCoy, kActorGordo, true);
+			Actor_Face_Actor(kActorGordo, kActorMcCoy, true);
+		}
 		Actor_Says(kActorGordo, 720, 16);
 		Actor_Says(kActorGordo, 730, 18);
 		Music_Stop(1u);
@@ -656,17 +662,94 @@ bool AIScriptGordo::GoalChanged(int currentGoalNumber, int newGoalNumber) {
 		Actor_Says(kActorGordo, 760, 15);
 		Actor_Says(kActorGordo, 770, 14);
 		Actor_Says(kActorGordo, 780, 13);
-		Actor_Says(kActorMcCoy, 3885, 16);
+		Actor_Says(kActorMcCoy, 3885, 16); //00-3885.AUD	It doesn’t quite work that way.
 		if (Game_Flag_Query(kFlagGordoIsReplicant)) {
+			// Made it so if McCoy doesn't have any clues that indicate Gordos guilt his dialogue will be different.
+			// Firstly Gordo won't mentions that he has some friends that know who McCoy is because that would reveal Gordos guilt
+			// and if McCoy has nothing on him Gordo has no reason to reveal this because it would give the game away.
+			// Also if McCoy has clues that indicate Gordos guilt Gordo won't mention pretending to be a replicant because he will
+			// actually want McCoy to gun him down in the street and he will be less likely trick him if mentions this here.
 			if (_vm->_cutContent) {
-				if (Actor_Clue_Query(kActorMcCoy, kClueGordoConfession)  
-				|| Actor_Clue_Query(kActorMcCoy, kClueGordoInterview3)) {
-					Actor_Says(kActorGordo, 850, 12);
-					Actor_Says(kActorGordo, 860, 15);
-					Actor_Says(kActorMcCoy, 3910, 16);
+				if (!Game_Flag_Query(kFlagMcCoyIsHelpingReplicants)) {
+					if (Actor_Clue_Query(kActorMcCoy, kClueGordoConfession)  
+					|| Actor_Clue_Query(kActorMcCoy, kClueGordoInterview3)) {
+						Actor_Says(kActorGordo, 850, 12); //02-0850.AUD	How about yourself? You’re sure about yourself?
+						Actor_Says(kActorGordo, 860, 15); //02-0860.AUD	'Cause I’ve got some friends they say they know you.
+						Actor_Says(kActorMcCoy, 3910, 16); //00-3910.AUD	You’re lying.
+						Delay(2000);
+						Actor_Says(kActorMcCoy, 6865, 14); //00-6865.AUD	You're a Replicant.
+						Music_Stop(1u);
+						Player_Loses_Control();
+						Delay(1000);
+						Actor_Change_Animation_Mode(kActorGordo, 4);
+						Delay(1000);
+						Actor_Face_Actor(kActorGordo, kActorMcCoy, true);
+						Music_Play(kMusicBeating1, 71, 0, 0, -1, kMusicLoopPlayOnce, 2);
+						Actor_Change_Animation_Mode(kActorGordo, kAnimationModeCombatAttack);
+						Actor_Change_Animation_Mode(kActorMcCoy, 21);
+						Delay(1000);
+						Player_Set_Combat_Mode(true);
+						Delay(1000);
+						Actor_Face_Actor(kActorMcCoy, kActorGordo, true);
+						Sound_Play(kSfxGUNH1A, 100, 0, 0, 50);
+						Actor_Change_Animation_Mode(kActorMcCoy, 6);
+						Delay(1000);
+						Actor_Change_Animation_Mode(kActorGordo, kAnimationModeCombatAttack);
+						Loop_Actor_Walk_To_XYZ(kActorMcCoy, 5.93, -23.68, 258.28, 0, false, true, false);
+						Actor_Face_Actor(kActorGordo, kActorMcCoy, true);
+						Actor_Face_Actor(kActorMcCoy, kActorGordo, true);
+						Sound_Play(kSfxGUNH1A, 100, 0, 0, 50);
+						Actor_Change_Animation_Mode(kActorMcCoy, 6);
+						Actor_Change_Animation_Mode(kActorGordo, 21);
+						Delay(1000);
+						Actor_Face_Actor(kActorGordo, kActorMcCoy, true);
+						Actor_Face_Actor(kActorMcCoy, kActorGordo, true);
+						Actor_Change_Animation_Mode(kActorGordo, kAnimationModeCombatAttack);
+						Actor_Change_Animation_Mode(kActorMcCoy, 22);
+						Delay(1000);
+						Actor_Face_Actor(kActorGordo, kActorMcCoy, true);
+						Actor_Face_Actor(kActorMcCoy, kActorGordo, true);
+						Sound_Play(kSfxGUNH1A, 100, 0, 0, 50);
+						Actor_Change_Animation_Mode(kActorMcCoy, 6);
+						Actor_Change_Animation_Mode(kActorGordo, 21);
+						Loop_Actor_Walk_To_XYZ(kActorGordo, -57.71, 12.61, -181.41, 0, true, true, false);
+						Actor_Face_Actor(kActorGordo, kActorMcCoy, true);
+						Actor_Face_Actor(kActorMcCoy, kActorGordo, true);
+						Actor_Change_Animation_Mode(kActorGordo, kAnimationModeCombatAttack);
+						Loop_Actor_Walk_To_XYZ(kActorMcCoy, -73.01, -23.55, 103.67, 0, true, true, false);
+						Actor_Face_Actor(kActorGordo, kActorMcCoy, true);
+						Actor_Face_Actor(kActorMcCoy, kActorGordo, true);
+						Sound_Play(kSfxGUNH1A, 100, 0, 0, 50);
+						Actor_Change_Animation_Mode(kActorMcCoy, 6);
+						Delay(1000);
+						Actor_Change_Animation_Mode(kActorGordo, kAnimationModeCombatAttack);
+						Actor_Change_Animation_Mode(kActorMcCoy, 22);
+						Loop_Actor_Walk_To_XYZ(kActorMcCoy, 63.98, -23.62, 116.07, 0, true, true, false);
+						Actor_Face_Actor(kActorGordo, kActorMcCoy, true);
+						Actor_Face_Actor(kActorMcCoy, kActorGordo, true);
+						Sound_Play(kSfxGUNH1A, 100, 0, 0, 50);
+						Actor_Change_Animation_Mode(kActorMcCoy, 6);
+						Actor_Change_Animation_Mode(kActorGordo, 21);
+						Delay(1000);
+						Loop_Actor_Walk_To_XYZ(kActorGordo, -67.04, 12.55, -60.20, 0, true, true, false);
+						Actor_Face_Actor(kActorGordo, kActorMcCoy, true);
+						Actor_Face_Actor(kActorMcCoy, kActorGordo, true);
+						Actor_Change_Animation_Mode(kActorGordo, kAnimationModeCombatAttack);
+						Loop_Actor_Walk_To_XYZ(kActorMcCoy, 22.64, 9.99, -19.16, 0, false, true, false);
+						Actor_Set_Goal_Number(kActorGordo, kGoalGordoNR02RunAway1);
+						Actor_Face_Actor(kActorMcCoy, kActorGordo, true);
+						Sound_Play(kSfxGUNH1A, 100, 0, 0, 50);
+						Actor_Change_Animation_Mode(kActorMcCoy, 6);
+						Player_Gains_Control();				
+						Delay(300);
+					} else {
+						Actor_Says(kActorGordo, 850, 12); //02-0850.AUD	How about yourself? You’re sure about yourself?
+						Actor_Says(kActorGordo, 860, 15); //02-0860.AUD	'Cause I’ve got some friends they say they know you.
+						Actor_Says(kActorMcCoy, 3910, 16); //00-3910.AUD	You’re lying.
+					}
 				} else {
-					Actor_Says(kActorGordo, 850, 12);
-					Actor_Says(kActorMcCoy, 8000, 16); //00-8000.AUD	Yes.
+					Actor_Says(kActorGordo, 850, 12); //02-0850.AUD	How about yourself? You’re sure about yourself?
+					Actor_Says(kActorMcCoy, 1025, 13); //00-1025.AUD	Absolutely.
 				}
 			} else {
 				Actor_Says(kActorGordo, 850, 12);
@@ -689,11 +772,18 @@ bool AIScriptGordo::GoalChanged(int currentGoalNumber, int newGoalNumber) {
 				if (!Actor_Clue_Query(kActorMcCoy, kClueGordoConfession) 
 				&& !Actor_Clue_Query(kActorMcCoy, kClueGordoInterview3)) {
 					Actor_Says(kActorGordo, 790, 12); //02-0790.AUD	Doesn’t, eh? What if I pretended to be a Replicant?
-					Actor_Says(kActorMcCoy, 3890, 15);
-					Sound_Play(kSfxRIMSHOT3, 50, 0, 0, 50);
-					Sound_Play(kSfxAUDLAFF3, 50, 0, 0, 50);
+					if (_vm->_cutContent) {
+						if (Player_Query_Agenda() == kPlayerAgendaSurly
+						|| (Player_Query_Agenda() == kPlayerAgendaErratic)) {
+							Actor_Says(kActorMcCoy, 3890, 15); //00-3890.AUD	That just an excuse for your lousy act, Gordo?
+							Sound_Play(kSfxRIMSHOT3, 50, 0, 0, 50);
+							Sound_Play(kSfxAUDLAFF3, 50, 0, 0, 50);
+						} else {
+							Actor_Says(kActorMcCoy, 7885, 13); //00-7885.AUD	You're saying that makes it okay?
+						}
+					}
 				} 
-				Actor_Says(kActorGordo, 800, 15);
+				Actor_Says(kActorGordo, 800, 15); //02-0800.AUD	(laughs) That snake dancer that worked here. Zhora? She was a Rep.
 				Actor_Says(kActorGordo, 810, 17);
 				Actor_Says(kActorMcCoy, 3895, 16);
 				Actor_Says(kActorGordo, 820, 14);
@@ -767,6 +857,8 @@ bool AIScriptGordo::GoalChanged(int currentGoalNumber, int newGoalNumber) {
 		break;
 
 	case kGoalGordoNR01GiveUp:
+		// This is code for a scene that happens if McCoy has no clues that indicate Gordos guilt. If that is the case Gordo will play it cool 
+		// and McCoy will try to further question him. This will lead to Gordo running away since McCoy has nothing on him.
 		if (_vm->_cutContent) {
 			if (Actor_Clue_Query(kActorMcCoy, kClueGordoConfession) 
 			|| Actor_Clue_Query(kActorMcCoy, kClueGordoInterview3)) {
@@ -781,7 +873,7 @@ bool AIScriptGordo::GoalChanged(int currentGoalNumber, int newGoalNumber) {
 				Loop_Actor_Walk_To_Actor(kActorGordo, kActorMcCoy, 60, false, true);
 				Actor_Face_Actor(kActorGordo, kActorMcCoy, true);
 				Actor_Face_Actor(kActorMcCoy, kActorGordo, true);
-				Actor_Says(kActorMcCoy, 4270, 14);
+				Actor_Says(kActorMcCoy, 4270, 14); //00-4270.AUD	I got some more questions for you.
 				Actor_Says(kActorGordo, 330, 15); //02-0330.AUD	Man, don’t you got anything better to do than hassle innocent people at their place of work?
 				Actor_Says(kActorMcCoy, 7815, 13); //00-7815.AUD	No.
 				Delay(1000);
@@ -1801,10 +1893,12 @@ void AIScriptGordo::talkToMcCoyInCity() {
 		Actor_Says(kActorMcCoy, 6460, 12);
 		Loop_Actor_Walk_To_Actor(kActorGordo, kActorMcCoy, 36, false, false);
 #endif // BLADERUNNER_ORIGINAL_BUGS
+		// The dialogue here will be slightly different since the original dialogue was moved to when you first meet Gordo.
+		// This is because Gordo never introduced himself when you first met him but somehow McCoy knew his name.
 		if (_vm->_cutContent) {
 			Actor_Says(kActorMcCoy, 8615, 14); //00-8615.AUD	Heard anything on the street?
 			Actor_Says(kActorGordo, 1030, 12); //02-1030.AUD	Sorry, Charlie.
-			Delay(1000);
+			Delay(500);
 		} else {
 			Actor_Says(kActorGordo, 890, 14);
 			Actor_Says(kActorMcCoy, 6465, 15);
@@ -1846,6 +1940,8 @@ void AIScriptGordo::talkToMcCoyInCity() {
 		Actor_Face_Actor(kActorGordo, kActorMcCoy, true);
 		Loop_Actor_Walk_To_Actor(kActorGordo, kActorMcCoy, 48, false, false);
 #endif // BLADERUNNER_ORIGINAL_BUGS
+		// Made it so Gordo now asks McCoy for some money to buy some lichen dogs and McCoy will choose to do depending on his agenda.
+		// If McCoy does give Gordo some money he will receive the Gordo interview 1 clue. 
 		if (_vm->_cutContent) {
 			if (Game_Flag_Query(kFlagGordoIsReplicant)) {
 				Actor_Says(kActorGordo, 980, 15); //02-0980.AUD	Got any chinyen you can part with? Just so I can grab myself a couple of lichen-dogs.
@@ -1853,16 +1949,23 @@ void AIScriptGordo::talkToMcCoyInCity() {
 				&&  Player_Query_Agenda() != kPlayerAgendaErratic) {
 					if (Global_Variable_Query(kVariableChinyen) >= 10) {
 						Actor_Says(kActorMcCoy, 1025, 13); //00-1025.AUD	Absolutely.
-						AI_Movement_Track_Unpause(kActorGordo);
+						Actor_Change_Animation_Mode(kActorMcCoy, 23);
+						Actor_Change_Animation_Mode(kActorGordo, 23);
+						Delay(2000);
+						Actor_Says(kActorMcCoy, 8170, 15); //00-8170.AUD	There you go.
+						Delay(1000);
 						Actor_Modify_Friendliness_To_Other(kActorGordo, kActorMcCoy, 2);
 						if (Query_Difficulty_Level() != kGameDifficultyEasy) {
 							Global_Variable_Decrement(kVariableChinyen, 10);
 						}
 						Actor_Says(kActorMcCoy, 6485, 12);
 						Actor_Says(kActorGordo, 1010, 12); //02-1010.AUD	Bombing? I've never bombed in my life. My act is always happening. Always now.
-						Actor_Says(kActorMcCoy, 6495, 14);
-						Actor_Says(kActorGordo, 1020, 13);
-						Actor_Says(kActorMcCoy, 6500, 14);
+						if (Player_Query_Agenda() != kPlayerAgendaSurly
+						&&  Player_Query_Agenda() != kPlayerAgendaErratic) {
+							Actor_Says(kActorMcCoy, 6495, 14); //00-6495.AUD	Cut the shit. A man was killed back there.
+							Actor_Says(kActorGordo, 1020, 13); //02-1020.AUD	Gee, that's a drag. There's eight million stories in the naked city, you know.
+						}
+						Actor_Says(kActorMcCoy, 6500, 14); //00-6500.AUD	And you know nothing about it.
 						Actor_Says(kActorGordo, 1030, 15);
 						Actor_Clue_Acquire(kActorMcCoy, kClueGordoInterview1, false, kActorGordo);
 					} else {
@@ -1878,6 +1981,11 @@ void AIScriptGordo::talkToMcCoyInCity() {
 				&&  Player_Query_Agenda() != kPlayerAgendaErratic) {
 					if (Global_Variable_Query(kVariableChinyen) >= 10) {
 						Actor_Says(kActorMcCoy, 1025, 13); //00-1025.AUD	Absolutely.
+						Actor_Change_Animation_Mode(kActorMcCoy, 23);
+						Actor_Change_Animation_Mode(kActorGordo, 23);
+						Delay(2000);
+						Actor_Says(kActorMcCoy, 8170, 15); //00-8170.AUD	There you go.
+						Delay(1000);
 						Actor_Modify_Friendliness_To_Other(kActorGordo, kActorMcCoy, 2);
 						if (Query_Difficulty_Level() != kGameDifficultyEasy) {
 							Global_Variable_Decrement(kVariableChinyen, 10);
@@ -1885,11 +1993,14 @@ void AIScriptGordo::talkToMcCoyInCity() {
 						Actor_Says(kActorMcCoy, 6485, 12);
 						Actor_Says(kActorGordo, 1040, 12); //02-1040.AUD	Bombing? I had a cousin who bombed at Tyrell's niece's wedding.
 						Actor_Says(kActorGordo, 1050, 13);
-						Actor_Says(kActorMcCoy, 6505, 14);
+						Actor_Says(kActorMcCoy, 6505, 14); //00-6505.AUD	I'm talking about a real explosion. A man was killed.
 						Actor_Says(kActorGordo, 1060, 13);
-						Actor_Says(kActorGordo, 1070, 14);
-						Actor_Says(kActorMcCoy, 6510, 16);
-						Actor_Says(kActorGordo, 1080, 15);
+						Actor_Says(kActorGordo, 1070, 14); //02-1070.AUD	Except when I'm dealing with a luscious young lady.
+						if (Player_Query_Agenda() == kPlayerAgendaSurly
+						&&  Player_Query_Agenda() == kPlayerAgendaErratic) {
+							Actor_Says(kActorMcCoy, 6510, 16); //00-6510.AUD	I wouldn't use that one in your act, if I were you.
+							Actor_Says(kActorGordo, 1080, 15); //02-1080.AUD	Some work. Some don't.
+						}
 						Actor_Clue_Acquire(kActorMcCoy, kClueGordoInterview1, false, kActorGordo);
 					} else {
 						Actor_Says(kActorMcCoy, 430, 14); //00-0430.AUD	Sorry, pal. All I got are hundreds.
@@ -1968,6 +2079,7 @@ void AIScriptGordo::talkToMcCoyAtNR02() {
 	Actor_Face_Actor(kActorGordo, kActorMcCoy, true);
 	Actor_Face_Actor(kActorMcCoy, kActorGordo, true);
 	Actor_Says(kActorGordo, 290, 13);
+	// Made it so these lines only play in the vanilla mode since I moved them to the scene where you first met Gordo.
 	if (!_vm->_cutContent) {
 		Actor_Says(kActorGordo, 300, 14);
 		Actor_Says(kActorGordo, 310, 12);
@@ -1975,7 +2087,7 @@ void AIScriptGordo::talkToMcCoyAtNR02() {
 		Actor_Says(kActorMcCoy, 3215, kAnimationModeTalk);
 	}
 	Actor_Says(kActorMcCoy, 3220, 12); //00-3220.AUD	I’m gonna ask you a few questions.
-	// If you gave money to Gordo for lichen dogs he will not be annoyed at McCoy asking him questions.
+	// Made it so Gordo will only be annoyed at you if you have low friendliness with him.
 	if (_vm->_cutContent) {
 		if (Actor_Query_Friendliness_To_Other(kActorGordo, kActorMcCoy) < 51) {
 			Actor_Says(kActorGordo, 330, 17); //02-0330.AUD	Man, don’t you got anything better to do than hassle innocent people at their place of work?
@@ -2109,8 +2221,14 @@ void AIScriptGordo::dialogue1() {
 		Actor_Says(kActorGordo, 380, 12);
 		Actor_Says(kActorGordo, 390, 14);
 		//Made it so McCoy will also say these lines if he is erratic.
-		if (Player_Query_Agenda() == kPlayerAgendaSurly
-		|| (Player_Query_Agenda() == kPlayerAgendaErratic)) {
+		if (_vm->_cutContent) {
+			if (Player_Query_Agenda() == kPlayerAgendaSurly
+			|| (Player_Query_Agenda() == kPlayerAgendaErratic)) {
+				Actor_Says(kActorMcCoy, 3265, 13);
+				Actor_Says(kActorGordo, 400, 12);
+				Actor_Modify_Friendliness_To_Other(kActorGordo, kActorMcCoy, -2);
+			}
+		} else {
 			Actor_Says(kActorMcCoy, 3265, 13);
 			Actor_Says(kActorGordo, 400, 12);
 			Actor_Modify_Friendliness_To_Other(kActorGordo, kActorMcCoy, -3);
@@ -2120,6 +2238,7 @@ void AIScriptGordo::dialogue1() {
 	case 770: // JOB
 		Actor_Says(kActorMcCoy, 3235, kAnimationModeTalk);
 		Actor_Says(kActorGordo, 410, 12); //02-0410.AUD	You mean my type as in talented, right? I had to fill in last minute for that snake woman.
+		// Made it so McCoy only talks to Gordo about Zhora if he saw the news report about her getting retired.
 		if (_vm->_cutContent) {
 			if (Game_Flag_Query(kFlagZhoraNewsReport)) {
 				Actor_Says(kActorMcCoy, 3270, 15); //00-3270.AUD	Did you hear what happened to her?
@@ -2157,7 +2276,16 @@ void AIScriptGordo::dialogue1() {
 		Actor_Says(kActorGordo, 480, 13);
 		Actor_Says(kActorGordo, 490, 12);
 		Actor_Says(kActorGordo, 500, 13);
-		Actor_Says(kActorMcCoy, 3290, 16);
+		if (_vm->_cutContent) {
+			if (Player_Query_Agenda() == kPlayerAgendaSurly
+			|| (Player_Query_Agenda() == kPlayerAgendaErratic)) {
+				Actor_Says(kActorMcCoy, 3290, 16); //00-3290.AUD	Yeah. I’m sure you’re irresistible.
+			} else {
+				Actor_Says(kActorMcCoy, 4880, 13); //00-4880.AUD	Is that right?
+			}
+		} else {
+			Actor_Says(kActorMcCoy, 3290, 16); 
+		}
 		Actor_Says(kActorGordo, 510, 15);
 #if BLADERUNNER_ORIGINAL_BUGS
 		Actor_Says(kActorMcCoy, 3295, 14);
@@ -2166,7 +2294,11 @@ void AIScriptGordo::dialogue1() {
 		Actor_Says_With_Pause(kActorMcCoy, 3295, 0.0f, 14);
 #endif // BLADERUNNER_ORIGINAL_BUGS
 		Actor_Says(kActorGordo, 520, 12);
-		Actor_Modify_Friendliness_To_Other(kActorGordo, kActorMcCoy, -4);
+		if (_vm->_cutContent) {
+			Actor_Modify_Friendliness_To_Other(kActorGordo, kActorMcCoy, -2);
+		} else {
+			Actor_Modify_Friendliness_To_Other(kActorGordo, kActorMcCoy, -4);
+		}
 		break;
 
 	case 790: // LUCY

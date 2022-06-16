@@ -43,7 +43,7 @@ void AIScriptInsectDealer::Initialize() {
 	_frameDelta = 1;
 	_var2 = 6;
 	_counter = 0;
-
+	// Made it so the insect dealer won't appear if she is arrested.
 	if (_vm->_cutContent) {
 		if (!Game_Flag_Query(kFlagInsectDealerArrested)) {
 			Actor_Put_In_Set(kActorInsectDealer, kSetAR01_AR02);
@@ -58,6 +58,8 @@ void AIScriptInsectDealer::Initialize() {
 }
 
 bool AIScriptInsectDealer::Update() {
+	// Made it so the insect dealer will only appear in act 3 if she agreed to help you find information on the dragonfly earring. If she didn't agree she won't be at her stall
+	// since she has no reason to wait around for you.
 	if (_vm->_cutContent) {
 		if (Global_Variable_Query(kVariableChapter) == 3) {
 			if (!Actor_Clue_Query(kActorMcCoy, kCluePeruvianLadyInterview) 

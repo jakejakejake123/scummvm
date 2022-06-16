@@ -280,19 +280,84 @@ void SceneScriptNR04::ActorChangedGoal(int actorId, int newGoal, int oldGoal, bo
 			Actor_Says(kActorMcCoy, 3390, 3);
 			if (_vm->_cutContent) {
 				if (Game_Flag_Query(kFlagEarlyQIsReplicant)) {
+					Player_Loses_Control();
+					Loop_Actor_Walk_To_XYZ(kActorMcCoy, 18.56f, 0.0f, 38.86f, 0, true, false, false);
+					Actor_Face_Actor(kActorMcCoy, kActorEarlyQ, true);
 					Delay(1000);
 					Actor_Says(kActorEarlyQ, 190, 74); //18-0190.AUD	You’re cold, General.
 					Delay(2000);
-					Actor_Says(kActorMcCoy, 6865, 14); //00-6865.AUD	You're a Replicant.
-					Player_Loses_Control();
-					Delay(2500);
-					Actor_Face_Actor(kActorEarlyQ, kActorMcCoy, true);
-					Actor_Change_Animation_Mode(kActorEarlyQ, kAnimationModeCombatAttack);
-					Delay(100);
-					Actor_Change_Animation_Mode(kActorMcCoy, kAnimationModeCombatHit);
-					Delay(250);
-					Actor_Change_Animation_Mode(kActorMcCoy, kAnimationModeDie);
-					Actor_Retired_Here(kActorMcCoy, 12, 12, true, -1);
+					if (!Game_Flag_Query(kFlagMcCoyIsHelpingReplicants)) {
+						Actor_Says(kActorMcCoy, 6865, 14); //00-6865.AUD	You're a Replicant.
+						Music_Stop(1u);
+						Delay(1000);
+						Actor_Change_Animation_Mode(kActorEarlyQ, 4);
+						Delay(1000);
+						Actor_Face_Actor(kActorEarlyQ, kActorMcCoy, true);
+						Actor_Change_Animation_Mode(kActorEarlyQ, kAnimationModeCombatAttack);
+						Actor_Change_Animation_Mode(kActorMcCoy, 21);
+						Music_Play(kMusicMoraji, 71, 0, 0, -1, kMusicLoopPlayOnce, 2);
+						Delay(1000);
+						Loop_Actor_Walk_To_XYZ(kActorMcCoy, 7.84, 0.26, 172.93, 0, false, true, false);
+						Actor_Face_Actor(kActorEarlyQ, kActorMcCoy, true);
+						Actor_Face_Actor(kActorMcCoy, kActorEarlyQ, true);
+						Sound_Play(kSfxGUNH1A, 100, 0, 0, 50);
+						Actor_Change_Animation_Mode(kActorMcCoy, 6);
+						Delay(1000);
+						Loop_Actor_Walk_To_XYZ(kActorMcCoy, -17.91, 0.24, 247.39, 0, true, true, false);
+						Actor_Face_Actor(kActorEarlyQ, kActorMcCoy, true);
+						Actor_Face_Actor(kActorMcCoy, kActorEarlyQ, true);
+						Sound_Play(kSfxGUNH1A, 100, 0, 0, 50);
+						Actor_Change_Animation_Mode(kActorMcCoy, 6);
+						Actor_Change_Animation_Mode(kActorEarlyQ, 21);
+						Delay(1000);
+						Loop_Actor_Walk_To_XYZ(kActorMcCoy, -30.30, 0.22, 299.78, 0, false, true, false);
+						Actor_Face_Actor(kActorEarlyQ, kActorMcCoy, true);
+						Actor_Change_Animation_Mode(kActorEarlyQ, kAnimationModeCombatAttack);
+						Actor_Change_Animation_Mode(kActorMcCoy, 22);
+						Delay(1000);
+						Actor_Face_Actor(kActorMcCoy, kActorEarlyQ, true);
+						Sound_Play(kSfxGUNH1A, 100, 0, 0, 50);
+						Actor_Change_Animation_Mode(kActorMcCoy, 6);
+						Actor_Change_Animation_Mode(kActorEarlyQ, 21);
+						Delay(1000);
+						Loop_Actor_Walk_To_XYZ(kActorMcCoy, 31.22f, 0.0f, 267.51f, 0, true, false, false);
+						Actor_Face_Actor(kActorEarlyQ, kActorMcCoy, true);
+						Actor_Change_Animation_Mode(kActorEarlyQ, kAnimationModeCombatAttack);
+						Actor_Change_Animation_Mode(kActorMcCoy, 22);
+						Delay(1000);
+						Actor_Face_Actor(kActorEarlyQ, kActorMcCoy, true);
+						Actor_Change_Animation_Mode(kActorEarlyQ, 7);
+						Delay(1000);
+						Actor_Face_Actor(kActorEarlyQ, kActorMcCoy, true);
+						Actor_Face_Actor(kActorMcCoy, kActorEarlyQ, true);
+						Sound_Play(kSfxGUNH1A, 100, 0, 0, 50);
+						Actor_Change_Animation_Mode(kActorMcCoy, 6);
+						AI_Movement_Track_Flush(kActorEarlyQ);
+						Actor_Change_Animation_Mode(kActorEarlyQ, kAnimationModeDie);
+						Actor_Retired_Here(kActorEarlyQ, 6, 6, true, kActorMcCoy);
+						Actor_Face_Heading(kActorEarlyQ, 760, false);
+						Actor_Set_At_XYZ(kActorEarlyQ, 122.09f, 0.14f, 370.11f, 760);
+						Actor_Says(kActorMcCoy, 490, -1); //00-0490.AUD	Suck on this, skin-job!
+						Delay(1000);
+						Game_Flag_Set(kFlagEarlyQDead);
+						Game_Flag_Reset(kFlagMcCoyIsHelpingReplicants);
+						Actor_Modify_Friendliness_To_Other(kActorSteele, kActorMcCoy, 2);
+						Actor_Modify_Friendliness_To_Other(kActorClovis, kActorMcCoy, -2);
+						Actor_Modify_Friendliness_To_Other(kActorGuzza, kActorMcCoy, 2);
+						Actor_Modify_Friendliness_To_Other(kActorGaff, kActorMcCoy, 2);
+						Actor_Set_Targetable(kActorEarlyQ, false);
+						if (Query_Difficulty_Level() != kGameDifficultyEasy) {
+							Global_Variable_Increment (kVariableChinyen, 200);
+						}
+						if (Game_Flag_Query(kFlagHanoiIsReplicant)) {
+							Actor_Set_Goal_Number(kActorHanoi, kGoalHanoiNR04Enter);
+						} else {
+							Player_Gains_Control();
+						}
+					} else {
+						Actor_Face_Actor(kActorEarlyQ, kActorMcCoy, true);
+						Actor_Set_Goal_Number(kActorEarlyQ, kGoalEarlyQNR04GoToMcCoy);
+					}
 				} else {
 					Actor_Face_Actor(kActorEarlyQ, kActorMcCoy, true);
 					Actor_Says(kActorEarlyQ, 110, 74);
@@ -468,7 +533,7 @@ if (_vm->_cutContent) {
 				Actor_Face_Actor(kActorEarlyQ, kActorMcCoy, true);
 				Actor_Says(kActorEarlyQ, 30, 13); //18-0030.AUD	How’re you doing, General? You got a warrant to show me or you’re just breaking and entering?
 				Actor_Voice_Over(4260, kActorVoiceOver); //99-4260.AUD	Early, you sick bastard.
-				Actor_Says(kActorEarlyQ, 750, 12); //18-0750.AUD	Look, General. No reason to get your panties in a bind. If I’d known you were gonna get so testy, I would have tossed you the straight dope to begin with.
+				Actor_Says(kActorEarlyQ, 750, 18); //18-0750.AUD	Look, General. No reason to get your panties in a bind. If I’d known you were gonna get so testy, I would have tossed you the straight dope to begin with.
 				Actor_Says(kActorMcCoy, 8519, 13); //00-8519.AUD	What do you say we dish each other the straight goods.
 				Actor_Says(kActorEarlyQ, 700, 15); //18-0700.AUD	I heard some things, yeah. I’m the kind of guy people confide in, you know.
 				Actor_Says(kActorMcCoy, 4760, 12); // 00-4760.AUD	About the girl.
@@ -477,11 +542,11 @@ if (_vm->_cutContent) {
 				Delay (2000);
 				Actor_Says(kActorMcCoy, 840, 14); //00-0840.AUD	Did you hear me?
 				Delay (2000);
-				Actor_Says(kActorEarlyQ, 540, 12); //18-0540.AUD	Of course, she ain’t half bad looking. My pappy always used to say ‘if there’s grass on the field, it’s time to play ball’.
+				Actor_Says(kActorEarlyQ, 540, 19); //18-0540.AUD	Of course, she ain’t half bad looking. My pappy always used to say ‘if there’s grass on the field, it’s time to play ball’.
 				Actor_Says(kActorMcCoy, 4800, 14); //00-4800.AUD	You son of a bitch she couldn't object.
 				Actor_Says(kActorEarlyQ, 50, 16); //18-0050.AUD	Hey, hey, I don’t hassle you about your private life.
 				Actor_Says(kActorMcCoy, 2255, 15); //00-2255.AUD	She was innocent, you bastard!
-				Actor_Says(kActorEarlyQ, 530, 12); //18-0530.AUD	This ain’t no daycare center, General.
+				Actor_Says(kActorEarlyQ, 530, 18); //18-0530.AUD	This ain’t no daycare center, General.
 				Actor_Clue_Acquire(kActorMcCoy, kClueEarlyAttemptedToSeduceLucy, true, kActorEarlyQ);
 				Delay (1000);
 				Actor_Says(kActorMcCoy, 3405, 13); //00-3405.AUD	Sit down.

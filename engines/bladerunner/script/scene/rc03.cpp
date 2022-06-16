@@ -362,12 +362,13 @@ void SceneScriptRC03::PlayerWalkedIn() {
 									Actor_Says(kActorMcCoy, 4840, 15);
 									Actor_Says(kActorSteele, 1990, kAnimationModeTalk); //01-1990.AUD	A little word of advice, Slim. Stay out of my way.
 									Actor_Says(kActorSteele, 2000, kAnimationModeTalk); //01-2000.AUD	Next time I'm not gonna worry about who's in my line of fire, understand?
+									Actor_Modify_Friendliness_To_Other(kActorSteele, kActorMcCoy, -2);
 								} else {
 									Delay(2000);
 									Actor_Says(kActorSteele, 2110, 15); //01-2110.AUD	That's okay.
+									Actor_Modify_Friendliness_To_Other(kActorSteele, kActorMcCoy, -1);
 								}
 								Game_Flag_Set(kFlagIzoGotAway);
-								Actor_Modify_Friendliness_To_Other(kActorSteele, kActorMcCoy, -2);
 								Actor_Modify_Friendliness_To_Other(kActorGuzza, kActorMcCoy, -2);
 								Actor_Modify_Friendliness_To_Other(kActorClovis, kActorMcCoy, 2);
 								Actor_Set_Goal_Number(kActorSteele, kGoalSteeleLeaveRC03);

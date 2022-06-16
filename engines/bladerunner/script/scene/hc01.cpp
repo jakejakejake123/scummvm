@@ -223,7 +223,6 @@ bool SceneScriptHC01::ClickedOnExit(int exitId) {
 
 	if (exitId == 1) {
 		if (!Loop_Actor_Walk_To_XYZ(kActorMcCoy, 607.0f, 0.14f, 9.0f, 0, true, false, false)) {
-			Game_Flag_Set(kFlagHC01toHC03);
 			Set_Enter(kSetHC01_HC02_HC03_HC04, kSceneHC03);
 		}
 		return true;

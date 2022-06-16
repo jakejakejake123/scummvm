@@ -438,9 +438,7 @@ void SceneScriptDR03::dialogueWithChew() {
 	case 640: // EISENDULLER
 		if (_vm->_cutContent) {
 			Actor_Says(kActorMcCoy, 765, 12);
-			if (Actor_Clue_Query(kActorMcCoy, kClueCrystalsCase)) {
-				Actor_Says_With_Pause(kActorMcCoy, 785, 0.80f, 18);
-			}
+			Actor_Says_With_Pause(kActorMcCoy, 785, 0.80f, 18);
 			Actor_Says(kActorMcCoy, 790, 13);
 			Actor_Says(kActorChew, 310, 12);
 			Actor_Says(kActorChew, 320, 3);

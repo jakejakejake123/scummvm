@@ -647,8 +647,12 @@ void SceneScriptCT01::PlayerWalkedIn() {
 		//Also I have restored the dispatcher dialogue for when either Leary or Grayford finds the car and calls it in so a flag had been added in called Leary checks car has been
 		//added in. This other dispatcher dialogue plays after you talk to Gaff in act 1 and will happen either in China town or McCoys apartment.
 		if (_vm->_cutContent) {
-			if (!Game_Flag_Query(kFlagCT01Visit) && !Actor_Clue_Query(kActorMcCoy, kClueDispatchHitAndRun)) {
-				Actor_Clue_Acquire(kActorMcCoy, kClueDispatchHitAndRun, false, kActorDispatcher);
+			if (!Game_Flag_Query(kFlagCT01Visit)) {
+				if (Actor_Clue_Query(kActorMcCoy, kCluePaintTransfer)
+				|| Actor_Clue_Query(kActorMcCoy, kClueCrowdInterviewB)
+				|| Actor_Clue_Query(kActorMcCoy, kClueCarColorAndMake)) {
+					Actor_Clue_Acquire(kActorMcCoy, kClueDispatchHitAndRun, false, kActorDispatcher);
+				}
 				Delay (1000);
 				Game_Flag_Set(kFlagCT01Visit);
 				ADQ_Add(kActorDispatcher, 80, kAnimationModeTalk);		

@@ -61,10 +61,13 @@ void AIScriptHasan::Initialize() {
 }
 
 bool AIScriptHasan::Update() {
+	// Made it so Hasan doesn't appear in act 3 if Bob hasn't been either arrested or retired. If Bob is still around Hasan will be nervous about this and will
+	// shut up shop early therefore not appearing act 3. However if Bob is arrested or retired Hasan won't be nervous so he will still be hanging around. 
 	if (_vm->_cutContent) {
 		if (Actor_Query_Goal_Number(kActorHasan) != kGoalHasanIsAway 
 		&& !Game_Flag_Query(kFlagBulletBobArrested)
 		&& !Actor_Clue_Query(kActorMcCoy, kClueBobShotInSelfDefense)
+		&& !Actor_Clue_Query(kActorMcCoy, kClueBobShotInColdBlood)
 		&& Global_Variable_Query(kVariableChapter) > 2) {
 			// use this goal to put Hasan in a FreeSlot set for Act 1
 			Actor_Set_Goal_Number(kActorHasan, kGoalHasanIsAway);

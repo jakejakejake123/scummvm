@@ -305,15 +305,17 @@ bool ESPERScript::SCRIPT_ESPER_DLL_Special_Region_Selected(int photo, int region
 			}
 		} else if (region == 7) {
 			if (_vm->_cutContent) {
-				if (Game_Flag_Query(kFlagAR02ScorpionsChecked)) {
+				if (Game_Flag_Query(kFlagAR02ScorpionsChecked)
+				|| Actor_Clue_Query(kActorMcCoy, kClueScorpions)) {
 					Actor_Voice_Over(4190, kActorVoiceOver);
+					Actor_Says(kActorMcCoy, 6945, 3);
+					Sound_Play(kSfxBR034_1A, 50, 0, 0, 50);
+					Actor_Clue_Acquire(kActorMcCoy, kClueScorpionbox, true, -1);
 				} else {
-					Actor_Says(kActorMcCoy, 6975, kAnimationModeTalk);
+					Actor_Says(kActorMcCoy, 8525, 3); // 00-8525.AUD	Hmph.
 				}
-			} else {
+			} else if (!Actor_Clue_Query(kActorMcCoy, kClueScorpionbox)) {
 				Actor_Voice_Over(4190, kActorVoiceOver);
-			}
-			if (!Actor_Clue_Query(kActorMcCoy, kClueScorpionbox)) {
 				Actor_Says(kActorMcCoy, 6945, 3);
 				Sound_Play(kSfxBR034_1A, 50, 0, 0, 50);
 				Actor_Clue_Acquire(kActorMcCoy, kClueScorpionbox, true, -1);
@@ -426,13 +428,23 @@ bool ESPERScript::SCRIPT_ESPER_DLL_Special_Region_Selected(int photo, int region
 
 		case 19:
 			if (_vm->_cutContent) {
-				Actor_Says(kActorMcCoy, 8790, 3); //00-8790.AUD	A dog collar.
-			}
-			Actor_Voice_Over(4160, kActorVoiceOver);
-			if (!Actor_Clue_Query(kActorMcCoy, kClueDogCollar2)) {
-				Actor_Says(kActorMcCoy, 6945, 3);
-				Sound_Play(kSfxBR034_1A, 50, 0, 0, 50);
-				Actor_Clue_Acquire(kActorMcCoy, kClueDogCollar2, true, -1);
+				if (!Actor_Clue_Query(kActorMcCoy, kClueAttemptedFileAccess)) {
+					Actor_Says(kActorMcCoy, 8790, 3); //00-8790.AUD	A dog collar.
+				} else {
+					Actor_Voice_Over(4160, kActorVoiceOver);
+					if (!Actor_Clue_Query(kActorMcCoy, kClueDogCollar2)) {
+						Actor_Says(kActorMcCoy, 6945, 3);
+						Sound_Play(kSfxBR034_1A, 50, 0, 0, 50);
+						Actor_Clue_Acquire(kActorMcCoy, kClueDogCollar2, true, -1);
+					}
+				} 
+			} else {
+				Actor_Voice_Over(4160, kActorVoiceOver);
+				if (!Actor_Clue_Query(kActorMcCoy, kClueDogCollar2)) {
+					Actor_Says(kActorMcCoy, 6945, 3);
+					Sound_Play(kSfxBR034_1A, 50, 0, 0, 50);
+					Actor_Clue_Acquire(kActorMcCoy, kClueDogCollar2, true, -1);
+				}
 			}
 			break;
 

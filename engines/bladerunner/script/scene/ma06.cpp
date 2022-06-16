@@ -109,7 +109,7 @@ void SceneScriptMA06::PlayerWalkedIn() {
 	Loop_Actor_Walk_To_XYZ(kActorMcCoy, 40.0f, 1.35f, 0.0f, 0, false, false, false);
 	Actor_Face_Object(kActorMcCoy, "panel", true);
 	if (_vm->_cutContent) {
-		Music_Stop(3u);
+		Music_Stop(1u);
 	}
 	Delay(500);
 	bool normalElevatorBusiness = true;
@@ -131,7 +131,10 @@ void SceneScriptMA06::PlayerWalkedIn() {
 			Game_Flag_Set(kFlagMA06toMA07);                
 			Actor_Face_Actor(kActorMcCoy, kActorRachael, true);
 			Actor_Says(kActorMcCoy, 2710, 14);             // Excuse me
-
+			Actor_Face_Object(kActorMcCoy, "panel", true);
+			Delay(1000);
+			Actor_Face_Actor(kActorMcCoy, kActorRachael, true);
+			Delay(1000);
 			Actor_Says(kActorMcCoy, 2730, 12);             // RachaelRight
 			AI_Movement_Track_Pause(kActorRachael);
 			Actor_Set_Goal_Number(kActorRachael, kGoalRachaelIsInsideElevatorStartTalkAct3);
@@ -145,13 +148,20 @@ void SceneScriptMA06::PlayerWalkedIn() {
 			Ambient_Sounds_Remove_Looping_Sound(kSfxSPINUP1,  1u);         // stop elev moving sound
 			Ambient_Sounds_Remove_Looping_Sound(kSfxAPRTFAN1, 1u);         // stop other ambient
 			Ambient_Sounds_Remove_Looping_Sound(kSfxELEAMB3,  1u);         // stop other ambient
-			Actor_Says_With_Pause(kActorRachael, 300, 1.0f, 14);  // GoodbyeMcCoy
-			Actor_Says(kActorRachael, 310, 14);                   // Isnt ThisYourFloor --
-			Actor_Says(kActorMcCoy, 2860, 14);                    // YouTakeCareOfYoursel
-
-			Set_Enter(kSetMA02_MA04, kSceneMA02);
+			if (!_vm->_cutContent) {
+				Actor_Says_With_Pause(kActorRachael, 300, 1.0f, 14);  // GoodbyeMcCoy
+				Actor_Says(kActorRachael, 310, 14);                   // Isnt ThisYourFloor --
+				Actor_Says(kActorMcCoy, 2860, 14);                    // YouTakeCareOfYoursel
+			}
+			Set_Enter(kSetMA07, kSceneMA07);
 			Scene_Loop_Start_Special(kSceneLoopModeChangeSet, kMA06LoopDoorClose, true);
 			Sound_Play(kSfxELDOORO2, 100, 50, 50, 50);
+			Delay(1100);
+			Actor_Set_Goal_Number(kActorRachael, kGoalRachaelIsOutsideMcCoysBuildingAct3);
+			AI_Movement_Track_Unpause(kActorRachael);
+			if (!Game_Flag_Query(kFlagMcCoyIsHelpingReplicants)) {
+				Player_Set_Combat_Mode(true);
+			}
 		} else if (Game_Flag_Query(kFlagMA02toMA06)
 			&& Actor_Query_Goal_Number(kActorRachael) == kGoalRachaelIsInsideMcCoysElevatorAct4
 		) {
@@ -277,6 +287,9 @@ void SceneScriptMA06::activateElevator() {
 		Scene_Loop_Start_Special(kSceneLoopModeOnce, kMA06LoopMainLoop, true);
 
 		if (floorLevel > 1) {
+			if (_vm->_cutContent) {
+				Actor_Says(kActorMcCoy, 2865, 17);   // Lobby
+			}
 			Game_Flag_Set(kFlagMA06toMA07);
 		} else if (floorLevel == 1) {
 			if (Game_Flag_Query(kFlagSpinnerAtMA01)) {

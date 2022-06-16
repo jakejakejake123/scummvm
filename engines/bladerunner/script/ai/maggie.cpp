@@ -601,6 +601,7 @@ bool AIScriptMaggie::GoalChanged(int currentGoalNumber, int newGoalNumber) {
 		Scene_Exits_Disable();
 		if (_vm->_cutContent) {
 			Sound_Play(kSfxDOGFAR1,  40, 0, 0, 50);
+			Delay(1000);
 		}
 		Loop_Actor_Walk_To_XYZ(kActorMaggie, -734.0, 0.0, -432.0, 0, false, false, false);
 		Actor_Face_Actor(kActorMaggie, kActorMcCoy, true);
@@ -617,6 +618,7 @@ bool AIScriptMaggie::GoalChanged(int currentGoalNumber, int newGoalNumber) {
 		if (_vm->_cutContent) {
 			Delay(2000);
 			Sound_Play(kSfxDOGCRY1,  40, 0, 0, 50);
+			Delay(1000);
 		}
 		AI_Movement_Track_Flush(kActorMaggie);
 		AI_Movement_Track_Append(kActorMaggie, 540, 0);

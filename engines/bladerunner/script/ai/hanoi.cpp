@@ -172,7 +172,7 @@ void AIScriptHanoi::ClickedByPlayer() {
 		}
 
 		if (Actor_Query_Goal_Number(kActorHanoi) == kGoalHanoiNR08WatchShow) {
-			// Made it so if Hanoi is a replicant he is more protective of Dektora and contantly tells him to look but don't touch.
+			// Made it so if Hanoi is a replicant he is more protective of Dektora and contantly tells McCoy to look but don't touch.
 			if (_vm->_cutContent) {
 				if (Game_Flag_Query(kFlagHanoiIsReplicant)) {
 					Actor_Says(kActorHanoi, 120, kAnimationModeTalk); //25-0120.AUD	Look but don’t touch, boy-o.
@@ -181,8 +181,6 @@ void AIScriptHanoi::ClickedByPlayer() {
 					Actor_Says(kActorMcCoy, 5075, 18); //00-5075.AUD	Hey, pal.
 					Actor_Says(kActorHanoi, 210, kAnimationModeTalk); //25-0210.AUD	Sod off, McCoy. I got no time for you.
 				}
-			} else {
-				Actor_Says(kActorHanoi, 210, kAnimationModeTalk); //25-0210.AUD	Sod off, McCoy. I got no time for you.
 			}
 		}
 	}
@@ -206,10 +204,7 @@ void AIScriptHanoi::OtherAgentEnteredCombatMode(int otherActorId, int combatMode
 	 && combatMode
 	) {
 		// Added in some dialogue where Hanoi makes some comments on McCoy pulling out his gun and then Hanoi approaches him.
-		// I wanted to have Hanoi grab McCoy and McCoy says let go you lug but I couldn't get it to work. Maybe you could add this in?
-		// Update: I got the scene where Hanoi grabs McCoy to work, however McCoy teleports slightly when Hanoi is in front of him so he can be grabbed properly.
-		// Maybe you could find a way to fix this?
-		// Made it so if Hanoi is human he doesn't throw McCoy out of the club when McCoy draws his gun. Instead he warns him and this warning will differ slightly based on Hanois status. McCoy complies and puts the gun away.
+		// Made it so if Hanoi is human he doesn't throw McCoy out of the club when McCoy draws his gun. Instead he just warns him. McCoy complies and puts the gun away.
 		// Hanoi never throws McCoy out if he is human since he is less aggressive, however when he is a replicant he always throws McCoy out.
 		if (_vm->_cutContent) {
 			Actor_Face_Actor(kActorHanoi, kActorMcCoy, true);
@@ -221,8 +216,9 @@ void AIScriptHanoi::OtherAgentEnteredCombatMode(int otherActorId, int combatMode
 				Actor_Says(kActorHanoi, 180, 13); //25-0180.AUD	Early Q's is for lovers, not fighters.
 			}
 			if (!Game_Flag_Query(kFlagHanoiIsReplicant)) {
-				Actor_Says(kActorMcCoy, 725, kAnimationModeTalk); //00-0725.AUD	Relax! I hear ya.
+				Actor_Says(kActorMcCoy, 725, -1); //00-0725.AUD	Relax! I hear ya.
 				Player_Set_Combat_Mode(false);
+				Delay(1500);
 			} else {
 				Loop_Actor_Walk_To_Actor(kActorHanoi, kActorMcCoy, 48, true, false); 
 				Actor_Set_Goal_Number(kActorHanoi, kGoalHanoiThrowOutMcCoy);
@@ -424,8 +420,8 @@ bool AIScriptHanoi::GoalChanged(int currentGoalNumber, int newGoalNumber) {
 		break;
 
 	case kGoalHanoiNR04ShootMcCoy:
-		// The new code for when replicant Hanoi tries to shoot McCoy. This time around McCoy is faster on the draw
-		// and shoots Hanoi dead before he has a chance to fire his shotgun.
+		// The new code for when replicant Hanoi tries to shoot McCoy. This time around McCoy and and Hanoi will get into a fight with each other
+		// and this will continue outside of the nightclub.
 		if (_vm->_cutContent) {
 			if (Game_Flag_Query(kFlagHanoiIsReplicant)) {
 				Actor_Change_Animation_Mode(kActorHanoi, 4);
@@ -437,22 +433,20 @@ bool AIScriptHanoi::GoalChanged(int currentGoalNumber, int newGoalNumber) {
 				Actor_Says(kActorMcCoy, 7260, -1); //00-7260.AUD	Didn't I see an incept tape at the—	
 				Sound_Play(kSfxSHOTCOK1, 77, 0, 0, 20);
 				Delay (1000);
-				Actor_Change_Animation_Mode(kActorMcCoy, 6);
+				Actor_Start_Speech_Sample(kActorMcCoy, 490); //00-0490.AUD	Suck on this, skin-job!
 				Sound_Play(kSfxGUNH1A, 100, 0, 0, 50);
 				Actor_Change_Animation_Mode(kActorHanoi, 21);
-				Actor_Says(kActorMcCoy, 490, 6); //00-0490.AUD	Suck on this, skin-job!
-				Music_Stop(3u);
-				Delay(1000);
-				Actor_Change_Animation_Mode(kActorMcCoy, 6);
-				Sound_Play(kSfxGUNH1A, 100, 0, 0, 50);
 				Loop_Actor_Walk_To_XYZ(kActorHanoi, 47.04, 0.18, 321.63, 0, false, false, false);
+				Music_Stop(1u);
 				Actor_Face_Actor(kActorHanoi, kActorMcCoy, true);
 				Actor_Face_Actor(kActorMcCoy, kActorHanoi, true);
-				Ambient_Sounds_Play_Sound(kSfxKICK2, 90, 99, 0, 0);
+				Delay(500);
 				Actor_Change_Animation_Mode(kActorHanoi, 71);
+				Delay(500);
 				Actor_Change_Animation_Mode(kActorMcCoy, 21);
+				Ambient_Sounds_Play_Sound(kSfxKICK2, 90, 99, 0, 0);
 				Music_Play(kMusicBeating1, 71, 0, 0, -1, kMusicLoopPlayOnce, 2);
-				Delay(2000);
+				Delay(1000);
 				Loop_Actor_Walk_To_XYZ(kActorMcCoy, 5.29, 0.24, 226.55, 0, false, true, false);
 				Actor_Face_Actor(kActorHanoi, kActorMcCoy, true);
 				Actor_Face_Actor(kActorMcCoy, kActorHanoi, true);
@@ -462,7 +456,7 @@ bool AIScriptHanoi::GoalChanged(int currentGoalNumber, int newGoalNumber) {
 				Loop_Actor_Walk_To_XYZ(kActorHanoi, 13.51, 0.22, 256.05, 0, false, false, false);
 				Actor_Change_Animation_Mode(kActorHanoi, 23);
 				Actor_Set_Invisible(kActorMcCoy, true);
-				Actor_Says(kActorMcCoy, 3595, kAnimationModeTalk);
+				Actor_Says(kActorMcCoy, 3595, kAnimationModeTalk); //00-3595.AUD	Wait a minute-- (grunts)
 				Actor_Says(kActorMcCoy, 3785, kAnimationModeTalk); //00-3785.AUD	Let go, you lug. I gotta-- (grunts)
 				Actor_Set_Goal_Number(kActorHanoi, kGoalHanoiThrowOutMcCoy);
 				Game_Flag_Set(kFlagHanoiFight);

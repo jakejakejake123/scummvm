@@ -369,11 +369,30 @@ void SceneScriptMA04::PlayerWalkedIn() {
 		return;
 	}
 	if ((Game_Flag_Query(kFlagZubenRetired) || Game_Flag_Query(kFlagZubenSpared)) && !Game_Flag_Query(kFlagChapter1Ending)) {
-		Music_Play(kMusicBRBlues, 52, 0, 2, -1, kMusicLoopPlayOnce, 0);
-		Player_Loses_Control();
+		if (_vm->_cutContent) {
+			Overlay_Play("MA04OVR2", 0, true, false, 0);
+			Player_Loses_Control();
+		}
+		if (!_vm->_cutContent) {
+			Music_Play(kMusicBRBlues, 52, 0, 2, -1, kMusicLoopPlayOnce, 0);
+			Player_Loses_Control();
+		}
 		Loop_Actor_Walk_To_XYZ(kActorMcCoy, -7199.0f, 955.0f, 1677.0f, 0, true, false, false);
 		if (isPhoneMessageWaiting() || isPhoneRinging()) {
-			Overlay_Remove("MA04OVER");
+			Overlay_Remove("MA04OVER");	
+		}
+		if (_vm->_cutContent) {		
+			Actor_Face_Object(kActorMcCoy, "BED-TV-1", true);
+			ADQ_Add(kActorNewscaster, 40, kAnimationModeTalk);
+			ADQ_Add(kActorNewscaster, 50, kAnimationModeTalk);
+			ADQ_Add(kActorNewscaster, 60, kAnimationModeTalk);
+			ADQ_Add(kActorNewscaster, 70, kAnimationModeTalk);
+			ADQ_Add(kActorNewscaster, 80, kAnimationModeTalk);
+			Delay(20000);
+			Overlay_Remove("MA04OVR2");
+			ADQ_Add(kActorMcCoy, 8625, 14); //00-8625.AUD	This city is a cesspool.
+			Music_Play(kMusicBRBlues, 52, 0, 2, -1, kMusicLoopPlayOnce, 0);
+			Delay(4000);
 		}
 		Loop_Actor_Walk_To_XYZ(kActorMcCoy, -7199.0f, 955.0f, 1675.0f, 0, true, false, false);
 		Game_Flag_Set(kFlagChapter1Ending);
@@ -627,6 +646,8 @@ void SceneScriptMA04::phoneCallWithSteele() {
 		if (Actor_Query_Friendliness_To_Other(kActorSteele, kActorMcCoy) > 50) {
 			Actor_Says(kActorSteele, 810, 3); //01-0810.AUD	Mm. I’m liking your style more and more.
 			Actor_Says(kActorMcCoy, 1885, 13); //00-1885.AUD	I’ll take that as a yes.
+			Delay(1000);
+			Actor_Says(kActorMcCoy, 3170, 13); //00-3170.AUD	I’m there.
 		} else {
 			Actor_Says(kActorSteele, 820, 3); //01-0820.AUD	But first come, first serve. I share my bonuses with nobody. See you on the other side, Slim.
 		}

@@ -278,9 +278,39 @@ void SceneScriptUG18::ActorChangedGoal(int actorId, int newGoal, int oldGoal, bo
 			Actor_Modify_Friendliness_To_Other(kActorSadik, kActorMcCoy, 10);
 			Player_Loses_Control();
 			Actor_Face_Actor(kActorGuzza, kActorMcCoy, true);
-			ADQ_Add(kActorGuzza, 1220, 58);
+			if (_vm->_cutContent) {
+				Actor_Says(kActorGuzza, 1220, 58);
+			} else {
+				ADQ_Add(kActorGuzza, 1220, 58);
+			}
 			Scene_Exits_Enable();
 			Actor_Set_Goal_Number(kActorGuzza, kGoalGuzzaUG18ShotByMcCoy);
+			if (_vm->_cutContent) {
+				if (Actor_Query_Friendliness_To_Other(kActorClovis, kActorMcCoy) > 50
+				&& Game_Flag_Query(kFlagMcCoyRetiredHuman)) {
+					Delay(2000);
+					Actor_Says(kActorSadik, 360, 14); // The Hunter, he do us a favor...
+					Actor_Says(kActorSadik, 380, 14); //08-0380.AUD	You better than I thought, mon. 
+					Actor_Says(kActorClovis, 660, 13); // Brother, you killed a human...
+					Actor_Says(kActorMcCoy, 5995, 13);
+					Actor_Says(kActorClovis, 670, 13);
+					Actor_Says(kActorMcCoy, 6000, 13);
+					Actor_Says_With_Pause(kActorClovis, 680, 2.0f, 13);
+					Actor_Says(kActorClovis, 690, 13);
+					Actor_Says(kActorClovis, 700, 13);
+					Actor_Set_Targetable(kActorClovis, false);
+					Actor_Set_Goal_Number(kActorSadik, kGoalSadikUG18Leave);
+					Actor_Set_Goal_Number(kActorClovis, kGoalClovisUG18Leave);
+					Actor_Clue_Acquire(kActorMcCoy, kClueMcCoyShotGuzza, true, kActorClovis);
+				} else {
+					Actor_Set_Targetable(kActorClovis, false);
+					ADQ_Add(kActorClovis, 650, 14); // So, what should we do with this detective.
+					ADQ_Add(kActorSadik, 370, 14);
+					ADQ_Add(kActorClovis, 1320, 14); // Perhaps you're right
+					Actor_Set_Goal_Number(kActorSadik, kGoalSadikUG18PrepareShootMcCoy);
+					Actor_Set_Goal_Number(kActorClovis, kGoalClovisUG18Leave);
+				}
+			}
 			break;
 
 		case kGoalGuzzaUG18MissedByMcCoy:
@@ -341,6 +371,7 @@ void SceneScriptUG18::ActorChangedGoal(int actorId, int newGoal, int oldGoal, bo
 		Loop_Actor_Walk_To_Actor(kActorSadik, kActorMcCoy, 36, false, true);
 		Actor_Face_Actor(kActorClovis, kActorMcCoy, true);
 		Actor_Face_Actor(kActorMcCoy, kActorSadik, true);
+		Actor_Face_Actor(kActorSadik, kActorMcCoy, true);
 		Sound_Play(kSfxSHOTCOK1, 100, 0, 100, 50);
 		Delay(1000);
 		Music_Play(kMusicMoraji, 71, 0, 0, -1, kMusicLoopPlayOnce, 2);
@@ -383,13 +414,15 @@ void SceneScriptUG18::ActorChangedGoal(int actorId, int newGoal, int oldGoal, bo
 		Actor_Change_Animation_Mode(kActorMcCoy, 29);
 		Delay(1000);
 		ADQ_Add(kActorMcCoy, 3935, 13); //00-3935.AUD	Thanks.
+		Delay(1000);
 		Player_Set_Combat_Mode(false);
-		Delay(1000);
-		Actor_Face_Actor(kActorMcCoy, kActorClovis, true);
-		Delay(1000);
+		Loop_Actor_Walk_To_XYZ(kActorGuzza, -684.71f, 0.0f, 171.59f, 0, false, true, false);
 		Game_Flag_Set(kFlagGuzzaSaved);
-		Loop_Actor_Walk_To_XYZ(kActorGuzza, -684.71f, 0.0f, 171.59f, 0, true, false, false);
-		Actor_Clue_Acquire(kActorClovis, kClueMcCoyRetiredSadik, true, -1);
+		Global_Variable_Set(kVariableAffectionTowards, kAffectionTowardsNone);
+		Game_Flag_Reset(kFlagMcCoyIsHelpingReplicants);
+		Actor_Face_Actor(kActorMcCoy, kActorClovis, true);
+		Actor_Face_Actor(kActorClovis, kActorMcCoy, true);
+		Delay(2000);
 		Loop_Actor_Walk_To_XYZ(kActorMcCoy, -684.71f, 0.0f, 171.59f, 0, true, false, false);
 		Player_Gains_Control();
 		Ambient_Sounds_Remove_All_Non_Looping_Sounds(true);
@@ -404,31 +437,12 @@ void SceneScriptUG18::ActorChangedGoal(int actorId, int newGoal, int oldGoal, bo
 	if (actorId == kActorSadik) {
 		switch (newGoal) {
 		case kGoalSadikUG18Decide:
-			if (_vm->_cutContent) {
-				if (Actor_Query_Friendliness_To_Other(kActorClovis, kActorMcCoy) > 50
-			    && Game_Flag_Query(kFlagMcCoyRetiredHuman)) {
-					Actor_Says(kActorSadik, 360, 14); // The Hunter, he do us a favor...
-					Actor_Says(kActorSadik, 380, 14); //08-0380.AUD	You better than I thought, mon. 
-					Actor_Says(kActorClovis, 660, 13); // Brother, you killed a human...
-					Actor_Says(kActorMcCoy, 5995, 13);
-					Actor_Says(kActorClovis, 670, 13);
-					Actor_Says(kActorMcCoy, 6000, 13);
-					Actor_Says_With_Pause(kActorClovis, 680, 2.0f, 13);
-					Actor_Says(kActorClovis, 690, 13);
-					Actor_Says(kActorClovis, 700, 13);
-					Actor_Set_Goal_Number(kActorSadik, kGoalSadikUG18Leave);
-					Actor_Set_Goal_Number(kActorClovis, kGoalClovisUG18Leave);
-					Actor_Clue_Acquire(kActorMcCoy, kClueMcCoyShotGuzza, true, kActorClovis);
-				} else {
-					Actor_Set_Goal_Number(kActorSadik, kGoalSadikUG18PrepareShootMcCoy);
-					Actor_Set_Goal_Number(kActorClovis, kGoalClovisUG18Leave);
-				}
-			} else if (Actor_Query_Friendliness_To_Other(kActorClovis, kActorMcCoy) > 55
+			if (Actor_Query_Friendliness_To_Other(kActorClovis, kActorMcCoy) > 55
 			 && Game_Flag_Query(kFlagMcCoyRetiredHuman)
 			) {
 				// Added in a couple of lines for Sadik.
 				if (_vm->_cutContent) {
-					Actor_Says(kActorSadik, 360, 14); // The Hunter, he do us a favor...
+					Actor_Says(kActorSadik, 360, 14); // The Hunter, he do us a favor...		
 					Actor_Says(kActorSadik, 380, 14); //08-0380.AUD	You better than I thought, mon. 
 				}
 				Actor_Says(kActorClovis, 660, 13); // Brother, you killed a human...
@@ -494,18 +508,16 @@ void SceneScriptUG18::PlayerWalkedIn() {
 		}
 	}
 	//Added code so a gunshot will play, a continuation of the scene where McCoy comes across the locked gate along with the remainder of the scene.
-	if (_vm->_cutContent
-	&& !Game_Flag_Query(kFlagUG18Visited)) {
-		Sound_Play(kSfxGUNH1A, 100, 0, 0, 50);
-		Loop_Actor_Walk_To_XYZ(kActorMcCoy, -488.71f, 0.0f, 123.59f, 0, false, false, false);
-		Actor_Says(kActorMcCoy, 8526, 14); // 00-8526.AUD	Nothing.
-		Player_Set_Combat_Mode(false);
-		Player_Gains_Control();
-		Game_Flag_Set(kFlagUG18Visited);
-	}
-	// This is the code for the scene where McCoy chases Guzza into the set but he gets away. Also during this whole scenario Guzza is offscreen and we never see him.
 	if (_vm->_cutContent) {
-		if (Game_Flag_Query(kFlagGuzzaKilledTransient)) {
+		if (!Game_Flag_Query(kFlagUG18Visited)) {
+			Sound_Play(kSfxGUNH1A, 100, 0, 0, 50);
+			Loop_Actor_Walk_To_XYZ(kActorMcCoy, -488.71f, 0.0f, 123.59f, 0, false, false, false);
+			Actor_Says(kActorMcCoy, 8526, 14); // 00-8526.AUD	Nothing.
+			Player_Set_Combat_Mode(false);
+			Player_Gains_Control();
+			Game_Flag_Set(kFlagUG18Visited);
+			// This is the code for the scene where McCoy chases Guzza into the set but he gets away. Also during this whole scenario Guzza is offscreen and we never see him.
+		} else if (Game_Flag_Query(kFlagGuzzaKilledTransient)) {
 			Actor_Change_Animation_Mode(kActorMcCoy, 5);
 			Delay(500);
 			Actor_Says(kActorMcCoy, 2250, -1); //00-2250.AUD	Come out and show yourself, you coward!
@@ -518,6 +530,10 @@ void SceneScriptUG18::PlayerWalkedIn() {
 			Ambient_Sounds_Remove_All_Looping_Sounds(1u);
 			Game_Flag_Set(kFlagUG18toUG13);
 			Set_Enter(kSetUG13, kSceneUG13);
+		} else {
+			Player_Loses_Control();
+			Loop_Actor_Walk_To_XYZ(kActorMcCoy, -488.71f, 0.0f, 123.59f, 0, false, false, false);
+			Player_Gains_Control();
 		}
 	}
 
@@ -525,6 +541,7 @@ void SceneScriptUG18::PlayerWalkedIn() {
 	 && !Game_Flag_Query(kFlagUG18GuzzaScene)
 	 &&  Actor_Query_Is_In_Current_Set(kActorGuzza)
 	) {
+
 		Scene_Exits_Disable();
 		talkWithGuzza();
 		talkWithClovis();
@@ -601,6 +618,8 @@ void SceneScriptUG18::DialogueQueueFlushed(int a1) {
 				ADQ_Add(kActorClovis, 650, 14); // So, what should we do with this detective.
 				ADQ_Add(kActorSadik, 370, 14);
 				ADQ_Add(kActorClovis, 1320, 14); // Perhaps you're right
+			} else {
+				ADQ_Add(kActorClovis, 550, 14); //05-0550.AUD	You’re making me very unhappy, old friend.
 			}
 		} else {
 			if (!_vm->_cutContent) {
@@ -662,6 +681,19 @@ void SceneScriptUG18::DialogueQueueFlushed(int a1) {
 				ADQ_Add(kActorClovis, 650, 14);
 				ADQ_Add(kActorSadik, 370, 14);
 				ADQ_Add(kActorClovis, 1320, 14);
+				Actor_Set_Goal_Number(kActorSadik, kGoalSadikUG18PrepareShootMcCoy);
+				Actor_Set_Goal_Number(kActorClovis, kGoalClovisUG18Leave);
+			} else {
+				ADQ_Add(kActorClovis, 60, 13); //05-0060.AUD	You're weak my friend. I expected so much more from you.
+				ADQ_Add(kActorClovis, 550, 13); //05-0550.AUD	You’re making me very unhappy, old friend.
+				Delay(2000);
+				Player_Loses_Control();
+				Loop_Actor_Walk_To_XYZ(kActorMcCoy, -684.71f, 0.0f, 171.59f, 0, false, true, false);
+				Player_Gains_Control();
+				Ambient_Sounds_Remove_All_Non_Looping_Sounds(true);
+				Ambient_Sounds_Remove_All_Looping_Sounds(1u);
+				Game_Flag_Set(kFlagUG18toUG13);
+				Set_Enter(kSetUG13, kSceneUG13);
 			}
 		} else {
 			ADQ_Add(kActorClovis, 650, 14);
@@ -933,6 +965,8 @@ void SceneScriptUG18::talkWithClovis() {
 	Loop_Actor_Walk_To_XYZ(kActorGuzza, 126.79f, 0.0f, -362.17f, 0, false, false, false);
 	Actor_Face_Heading(kActorGuzza, 729, false);
 	if (_vm->_cutContent) {
+		Actor_Change_Animation_Mode(kActorGuzza, 4);
+		Delay(1000);
 		Loop_Actor_Walk_To_XYZ(kActorClovis, 1.14f, 0.39f, 507.35, 0, false, false, false);
 		Actor_Face_Actor(kActorClovis, kActorGuzza, true);
 	}

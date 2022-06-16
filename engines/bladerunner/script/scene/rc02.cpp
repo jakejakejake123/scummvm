@@ -161,6 +161,9 @@ bool SceneScriptRC02::ClickedOn3DObject(const char *objectName, bool a2) {
 			Actor_Face_Actor(kActorRunciter, kActorMcCoy, true);
 			Actor_Says(kActorRunciter, 30, 23);
 			if (_vm->_cutContent) {
+				Actor_Change_Animation_Mode(kActorMcCoy, 23);
+				Actor_Change_Animation_Mode(kActorRunciter, 23);
+				Delay(2000);
 				if (Player_Query_Agenda() != kPlayerAgendaSurly 
 				&& Player_Query_Agenda() != kPlayerAgendaErratic) {
 					Actor_Says(kActorMcCoy, 4555, 18);
@@ -300,7 +303,7 @@ void SceneScriptRC02::dialogueWithRunciter() {
 			} else {
 				Actor_Says(kActorRunciter, 140, 16); // 15-0140.AUD	Who else would be capable of such barbaric acts?
 				Actor_Says(kActorRunciter, 310, 18);  // 15-0310.AUD	They should have just killed me!
-				Actor_Says(kActorMcCoy, 8190, 0);	// 00-8190.AUD	Why?
+				Actor_Says(kActorMcCoy, 8190, -1);	// 00-8190.AUD	Why?
 				Actor_Says(kActorRunciter, 300, 16); // 15-0300.AUD	Do you have any idea how much this is going to cost me? I'm ruined!			
 				Actor_Says(kActorRunciter, 90, 17); // 15-0090.AUD	That snow tiger alone was worth more than most people will ever see in a lifetime. 
 				Actor_Says(kActorRunciter, 540, 19); // 15-0540.AUD	I sacrificed everything to get that tiger. And now she's dead.
@@ -400,8 +403,16 @@ void SceneScriptRC02::dialogueWithRunciter() {
 				Loop_Actor_Walk_To_Actor(kActorRunciter, kActorMcCoy, 24, false, false);
 				Actor_Face_Actor(kActorRunciter, kActorMcCoy, true);
 				Actor_Face_Actor(kActorMcCoy, kActorRunciter, true);
-				Item_Pickup_Spin_Effect(kModelAnimationReferenceLetter, 357, 228);
-				Actor_Says(kActorRunciter, 1700, 15);
+				if (_vm->_cutContent) {
+					Actor_Says(kActorRunciter, 1700, 15);
+					Actor_Change_Animation_Mode(kActorMcCoy, 23);
+					Actor_Change_Animation_Mode(kActorRunciter, 23);
+					Delay(2000);
+					Item_Pickup_Spin_Effect(kModelAnimationReferenceLetter, 357, 228);
+				} else {
+					Item_Pickup_Spin_Effect(kModelAnimationReferenceLetter, 357, 228);
+					Actor_Says(kActorRunciter, 1700, 15);
+				}
 				Actor_Clue_Acquire(kActorMcCoy, kClueReferenceLetter, true, kActorRunciter);
 				// If McCoy doesn't have the shell casings yet and Runciter likes him Runciter will show McCoy where the shell casings are and give them to him.
 				Delay (500);
@@ -415,13 +426,16 @@ void SceneScriptRC02::dialogueWithRunciter() {
 					Actor_Face_Actor(kActorRunciter, kActorMcCoy, true);
 					Loop_Actor_Walk_To_Actor(kActorMcCoy, kActorRunciter, 24, true, false);
 					Actor_Face_Actor(kActorMcCoy, kActorRunciter, true);
+					Actor_Says(kActorRunciter, 1700, 16); //15-1700.AUD	Here you are.
+					Actor_Change_Animation_Mode(kActorMcCoy, 23);
+					Actor_Change_Animation_Mode(kActorRunciter, 23);
+					Delay(2000);
 					Actor_Clue_Acquire(kActorMcCoy, kClueShellCasings, true, kActorRunciter);
 					Game_Flag_Set(kFlagRC02ShellCasingsTaken);
 					Item_Remove_From_World(kItemShellCasingA);
 					Item_Remove_From_World(kItemShellCasingB);
 					Item_Remove_From_World(kItemShellCasingC);
 					Item_Pickup_Spin_Effect(kModelAnimationShellCasings, 395, 352);
-					Actor_Says(kActorRunciter, 1700, 16); //15-1700.AUD	Here you are.
 					Actor_Change_Animation_Mode(kActorMcCoy, 23);
 					Delay(2000);
 					Actor_Says(kActorMcCoy, 8730, 13); //00-8730.AUD	Shell casings.
@@ -756,7 +770,7 @@ bool SceneScriptRC02::ClickedOnActor(int actorId) {
 						Actor_Says(kActorMcCoy, 4635, 15); // 00-4635.AUD	I assume you're talking about some of those fruitcakes on DNA Row.
 						Actor_Says(kActorRunciter, 240, 16); // 15-0240.AUD	That's a horrible thing to say about people, detective.
 						Actor_Says(kActorMcCoy, 4640, 17); // 00-4640.AUD	Sorry.
-						Actor_Modify_Friendliness_To_Other(kActorRunciter, kActorMcCoy, -5);
+						Actor_Modify_Friendliness_To_Other(kActorRunciter, kActorMcCoy, -2);
 					} 
 				} 		
 				// Original behaviour without cut content.

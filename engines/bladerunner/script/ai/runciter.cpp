@@ -81,6 +81,7 @@ void AIScriptRunciter::CompletedMovementTrack() {
 			case 2:
 				// fall through
 			case 3:
+				// Made it so Runciter is a little less emotional about his animals dying if he is a replicant.
 				if (_vm->_cutContent) {
 					if (!Game_Flag_Query(kFlagRunciterIsReplicant)) {
 						ADQ_Add(kActorRunciter, 530, -1); //15-0530.AUD	My precious one. She was my baby.
@@ -117,13 +118,18 @@ void AIScriptRunciter::CompletedMovementTrack() {
 void AIScriptRunciter::ReceivedClue(int clueId, int fromActorId) {}
 
 void AIScriptRunciter::ClickedByPlayer() {
+	// Made it so if you click on Runciter and he is in lock up for animal fraud, if you have the envelope McCoy will question him about his deal with Luther and Lance.
 	if (_vm->_cutContent) {
 		if (Actor_Query_In_Set(kActorRunciter, kSetPS09)) {
 			if (!Loop_Actor_Walk_To_XYZ(kActorMcCoy, -381.11f, 0.0f, -135.55f, 0, false, true, false)) {
 				Actor_Face_Actor(kActorMcCoy, kActorRunciter, true);
 				Actor_Face_Actor(kActorRunciter, kActorMcCoy, true);
 				Actor_Says(kActorMcCoy, 8920, 14); //00-8920.AUD	I gotta ask you a question.
-				Actor_Says(kActorRunciter, 720, 17); //15-0720.AUD	I have nothing more to say to you, detective.
+				if (!Actor_Clue_Query(kActorMcCoy, kClueRuncitersConfession3)) {
+					Actor_Says(kActorRunciter, 720, 17); //15-0720.AUD	I have nothing more to say to you, detective.
+				} else {
+					Actor_Says(kActorRunciter, 730, 17); //15-0730.AUD	Please. Just leave me alone.
+				}
 				if (Actor_Clue_Query(kActorMcCoy, kClueEnvelope)
 				&& !Actor_Clue_Query(kActorMcCoy, kClueRuncitersConfession3)) {
 					if (Player_Query_Agenda() == kPlayerAgendaSurly 
@@ -193,7 +199,7 @@ void AIScriptRunciter::OtherAgentEnteredCombatMode(int otherActorId, int combatM
 				Actor_Says(kActorMcCoy, 4790, -1);
 				Actor_Says(kActorRunciter, 650, 18);
 				if (_vm->_cutContent) {
-					Actor_Says(kActorMcCoy, 4800, -1);
+					Actor_Says(kActorMcCoy, 4800, -1); //00-4800.AUD	You son of a bitch she couldn't object.
 				}
 				Actor_Says(kActorRunciter, 660, 19);
 				Actor_Clue_Acquire(kActorMcCoy, kClueRuncitersConfession1, true, kActorRunciter);
@@ -292,6 +298,7 @@ void AIScriptRunciter::OtherAgentEnteredCombatMode(int otherActorId, int combatM
 		Game_Flag_Reset(kFlagRunciterConfronted);
 		Game_Flag_Set(kFlagMcCoyIsHelpingReplicants);
 		Actor_Modify_Friendliness_To_Other(kActorRunciter, kActorMcCoy, 20);
+		Actor_Modify_Friendliness_To_Other(kActorClovis, kActorMcCoy, -2);
 		Scene_Exits_Enable();
 	}
 }
@@ -305,8 +312,8 @@ bool AIScriptRunciter::ShotAtAndHit() {
 	if (_vm->_cutContent && !Game_Flag_Query(kFlagRunciterIsReplicant)) {
 		Game_Flag_Set(kFlagMcCoyRetiredHuman);	
 	}
-	// Fixed Runciter anaimation. His head now tilts back when he is shot.
-	Actor_Says(kActorRunciter, 9020, -1); //15-9020.AUD	Argh!	
+	// Restored Runciters hit animation for when he is shot.
+	Actor_Says(kActorRunciter, 9020, 21); //15-9020.AUD	Argh!	
 	Actor_Change_Animation_Mode(kActorRunciter, kAnimationModeDie);
 	Actor_Set_Goal_Number(kActorRunciter, kGoalRunciterDead);
 	Delay(2000);

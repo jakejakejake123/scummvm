@@ -39,7 +39,6 @@ void SceneScriptHC03::InitializeScene() {
 		Game_Flag_Reset(kFlagUG02toHC03);
 	} else {
 		Setup_Scene_Information(607.0f, 0.14f, 13.0f, 57);
-		Game_Flag_Reset(kFlagHC01toHC03);
 	}
 	Scene_Exit_Add_2D_Exit(0, 0, 0, 30, 479, 3);
 

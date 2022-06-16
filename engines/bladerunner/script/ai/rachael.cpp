@@ -159,13 +159,12 @@ bool AIScriptRachael::GoalChanged(int currentGoalNumber, int newGoalNumber) {
 		dialogue_start(); // "I remember you mr McCoy" till "I'm fine, thank you for asking."
 
 		// the structure is simplified (maintaining the same logic flow)
-		if (!Game_Flag_Query(kFlagMcCoyIsHelpingReplicants)) {
+		if (Player_Query_Agenda() == kPlayerAgendaSurly 
+		|| Player_Query_Agenda() == kPlayerAgendaErratic) {
 			dialogue_agenda2();
 		} else {
 			dialogue_agenda1();
 		}
-		Actor_Set_Goal_Number(kActorRachael, kGoalRachaelIsOutsideMcCoysBuildingAct3);
-		AI_Movement_Track_Unpause(kActorRachael);
 		break;
 
 	case kGoalRachaelIsInsideElevatorStartTalkAct4:
@@ -409,21 +408,27 @@ void AIScriptRachael::FledCombat() {
 }
 
 void AIScriptRachael::dialogue_start() {
+	// I adjusted Rachaels dialogue so it will play out differently based on your friendliness status with Rachael and whether or not McCoy is a rep sympathizer.
 	if (_vm->_cutContent) {
 		Actor_Face_Actor(kActorRachael, kActorMcCoy, true);
 		Loop_Actor_Walk_To_Actor(kActorRachael, kActorMcCoy, 84, false, false);
-		if (_vm->_cutContent) {
-			Actor_Says(kActorMcCoy, 2735, 14);              // MetAtYourUnclesOffice
-		}
+		Actor_Says(kActorMcCoy, 2735, 14);              // MetAtYourUnclesOffice
 		Actor_Says(kActorRachael, 0, 15);                   // RememberYouMisterMcCoy
 		Actor_Says(kActorMcCoy, 2740, 13);                  // YouLiveHereSameBuilding
 		Actor_Says(kActorRachael, 10, 14);                  // VisitingSomebody
 		Actor_Says(kActorMcCoy, 2745, 13);                  // WhoMaybeIKnowHim
-		Actor_Says(kActorRachael, 20, 12);                  // NoneOfYourBusiness
+		Music_Play(kMusicBRBlues, 52, 0, 2, -1, kMusicLoopPlayOnce, 1);
+		if (Actor_Query_Friendliness_To_Other(kActorRachael, kActorMcCoy) < 50) {
+			Actor_Says(kActorRachael, 20, 12);                  // NoneOfYourBusiness
+			if (Player_Query_Agenda() != kPlayerAgendaSurly 
+			&& Player_Query_Agenda() != kPlayerAgendaErratic) {
+				Actor_Says_With_Pause(kActorMcCoy, 2750, 1.5f, 3); // OkGetThePicture
+			}
+		} else {
+			Delay(2000);
+		}
 		if (Player_Query_Agenda() != kPlayerAgendaSurly 
 		&& Player_Query_Agenda() != kPlayerAgendaErratic) {
-			Music_Play(kMusicBRBlues, 52, 0, 2, -1, kMusicLoopPlayOnce, 1);
-			Actor_Says_With_Pause(kActorMcCoy, 2750, 1.5f, 3); // OkGetThePicture
 			Actor_Says(kActorMcCoy, 2755, 3);                  // AreYouAlrightALittlePale
 			Actor_Says(kActorRachael, 30, 13);                  // CertainlyHadBetterDaysInMyLifeButImFine
 			Actor_Says(kActorRachael, 40, 15);                  // ThankYouForAsking
@@ -448,40 +453,54 @@ void AIScriptRachael::dialogue_agenda1() {
 	if (_vm->_cutContent) {
 		Actor_Says(kActorMcCoy, 2795, 13);                      // YouAreUpset
 		Actor_Says(kActorRachael, 140, 15);                     // HowObservant
-		if (Player_Query_Agenda() != kPlayerAgendaSurly 
-		&& Player_Query_Agenda() != kPlayerAgendaErratic) {
-			Actor_Says(kActorMcCoy, 2800, 12);                      // WhatTheMatterGoodListener
-			Actor_Says(kActorRachael, 150, 16);                     // HowObservant
-		}
+		Actor_Says(kActorMcCoy, 2800, 12);                      // WhatTheMatterGoodListener
+		Actor_Says(kActorRachael, 150, 16);                     // HowObservant
 		Actor_Says(kActorMcCoy, 2805, 18);                      // DidYourUncleSaySomethingToYou
 		Actor_Says(kActorRachael, 160, 14);                     // HeCanBeSoCruel
 		Actor_Says(kActorRachael, 170, 13);                     // HereIAmPouringMyHeartOut
-		Actor_Says(kActorMcCoy, 2810, 14);                      // NotHowILookAtIt
-		Actor_Says(kActorRachael, 180, 13);                     // GotToLiveWithYourself
-		Actor_Says(kActorMcCoy, 2815, 12);                      // NotSomeKillingMachineRachael
-		Actor_Says(kActorMcCoy, 2820, 13);                      // LatelyReEvalTheJobDontLikeItNeverHave - I've thought ab... Well lately reevaluating the job dont like it
-		Actor_Says(kActorRachael, 190, 15);                     // WhyDontYouQuitThen
-		Actor_Says(kActorMcCoy, 2825, 12);                      // SomeoneWouldJustTakeMyPlace
-		Actor_Says(kActorRachael, 200, 15);                     // SoMuchForIntegrity
-		Actor_Says(kActorMcCoy, 2830, 14);                      // ItsNotThat
-		Actor_Says(kActorRachael, 210, 15);                     // ItsTheMoneyThen
-		Actor_Says(kActorRachael, 220, 16);                     // ImSoFedUpWithAllOfIt
-		Actor_Says(kActorMcCoy, 2835, 13);                      // IveThinkingAboutTheTreatmentOfReps
-		Actor_Says(kActorRachael, 230, 14);                     // BravoShouldWeCallThePressConf -  new switched to here
-		Actor_Says(kActorMcCoy, 2840, 12);                      // MaybeTheyVeGottenARawDeal
-		Actor_Says(kActorRachael, 240, 13);                     // ImagineSomebodyEngineeringYourMind
-		Actor_Says(kActorRachael, 250, 15);                     // PuttingWhateverThoughtsAndMemories
-		Actor_Says(kActorRachael, 260, 16);                     // NothingInThisWorldWouldBelongToyou
-		Actor_Says(kActorMcCoy, 2845, 13);                      // No
-		Actor_Says(kActorRachael, 270, 13);                     // ThinkAboutItMcCoy
-		Actor_Says(kActorRachael, 280, 14);                     // MaybeYouArentSoDifferentFromThoseRepsAfterAll
-		Actor_Says(kActorMcCoy, 2850, 13);                      // ISupposeAllRepsInOneWayOrAnother
-		Actor_Says(kActorMcCoy, 2855, 14);                      // ProgrammedToDoThingsThinkThings
-		Actor_Says(kActorRachael, 290, 14);                     // ThatsRight
-		if (Actor_Query_In_Set(kActorRachael, kSetMA07)) {
-			Actor_Says_With_Pause(kActorRachael, 300, 1.0f, 3); // GoodbyeMcCoy
-			Actor_Says(kActorMcCoy, 2860, 14);                  // YouTakeCareOfYourself
+		if (!Game_Flag_Query(kFlagMcCoyIsHelpingReplicants)) {
+			Actor_Says(kActorMcCoy, 2810, 14);                      // NotHowILookAtIt
+			Actor_Says(kActorRachael, 180, 13);                     // GotToLiveWithYourself
 		}
+		Actor_Says(kActorMcCoy, 2815, 12);                      // NotSomeKillingMachineRachael
+		if (Game_Flag_Query(kFlagMcCoyIsHelpingReplicants)) {
+			Actor_Says(kActorMcCoy, 2820, 13);                      // LatelyReEvalTheJobDontLikeItNeverHave - I've thought ab... Well lately reevaluating the job dont like it
+		}
+		Actor_Says(kActorRachael, 190, 15);                     // WhyDontYouQuitThen
+		if (!Game_Flag_Query(kFlagMcCoyIsHelpingReplicants)) {
+			Actor_Says(kActorMcCoy, 2825, 12);                      // SomeoneWouldJustTakeMyPlace
+			Actor_Says(kActorRachael, 200, 15);                     // SoMuchForIntegrity
+			Actor_Says(kActorMcCoy, 2830, 14);                      // ItsNotThat
+			Actor_Says(kActorRachael, 210, 15);                     // ItsTheMoneyThen
+			Actor_Says(kActorRachael, 220, 16);                     // ImSoFedUpWithAllOfIt
+		} else {
+			Delay(2000);
+		}
+		if (Game_Flag_Query(kFlagMcCoyIsHelpingReplicants)) {
+			Actor_Says(kActorMcCoy, 2835, 13);                      // IveThinkingAboutTheTreatmentOfReps
+			if (Actor_Query_Friendliness_To_Other(kActorRachael, kActorMcCoy) < 50) {
+				Actor_Says(kActorRachael, 230, 14);                     // BravoShouldWeCallThePressConf -  new switched to here
+			}
+			Actor_Says(kActorMcCoy, 2840, 12);                      // MaybeTheyVeGottenARawDeal
+		}
+		if (!Game_Flag_Query(kFlagMcCoyIsHelpingReplicants)) {
+			Actor_Says(kActorMcCoy, 2780, 17);                      // ReplicantsArentPeople
+			Delay(2000);
+			Actor_Says(kActorRachael, 240, 13);                     // ImagineSomebodyEngineeringYourMind
+			Actor_Says(kActorRachael, 250, 15);                     // PuttingWhateverThoughtsAndMemories
+			Actor_Says(kActorRachael, 260, 16);                     // NothingInThisWorldWouldBelongToyou
+			Actor_Says(kActorMcCoy, 2845, 13);                      // No
+			Actor_Says(kActorRachael, 270, 13);                     // ThinkAboutItMcCoy
+			Actor_Says(kActorRachael, 280, 14);                     // MaybeYouArentSoDifferentFromThoseRepsAfterAll
+			Delay(2000);
+		} else {
+			Actor_Says(kActorMcCoy, 2850, 13);                      // ISupposeAllRepsInOneWayOrAnother
+			Actor_Says(kActorMcCoy, 2855, 14);                      // ProgrammedToDoThingsThinkThings
+			Actor_Says(kActorRachael, 290, 14);                     // ThatsRight
+		}
+		Actor_Says_With_Pause(kActorRachael, 300, 1.0f, 14);  // GoodbyeMcCoy
+		Actor_Says(kActorRachael, 310, 14);                   // Isnt ThisYourFloor --
+		Actor_Says(kActorMcCoy, 2860, 14);                    // YouTakeCareOfYourself
 	} else {
 		// original code
 		Actor_Says(kActorMcCoy, 2795, 13);                  // You are upset
@@ -523,23 +542,34 @@ void AIScriptRachael::dialogue_agenda2() {
 		Actor_Says(kActorMcCoy, 2760, 14);                   // InterestingGuyYourUncleCharacterator-Rachael
 		Actor_Says(kActorRachael, 50, 15);                   // IDontThinkHeDAppreciateBeingCalledThat  new anim 15
 		Actor_Says(kActorMcCoy, 2765, 16);                   // ImSureHeIsABrilliantMan  new anim 16
-		Actor_Says_With_Pause(kActorMcCoy, 2770, 0.0f, 17);  // AnyoneWhoCouldCreateNexus6StateOfArt  new anim 17
+		Actor_Modify_Friendliness_To_Other(kActorRachael, kActorMcCoy, -2);
+		if (!Game_Flag_Query(kFlagMcCoyIsHelpingReplicants)) {
+			Actor_Says_With_Pause(kActorMcCoy, 2770, 0.0f, 17);  // AnyoneWhoCouldCreateNexus6StateOfArt  new anim 17
+		}
 		Actor_Says(kActorRachael, 60, 14);                   // KeepingPeopleLikeYouEmployedIsntHe
-		Actor_Says(kActorMcCoy, 2775, 16);                   // IdJustAsSoonNotDoThisJob.
-		Actor_Says(kActorRachael, 70, 13);                   // DoYouReallyExpectMeToBelieveThat
+		if (Game_Flag_Query(kFlagMcCoyIsHelpingReplicants)) {
+			Actor_Says(kActorMcCoy, 2775, 16);                   // IdJustAsSoonNotDoThisJob.
+			Actor_Says(kActorRachael, 70, 13);                   // DoYouReallyExpectMeToBelieveThat
+		} else {
+			Delay(2000);
+		}
 		Actor_Says(kActorRachael, 80, 14);                   // ISawThatLookInYourEye
 		Actor_Says(kActorRachael, 90, 15);                   // LikeNothingButToKillInnocentPeople
-		Actor_Says(kActorMcCoy, 2780, 17);                   // ReplicantsArentPeople
-		Actor_Says(kActorRachael, 100, 16);                  // CertainlyAreMoreInnocentThanMostPeople
-		Actor_Says(kActorRachael, 110, 15);                  // TheyDidntAskToBeBroughtIntoThisWorld
-		Actor_Says(kActorMcCoy, 2785, 17);                   // NobodyDoes
-		Actor_Says(kActorRachael, 120, 13);                  // ThatsRightAndNobodyHasALicenseTokillHumans
-		Actor_Says(kActorMcCoy, 2790, 18);                   // Aha
-		Actor_Says(kActorRachael, 130, 14);                  // ButReplicantsHowHumain
-		if (Actor_Query_In_Set(kActorRachael, kSetMA07)) {
-			Actor_Says_With_Pause(kActorRachael, 300, 1.0f, 3); // GoodbyeMcCoy
-			Actor_Says(kActorMcCoy, 2860, 14);                  // YouTakeCareOfYourself
+		if (!Game_Flag_Query(kFlagMcCoyIsHelpingReplicants)) {
+			Actor_Says(kActorMcCoy, 2780, 17);                   // ReplicantsArentPeople
+			Actor_Says(kActorRachael, 100, 16);                  // CertainlyAreMoreInnocentThanMostPeople
+			Actor_Says(kActorRachael, 110, 15);                  // TheyDidntAskToBeBroughtIntoThisWorld
+			Actor_Says(kActorMcCoy, 2785, 17);                   // NobodyDoes
+			Actor_Says(kActorRachael, 120, 13);                  // ThatsRightAndNobodyHasALicenseTokillHumans
+			Actor_Says(kActorMcCoy, 2790, 18);                   // Aha
+			Actor_Says(kActorRachael, 130, 14);                  // ButReplicantsHowHumain
+		} else {
+			Actor_Says(kActorMcCoy, 7895, kAnimationModeTalk); //00-7895.AUD	No. I--
+			Actor_Says(kActorRachael, 120, 13);                  // ThatsRightAndNobodyHasALicenseTokillHumans
+			Actor_Says(kActorMcCoy, 2790, 18);                   // Aha
+			Actor_Says(kActorRachael, 130, 14);                  // ButReplicantsHowHumain
 		}
+		Actor_Says_With_Pause(kActorRachael, 300, 1.0f, 3); // GoodbyeMcCoy
 	} else {
 		// original code - missing some quotes or removing some quotes to make it fit better
 		Actor_Says(kActorRachael, 50, 15);                  // I don't think he'd appreciate being called that
@@ -566,27 +596,29 @@ void AIScriptRachael::dialogue_agenda2() {
 void AIScriptRachael::dialogue_act4() {
 	Actor_Says(kActorMcCoy, 2865, 17);   // Lobby
 	if (_vm->_cutContent) {
+		Actor_Face_Actor(kActorRachael, kActorMcCoy, true);
+		Delay(1000);
+		Actor_Says(kActorRachael, 320, 12);  //  McCoy
 		Game_Flag_Set(kFlagMA06toMA07); // to Ground Floor / Lobby
 		Delay(500);
 		AI_Movement_Track_Pause(kActorRachael);
-		Actor_Face_Actor(kActorRachael, kActorMcCoy, true);
 		Music_Play(kMusicBRBlues, 52, 0, 2, -1, kMusicLoopPlayOnce, 1);
-	}
-	Actor_Says(kActorRachael, 320, 12);  //  McCoy
-	Actor_Says(kActorRachael, 330, 17);  //  RachaelRememberMe
-	if (_vm->_cutContent) {
 		Actor_Face_Actor(kActorMcCoy, kActorRachael, true);
+		Actor_Says(kActorMcCoy, 855, 19); // 00-0855.AUD	What?
 	}
+	Actor_Says(kActorRachael, 330, 17);  //  RachaelRememberMe
 	Actor_Says(kActorMcCoy, 2870, 13);   //  Jesus DontKnowWhatIRememberAnyMore
 	Actor_Says(kActorRachael, 340, 12);  //  NowYouLookInTrouble
 	Actor_Says(kActorMcCoy, 2875, 15);   //  Saw me here before
 	Actor_Says(kActorRachael, 350, 3);   //  YesWhatHappened
 	Actor_Says(kActorMcCoy, 2880, 16);   //  Suddenly
 	Actor_Says(kActorMcCoy, 2885, 12);   //  MyAnimalMaggiePrizedPosessionDisappeared
-	if (Actor_Query_Friendliness_To_Other(kActorRachael, kActorMcCoy) > 50) {
-		Actor_Says(kActorRachael, 360, 3);   //  ImSorry
-		Actor_Says(kActorRachael, 370, 3);   //  IKnowTheFeeling
-		Actor_Says(kActorMcCoy, 2890, 18);   //  You do?
+	if (_vm->_cutContent) {
+		if (Actor_Query_Friendliness_To_Other(kActorRachael, kActorMcCoy) > 50) {
+			Actor_Says(kActorRachael, 360, 3);   //  ImSorry
+			Actor_Says(kActorRachael, 370, 3);   //  IKnowTheFeeling
+			Actor_Says(kActorMcCoy, 2890, 18);   //  You do?
+		}
 	}
 	Actor_Says(kActorRachael, 380, 18);  //  EverythingWeBelieve
 	Actor_Says(kActorRachael, 390, 12);  //  WhatIsReality
@@ -601,11 +633,21 @@ void AIScriptRachael::dialogue_act4() {
 	Actor_Says(kActorMcCoy, 2910, 14);   //  NotLosingMyMindEscapedReplicant
 	Actor_Says(kActorMcCoy, 2920, 17);   //  SomeoneSettingMeUpUsingMe
 	Actor_Says(kActorRachael, 450, 3);   //  NothingWrongWithAcceptingWhatYouAre
-	Actor_Says(kActorMcCoy, 2925, 15);   //  NotAReplicantGoddamnit
-	Actor_Says(kActorMcCoy, 2930, 14);   //  MaybeYouCanHelpMeYouAreTyrellsNiece
-	Actor_Says(kActorRachael, 460, 13);  //  Why not take that V-K test
-	Actor_Says(kActorMcCoy, 2935, 19);   //  YeahGoodIdeaMaybeIllDoThat
-	Actor_Says(kActorRachael, 470, 18);  //  Hope you get the answers looking for McCoy.
+	if (!Game_Flag_Query(kFlagMcCoyIsHelpingReplicants)) {
+		Actor_Says(kActorMcCoy, 2925, 15);   //  NotAReplicantGoddamnit
+		Actor_Says(kActorMcCoy, 2930, 14);   //  MaybeYouCanHelpMeYouAreTyrellsNiece
+		Actor_Says(kActorRachael, 460, 13);  //  Why not take that V-K test
+		Actor_Says(kActorMcCoy, 2935, 19);   //  YeahGoodIdeaMaybeIllDoThat
+	} else {
+		Delay(2000);
+	}	
+	if (_vm->_cutContent) {
+		if (Actor_Query_Friendliness_To_Other(kActorRachael, kActorMcCoy) > 50) {
+			Actor_Says(kActorRachael, 470, 18);  //  Hope you get the answers looking for McCoy.
+		} else {
+			Actor_Says_With_Pause(kActorRachael, 300, 1.0f, 3); // GoodbyeMcCoy
+		}
+	}
 }
 
 } // End of namespace BladeRunner

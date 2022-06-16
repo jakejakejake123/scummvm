@@ -1155,6 +1155,11 @@ void SceneScriptHF05::talkWithCrazylegs3(int affectionTowardsActor) {
 		Actor_Says(kActorCrazylegs, 70, 13); //09-0070.AUD	I know you’ll get me on the com, right?
 		Actor_Says(kActorMcCoy, 1730, kAnimationModeTalk); //00-1730.AUD	You’re a stand up guy, Crazy.
 		Loop_Actor_Walk_To_Actor(kActorCrazylegs, kActorMcCoy, 28, false, false);
+		if (_vm->_cutContent) {
+			Actor_Change_Animation_Mode(kActorMcCoy, 23);
+			Actor_Change_Animation_Mode(kActorCrazylegs, 23);
+			Delay(2000);
+		}
 		Item_Pickup_Spin_Effect(kModelAnimationSpinnerKeys, 315, 327);
 		Actor_Says(kActorCrazylegs, 80, 23); //09-0080.AUD	That I am.
 		Actor_Clue_Acquire(kActorMcCoy, kClueSpinnerKeys, true, kActorCrazylegs);

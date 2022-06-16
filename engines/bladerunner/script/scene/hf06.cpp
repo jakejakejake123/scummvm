@@ -196,14 +196,14 @@ void SceneScriptHF06::ActorChangedGoal(int actorId, int newGoal, int oldGoal, bo
 			if (_vm->_cutContent) {
 				if (Actor_Query_Is_In_Current_Set(kActorDektora)) {
 					if (Actor_Query_Goal_Number(kActorDektora) == kGoalDektoraGone) {
-						Music_Stop(3u);
-						Music_Play(kMusicLoveSong, 35, 0, 3, -1, kMusicLoopPlayOnce, 0);
+						Music_Stop(1u);
+						Music_Play(kMusicLoveSong, 35, 0, 3, -1, kMusicLoopPlayOnce, 1);
 					}
 				// Sad music will play when Lucy dies.
 				} else if (Actor_Query_Is_In_Current_Set(kActorLucy)) {
 					if (Actor_Query_Goal_Number(kActorLucy) == kGoalLucyGone) { 
-						Music_Stop(3u);
-						Music_Play(kMusicCrysDie1, 25, 0, 1, -1, kMusicLoopPlayOnce, 0);
+						Music_Stop(1u);
+						Music_Play(kMusicCrysDie1, 25, 0, 1, -1, kMusicLoopPlayOnce, 1);
 					}
 				}
 			} else {

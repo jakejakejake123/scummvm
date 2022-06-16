@@ -239,11 +239,12 @@ void SceneScriptNR02::PlayerWalkedIn() {
 						Actor_Says(kActorMcCoy, 6445, 11); //00-6445.AUD	Memories can be implanted.
 						Actor_Says(kActorDektora, 1370, 12); //03-1370.AUD	Not mine. Mine are real!
 						Actor_Says(kActorDektora, 1380, 13); //03-1380.AUD	God damn Tyrell!
-					}
+					}				
 					Actor_Says(kActorMcCoy, 6535, 11); //00-6535.AUD	I need to see Clovis ASAP.
 					Actor_Says(kActorDektora, 1410, 12); //03-1410.AUD	You must be patient. He’ll find you, when he’s ready
-					Music_Stop(3u);
-					Music_Play(kMusicLoveSong, 35, 0, 3, -1, kMusicLoopPlayOnce, 0);
+					Music_Stop(1u);
+					Delay(1000);
+					Music_Play(kMusicLoveSong, 35, 0, 3, -1, kMusicLoopPlayOnce, 1);
 					Actor_Says(kActorDektora, 1130, 13); //03-1130.AUD	He is very jealous. You don’t understand
 					if (Player_Query_Agenda() == kPlayerAgendaSurly 
 					|| Player_Query_Agenda() == kPlayerAgendaErratic) { 
@@ -286,6 +287,7 @@ void SceneScriptNR02::PlayerWalkedIn() {
 					Actor_Says(kActorMcCoy, 6455, 11); //00-6455.AUD	In the meantime, I’ve gotta see Clovis.
 					Actor_Says(kActorDektora, 1100, 13); //03-1100.AUD	Okay. Ray.
 					Loop_Actor_Walk_To_XYZ(kActorDektora, -300.18, -23.44, 44.75, 48, true, false, false);
+					Music_Stop(1u);
 					// Removed code that makes Dekora invisible.
 					Game_Flag_Set(kFlagDektoraTalkAct4);
 				}

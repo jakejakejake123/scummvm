@@ -53,10 +53,10 @@ bool AIScriptLuther::Update() {
 		Actor_Says(kActorLuther, 80, 13);
 		if (_vm->_cutContent) {
 			if (Game_Flag_Query(kFlagLutherLanceIsReplicant)) {
-				Actor_Says(kActorLance, 40, 12);
+				Actor_Says(kActorLance, 40, 12); //13-0040.AUD	Just give it up. You got no jurisdiction down here.
 			}
 		} else {
-			Actor_Says(kActorLance, 40, 12);
+			Actor_Says(kActorLance, 40, 12); //13-0040.AUD	Just give it up. You got no jurisdiction down here.
 		}
 		Game_Flag_Set(kFlagUG16PulledGun);
 		return false;
@@ -116,6 +116,7 @@ bool AIScriptLuther::Update() {
 				Actor_Voice_Over(2120, kActorVoiceOver); //99-2120.AUD	I didn't have a lot of time and my options were pretty lousy.
 				Actor_Voice_Over(2130, kActorVoiceOver); //99-2130.AUD	Stay and face the music or take off and hope I didn't get caught.
 				Game_Flag_Set(kFlagMcCoyRetiredHuman);
+				Game_Flag_Reset(kFlagMcCoyIsHelpingReplicants);
 				Actor_Modify_Friendliness_To_Other(kActorClovis, kActorMcCoy, -4);
 				Actor_Modify_Friendliness_To_Other(kActorSteele, kActorMcCoy, -4);
 			}
@@ -227,8 +228,9 @@ void AIScriptLuther::Retired(int byActorId) {
 		Actor_Set_Goal_Number(kActorLuther, kGoalLutherGone);
 		if (_vm->_cutContent) {
 			if (Query_Difficulty_Level() != kGameDifficultyEasy) {
-				Global_Variable_Increment (kVariableChinyen, 200);
+				Global_Variable_Increment (kVariableChinyen, 400);
 			}
+			Actor_Modify_Friendliness_To_Other(kActorGaff, kActorMcCoy, 4);
 		}
 
 		if (Global_Variable_Query(kVariableReplicantsSurvivorsAtMoonbus) == 0) {

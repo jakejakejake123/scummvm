@@ -873,7 +873,6 @@ bool SceneScriptPS12::ClickedOnItem(int itemId, bool a2) {
 bool SceneScriptPS12::ClickedOnExit(int exitId) {
 	if (exitId == 0) {
 		if (!Loop_Actor_Walk_To_Waypoint(kActorMcCoy, 8, 12, true, false)) {
-			Game_Flag_Set(kFlagPS12toPS11);
 			removeTargets();
 			Set_Enter(kSetPS10_PS11_PS12_PS13, kScenePS11);
 		}

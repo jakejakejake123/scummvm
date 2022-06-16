@@ -190,6 +190,12 @@ void SceneScriptMA07::PlayerWalkedIn() {
 					Game_Flag_Reset(kFlagMcCoyFreedOfAccusations);
 					Game_Flag_Set(kFlagMA06ToMA02);
 					Set_Enter(kSetMA02_MA04, kSceneMA02);
+				} else {
+					Delay(1000);
+					Player_Gains_Control();
+					Game_Flag_Reset(kFlagMcCoyFreedOfAccusations);
+					Game_Flag_Set(kFlagMA06ToMA02);
+					Set_Enter(kSetMA02_MA04, kSceneMA02);
 				}
 			} else {
 				Actor_Voice_Over(1380, kActorVoiceOver); //99-1380.AUD	Bryant chewed me out for letting the Reps kill him…
@@ -436,11 +442,11 @@ void SceneScriptMA07::PlayerWalkedIn() {
 					Async_Actor_Walk_To_Waypoint(kActorMcCoy, 100, 0, false);
 					Async_Actor_Walk_To_Waypoint(kActorGuzza, 101, 0, false);
 					Delay(4000);
+					Music_Stop(1u);
 					Actor_Force_Stop_Walking(kActorMcCoy);
 					Actor_Put_In_Set(kActorGuzza, kSetPS09);
 					Player_Gains_Control();
 					Player_Set_Combat_Mode(false);
-					Global_Variable_Set(kVariableAffectionTowards, kAffectionTowardsNone);
 					Game_Flag_Set(kFlagMcCoyFreedOfAccusations);
 					Game_Flag_Set(kFlagMcCoyIsInnocent);
 					Game_Flag_Reset(kFlagMcCoyRetiredHuman);
@@ -457,6 +463,9 @@ void SceneScriptMA07::PlayerWalkedIn() {
 					Actor_Says(kActorMcCoy, 8502, 14); //00-8502.AUD	I hope it's enough.
 					Actor_Says(kActorGuzza, 230, 14); //04-0230.AUD	Hey, don't worry. The boys upstairs want to keep our best and brightest happy.
 					Delay(1000);
+					Actor_Change_Animation_Mode(kActorMcCoy, 23);
+					Actor_Change_Animation_Mode(kActorGuzza, 23);
+					Delay(2000);
 					Item_Pickup_Spin_Effect(kModelAnimationFolder, 391, 343);
 					Actor_Clue_Lose(kActorMcCoy, kClueFolder);
 					Actor_Says(kActorMcCoy, 4055, 13); // 00-4055.AUD	Thanks, Lieutenant.
@@ -466,14 +475,14 @@ void SceneScriptMA07::PlayerWalkedIn() {
 					Actor_Says(kActorGuzza, 750, 14); //04-0750.AUD	It's easy for a Blade Runner to step over the line.
 					Actor_Face_Actor(kActorMcCoy, kActorGuzza, true);
 					Delay(1000);
-					Actor_Says(kActorMcCoy, 7980, 19); //00-7980.AUD	Yeah. Maybe.
+					Actor_Says(kActorMcCoy, 7980, 19); //00-7980.AUD	Yeah. Maybe.	
 					Async_Actor_Walk_To_Waypoint(kActorMcCoy, 100, 0, false);
 					Async_Actor_Walk_To_Waypoint(kActorGuzza, 101, 0, false);
 					Delay(4000);
+					Music_Stop(1u);
 					Actor_Force_Stop_Walking(kActorMcCoy);
 					Actor_Put_In_Set(kActorGuzza, kSetPS04);
 					Player_Gains_Control();
-					Global_Variable_Set(kVariableAffectionTowards, kAffectionTowardsNone);
 					Game_Flag_Set(kFlagMcCoyFreedOfAccusations);
 					Game_Flag_Set(kFlagMcCoyIsInnocent);
 					Actor_Set_Goal_Number(kActorMcCoy, kGoalMcCoyStartChapter5);

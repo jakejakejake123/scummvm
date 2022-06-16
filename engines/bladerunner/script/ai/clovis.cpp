@@ -326,9 +326,10 @@ bool AIScriptClovis::GoalChanged(int currentGoalNumber, int newGoalNumber) {
 
 	case kGoalClovisBB11TalkWithSadik:
 		Actor_Set_Goal_Number(kActorSadik, kGoalSadikBB11TalkWithClovis);
+		// Made it so Clovis only gets annoyed at Sadik for continually beating up McCoy if Clovis has high friendliness with McCoy.
 		if (_vm->_cutContent) {
 			if (Actor_Query_Friendliness_To_Other(kActorClovis, kActorMcCoy) > 50) {
-				Actor_Says(kActorClovis, 10, 15);
+				Actor_Says(kActorClovis, 10, 15); //05-0010.AUD	Enough!
 			}
 		} else {
 			Actor_Says(kActorClovis, 10, 15);
@@ -343,9 +344,10 @@ bool AIScriptClovis::GoalChanged(int currentGoalNumber, int newGoalNumber) {
 		Actor_Says(kActorSadik, 20, kAnimationModeTalk);
 		Actor_Face_Actor(kActorClovis, kActorMcCoy, true);
 		Actor_Face_Actor(kActorSadik, kActorMcCoy, true);
+		// Made it so Clovis says that McCoy is not a problem but an opportunity if he has high friendliness with him.
 		if (_vm->_cutContent) {
 			if (Actor_Query_Friendliness_To_Other(kActorClovis, kActorMcCoy) > 50) {		
-				Actor_Says(kActorClovis, 50, 14);
+				Actor_Says(kActorClovis, 50, 14); //05-0050.AUD	This one? He's not a problem. He's an opportunity.
 			}
 		} else {
 			Actor_Says(kActorClovis, 50, 14);
@@ -374,6 +376,7 @@ bool AIScriptClovis::GoalChanged(int currentGoalNumber, int newGoalNumber) {
 		if (!Game_Flag_Query(kFlagSadikIsReplicant)) {
 			Actor_Clue_Acquire(kActorMcCoy, kClueStaggeredbyPunches, true, kActorSadik);
 		}
+		// Added in the clue sighting Sadik at Bradbury which is bassically the conversation that Sadik and Clovis have on the roof of the Bradbury.
 		if (_vm->_cutContent) {
 			Actor_Clue_Acquire(kActorMcCoy, kClueSightingSadikBradbury, true, kActorSadik);
 		}	
@@ -461,14 +464,16 @@ bool AIScriptClovis::GoalChanged(int currentGoalNumber, int newGoalNumber) {
 		return true;
 
 	case kGoalClovisKP06TalkToMcCoy:
-		Actor_Says(kActorClovis, 110, kAnimationModeTalk);
-		Actor_Says(kActorMcCoy, 2255, kAnimationModeTalk);
-		Actor_Says(kActorClovis, 120, kAnimationModeTalk);
-		Actor_Says(kActorClovis, 130, kAnimationModeTalk);
-		Actor_Says(kActorClovis, 140, kAnimationModeTalk);
-		Actor_Says(kActorMcCoy, 2260, kAnimationModeTalk);
-		Actor_Says(kActorClovis, 150, kAnimationModeTalk);
-		Actor_Set_Goal_Number(kActorClovis, kGoalClovisKP07Wait);
+		if (Player_Query_Current_Scene() == kSetKP05_KP06) {
+			Actor_Says(kActorClovis, 110, kAnimationModeTalk);
+			Actor_Says(kActorMcCoy, 2255, kAnimationModeTalk);
+			Actor_Says(kActorClovis, 120, kAnimationModeTalk);
+			Actor_Says(kActorClovis, 130, kAnimationModeTalk);
+			Actor_Says(kActorClovis, 140, kAnimationModeTalk);
+			Actor_Says(kActorMcCoy, 2260, kAnimationModeTalk);
+			Actor_Says(kActorClovis, 150, kAnimationModeTalk);
+			Actor_Set_Goal_Number(kActorClovis, kGoalClovisKP07Wait);
+		}
 		return true;
 
 	case kGoalClovisKP07Wait:
@@ -515,7 +520,7 @@ bool AIScriptClovis::GoalChanged(int currentGoalNumber, int newGoalNumber) {
 											&& Game_Flag_Query(kFlagEarlyQDead)))  {
 												if (Game_Flag_Query(kFlagHanoiIsReplicant) 
 												&& Game_Flag_Query(kFlagHanoiDead))  {
-													Actor_Says(kActorMcCoy, 2345, 16);
+													Actor_Says(kActorMcCoy, 2345, 16); //00-2345.AUD	They’re all dead. You’re the last one.
 												}
 											}
 										}
@@ -544,17 +549,28 @@ bool AIScriptClovis::GoalChanged(int currentGoalNumber, int newGoalNumber) {
 		Actor_Says(kActorClovis, 190, -1); //05-0190.AUD	And what about you, Ray McCoy?(coughs) After what you did to my family.
 		Actor_Says(kActorClovis, 200, kAnimationModeTalk); //05-0200.AUD	To my friends. Do you not also seek forgiveness?
 		if (_vm->_cutContent) {
-			Delay (2000);
+			Player_Loses_Control();
+			Loop_Actor_Walk_To_XYZ(kActorMcCoy, 54.09, -42.70, -148.65, 0, false, false, false);
 			if (Player_Query_Agenda() == kPlayerAgendaSurly 
 			|| (Player_Query_Agenda() == kPlayerAgendaErratic)) {
 				Actor_Says(kActorMcCoy, 2360, 18); //00-2360.AUD	I don’t need to.
+				// This flag will lead to Clovis shooting McCoy if McCoy does not shoot him first.
 				Game_Flag_Set(kFlagClovisTalkUnsympathetic);
 			} else {	
+				Delay (2000);
 				Actor_Says(kActorMcCoy, 2305, 17); //00-2305.AUD	I’m sorry.
 			}
 		}
 		Actor_Says(kActorClovis, 210, kAnimationModeTalk); //05-0210.AUD	(coughs) I thought I could cheat my destiny.
-		Actor_Says(kActorClovis, 220, -1);
+		if (_vm->_cutContent) {
+			if (!Game_Flag_Query(kFlagClovisTalkUnsympathetic)) {
+				Actor_Says(kActorClovis, 220, -1); //05-0220.AUD	I should have cherished what little time I had instead of wasting it in one precious minute... on revenge. (coughs)
+			} else {
+				Delay(2000);
+			}
+		} else {
+			Actor_Says(kActorClovis, 220, -1); //05-0220.AUD	I should have cherished what little time I had instead of wasting it in one precious minute... on revenge. (coughs)
+		}
 		Actor_Set_Goal_Number(kActorClovis, kGoalClovisKP07SayFinalWords);
 		return true;
 
@@ -564,7 +580,6 @@ bool AIScriptClovis::GoalChanged(int currentGoalNumber, int newGoalNumber) {
 	// for Clovis he is partially obscured by McCoy making it look like Clovis shot him dead with his final breath during his dying animation.	
 		if (_vm->_cutContent) {
 			Actor_Change_Animation_Mode(kActorClovis, 54);
-			Loop_Actor_Walk_To_XYZ(kActorMcCoy, 54.09, -42.70, -148.65, 0, false, false, false);
 			Actor_Face_Actor(kActorMcCoy, kActorClovis, true);
 			Actor_Says(kActorClovis, 240, -1);
 			Actor_Says(kActorClovis, 250, -1);
@@ -574,11 +589,8 @@ bool AIScriptClovis::GoalChanged(int currentGoalNumber, int newGoalNumber) {
 			Actor_Says(kActorClovis, 280, -1);
 			Actor_Says(kActorClovis, 290, -1);
 			Actor_Says(kActorClovis, 300, -1);
-			if (Actor_Clue_Query(kActorClovis, kClueMcCoyRetiredLucy) 
-			|| Actor_Clue_Query(kActorClovis, kClueMcCoyRetiredDektora)
-			|| Game_Flag_Query(kFlagClovisTalkUnsympathetic)) {
+			if (Game_Flag_Query(kFlagClovisTalkUnsympathetic)) {
 				Actor_Change_Animation_Mode(kActorClovis, 54);
-				Loop_Actor_Walk_To_XYZ(kActorMcCoy, 54.09, -42.70, -148.65, 0, false, false, false);
 				Delay (1000);
 				Actor_Says(kActorMcCoy, 8990, 13); //00-8990.AUD	What have you got there?
 				Delay (1000);
@@ -595,6 +607,7 @@ bool AIScriptClovis::GoalChanged(int currentGoalNumber, int newGoalNumber) {
 				Actor_Change_Animation_Mode(kActorClovis, kAnimationModeHit);
 				Actor_Retired_Here(kActorClovis, 12, 48, true, -1);
 				Actor_Set_Goal_Number(kActorClovis, kGoalClovisGone);
+				Scene_Exits_Enable();
 				Player_Gains_Control();
 			}
 		} else {
@@ -635,7 +648,7 @@ bool AIScriptClovis::GoalChanged(int currentGoalNumber, int newGoalNumber) {
 		}
 		Actor_Says(kActorMcCoy, 8504, kAnimationModeTalk); //00-8504.AUD	I've got questions of my own.
 		Actor_Says(kActorClovis, 1290, kAnimationModeTalk); //05-1290.AUD	No doubt. But answers will take time. And time is precious. To all of us.
-		// Added code so Clovis will only mention McCoy having the information from Tyrell if McCoy has the Tyrell DNA data.
+		// Added code so Clovis will only mention McCoy having the information from Tyrell if McCoy has the Tyrell DNA data and he interviewed Tyrell.
 		if (_vm->_cutContent) {
 			if (Actor_Clue_Query(kActorMcCoy, kClueTyrellInterview)
 			&& 	Actor_Clue_Query(kActorMcCoy, kClueDNATyrell)) {
@@ -652,7 +665,9 @@ bool AIScriptClovis::GoalChanged(int currentGoalNumber, int newGoalNumber) {
 #endif // BLADERUNNER_ORIGINAL_BUGS
 		Actor_Says(kActorClovis, 1310, kAnimationModeTalk); //05-1310.AUD	He’s a hunter no more. He has come home. It’s time to go, my friend.
 		// Added in a line.
-		Actor_Says(kActorMcCoy, 8506, kAnimationModeTalk); //00-8506.AUD	Where are we headed?
+		if (_vm->_cutContent) {
+			Actor_Says(kActorMcCoy, 8506, kAnimationModeTalk); //00-8506.AUD	Where are we headed?
+		}
 		Ambient_Sounds_Remove_All_Non_Looping_Sounds(true);
 		Ambient_Sounds_Remove_All_Looping_Sounds(1u);
 		Outtake_Play(kOuttakeEnd4A, false, -1);

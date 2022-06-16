@@ -118,7 +118,6 @@ bool SceneScriptNR10::ClickedOnExit(int exitId) {
 		if (!Loop_Actor_Walk_To_XYZ(kActorMcCoy, 11.5f, 2.84f, -304.46f, 0, true, false, false)) {
 			Actor_Face_Heading(kActorMcCoy, 55, false);
 			Loop_Actor_Travel_Ladder(kActorMcCoy, 8, true, kAnimationModeIdle);
-			Game_Flag_Set(kFlagNR10toNR11);
 			Set_Enter(kSetNR11, kSceneNR11);
 			return true;
 		}
@@ -144,12 +143,6 @@ bool SceneScriptNR10::ClickedOn2DRegion(int region) {
 void SceneScriptNR10::SceneFrameAdvanced(int frame) {
 	if (frame == 122) {
 		Game_Flag_Set(kFlagNR10McCoyBlinded);
-		// This track plays when McCoy is blinded.
-		if (_vm->_cutContent) {
-			if (!Actor_Clue_Query(kActorDektora, kClueMcCoyHelpedDektora)) {
-				Music_Play(kMusicBeating1, 61, 0, 1, -1, kMusicLoopPlayOnce, 0);
-			}
-		}
 		Actor_Set_Invisible(kActorMcCoy, true);
 		Actor_Set_Invisible(kActorDektora, true);
 		Combat_Target_Object("BOX18");
@@ -161,7 +154,9 @@ void SceneScriptNR10::SceneFrameAdvanced(int frame) {
 	 && Game_Flag_Query(kFlagNR10McCoyBlinded)
 	) {
 		Game_Flag_Reset(kFlagNR10McCoyBlinded);
-		Player_Set_Combat_Mode(false);
+		if (!_vm->_cutContent) {
+			Player_Set_Combat_Mode(false);
+		}
 		Actor_Set_Invisible(kActorMcCoy, false);
 		if (_vm->_cutContent) {
 			if (!Actor_Clue_Query(kActorDektora, kClueMcCoyHelpedDektora)) {

@@ -189,6 +189,7 @@ void SceneScriptPS14::PlayerWalkedIn() {
 				Actor_Says(kActorOfficerGrayford, 90, kAnimationModeTalk); //24-0090.AUD	if you are lying, if you’ve killed any humans in the process…
 				Actor_Says(kActorOfficerGrayford, 100, kAnimationModeTalk); //24-0100.AUD	you gonna wish we disposed you right here and now.
 				Actor_Says(kActorOfficerGrayford, 110, kAnimationModeTalk); //24-0110.AUD	Take him in!
+				Music_Stop(1u);
 				Player_Gains_Control();
 				// Removed invisibility code, instead placed Grayford outside of the set.
 				Actor_Set_At_XYZ(kActorOfficerGrayford, 180.04, 11.73, -5.42, 0);

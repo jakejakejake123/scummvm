@@ -234,10 +234,12 @@ void SceneScriptMA02::PlayerWalkedIn() {
 				Delay(1000);
 				Actor_Face_Object(kActorMcCoy, "BAR-MAIN", true);
 				Delay(2000);
+				Player_Loses_Control();
 				Loop_Actor_Walk_To_XYZ(kActorMcCoy, -29.0f, -140.4f, 298.0f, 36, true, false, false);
 				Delay(1000);
 				Overlay_Remove("MA02OVER");
 				Item_Pickup_Spin_Effect(kModelAnimationCrystalsCigarette, 480, 240);
+				Player_Gains_Control();
 				Actor_Voice_Over(1770, kActorVoiceOver);
 				Actor_Voice_Over(1150, kActorVoiceOver); //99-1150.AUD	It wasn’t any mystery.
 				// If McCoy didn't prove his innocence or his companion is a replicant, Crystal came to the apartment to kill him but kills Maggie instead and this is a message that she is coming for McCoy.

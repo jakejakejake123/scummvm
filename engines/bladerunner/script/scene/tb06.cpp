@@ -112,17 +112,23 @@ bool SceneScriptTB06::ClickedOnItem(int itemId, bool a2) {
 		if (!Loop_Actor_Walk_To_Item(kActorMcCoy, kItemDogCollar, 12, true, false)) {
 			Actor_Face_Item(kActorMcCoy, kItemDogCollar, true);
 			if (_vm->_cutContent) {
-				Actor_Clue_Acquire(kActorMcCoy, kClueDogCollar1, true, kActorMarcus);
+				if (!Actor_Clue_Query(kActorMcCoy, kClueAttemptedFileAccess)) {
+					Actor_Says(kActorMcCoy, 8790, 3); //00-8790.AUD	A dog collar.
+				} else {
+					Actor_Voice_Over(4160, kActorVoiceOver);
+					Item_Pickup_Spin_Effect(kModelAnimationDogCollar, 341, 368);
+					Item_Remove_From_World(kItemDogCollar);
+					Actor_Voice_Over(4160, kActorVoiceOver);
+					Game_Flag_Set(kFlagTB06DogCollarTaken);
+					Actor_Clue_Acquire(kActorMcCoy, kClueDogCollar1, true, kActorMarcus);
+				}	
 			} else {
 				Actor_Clue_Acquire(kActorMcCoy, kClueDogCollar1, true, -1);
+				Item_Pickup_Spin_Effect(kModelAnimationDogCollar, 341, 368);
+				Item_Remove_From_World(kItemDogCollar);
+				Actor_Voice_Over(4160, kActorVoiceOver);
+				Game_Flag_Set(kFlagTB06DogCollarTaken);
 			}
-			Item_Pickup_Spin_Effect(kModelAnimationDogCollar, 341, 368);
-			Item_Remove_From_World(kItemDogCollar);
-			if (_vm->_cutContent) {
-				Actor_Says(kActorMcCoy, 8790, 13); //00-8790.AUD	A dog collar.
-			}
-			Actor_Voice_Over(4160, kActorVoiceOver);
-			Game_Flag_Set(kFlagTB06DogCollarTaken);
 			return true;
 		}
 	}

@@ -281,6 +281,9 @@ void SceneScriptPS01::ActorChangedGoal(int actorId, int newGoal, int oldGoal, bo
 }
 
 void SceneScriptPS01::PlayerWalkedIn() {
+	if (_vm->_cutContent) {
+		Music_Stop(1u);
+	}
 	if (Game_Flag_Query(kFlagPS02toPS01)) {
 		Actor_Set_At_XYZ(kActorMcCoy, 1920.0f, 16581.0f, -2653.0f, 150);
 		Game_Flag_Reset(kFlagPS02toPS01);

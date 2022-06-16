@@ -245,6 +245,12 @@ void AIScriptSadik::Retired(int byActorId) {
 	if (Actor_Query_In_Set(kActorSadik, kSetKP07)) {
 		Global_Variable_Decrement(kVariableReplicantsSurvivorsAtMoonbus, 1); // can't Sadik still be human (Rep-sympathiser here? A bug?
 		Actor_Set_Goal_Number(kActorSadik, kGoalSadikGone);
+		if (_vm->_cutContent) {
+			if (Query_Difficulty_Level() != kGameDifficultyEasy) {
+				Global_Variable_Increment(kVariableChinyen, 200);		
+			}	
+			Actor_Modify_Friendliness_To_Other(kActorGaff, kActorMcCoy, 2);
+		}
 
 		if (Global_Variable_Query(kVariableReplicantsSurvivorsAtMoonbus) == 0) {
 			Player_Loses_Control();
@@ -419,32 +425,6 @@ bool AIScriptSadik::GoalChanged(int currentGoalNumber, int newGoalNumber) {
 		return true;
 
 	case 412:
-	// Made it so if Sadik is dead Clovis is the one who kills Maggie and talks to you.
-	if (_vm->_cutContent) {
-		if (Actor_Clue_Query(kActorClovis, kClueMcCoyRetiredSadik)) {
-			Actor_Says(kActorClovis, 110, kAnimationModeTalk);
-			Actor_Says(kActorMcCoy, 2255, kAnimationModeTalk);
-			Actor_Says(kActorClovis, 120, kAnimationModeTalk);
-			Actor_Says(kActorClovis, 130, kAnimationModeTalk);
-			Actor_Says(kActorClovis, 140, kAnimationModeTalk);
-			Actor_Says(kActorMcCoy, 2260, kAnimationModeTalk);
-			Actor_Says(kActorClovis, 150, kAnimationModeTalk);
-			Actor_Set_Goal_Number(kActorClovis, kGoalClovisKP07Wait);
-		} else {
-			Actor_Says(kActorSadik, 60, 3);
-			Actor_Says(kActorMcCoy, 2240, 3);
-			Actor_Says(kActorSadik, 70, 3);
-			Actor_Says(kActorSadik, 80, 3);
-			Actor_Says(kActorMcCoy, 2245, 3);
-			Actor_Says(kActorSadik, 90, 3);
-			Actor_Says(kActorSadik, 100, 3);
-			Actor_Says(kActorMcCoy, 2250, 3);
-			Actor_Clue_Acquire(kActorMcCoy, kClueMcCoyRetiredSadik, true, kActorSadik);
-			// Added in some action music for the final confrontation with Sadik.
-			Music_Play(kMusicMoraji, 71, 0, 0, -1, kMusicLoopPlayOnce, 2);
-			Actor_Set_Goal_Number(kActorSadik, 413);
-		}
-	} else {
 		Actor_Says(kActorSadik, 60, 3);
 		Actor_Says(kActorMcCoy, 2240, 3);
 		Actor_Says(kActorSadik, 70, 3);
@@ -453,8 +433,12 @@ bool AIScriptSadik::GoalChanged(int currentGoalNumber, int newGoalNumber) {
 		Actor_Says(kActorSadik, 90, 3);
 		Actor_Says(kActorSadik, 100, 3);
 		Actor_Says(kActorMcCoy, 2250, 3);
+		if (_vm->_cutContent) {
+			Actor_Clue_Acquire(kActorMcCoy, kClueMcCoyRetiredSadik, true, kActorSadik);
+			// Added in some action music for the final confrontation with Sadik.
+			Music_Play(kMusicMoraji, 71, 0, 0, -1, kMusicLoopPlayOnce, 2);
+		}
 		Actor_Set_Goal_Number(kActorSadik, 413);
-	}
 	return true;
 
 	case 413:
@@ -473,11 +457,22 @@ bool AIScriptSadik::GoalChanged(int currentGoalNumber, int newGoalNumber) {
 	case 415:
 	// Added in some extra dialogue for Sadik and McCoy. If McCoy betrayed Crystal this will be mentioned in the conversation.
 		if (_vm->_cutContent) {
+			Actor_Face_Actor(kActorMcCoy, kActorSadik, true);
 			Actor_Says(kActorMcCoy, 8480, kAnimationModeTalk); //00-8480.AUD	Anyone there?
+			Loop_Actor_Walk_To_XYZ(kActorSadik, -857.0f, 0.0f, -703.0f, 0, false, true, false);
+			Actor_Face_Actor(kActorSadik, kActorMcCoy, true);
+			Actor_Face_Actor(kActorMcCoy, kActorSadik, true);
 		}
 		Actor_Says(kActorSadik, 110, kAnimationModeTalk); //08-0110.AUD	Brother mon. Wondering when you’d make it out here.
-		Actor_Says(kActorMcCoy, 2290, kAnimationModeTalk); //00-2290.AUD	Took a little while to realize where I belonged.
-		Actor_Says(kActorSadik, 310, kAnimationModeTalk); //08-0310.AUD	The Maker built you right.
+		if (_vm->_cutContent) {
+			if (Game_Flag_Query(kFlagMcCoyIsHelpingReplicants)) {
+				Actor_Says(kActorMcCoy, 2290, kAnimationModeTalk); //00-2290.AUD	Took a little while to realize where I belonged.
+				Actor_Says(kActorSadik, 310, kAnimationModeTalk); //08-0310.AUD	The Maker built you right.
+			}
+		} else {
+			Actor_Says(kActorMcCoy, 2290, kAnimationModeTalk); //00-2290.AUD	Took a little while to realize where I belonged.
+			Actor_Says(kActorSadik, 310, kAnimationModeTalk); //08-0310.AUD	The Maker built you right.
+		}
 		if (_vm->_cutContent) {
 			if (Actor_Clue_Query(kActorSadik, kClueMcCoyBetrayal)) {
 				Actor_Says(kActorSadik, 120, kAnimationModeTalk); //08-0120.AUD	Heard one of the traps go off. Was afraid you was blown to bits.
@@ -486,22 +481,46 @@ bool AIScriptSadik::GoalChanged(int currentGoalNumber, int newGoalNumber) {
 				if (Player_Query_Agenda() == kPlayerAgendaSurly 
 				|| Player_Query_Agenda() == kPlayerAgendaErratic) {
 					Actor_Says(kActorMcCoy, 8485, kAnimationModeTalk); //00-8485.AUD	One is a start.
-				} 
+				} else {
+					Actor_Says(kActorMcCoy, 2300, kAnimationModeTalk);
+					if (Game_Flag_Query(kFlagSadikIsReplicant)) {
+						Actor_Says(kActorSadik, 180, kAnimationModeTalk);
+						Actor_Says(kActorSadik, 190, kAnimationModeTalk);
+						if (Player_Query_Agenda() == kPlayerAgendaSurly 
+						|| Player_Query_Agenda() == kPlayerAgendaErratic) {
+							Actor_Says(kActorMcCoy, 4880, 13); //00-4880.AUD	Is that right?
+						} else {
+							Actor_Says(kActorMcCoy, 2310, kAnimationModeTalk); //00-2310.AUD	I understand.
+						}
+						Actor_Says(kActorSadik, 200, kAnimationModeTalk);
+					} else {
+						Actor_Says(kActorSadik, 140, kAnimationModeTalk);
+						Actor_Says(kActorSadik, 150, kAnimationModeTalk);
+						if (Player_Query_Agenda() == kPlayerAgendaSurly 
+						|| Player_Query_Agenda() == kPlayerAgendaErratic) {
+							Actor_Says(kActorMcCoy, 4880, 13); //00-4880.AUD	Is that right?
+						} else {
+							Actor_Says(kActorMcCoy, 2305, kAnimationModeTalk); //00-2305.AUD	I’m sorry.
+						}
+						Actor_Says(kActorSadik, 160, kAnimationModeTalk);
+						Actor_Says(kActorSadik, 170, kAnimationModeTalk);
+					}
+				}
 			}
-		}
-		// Moved the dialogue down one space so Sadik says the maker built you right, before mentioning the explosion.
-		Actor_Says(kActorMcCoy, 2300, kAnimationModeTalk);
-		if (Game_Flag_Query(kFlagSadikIsReplicant)) {
-			Actor_Says(kActorSadik, 180, kAnimationModeTalk);
-			Actor_Says(kActorSadik, 190, kAnimationModeTalk);
-			Actor_Says(kActorMcCoy, 2310, kAnimationModeTalk);
-			Actor_Says(kActorSadik, 200, kAnimationModeTalk);
 		} else {
-			Actor_Says(kActorSadik, 140, kAnimationModeTalk);
-			Actor_Says(kActorSadik, 150, kAnimationModeTalk);
-			Actor_Says(kActorMcCoy, 2305, kAnimationModeTalk);
-			Actor_Says(kActorSadik, 160, kAnimationModeTalk);
-			Actor_Says(kActorSadik, 170, kAnimationModeTalk);
+			Actor_Says(kActorMcCoy, 2300, kAnimationModeTalk);
+			if (Game_Flag_Query(kFlagSadikIsReplicant)) {
+				Actor_Says(kActorSadik, 180, kAnimationModeTalk);
+				Actor_Says(kActorSadik, 190, kAnimationModeTalk);
+				Actor_Says(kActorMcCoy, 2310, kAnimationModeTalk); //00-2310.AUD	I understand.
+				Actor_Says(kActorSadik, 200, kAnimationModeTalk);
+			} else {
+				Actor_Says(kActorSadik, 140, kAnimationModeTalk);
+				Actor_Says(kActorSadik, 150, kAnimationModeTalk);
+				Actor_Says(kActorMcCoy, 2305, kAnimationModeTalk); //00-2305.AUD	I’m sorry.
+				Actor_Says(kActorSadik, 160, kAnimationModeTalk);
+				Actor_Says(kActorSadik, 170, kAnimationModeTalk);
+			}
 		}
 		Actor_Says(kActorMcCoy, 2315, kAnimationModeTalk);
 		Actor_Says(kActorSadik, 210, kAnimationModeTalk);
@@ -511,14 +530,24 @@ bool AIScriptSadik::GoalChanged(int currentGoalNumber, int newGoalNumber) {
 		Actor_Says(kActorSadik, 250, kAnimationModeTalk); //08-0250.AUD	Old reactor cores. Anything still got a glow.
 		// Added in a line.
 		if (_vm->_cutContent) {
-			Actor_Says(kActorMcCoy, 6195, kAnimationModeTalk); //00-6195.AUD	I thought you said we came to earth in this thing.
+			if (Player_Query_Agenda() == kPlayerAgendaSurly 
+			|| Player_Query_Agenda() == kPlayerAgendaErratic) {
+				Actor_Says(kActorMcCoy, 6195, kAnimationModeTalk); //00-6195.AUD	I thought you said we came to earth in this thing.
+			} else {
+				Actor_Says(kActorMcCoy, 8490, kAnimationModeTalk); //00-8490.AUD	And that would be...?
+			}
 		}
 		Actor_Says(kActorSadik, 260, kAnimationModeTalk); //08-0260.AUD	The generator? It take almost anything.
+		if (_vm->_cutContent) {
+			Actor_Says(kActorMcCoy, 2750, kAnimationModeTalk); //00-2750.AUD	Okay, I get the picture.
+		}
 		Actor_Set_Goal_Number(kActorSadik, kGoalSadikKP06NeedsReactorCoreFromMcCoy);
 		// Made it so you can't shoot Sadik when he is preparing the moonbus. This is to prevent several narrative inconsistencies such as all the replicants waiting for you on the
 		// moonbus disappearing because Sadik was killed.
 		// Also added in a clue.
 		if (_vm->_cutContent) {
+			Loop_Actor_Walk_To_XYZ(kActorSadik, -961.0f, 0.0f, -778.0f, 0, false, false, false);
+			Actor_Face_Heading(kActorSadik, 150, false);
 			Actor_Set_Targetable(kActorSadik, false);
 			Actor_Clue_Acquire(kActorMcCoy, kClueMoonbusCloseup, true, kActorSadik);
 		}

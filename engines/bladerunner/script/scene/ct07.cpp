@@ -125,15 +125,15 @@ void SceneScriptCT07::PlayerWalkedIn() {
 			Actor_Modify_Friendliness_To_Other(kActorGuzza, kActorMcCoy, -2);
 			Actor_Modify_Friendliness_To_Other(kActorClovis, kActorMcCoy, 2);
 			Actor_Set_Goal_Number(kActorGordo, kGoalGordoCT05WalkThrough);
+			Actor_Clue_Acquire(kActorZuben, kClueMcCoyLetZubenEscape, true, -1);
+			Actor_Set_Goal_Number(kActorZuben, kGoalZubenCT07RunToFreeSlotA);
+			if (Random_Query(1, 3) < 3) {
+				Actor_Clue_Acquire(kActorZuben, kClueMcCoysDescription, true, -1);
+			}
+			if (Random_Query(1, 5) < 5) {
+				Actor_Clue_Acquire(kActorZuben, kClueMcCoyIsABladeRunner, true, -1);
+			}
 		}
-		if (Random_Query(1, 3) < 3) {
-			Actor_Clue_Acquire(kActorZuben, kClueMcCoysDescription, true, -1);
-		}
-		if (Random_Query(1, 5) < 5) {
-			Actor_Clue_Acquire(kActorZuben, kClueMcCoyIsABladeRunner, true, -1);
-		}
-		Actor_Clue_Acquire(kActorZuben, kClueMcCoyLetZubenEscape, true, -1);
-		Actor_Set_Goal_Number(kActorZuben, kGoalZubenCT07RunToFreeSlotA);
 	}
 }
 

@@ -102,7 +102,11 @@ bool SceneScriptNR07::ClickedOnActor(int actorId) {
 			}
 			// Made it so the scorpions option is now available. The trigger for this will be the clue purchased scorpions.
 			if (_vm->_cutContent) {
-				if (Actor_Clue_Query(kActorMcCoy, kCluePurchasedScorpions)) {
+				if (Actor_Clue_Query(kActorMcCoy, kCluePurchasedScorpions) 
+				|| ((Actor_Clue_Query(kActorMcCoy, kClueScorpionbox)
+				&& Game_Flag_Query(kFlagAR02ScorpionsChecked))
+				|| (((Actor_Clue_Query(kActorMcCoy, kClueScorpions)
+				&& Actor_Clue_Query(kActorMcCoy, kClueWomanInAnimoidRow)))))) {
 					DM_Add_To_List_Never_Repeat_Once_Selected(1140, 1, 4, 7); // SCORPIONS
 				}
 			}

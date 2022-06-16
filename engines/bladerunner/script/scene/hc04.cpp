@@ -39,7 +39,7 @@ void SceneScriptHC04::InitializeScene() {
 
 	if (_vm->_cutContent) {
 		if (!Game_Flag_Query(kFlagIsabellaArrested)
-		|| Global_Variable_Query(kVariableChapter) > 3) { 
+		&& Global_Variable_Query(kVariableChapter) < 4) { 
 			Actor_Put_In_Set(kActorIsabella, kSetHC01_HC02_HC03_HC04);
 			Actor_Set_At_XYZ(kActorIsabella, -210.0f, 0.0f, -445.0f, 250);
 		}

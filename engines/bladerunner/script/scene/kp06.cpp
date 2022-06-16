@@ -132,9 +132,20 @@ bool SceneScriptKP06::ClickedOnExit(int exitId) {
 				Set_Enter(kSetKP07, kSceneKP07);
 			}
 		} else if (Actor_Clue_Query(kActorMcCoy, kCluePowerSource)) {
-			Actor_Says(kActorSadik, 280, kAnimationModeTalk);
+			if (_vm->_cutContent) {
+				Loop_Actor_Walk_To_Actor(kActorMcCoy, kActorSadik, 24, true, false);
+				Actor_Face_Actor(kActorSadik, kActorMcCoy, true);
+				Actor_Face_Actor(kActorMcCoy, kActorSadik, true);
+				Actor_Change_Animation_Mode(kActorMcCoy, 23);
+				Actor_Change_Animation_Mode(kActorSadik, 23);
+				Delay(2000);
+			}
+			Actor_Says(kActorSadik, 280, kAnimationModeTalk); //08-0280.AUD	You for real I’m thinking.
 			Actor_Says(kActorSadik, 290, kAnimationModeTalk);
 			Actor_Clue_Acquire(kActorSadik, kCluePowerSource, true, kActorMcCoy);
+			if (_vm->_cutContent) {
+				Actor_Clue_Lose(kActorMcCoy, kCluePowerSource);
+			}
 			Loop_Actor_Walk_To_XYZ(kActorMcCoy, -731.0f, 8.26f, -657.0f, 0, false, true, false);
 			Player_Set_Combat_Mode(false);
 			Ambient_Sounds_Remove_All_Non_Looping_Sounds(true);

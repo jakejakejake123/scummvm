@@ -317,6 +317,9 @@ void SceneScriptDR01::ActorChangedGoal(int actorId, int newGoal, int oldGoal, bo
 }
 
 void SceneScriptDR01::PlayerWalkedIn() {
+	if (_vm->_cutContent) {
+		Music_Stop(1u);
+	}
 	if (Game_Flag_Query(kFlagCT11toDR01)) {
 		Async_Actor_Walk_To_XYZ(kActorMcCoy, -757.15f, -0.04f, 24.64f, 0, false);
 	} else if (!Game_Flag_Query(kFlagDR02toDR01)

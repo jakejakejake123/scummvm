@@ -34,7 +34,7 @@ void AIScriptHowieLee::Initialize() {
 	_animationStateNext = 0;
 	_animationNext = 0;
 	_varIdleStatesToggle = 0;
-
+	// Made it so Howie Lee only appears in act one since he doesn't serve any purpose after the first act.
 	if (_vm->_cutContent) {
 		if (!Game_Flag_Query(kFlagHowieLeeArrested) 
 		&& Global_Variable_Query(kVariableChapter) < 2) {
@@ -78,7 +78,7 @@ bool AIScriptHowieLee::Update() {
 			return true;
 		}
 	}
-
+	// Made it so Howie Lees goals won't trigger after act one or if he is arrested.
 	if (_vm->_cutContent) {
 		if (!Game_Flag_Query(kFlagHowieLeeArrested)
 		&& Global_Variable_Query(kVariableChapter) < 2) {
@@ -211,6 +211,7 @@ void AIScriptHowieLee::ReceivedClue(int clueId, int fromActorId) {
 }
 
 void AIScriptHowieLee::ClickedByPlayer() {
+	// This is the code for Howie Lee when you click on him in the lock up after you arrest him.
 	if (_vm->_cutContent) {
 		if (Actor_Query_In_Set(kActorHowieLee, kSetPS09)) {
 			if (!Loop_Actor_Walk_To_XYZ(kActorMcCoy, -381.11f, 0.0f, -135.55f, 0, false, false, false)) {
@@ -363,20 +364,50 @@ bool AIScriptHowieLee::UpdateAnimation(int *animation, int *frame) {
 		++_animationFrame;
 		// _varIdleStatesToggle can be 0 or 1.
 		// Determines whether kModelAnimationHowieLeePutsIngredientsCooking or kModelAnimationHowieLeeGathersOfTidiesUp is used.
-		if (_varIdleStatesToggle > 0) {
-			*animation = kModelAnimationHowieLeePutsIngredientsCooking;
-			if (_animationFrame >= Slice_Animation_Query_Number_Of_Frames(kModelAnimationHowieLeePutsIngredientsCooking)) {
-				_animationFrame = 0;
-				if (Random_Query(0, 2) > 0) {
-					_varIdleStatesToggle ^= 1;
+		// Made it so Howie Lees food preparing animation will not play when he is arrested and placed in lock up. Instead his calm talk animation will play.
+		if (_vm->_cutContent) {
+			if (!Game_Flag_Query(kFlagHowieLeeArrested)) {
+				if (_varIdleStatesToggle > 0) {
+					*animation = kModelAnimationHowieLeePutsIngredientsCooking;
+					if (_animationFrame >= Slice_Animation_Query_Number_Of_Frames(kModelAnimationHowieLeePutsIngredientsCooking)) {
+						_animationFrame = 0;
+						if (Random_Query(0, 2) > 0) {
+							_varIdleStatesToggle ^= 1;
+						}
+					}
+				} else {
+					*animation = kModelAnimationHowieLeeGathersOfTidiesUp;
+					if (_animationFrame >= Slice_Animation_Query_Number_Of_Frames(kModelAnimationHowieLeeGathersOfTidiesUp)) {
+						_animationFrame = 0;
+						if (Random_Query(0, 1) > 0) {
+							_varIdleStatesToggle ^= 1;
+						}
+					}
+				}
+			} else {
+				*animation = kModelAnimationHowieLeeCalmTalk;
+				if (_animationFrame >= Slice_Animation_Query_Number_Of_Frames(kModelAnimationHowieLeeCalmTalk)) {
+					_animationState = 3;
+					_animationFrame = 0;
+					*animation = kModelAnimationHowieLeeCalmTalk;
 				}
 			}
 		} else {
-			*animation = kModelAnimationHowieLeeGathersOfTidiesUp;
-			if (_animationFrame >= Slice_Animation_Query_Number_Of_Frames(kModelAnimationHowieLeeGathersOfTidiesUp)) {
-				_animationFrame = 0;
-				if (Random_Query(0, 1) > 0) {
-					_varIdleStatesToggle ^= 1;
+			if (_varIdleStatesToggle > 0) {
+				*animation = kModelAnimationHowieLeePutsIngredientsCooking;
+				if (_animationFrame >= Slice_Animation_Query_Number_Of_Frames(kModelAnimationHowieLeePutsIngredientsCooking)) {
+					_animationFrame = 0;
+					if (Random_Query(0, 2) > 0) {
+						_varIdleStatesToggle ^= 1;
+					}
+				}
+			} else {
+				*animation = kModelAnimationHowieLeeGathersOfTidiesUp;
+				if (_animationFrame >= Slice_Animation_Query_Number_Of_Frames(kModelAnimationHowieLeeGathersOfTidiesUp)) {
+					_animationFrame = 0;
+					if (Random_Query(0, 1) > 0) {
+						_varIdleStatesToggle ^= 1;
+					}
 				}
 			}
 		}

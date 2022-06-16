@@ -312,6 +312,9 @@ void SceneScriptMA01::ActorChangedGoal(int actorId, int newGoal, int oldGoal, bo
 }
 
 void SceneScriptMA01::PlayerWalkedIn() {
+	if (_vm->_cutContent) {
+		Music_Stop(1u);
+	}
 	//Removed the code that plays the dispatcher hit and run dialogue since it now plays when you arrive in China town.
 }
 

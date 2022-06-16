@@ -281,7 +281,6 @@ bool AIScriptIzo::ShotAtAndHit() {
 				_animationState = 19;
 				Actor_Retired_Here(kActorIzo, 36, 12, true, -1);
 				Actor_Set_Goal_Number(kActorIzo, kGoalIzoDie);
-				Game_Flag_Reset(kFlagMcCoyIsHelpingReplicants);
 				if (Game_Flag_Query(kFlagIzoIsReplicant)) {
 					Actor_Set_Goal_Number(kActorSteele, 200);
 					Actor_Put_In_Set(kActorSteele, kSetRC03);
@@ -294,7 +293,12 @@ bool AIScriptIzo::ShotAtAndHit() {
 					Actor_Face_Actor(kActorSteele, kActorMcCoy, true);
 					if (Actor_Query_Friendliness_To_Other(kActorSteele, kActorMcCoy) < 51) {
 						Actor_Says(kActorSteele, 1800, 59); //01-1800.AUD	You should have waited for me, Slim.
-						Actor_Says(kActorMcCoy, 6280, 15); //00-6280.AUD	Ha. A guy’s got to start somewhere.
+						if (Player_Query_Agenda() == kPlayerAgendaSurly 
+						|| Player_Query_Agenda() == kPlayerAgendaErratic) {
+							Actor_Says(kActorMcCoy, 3835, 12); // 00-3835.AUD	I had the shot, so I took it.
+						} else {
+							Actor_Says(kActorMcCoy, 6280, 15); //00-6280.AUD	Ha. A guy’s got to start somewhere.
+						}
 						Actor_Says(kActorSteele, 1810, 59); //01-1810.AUD	(smacks lips) We’ll see who has it next time.
 					} else {
 						Actor_Says(kActorSteele, 1790, 59); //01-1790.AUD	We having fun yet?
@@ -326,9 +330,8 @@ bool AIScriptIzo::ShotAtAndHit() {
 					Player_Set_Combat_Mode(false);
 					Actor_Change_Animation_Mode(kActorMcCoy, kAnimationModeIdle);
 					Actor_Face_Actor(kActorSteele, kActorMcCoy, true);
-					Actor_Says(kActorSteele, 2160, 59); //01-2160.AUD	Are you nuts?
 					Actor_Face_Actor(kActorMcCoy, kActorSteele, true);
-					Actor_Says(kActorMcCoy, 3835, 12); // 00-3835.AUD	I had the shot, so I took it.
+					Actor_Says(kActorSteele, 2160, 59); //01-2160.AUD	Are you nuts?
 					Actor_Says(kActorSteele, 2170, 59); //01-2170.AUD	Give me your gun, goddammit! Give it to me!
 					Actor_Says(kActorMcCoy, 4855, 16); //00-4855.AUD	But... weren't you gonna shoot him?
 					Actor_Says(kActorSteele, 2180, 59); //01-2180.AUD	I was just gonna take him downtown. He's a material witness in a case I'm working. Now look! He's freaking useless, Slim.

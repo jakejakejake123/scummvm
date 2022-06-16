@@ -215,6 +215,8 @@ bool AIScriptLeon::GoalChanged(int currentGoalNumber, int newGoalNumber) {
 			Actor_Says(kActorMcCoy, 530, 16);
 			Actor_Set_Goal_Number(kActorLeon, kGoalLeonApproachMcCoy);
 		} else {
+			// Made it McCoys conversation with Leon will be different based upon whether or not McCoy helped the desk clerk.
+			// If McCoy helped the clerk he will be concerned about him and if he didn't he couldn't care less.
 			Actor_Says_With_Pause(kActorMcCoy, 535, 0.8f, 17); //00-0535.AUD	What about him?
 			Actor_Says(kActorLeon, 100, 13); //62-0100.AUD	Nothing, I just thought you were gonna arrest me. That's all.
 			if (_vm->_cutContent) {
@@ -234,7 +236,12 @@ bool AIScriptLeon::GoalChanged(int currentGoalNumber, int newGoalNumber) {
 					Actor_Says(kActorMcCoy, 560, kAnimationModeTalk);
 					Actor_Says_With_Pause(kActorLeon, 130, 0.8f, kAnimationModeTalk); //62-0130.AUD	Nothing, friend. I ain't done nothing.
 					Actor_Face_Current_Camera(kActorMcCoy, true);
-					Actor_Says(kActorMcCoy, 565, 18);
+					if (Player_Query_Agenda() == kPlayerAgendaSurly 
+					|| Player_Query_Agenda() == kPlayerAgendaErratic) {
+						Actor_Says(kActorMcCoy, 565, 18); //00-0565.AUD	We're all innocents, aren't we?
+					} else {
+						Actor_Says(kActorMcCoy, 4880, 13); //00-4880.AUD	Is that right?
+					}
 					Actor_Face_Actor(kActorMcCoy, kActorLeon, true);
 				}
 			} else {
@@ -251,7 +258,9 @@ bool AIScriptLeon::GoalChanged(int currentGoalNumber, int newGoalNumber) {
 			// Made it so McCoy only mentions Clovis' description if he has a clue which gave him that information.
 			if (_vm->_cutContent) {
 				if (Actor_Clue_Query(kActorMcCoy, kClueAnimalMurderSuspect)
-				|| Actor_Clue_Query(kActorMcCoy, kClueMorajiInterview)) {
+				|| Actor_Clue_Query(kActorMcCoy, kClueMorajiInterview)
+				|| Actor_Clue_Query(kActorMcCoy, kClueClovisAtMoonbus)
+				|| Actor_Clue_Query(kActorMcCoy, kClueDektorasDressingRoom)) {
 					Actor_Says_With_Pause(kActorMcCoy, 575, 1.2f, 13); //00-0575.AUD	Or a guy with a beard and dark eyes?
 				}
 			} else {
@@ -272,7 +281,6 @@ bool AIScriptLeon::GoalChanged(int currentGoalNumber, int newGoalNumber) {
 	// Made it so Leon now punches McCoy twice. McCoy seems to struggle a bit when he says 'I'm thinking of changing jobs' so it makes sense for
 	// him to be hit here. Also made other improvements to this encounter.
 		Player_Loses_Control();
-		Music_Stop(3u);
 		Actor_Face_Actor(kActorMcCoy, kActorLeon, true);
 		Actor_Face_Actor(kActorLeon, kActorMcCoy, true);
 		Actor_Says(kActorLeon, 40, kAnimationModeTalk); //62-0040.AUD	LPD, huh? You wouldn't be a Blade Runner would ya?
@@ -280,12 +288,14 @@ bool AIScriptLeon::GoalChanged(int currentGoalNumber, int newGoalNumber) {
 		Actor_Change_Animation_Mode(kActorLeon, kAnimationModeCombatAttack);
 		Music_Play(kMusicBeating1, 71, 0, 0, -1, kMusicLoopPlayOnce, 2);
 		Delay (500);
+		Ambient_Sounds_Play_Sound(kSfxKICK2, 90, 99, 0, 0);
 		Actor_Says(kActorMcCoy, 8670, 21); //00-8670.AUD	(grunts)
+		Delay (500);
 		Actor_Says(kActorMcCoy, 510, kAnimationModeTalk); //00-0510.AUD	I'm thinking of changing jobs.
 		Actor_Says(kActorLeon, 50, kAnimationModeTalk); //62-0050.AUD	You should have done it long ago. Now you're out of time, LPD. Good night!
 		Actor_Change_Animation_Mode(kActorLeon, kAnimationModeCombatAttack);
 		Delay (500);
-		Actor_Says(kActorMcCoy, 255, 21); //00-0255.AUD	Wait, I just-- Argh!
+		Ambient_Sounds_Play_Sound(kSfxKICK2, 90, 99, 0, 0);
 		Actor_Change_Animation_Mode(kActorMcCoy, kAnimationModeDie);
 		Actor_Retired_Here(kActorMcCoy, 12, 12, true, -1);
 		return false;

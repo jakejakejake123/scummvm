@@ -84,7 +84,9 @@ bool SceneScriptPS15::ClickedOnActor(int actorId) {
 				if (_vm->_cutContent) {	
 					if (!Game_Flag_Query(kFlagWallsUpset)) {
 						Actor_Says(kActorSergeantWalls, 180, 16); // 34-0180.AUD	Yeah, dig this. It's been doing the circuits around the station
-						Delay (1000);
+						Actor_Change_Animation_Mode(kActorMcCoy, 23);
+						Actor_Change_Animation_Mode(kActorSergeantWalls, 23);
+						Delay (2000);
 						Item_Pickup_Spin_Effect(kModelAnimationWeaponsOrderForm, 211, 239);
 						Actor_Clue_Acquire(kActorMcCoy, kClueWeaponsOrderForm, true, kActorSergeantWalls);
 						if (Game_Flag_Query(kFlagPS04WeaponsOrderForm)) {
@@ -127,8 +129,11 @@ bool SceneScriptPS15::ClickedOnActor(int actorId) {
 						} else {	   
 							Actor_Says(kActorMcCoy, 6985, 18); // 00-6985.AUD	Got the straight scoop for me or what?
 							Delay (2000);
-							Item_Pickup_Spin_Effect(kModelAnimationWeaponsOrderForm, 211, 239);
 							Actor_Says(kActorSergeantWalls, 150, 14); //34-0150.AUD	I guess there ain't no harm in it.
+							Actor_Change_Animation_Mode(kActorMcCoy, 23);
+							Actor_Change_Animation_Mode(kActorSergeantWalls, 23);
+							Delay (2000);
+							Item_Pickup_Spin_Effect(kModelAnimationWeaponsOrderForm, 211, 239);
 							Actor_Clue_Acquire(kActorMcCoy, kClueWeaponsOrderForm, true, kActorSergeantWalls);
 							if (Game_Flag_Query(kFlagPS04WeaponsOrderForm)) {
 								Item_Remove_From_World(kItemWeaponsOrderForm);
@@ -298,6 +303,9 @@ void SceneScriptPS15::PlayerWalkedIn() {
 			Loop_Actor_Walk_To_XYZ(kActorMcCoy, -256.0f, -113.43f, 43.51f, 0, true, false, false);
 			Actor_Face_Actor(kActorMcCoy, kActorSergeantWalls, true);
 			Actor_Face_Actor(kActorSergeantWalls, kActorMcCoy, true);
+			Actor_Change_Animation_Mode(kActorMcCoy, 23);
+			Actor_Change_Animation_Mode(kActorSergeantWalls, 23);
+			Delay(2000);
 			Item_Pickup_Spin_Effect(kModelAnimationRequisitionForm, 211, 239);
 			Actor_Says(kActorMcCoy, 8805, -1); //00-8805.AUD	A requisition form.
 			Actor_Voice_Over(3930, kActorVoiceOver);

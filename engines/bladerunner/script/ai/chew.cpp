@@ -77,6 +77,7 @@ void AIScriptChew::OtherAgentExitedThisSet(int otherActorId) {
 }
 
 void AIScriptChew::OtherAgentEnteredCombatMode(int otherActorId, int combatMode) {
+	// Added in a scene for when McCoy pulls out his gun in front of Chew.
 	if (_vm->_cutContent) {
 		if (otherActorId == kActorMcCoy
 		&& combatMode

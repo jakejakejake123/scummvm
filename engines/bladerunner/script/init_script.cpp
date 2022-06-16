@@ -3249,6 +3249,7 @@ void InitScript::Init_CDB() {
 		CDB_Set_Clue_Asset_Type(kClueMcCoyHelpedGordo, kClueTypeAudioRecording);
 		CDB_Set_Clue_Asset_Type(kClueMcCoyShotZubenInTheBack, kClueTypeAudioRecording);
 		CDB_Set_Clue_Asset_Type(kClueZubenRunsAway, kClueTypeAudioRecording);
+		CDB_Set_Clue_Asset_Type(kClueMcCoyPulledAGun, kClueTypeAudioRecording);
 	}
 }
 

@@ -259,6 +259,33 @@ bool SceneScriptRC01::ClickedOn3DObject(const char *objectName, bool a2) {
 				Actor_Voice_Over(1890, kActorVoiceOver);
 				I_Sez("JM: That McCoy--he's one funny guy! Jet-black fire truck, hehehehe...");
 				Actor_Clue_Acquire(kActorMcCoy, kCluePaintTransfer, true, -1);
+				if (_vm->_cutContent) {
+					if (Game_Flag_Query(kFlagChromeChecked)) {
+						Delay(1000);
+						Loop_Actor_Walk_To_Item(kActorMcCoy, kItemChromeDebris, 36, true, false);
+						Actor_Says(kActorMcCoy, 8525, 13); // 00-8525.AUD	Hmph.
+						Loop_Actor_Walk_To_Actor(kActorOfficerLeary, kActorMcCoy, 36, false, false);
+						Actor_Says(kActorOfficerLeary, 20, 12);
+						Game_Flag_Set(kFlagRC01ChromeDebrisTaken);
+						Item_Remove_From_World(kItemChromeDebris);
+						Item_Pickup_Spin_Effect(kModelAnimationChromeDebris, 426, 316);
+						I_Sez("JM: Chrome...is that what that is?");
+						Actor_Says(kActorMcCoy, 4505, 13);
+						// Jake - Added in a line where Leary is annoyed at McCoy for him being condescending towards him. 
+						Actor_Says(kActorOfficerLeary, 30, 14);
+						Actor_Face_Actor(kActorMcCoy, kActorOfficerLeary, true);
+						if (Player_Query_Agenda() == kPlayerAgendaSurly 
+						|| Player_Query_Agenda() == kPlayerAgendaErratic) {
+							Actor_Says(kActorMcCoy, 4510, 14); //00-4510.AUD	No, I think it's horse chrome. Bag it and tag it.
+							Actor_Says(kActorOfficerLeary, 170, 13); //23-0170.AUD	You ain't talking to some flunky, McCoy.
+							Actor_Modify_Friendliness_To_Other(kActorOfficerLeary, kActorMcCoy, -2);
+						} else {
+							Actor_Says(kActorMcCoy, 1025, 13);
+							Delay (500);
+							Actor_Says(kActorMcCoy, 5310, 11); //00-5310.AUD	You spot anything you think I ought to know about, tell me.
+						}
+					}
+				}
 			}
 		}
 		return true;
@@ -500,6 +527,8 @@ bool SceneScriptRC01::ClickedOnItem(int itemId, bool a2) {
 			if (_vm->_cutContent) {		
 				if (!Actor_Clue_Query(kActorMcCoy, kCluePaintTransfer)) {
 					Actor_Says(kActorMcCoy, 8525, 13); // 00-8525.AUD	Hmph.
+					Actor_Says(kActorMcCoy, 8755, 15); //00-8755.AUD	A piece of chrome.
+					Game_Flag_Set(kFlagChromeChecked);
 				} else {
 					Actor_Face_Actor(kActorOfficerLeary, kActorMcCoy, true);
 					Actor_Says(kActorMcCoy, 8755, 15); //00-8755.AUD	A piece of chrome.
@@ -819,6 +848,9 @@ void SceneScriptRC01::ActorChangedGoal(int actorId, int newGoal, int oldGoal, bo
 }
 
 void SceneScriptRC01::PlayerWalkedIn() {
+	if (_vm->_cutContent) {
+		Music_Stop(1u);
+	}
 	if (Game_Flag_Query(kFlagSpinnerAtRC01)
 	    && !Game_Flag_Query(kFlagRC02toRC01)
 	    && !Game_Flag_Query(kFlagRC03toRC01)
@@ -834,9 +866,6 @@ void SceneScriptRC01::PlayerWalkedIn() {
 	}
 
 	if (Game_Flag_Query(kFlagRC02toRC01)) {
-		if (_vm->_cutContent) {
-			Music_Stop(3u);
-		}
 		Player_Loses_Control();
 		Loop_Actor_Walk_To_XYZ(kActorMcCoy, -203.45f, 5.55f, 85.05f, 0, false, false, false);
 		Player_Gains_Control();

@@ -161,6 +161,9 @@ void AIScriptDektora::CompletedMovementTrack() {
 		break;
 
 	case kGoalDektoraWalkAroundAsReplicant:
+	// Made it so Dektora will only buy the scorpions to kill Early Q with if Early Q is a human. This is because he can now be a replicant in cut content and if
+	// this is the case he is actually helping the replicants and he never harms Lucy. Also I made it so only replicant Dektora is willing to murder Early Q since I wanted
+	// to create further differences between the replicant and human versions of each character.
 	if (_vm->_cutContent) {
 		if (Random_Query(1, 2) == 1
 		&& !Game_Flag_Query(kFlagEarlyQIsReplicant)  
@@ -422,10 +425,9 @@ bool AIScriptDektora::GoalChanged(int currentGoalNumber, int newGoalNumber) {
 		AI_Movement_Track_Append_With_Facing(kActorDektora, 288, 35, 528);
 		// If Early Q is a replicant he actually cares about the other replicants and is helping them out. Because of this he never assaults Lucy 
 		// therefore Dektora never buys the scorpions since she has no reason to kill Early Q.
-		// Also removed the random chance of Dektora buying the scorpions since the random chance of Early Q being a replicant has been added to the equation.
 		if (_vm->_cutContent) {
-			if (!Game_Flag_Query(kFlagEarlyQIsReplicant)) { 
-				if (Random_Query(1, 2) == 1) {
+			if (Random_Query(1, 2) == 1) {
+				if (!Game_Flag_Query(kFlagEarlyQIsReplicant)) { 
 					if (Game_Flag_Query(kFlagAR02DektoraWillBuyScorpions)) {
 						AI_Movement_Track_Append(kActorDektora, 289, 0);
 						AI_Movement_Track_Append_With_Facing(kActorDektora, 290, 2, 979);
@@ -550,8 +552,43 @@ bool AIScriptDektora::GoalChanged(int currentGoalNumber, int newGoalNumber) {
 	case kGoalDektoraNR10AttackMcCoy:
 		Actor_Set_At_XYZ(kActorDektora, -99.0f, 2.88f, -202.0f, 911);
 		Actor_Set_Invisible(kActorDektora, false);
-		Actor_Change_Animation_Mode(kActorDektora, 70);
-		Actor_Retired_Here(kActorMcCoy, 12, 12, true, -1);
+		if (_vm->_cutContent) {
+			Music_Play(kMusicBeating1, 71, 0, 0, -1, kMusicLoopPlayOnce, 2);
+			Actor_Change_Animation_Mode(kActorDektora, 4);
+			Delay(1000);
+			Actor_Change_Animation_Mode(kActorDektora, 70);
+			Delay(200);
+			Actor_Change_Animation_Mode(kActorMcCoy, 22);
+			Delay(1000);
+			Loop_Actor_Walk_To_XYZ(kActorMcCoy, -89.16, -0.25, -55.81, 0, false, true, false);
+			Actor_Face_Actor(kActorDektora, kActorMcCoy, true);
+			Actor_Face_Actor(kActorMcCoy, kActorDektora, true);
+			Sound_Play(kSfxGUNH1A, 100, 0, 0, 50);
+			Actor_Change_Animation_Mode(kActorMcCoy, 6);
+			Delay(200);	
+			Loop_Actor_Walk_To_XYZ(kActorDektora, -96.45, -0.23, -101.03, 0, false, true, false);
+			Actor_Change_Animation_Mode(kActorDektora, 71);
+			Delay(500);
+			Ambient_Sounds_Play_Sound(kSfxKICK1, 90, 99, 0, 0);
+			Actor_Change_Animation_Mode(kActorMcCoy, 22);
+			Delay(1000);
+			Loop_Actor_Walk_To_XYZ(kActorMcCoy, 17.94, -0.25, -81.05, 0, false, true, false);
+			Actor_Face_Actor(kActorDektora, kActorMcCoy, true);
+			Actor_Face_Actor(kActorMcCoy, kActorDektora, true);
+			Sound_Play(kSfxGUNH1A, 100, 0, 0, 50);
+			Actor_Change_Animation_Mode(kActorMcCoy, 6);
+			Delay(200);
+			Loop_Actor_Walk_To_XYZ(kActorDektora, -18.87, -0.25, -64.81, 0, false, true, false);
+			Actor_Change_Animation_Mode(kActorDektora, 70);
+			Delay(500);
+			Ambient_Sounds_Play_Sound(kSfxKICK1, 90, 99, 0, 0);
+			Actor_Change_Animation_Mode(kActorMcCoy, kAnimationModeDie);
+			Actor_Retired_Here(kActorMcCoy, 12, 12, true, -1);
+			Delay(2000);
+		} else {
+			Actor_Change_Animation_Mode(kActorDektora, 70);
+			Actor_Retired_Here(kActorMcCoy, 12, 12, true, -1);
+		}
 		break;
 
 	case kGoalDektoraNR11Hiding:
@@ -845,7 +882,9 @@ bool AIScriptDektora::UpdateAnimation(int *animation, int *frame) {
 		if (_animationFrame == 6
 		 && Actor_Query_Goal_Number(kActorDektora) == kGoalDektoraNR10AttackMcCoy
 		) {
-			Actor_Change_Animation_Mode(kActorMcCoy, kAnimationModeDie);
+			if (!_vm->_cutContent) {
+				Actor_Change_Animation_Mode(kActorMcCoy, kAnimationModeDie);
+			}
 		}
 
 		if (_animationFrame == 3) {

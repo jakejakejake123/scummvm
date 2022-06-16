@@ -77,10 +77,10 @@ bool AIScriptZuben::Update() {
 		Actor_Set_Goal_Number(kActorZuben, kGoalZubenCT01WalkToCT02);
 		return true;
 	}
+	// New code for Zuben appearing outside hysteria hall.
 	if (_vm->_cutContent) {
-		if	(!Game_Flag_Query(kFlagUG09Visited) 
-		&& !Game_Flag_Query(kFlagZubenRetired)
-		&& (Global_Variable_Query(kVariableChapter) == 4)) {
+		if (Global_Variable_Query(kVariableChapter) == 4
+		&& Actor_Query_Goal_Number(kActorZuben) < kGoalZubenGone) {
 			Actor_Set_Goal_Number(kActorZuben, kGoalZubenWaitAtHF01);
 		}
 	} else if ( Global_Variable_Query(kVariableChapter) >= 4
@@ -303,10 +303,12 @@ void AIScriptZuben::OtherAgentEnteredCombatMode(int otherActorId, int combatMode
 		// Added in some animations so McCoy actually reacts to Zuben when he attacks him.
 		Delay (800);
 		Actor_Change_Animation_Mode(kActorMcCoy, 21);
+		Music_Play(kMusicMoraji, 71, 0, 0, -1, kMusicLoopPlayOnce, 2);
 		Actor_Says(kActorMcCoy, 445, 21); //00-0445.AUD	Gah! Guess I've made a mistake. 
 		Actor_Says(kActorZuben, 90, 14); //19-0090.AUD	Big mistake.
+		Actor_Start_Speech_Sample(kActorMcCoy, 255); //00-0255.AUD	Wait, I just-- Argh!
 		Actor_Change_Animation_Mode(kActorZuben, kAnimationModeCombatAttack);
-		Delay (800);
+		Delay (1500);
 		Actor_Change_Animation_Mode(kActorMcCoy, 39);
 		Actor_Retired_Here(kActorMcCoy, 12, 48, 1, kActorZuben);
 	}
@@ -350,6 +352,7 @@ void AIScriptZuben::Retired(int byActorId) {
 		if (Query_Difficulty_Level() != kGameDifficultyEasy) {
 			Global_Variable_Increment (kVariableChinyen, 200);
 		}
+		Actor_Modify_Friendliness_To_Other(kActorGaff, kActorMcCoy, 2);
 	}
 	if (Global_Variable_Query(kVariableReplicantsSurvivorsAtMoonbus) == 0) {
 		Player_Loses_Control();
@@ -473,7 +476,6 @@ bool AIScriptZuben::GoalChanged(int currentGoalNumber, int newGoalNumber) {
 			Player_Set_Combat_Mode(false);
 			Actor_Set_Goal_Number(kActorGaff, kGoalGaffMA01ApproachMcCoy);
 		}
-		// Made it so you gain five friendliness points with Crystal when you retire Zuben.
 		if (_vm->_cutContent) {
 			Actor_Modify_Friendliness_To_Other(kActorSteele, kActorMcCoy, 2);
 			Actor_Modify_Friendliness_To_Other(kActorGuzza, kActorMcCoy, 2);
@@ -1434,10 +1436,6 @@ void AIScriptZuben::dialogue() {
 
 	case 1510:
 		Actor_Says(kActorMcCoy, 7300, 13); //00-7300.AUD	Did you kill the animals?
-		if (_vm->_cutContent) {
-			Actor_Says(kActorZuben, 270, 12); //19-0270.AUD	Because he bad.
-			Actor_Says(kActorMcCoy, 7350, 13); //00-7350.AUD	Runciter?
-		}
 		Actor_Says(kActorZuben, 280, 12); //19-0280.AUD	He not pay. Bad to Lucy. Bad to everybody. Make people starve.
 		Actor_Says(kActorMcCoy, 7355, 14); //00-7355.AUD	All those animals died.
 		Actor_Says(kActorZuben, 290, 15); //19-0290.AUD	He made Lucy do bad things. Lucy hurt. Clovis more angry.
@@ -1445,16 +1443,7 @@ void AIScriptZuben::dialogue() {
 		Actor_Says(kActorZuben, 300, 14); //19-0300.AUD	Girl was forced to do bad things Off-World. Clovis thought Terra better.
 		Actor_Says(kActorZuben, 310, 13); //19-0310.AUD	But Terra's no better for young girls. Runciter bad to Lucy.
 		Delay(2000);
-		if (_vm->_cutContent) {
-			if (Player_Query_Agenda() == kPlayerAgendaSurly 
-				|| Player_Query_Agenda() == kPlayerAgendaErratic) {
-				Actor_Says(kActorMcCoy, 7365, 14); //00-7365.AUD	You should have killed him.
-			} else {
-				Actor_Says(kActorMcCoy, 7360, 14); //00-7360.AUD	Did he do things to Lucy?
-			}
-		} else {
-			Actor_Says(kActorMcCoy, 7360, 11); ////00-7360.AUD	Did he do things to Lucy?
-		}
+		Actor_Says(kActorMcCoy, 7360, 11); ////00-7360.AUD	Did he do things to Lucy?
 		Actor_Says(kActorZuben, 320, 12);
 		Actor_Says(kActorZuben, 330, 12);
 		Actor_Clue_Acquire(kActorMcCoy, kClueZubensMotive, false, kActorZuben);

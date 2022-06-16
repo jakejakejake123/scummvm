@@ -583,6 +583,9 @@ void SceneScriptRC04::dialogueWithBulletBob() {
 				if (Query_Difficulty_Level() != kGameDifficultyEasy) {
 					Global_Variable_Decrement(kVariableChinyen, 40);
 				}
+				Actor_Change_Animation_Mode(kActorMcCoy, 23);
+				Actor_Change_Animation_Mode(kActorBulletBob, 23);
+				Delay(2000);
 				Item_Pickup_Spin_Effect(kModelAnimationAmmoType01, 405, 192);
 				Give_McCoy_Ammo(1, 24);
 			} else {
@@ -606,6 +609,9 @@ void SceneScriptRC04::dialogueWithBulletBob() {
 				if (Query_Difficulty_Level() != kGameDifficultyEasy) {
 					Global_Variable_Decrement(kVariableChinyen, 40);
 				}
+				Actor_Change_Animation_Mode(kActorMcCoy, 23);
+				Actor_Change_Animation_Mode(kActorBulletBob, 23);
+				Delay(2000);
 				Item_Pickup_Spin_Effect(kModelAnimationAmmoType01, 405, 192);
 				Give_McCoy_Ammo(1, 24);
 			} else {
@@ -785,6 +791,7 @@ bool SceneScriptRC04::ClickedOnActor(int actorId) {
 								Global_Variable_Decrement(kVariableChinyen, 100);
 							}
 							Actor_Change_Animation_Mode(kActorMcCoy, 23);
+							Actor_Change_Animation_Mode(kActorBulletBob, 23);
 							Delay(4000);
 							Item_Pickup_Spin_Effect(kModelAnimationDNADataDisc, 405, 192);
 							Actor_Says(kActorBulletBob, 2030, 30); //14-2030.AUD	There you go better than new.
@@ -854,6 +861,7 @@ bool SceneScriptRC04::ClickedOnActor(int actorId) {
 								Global_Variable_Decrement(kVariableChinyen, 100);
 							}
 							Actor_Change_Animation_Mode(kActorMcCoy, 23);
+							Actor_Change_Animation_Mode(kActorBulletBob, 23);
 							Delay(4000);
 							Item_Pickup_Spin_Effect(kModelAnimationDNADataDisc, 405, 192);
 							Actor_Says(kActorBulletBob, 2030, 30); //14-2030.AUD	There you go better than new.
@@ -1009,7 +1017,14 @@ bool SceneScriptRC04::ClickedOn2DRegion(int region) {
 				if (Global_Variable_Query(kVariableChinyen) >= 200
 	  			  || Query_Difficulty_Level() == kGameDifficultyEasy
 				) {
-					Actor_Says(kActorMcCoy, 4940, 13); //00-4940.AUD	Okay, let's have it.
+					Actor_Says(kActorMcCoy, 7000, 13); //00-7000.AUD	Yeah, okay. I'll take it.
+					Loop_Actor_Walk_To_Waypoint(kActorMcCoy, 104, 0, false, false);
+					Actor_Change_Animation_Mode(kActorMcCoy, 23);
+					Actor_Change_Animation_Mode(kActorBulletBob, 23);
+					Delay(2000);
+					Loop_Actor_Walk_To_XYZ(kActorMcCoy, 77.30, 0.27, -77.67, 0, false, false, true);
+					Actor_Change_Animation_Mode(kActorMcCoy, 23);
+					Delay(2000);
 					Actor_Set_Health(kActorMcCoy, 90, 90);
 					Game_Flag_Set(kFlagMcCoyHasVest);
 					Scene_2D_Region_Remove(0);
@@ -1025,8 +1040,14 @@ bool SceneScriptRC04::ClickedOn2DRegion(int region) {
 				if (Global_Variable_Query(kVariableChinyen) >= 300
 	  			 	|| Query_Difficulty_Level() == kGameDifficultyEasy
 				) {
-					Actor_Says(kActorMcCoy, 4940, 13); //00-4940.AUD	Okay, let's have it.
-					Actor_Face_Actor(kActorBulletBob, kActorMcCoy, true);
+					Actor_Says(kActorMcCoy, 7000, 13); //00-7000.AUD	Yeah, okay. I'll take it.
+					Loop_Actor_Walk_To_Waypoint(kActorMcCoy, 104, 0, false, false);
+					Actor_Change_Animation_Mode(kActorMcCoy, 23);
+					Actor_Change_Animation_Mode(kActorBulletBob, 23);
+					Delay(2000);
+					Loop_Actor_Walk_To_XYZ(kActorMcCoy, 77.30, 0.27, -77.67, 0, false, false, true);
+					Actor_Change_Animation_Mode(kActorMcCoy, 23);
+					Delay(2000);
 					Actor_Set_Health(kActorMcCoy, 90, 90);
 					Game_Flag_Set(kFlagMcCoyHasVest);
 					Scene_2D_Region_Remove(0);
@@ -1165,6 +1186,7 @@ void SceneScriptRC04::PlayerWalkedIn() {
 					Actor_Change_Animation_Mode(kActorMcCoy, 6);
 					Sound_Play(kSfxGUNH1A, 100, 0, 0, 50);
 					Delay(1000);
+					Sound_Play(kSfxBARSFX2, 100, 0, 0, 50);
 					Loop_Actor_Walk_To_XYZ(kActorMcCoy, 76.40, 0.26, -97.51, 0, true, false, false);
 					Actor_Face_Actor(kActorMcCoy, kActorGenwalkerA, true);
 					Actor_Change_Animation_Mode(kActorMcCoy, 6);

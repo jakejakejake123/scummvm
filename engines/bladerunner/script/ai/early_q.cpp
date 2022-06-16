@@ -108,6 +108,10 @@ void AIScriptEarlyQ::TimerExpired(int timer) {
 		Actor_Change_Animation_Mode(kActorEarlyQ, 29);
 		Delay(2500);
 		Actor_Face_Actor(kActorEarlyQ, kActorMcCoy, true);
+		if (_vm->_cutContent) {
+			Actor_Change_Animation_Mode(kActorEarlyQ, 4);
+			Delay(1000);
+		}
 		Actor_Change_Animation_Mode(kActorEarlyQ, kAnimationModeCombatAttack);
 		Delay(100);
 		_vm->_aiScripts->callChangeAnimationMode(kActorMcCoy, kAnimationModeCombatHit);
@@ -184,6 +188,7 @@ void AIScriptEarlyQ::ReceivedClue(int clueId, int fromActorId) {
 }
 
 void AIScriptEarlyQ::ClickedByPlayer() {
+	// This code is for when Early Q is arrested and you talk to him in the cell blocks.
 	if (_vm->_cutContent) {
 		if (Actor_Query_In_Set(kActorEarlyQ, kSetPS09)) {
 			if (!Loop_Actor_Walk_To_XYZ(kActorMcCoy, -381.11f, 0.0f, -135.55f, 0, false, false, false)) {

@@ -33,7 +33,6 @@ enum kHF04Loops {
 
 void SceneScriptHF04::InitializeScene() {
 	Setup_Scene_Information(-33.85f, -0.31f, 395.0f, 0);
-	Game_Flag_Reset(kFlagHF03toHF04);
 
 	Scene_Exit_Add_2D_Exit(0, 602, 104, 639, 177, 1);
 

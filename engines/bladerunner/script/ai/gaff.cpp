@@ -70,6 +70,7 @@ void AIScriptGaff::CompletedMovementTrack() {
 		Actor_Says(kActorGaff, 0, kAnimationModeTalk);
 		Loop_Actor_Walk_To_Actor(kActorMcCoy, kActorGaff, 36, false, true);
 		Actor_Face_Actor(kActorMcCoy, kActorGaff, true);
+		// Made it so McCoys dialogue with Gaff is a little different if McCoy is a rep sympathizer.
 		if (_vm->_cutContent) {
 			if (!Game_Flag_Query(kFlagMcCoyIsHelpingReplicants)) {
 				Actor_Says(kActorMcCoy, 670, kAnimationModeTalk); //00-0670.AUD	Working on it.
@@ -83,8 +84,13 @@ void AIScriptGaff::CompletedMovementTrack() {
 		if (_vm->_cutContent) {
 			if (!Game_Flag_Query(kFlagMcCoyIsHelpingReplicants)) {
 				Actor_Says(kActorMcCoy, 675, kAnimationModeTalk); //00-0675.AUD	I understand it's got a hell of a retirement plan.
-			} else {	
-				Actor_Says(kActorMcCoy, 8610, 18); //00-8610.AUD	What's the word, friend?
+			} else {
+				if (Player_Query_Agenda() != kPlayerAgendaSurly 
+				&& Player_Query_Agenda() != kPlayerAgendaErratic) {
+					Actor_Says(kActorMcCoy, 8610, 18); //00-8610.AUD	What's the word, friend?
+				} else {
+					Actor_Says(kActorMcCoy, 8514, 14);//00-8514.AUD	Got anything new to tell me?
+				}
 			}
 		} else {
 			Actor_Says(kActorMcCoy, 675, kAnimationModeTalk);
@@ -201,7 +207,12 @@ void AIScriptGaff::ClickedByPlayer() {
 		// Restored some dialogue for Gaff when you talk to him in DNA row.
 		if (_vm->_cutContent) {
 			if (!Game_Flag_Query(kFlagGaffTalk)) {
-				Actor_Says(kActorMcCoy, 8610, 13); //00-8610.AUD	What's the word, friend?
+				if (Player_Query_Agenda() != kPlayerAgendaSurly 
+				&& Player_Query_Agenda() != kPlayerAgendaErratic) {
+					Actor_Says(kActorMcCoy, 8610, 18); //00-8610.AUD	What's the word, friend?
+				} else {
+					Actor_Says(kActorMcCoy, 8514, 14);//00-8514.AUD	Got anything new to tell me?
+				}
 				Actor_Says(kActorGaff, 320, 13); //53-0320.AUD	Someone said you've been earning your stripes, McCoy.
 				if (!Game_Flag_Query(kFlagMcCoyIsHelpingReplicants)) {
 					Actor_Says(kActorMcCoy, 6915, 14); //00-6915.AUD	Trying to.
@@ -218,7 +229,7 @@ void AIScriptGaff::ClickedByPlayer() {
 				if (!Game_Flag_Query(kFlagMcCoyIsHelpingReplicants)) {
 					Actor_Says(kActorMcCoy, 6925, 18); //00-6925.AUD	Don't bet on it.
 				} else {
-					Actor_Says(kActorMcCoy, 6915, 14); //00-8265.AUD	Really?
+					Actor_Says(kActorMcCoy, 8265, 14); //00-8265.AUD	Really?
 				}
 				Actor_Says(kActorGaff, 190, kAnimationModeTalk); //53-0190.AUD	It's like I said before. You retire a human, your career is over.
 				Actor_Says(kActorGaff, 200, kAnimationModeTalk); //53-0200.AUD	Your life too, maybe.
@@ -379,7 +390,14 @@ bool AIScriptGaff::GoalChanged(int currentGoalNumber, int newGoalNumber) {
 		Actor_Face_Actor(kActorMcCoy, kActorGaff, true);
 		Actor_Says(kActorMcCoy, 2945, 14);
 		Loop_Actor_Walk_To_Actor(kActorGaff, kActorMcCoy, 180, false, false);
-		Actor_Says(kActorGaff, 120, 16);
+		// Made it so if McCoy already talked to Steele in act 4 Gaff won't mention that she is looking for McCoy.
+		if (_vm->_cutContent) {
+			if (!Game_Flag_Query(kFlagCrystalTalkAct4)) {
+				Actor_Says(kActorGaff, 120, 16); //53-0120.AUD	Steele is looking for you. And Bryant.
+			} 
+		} else {
+			Actor_Says(kActorGaff, 120, 16); //53-0120.AUD	Steele is looking for you. And Bryant.
+		}
 		Actor_Says(kActorGaff, 130, 13);
 		Actor_Says(kActorMcCoy, 2950, kAnimationModeTalk);
 		Actor_Says(kActorMcCoy, 2955, 16); //00-2955.AUD	You're looking for me, too, Gaff?
@@ -415,6 +433,7 @@ bool AIScriptGaff::GoalChanged(int currentGoalNumber, int newGoalNumber) {
 				Delay(4000);
 				Player_Gains_Control();
 				Actor_Start_Speech_Sample(kActorGaff, 210);
+				Music_Stop(1u);
 				Actor_Set_Goal_Number(kActorGaff, kGoalGaffMA07Left);
 			}
 		} else {
