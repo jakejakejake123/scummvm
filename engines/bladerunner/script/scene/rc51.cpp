@@ -142,7 +142,6 @@ bool SceneScriptRC51::ClickedOnItem(int itemId, bool a2) {
 			}
 			Item_Remove_From_World(kItemToyDog);
 			Item_Pickup_Spin_Effect(kModelAnimationToyDog, 55, 376);
-			Actor_Says(kActorMcCoy, 8525, 3);
 			Actor_Says(kActorMcCoy, 8740, 3);
 			Game_Flag_Set(kFlagRC51ToyDogTaken);
 			return true;

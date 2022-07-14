@@ -198,7 +198,7 @@ bool SceneScriptNR11::ClickedOn3DObject(const char *objectName, bool combatMode)
 						Actor_Clue_Acquire(kActorMcCoy, kClueDektoraInterview4, true, kActorDektora);
 					}
 					if (_vm->_cutContent) {
-						if (Actor_Query_Friendliness_To_Other(kActorDektora, kActorMcCoy) < 51) {
+						if (!Actor_Clue_Query(kActorDektora, kClueMcCoyHelpedDektora)) {
 							Actor_Says(kActorDektora, 990, 13); //03-0990.AUD	You say a lot of things, Mr. McCoy.
 							Actor_Says(kActorDektora, 1000, 14); //03-1000.AUD	But you’re a Blade Runner. It’s hard to know what’s real.
 						}
@@ -208,25 +208,53 @@ bool SceneScriptNR11::ClickedOn3DObject(const char *objectName, bool combatMode)
 					}
 					Loop_Actor_Walk_To_Actor(kActorDektora, kActorMcCoy, 108, false, false);
 					Actor_Says(kActorMcCoy, 3845, 13);
-					Actor_Says(kActorMcCoy, 3850, 15);
-					Actor_Says(kActorDektora, 1010, 14);
-					Actor_Says(kActorMcCoy, 3855, 13);
-					Actor_Says(kActorDektora, 1020, 12);
-					Actor_Says(kActorMcCoy, 3860, 12);
-					Actor_Says_With_Pause(kActorDektora, 1030, 1.0f, 14);
-					Actor_Says(kActorDektora, 1040, 13);
+					Actor_Says(kActorMcCoy, 3850, 15); //00-3850.AUD	I’m not sure I can hold her off much longer.
+					Actor_Says(kActorDektora, 1010, 14); //03-1010.AUD	I’m not worried. She may kill some of us but not all of us. Clovis will see to that.
+					if (_vm->_cutContent) {
+						if (!Actor_Clue_Query(kActorMcCoy, kClueClovisFlowers)) {
+							Actor_Says(kActorMcCoy, 3855, 13); //00-3855.AUD	Is he the one that sent you the flowers?
+							Actor_Says(kActorDektora, 1020, 12); //03-1020.AUD	Yes.
+							Actor_Says(kActorMcCoy, 3860, 12);
+							Actor_Says_With_Pause(kActorDektora, 1030, 1.0f, 14); //03-1030.AUD	We were once. But now we’ve evolved beyond that.
+						} else {
+							Actor_Says(kActorMcCoy, 3860, 12);
+							Actor_Says_With_Pause(kActorDektora, 1030, 1.0f, 14); //03-1030.AUD	We were once. But now we’ve evolved beyond that.
+						}
+					} else {
+						Actor_Says(kActorMcCoy, 3855, 13); //00-3855.AUD	Is he the one that sent you the flowers?
+						Actor_Says(kActorDektora, 1020, 12); //03-1020.AUD	Yes.
+						Actor_Says(kActorMcCoy, 3860, 12);
+						Actor_Says_With_Pause(kActorDektora, 1030, 1.0f, 14); //03-1030.AUD	We were once. But now we’ve evolved beyond that.
+					}
+					Actor_Says(kActorDektora, 1040, 13); //03-1040.AUD	They are still my family. Clovis and Lucy.
 					Actor_Says(kActorMcCoy, 3865, 15);
-					Actor_Says_With_Pause(kActorDektora, 1050, 0.8f, 14);
-					Actor_Says(kActorDektora, 1060, 13);
-					Actor_Says(kActorMcCoy, 3870, 3);
-					Actor_Says(kActorDektora, 1070, 14);
+					if (_vm->_cutContent) {
+						if (!Actor_Clue_Query(kActorDektora, kClueMcCoyHelpedDektora)) {
+							Actor_Says(kActorDektora, 1440, 13); //03-1440.AUD	I don't see why you need to know that.
+							Actor_Says(kActorMcCoy, 3870, 3); //00-3870.AUD	Can you take me to him?
+							Actor_Says(kActorDektora, 2060, 14);//03-2060.AUD	No.
+						} else {
+							Actor_Says_With_Pause(kActorDektora, 1050, 0.8f, 14); //03-1050.AUD	Information. Data. Four years isn’t enough time, Mr. McCoy.
+							Actor_Says(kActorDektora, 1060, 13); //03-1060.AUD	If anyone deserves more than four years, it’s Clovis. If you could only meet him.
+							Actor_Says(kActorMcCoy, 3870, 3); //00-3870.AUD	Can you take me to him?
+							Actor_Says(kActorDektora, 1070, 14);
+						}
+					} else {
+						Actor_Says_With_Pause(kActorDektora, 1050, 0.8f, 14); //03-1050.AUD	Information. Data. Four years isn’t enough time, Mr. McCoy.
+						Actor_Says(kActorDektora, 1060, 13); //03-1060.AUD	If anyone deserves more than four years, it’s Clovis. If you could only meet him.
+						Actor_Says(kActorMcCoy, 3870, 3); //00-3870.AUD	Can you take me to him?
+						Actor_Says(kActorDektora, 1070, 14);
+					}
 					if (_vm->_cutContent) {
 						Game_Flag_Set(kFlagMcCoyIsHelpingReplicants);
-						Actor_Modify_Friendliness_To_Other(kActorSteele, kActorMcCoy, 2);
-						Actor_Modify_Friendliness_To_Other(kActorClovis, kActorMcCoy, -2);
-						Actor_Modify_Friendliness_To_Other(kActorGuzza, kActorMcCoy, 2);
+						Actor_Modify_Friendliness_To_Other(kActorSteele, kActorMcCoy, -2);
+						Actor_Modify_Friendliness_To_Other(kActorClovis, kActorMcCoy, 2);
+						Actor_Modify_Friendliness_To_Other(kActorGuzza, kActorMcCoy, -2);
+						Actor_Modify_Friendliness_To_Other(kActorDektora, kActorMcCoy, 2);
 					}
-					Actor_Modify_Friendliness_To_Other(kActorDektora, kActorMcCoy, 5);
+					if (!_vm->_cutContent) {
+						Actor_Modify_Friendliness_To_Other(kActorDektora, kActorMcCoy, 5);
+					}
 					if (_vm->_cutContent) {
 						if (Actor_Query_Friendliness_To_Other(kActorDektora, kActorMcCoy) > 50
 						 && Global_Variable_Query(kVariableAffectionTowards) == kAffectionTowardsNone) {
@@ -359,7 +387,13 @@ void SceneScriptNR11::SceneFrameAdvanced(int frame) {
 		if (!Player_Query_Combat_Mode()) {
 			Player_Set_Combat_Mode(true);
 		}
-		Actor_Set_Goal_Number(kActorMcCoy, kGoalMcCoyNR11Shoot);
+		if (_vm->_cutContent) {
+			if (!Game_Flag_Query(kFlagMcCoyIsHelpingReplicants)) {
+				Actor_Set_Goal_Number(kActorMcCoy, kGoalMcCoyNR11Shoot);
+			} 
+		} else {
+			Actor_Set_Goal_Number(kActorMcCoy, kGoalMcCoyNR11Shoot);
+		}
 		Scene_Loop_Set_Default(kNR11LoopMainLoopFires);
 		Scene_Loop_Start_Special(kSceneLoopModeOnce, kNR11LoopGunshots, true);
 		Game_Flag_Reset(kFlagNR11SteeleShoot);
@@ -411,14 +445,6 @@ void SceneScriptNR11::PlayerWalkedIn() {
 		if (Game_Flag_Query(kFlagDektoraIsReplicant)) {
 			if (Actor_Query_Goal_Number(kActorSteele) == kGoalSteeleNR11StopWaiting) {
 				Actor_Set_At_XYZ(kActorMcCoy, -37.41f, 0.33f, -86.0f, 26);
-				// Made it so Blade runner blues only plays when Dektora dies if McCoy is neither surly or erratic.
-				if (_vm->_cutContent) {
-					if (Player_Query_Agenda() != kPlayerAgendaSurly 
-					&& Player_Query_Agenda() != kPlayerAgendaErratic) {
-						Music_Stop(4u);
-						Music_Play(kMusicBRBlues, 52, 0, 2, -1, kMusicLoopPlayOnce, 0);
-					}
-				}
 				Delay(500);
 				Actor_Face_Current_Camera(kActorMcCoy, true);
 				Delay(750);
@@ -432,10 +458,23 @@ void SceneScriptNR11::PlayerWalkedIn() {
 					Actor_Modify_Friendliness_To_Other(kActorSteele, kActorMcCoy, 3);
 				}
 				Delay(1500);
-				Actor_Says(kActorMcCoy, 3805, 12); //00-3805.AUD	Hope Early’s got insurance.
-				Actor_Face_Actor(kActorMcCoy, kActorSteele, true);
-				Actor_Face_Actor(kActorSteele, kActorMcCoy, true);
-				Actor_Says_With_Pause(kActorSteele, 1720, 0.3f, 16);
+				if (_vm->_cutContent) {
+					if (!Game_Flag_Query(kFlagEarlyQDead)
+					&& !Game_Flag_Query(kFlagNR04EarlyQStungByScorpions)) {
+						Actor_Says(kActorMcCoy, 3805, 12); //00-3805.AUD	Hope Early’s got insurance.
+						Actor_Face_Actor(kActorMcCoy, kActorSteele, true);
+						Actor_Face_Actor(kActorSteele, kActorMcCoy, true);
+						Actor_Says_With_Pause(kActorSteele, 1720, 0.3f, 16); //01-1720.AUD	Putz employs Replicants, you gotta expect the worst.
+					} else {
+						Actor_Face_Actor(kActorMcCoy, kActorSteele, true);
+						Actor_Face_Actor(kActorSteele, kActorMcCoy, true);
+					}
+				} else {
+					Actor_Says(kActorMcCoy, 3805, 12); //00-3805.AUD	Hope Early’s got insurance.
+					Actor_Face_Actor(kActorMcCoy, kActorSteele, true);
+					Actor_Face_Actor(kActorSteele, kActorMcCoy, true);
+					Actor_Says_With_Pause(kActorSteele, 1720, 0.3f, 16); //01-1720.AUD	Putz employs Replicants, you gotta expect the worst.
+				}
 				if (_vm->_cutContent) {
 					if (!Game_Flag_Query(kFlagMcCoyIsHelpingReplicants)) {
 						Actor_Says(kActorMcCoy, 1570, 13); //00-1570.AUD	You sure aired that sucker out.
@@ -448,9 +487,6 @@ void SceneScriptNR11::PlayerWalkedIn() {
 					Actor_Says_With_Pause(kActorSteele, 1730, 0.2f, 14); //01-1730.AUD	What’s this "her" crap? It’s an "it", remember? A goddamn machine.
 				}
 				Actor_Says(kActorSteele, 1740, 15); //01-1740.AUD	Come on, let’s blow while the getting's good.
-				if (_vm->_cutContent) {
-					Game_Flag_Reset(kFlagMcCoyIsHelpingReplicants);
-				}
 				Actor_Set_Goal_Number(kActorDektora, kGoalDektoraGone);
 				Actor_Put_In_Set(kActorDektora, kSetFreeSlotI);
 				Actor_Set_At_Waypoint(kActorDektora, 41, 0);

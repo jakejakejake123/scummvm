@@ -156,6 +156,11 @@ void AIScriptRunciter::ClickedByPlayer() {
 					}	
 				}
 			}
+		} else if (Actor_Query_In_Set(kActorRunciter, kSetKP07)) {
+			Actor_Face_Actor(kActorMcCoy, kActorRunciter, true);
+			Actor_Face_Actor(kActorRunciter, kActorMcCoy, true);
+			Actor_Says(kActorMcCoy, 3970, 14); //00-3970.AUD	Hey.
+			Actor_Says(kActorRunciter, 730, 17); //15-0730.AUD	Please. Just leave me alone.
 		}
 	}
 }
@@ -170,6 +175,7 @@ void AIScriptRunciter::OtherAgentEnteredCombatMode(int otherActorId, int combatM
 	if ( Actor_Query_Goal_Number(kActorRunciter) == kGoalRunciterRC02Wait
 	 &&  combatMode
 	 && !Game_Flag_Query(kFlagRC02RunciterTalkWithGun)
+	 && Actor_Query_In_Set(kActorRunciter, kSceneRC02)
 	) {
 		Actor_Set_Targetable(kActorRunciter, true);
 		Actor_Face_Actor(kActorRunciter, kActorMcCoy, true);
@@ -255,8 +261,6 @@ void AIScriptRunciter::OtherAgentEnteredCombatMode(int otherActorId, int combatM
 			// Jake - Added in some extra lines for McCoy. Also restored the Runciter confession clues.
 			if (_vm->_cutContent) {
 				Actor_Says(kActorMcCoy, 4755, -1); //-	00-4755.AUD	Was the tiger a fake?
-			}
-			if (_vm->_cutContent) {
 				if (!Game_Flag_Query(kFlagRunciterIsReplicant)) {
 					Actor_Says(kActorRunciter, 520, 17); //15-0520.AUD	No! The tiger was real. I swear it.
 					Actor_Says(kActorRunciter, 530, 18);
@@ -306,69 +310,114 @@ void AIScriptRunciter::OtherAgentEnteredCombatMode(int otherActorId, int combatM
 void AIScriptRunciter::ShotAtAndMissed() {}
 
 bool AIScriptRunciter::ShotAtAndHit() {
-	Actor_Set_Targetable(kActorRunciter, false);
-	// Jake - Restored Runciters death rattle. Achieved this so when he is shot the animation of his head tilting back plays
-	// and he falls to the ground. Also added in the McCoy retired Runciter flag which activates when you shoot Runciter.
-	if (_vm->_cutContent && !Game_Flag_Query(kFlagRunciterIsReplicant)) {
-		Game_Flag_Set(kFlagMcCoyRetiredHuman);	
-	}
-	// Restored Runciters hit animation for when he is shot.
-	Actor_Says(kActorRunciter, 9020, 21); //15-9020.AUD	Argh!	
-	Actor_Change_Animation_Mode(kActorRunciter, kAnimationModeDie);
-	Actor_Set_Goal_Number(kActorRunciter, kGoalRunciterDead);
-	Delay(2000);
-	//Code for when McCoy shoots Runciter and he is a replicant.
-	if  (Game_Flag_Query(kFlagRunciterIsReplicant)
-	&&	Global_Variable_Query(kVariableChapter) == 1) {
-		// Made it so McCoys response to retiring Runciter is different based on his agenda.
-		if (Player_Query_Agenda() != kPlayerAgendaSurly 
-		&& Player_Query_Agenda() != kPlayerAgendaErratic) {
-			Actor_Voice_Over(1410, kActorVoiceOver); //99-1410.AUD	I’d retired another Replicant so more money was headed my way but I didn’t feel so good about it.
-			Actor_Voice_Over(1670, kActorVoiceOver); //99-1670.AUD	Still it was a hell of a way to go.
-			Actor_Voice_Over(2090, kActorVoiceOver); //99-2090.AUD	And maybe I’d done him a favor too, since his animals were all dead.
-			Music_Play(kMusicBRBlues, 52, 0, 2, -1, kMusicLoopPlayOnce, 0);
+	if (Actor_Query_In_Set(kActorRunciter, kSceneRC02)) {
+		Actor_Set_Targetable(kActorRunciter, false);
+		// Jake - Restored Runciters death rattle. Achieved this so when he is shot the animation of his head tilting back plays
+		// and he falls to the ground. Also added in the McCoy retired Runciter flag which activates when you shoot Runciter.
+		if (_vm->_cutContent && !Game_Flag_Query(kFlagRunciterIsReplicant)) {
+			Game_Flag_Set(kFlagMcCoyRetiredHuman);	
+		}
+		// Restored Runciters hit animation for when he is shot.
+		Actor_Says(kActorRunciter, 9020, 21); //15-9020.AUD	Argh!	
+		Actor_Change_Animation_Mode(kActorRunciter, kAnimationModeDie);
+		Actor_Set_Goal_Number(kActorRunciter, kGoalRunciterDead);
+		Delay(2000);
+		//Code for when McCoy shoots Runciter and he is a replicant.
+		if  (Game_Flag_Query(kFlagRunciterIsReplicant)
+		&&	Global_Variable_Query(kVariableChapter) == 1) {
+			// Made it so McCoys response to retiring Runciter is different based on his agenda.
+			if (Player_Query_Agenda() != kPlayerAgendaSurly 
+			&& Player_Query_Agenda() != kPlayerAgendaErratic) {
+				Actor_Voice_Over(1410, kActorVoiceOver); //99-1410.AUD	I’d retired another Replicant so more money was headed my way but I didn’t feel so good about it.
+				Actor_Voice_Over(1670, kActorVoiceOver); //99-1670.AUD	Still it was a hell of a way to go.
+				Actor_Voice_Over(2090, kActorVoiceOver); //99-2090.AUD	And maybe I’d done him a favor too, since his animals were all dead.
+				Music_Play(kMusicBRBlues, 52, 0, 2, -1, kMusicLoopPlayOnce, 0);
+			} else {
+				Actor_Voice_Over(920, kActorVoiceOver); //99-0920.AUD	Easy money.
+			}
+			Actor_Modify_Friendliness_To_Other(kActorSteele, kActorMcCoy, 2);
+			Actor_Modify_Friendliness_To_Other(kActorGuzza, kActorMcCoy, 2);
+			Actor_Modify_Friendliness_To_Other(kActorClovis, kActorMcCoy, 2);
+			Actor_Modify_Friendliness_To_Other(kActorGaff, kActorMcCoy, 2);
+			Game_Flag_Reset(kFlagRunciterConfronted);
+			Game_Flag_Set(kFlagMcCoyRetiredRunciter);
+			Scene_Exits_Enable();
+			if (Query_Difficulty_Level() != kGameDifficultyEasy) {
+				Global_Variable_Increment(kVariableChinyen, 200);
+			}
+		} else if (Actor_Clue_Query(kActorMcCoy, kClueZubensMotive)) {
+			Actor_Voice_Over(2050, kActorVoiceOver);
+			Actor_Voice_Over(2060, kActorVoiceOver);
+			if (_vm->_cutContent) {
+				Actor_Clue_Acquire(kActorMcCoy, kClueMcCoyKilledRunciter1, true, -1);
+				Game_Flag_Set(kFlagMcCoyRetiredHuman);
+				Actor_Modify_Friendliness_To_Other(kActorSteele, kActorMcCoy, -2);
+				Actor_Modify_Friendliness_To_Other(kActorClovis, kActorMcCoy, 2);
+				Game_Flag_Set(kFlagMcCoyIsHelpingReplicants);
+			}
 		} else {
-			Actor_Voice_Over(920, kActorVoiceOver); //99-0920.AUD	Easy money.
+			Actor_Voice_Over(2070, kActorVoiceOver);
+			Actor_Voice_Over(2080, kActorVoiceOver);
+			Actor_Voice_Over(2090, kActorVoiceOver);
+			if (_vm->_cutContent) {
+				Actor_Clue_Acquire(kActorMcCoy, kClueMcCoyKilledRunciter2, true, -1);
+				Game_Flag_Set(kFlagMcCoyRetiredHuman);
+				Actor_Modify_Friendliness_To_Other(kActorSteele, kActorMcCoy, -2);
+				Actor_Modify_Friendliness_To_Other(kActorClovis, kActorMcCoy, 2);
+				Game_Flag_Set(kFlagMcCoyIsHelpingReplicants);
+			}
 		}
-		Actor_Modify_Friendliness_To_Other(kActorSteele, kActorMcCoy, 2);
-		Actor_Modify_Friendliness_To_Other(kActorGuzza, kActorMcCoy, 2);
-		Actor_Modify_Friendliness_To_Other(kActorClovis, kActorMcCoy, 2);
-		Actor_Modify_Friendliness_To_Other(kActorGaff, kActorMcCoy, 2);
-		Game_Flag_Reset(kFlagRunciterConfronted);
-		Game_Flag_Set(kFlagMcCoyRetiredRunciter);
-		Scene_Exits_Enable();
-		if (Query_Difficulty_Level() != kGameDifficultyEasy) {
-			Global_Variable_Increment(kVariableChinyen, 200);
-		}
-	} else if (Actor_Clue_Query(kActorMcCoy, kClueZubensMotive)) {
-		Actor_Voice_Over(2050, kActorVoiceOver);
-		Actor_Voice_Over(2060, kActorVoiceOver);
-		if (_vm->_cutContent) {
-			Actor_Clue_Acquire(kActorMcCoy, kClueMcCoyKilledRunciter1, true, -1);
-			Game_Flag_Set(kFlagMcCoyRetiredHuman);
-			Actor_Modify_Friendliness_To_Other(kActorSteele, kActorMcCoy, -2);
+		if (!_vm->_cutContent) {
 			Actor_Modify_Friendliness_To_Other(kActorClovis, kActorMcCoy, 2);
-			Game_Flag_Set(kFlagMcCoyIsHelpingReplicants);
 		}
-	} else {
-		Actor_Voice_Over(2070, kActorVoiceOver);
-		Actor_Voice_Over(2080, kActorVoiceOver);
-		Actor_Voice_Over(2090, kActorVoiceOver);
-		if (_vm->_cutContent) {
-			Actor_Clue_Acquire(kActorMcCoy, kClueMcCoyKilledRunciter2, true, -1);
-			Game_Flag_Set(kFlagMcCoyRetiredHuman);
-			Actor_Modify_Friendliness_To_Other(kActorSteele, kActorMcCoy, -2);
-			Actor_Modify_Friendliness_To_Other(kActorClovis, kActorMcCoy, 2);
-			Game_Flag_Set(kFlagMcCoyIsHelpingReplicants);
-		}
-	}
-	if (!_vm->_cutContent) {
-		Actor_Modify_Friendliness_To_Other(kActorClovis, kActorMcCoy, 2);
+	} else if (Actor_Query_In_Set(kActorRunciter, kSetKP07)) {
+		Actor_Set_Targetable(kActorRunciter, false);
+		Actor_Retired_Here(kActorRunciter, 6, 6, true, kActorMcCoy);
+		Actor_Change_Animation_Mode(kActorRunciter, kAnimationModeDie);
+		Actor_Set_Goal_Number(kActorRunciter, kGoalRunciterDead);
 	}
 	return false;
 }
 
-void AIScriptRunciter::Retired(int byActorId) {}
+void AIScriptRunciter::Retired(int byActorId) {
+	if (_vm->_cutContent) {
+		Actor_Set_Goal_Number(kActorRunciter, kGoalRunciterDead);
+		// Made it so the replicant survivors at moonbus variable goes up when Bob is at the moonbus and then goes down when he is retired..
+		if (Actor_Query_In_Set(kActorRunciter, kSetKP07)) {
+			Global_Variable_Decrement(kVariableReplicantsSurvivorsAtMoonbus, 1);
+			Actor_Set_Goal_Number(kActorBulletBob, kGoalBulletBobGone);
+			// Made it so the player receives 200 chinyen when retiring Bob or anyother replicant in the moonbus. 
+			if (Query_Difficulty_Level() != kGameDifficultyEasy) {
+				Global_Variable_Increment (kVariableChinyen, 200);
+			}
+			// Gaffs friendliness will go up whenever a replicant is killed. His friendliness will act as a replicant kill tally. This is because some dialogues will be different based on
+			// how many replicants McCoy retires and this tally will be used determine how these dialogues play out..
+			Actor_Modify_Friendliness_To_Other(kActorGaff, kActorMcCoy, 2);
+			if (Global_Variable_Query(kVariableReplicantsSurvivorsAtMoonbus) == 0) {
+				Player_Loses_Control();
+				// Made it so if Crazylegs is in the moonbus, after all the reps are retired he flees and is never seen again.
+				// This was done because he has no death animation so this seemed to be a reasonable solution.
+				if (Game_Flag_Query(kFlagCrazylegsIsReplicant)) {
+					if (!Game_Flag_Query(kFlagCrazylegsDead)) {
+						Loop_Actor_Walk_To_XYZ(kActorCrazylegs, -12.0f, -41.58f, 72.0f, 0, true, false, false);
+						Actor_Put_In_Set(kActorCrazylegs, kSceneKP06);
+						Delay(500);
+						Sound_Play(kSfxSMCAL3, 100, 0, 0, 50);
+					}
+				}
+				Delay(2000);
+				Player_Set_Combat_Mode(false);
+				Delay(2000);  
+				Ambient_Sounds_Remove_All_Non_Looping_Sounds(true);
+				Ambient_Sounds_Remove_All_Looping_Sounds(1u);
+				Game_Flag_Set(kFlagKP07toKP06);
+				Game_Flag_Reset(kFlagMcCoyIsHelpingReplicants);
+				Set_Enter(kSetKP05_KP06, kSceneKP06);
+				return; //true;
+			}
+		}
+	}
+}
 
 int AIScriptRunciter::GetFriendlinessModifierIfGetsClue(int otherActorId, int clueId) {
 	return 0;

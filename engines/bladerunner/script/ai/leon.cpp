@@ -258,9 +258,7 @@ bool AIScriptLeon::GoalChanged(int currentGoalNumber, int newGoalNumber) {
 			// Made it so McCoy only mentions Clovis' description if he has a clue which gave him that information.
 			if (_vm->_cutContent) {
 				if (Actor_Clue_Query(kActorMcCoy, kClueAnimalMurderSuspect)
-				|| Actor_Clue_Query(kActorMcCoy, kClueMorajiInterview)
-				|| Actor_Clue_Query(kActorMcCoy, kClueClovisAtMoonbus)
-				|| Actor_Clue_Query(kActorMcCoy, kClueDektorasDressingRoom)) {
+				|| Actor_Clue_Query(kActorMcCoy, kClueMorajiInterview)) {
 					Actor_Says_With_Pause(kActorMcCoy, 575, 1.2f, 13); //00-0575.AUD	Or a guy with a beard and dark eyes?
 				}
 			} else {
@@ -293,6 +291,8 @@ bool AIScriptLeon::GoalChanged(int currentGoalNumber, int newGoalNumber) {
 		Delay (500);
 		Actor_Says(kActorMcCoy, 510, kAnimationModeTalk); //00-0510.AUD	I'm thinking of changing jobs.
 		Actor_Says(kActorLeon, 50, kAnimationModeTalk); //62-0050.AUD	You should have done it long ago. Now you're out of time, LPD. Good night!
+		Actor_Start_Speech_Sample(kActorMcCoy, 8509); //00-8509.AUD	Wait a minute.
+		Delay (500);
 		Actor_Change_Animation_Mode(kActorLeon, kAnimationModeCombatAttack);
 		Delay (500);
 		Ambient_Sounds_Play_Sound(kSfxKICK2, 90, 99, 0, 0);

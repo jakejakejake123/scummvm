@@ -188,9 +188,27 @@ void AIScriptIzo::ReceivedClue(int clueId, int fromActorId) {
 }
 
 void AIScriptIzo::ClickedByPlayer() {
+	if (_vm->_cutContent) {
+		if (Actor_Query_In_Set(kActorIzo, kSetKP07)) {
+			Loop_Actor_Walk_To_Actor(kActorMcCoy, kActorIzo, 24, false, false);
+			Actor_Face_Actor(kActorMcCoy, kActorIzo, true);
+			Actor_Face_Actor(kActorIzo, kActorMcCoy, true);
+			Actor_Says(kActorMcCoy, 3210, kAnimationModeTalk); //00-3210.AUD	Hey, man.
+			Actor_Says(kActorIzo, 710, 17); //07-0710.AUD	You’re a better man than I imagined.
+		}
+	}
 	if (Actor_Query_Goal_Number(kActorIzo) > 500) { // Dead
 		Actor_Face_Actor(kActorMcCoy, kActorIzo, true);
-		Actor_Says(kActorMcCoy, 8585, 13);
+		if (_vm->_cutContent) {
+			if (Player_Query_Agenda() == kPlayerAgendaSurly 
+			|| Player_Query_Agenda() == kPlayerAgendaErratic) {
+				Actor_Says(kActorMcCoy, 8585, 13);
+			} else {	
+				Actor_Says(kActorMcCoy, 8630, 12);  // What a waste
+			}
+		} else {
+			Actor_Says(kActorMcCoy, 8585, 13);
+		}
 		return; //true;
 	}
 
@@ -292,23 +310,23 @@ bool AIScriptIzo::ShotAtAndHit() {
 					Actor_Face_Actor(kActorMcCoy, kActorSteele, true);
 					Actor_Face_Actor(kActorSteele, kActorMcCoy, true);
 					if (Actor_Query_Friendliness_To_Other(kActorSteele, kActorMcCoy) < 51) {
-						Actor_Says(kActorSteele, 1800, 59); //01-1800.AUD	You should have waited for me, Slim.
+						Actor_Says(kActorSteele, 1800,  kAnimationModeTalk); //01-1800.AUD	You should have waited for me, Slim.
 						if (Player_Query_Agenda() == kPlayerAgendaSurly 
 						|| Player_Query_Agenda() == kPlayerAgendaErratic) {
 							Actor_Says(kActorMcCoy, 3835, 12); // 00-3835.AUD	I had the shot, so I took it.
 						} else {
 							Actor_Says(kActorMcCoy, 6280, 15); //00-6280.AUD	Ha. A guy’s got to start somewhere.
 						}
-						Actor_Says(kActorSteele, 1810, 59); //01-1810.AUD	(smacks lips) We’ll see who has it next time.
+						Actor_Says(kActorSteele, 1810, kAnimationModeTalk); //01-1810.AUD	(smacks lips) We’ll see who has it next time.
 					} else {
-						Actor_Says(kActorSteele, 1790, 59); //01-1790.AUD	We having fun yet?
+						Actor_Says(kActorSteele, 1790, kAnimationModeTalk); //01-1790.AUD	We having fun yet?
 						if (Player_Query_Agenda() == kPlayerAgendaSurly 
 						|| Player_Query_Agenda() == kPlayerAgendaErratic) {
 							Actor_Says(kActorMcCoy, 3830, 13);//00-3830.AUD	Oh, yeah.
 						} else {
 							Actor_Says(kActorMcCoy, 6275, 15); //00-6275.AUD	Just doing what I get paid the big bucks to do.
 						}
-						Actor_Says(kActorSteele, 1810, 59); //01-1810.AUD	(smacks lips) We’ll see who has it next time.
+						Actor_Says(kActorSteele, 1810, kAnimationModeTalk); //01-1810.AUD	(smacks lips) We’ll see who has it next time.
 					}
 					Actor_Set_Goal_Number(kActorSteele, kGoalSteeleLeaveRC03);
 					Scene_Exits_Enable();
@@ -331,13 +349,16 @@ bool AIScriptIzo::ShotAtAndHit() {
 					Actor_Change_Animation_Mode(kActorMcCoy, kAnimationModeIdle);
 					Actor_Face_Actor(kActorSteele, kActorMcCoy, true);
 					Actor_Face_Actor(kActorMcCoy, kActorSteele, true);
-					Actor_Says(kActorSteele, 2160, 59); //01-2160.AUD	Are you nuts?
-					Actor_Says(kActorSteele, 2170, 59); //01-2170.AUD	Give me your gun, goddammit! Give it to me!
+					Actor_Says(kActorSteele, 2160, kAnimationModeTalk); //01-2160.AUD	Are you nuts?
+					Actor_Says(kActorSteele, 2170, kAnimationModeTalk); //01-2170.AUD	Give me your gun, goddammit! Give it to me!
 					Actor_Says(kActorMcCoy, 4855, 16); //00-4855.AUD	But... weren't you gonna shoot him?
-					Actor_Says(kActorSteele, 2180, 59); //01-2180.AUD	I was just gonna take him downtown. He's a material witness in a case I'm working. Now look! He's freaking useless, Slim.
+					Actor_Says(kActorSteele, 2180, kAnimationModeTalk); //01-2180.AUD	I was just gonna take him downtown. He's a material witness in a case I'm working. Now look! He's freaking useless, Slim.
 					Actor_Says(kActorMcCoy, 4860, 16); //00-4860.AUD	I didn't realize!
-					Actor_Says(kActorSteele, 2200, 59); //01-2200.AUD	You killed him, McCoy!
+					Actor_Says(kActorSteele, 2200, kAnimationModeTalk); //01-2200.AUD	You killed him, McCoy!
+					Actor_Change_Animation_Mode(kActorSteele, 4);
+					Delay(1500);
 					Actor_Says(kActorSteele, 2210, 59); //01-2210.AUD	I guess I gotta take you in. They'll probably have to run a couple of tests, too.
+					Outtake_Play(kOuttakeAway1, true, -1);
 					Actor_Set_Goal_Number(kActorMcCoy, kGoalMcCoyArrested);
 				}
 				return true;
@@ -383,11 +404,13 @@ void AIScriptIzo::Retired(int byActorId) {
 					if (!Game_Flag_Query(kFlagCrazylegsDead)) {
 						Loop_Actor_Walk_To_XYZ(kActorCrazylegs, -12.0f, -41.58f, 72.0f, 0, true, false, false);
 						Actor_Put_In_Set(kActorCrazylegs, kSceneKP06);
+						Delay(500);
+						Sound_Play(kSfxSMCAL3, 100, 0, 0, 50);
 					}
 				}
 				Delay(2000);
 				Player_Set_Combat_Mode(false);
-				Delay(2000); 
+				Delay(2000);  
 			}
 			Ambient_Sounds_Remove_All_Non_Looping_Sounds(true);
 			Ambient_Sounds_Remove_All_Looping_Sounds(1u);
@@ -920,7 +943,9 @@ bool AIScriptIzo::UpdateAnimation(int *animation, int *frame) {
 		if (_animationFrame == 6) {
 			Scene_Loop_Set_Default(0); // // HC01 - MainLoop
 			Scene_Loop_Start_Special(kSceneLoopModeOnce, 2, true); // HC01 - IzoFlashLoop
-			Player_Set_Combat_Mode(true);
+			if (!_vm->_cutContent) {
+				Player_Set_Combat_Mode(true);
+			}
 		}
 		if (_animationFrame >= Slice_Animation_Query_Number_Of_Frames(kModelAnimationIzoHoldingCameraUsesFlash)) {
 			*animation = kModelAnimationIzoIdle;
@@ -928,9 +953,11 @@ bool AIScriptIzo::UpdateAnimation(int *animation, int *frame) {
 			_animationState = 0;
 			Item_Add_To_World(kItemCamera, kModelAnimationIzoCamera, kSetHC01_HC02_HC03_HC04, 597.46f, 0.14f, 49.92f, 0, 12, 12, false, true, false, false);
 			Actor_Set_Goal_Number(kActorIzo, kGoalIzoRunToUG02);
-			if	(Game_Flag_Query(kFlagIzoEscaped)) {
-				Actor_Set_Goal_Number(kActorIzo, kGoalIzoRC03RunAway);
-				Player_Gains_Control();
+			if (_vm->_cutContent) {
+				if  (Game_Flag_Query(kFlagIzoGotAway)) {
+					Actor_Set_Goal_Number(kActorIzo, kGoalIzoRC03RunAway);
+					Player_Gains_Control();
+				}
 			}
 		}
 		break;

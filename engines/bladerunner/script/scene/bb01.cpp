@@ -289,6 +289,9 @@ void SceneScriptBB01::ActorChangedGoal(int actorId, int newGoal, int oldGoal, bo
 
 void SceneScriptBB01::PlayerWalkedIn() {
 	Spinner_Set_Selectable_Destination_Flag(kSpinnerDestinationBradburyBuilding, true);
+	if (_vm->_cutContent) {
+		Music_Stop(1u);
+	}
 	if (Game_Flag_Query(kFlagDR02toBB01)) {
 		Game_Flag_Reset(kFlagDR02toBB01);
 	} else if (Game_Flag_Query(kFlagBB02toBB01)) {

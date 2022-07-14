@@ -65,10 +65,19 @@ bool SceneScriptHF03::ClickedOn3DObject(const char *objectName, bool a2) {
 
 void SceneScriptHF03::dialogueWithLucy() {
 	Dialogue_Menu_Clear_List();
-	DM_Add_To_List_Never_Repeat_Once_Selected(840, -1, 3, 8); // VOIGT-KAMPFF
 	DM_Add_To_List_Never_Repeat_Once_Selected(850, 6, 5, 2); // FATHER
-	DM_Add_To_List_Never_Repeat_Once_Selected(860, 8, -1, -1); // CRYSTAL
 	DM_Add_To_List_Never_Repeat_Once_Selected(870, 2, 8, 6); // RUNCITER
+	if (_vm->_cutContent) {
+		if (!Game_Flag_Query(kFlagMcCoyIsHelpingReplicants)) {
+			DM_Add_To_List_Never_Repeat_Once_Selected(840, -1, 3, 8); // VOIGT-KAMPFF
+		} else {
+			DM_Add_To_List_Never_Repeat_Once_Selected(860, 8, -1, -1); // CRYSTAL
+		}
+	} else {
+		DM_Add_To_List_Never_Repeat_Once_Selected(840, -1, 3, 8); // VOIGT-KAMPFF
+		DM_Add_To_List_Never_Repeat_Once_Selected(860, 8, -1, -1); // CRYSTAL
+	}
+	
 	Dialogue_Menu_Add_DONE_To_List(880); // DONE
 
 	Dialogue_Menu_Appear(320, 240);
@@ -106,12 +115,19 @@ void SceneScriptHF03::dialogueWithLucy() {
 			 && Global_Variable_Query(kVariableAffectionTowards) == kAffectionTowardsNone
 			) {
 				Global_Variable_Set(kVariableAffectionTowards, kAffectionTowardsLucy);
-				Actor_Says(kActorLucy, 940, 14);
-				Actor_Says(kActorMcCoy, 6780, 11);
-				Actor_Says(kActorLucy, 950, 12);
-				Actor_Says(kActorLucy, 960, 13);
-				Actor_Says(kActorMcCoy, 6785, 15);
-				Actor_Says(kActorLucy, 970, 16);
+				Actor_Says(kActorLucy, 940, 14); //06-0940.AUD	You’re a good man.
+				if (_vm->_cutContent) {
+					if (Player_Query_Agenda() == kPlayerAgendaSurly 
+					|| Player_Query_Agenda() == kPlayerAgendaErratic) {
+						Actor_Says(kActorMcCoy, 6780, 11); //00-6780.AUD	Don’t jump to any conclusions.
+					}
+				} else {
+					Actor_Says(kActorMcCoy, 6780, 11); //00-6780.AUD	Don’t jump to any conclusions.
+				}
+				Actor_Says(kActorLucy, 950, 12); //06-0950.AUD	You’re gentle. Father used to be like that too.
+				Actor_Says(kActorLucy, 960, 13); //06-0960.AUD	He would read to me and tell me stories. Pretty stories so I would have pretty dreams.
+				Actor_Says(kActorMcCoy, 6785, 15); //00-6785.AUD	He doesn’t do that anymore?
+				Actor_Says(kActorLucy, 970, 16); //06-0970.AUD	He’s out with Sadik every night. And he and mother…
 				Actor_Says(kActorLucy, 980, 17);
 				if (Game_Flag_Query(kFlagDektoraIsReplicant)) {
 					Actor_Says(kActorLucy, 990, 17);
@@ -120,6 +136,8 @@ void SceneScriptHF03::dialogueWithLucy() {
 					if (Player_Query_Agenda() != kPlayerAgendaSurly 
 					&& Player_Query_Agenda() != kPlayerAgendaErratic) {
 						Actor_Says(kActorMcCoy, 6790, 15); //00-6790.AUD	That must be tough on you.
+					} else {
+						Actor_Says(kActorMcCoy, 5065, 18); //00-5065.AUD	Is that right?
 					}
 				} else {
 					Actor_Says(kActorMcCoy, 6790, 15); //00-6790.AUD	That must be tough on you.
@@ -149,33 +167,35 @@ void SceneScriptHF03::dialogueWithLucy() {
 					Actor_Says(kActorLucy, 1040, 18); //06-1040.AUD	Will I?
 					Actor_Says(kActorMcCoy, 6805, 13); //00-6805.AUD	I-- I promise you. But for now we gotta be careful. You should stay hidden for a while.
 					Actor_Says(kActorMcCoy, 6810, 14); //00-6810.AUD	Go. I’ll find you when it’s safe.
+				}
+				Actor_Says(kActorLucy, 220, 13);
+				Actor_Says(kActorMcCoy, 1660, 15); //00-1660.AUD	Go! Quickly.
+				if (_vm->_cutContent) {
 					if (Game_Flag_Query(kFlagLucyIsReplicant)) {
 						Actor_Says(kActorLucy, 230, 14); //06-0230.AUD	Thank you.
 					} else {
 						Actor_Says(kActorLucy, 1050, 17); //06-1050.AUD	Oh, thank you. Thank you for everything.
 					}
+					Actor_Says(kActorMcCoy, 1650, 13); //00-1650.AUD	Take care of yourself, kid.
 					Actor_Modify_Friendliness_To_Other(kActorSteele, kActorMcCoy, -2);
 					Actor_Modify_Friendliness_To_Other(kActorClovis, kActorMcCoy, 2);
 					Actor_Modify_Friendliness_To_Other(kActorGuzza, kActorMcCoy, -2);
-					Game_Flag_Set(kFlagMcCoyIsHelpingReplicants);
+					Actor_Clue_Acquire(kActorLucy, kClueMcCoyHelpedLucy, true, kActorMcCoy);
+					if (Game_Flag_Query(kFlagLucyIsReplicant)) {
+						Game_Flag_Set(kFlagMcCoyIsHelpingReplicants);
+					}
+				} else {
+					Actor_Says(kActorLucy, 230, 14); //06-0230.AUD	Thank you.
 					Actor_Clue_Acquire(kActorLucy, kClueMcCoyHelpedLucy, true, kActorMcCoy);
 				}
-			} else if (_vm->_cutContent
-			&& Global_Variable_Query(kVariableAffectionTowards) == kAffectionTowardsDektora) {
-				Actor_Says(kActorLucy, 220, 13);
-				Actor_Says(kActorMcCoy, 1660, 15); //00-1660.AUD	Go! Quickly.
-				if (Game_Flag_Query(kFlagLucyIsReplicant)) {
+			} else if (_vm->_cutContent) { 
+				if (Global_Variable_Query(kVariableAffectionTowards) == kAffectionTowardsDektora) {
+					Actor_Says(kActorLucy, 220, 13);
+					Actor_Says(kActorMcCoy, 1660, 15); //00-1660.AUD	Go! Quickly.
 					Actor_Says(kActorLucy, 230, 14); //06-0230.AUD	Thank you.
-				} else {
-					Actor_Says(kActorLucy, 1050, 17); //06-1050.AUD	Oh, thank you. Thank you for everything.
+					Actor_Says(kActorMcCoy, 1650, 13); //00-1650.AUD	Take care of yourself, kid.
+					Actor_Clue_Acquire(kActorLucy, kClueMcCoyHelpedLucy, true, kActorMcCoy);
 				}
-				Actor_Clue_Acquire(kActorLucy, kClueMcCoyHelpedLucy, true, kActorMcCoy);
-				Game_Flag_Set(kFlagMcCoyIsHelpingReplicants);
-			} else if (Global_Variable_Query(kVariableAffectionTowards) == kAffectionTowardsDektora) {
-				Actor_Says(kActorLucy, 220, 13);
-				Actor_Says(kActorMcCoy, 1660, 15); //00-1660.AUD	Go! Quickly.
-				Actor_Says(kActorLucy, 230, 14); //06-0230.AUD	Thank you.
-				Actor_Clue_Acquire(kActorLucy, kClueMcCoyHelpedLucy, true, kActorMcCoy);
 			}
 			if (Game_Flag_Query(kFlagLucyIsReplicant)) {
 				Actor_Set_Goal_Number(kActorLucy, kGoalLucyHF03RunToHF041);
@@ -231,31 +251,38 @@ bool SceneScriptHF03::ClickedOnActor(int actorId) {
 				Game_Flag_Set(kFlagHF03LucyTalk);
 				// Made it so McCoy will only point out that Lucy is a replicant by saying she's sick if he found her incept photo at the twins place.
 				if (_vm->_cutContent) {
-					Actor_Says(kActorMcCoy, 1615, 16); //00-1615.AUD	I’ve been looking for you.
-					if (Actor_Clue_Query(kActorMcCoy, kClueLucyIncept)) {
-						if (!Game_Flag_Query(kFlagZubenSpared)) {
-							Actor_Says(kActorLucy, 90, 13); //06-0090.AUD	Leave me alone.
-						}
+					if (Game_Flag_Query(kFlagLucyIsReplicant)) {
+						if (Actor_Clue_Query(kActorMcCoy, kClueLucyIncept)) {
+							Actor_Says(kActorMcCoy, 1605, 15); //00-1605.AUD	You’re sick, Lucy.
+							Actor_Says(kActorLucy, 100, 12);
+							Delay(1000);
+							if (Game_Flag_Query(kFlagMcCoyIsHelpingReplicants)) {
+								Actor_Says(kActorMcCoy, 7330, 16); //00-7330.AUD	Let's hope so.
+							} else {
+								Actor_Says(kActorMcCoy, 1610, 14);
+							}
+						} else {
+							Actor_Says(kActorMcCoy, 1615, 16); //00-1615.AUD	I’ve been looking for you.
+							if (Actor_Query_Friendliness_To_Other(kActorClovis, kActorMcCoy) < 51) {
+								Actor_Says(kActorLucy, 90, 13); //06-0090.AUD	Leave me alone.
+								Actor_Says(kActorLucy, 120, 13); //06-0120.AUD	Father told me to watch out for you.
+								if (Game_Flag_Query(kFlagMcCoyIsHelpingReplicants)) {
+									Actor_Says(kActorMcCoy, 1620, 13); //00-1620.AUD	I’m not gonna hurt you.
+								} else {
+									Actor_Says(kActorMcCoy, 4880, 13); //00-4880.AUD	Is that right?
+								}
+							}
+						} 	
+					} else {
+						Actor_Says(kActorMcCoy, 1615, 16); //00-1615.AUD	I’ve been looking for you.
 						if (Actor_Query_Friendliness_To_Other(kActorClovis, kActorMcCoy) < 51) {
+							Actor_Says(kActorLucy, 110, 13); //06-0110.AUD	Please, leave me alone.
 							Actor_Says(kActorLucy, 120, 13); //06-0120.AUD	Father told me to watch out for you.
 						}
 						if (Game_Flag_Query(kFlagMcCoyIsHelpingReplicants)) {
-							Actor_Says(kActorMcCoy, 1605, 15);
-							Actor_Says(kActorLucy, 100, 12);
-							Actor_Says(kActorMcCoy, 1610, 14);
-						}
-					} else {
-						Actor_Says(kActorMcCoy, 1615, 16);
-						if (!Game_Flag_Query(kFlagZubenSpared)) {
-							Actor_Says(kActorLucy, 110, 13); //06-0110.AUD	Please, leave me alone.
-							if (Actor_Query_Friendliness_To_Other(kActorClovis, kActorMcCoy) < 51) {
-								Actor_Says(kActorLucy, 120, 13); //06-0120.AUD	Father told me to watch out for you.
-							}
-							if (Game_Flag_Query(kFlagMcCoyIsHelpingReplicants)) {
-								Actor_Says(kActorMcCoy, 1620, 13);
-							} else {
-								Actor_Says(kActorMcCoy, 4880, 13); //00-4880.AUD	Is that right?
-							}
+							Actor_Says(kActorMcCoy, 1620, 13); //00-1620.AUD	I’m not gonna hurt you.
+						} else {
+							Actor_Says(kActorMcCoy, 4880, 13); //00-4880.AUD	Is that right?
 						}
 					}
 				} else if (Game_Flag_Query(kFlagLucyIsReplicant)) {
@@ -351,12 +378,38 @@ void SceneScriptHF03::PlayerWalkedIn() {
 			Actor_Says(kActorSteele, 210, 13); // 01-0210.AUD	Just follow my lead, Slim.
 		}
 		Actor_Face_Actor(kActorMcCoy, kActorSteele, true);
-		Actor_Says(kActorMcCoy, 1680, 15); //00-1680.AUD	There’s civilians all over the place.
-		Actor_Says(kActorSteele, 220, 14); //01-0220.AUD	Yeah, they move pretty fast, don’t they?
-		Actor_Says(kActorMcCoy, 1685, 13);
-		Actor_Says(kActorSteele, 230, 16); //01-0230.AUD	Who’s giving the orders around here?
-		Actor_Says(kActorMcCoy, 1690, 12);
-		Actor_Says(kActorSteele, 240, 13);
+		if (_vm->_cutContent) {
+			if (Player_Query_Agenda() != kPlayerAgendaSurly 
+			&& Player_Query_Agenda() != kPlayerAgendaErratic) {
+				Actor_Says(kActorMcCoy, 1680, 15); //00-1680.AUD	There’s civilians all over the place.
+				Actor_Says(kActorSteele, 220, 14); //01-0220.AUD	Yeah, they move pretty fast, don’t they?
+			}
+		} else {
+			Actor_Says(kActorMcCoy, 1680, 15); //00-1680.AUD	There’s civilians all over the place.
+			Actor_Says(kActorSteele, 220, 14); //01-0220.AUD	Yeah, they move pretty fast, don’t they?
+		}
+		if (_vm->_cutContent) {
+			if (Game_Flag_Query(kFlagMcCoyIsHelpingReplicants)) {
+				Actor_Says(kActorMcCoy, 1685, 13); //00-1685.AUD	I’ll take care of it. You just cover the exit.
+				if (Actor_Query_Friendliness_To_Other(kActorSteele, kActorMcCoy) < 51) {
+					Actor_Says(kActorSteele, 230, 16); //01-0230.AUD	Who’s giving the orders around here?
+				} else {
+					Actor_Says(kActorSteele, 2350, 13); //01-2350.AUD	Ditto.
+				}
+			} else {
+				Actor_Says(kActorMcCoy, 1690, 12); //00-1690.AUD	This one’s mine, Steele. I tracked it, I get the kill.
+				if (Actor_Query_Friendliness_To_Other(kActorSteele, kActorMcCoy) < 51) {
+					Actor_Says(kActorSteele, 240, 13); //01-0240.AUD	About time you strapped on some balls, Slim. Go for it.
+				} else {
+					Actor_Says(kActorSteele, 2350, 13); //01-2350.AUD	Ditto.
+				}
+			}
+		} else {
+			Actor_Says(kActorMcCoy, 1685, 13); //00-1685.AUD	I’ll take care of it. You just cover the exit.
+			Actor_Says(kActorSteele, 230, 16); //01-0230.AUD	Who’s giving the orders around here?
+			Actor_Says(kActorMcCoy, 1690, 12); //00-1690.AUD	This one’s mine, Steele. I tracked it, I get the kill.
+			Actor_Says(kActorSteele, 240, 13); //01-0240.AUD	About time you strapped on some balls, Slim. Go for it.
+		}
 		Actor_Set_Goal_Number(kActorSteele, kGoalSteeleHF03McCoyChasingLucy);
 	}
 }

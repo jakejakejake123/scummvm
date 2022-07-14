@@ -118,7 +118,7 @@ void SceneScriptPS14::ActorChangedGoal(int actorId, int newGoal, int oldGoal, bo
 
 void SceneScriptPS14::PlayerWalkedIn() {
 	if (_vm->_cutContent) {
-		Music_Stop(3u);
+		Music_Stop(1u);
 	}
 	if (Game_Flag_Query(kFlagMA07toPS14)) {
 		if (_vm->_cutContent) {
@@ -145,7 +145,6 @@ void SceneScriptPS14::PlayerWalkedIn() {
 		&& (Global_Variable_Query(kVariableChapter) == 4)) {  
 			Actor_Put_In_Set(kActorOfficerGrayford, kSetPS14);
 			Actor_Set_At_XYZ(kActorOfficerGrayford, -879.97, 507.86, -1132.41, 0);
-			// Added in some lines and music for this encounter. TODO I couldn't get Grayford to face Leary properly for the first couple of lines.
 			Actor_Face_Actor(kActorOfficerGrayford, kActorOfficerLeary, true); 
 			Actor_Says(kActorOfficerLeary, 280, kAnimationModeTalk); //23-0280.AUD	Sounds like another nutcase overdosed on too many lichen-dogs.
 			Actor_Face_Actor(kActorOfficerGrayford, kActorOfficerLeary, true); 
@@ -165,9 +164,9 @@ void SceneScriptPS14::PlayerWalkedIn() {
 			|| Game_Flag_Query(kFlagMcCoyRetiredHuman)) {
 				Actor_Set_Goal_Number(kActorMcCoy, kGoalMcCoyArrested);
 			} else {
-				Actor_Says(kActorMcCoy, 710, kAnimationModeTalk); //00-0710.AUD	Hold it! I'm not a Replicant, I got proof!		 
+				Actor_Says(kActorMcCoy, 710, 23); //00-0710.AUD	Hold it! I'm not a Replicant, I got proof!		 
 				Actor_Says(kActorOfficerGrayford, 20, kAnimationModeTalk); //24-0020.AUD	Don’t bullshit, McCoy!
-				Actor_Says(kActorMcCoy, 715, kAnimationModeTalk); //00-0715.AUD	It's all in there!
+				Actor_Says(kActorMcCoy, 715, 23); //00-0715.AUD	It's all in there!
 				Actor_Says(kActorOfficerGrayford, 30, kAnimationModeTalk); //24-0030.AUD	Let’s get the bomb squad out here!
 				//The Crystal will vouch for me line will only play if you are on good terms with Crystal meaning not having Lucy and Dektoras global affection goals activated.
 				if (Global_Variable_Query(kVariableAffectionTowards) != kAffectionTowardsDektora 	 
@@ -183,7 +182,7 @@ void SceneScriptPS14::PlayerWalkedIn() {
 				Player_Loses_Control();
 				Loop_Actor_Walk_To_Actor(kActorMcCoy, kActorOfficerGrayford, 48, true, false);
 				Actor_Says(kActorOfficerGrayford, 60, kAnimationModeTalk); //24-0060.AUD	If you don’t follow my exact instructions, we’re gonna shred you into a thousand pieces.
-				Actor_Says(kActorMcCoy, 725, kAnimationModeTalk); //00-0725.AUD	Relax! I hear ya.
+				Actor_Says(kActorMcCoy, 725, 13); //00-0725.AUD	Relax! I hear ya.
 				Actor_Says(kActorOfficerGrayford, 70, kAnimationModeTalk); //24-0070.AUD	All right, assume the position. On the ground!
 				Actor_Says(kActorOfficerGrayford, 80, kAnimationModeTalk); //24-0080.AUD	I swear to God, McCoy…
 				Actor_Says(kActorOfficerGrayford, 90, kAnimationModeTalk); //24-0090.AUD	if you are lying, if you’ve killed any humans in the process…

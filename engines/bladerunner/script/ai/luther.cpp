@@ -49,10 +49,13 @@ bool AIScriptLuther::Update() {
 	 && !Game_Flag_Query(kFlagUG16PulledGun)
 	 &&  Global_Variable_Query(kVariableChapter) == 4
 	) {
+		if (_vm->_cutContent) {
+			Actor_Face_Actor(kActorMcCoy, kActorLuther, true);
+		}
 		Actor_Says(kActorMcCoy, 5720, 12);
 		Actor_Says(kActorLuther, 80, 13);
 		if (_vm->_cutContent) {
-			if (Game_Flag_Query(kFlagLutherLanceIsReplicant)) {
+			if (Actor_Query_Friendliness_To_Other(kActorLuther, kActorMcCoy) < 50) {
 				Actor_Says(kActorLance, 40, 12); //13-0040.AUD	Just give it up. You got no jurisdiction down here.
 			}
 		} else {
@@ -94,6 +97,10 @@ bool AIScriptLuther::Update() {
 		ChangeAnimationMode(kAnimationModeDie);
 		Actor_Set_Goal_Number(kActorLuther, kGoalLutherDie);
 		Actor_Set_Targetable(kActorLuther, false);
+		Scene_Loop_Set_Default(5); // UG16MainLoopNoComputerLight
+		Scene_Loop_Start_Special(kSceneLoopModeOnce, 4, true); // UG16SparkLoop
+		Ambient_Sounds_Play_Sound(kSfxCOMPDWN4, 50, 0, 0, 99);
+		Ambient_Sounds_Remove_Looping_Sound(kSfxELECLAB1, 1u);
 		// Made it so if you retire the twins and they are replicantt you receive the McCoy retired Luther and Lance clue and McCoy will
 		// say no retirement swag since he is not working for the department at this point in time. If he retires the twins when they are human
 		// McCoy scolds himself saying that he has crossed the line. This will also set the McCoy retired human flag.
@@ -121,10 +128,7 @@ bool AIScriptLuther::Update() {
 				Actor_Modify_Friendliness_To_Other(kActorSteele, kActorMcCoy, -4);
 			}
 		}
-		Scene_Loop_Set_Default(5); // UG16MainLoopNoComputerLight
-		Scene_Loop_Start_Special(kSceneLoopModeOnce, 4, true); // UG16SparkLoop
-		Ambient_Sounds_Play_Sound(kSfxCOMPDWN4, 50, 0, 0, 99);
-		Ambient_Sounds_Remove_Looping_Sound(kSfxELECLAB1, 1u);
+		
 		return false;
 	}
 
@@ -170,7 +174,14 @@ void AIScriptLuther::ReceivedClue(int clueId, int fromActorId) {
 }
 
 void AIScriptLuther::ClickedByPlayer() {
-	//return false;
+	if (_vm->_cutContent) {
+		if (Actor_Query_In_Set(kActorLuther, kSetKP07)) {
+			Actor_Face_Actor(kActorMcCoy, kActorLuther, true);
+			Actor_Says(kActorMcCoy, 3970, 14);
+			Actor_Says(kActorLance, 0, 17); //13-0000.AUD	Hey, it’s about time you showed up.
+			Actor_Says(kActorLuther, 320, 6); //10-0320.AUD	No question.
+		}
+	}
 }
 
 void AIScriptLuther::EnteredSet(int setId) {
@@ -240,11 +251,13 @@ void AIScriptLuther::Retired(int byActorId) {
 					if (!Game_Flag_Query(kFlagCrazylegsDead)) {
 						Loop_Actor_Walk_To_XYZ(kActorCrazylegs, -12.0f, -41.58f, 72.0f, 0, true, false, false);
 						Actor_Put_In_Set(kActorCrazylegs, kSceneKP06);
+						Delay(500);
+						Sound_Play(kSfxSMCAL3, 100, 0, 0, 50);
 					}
 				}
 				Delay(2000);
 				Player_Set_Combat_Mode(false);
-				Delay(2000);
+				Delay(2000); 
 			}
 			Ambient_Sounds_Remove_All_Non_Looping_Sounds(true);
 			Ambient_Sounds_Remove_All_Looping_Sounds(1u);

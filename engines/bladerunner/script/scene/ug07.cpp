@@ -116,17 +116,68 @@ bool SceneScriptUG07::ClickedOnExit(int exitId) {
 	}
 
 	if (exitId == 2) {
-		if (!Game_Flag_Query(kFlagMcCoyRetiredHuman)
-		 &&  Game_Flag_Query(kFlagUG18GuzzaScene)
-		 &&  Global_Variable_Query(kVariableChapter) == 4
-		 && !Game_Flag_Query(kFlagUG07ClovisCaughtMcCoy)
-		 && (Actor_Query_Friendliness_To_Other(kActorClovis, kActorMcCoy) < 51)
+		if (_vm->_cutContent) {
+			if (Game_Flag_Query(kFlagUG18GuzzaScene)
+			&&  Global_Variable_Query(kVariableChapter) == 4
+			&& !Game_Flag_Query(kFlagUG07ClovisCaughtMcCoy)) {
+				if (Actor_Clue_Query(kActorClovis, kClueMcCoyRetiredLucy) 
+				|| Actor_Clue_Query(kActorClovis, kClueMcCoyRetiredDektora)
+				|| Actor_Query_Friendliness_To_Other(kActorClovis, kActorMcCoy) < 51) {
+					if (!Loop_Actor_Walk_To_XYZ(kActorMcCoy, 49.0f, -12.21f, -130.0f, 0, true, false, false)) {
+						Game_Flag_Set(kFlagUG07ClovisCaughtMcCoy);
+						if (_vm->_cutContent) {
+							Music_Play(kMusicBeating1, 71, 0, 0, -1, kMusicLoopPlayOnce, 2);
+						}
+						Actor_Put_In_Set(kActorClovis, kSetUG07);
+						Actor_Set_At_XYZ(kActorClovis, 118.02f, -12.21f, -154.0f, 768);
+						Player_Set_Combat_Mode(true);
+						Actor_Face_Actor(kActorMcCoy, kActorClovis, true);
+						Loop_Actor_Walk_To_XYZ(kActorClovis, 98.02f, -12.21f, -154.0f, 0, false, false, false);
+						Actor_Face_Actor(kActorClovis, kActorMcCoy, true);
+						Actor_Set_Goal_Number(kActorMcCoy, kGoalMcCoyUG07Caught);
+						Actor_Face_Heading(kActorMcCoy, 0, true);
+						Delay(1500);
+						Actor_Says_With_Pause(kActorClovis, 550, 1.0f, 3);
+						if (Actor_Clue_Query(kActorClovis, kClueMcCoyRetiredDektora)) {
+							Actor_Says(kActorClovis, 560, 3);
+							Actor_Set_Goal_Number(kActorMcCoy, kGoalMcCoyUG07BrokenFinger);
+							Sound_Play(kSfxBRKFNGR1, 100, 0, 0, 50);
+							Delay(2000);
+						}
+						if (Actor_Clue_Query(kActorClovis, kClueMcCoyRetiredLucy)) {
+							Actor_Says(kActorClovis, 570, 3);
+							Actor_Set_Goal_Number(kActorMcCoy, kGoalMcCoyUG07BrokenFinger);
+							Sound_Play(kSfxBRKFNGR1, 100, 0, 0, 50);
+							Delay(2000);
+						}
+						// Added in a line.
+						if (_vm->_cutContent) {
+							Actor_Says(kActorClovis, 580, 0); //05-0580.AUD	And now it’s time to end this game.
+							Actor_Modify_Friendliness_To_Other(kActorClovis, kActorMcCoy, -10);
+						}
+						Actor_Set_Goal_Number(kActorMcCoy, kGoalMcCoyUG07Released);
+						Delay(1000);
+						Actor_Set_Goal_Number(kActorClovis, kGoalClovisUG07ChaseMcCoy);
+					}
+				} else {
+					if (!Loop_Actor_Walk_To_XYZ(kActorMcCoy, -10.0f, -21.47f, -58.0f, 0, true, false, false)
+					&& Actor_Query_Goal_Number(kActorClovis) != kGoalClovisUG07KillMcCoy
+					) {
+						Ambient_Sounds_Remove_All_Non_Looping_Sounds(true);
+						Ambient_Sounds_Remove_All_Looping_Sounds(1u);
+						Game_Flag_Set(kFlagUG07toUG10);
+						Set_Enter(kSetUG10, kSceneUG10);
+						return true;
+					}
+				}
+			}
+		} else if (!Game_Flag_Query(kFlagMcCoyRetiredHuman)
+		&&  Game_Flag_Query(kFlagUG18GuzzaScene)
+		&&  Global_Variable_Query(kVariableChapter) == 4
+		&& !Game_Flag_Query(kFlagUG07ClovisCaughtMcCoy)
 		) {
 			if (!Loop_Actor_Walk_To_XYZ(kActorMcCoy, 49.0f, -12.21f, -130.0f, 0, true, false, false)) {
 				Game_Flag_Set(kFlagUG07ClovisCaughtMcCoy);
-				if (_vm->_cutContent) {
-					Music_Play(kMusicBeating1, 71, 0, 0, -1, kMusicLoopPlayOnce, 2);
-				}
 				Actor_Put_In_Set(kActorClovis, kSetUG07);
 				Actor_Set_At_XYZ(kActorClovis, 118.02f, -12.21f, -154.0f, 768);
 				Player_Set_Combat_Mode(true);
@@ -149,19 +200,13 @@ bool SceneScriptUG07::ClickedOnExit(int exitId) {
 					Sound_Play(kSfxBRKFNGR1, 100, 0, 0, 50);
 					Delay(2000);
 				}
-				// Added in a line.
-				if (_vm->_cutContent) {
-					Actor_Says(kActorClovis, 580, 0); //05-0580.AUD	And now it’s time to end this game.
-					Actor_Clue_Acquire(kActorMcCoy, kClueSadiksGun, true, kActorClovis);
-					Actor_Clue_Acquire(kActorMcCoy, kClueClovisOrdersMcCoysDeath, true, kActorClovis);
-				}
 				Actor_Set_Goal_Number(kActorMcCoy, kGoalMcCoyUG07Released);
 				Delay(1000);
 				Actor_Set_Goal_Number(kActorClovis, kGoalClovisUG07ChaseMcCoy);
 			}
 		} else {
 			if (!Loop_Actor_Walk_To_XYZ(kActorMcCoy, -10.0f, -21.47f, -58.0f, 0, true, false, false)
-			 && Actor_Query_Goal_Number(kActorClovis) != kGoalClovisUG07KillMcCoy
+			&& Actor_Query_Goal_Number(kActorClovis) != kGoalClovisUG07KillMcCoy
 			) {
 				Ambient_Sounds_Remove_All_Non_Looping_Sounds(true);
 				Ambient_Sounds_Remove_All_Looping_Sounds(1u);

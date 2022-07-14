@@ -140,7 +140,6 @@ bool SceneScriptBB05::ClickedOnExit(int exitId) {
 		if (!Loop_Actor_Walk_To_XYZ(kActorMcCoy, 151.0f, -60.34f, -108.0f, 0, true, false, false)) {
 			Ambient_Sounds_Remove_All_Non_Looping_Sounds(true);
 			Ambient_Sounds_Remove_All_Looping_Sounds(1u);
-			Game_Flag_Set(kFlagBB05toBB12);
 			Set_Enter(kSetBB12, kSceneBB12);
 		}
 		return true;
@@ -170,7 +169,6 @@ void SceneScriptBB05::PlayerWalkedIn() {
 		Game_Flag_Reset(kFlagBB12toBB05);
 	} else {
 		Loop_Actor_Walk_To_XYZ(kActorMcCoy, -76.0f, -60.31f, 131.0f, 0, false, false, false);
-		Game_Flag_Reset(kFlagBB03toBB05);
 	}
 
 	if (Actor_Query_Goal_Number(kActorSebastian) == 200) {
@@ -182,56 +180,90 @@ void SceneScriptBB05::PlayerWalkedIn() {
 		Actor_Says(kActorSebastian, 140, 16);
 		Actor_Says(kActorSebastian, 150, 14);
 		Actor_Says(kActorSebastian, 160, 15);
+		Actor_Says(kActorMcCoy, 7035, 14);  //00-7035.AUD	You feeling all right?
+		Actor_Says(kActorSebastian, 170, 12);
+		// Made it so if McCoy is not helping the replicants but is instead hunting them down he will question if Sebastian is hiding someone, most possibly a replicant.
 		if (_vm->_cutContent) {
-			if (Player_Query_Agenda() != kPlayerAgendaSurly 
-			&& Player_Query_Agenda() != kPlayerAgendaErratic) {
-				Actor_Says(kActorMcCoy, 7035, 14); //00-7035.AUD	You feeling all right?
-				Actor_Says(kActorSebastian, 170, 12);
-			} else {
-				Delay(1000);
-			}
-		} else {
-			Actor_Says(kActorMcCoy, 7035, 14); 
-			Actor_Says(kActorSebastian, 170, 12);
-		}
-		Actor_Says(kActorMcCoy, 7040, 14);
-		Actor_Says(kActorSebastian, 180, 16);
-		Actor_Says(kActorMcCoy, 7045, 14);
-		if (Game_Flag_Query(kFlagGeneralDollShot)) {
-			Actor_Says(kActorSebastian, 190, 15);
-			Actor_Says(kActorMcCoy, 7050, 17);
-			Actor_Says(kActorSebastian, 200, 16);
-			Actor_Says_With_Pause(kActorSebastian, 210, 1.5f, 14);
-			if (_vm->_cutContent) {
-				if (Player_Query_Agenda() != kPlayerAgendaSurly 
-				&& Player_Query_Agenda() != kPlayerAgendaErratic) {
-					Actor_Says(kActorMcCoy, 7055, 15);
+			if (!Game_Flag_Query(kFlagMcCoyIsHelpingReplicants)) {
+				Actor_Says(kActorMcCoy, 7040, 14); //00-7040.AUD	You wouldn't be hiding anybody, would you?
+				Actor_Says(kActorSebastian, 180, 16);
+				Actor_Says(kActorMcCoy, 7045, 14);
+				if (Game_Flag_Query(kFlagGeneralDollShot)) {
+					Actor_Says(kActorSebastian, 190, 15);
+					Actor_Says(kActorMcCoy, 7050, 17); 
+					Actor_Says(kActorSebastian, 200, 16);
+					Actor_Says_With_Pause(kActorSebastian, 210, 1.5f, 14); //56-0210.AUD	It won't be easy to put him right again. I'm sure there was some permanent damage.
+					if (Player_Query_Agenda() != kPlayerAgendaSurly
+					&& Player_Query_Agenda() != kPlayerAgendaErratic) {
+						Actor_Says(kActorMcCoy, 7055, 15); //00-7055.AUD	Uh, I'm sorry to hear that.
+					} else {
+						Actor_Says(kActorMcCoy, 7835, 18); //00-7835.AUD	Is that so?
+					}
+				} else {
+					Actor_Put_In_Set(kActorGeneralDoll, kSetBB05);
+					Actor_Set_At_Waypoint(kActorGeneralDoll, 134, 0);
+					Loop_Actor_Walk_To_Waypoint(kActorGeneralDoll, 135, 0, false, false);
+					Actor_Says(kActorGeneralDoll, 0, kAnimationModeTalk);
+					Actor_Face_Actor(kActorMcCoy, kActorGeneralDoll, true);
+					Actor_Face_Actor(kActorSebastian, kActorGeneralDoll, true);
+					Actor_Says(kActorSebastian, 220, 13);
+					Loop_Actor_Walk_To_Waypoint(kActorGeneralDoll, 134, 0, false, false);
+					Actor_Face_Actor(kActorSebastian, kActorMcCoy, true);
+					Actor_Face_Actor(kActorMcCoy, kActorSebastian, true);
+					Actor_Says(kActorSebastian, 230, 15);
+					Actor_Says(kActorMcCoy, 7060, 17);
+					Actor_Says(kActorSebastian, 240, 12);
 				}
 			} else {
-				Actor_Says(kActorMcCoy, 7055, 15);
+				Delay(2000);
 			}
+			Actor_Says(kActorMcCoy, 7065, 16); //00-7065.AUD	Look, I gotta check the premises again. Maybe they left something behind.
+			Actor_Says(kActorSebastian, 250, 16); //56-0250.AUD	Well, if you want to take a look, go on ahead. I can't stop you. But please be careful in my lab.
+			if (_vm->_cutContent) {
+				if (Player_Query_Agenda() != kPlayerAgendaSurly
+				&& Player_Query_Agenda() != kPlayerAgendaErratic) {
+					Actor_Says(kActorMcCoy, 7070, 18); //00-7070.AUD	You got it.
+				}
+			} else {
+				Actor_Says(kActorMcCoy, 7070, 18); 
+			}
+			Actor_Set_Goal_Number(kActorSebastian, 205);
+			Actor_Set_Goal_Number(kActorGeneralDoll, 201);
+			Actor_Set_Goal_Number(kActorBryant, 101);
+			Actor_Set_Goal_Number(kActorGeneralDoll, 200);
 		} else {
-			Actor_Put_In_Set(kActorGeneralDoll, kSetBB05);
-			Actor_Set_At_Waypoint(kActorGeneralDoll, 134, 0);
-			Loop_Actor_Walk_To_Waypoint(kActorGeneralDoll, 135, 0, false, false);
-			Actor_Says(kActorGeneralDoll, 0, kAnimationModeTalk);
-			Actor_Face_Actor(kActorMcCoy, kActorGeneralDoll, true);
-			Actor_Face_Actor(kActorSebastian, kActorGeneralDoll, true);
-			Actor_Says(kActorSebastian, 220, 13);
-			Loop_Actor_Walk_To_Waypoint(kActorGeneralDoll, 134, 0, false, false);
-			Actor_Face_Actor(kActorSebastian, kActorMcCoy, true);
-			Actor_Face_Actor(kActorMcCoy, kActorSebastian, true);
-			Actor_Says(kActorSebastian, 230, 15);
-			Actor_Says(kActorMcCoy, 7060, 17);
-			Actor_Says(kActorSebastian, 240, 12);
+			Actor_Says(kActorMcCoy, 7040, 14);
+			Actor_Says(kActorSebastian, 180, 16);
+			Actor_Says(kActorMcCoy, 7045, 14);
+			if (Game_Flag_Query(kFlagGeneralDollShot)) {
+				Actor_Says(kActorSebastian, 190, 15);
+				Actor_Says(kActorMcCoy, 7050, 17);
+				Actor_Says(kActorSebastian, 200, 16);
+				Actor_Says_With_Pause(kActorSebastian, 210, 1.5f, 14);
+				Actor_Says(kActorMcCoy, 7055, 15);
+			} else {
+				Actor_Put_In_Set(kActorGeneralDoll, kSetBB05);
+				Actor_Set_At_Waypoint(kActorGeneralDoll, 134, 0);
+				Loop_Actor_Walk_To_Waypoint(kActorGeneralDoll, 135, 0, false, false);
+				Actor_Says(kActorGeneralDoll, 0, kAnimationModeTalk);
+				Actor_Face_Actor(kActorMcCoy, kActorGeneralDoll, true);
+				Actor_Face_Actor(kActorSebastian, kActorGeneralDoll, true);
+				Actor_Says(kActorSebastian, 220, 13);
+				Loop_Actor_Walk_To_Waypoint(kActorGeneralDoll, 134, 0, false, false);
+				Actor_Face_Actor(kActorSebastian, kActorMcCoy, true);
+				Actor_Face_Actor(kActorMcCoy, kActorSebastian, true);
+				Actor_Says(kActorSebastian, 230, 15);
+				Actor_Says(kActorMcCoy, 7060, 17);
+				Actor_Says(kActorSebastian, 240, 12);
+			}
+			Actor_Says(kActorMcCoy, 7065, 16); //00-7065.AUD	Look, I gotta check the premises again. Maybe they left something behind.
+			Actor_Says(kActorSebastian, 250, 16);
+			Actor_Says(kActorMcCoy, 7070, 18);
+			Actor_Set_Goal_Number(kActorSebastian, 205);
+			Actor_Set_Goal_Number(kActorGeneralDoll, 201);
+			Actor_Set_Goal_Number(kActorBryant, 101);
+			Actor_Set_Goal_Number(kActorGeneralDoll, 200);
 		}
-		Actor_Says(kActorMcCoy, 7065, 16);
-		Actor_Says(kActorSebastian, 250, 16);
-		Actor_Says(kActorMcCoy, 7070, 18);
-		Actor_Set_Goal_Number(kActorSebastian, 205);
-		Actor_Set_Goal_Number(kActorGeneralDoll, 201);
-		Actor_Set_Goal_Number(kActorBryant, 101);
-		Actor_Set_Goal_Number(kActorGeneralDoll, 200);
 	}
 }
 

@@ -63,6 +63,11 @@ void SceneScriptNR06::SceneLoaded() {
 	Unobstacle_Object("LINE02", true);
 	Unobstacle_Object("WALL01", true);
 	Unclickable_Object("CHAIR01");
+	if (_vm->_cutContent) {
+		if (Game_Flag_Query(kFlagAR02DektoraBoughtScorpions)) {
+			Item_Add_To_World(kItemScorpions, kModelAnimationCageOfScorpions, kSetNR06, -219.04f, -71.66f, 21.27f, 360, 36, 36, false, true, false, true);
+		}
+	}
 }
 
 bool SceneScriptNR06::MouseClick(int x, int y) {
@@ -78,7 +83,20 @@ bool SceneScriptNR06::ClickedOnActor(int actorId) {
 }
 
 bool SceneScriptNR06::ClickedOnItem(int itemId, bool a2) {
-	return false;
+	if (_vm->_cutContent) {
+		if (itemId == kItemScorpions) {
+			if (!Loop_Actor_Walk_To_XYZ(kActorMcCoy, -173.30f, -71.67f, 24.47f, 12, true, false, false)) {
+				Actor_Face_Heading(kActorMcCoy, 700, true);
+				Actor_Voice_Over(4180, kActorVoiceOver); //99-4180.AUD	Scorpions.
+				if (Game_Flag_Query(kFlagAR02ScorpionsChecked)) {
+					Delay(1000);
+					Actor_Voice_Over(4200, kActorVoiceOver); //99-4200.AUD	Where have I seen those before?
+					Game_Flag_Set(kFlagScorpionsDiscovered);
+				}
+			}
+		}
+	}
+	return true;
 }
 
 bool SceneScriptNR06::ClickedOnExit(int exitId) {

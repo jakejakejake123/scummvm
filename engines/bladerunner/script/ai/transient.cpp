@@ -141,18 +141,7 @@ void AIScriptTransient::OtherAgentExitedThisSet(int otherActorId) {
 }
 
 void AIScriptTransient::OtherAgentEnteredCombatMode(int otherActorId, int combatMode) {
-	//Added in a brief scene where McCoy pulls out his gun near the homeless guy.
-	if (_vm->_cutContent) {
-		if (otherActorId == kActorMcCoy
-		&& combatMode
-		&&  Player_Query_Current_Scene() == kSceneUG13
-		) {
-			Actor_Face_Actor(kActorMcCoy, kActorTransient, true);
-			Actor_Says(kActorMcCoy, 5720, -1);
-			Delay(2000);
-			Actor_Says(kActorMcCoy, 8525, -1); //00-8525.AUD	Hmph.	
-		}
-	}
+	// return false;
 }
 
 void AIScriptTransient::ShotAtAndMissed() {

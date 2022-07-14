@@ -74,8 +74,6 @@ void AIScriptGaff::CompletedMovementTrack() {
 		if (_vm->_cutContent) {
 			if (!Game_Flag_Query(kFlagMcCoyIsHelpingReplicants)) {
 				Actor_Says(kActorMcCoy, 670, kAnimationModeTalk); //00-0670.AUD	Working on it.
-			} else {
-				Delay(1000);
 			}
 		} else {
 			Actor_Says(kActorMcCoy, 670, kAnimationModeTalk);
@@ -84,13 +82,12 @@ void AIScriptGaff::CompletedMovementTrack() {
 		if (_vm->_cutContent) {
 			if (!Game_Flag_Query(kFlagMcCoyIsHelpingReplicants)) {
 				Actor_Says(kActorMcCoy, 675, kAnimationModeTalk); //00-0675.AUD	I understand it's got a hell of a retirement plan.
+			}
+			if (Player_Query_Agenda() != kPlayerAgendaSurly 
+			&& Player_Query_Agenda() != kPlayerAgendaErratic) {
+				Actor_Says(kActorMcCoy, 8610, 18); //00-8610.AUD	What's the word, friend?
 			} else {
-				if (Player_Query_Agenda() != kPlayerAgendaSurly 
-				&& Player_Query_Agenda() != kPlayerAgendaErratic) {
-					Actor_Says(kActorMcCoy, 8610, 18); //00-8610.AUD	What's the word, friend?
-				} else {
-					Actor_Says(kActorMcCoy, 8514, 14);//00-8514.AUD	Got anything new to tell me?
-				}
+				Actor_Says(kActorMcCoy, 8514, 14);//00-8514.AUD	Got anything new to tell me?
 			}
 		} else {
 			Actor_Says(kActorMcCoy, 675, kAnimationModeTalk);
@@ -100,17 +97,26 @@ void AIScriptGaff::CompletedMovementTrack() {
 		Actor_Says(kActorGaff, 30, kAnimationModeTalk);
 		Actor_Says(kActorMcCoy, 685, kAnimationModeTalk);
 		Actor_Says(kActorGaff, 40, kAnimationModeTalk);
-		Actor_Says(kActorMcCoy, 690, kAnimationModeTalk);
+		if (_vm->_cutContent) {
+			if (!Game_Flag_Query(kFlagMcCoyIsHelpingReplicants)) {
+				Actor_Says(kActorMcCoy, 690, kAnimationModeTalk); //00-0690.AUD	Gotcha.
+			} else {
+				Actor_Says(kActorMcCoy, 8320, kAnimationModeTalk); //00-8320.AUD	Really?
+			}
+		} else {
+			Actor_Says(kActorMcCoy, 690, kAnimationModeTalk); //00-0690.AUD	Gotcha.
+		}
 		if (Game_Flag_Query(kFlagZubenRetired)) {
 			Actor_Says(kActorGaff, 50, kAnimationModeTalk);
 			Actor_Says(kActorMcCoy, 695, kAnimationModeTalk);
 			Actor_Says(kActorGaff, 60, kAnimationModeTalk);
-			Actor_Says(kActorMcCoy, 700, kAnimationModeTalk);
+			Actor_Says(kActorMcCoy, 700, kAnimationModeTalk); //00-0700.AUD	I'm starting to understand.
 			Actor_Says(kActorGaff, 70, kAnimationModeTalk);
 			Actor_Clue_Acquire(kActorGaff, kClueMcCoyRetiredZuben, true, -1);
 			//Restored clue McCoy retred Zuben as an audio clue for McCoy
 			if (_vm->_cutContent) {
 				Actor_Clue_Acquire(kActorMcCoy, kClueMcCoyRetiredZuben, true, kActorGaff);
+				Scene_Exits_Enable();
 			}
 		} else {
 			Actor_Says(kActorGaff, 80, kAnimationModeTalk);
@@ -120,6 +126,7 @@ void AIScriptGaff::CompletedMovementTrack() {
 			Actor_Clue_Acquire(kActorGaff, kClueMcCoyLetZubenEscape, true, -1);
 			if (_vm->_cutContent) {
 				Actor_Clue_Acquire(kActorMcCoy, kClueMcCoyLetZubenEscape, true, kActorGaff);
+				Scene_Exits_Enable();
 			}
 		}
 		Actor_Clue_Acquire(kActorMcCoy, kClueGaffsInformation, true, kActorGaff);
@@ -131,7 +138,7 @@ void AIScriptGaff::CompletedMovementTrack() {
 		if (_vm->_cutContent) {
 			if (!Game_Flag_Query(kFlagCT12Visited)) {
 				if (Game_Flag_Query(kFlagLearyChecksCar)) {
-					Delay (2000);
+					Delay (1000);
 					ADQ_Add(kActorOfficerLeary, 360, kAnimationModeTalk); 	//23-0360.AUD	LA, 31 Metro 3 is 10-97 at the scene. 
 					ADQ_Add(kActorDispatcher, 370, kAnimationModeTalk);   //38-0370.AUD	32 Metro 1 LA. Go ahead.
 					ADQ_Add(kActorOfficerLeary, 420, kAnimationModeTalk);	//23-0420.AUD	LA, 13 Metro 1. 10-29 on abandoned vehicle.
@@ -141,7 +148,7 @@ void AIScriptGaff::CompletedMovementTrack() {
 					ADQ_Add(kActorOfficerLeary, 270, kAnimationModeTalk);  	//23-0270.AUD	LA, 38 Metro 3. 10-4.
 					Game_Flag_Set(kFlagCT12Visited);
 				} else {
-					Delay (2000);
+					Delay (1000);
 					ADQ_Add(kActorOfficerGrayford, 380, kAnimationModeTalk);   //24-0380.AUD	LA, 31 Metro 3 is 10-97 at the scene.	
 					ADQ_Add(kActorDispatcher, 370, kAnimationModeTalk);  //38-0370.AUD	32 Metro 1 LA. Go ahead.
 					ADQ_Add(kActorOfficerGrayford, 420, kAnimationModeTalk);  //24-0420.AUD	LA, 13 Metro 1. 10-29 on abandoned vehicle.
@@ -433,7 +440,7 @@ bool AIScriptGaff::GoalChanged(int currentGoalNumber, int newGoalNumber) {
 				Delay(4000);
 				Player_Gains_Control();
 				Actor_Start_Speech_Sample(kActorGaff, 210);
-				Music_Stop(1u);
+				Music_Stop(3u);
 				Actor_Set_Goal_Number(kActorGaff, kGoalGaffMA07Left);
 			}
 		} else {
@@ -456,6 +463,13 @@ bool AIScriptGaff::GoalChanged(int currentGoalNumber, int newGoalNumber) {
 		return true;
 
 	case kGoalGaffMA07Left:
+		return true;
+
+	case kGoalGaffCT05Wait:
+		AI_Movement_Track_Flush(kActorGaff);
+		Actor_Put_In_Set(kActorGaff, kSetCT05);
+		Actor_Set_At_XYZ(kActorGaff, -141.07f, -107.78f, 186.21f, 400);
+
 		return true;
 
 	case kGoalGaffMA07ShootMcCoy:

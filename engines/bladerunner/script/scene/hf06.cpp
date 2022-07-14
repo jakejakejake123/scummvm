@@ -375,8 +375,7 @@ void SceneScriptHF06::steelInterruption() {
 					// This line will only be said if your companion is a replicant.
 					Actor_Says(kActorSteele, 290, 58); //01-0290.AUD	Thanks for bringing her here. Makes my end a hell of a lot easier.
 				}
-				if (Player_Query_Agenda() != kPlayerAgendaSurly 
-				&& Player_Query_Agenda() != kPlayerAgendaErratic) {
+				if (Game_Flag_Query(kFlagMcCoyIsHelpingReplicants)) {
 					Actor_Says(kActorMcCoy, 2130, -1); //00-2130.AUD	You’re the coldest person I’ve ever seen when it comes to killing.
 					Actor_Says(kActorSteele, 300, 59); //01-0300.AUD	I’ll take that as a compliment.
 				}
@@ -440,8 +439,7 @@ void SceneScriptHF06::steelInterruption() {
 				if (Game_Flag_Query(kFlagLucyIsReplicant)) {
 					Actor_Says(kActorSteele, 290, 58); ////01-0290.AUD	Thanks for bringing her here. Makes my end a hell of a lot easier.
 				}
-				if (Player_Query_Agenda() != kPlayerAgendaSurly 
-				&& Player_Query_Agenda() != kPlayerAgendaErratic) {
+				if (Game_Flag_Query(kFlagMcCoyIsHelpingReplicants)) {
 					Actor_Says(kActorMcCoy, 2130, -1); //00-2130.AUD	You’re the coldest person I’ve ever seen when it comes to killing.
 					Actor_Says(kActorSteele, 300, 59); //01-0300.AUD	I’ll take that as a compliment.
 				}

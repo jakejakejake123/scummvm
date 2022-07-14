@@ -228,13 +228,13 @@ void SceneScriptMA07::PlayerWalkedIn() {
 			Actor_Set_At_XYZ(kActorSteele, 27.19, -162.21, 184.93, 0);
 			Actor_Face_Actor(kActorSteele, kActorMcCoy, true);
 			Actor_Face_Actor(kActorMcCoy, kActorSteele, true);
+			Music_Play(kMusicBRBlues, 52, 0, 2, -1, kMusicLoopPlayOnce, 1);
 			if (Actor_Query_Friendliness_To_Other(kActorSteele, kActorMcCoy) < 51) {
 				Actor_Says(kActorSteele, 2710, 12); //01-2710.AUD	You must be in better shape that I thought.
 				Actor_Says(kActorSteele, 2720, 13); //01-2720.AUD	You’re still alive.	
 				Actor_Says(kActorMcCoy, 5705, 13); //00-5705.AUD	Uh-huh.
 			}
 			Actor_Says(kActorSteele, 2640, 12); //01-2640.AUD	Killing time again, Slim?
-			Music_Play(kMusicBRBlues, 52, 0, 2, -1, kMusicLoopPlayOnce, 1);
 			Actor_Says(kActorMcCoy, 6215, 13); //00-6215.AUD	I plan to. I’m going home.
 			// If McCoy doesn't retire at least 5 reps Crystal teases him.
 			if (Actor_Query_Friendliness_To_Other(kActorGaff, kActorMcCoy) < 55) {
@@ -340,10 +340,21 @@ void SceneScriptMA07::PlayerWalkedIn() {
 			}
 			Actor_Says(kActorSteele, 2760, 13); //01-2760.AUD	What’s the latest?
 			Actor_Says(kActorMcCoy, 6345, 15); //00-6345.AUD	I think you already know the answer to that question
-			Actor_Says(kActorSteele, 2770, 14); //01-2770.AUD	I want to hear it from you.
-			Actor_Says(kActorMcCoy, 6350, 16); //00-6350.AUD	What’s the point? You are not gonna believe a word I say.
+			if (Actor_Query_Friendliness_To_Other(kActorSteele, kActorMcCoy) > 50) {
+				Actor_Says(kActorSteele, 2770, 14); //01-2770.AUD	I want to hear it from you.
+				Actor_Says(kActorMcCoy, 6350, 16); //00-6350.AUD	What’s the point? You are not gonna believe a word I say.
+			}
 			Actor_Says(kActorSteele, 2780, 13); //01-2780.AUD	Do yourself a favor, Slim. Turn yourself in. Guzza will give you a fair shake.
-			Actor_Says(kActorMcCoy, 6355, 14); //00-6355.AUD	Like hell!
+			if (Actor_Clue_Query(kActorMcCoy, kClueGuzzaFramedMcCoy)) {
+				if (Player_Query_Agenda() == kPlayerAgendaSurly 
+				|| Player_Query_Agenda() == kPlayerAgendaErratic) {
+					Actor_Says(kActorMcCoy, 6355, 14); //00-6355.AUD	Like hell!
+				} else {
+					Actor_Says(kActorMcCoy, 2485, 19); //00-2485.AUD	I’ve a hard time believing that.
+				}
+			} else {
+				Actor_Says(kActorMcCoy, 5065, 18); //00-5065.AUD	Is that right?
+			}
 			// Made it so if McCoy has retired 4 replicants Steele is nicer to him.
 			if (Actor_Query_Friendliness_To_Other(kActorSteele, kActorMcCoy) > 50) {
 				Actor_Says(kActorSteele, 2790, 12); //01-2790.AUD	I guarantee it. I’ll put you on the Machine myself.
@@ -352,9 +363,6 @@ void SceneScriptMA07::PlayerWalkedIn() {
 			}
 			Actor_Says(kActorMcCoy, 6330, 15); //00-6330.AUD	You find out anything about our friend Guzza?
 			Actor_Says(kActorSteele, 2730, 15); //01-2730.AUD	Zilcho for now. Looks like the fat man took a jump off the face of the earth. 
-			Actor_Says(kActorMcCoy, 6325, 16); //00-6325.AUD	How’s that?
-			Actor_Says(kActorSteele, 2250, 16); //01-2250.AUD	I'm still fitting the pieces together.
-			Delay(1000);
 			if (Actor_Clue_Query(kActorMcCoy, kClueGuzzaFramedMcCoy)) {
 				Actor_Says(kActorMcCoy, 6335, 13); //00-6335.AUD	Maybe he just doesn’t want to be found.
 				Actor_Says(kActorSteele, 2740, 14); //01-2740.AUD	That’s a big maybe.
@@ -363,20 +371,25 @@ void SceneScriptMA07::PlayerWalkedIn() {
 					Actor_Says(kActorSteele, 2800, 15); //01-2800.AUD	You don’t want to know what I think.
 					Actor_Says(kActorMcCoy, 2990, 16); //00-2990.AUD	Are you saying I’m a Rep? Come off it!
 					Actor_Says(kActorSteele, 1360, 13); //01-1360.AUD	You’re not on my list yet. That means no retirement swag.
-					Actor_Says(kActorMcCoy, 2925, 15); //00-2925.AUD	I'm not a Replicant goddamn it.
+					if (!Game_Flag_Query(kFlagMcCoyIsHelpingReplicants)) {
+						Actor_Says(kActorMcCoy, 2925, 15); //00-2925.AUD	I'm not a Replicant goddamn it.
+					}
 					Actor_Says(kActorSteele, 2810, 15); //01-2810.AUD	Beat it, Slim. Take it on the heel. Before I regret this.
 				} else {
 					Actor_Says(kActorSteele, 2750, 13); //01-2750.AUD	I think maybe you’re a lot smarter than you look, Slim.
 					Actor_Says(kActorMcCoy, 1345, 13); //00-1345.AUD	Thanks.
 				}
+			} else {
+				Actor_Says(kActorMcCoy, 6325, 16); //00-6325.AUD	How’s that?
+				Actor_Says(kActorSteele, 2250, 16); //01-2250.AUD	I'm still fitting the pieces together.
+				Delay(1000);
 			}
+			Actor_Says(kActorMcCoy, 3255, 18); //00-3255.AUD	Maybe I’ll see you again.
+			Actor_Says(kActorSteele, 970, 13); //01-0970.AUD	We’ll be meeting again, Slim. You can bank on it.
 			if (Actor_Query_Friendliness_To_Other(kActorSteele, kActorMcCoy) > 50) {
 				Actor_Says(kActorMcCoy, 5260, 15); //00-5260.AUD	Happy trails, Steele.
 				Actor_Says(kActorSteele, 2350, 14); //01-2350.AUD	Ditto.
 				Game_Flag_Set(kFlagCrystalTrustsMcCoy);
-			} else {
-				Actor_Says(kActorMcCoy, 3255, 18); //00-3255.AUD	Maybe I’ll see you again.
-				Actor_Says(kActorSteele, 970, 13); //01-0970.AUD	We’ll be meeting again, Slim. You can bank on it.
 			}
 			Loop_Actor_Walk_To_XYZ(kActorSteele, -270.65, -162.25, 276.32, 0, true, false, false);
 			Player_Gains_Control();
@@ -391,8 +404,8 @@ void SceneScriptMA07::PlayerWalkedIn() {
 				Actor_Put_In_Set(kActorGuzza, kSetMA07);
 				Actor_Set_At_XYZ(kActorGuzza, 184.49, -162.24, 215.34, 0);
 				Actor_Face_Actor(kActorGuzza, kActorMcCoy, true);
-				Actor_Says(kActorGuzza, 9005, 14); //04-9005.AUD	Hey.
 				Actor_Face_Actor(kActorMcCoy, kActorGuzza, true);
+				Actor_Says(kActorGuzza, 9005, 14); //04-9005.AUD	Hey.
 				Actor_Says(kActorGuzza, 420, 13); //04-0420.AUD	Keeping out of trouble, kid?
 				Actor_Face_Actor(kActorMcCoy, kActorGuzza, true);
 				Actor_Says(kActorMcCoy, 9045, 15); //00-9045.AUD	Not these days.
@@ -407,14 +420,14 @@ void SceneScriptMA07::PlayerWalkedIn() {
 				Delay(1000);
 				Actor_Says(kActorGuzza, 1530, 15); //04-1530.AUD	I must have made a mistake or something. Truly, an honest mistake.
 				Actor_Says(kActorMcCoy, 3910, 15); //00-3910.AUD	You’re lying.
-				Actor_Says(kActorGuzza, 1520, 14); //04-1520.AUD	Everything I say is as true as holy writ.
+				Actor_Says(kActorGuzza, 1520, 16); //04-1520.AUD	Everything I say is as true as holy writ.
 				if (Player_Query_Agenda() == kPlayerAgendaSurly 
 				|| Player_Query_Agenda() == kPlayerAgendaErratic) {
 					Actor_Says(kActorMcCoy, 2140, -1); //00-2140.AUD	Bullshit.
 				}
 				Delay(1000);
 				Actor_Says(kActorMcCoy, 2130, 15); //00-2130.AUD	You’re the coldest person I’ve ever seen when it comes to killing.
-				Delay(500);
+				Delay(1000);
 				Actor_Says(kActorMcCoy, 6645, 18); //00-6645.AUD	You were raking in the chinyen selling LPD wares to scumbags and Reps.
 				Actor_Says(kActorGuzza, 540, 14); //04-0540.AUD	Trust me. Ain't nobody getting rich unless they're sneaking some on the side.
 				if (Player_Query_Agenda() != kPlayerAgendaSurly 
@@ -422,7 +435,7 @@ void SceneScriptMA07::PlayerWalkedIn() {
 					Actor_Says(kActorMcCoy, 8345, 18); //00-8345.AUD	I wouldn't know.
 				}
 				Delay(1000);
-				Actor_Says(kActorGuzza, 260, 13);//04-0260.AUD	Once you start carving up that juicy bacon kid, the taste never goes away.
+				Actor_Says(kActorGuzza, 260, 16);//04-0260.AUD	Once you start carving up that juicy bacon kid, the taste never goes away.
 				Actor_Says(kActorGuzza, 270, 15);//04-0270.AUD	The great things in life...? Believe me you'll just be wanting more and more.
 				if (!Game_Flag_Query(kFlagMcCoyRetiredHuman)
 				&& Actor_Clue_Query(kActorMcCoy, kClueBriefcase)) {
@@ -433,10 +446,10 @@ void SceneScriptMA07::PlayerWalkedIn() {
 					Delay(1000);
 					Actor_Says(kActorGuzza, 410, 15); //04-0410.AUD	Jesus.
 					Actor_Says(kActorMcCoy, 3095, -1); //00-3095.AUD	Now we’re gonna take a little ride downtown.	
-					Actor_Says(kActorGuzza, 600, 15);	// 04-0600.AUD	You what? Damn it, wha-- what are you telling me? I don't need this. Not today.
+					Actor_Says(kActorGuzza, 600, 16);	// 04-0600.AUD	You what? Damn it, wha-- what are you telling me? I don't need this. Not today.
 					Actor_Says(kActorMcCoy, 4205, -1); //00-4205.AUD	I'll bet. But this is only the beginning.
 					Delay(1000);
-					Actor_Says(kActorGuzza, 120, 15); // 04-0120.AUD	I don't want to ever see your sorry ass again.
+					Actor_Says(kActorGuzza, 120, 17); // 04-0120.AUD	I don't want to ever see your sorry ass again.
 					Actor_Says(kActorMcCoy, 4070, -1); //00-4070.AUD	You got it.
 					Loop_Actor_Walk_To_XYZ(kActorGuzza, 127.63, -162.26, 252.58, 0, true, false, false);
 					Async_Actor_Walk_To_Waypoint(kActorMcCoy, 100, 0, false);
@@ -449,30 +462,31 @@ void SceneScriptMA07::PlayerWalkedIn() {
 					Player_Set_Combat_Mode(false);
 					Game_Flag_Set(kFlagMcCoyFreedOfAccusations);
 					Game_Flag_Set(kFlagMcCoyIsInnocent);
-					Game_Flag_Reset(kFlagMcCoyRetiredHuman);
+					Actor_Modify_Friendliness_To_Other(kActorSteele, kActorMcCoy, 2);
 					Actor_Set_Goal_Number(kActorMcCoy, kGoalMcCoyStartChapter5);
 				} else {
 					Actor_Says(kActorMcCoy, 8519, 14); // 00-8519.AUD	What do you say we dish each other the straight goods.
 					Delay(500);
 					Actor_Says(kActorMcCoy, 6675, 18); //00-6675.AUD	I want my life back.
 					Delay(1000);
-					Actor_Says(kActorGuzza, 620, 13); //04-0620.AUD	I'm gonna have to call in some favors.
+					Actor_Says(kActorGuzza, 620, 17); //04-0620.AUD	I'm gonna have to call in some favors.
 					Actor_Says(kActorMcCoy, 8320, 18); //00-8320.AUD	Really?
 					Delay(500);
 					Actor_Says(kActorGuzza, 450, 15); //04-0450.AUD	Yeah, I'll give it a try, kid. And I'll have to pull some strings, so don't go in there half-assed.
 					Actor_Says(kActorMcCoy, 8502, 14); //00-8502.AUD	I hope it's enough.
 					Actor_Says(kActorGuzza, 230, 14); //04-0230.AUD	Hey, don't worry. The boys upstairs want to keep our best and brightest happy.
 					Delay(1000);
+					Item_Pickup_Spin_Effect(kModelAnimationFolder, 391, 343);
 					Actor_Change_Animation_Mode(kActorMcCoy, 23);
 					Actor_Change_Animation_Mode(kActorGuzza, 23);
 					Delay(2000);
-					Item_Pickup_Spin_Effect(kModelAnimationFolder, 391, 343);
 					Actor_Clue_Lose(kActorMcCoy, kClueFolder);
+					Actor_Clue_Acquire(kActorGuzza, kClueFolder, true, kActorMcCoy);
 					Actor_Says(kActorMcCoy, 4055, 13); // 00-4055.AUD	Thanks, Lieutenant.
 					Loop_Actor_Walk_To_XYZ(kActorMcCoy, 110.71, -162.25, 261.82, 0, true, false, false);
 					Actor_Face_Actor(kActorGuzza, kActorMcCoy, true);
-					Actor_Says(kActorGuzza, 740, 15); //04-0740.AUD	Look, McCoy. I know how it is on the street.
-					Actor_Says(kActorGuzza, 750, 14); //04-0750.AUD	It's easy for a Blade Runner to step over the line.
+					Actor_Says(kActorGuzza, 740, 16); //04-0740.AUD	Look, McCoy. I know how it is on the street.
+					Actor_Says(kActorGuzza, 750, 17); //04-0750.AUD	It's easy for a Blade Runner to step over the line.
 					Actor_Face_Actor(kActorMcCoy, kActorGuzza, true);
 					Delay(1000);
 					Actor_Says(kActorMcCoy, 7980, 19); //00-7980.AUD	Yeah. Maybe.	
@@ -485,6 +499,7 @@ void SceneScriptMA07::PlayerWalkedIn() {
 					Player_Gains_Control();
 					Game_Flag_Set(kFlagMcCoyFreedOfAccusations);
 					Game_Flag_Set(kFlagMcCoyIsInnocent);
+					Game_Flag_Reset(kFlagMcCoyRetiredHuman);
 					Actor_Set_Goal_Number(kActorMcCoy, kGoalMcCoyStartChapter5);
 				}	
 			}

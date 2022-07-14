@@ -1062,11 +1062,21 @@ bool AIScriptSteele::GoalChanged(int currentGoalNumber, int newGoalNumber) {
 		Actor_Says(kActorSteele, 2070, kAnimationModeTalk); //01-2070.AUD	I've been tracking this boy for a week. He thinks he's pretty clever.
 		Actor_Says(kActorSteele, 2080, kAnimationModeTalk);
 		Actor_Face_Actor(kActorSteele, kActorIzo, true);
-		Actor_Says(kActorSteele, 2090, kAnimationModeTalk);
-		Actor_Says_With_Pause(kActorSteele, 2100, 1.0f, kAnimationModeTalk);
-		Actor_Says(kActorIzo, 690, kAnimationModeTalk);
-		Actor_Says(kActorSteele, 2110, kAnimationModeTalk);
-		Actor_Says(kActorSteele, 2120, kAnimationModeTalk); //01-2120.AUD	You'll be giving him up to me soon enough.
+		if (_vm->_cutContent) {
+			if (Game_Flag_Query(kFlagSadikIsReplicant)) {
+				Actor_Says(kActorSteele, 2090, kAnimationModeTalk); //01-2090.AUD	In fact your best buddy's a Replicant, isn't he?
+				Actor_Says_With_Pause(kActorSteele, 2100, 1.0f, kAnimationModeTalk);
+				Actor_Says(kActorIzo, 690, kAnimationModeTalk);
+				Actor_Says(kActorSteele, 2110, kAnimationModeTalk);
+				Actor_Says(kActorSteele, 2120, kAnimationModeTalk); //01-2120.AUD	You'll be giving him up to me soon enough.
+			}
+		} else {
+			Actor_Says(kActorSteele, 2090, kAnimationModeTalk); //01-2090.AUD	In fact your best buddy's a Replicant, isn't he?
+			Actor_Says_With_Pause(kActorSteele, 2100, 1.0f, kAnimationModeTalk);
+			Actor_Says(kActorIzo, 690, kAnimationModeTalk);
+			Actor_Says(kActorSteele, 2110, kAnimationModeTalk);
+			Actor_Says(kActorSteele, 2120, kAnimationModeTalk); //01-2120.AUD	You'll be giving him up to me soon enough.
+		}
 		Actor_Face_Actor(kActorSteele, kActorMcCoy, true); 
 		if (_vm->_cutContent) {
 			if (Actor_Query_Friendliness_To_Other(kActorSteele, kActorMcCoy) < 51) {
@@ -1209,8 +1219,6 @@ bool AIScriptSteele::GoalChanged(int currentGoalNumber, int newGoalNumber) {
 				if (Player_Query_Agenda() == kPlayerAgendaSurly 
 				|| Player_Query_Agenda() == kPlayerAgendaErratic) {
 					Actor_Says(kActorMcCoy, 3815, 19); //00-3815.AUD	I think we can safely say that one’s in bio-mechanical purgatory.
-				} else {
-					Music_Play(kMusicBRBlues, 52, 0, 2, -1, kMusicLoopPlayOnce, 0);
 				}
 			} else {
 				Actor_Says(kActorMcCoy, 3815, 19);
@@ -1218,12 +1226,14 @@ bool AIScriptSteele::GoalChanged(int currentGoalNumber, int newGoalNumber) {
 			Actor_Says(kActorSteele, 1760, 13); //01-1760.AUD	You had to clear out everything else up here too.
 			if (_vm->_cutContent) {
 				Actor_Voice_Over(180, kActorVoiceOver); //99-0180.AUD	Sometimes my trigger finger starts to itch.
+				Delay(500);
 				Actor_Says(kActorSteele, 2110, 14); //01-2110.AUD	That's okay.
 				Actor_Clue_Acquire(kActorClovis, kClueMcCoyRetiredDektora, true, kActorSteele);
+				Actor_Clue_Acquire(kActorMcCoy, kClueMcCoyRetiredDektora, true, kActorSteele);
 				Game_Flag_Reset(kFlagMcCoyIsHelpingReplicants);
 				Global_Variable_Set(kVariableAffectionTowards, kAffectionTowardsNone);
 				Actor_Modify_Friendliness_To_Other(kActorSteele, kActorMcCoy, 2);
-				Actor_Modify_Friendliness_To_Other(kActorClovis, kActorMcCoy, -2);
+				Actor_Modify_Friendliness_To_Other(kActorClovis, kActorMcCoy, -4);
 				Actor_Modify_Friendliness_To_Other(kActorGuzza, kActorMcCoy, 2);
 				Actor_Modify_Friendliness_To_Other(kActorGaff, kActorMcCoy, 2);
 				if (Query_Difficulty_Level() != kGameDifficultyEasy) {
@@ -1248,6 +1258,10 @@ bool AIScriptSteele::GoalChanged(int currentGoalNumber, int newGoalNumber) {
 				}
 			} else {
 				Actor_Says(kActorMcCoy, 3825, 14);		
+			}
+			if (_vm->_cutContent) {
+				Actor_Says(kActorSteele, 1740, 15); //01-1740.AUD	Come on, let’s blow while the getting's good.
+				Actor_Says(kActorSteele, 1740, 14); //01-0140.AUD	Maybe Guzza's got some answers about those guys who grabbed you up.
 			}
 			Game_Flag_Set(kFlagDektoraRanAway);
 			Actor_Set_Goal_Number(kActorDektora, kGoalDektoraGone);
@@ -1598,9 +1612,6 @@ bool AIScriptSteele::GoalChanged(int currentGoalNumber, int newGoalNumber) {
 		Game_Flag_Reset(kFlagSteeleAimingAtGordo);
 		ADQ_Flush();
 		Game_Flag_Set(kFlagGordoRanAway);
-		if (_vm->_cutContent) {
-			Game_Flag_Set(kFlagMcCoyShotGordoHostage);
-		}
 		Actor_Set_Targetable(kActorSteele, false);
 		Delay(1000);
 		Player_Set_Combat_Mode(false);
@@ -1653,6 +1664,7 @@ bool AIScriptSteele::GoalChanged(int currentGoalNumber, int newGoalNumber) {
 		Actor_Says(kActorSteele, 1140, 12);
 		// Flag is reset and friendliness towards Steele is altered when McCoy shoots Gordo.
 		if (_vm->_cutContent) {
+			Game_Flag_Set(kFlagMcCoyShotGordoHostage);
 			Game_Flag_Reset(kFlagMcCoyIsHelpingReplicants);
 			Actor_Clue_Acquire(kActorMcCoy, kClueMcCoyRetiredGordo, true, kActorSteele);
 			Actor_Modify_Friendliness_To_Other(kActorSteele, kActorMcCoy, 2);
@@ -1687,6 +1699,8 @@ bool AIScriptSteele::GoalChanged(int currentGoalNumber, int newGoalNumber) {
 				Actor_Says(kActorSteele, 1170, 16); //01-1170.AUD	Damn straight!
 				Actor_Says(kActorMcCoy, 3040, 15); //00-3040.AUD	What about the hostage?
 				Actor_Says(kActorSteele, 1180, 16); //01-1180.AUD	A small price to pay to juice that skin-job.
+			} else {
+				Delay(1000);
 			}
 		} else {
 			Actor_Says(kActorSteele, 1170, 16); //01-1170.AUD	Damn straight!
@@ -1844,6 +1858,7 @@ bool AIScriptSteele::GoalChanged(int currentGoalNumber, int newGoalNumber) {
 				Actor_Says(kActorSteele, 950, 13); //01-0950.AUD	And there’s no use juicing you, if I can’t make some honest chinyen off it, you know?
 				Actor_Says(kActorMcCoy, 3010, 15); //00-3010.AUD	I never appreciated your baser instincts so much.
 			} else {
+				Actor_Says(kActorSteele, 640, 12); //01-0640.AUD	No chance.
 				Actor_Says(kActorSteele, 960, 15); //01-0960.AUD	Guzza must have messed up somehow. I’ll check it out, see what’s going on and then...
 			}
 		} else {

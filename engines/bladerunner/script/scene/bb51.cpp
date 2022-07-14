@@ -78,7 +78,7 @@ bool SceneScriptBB51::ClickedOn3DObject(const char *objectName, bool a2) {
 #endif // BLADERUNNER_ORIGINAL_BUGS
 		Actor_Face_Object(kActorMcCoy, "V2CHESSTBL01", true);
 		Actor_Voice_Over(80, kActorVoiceOver);
-		Actor_Voice_Over(90, kActorVoiceOver);
+		Actor_Voice_Over(90, kActorVoiceOver); 
 	}
 
 	if (Object_Query_Click("TOP02", objectName)) {

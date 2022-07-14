@@ -150,13 +150,22 @@ void AIScriptMcCoy::ReceivedClue(int clueId, int fromActorId) {
 	case kClueDispatchHitAndRun: // added case for cut content
 		// fall through
 	case kClueChopstickWrapper:
-		// fall through
+		if (_vm->_cutContent) {
+			Spinner_Set_Selectable_Destination_Flag(kSpinnerDestinationChinatown, true);
+		}
+		break;
 	case kClueSushiMenu:
 		Spinner_Set_Selectable_Destination_Flag(kSpinnerDestinationChinatown, true);
 		break;
 
 	case kClueDragonflyEarring:
-		// fall through
+		if (_vm->_cutContent) {
+			if (Game_Flag_Query(kFlagTB06PhotographTalk1)
+			&& Game_Flag_Query(kFlagTyrellGuardEarringTalk)) {
+				Spinner_Set_Selectable_Destination_Flag(kSpinnerDestinationAnimoidRow, true);
+			}
+		}
+		break;
 	case kClueBombingSuspect:
 		Spinner_Set_Selectable_Destination_Flag(kSpinnerDestinationAnimoidRow, true);
 		break;
@@ -164,8 +173,10 @@ void AIScriptMcCoy::ReceivedClue(int clueId, int fromActorId) {
 	case kClueKingstonKitchenBox1:
 		// fall through
 	case kClueKingstonKitchenBox2:
-		if (Query_Difficulty_Level() == kGameDifficultyEasy) {
-			Spinner_Set_Selectable_Destination_Flag(kSpinnerDestinationAnimoidRow, true);
+		if (!_vm->_cutContent) {
+			if (Query_Difficulty_Level() == kGameDifficultyEasy) {
+				Spinner_Set_Selectable_Destination_Flag(kSpinnerDestinationAnimoidRow, true);
+			}
 		}
 		break;
 
@@ -174,58 +185,117 @@ void AIScriptMcCoy::ReceivedClue(int clueId, int fromActorId) {
 		break;
 
 	case kClueHysteriaToken:
-		// fall through
+		if (_vm->_cutContent) {
+			Spinner_Set_Selectable_Destination_Flag(kSpinnerDestinationHysteriaHall, true);
+			Spinner_Set_Selectable_Destination_Flag(kSpinnerDestinationNightclubRow, true);
+		}
+		break;
+		
 	case kClueCarRegistration1:
-		// fall through
+		if (_vm->_cutContent) {
+			Spinner_Set_Selectable_Destination_Flag(kSpinnerDestinationHysteriaHall, true);
+		}
+		break;
+
 	case kClueCarRegistration2:
 		// fall through
 	case kClueCarRegistration3:
-		// fall through
+		if (_vm->_cutContent) {
+			Spinner_Set_Selectable_Destination_Flag(kSpinnerDestinationHysteriaHall, true);
+		}
+		break;
+
 	case kClueLichenDogWrapper:
 		Spinner_Set_Selectable_Destination_Flag(kSpinnerDestinationHysteriaHall, true);
 		Spinner_Set_Selectable_Destination_Flag(kSpinnerDestinationNightclubRow, true);
 		break;
 
 	case kClueWeaponsCache:
-		// fall through
+		if (_vm->_cutContent) {
+			Global_Variable_Increment(kVariableCorruptedGuzzaEvidence, 1);
+		}
+		break;
+
+	case kCluePoliceWeaponUsed:
+		if (_vm->_cutContent) {
+			Global_Variable_Increment(kVariableCorruptedGuzzaEvidence, 1);
+		}
+		break;
+
 	case kClueWeaponsOrderForm:
-		// fall through
+		if (_vm->_cutContent) {
+			Global_Variable_Increment(kVariableCorruptedGuzzaEvidence, 1);
+		}
+		break;
+
 	case kClueShippingForm:
-		// fall through
+		if (_vm->_cutContent) {
+			Global_Variable_Increment(kVariableCorruptedGuzzaEvidence, 1);
+		}
+		break;
+
 	case kCluePoliceIssueWeapons:
-		Global_Variable_Increment(kVariableCorruptedGuzzaEvidence, 1);
+		if (!_vm->_cutContent) {
+			Global_Variable_Increment(kVariableCorruptedGuzzaEvidence, 1);
+		}
 		break;
 
 	case kClueFolder:
-		Global_Variable_Increment(kVariableCorruptedGuzzaEvidence, 5);
+		if (_vm->_cutContent) {
+			Global_Variable_Increment(kVariableCorruptedGuzzaEvidence, 7);
+		} else {
+			Global_Variable_Increment(kVariableCorruptedGuzzaEvidence, 5);
+		}
 		break;
 
 	case kClueHomelessManKid:
-		// fall through
+		if (_vm->_cutContent) {
+			Global_Variable_Increment(kVariableCorruptedGuzzaEvidence, 2);
+		}
+		break;
+
 	case kClueOriginalRequisitionForm:
-		// Made it so no corrupted Guzza points are given when you pick up the form. Originally the Guzza framed McCoy
-		// dialogue played immediately when you clicked on the form and then McCoy would pick up the form and talk about it.
-		if (!_vm->_cutContent) {
-			Global_Variable_Increment(kVariableCorruptedGuzzaEvidence, 3);
+		if (_vm->_cutContent) {
+			if (Actor_Clue_Query(kActorMcCoy, kClueRequisitionForm)) {
+				Global_Variable_Increment(kVariableCorruptedGuzzaEvidence, 7);
+			}
 		}
 		break;
 
 	case kClueScaryChair:
-		// fall through
+		if (_vm->_cutContent) {
+			Global_Variable_Increment(kVariableCorruptedGuzzaEvidence, 1);
+		}
+		break;
 	case kClueIzosStashRaided:
 		Global_Variable_Increment(kVariableCorruptedGuzzaEvidence, 2);
 		break;
 
 	case kClueDNATyrell:
-		// fall through
+		if (_vm->_cutContent) {
+			Global_Variable_Increment(kVariableDNAEvidence, 1);
+		}
+		break;
 	case kClueDNASebastian:
-		// fall through
+		if (_vm->_cutContent) {
+			Global_Variable_Increment(kVariableDNAEvidence, 1);
+		}
+		break;
 	case kClueDNAChew:
-		// fall through
+		if (_vm->_cutContent) {
+			Global_Variable_Increment(kVariableDNAEvidence, 1);
+		}
+		break;
 	case kClueDNAMoraji:
-		// fall through
+		if (_vm->_cutContent) {
+			Global_Variable_Increment(kVariableDNAEvidence, 1);
+		}
+		break;
 	case kClueDNALutherLance:
-		// fall through
+		if (_vm->_cutContent) {
+			Global_Variable_Increment(kVariableDNAEvidence, 1);
+		}
+		break;
 	case kClueDNAMarcus:
 		Global_Variable_Increment(kVariableDNAEvidence, 1);
 		break;
@@ -236,7 +306,7 @@ void AIScriptMcCoy::ReceivedClue(int clueId, int fromActorId) {
 	 && !Actor_Clue_Query(kActorMcCoy, kClueGuzzaFramedMcCoy)
 	) {
 		Delay(500);
-		Actor_Voice_Over(3320, kActorVoiceOver);
+		Actor_Voice_Over(3320, kActorVoiceOver); //99-3320.AUD	A little light started to flicker in my brain. Guzza was the one measuring me for the frame.
 		switch (clueId) {
 		case kClueWeaponsCache:
 			// fall through
@@ -247,22 +317,51 @@ void AIScriptMcCoy::ReceivedClue(int clueId, int fromActorId) {
 		case kCluePoliceIssueWeapons:
 			// fall through
 		case kClueIzosStashRaided:
-			// fall through
+			if (_vm->_cutContent) {
+				Actor_Voice_Over(3340, kActorVoiceOver); //99-3340.AUD	He set up a Black Market network…
+				Actor_Voice_Over(3350, kActorVoiceOver); //99-3350.AUD	Moving surplus LPD weapons through Izo and the Green Pawn.
+				Actor_Voice_Over(3360, kActorVoiceOver); //99-3360.AUD	Nothing wrong with a little graft…
+				Actor_Voice_Over(3370, kActorVoiceOver);
+				Actor_Voice_Over(3380, kActorVoiceOver);
+				Actor_Voice_Over(3390, kActorVoiceOver); //99-3390.AUD	I used to think Guzza was a pretty smart guy…
+				Actor_Voice_Over(3400, kActorVoiceOver); //99-3400.AUD	but letting Baker and Holloway work their bogus interrogation deal with all that LPD equipment was a suicide move.
+				Actor_Voice_Over(3420, kActorVoiceOver);
+				Actor_Clue_Acquire(kActorMcCoy, kCluePoliceIssueWeapons, true, -1);
+			}
+			break;
 		case kClueOriginalRequisitionForm:
-			Actor_Voice_Over(3340, kActorVoiceOver);
-			Actor_Voice_Over(3350, kActorVoiceOver);
-			Actor_Voice_Over(3360, kActorVoiceOver);
+			Actor_Voice_Over(3340, kActorVoiceOver); //99-3340.AUD	He set up a Black Market network…
+			if (_vm->_cutContent) {
+				if (Actor_Clue_Query(kActorMcCoy, kClueWeaponsCache)) {
+					Actor_Voice_Over(3350, kActorVoiceOver); //99-3350.AUD	Moving surplus LPD weapons through Izo and the Green Pawn.
+				}
+			} else {
+				Actor_Voice_Over(3350, kActorVoiceOver); //99-3350.AUD	Moving surplus LPD weapons through Izo and the Green Pawn.
+			}
+			Actor_Voice_Over(3360, kActorVoiceOver); //99-3360.AUD	Nothing wrong with a little graft…
 			Actor_Voice_Over(3370, kActorVoiceOver);
 			Actor_Voice_Over(3380, kActorVoiceOver);
+			if (_vm->_cutContent) {
+				if (Actor_Clue_Query(kActorMcCoy, kClueHomelessManKid)) {
+					Actor_Voice_Over(3330, kActorVoiceOver); //99-3330.AUD	The homeless guy only confirmed my worse suspicions.
+					Delay(500);
+				}
+			}
+			if (_vm->_cutContent) {
+				Actor_Voice_Over(3390, kActorVoiceOver); //99-3390.AUD	I used to think Guzza was a pretty smart guy…
+				Actor_Voice_Over(3400, kActorVoiceOver); //99-3400.AUD	but letting Baker and Holloway work their bogus interrogation deal with all that LPD equipment was a suicide move.
+				Actor_Voice_Over(3420, kActorVoiceOver);
+				Actor_Clue_Acquire(kActorMcCoy, kCluePoliceIssueWeapons, true, -1);
+			}
 			break;
 
 		case kClueHomelessManKid:
-			Actor_Voice_Over(3330, kActorVoiceOver);
+			Actor_Voice_Over(3330, kActorVoiceOver); //99-3330.AUD	The homeless guy only confirmed my worse suspicions.
 			break;
 
 		case kClueScaryChair:
-			Actor_Voice_Over(3390, kActorVoiceOver);
-			Actor_Voice_Over(3400, kActorVoiceOver);
+			Actor_Voice_Over(3390, kActorVoiceOver); //99-3390.AUD	I used to think Guzza was a pretty smart guy…
+			Actor_Voice_Over(3400, kActorVoiceOver); //99-3400.AUD	but letting Baker and Holloway work their bogus interrogation deal with all that LPD equipment was a suicide move.
 			Actor_Voice_Over(3420, kActorVoiceOver);
 			break;
 		}
@@ -271,37 +370,55 @@ void AIScriptMcCoy::ReceivedClue(int clueId, int fromActorId) {
 
 		if (clueId == kClueFolder) {
 			// if McCoy just got the folder
-			// Added in some dialogue.
 			if (_vm->_cutContent) {
 				Actor_Voice_Over(3430, kActorVoiceOver); //99-3430.AUD	The info I’d gotten from Luther and Lance finally made some sense.
 				Actor_Voice_Over(3440, kActorVoiceOver); //99-3440.AUD	The Reps must had found out about Guzza’s career's sidelines…
 				Actor_Voice_Over(3450, kActorVoiceOver); //99-3450.AUD	and pressured him to set me up in order to get me off their backs.
 				Actor_Voice_Over(3460, kActorVoiceOver); //99-3460.AUD	This nasty business he was only too willing to do.
-				Actor_Voice_Over(3470, kActorVoiceOver); //99-3470.AUD	But I wasn’t gonna eat crow that easily.
-				Actor_Voice_Over(2870, kActorVoiceOver); //99-2870.AUD	When my stomach stopped churning…
-				Actor_Voice_Over(2880, kActorVoiceOver); //99-2880.AUD	I realized I could use this to force the bastard to give me my life back.
-				Actor_Voice_Over(3490, kActorVoiceOver); //99-3490.AUD	It was time to have my own little fun with Guzza.
-				Actor_Voice_Over(3500, kActorVoiceOver); //99-3500.AUD	All I had to do was place a call and make the worm squirm.
+				Actor_Voice_Over(3470, kActorVoiceOver); //99-3470.AUD	But I wasn’t gonna eat crow that easily.	
+				if (Player_Query_Agenda() == kPlayerAgendaSurly 
+				|| Player_Query_Agenda() == kPlayerAgendaErratic) {
+					Actor_Voice_Over(2780, kActorVoiceOver); //99-2780.AUD	When my stomach stopped churning, I realized I had everything I needed to force the bastard to play ball with me.
+					Actor_Voice_Over(2800, kActorVoiceOver); //99-2800.AUD	I knew that he would listen to reason, if applied with serious pressure.
+					Actor_Voice_Over(3500, kActorVoiceOver); //99-3500.AUD	All I had to do was place a call and make the worm squirm.	
+				} else {
+					Actor_Voice_Over(3490, kActorVoiceOver); //99-3490.AUD	It was time to have my own little fun with Guzza.
+					Actor_Voice_Over(2810, kActorVoiceOver);	
+				}
 			} else {
-				Actor_Voice_Over(2780, kActorVoiceOver);
-				Actor_Voice_Over(2800, kActorVoiceOver);
+				Actor_Voice_Over(2780, kActorVoiceOver); //99-2780.AUD	When my stomach stopped churning, I realized I had everything I needed to force the bastard to play ball with me.
+				Actor_Voice_Over(2800, kActorVoiceOver); //99-2800.AUD	I knew that he would listen to reason, if applied with serious pressure.
 				Actor_Voice_Over(2810, kActorVoiceOver);
-			}
+			}		
 		} else if (Actor_Clue_Query(kActorMcCoy, kClueFolder)) {
 			// if McCoy already had the folder
-			Actor_Voice_Over(3430, kActorVoiceOver);
-			Actor_Voice_Over(3440, kActorVoiceOver);
-			Actor_Voice_Over(3450, kActorVoiceOver);
-			Actor_Voice_Over(3460, kActorVoiceOver);
-			Actor_Voice_Over(3470, kActorVoiceOver);
-			Actor_Voice_Over(3480, kActorVoiceOver);
-			Actor_Voice_Over(3490, kActorVoiceOver);
-			Actor_Voice_Over(3500, kActorVoiceOver);
+			Actor_Voice_Over(3430, kActorVoiceOver); //99-3430.AUD	The info I’d gotten from Luther and Lance finally made some sense.
+			Actor_Voice_Over(3440, kActorVoiceOver); //99-3440.AUD	The Reps must had found out about Guzza’s career's sidelines…
+			Actor_Voice_Over(3450, kActorVoiceOver); //99-3450.AUD	and pressured him to set me up in order to get me off their backs.
+			Actor_Voice_Over(3460, kActorVoiceOver); //99-3460.AUD	This nasty business he was only too willing to do.
+			Actor_Voice_Over(3470, kActorVoiceOver); //99-3470.AUD	But I wasn’t gonna eat crow that easily.
+			if (!_vm->_cutContent) {
+				Actor_Voice_Over(3480, kActorVoiceOver); //99-3480.AUD	Yeah, what a difference a day makes.
+			}
+			if (_vm->_cutContent) {
+				if (Player_Query_Agenda() == kPlayerAgendaSurly 
+				|| Player_Query_Agenda() == kPlayerAgendaErratic) {
+					Actor_Voice_Over(2780, kActorVoiceOver); //99-2780.AUD	When my stomach stopped churning, I realized I had everything I needed to force the bastard to play ball with me.
+					Actor_Voice_Over(2800, kActorVoiceOver); //99-2800.AUD	I knew that he would listen to reason, if applied with serious pressure.
+					Actor_Voice_Over(3500, kActorVoiceOver); //99-3500.AUD	All I had to do was place a call and make the worm squirm.	
+				} else {
+					Actor_Voice_Over(3490, kActorVoiceOver); //99-3490.AUD	It was time to have my own little fun with Guzza.
+					Actor_Voice_Over(2810, kActorVoiceOver);	
+				}
+			} else {
+				Actor_Voice_Over(3490, kActorVoiceOver); //99-3490.AUD	It was time to have my own little fun with Guzza.
+				Actor_Voice_Over(3500, kActorVoiceOver); //99-3500.AUD	All I had to do was place a call and make the worm squirm.
+			}
 		} else {
 			// if McCoy never got the folder
-			Actor_Voice_Over(3510, kActorVoiceOver);
-			Actor_Voice_Over(3520, kActorVoiceOver);
-			Actor_Voice_Over(3530, kActorVoiceOver);
+			Actor_Voice_Over(3510, kActorVoiceOver); //99-3510.AUD	The picture was still a little blurry.
+			Actor_Voice_Over(3520, kActorVoiceOver); //99-3520.AUD	Guzza must have had some connection to Clovis and his group…
+			Actor_Voice_Over(3530, kActorVoiceOver); //99-3530.AUD	even though he always claimed to have hated Replicants.
 			Actor_Voice_Over(3540, kActorVoiceOver);
 		}
 	}

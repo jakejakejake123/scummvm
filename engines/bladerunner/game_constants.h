@@ -525,9 +525,9 @@ enum Flags {
 	kFlagCT06toCT08                           =  79,
 	kFlagGrayfordPS09Talk                     =  80, 
 	kFlagCT08toCT09                           =  81,
-	kFlagCT09toCT10                           =  82, // is never checked
-	kFlagCT09toCT11                           =  83, // is never checked
-	kFlagCT09toCT08                           =  84, // is never checked
+	kFlagMiaAndMurrayArrested                 =  82, 
+	kFlagScorpionsDiscovered                  =  83, 
+	kFlagHawkersBarkeepHappy                  =  84, 
 	kFlagCT10toCT09                           =  85,
 	kFlagCT11toCT12                           =  86,
 	kFlagGrigorianUpset                       =  87,
@@ -539,8 +539,8 @@ enum Flags {
 	kFlagLearyChecksCar					      =  93,	
 	kFlagCT05WarehouseOpen                    =  94,
 	kFlagTB05toTB02                           =  95,
-	kFlagTB02toTB05                           =  96, // is never checked
-	kFlagTB05toTB06                           =  97, // is never checked
+	kFlagTB02toTB05                           =  96, 
+	kFlagTB05toTB06                           =  97, 
 	kFlagTB06toTB05                           =  98,
 	kFlagTB05MonitorIntro                     =  99,
 	kFlagTB05MonitorUnlockAttempt             = 100,
@@ -563,7 +563,7 @@ enum Flags {
 	kFlagAR02toRC03                           = 117,
 	kFlagRC03toUG01                           = 118,
 	kFlagUG01toRC03                           = 119,
-	kFlagRC03toRC04                           = 120, // is never checked
+	kFlagMiaAndMurrayFinishedTalk             = 120, 
 	kFlagRC04toRC03                           = 121,
 	kFlagSlugTalk							  = 122,
 	kFlagCT01toCT12                           = 123,
@@ -597,7 +597,7 @@ enum Flags {
 	kFlagRC03UnlockedToUG01                   = 151,
 	kFlagUG15toUG16a                          = 152,
 	kFlagUG16toUG15a                          = 153,
-	kFlagTB02toTB03                           = 154, // is never checked
+	kFlagCarEnding                            = 154, 
 	kFlagTB03toTB02                           = 155,
 	kFlagPS07KleinInsultedTalk                = 156,
 	kFlagSergeantWallsMazeInstructions        = 157, // Re-purposed. Original: 157 is never used
@@ -648,7 +648,7 @@ enum Flags {
 	kFlagIzoVKAttempt						  = 202,
 	kFlagIzoWarnedAboutCrystal				  = 203,	
 	kFlagPS15toPS05                           = 204,
-	kFlagIzoEscaped							  = 205,
+	kFlagIzoFled							  = 205,
 	kFlagSergeantWallsBuzzInRequest           = 206, // is never set
 	kFlagRunciterArrestTalk					  = 207,					  
 	kFlagIzoGotAway							  = 208,
@@ -665,17 +665,17 @@ enum Flags {
 	kFlagBB09toBB08                           = 219,
 	kFlagBB09toBB10b                          = 220,
 	kFlagBB10toBB09                           = 221,
-	kFlagBB10toBB11                           = 222, // is never checked
+	kFlagZubenEncounter                       = 222, 
 	kFlagBB11toBB10                           = 223,
 	kFlagDR01toDR02                           = 224,
 	kFlagDR02toDR01                           = 225,
 	kFlagDR02toDR03                           = 226,
 	kFlagDR03toDR02                           = 227,
-	kFlagDR04toDR05                           = 228, // is never checked
+	kFlagPhoneRung                            = 228, 
 	kFlagDR05toDR04                           = 229,
 	kFlagDR04toDR06                           = 230,
 	kFlagDR06toDR04                           = 231,
-	kFlagBulletBobArrested                     = 232,
+	kFlagBulletBobArrested                    = 232,
 	kFlagMorajiAlive						  = 233,
 	kFlagCT02toCT01walk                       = 234,
 	kFlagGaffTalk							  = 235,	
@@ -725,10 +725,10 @@ enum Flags {
 	kFlagTyrellGuardTalkMeeting				  = 279,
 	kFlagDR06VidphoneChecked                  = 280,
 	kFlagBB03toBB02                           = 281,
-	kFlagBB02toBB03                           = 282, // is never checked
+	kFlagPS05Entered                          = 282, 
 	kFlagBB03toBB04                           = 283,
 	kFlagBB04toBB03                           = 284,
-	kFlagBB03toBB05                           = 285, // is never checked
+	kFlagPoliceCrateChecked                   = 285, 
 	kFlagBB05toBB03                           = 286,
 	kFlagRC04Entered                          = 287,
 	kFlagCrazylegsTalkCarRegistration		  = 288,	
@@ -744,10 +744,10 @@ enum Flags {
 	kFlagBB06toBB05                           = 298,
 	kFlagBB05toBB07                           = 299,
 	kFlagBB07toBB05                           = 300,
-	kFlagBB05toBB12                           = 301, // is never checked
+	kFlagLearyForcedDoorTalk                  = 301, 
 	kFlagBB12toBB05                           = 302,
 	kFlagRC04McCoyWarned                      = 303,
-	kFlagCT11toCT09                           = 304, // is never checked
+	kFlagBulletBobWarned					  = 304, 
 	kFlagRC04BobTalkAmmo                      = 305,
 	kFlagHC04Visited						  = 306,	
 	kFlagSpinnerAtTB02                        = 307,
@@ -777,7 +777,7 @@ enum Flags {
 	kFlagAR02ScorpionsChecked                 = 331,
 	kFlagBB02toBB04                           = 332,
 	kFlagBB04toBB02                           = 333,
-	kFlagUG03toUG04                           = 334, // is never checked
+	kFlagTyrellGuardEarringTalk               = 334, 
 	kFlagUG04toUG03                           = 335,
 	kFlagUG03toUG10                           = 336,
 	kFlagUG10toUG03                           = 337,
@@ -829,7 +829,7 @@ enum Flags {
 	//					                      = 383, Flag broken, don't use.
 	kFlagHC01toHC02                           = 384,
 	kFlagHC02toHC01                           = 385,
-	kFlagIsabellaArrested                     = 386, // is never checked
+	kFlagIsabellaArrested                     = 386, 
 	kFlagHC03toHC01                           = 387,
 	kFlagHC03TrapDoorOpen                     = 388,
 	kFlagUG09Visited						  = 389,	
@@ -2725,7 +2725,7 @@ enum GameModelAnimations {
 	kModelAnimationWeaponsOrderForm            = 965,
 	kModelAnimationShellCasings                = 966,
 	kModelAnimationSlug                        = 967,
-//	kModelAnimationKnife                       = 968, // UNUSED - 3 frames - a knife? - spins badly
+	kModelAnimationKnife                       = 968, // UNUSED - 3 frames - a knife? - spins badly
 	kModelAnimationStrangeScale                = 969,
 	kModelAnimationHysteriaToken               = 970,
 	kModelAnimationToyDog                      = 971,
@@ -2751,7 +2751,7 @@ enum GameModelAnimations {
 	kModelAnimationDNAEvidence04OutOf6         = 991, // used for three parts found
 	kModelAnimationDNAEvidence05OutOf6         = 992, // UNUSED - actual 5 parts of DNA
 	kModelAnimationDNAEvidenceComplete         = 993,
-//	kModelAnimationAmmoType00                  = 994, // UNUSED - simple bullet
+	kModelAnimationAmmoType00                  = 994, // UNUSED - simple bullet
 	kModelAnimationAmmoType01                  = 995, // from Bullet Bob's
 	kModelAnimationAmmoType02                  = 996  // from Izo stash (Act 4)
 };
@@ -3466,6 +3466,7 @@ enum GoalGaff {
 	kGoalGaffMA01ApproachMcCoy   =   3,
 	kGoalGaffMA01Leave           =   4,
 	kGoalGaffCT12Leave           =   5,
+	kGoalGaffCT05Wait			 =   6,
 	kGoalGaffCT12FlyAway         =  10,
 	kGoalGaffStartWalkingAround  = 100,
 	kGoalGaffWalkAround          = 101,

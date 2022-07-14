@@ -219,6 +219,9 @@ void SceneScriptUG01::PlayerWalkedIn() {
 				Game_Flag_Reset(kFlagUG02toUG01);
 			}
 		}
+	} else {	
+		Loop_Actor_Walk_To_XYZ(kActorMcCoy, -55.0f, -50.13f, -288.0f, 12, false, false, false);
+		Game_Flag_Reset(kFlagUG02toUG01);
 	}
 	if (_vm->_cutContent) {
 		if (Game_Flag_Query(kFlagIzoWarnedAboutCrystal)) {
@@ -245,16 +248,21 @@ void SceneScriptUG01::PlayerWalkedIn() {
 			}
 			Actor_Says(kActorIzo, 830, 17); //07-0830.AUD	I got some… friends who’ll probably want to meet you.
 			Actor_Says(kActorIzo, 840, 17); //07-0840.AUD	You’ll be hearing from them soon enough.
-			Actor_Says(kActorMcCoy, 5470, 15); //00-5470.AUD	Get lost, Izo. Take off.
+			if (Player_Query_Agenda() == kPlayerAgendaSurly 
+			|| Player_Query_Agenda() == kPlayerAgendaErratic) {
+				Actor_Says(kActorMcCoy, 5470, 15); //00-5470.AUD	Get lost, Izo. Take off.
+			} else {
+				Actor_Says(kActorMcCoy, 1660, 15); //00-1660.AUD	Go! Quickly.
+			}
 			Loop_Actor_Walk_To_XYZ(kActorIzo, -57.24, -48.79, -2023.48, 48, false, true, false);
 			// Removed code that makes Izo invisible.
 			Actor_Put_In_Set(kActorIzo, kSetUG03);
 			Game_Flag_Reset(kFlagIzoWarnedAboutCrystal);
 			// Flag for determining the ending added.
 			Game_Flag_Set(kFlagIzoWarned);
-			Actor_Clue_Acquire(kActorIzo,  kClueMcCoyHelpedIzoIzoIsAReplicant, true, kActorIzo);
 			Game_Flag_Set(kFlagMcCoyIsHelpingReplicants);
 			Actor_Modify_Friendliness_To_Other(kActorClovis, kActorMcCoy, 2);
+			Actor_Modify_Friendliness_To_Other(kActorIzo, kActorMcCoy, 2);
 			Player_Loses_Control();
 			Loop_Actor_Walk_To_XYZ(kActorMcCoy, -70.0f, -50.13f, -500.0f, 0, true, false, false);
 			Player_Gains_Control();

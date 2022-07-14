@@ -130,7 +130,16 @@ bool SceneScriptDR06::ClickedOn3DObject(const char *objectName, bool a2) {
 				Actor_Says(kActorSebastian, 40, kAnimationModeTalk);
 				Actor_Says(kActorSebastian, 50, kAnimationModeTalk);
 				Actor_Says(kActorAnsweringMachine, 40, kAnimationModeTalk);
-				Actor_Says(kActorMcCoy, 1030, 13);
+				if (_vm->_cutContent) {
+					if (Player_Query_Agenda() == kPlayerAgendaSurly 
+					|| Player_Query_Agenda() == kPlayerAgendaErratic) {
+						Actor_Says(kActorMcCoy, 6420, 14); //00-6420.AUD	Not right now.
+					} else {
+						Actor_Says(kActorMcCoy, 1030, 13); //00-1030.AUD	Not right now, thanks.
+					}
+				} else {
+					Actor_Says(kActorMcCoy, 1030, 13);
+				}
 				Actor_Says(kActorAnsweringMachine, 50, kAnimationModeTalk);
 				Actor_Clue_Acquire(kActorMcCoy, kClueAnsweringMachineMessage, true, kActorSebastian);
 			}
@@ -219,17 +228,8 @@ bool SceneScriptDR06::ClickedOn3DObject(const char *objectName, bool a2) {
 					if (_vm->_cutContent) {
 						Item_Pickup_Spin_Effect(kModelAnimationEnvelope, 171, 280);
 						Actor_Says(kActorMcCoy, 8800, 13); //00-8800.AUD	An envelope full of money.
-					}
-					Actor_Voice_Over(850, kActorVoiceOver);
-					if (!_vm->_cutContent) {
-						Item_Pickup_Spin_Effect(kModelAnimationEnvelope, 171, 280);
-					}
-					Actor_Voice_Over(860, kActorVoiceOver);
-					if (!_vm->_cutContent) {
-						Actor_Voice_Over(870, kActorVoiceOver); //99-0870.AUD	But I didn't expect to find hundreds of chinyen inside.
-					}
-					// Made it so McCoy only he didn't know what the money in the envelope was for he has not found out that Runciter was selling fake animals.
-					if (_vm->_cutContent) {
+						Actor_Voice_Over(850, kActorVoiceOver);
+						Actor_Voice_Over(860, kActorVoiceOver);
 						if (Actor_Clue_Query(kActorMcCoy, kClueLabCorpses)	
 						&& Actor_Clue_Query(kActorMcCoy, kClueAnsweringMachineMessage)) {	
 							Actor_Voice_Over(870, kActorVoiceOver); //99-0870.AUD	But I didn't expect to find hundreds of chinyen inside.
@@ -237,19 +237,23 @@ bool SceneScriptDR06::ClickedOn3DObject(const char *objectName, bool a2) {
 							Actor_Voice_Over(870, kActorVoiceOver); //99-0870.AUD	But I didn't expect to find hundreds of chinyen inside.
 							Actor_Voice_Over(880, kActorVoiceOver); //99-0880.AUD	I didn't know what it was for but I'd bet the farm it wasn't on Runciter's books.
 						}
-					} else {
-						Actor_Voice_Over(880, kActorVoiceOver); //99-0880.AUD	I didn't know what it was for but I'd bet the farm it wasn't on Runciter's books.
-					}
-					Actor_Clue_Acquire(kActorMcCoy, kClueEnvelope, true, kActorLance);
-					if (_vm->_cutContent) {
-						if (Query_Difficulty_Level() != kGameDifficultyEasy) {
-							if (Player_Query_Agenda() == kPlayerAgendaSurly 
-							|| Player_Query_Agenda() == kPlayerAgendaErratic) {
+						Actor_Clue_Acquire(kActorMcCoy, kClueEnvelope, true, kActorLance);
+						if (Player_Query_Agenda() == kPlayerAgendaSurly 
+						|| Player_Query_Agenda() == kPlayerAgendaErratic) {
+							if (Query_Difficulty_Level() != kGameDifficultyEasy) {
 								Global_Variable_Increment(kVariableChinyen, 200);
 							}
 						}
-					} else if (Query_Difficulty_Level() != kGameDifficultyEasy) {
-						Global_Variable_Increment(kVariableChinyen, 200);
+					} else {
+						Actor_Voice_Over(850, kActorVoiceOver);
+						Item_Pickup_Spin_Effect(kModelAnimationEnvelope, 171, 280);
+						Actor_Voice_Over(860, kActorVoiceOver);
+						Actor_Voice_Over(870, kActorVoiceOver); //99-0870.AUD	But I didn't expect to find hundreds of chinyen inside.
+						Actor_Voice_Over(880, kActorVoiceOver); //99-0880.AUD	I didn't know what it was for but I'd bet the farm it wasn't on Runciter's books.
+						Actor_Clue_Acquire(kActorMcCoy, kClueEnvelope, true, kActorLance);
+						if (Query_Difficulty_Level() != kGameDifficultyEasy) {
+							Global_Variable_Increment(kVariableChinyen, 200);
+						}
 					}
 				}
 			} else {

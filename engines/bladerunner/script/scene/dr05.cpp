@@ -32,8 +32,6 @@ enum kDR05Loops {
 void SceneScriptDR05::InitializeScene() {
 	Setup_Scene_Information(-22.0f, 0.3f, 221.0f, 0);
 
-	Game_Flag_Reset(kFlagDR04toDR05);
-
 	Scene_Exit_Add_2D_Exit(0, 0, 38, 80, 467, 3);
 
 	Ambient_Sounds_Add_Looping_Sound(kSfxSKINBED1, 25, 0, 1);
@@ -174,14 +172,26 @@ void SceneScriptDR05::PlayerWalkedIn() {
 				Actor_Voice_Over(730, kActorVoiceOver);
 				Actor_Voice_Over(740, kActorVoiceOver);
 				Actor_Voice_Over(750, kActorVoiceOver);
-				Actor_Voice_Over(760, kActorVoiceOver);
+				if (_vm->_cutContent) {
+					if (Actor_Clue_Query(kActorMcCoy, kClueCrystalsCase)) {
+						Actor_Voice_Over(760, kActorVoiceOver); //99-0760.AUD	And that expertise could only come with extensive on-the-job Off-World training.
+					}
+				} else {
+					Actor_Voice_Over(760, kActorVoiceOver); //99-0760.AUD	And that expertise could only come with extensive on-the-job Off-World training.
+				}
 				Actor_Clue_Acquire(kActorMcCoy, kClueExpertBomber, true, -1);
 			} else {
 				Actor_Voice_Over(670, kActorVoiceOver);
 				Actor_Voice_Over(680, kActorVoiceOver);
 				Actor_Voice_Over(700, kActorVoiceOver);
-				Actor_Voice_Over(710, kActorVoiceOver);
-				Actor_Voice_Over(720, kActorVoiceOver);
+				if (_vm->_cutContent) {
+					if (Actor_Clue_Query(kActorMcCoy, kClueCrimeSceneNotes)) {
+						Actor_Voice_Over(710, kActorVoiceOver); //99-0710.AUD	If my instincts were right, he was the same joker who lit up the Tyrell Building.
+					}
+				} else {
+					Actor_Voice_Over(710, kActorVoiceOver); //99-0710.AUD	If my instincts were right, he was the same joker who lit up the Tyrell Building.
+				}
+				Actor_Voice_Over(720, kActorVoiceOver); //99-0720.AUD	Dangerous but still an amateur.
 				Actor_Clue_Acquire(kActorMcCoy, kClueAmateurBomber, true, -1);
 			}
 		}

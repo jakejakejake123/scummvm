@@ -76,7 +76,32 @@ void AIScriptMurray::ReceivedClue(int clueId, int fromActorId) {
 }
 
 void AIScriptMurray::ClickedByPlayer() {
-	//return false;
+	if (_vm->_cutContent) {
+		if (!Loop_Actor_Walk_To_XYZ(kActorMcCoy, -473.0f, 0.2f, -133.0f, 12, false, false, false)) {
+			Actor_Face_Actor(kActorMcCoy, kActorMurray, true);
+			Actor_Face_Actor(kActorMurray, kActorMcCoy, true);
+			Actor_Says(kActorMcCoy, 3970, 14);
+			Actor_Says(kActorMurray, 310, 13); //31-0310.AUD	McCoy, we've been friends for years. How dare you accuse us?
+			Actor_Face_Actor(kActorMia, kActorMcCoy, true);
+			Actor_Says(kActorMia, 230, 12); //22-0230.AUD	Hmph! No more free ‘dogs for you, young man.
+			if (Player_Query_Agenda() == kPlayerAgendaSurly 
+			|| Player_Query_Agenda() == kPlayerAgendaErratic) {
+				if (!Actor_Clue_Query(kActorMcCoy, kClueSpecialIngredient)) {
+					Actor_Says(kActorMcCoy, 8519, 14);//00-8519.AUD	What do you say we dish each other the straight goods.
+					Delay(2000);
+					Actor_Says(kActorMia, 180, 12); //22-0180.AUD	Well, we did hear something, Ray. I hope this won't get anybody into trouble.
+					Actor_Says(kActorMcCoy, 1845, 19); //00-1845.AUD	I’ll have to think about it.
+					Actor_Says(kActorMia, 250, 12); //22-0250.AUD	All right, then. Ray, here's the truth.
+					Delay(1000);
+					Actor_Says(kActorMurray, 210, 13);
+					Actor_Says(kActorMurray, 220, 13);
+					Actor_Says(kActorMia, 140, 12);
+					Actor_Says(kActorMurray, 230, 13);
+					Actor_Clue_Acquire(kActorMcCoy, kClueSpecialIngredient, false, kActorMurray);
+				}
+			}
+		}
+	}
 }
 
 void AIScriptMurray::EnteredSet(int setId) {

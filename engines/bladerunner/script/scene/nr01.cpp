@@ -344,6 +344,7 @@ void SceneScriptNR01::PlayerWalkedIn() {
 			Actor_Face_Actor(kActorMcCoy, kActorHanoi, true);
 			Sound_Play(kSfxGUNH1A, 100, 0, 0, 50);
 			Actor_Change_Animation_Mode(kActorMcCoy, 6);
+			Actor_Change_Animation_Mode(kActorHanoi, 21);
 			Delay(1000);
 			Actor_Change_Animation_Mode(kActorHanoi, 6);
 			Ambient_Sounds_Play_Sound(kSfxSHOTGUN1, 97, 0, 0, 20);
@@ -389,7 +390,6 @@ void SceneScriptNR01::PlayerWalkedIn() {
 			Game_Flag_Reset(kFlagHanoiFight);
 			Game_Flag_Reset(kFlagNR03McCoyThrownOut);
 			Game_Flag_Set(kFlagHanoiDead);
-			Player_Gains_Control();
 			if (Query_Difficulty_Level() != kGameDifficultyEasy) {
 				Global_Variable_Increment (kVariableChinyen, 200);
 			}
@@ -430,29 +430,32 @@ void SceneScriptNR01::PlayerWalkedIn() {
 				Actor_Face_Actor(kActorMcCoy, kActorSteele, true);
 				Player_Set_Combat_Mode(true);
 				Delay(1500);
-				Actor_Change_Animation_Mode(kActorMcCoy, kAnimationModeCombatAttack);
-				Sound_Play(kSfxSMCAL3, 100, 0, 0, 50);
+				Sound_Play(kSfxGUNH1A, 100, 0, 0, 50);
+				Actor_Change_Animation_Mode(kActorMcCoy, 6);	
+				Delay(1000);
 				Actor_Set_Goal_Number(kActorGordo, kGoalGordoNR01ReleaseHostage);
 				Game_Flag_Reset(kFlagSteeleAimingAtGordo);
 				Game_Flag_Set(kFlagGordoRanAway);
 				Actor_Face_Actor(kActorSteele, kActorMcCoy, true);
 				Actor_Says(kActorSteele, 1160, 15); //01-1160.AUD	Dah! What the hell?! Now we’ll never catch it.
-				Actor_Face_Actor(kActorMcCoy, kActorSteele, true);
+				Player_Set_Combat_Mode(false);
 				Actor_Says(kActorMcCoy, 3035, 14); //00-3035.AUD	You were gonna shoot!
 				if (Actor_Query_Friendliness_To_Other(kActorSteele, kActorMcCoy) < 51) {
 					Actor_Says(kActorSteele, 1170, 16); //01-1170.AUD	Damn straight!
 					Actor_Says(kActorMcCoy, 3040, 15); //00-3040.AUD	What about the hostage?
 					Actor_Says(kActorSteele, 1180, 16); //01-1180.AUD	A small price to pay to juice that skin-job.
 				} else {
-					Actor_Says(kActorSteele, 1170, 16); //01-1170.AUD	Damn straight!
-					Actor_Says(kActorMcCoy, 3040, 15); //00-3040.AUD	What about the hostage?
-					Actor_Says(kActorSteele, 1180, 16); //01-1180.AUD	A small price to pay to juice that skin-job.
+					Delay(1000);
 				}
-				Actor_Says(kActorMcCoy, 3045, 15);
+				Actor_Says(kActorMcCoy, 3045, 15); //00-3045.AUD	You think Bryant is gonna keep you on if you start wasting civilians in the middle of the street?
 				Actor_Says(kActorMcCoy, 3055, 15); //00-3055.AUD	I just saved your job, Steele.
-				Actor_Says(kActorSteele, 1190, 16); //01-1190.AUD	I can’t believe you took a shot at me!
-				Actor_Says(kActorMcCoy, 3060, 15); 
-				Actor_Says(kActorSteele, 1200, 16); //01-1200.AUD	Yeah, about three inches!
+				if (Actor_Query_Friendliness_To_Other(kActorSteele, kActorMcCoy) < 51) {
+					Actor_Says(kActorSteele, 1190, 16); //01-1190.AUD	I can’t believe you took a shot at me!
+					Actor_Says(kActorMcCoy, 3060, 15); //00-3060.AUD	At your gun. There’s a difference.
+					Actor_Says(kActorSteele, 1200, 16); //01-1200.AUD	Yeah, about three inches!
+				} else {
+					Delay(2000);
+				}
 				Actor_Says(kActorSteele, 1210, 14); //01-1210.AUD	We’d better call this in. Maybe we can seal off the sewers and get a search team out here. Your vehicle close by?
 				Actor_Clue_Acquire(kActorMcCoy, kClueMcCoyHelpedGordo, true, kActorSteele);
 				Game_Flag_Set(kFlagGordoEscaped);
@@ -541,7 +544,7 @@ void SceneScriptNR01::PlayerWalkedIn() {
 			}
 			Loop_Actor_Walk_To_Actor(kActorMcCoy, kActorSteele, 48, false, true);
 			Actor_Says(kActorMcCoy, 3145, 13);
-			if (Global_Variable_Query(kVariableHollowayArrest) != 3) {
+			if (Global_Variable_Query(kVariableHollowayArrest) == 1) {
 				Actor_Says(kActorSteele, 1450, 12);
 				Actor_Says(kActorSteele, 1460, 13);
 			}
@@ -554,7 +557,10 @@ void SceneScriptNR01::PlayerWalkedIn() {
 				if (Player_Query_Agenda() == kPlayerAgendaSurly 
 				|| Player_Query_Agenda() == kPlayerAgendaErratic) {
 					Actor_Says(kActorMcCoy, 3160, 12);
+				} else {
+					Actor_Says(kActorMcCoy, 4130, 13);	//00-4130.AUD	Anything else?
 				}
+				
 			} else {
 				Actor_Says(kActorMcCoy, 3160, 12);
 			}
@@ -563,19 +569,40 @@ void SceneScriptNR01::PlayerWalkedIn() {
 			if (Game_Flag_Query(kFlagSteeleKnowsBulletBobIsDead)
 			|| Game_Flag_Query(kFlagGuzzaInformed)
 			|| Game_Flag_Query(kFlagMcCoyRetiredHuman)) {
-				Actor_Says(kActorSteele, 1330, 12);
-				Actor_Says(kActorSteele, 1340, 12);
-				Actor_Says(kActorSteele, 1350, 12);
-				Actor_Says(kActorMcCoy, 3120, 15);
-				Actor_Says(kActorSteele, 1360, 12);
-				Actor_Says(kActorSteele, 1370, 12);
-				Actor_Says(kActorMcCoy, 3125, 15);
-				Actor_Says(kActorSteele, 1380, 12);
-				Actor_Says(kActorMcCoy, 3130, 15);
-				Actor_Says(kActorSteele, 1390, 12);
-				Actor_Says(kActorSteele, 1400, 12);
-				Actor_Says(kActorSteele, 1410, 12);
-				Actor_Says(kActorMcCoy, 3135, 15);
+				Actor_Says(kActorSteele, 1330, 12); //01-1330.AUD	We got a problem, though. There’s an APB out for you.
+				if (Game_Flag_Query(kFlagGuzzaInformed)) {
+					Actor_Says(kActorSteele, 1340, 12); //01-1340.AUD	You’ve been shooting civilians? Because that’s what Guzza's saying.
+					Actor_Says(kActorSteele, 1350, 12); //01-1350.AUD	He wants to put you on the Machine.
+					Actor_Says(kActorMcCoy, 3120, 15); //00-3120.AUD	You’re gonna retire me, Steele?
+					if (Actor_Query_Friendliness_To_Other(kActorSteele, kActorMcCoy) < 51 
+					|| Global_Variable_Query(kVariableAffectionTowards) == kAffectionTowardsDektora 
+					|| Global_Variable_Query(kVariableAffectionTowards) == kAffectionTowardsLucy) {
+						Actor_Says(kActorSteele, 1360, 12); //01-1360.AUD	You’re not on my list yet. That means no retirement swag.
+					} else {
+						Actor_Says(kActorSteele, 640, 12); //01-0640.AUD	No chance.
+					}
+				}
+				Actor_Says(kActorSteele, 1370, 12); //01-1370.AUD	The uniforms know you’re down here. They already towed your Spinner.
+				Actor_Says(kActorMcCoy, 3125, 15); //00-3125.AUD	I was wondering where it went.
+				Actor_Says(kActorSteele, 1380, 12); //01-1380.AUD	Is it true, Slim? Did you kill somebody?
+				if (_vm->_cutContent) {
+					if (Player_Query_Agenda() != kPlayerAgendaSurly 
+					&& Player_Query_Agenda() != kPlayerAgendaErratic) {
+						Delay(1500);
+						Actor_Says(kActorMcCoy, 7980, 19); //00-7980.AUD	Yeah. Maybe.
+					} else {
+						Actor_Says(kActorMcCoy, 3130, 15); //00-3130.AUD	What do you think?
+						Actor_Says(kActorSteele, 1390, 12); //01-1390.AUD	I ain’t sure yet. I like to be sure.
+					}
+				} else {
+					Actor_Says(kActorMcCoy, 3130, 15); //00-3130.AUD	What do you think?
+					Actor_Says(kActorSteele, 1390, 12); //01-1390.AUD	I ain’t sure yet. I like to be sure.
+				}
+				if (!_vm->_cutContent) {
+					Actor_Says(kActorSteele, 1400, 12); //01-1400.AUD	Something ain’t right. That setup underground? I didn’t see a V-K Machine down there.
+					Actor_Says(kActorSteele, 1410, 12); //01-1410.AUD	Baker wasn’t gonna take you downtown and he wasn’t gonna test you.
+					Actor_Says(kActorMcCoy, 3135, 15); //00-3135.AUD	No kidding.
+				}
 				Actor_Says(kActorSteele, 1420, 12); //01-1420.AUD	Go, if you’re going. I’m gonna talk to Guzza before I do anything.
 				// Made it so Crystal arrests McCoy for killing Bob or the homeless guy instead of letting him go. The plot makes no sense from this point if
 				// McCoy actually did kill someone since he mentions from this point onwards multiple times about him being framed which doesn't make any sense if
@@ -584,7 +611,10 @@ void SceneScriptNR01::PlayerWalkedIn() {
 					// Made it so Crystal only arrests McCoy for killing Bob if he is not a replicant.
 					Actor_Says(kActorMcCoy, 8565, 15); //00-8565.AUD	Really?
 					Actor_Says(kActorSteele, 1930, 12); //01-1930.AUD	Just kidding, Slim.
+					Actor_Change_Animation_Mode(kActorSteele, 4);
+					Delay(1500);
 					Actor_Says(kActorSteele, 2210, 12); //01-2210.AUD	I guess I gotta take you in. They'll probably have to run a couple of tests, too.
+					Outtake_Play(kOuttakeAway1, true, -1);
 					Actor_Set_Goal_Number(kActorMcCoy, kGoalMcCoyArrested);
 				} else {
 					Actor_Says(kActorMcCoy, 3140, 15); //00-3140.AUD	Thanks.
@@ -594,10 +624,19 @@ void SceneScriptNR01::PlayerWalkedIn() {
 			} else {
 				int v0 = Global_Variable_Query(kVariableHollowayArrest);
 				if (v0 == 1) { // Dektora called the fake cops
-					Actor_Says(kActorSteele, 1510, 15);
-					Actor_Says(kActorSteele, 1520, 14);
-					Actor_Says(kActorSteele, 1530, 13);
-					Actor_Says(kActorMcCoy, 3170, 13);
+					Actor_Says(kActorSteele, 1510, 15); //01-1510.AUD	That stripper you interviewed. She’s one of them.
+					Actor_Says(kActorSteele, 1520, 14); //01-1520.AUD	Figure it out! She must have made the call to Baker and that other Bozo.
+					if (_vm->_cutContent) {
+						Delay(1000);
+						Actor_Says(kActorSteele, 1400, 12); //01-1400.AUD	Something ain’t right. That setup underground? I didn’t see a V-K Machine down there.
+						Actor_Says(kActorSteele, 1410, 12); //01-1410.AUD	Baker wasn’t gonna take you downtown and he wasn’t gonna test you.
+						Actor_Says(kActorMcCoy, 3135, 15); //00-3135.AUD	No kidding.
+						Delay(1000);
+						Actor_Says(kActorSteele, 1570, 12); //01-1570.AUD	I bet she’s still there, Slim.
+						Actor_Says(kActorSteele, 1580, 14);
+						Actor_Says(kActorMcCoy, 3170, 13);
+					}
+					Actor_Says(kActorSteele, 1530, 13); //01-1530.AUD	Let’s attend to some business.
 					// Added in a clue.
 					if (_vm->_cutContent) {
 						Actor_Clue_Acquire(kActorMcCoy, kClueSuspectDektora, true, kActorSteele);
@@ -605,23 +644,57 @@ void SceneScriptNR01::PlayerWalkedIn() {
 					Actor_Set_Goal_Number(kActorSteele, kGoalSteeleNR01GoToNR08);
 				} else if (v0 == 2) { // Gordo called the fake cops
 					Actor_Says(kActorSteele, 1590, 15);
-					Actor_Says(kActorMcCoy, 3195, 14);
-					Actor_Says(kActorSteele, 1600, 16);
-					Actor_Says(kActorMcCoy, 3200, 13);
-					Actor_Says(kActorSteele, 1610, 17);
-					Actor_Says(kActorSteele, 1620, 15);
-					Actor_Says(kActorSteele, 1630, 14);
-					Actor_Says(kActorMcCoy, 3205, 12);
+					Actor_Says(kActorMcCoy, 3195, 14); //00-3195.AUD	Gordo?
+					Actor_Says(kActorSteele, 1600, 16); //01-1600.AUD	He’s one of them. You should have popped him right there on the stage.
+					if (_vm->_cutContent) {
+						if (Game_Flag_Query(kFlagMcCoyIsHelpingReplicants)) {
+							Actor_Says(kActorMcCoy, 3200, 13); //00-3200.AUD	Yeah. That would have been good publicity for the Department.
+							if (Actor_Query_Friendliness_To_Other(kActorSteele, kActorMcCoy) < 51) {
+								Actor_Says(kActorSteele, 1610, 17); //01-1610.AUD	That’s your problem, McCoy. You worry too much about what people think.
+							}
+						} else {
+							Actor_Says(kActorMcCoy, 1025, 13); //00-1025.AUD	Absolutely.
+						}
+					} else {
+						Actor_Says(kActorMcCoy, 3200, 13); //00-3200.AUD	Yeah. That would have been good publicity for the Department.
+						Actor_Says(kActorSteele, 1610, 17); //01-1610.AUD	That’s your problem, McCoy. You worry too much about what people think.
+					}
+					if (_vm->_cutContent) {
+						if (Actor_Query_Friendliness_To_Other(kActorSteele, kActorMcCoy) < 51) {
+							Actor_Says(kActorSteele, 1620, 15); //01-1620.AUD	Now, excuse me while I go collect.
+						} else {
+							Actor_Says(kActorSteele, 1530, 13); //01-1530.AUD	Let’s attend to some business.
+						}
+					} else {
+						Actor_Says(kActorSteele, 1620, 15); //01-1620.AUD	Now, excuse me while I go collect.
+					}
+					Actor_Says(kActorSteele, 1630, 14); //01-1630.AUD	You in or out?
+					Actor_Says(kActorMcCoy, 3205, 12); //00-3205.AUD	In.
 					Actor_Set_Goal_Number(kActorSteele, kGoalSteeleNR01GoToNR02);
 				} else if (v0 == 3) { // Lucy called the fake cops
-					Actor_Says(kActorSteele, 1540, 15);
-					Actor_Says(kActorMcCoy, 3175, 13);
-					Actor_Says(kActorSteele, 1550, 13);
-					Actor_Says(kActorSteele, 1560, 16);
-					Actor_Says(kActorMcCoy, 3180, 15);
-					Actor_Says(kActorSteele, 1570, 12);
-					Actor_Says(kActorSteele, 1580, 14);
-					Actor_Says(kActorMcCoy, 3190, 12);
+					Actor_Says(kActorSteele, 1540, 15); //01-1540.AUD	That girl, the one from the arcade. She’s one of them.
+					if (_vm->_cutContent) {
+						if (!Actor_Clue_Query(kActorMcCoy, kClueLucyIncept)) {
+							Actor_Says(kActorMcCoy, 3175, 13); //00-3175.AUD	You sure? I didn’t get a chance to put her on the Machine.
+							Actor_Says(kActorSteele, 1550, 13); //01-1550.AUD	I’ve been sure since I’ve heard about all those dead animals in Runciter’s shop.
+						}
+					} else {
+						Actor_Says(kActorMcCoy, 3175, 13); //00-3175.AUD	You sure? I didn’t get a chance to put her on the Machine.
+						Actor_Says(kActorSteele, 1550, 13); //01-1550.AUD	I’ve been sure since I’ve heard about all those dead animals in Runciter’s shop.
+					}
+					Actor_Says(kActorSteele, 1560, 16); //01-1560.AUD	You should have whacked her when you had the chance.
+					if (_vm->_cutContent) {
+						if (Game_Flag_Query(kFlagMcCoyIsHelpingReplicants)) {
+							Actor_Says(kActorMcCoy, 3180, 15); //00-3180.AUD	Yeah, right in front of all the other children in the arcade. That would have been great publicity.
+						} else {
+							Actor_Says(kActorMcCoy, 8535, 13); //00-8535.AUD	Yeah.
+						}
+					} else {
+						Actor_Says(kActorMcCoy, 3180, 15); //00-3180.AUD	Yeah, right in front of all the other children in the arcade. That would have been great publicity.
+					}
+					Actor_Says(kActorSteele, 1570, 12); //01-1570.AUD	I bet she’s still there, Slim.
+					Actor_Says(kActorSteele, 1580, 14); 
+					Actor_Says(kActorMcCoy, 3190, 12); //00-3190.AUD	Right behind you.
 					Actor_Set_Goal_Number(kActorSteele, kGoalSteeleNR01GoToHF03);
 				}
 			}
@@ -654,8 +727,6 @@ void SceneScriptNR01::PlayerWalkedIn() {
 					Actor_Face_Actor(kActorMcCoy, kActorGordo, true);
 					Actor_Says(kActorMcCoy, 3105, 15); //Instead, I’m gonna let you go. But here’s what you’re gonna do.
 					Actor_Says(kActorMcCoy, 3110, 17); //00-3110.AUD	You’re gonna go tell your pal, Clovis, that I’m looking for him.
-					Actor_Says(kActorGordo, 1210, 15); //02-1210.AUD	Sure. But he wants to pick the venue. And he doesn’t like to be hurried into anything.
-					Actor_Says(kActorMcCoy, 880, 17); //00-0880.AUD	That so?
 					Actor_Says(kActorGordo, 250, 13);
 					Actor_Says(kActorGordo, 260, 18);
 					Actor_Says(kActorMcCoy, 3115, 14);
@@ -668,8 +739,8 @@ void SceneScriptNR01::PlayerWalkedIn() {
 					Actor_Clue_Acquire(kActorGordo, kClueMcCoyHelpedGordo, true, kActorSteele);
 					Actor_Set_Targetable(kActorGordo, false);
 					Game_Flag_Set(kFlagGordoEscaped);
-					Actor_Set_Goal_Number(kActorGordo, kGoalGordoNR01RunAway);
 					Scene_Exits_Enable();
+					Actor_Set_Goal_Number(kActorGordo, kGoalGordoNR01RunAway);
 				}
 			} else {
 				Actor_Set_Goal_Number(kActorGordo, kGoalGordoNR01Attack);

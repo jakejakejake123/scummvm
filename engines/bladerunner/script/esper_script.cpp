@@ -74,7 +74,7 @@ void ESPERScript::SCRIPT_ESPER_DLL_Initialize() {
 				}
 				ESPER_Add_Photo("NR070000.IMG", 3, 3);
 			}
-		} else if (!Game_Flag_Query(kFlagEarlyQIsReplicant)) { 
+		} else { 
 			if (Actor_Clue_Query(kActorMcCoy, kClueEarlyQsClub)) {
 				if (!Actor_Clue_Query(kActorMcCoy, kClueOuterDressingRoom)) {
 					Actor_Says(kActorAnsweringMachine, 160, kAnimationModeTalk);
@@ -97,7 +97,7 @@ void ESPERScript::SCRIPT_ESPER_DLL_Initialize() {
 	if (_vm->_cutContent) {
 		if (!Game_Flag_Query(kFlagEarlyQIsReplicant)) { 
 			if (Actor_Clue_Query(kActorMcCoy, kClueDektorasDressingRoom)) {
-		ESPER_Add_Photo("NR070000.IMG", 3, 3);
+				ESPER_Add_Photo("NR070000.IMG", 3, 3);
 			}
 		}
 	} else if (Actor_Clue_Query(kActorMcCoy, kClueDektorasDressingRoom)) {
@@ -269,20 +269,6 @@ bool ESPERScript::SCRIPT_ESPER_DLL_Special_Region_Selected(int photo, int region
 				Actor_Says(kActorMcCoy, 6945, 3);
 				Sound_Play(kSfxBR034_1A, 50, 0, 0, 50);
 				Actor_Clue_Acquire(kActorMcCoy, kCluePartialLicenseNumber, true, -1);
-				//Altered code so if McCoy found the license plate and then finds the partial license number clue he runs a test on it
-				//and it is a match.
-				if (_vm->_cutContent
-					&& Actor_Clue_Query(kActorMcCoy, kClueLicensePlate)) {
-					Actor_Says(kActorMcCoy, 8525, 9); ////00-8525.AUD	Hmph.
-					Actor_Says(kActorAnsweringMachine, 390, kAnimationModeTalk); // 39-0390.AUD	Begin test.
-					Ambient_Sounds_Play_Sound(kSfxDATALOAD, 50, 0, 0, 99);
-					Delay(2000);
-					Ambient_Sounds_Play_Sound(kSfxBEEPNEAT, 80, 0, 0, 99);
-					Actor_Says(kActorAnsweringMachine, 420, kAnimationModeTalk); //39-0420.AUD	Positive result.
-					Actor_Says(kActorAnsweringMachine, 470, kAnimationModeTalk); //39-0470.AUD	End test.
-					Actor_Says(kActorMcCoy, 7200, 9); //00-7200.AUD	Bingo.
-					Actor_Clue_Acquire(kActorMcCoy, kClueLicensePlateMatch, true, -1); 
-				}
 			}
 		} else if (region == 6) {
 			Actor_Voice_Over(4070, kActorVoiceOver);
@@ -308,18 +294,17 @@ bool ESPERScript::SCRIPT_ESPER_DLL_Special_Region_Selected(int photo, int region
 				if (Game_Flag_Query(kFlagAR02ScorpionsChecked)
 				|| Actor_Clue_Query(kActorMcCoy, kClueScorpions)) {
 					Actor_Voice_Over(4190, kActorVoiceOver);
-					Actor_Says(kActorMcCoy, 6945, 3);
-					Sound_Play(kSfxBR034_1A, 50, 0, 0, 50);
-					Actor_Clue_Acquire(kActorMcCoy, kClueScorpionbox, true, -1);
 				} else {
-					Actor_Says(kActorMcCoy, 8525, 3); // 00-8525.AUD	Hmph.
+					Actor_Voice_Over(4180, kActorVoiceOver); //99-4180.AUD	Scorpions.
 				}
-			} else if (!Actor_Clue_Query(kActorMcCoy, kClueScorpionbox)) {
+			} else {
 				Actor_Voice_Over(4190, kActorVoiceOver);
+			}
+			if (!Actor_Clue_Query(kActorMcCoy, kClueScorpionbox)) {
 				Actor_Says(kActorMcCoy, 6945, 3);
 				Sound_Play(kSfxBR034_1A, 50, 0, 0, 50);
 				Actor_Clue_Acquire(kActorMcCoy, kClueScorpionbox, true, -1);
-			}
+			}		
 		}
 		retValue = true;
 		break;
@@ -418,11 +403,25 @@ bool ESPERScript::SCRIPT_ESPER_DLL_Special_Region_Selected(int photo, int region
 	case 8:
 		switch (region) {
 		case 18:
-			Actor_Says(kActorMcCoy, 8775, 3);
-			if (!Actor_Clue_Query(kActorMcCoy, kClueKingstonKitchenBox2)) {
-				Actor_Says(kActorMcCoy, 6945, 3);
-				Sound_Play(kSfxBR034_1A, 50, 0, 0, 50);
-				Actor_Clue_Acquire(kActorMcCoy, kClueKingstonKitchenBox2, true, -1);
+			if (_vm->_cutContent) {
+				if (!Actor_Clue_Query(kActorMcCoy, kClueTyrellGuardInterview)) {
+					Actor_Says(kActorMcCoy, 8775, 3);
+					Actor_Says(kActorMcCoy, 8525, 13); // 00-8525.AUD	Hmph.
+				} else {
+					Actor_Says(kActorMcCoy, 8775, 3);
+					if (!Actor_Clue_Query(kActorMcCoy, kClueKingstonKitchenBox2)) {
+						Actor_Says(kActorMcCoy, 6945, 3);
+						Sound_Play(kSfxBR034_1A, 50, 0, 0, 50);
+						Actor_Clue_Acquire(kActorMcCoy, kClueKingstonKitchenBox2, true, -1);
+					}
+				}
+			} else {
+				Actor_Says(kActorMcCoy, 8775, 3);
+				if (!Actor_Clue_Query(kActorMcCoy, kClueKingstonKitchenBox2)) {
+					Actor_Says(kActorMcCoy, 6945, 3);
+					Sound_Play(kSfxBR034_1A, 50, 0, 0, 50);
+					Actor_Clue_Acquire(kActorMcCoy, kClueKingstonKitchenBox2, true, -1);
+				}
 			}
 			break;
 
@@ -430,6 +429,7 @@ bool ESPERScript::SCRIPT_ESPER_DLL_Special_Region_Selected(int photo, int region
 			if (_vm->_cutContent) {
 				if (!Actor_Clue_Query(kActorMcCoy, kClueAttemptedFileAccess)) {
 					Actor_Says(kActorMcCoy, 8790, 3); //00-8790.AUD	A dog collar.
+					Actor_Says(kActorMcCoy, 8525, 13); // 00-8525.AUD	Hmph.
 				} else {
 					Actor_Voice_Over(4160, kActorVoiceOver);
 					if (!Actor_Clue_Query(kActorMcCoy, kClueDogCollar2)) {

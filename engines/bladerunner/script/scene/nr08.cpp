@@ -231,8 +231,21 @@ void SceneScriptNR08::PlayerWalkedIn() {
 	if (Actor_Query_Goal_Number(kActorSteele) == kGoalSteeleNR01GoToNR08) {
 		Actor_Says(kActorSteele, 1640, 12);
 		if (!Game_Flag_Query(kFlagDirectorsCut)) {
-			Actor_Says(kActorMcCoy, 3790, 13);
-			Actor_Says(kActorSteele, 1650, 14);
+			if (_vm->_cutContent) {
+				if (Player_Query_Agenda() == kPlayerAgendaSurly 
+				|| Player_Query_Agenda() == kPlayerAgendaErratic) {
+					Actor_Face_Actor(kActorMcCoy, kActorSteele, true);
+					Delay(1000);
+					Actor_Says(kActorMcCoy, 7815, 14); //00-7815.AUD	No.
+					Delay(1000);
+				} else {
+					Actor_Says(kActorMcCoy, 3790, 13); //00-3790.AUD	Regular folks, Steele. Just like you and me.
+					Actor_Says(kActorSteele, 1650, 14);
+				}
+			} else {
+				Actor_Says(kActorMcCoy, 3790, 13); //00-3790.AUD	Regular folks, Steele. Just like you and me.
+				Actor_Says(kActorSteele, 1650, 14);
+			}	
 		}
 		Actor_Says(kActorSteele, 1660, 12);
 		Actor_Says(kActorMcCoy, 3795, 16);
@@ -241,10 +254,15 @@ void SceneScriptNR08::PlayerWalkedIn() {
 		Actor_Says(kActorSteele, 1690, 15); //01-1690.AUD	I don’t want this one giving us the blow-off.
 		// Added in some dialogue for Crystal and McCoy.
 		if (_vm->_cutContent) {
-			Music_Stop(3u);
 			Actor_Face_Actor(kActorMcCoy, kActorSteele, true);
-			Actor_Says(kActorMcCoy, 6285, 14); //00-6285.AUD	Who made you Captain?
+			if (Player_Query_Agenda() == kPlayerAgendaSurly 
+			|| Player_Query_Agenda() == kPlayerAgendaErratic) {
+				Actor_Says(kActorMcCoy, 6285, 14); //00-6285.AUD	Who made you Captain?
+			} else {
+				Actor_Says(kActorMcCoy, 690, kAnimationModeTalk); //00-0690.AUD	Gotcha.
+			}
 			Actor_Says(kActorSteele, 1530, 15); //01-1530.AUD	Let’s attend to some business.
+			Music_Stop(1u);
 			Music_Play(kMusicBatl226M, 50, 0, 2, -1, kMusicLoopPlayOnce, 0);
 		}
 		Actor_Set_Goal_Number(kActorSteele, kGoalSteeleNR08WalkOut);

@@ -55,16 +55,6 @@ bool AIScriptLucy::Update() {
 	float x, y, z;
 
 	if (Global_Variable_Query(kVariableChapter) == 3
-	// If you don't meet Crazylegs in act 3 this leads to some problems later in the game. If you meet him for the first time in act 4 the first half of 
-	// conversation that you have with him is missing and if you meet him for the first time in act 5 he talks as if you have met before by referring to you by name
-	// and saying that he thought you were going to arrest Dektora/Lucy. In order to circumvent this I have made it so you can only meet Lucy in act 3 if you have talked to
-	// Crazylegs first. To be honest I couldn't fully test this since Lucy appearing at Hysteria hall has a random element to it so you should test this out just to be safe. 
-	 && (_vm->_cutContent) 
-	 && Actor_Query_Goal_Number(kActorLucy) < kGoalLucyMoveAround
-	 && Game_Flag_Query(kFlagHF05CrazyLegsTalk1)
-	) {
-		Actor_Set_Goal_Number(kActorLucy, kGoalLucyMoveAround);
-	} else if (Global_Variable_Query(kVariableChapter) == 3
 	 && Actor_Query_Goal_Number(kActorLucy) < kGoalLucyMoveAround
 	) {
 		Actor_Set_Goal_Number(kActorLucy, kGoalLucyMoveAround);
@@ -235,9 +225,27 @@ void AIScriptLucy::ReceivedClue(int clueId, int fromActorId) {
 }
 
 void AIScriptLucy::ClickedByPlayer() {
+	if (_vm->_cutContent) {
+		if (Actor_Query_In_Set(kActorLucy, kSetKP07)) {
+			Loop_Actor_Walk_To_Actor(kActorMcCoy, kActorLucy, 24, false, false);
+			Actor_Face_Actor(kActorMcCoy, kActorLucy, true);
+			Actor_Face_Actor(kActorLucy, kActorMcCoy, true);
+			Actor_Says(kActorMcCoy, 4775, kAnimationModeTalk); //00-4775.AUD	Lucy.
+			Actor_Says(kActorLucy, 0, 17); //06-0000.AUD	I knew you’d come.
+		}
+	}
 	if (Actor_Query_Goal_Number(kActorLucy) == kGoalLucyGone) {
 		Actor_Face_Actor(kActorMcCoy, kActorLucy, true);
-		Actor_Says(kActorMcCoy, 8630, kAnimationModeTalk);
+		if (_vm->_cutContent) {
+			if (Player_Query_Agenda() == kPlayerAgendaSurly 
+			|| Player_Query_Agenda() == kPlayerAgendaErratic) {
+				Actor_Says(kActorMcCoy, 8665, 13); //00-8665.AUD	Disgusting.
+			} else {	
+				Actor_Says(kActorMcCoy, 8630, 12);  // What a waste
+			}
+		} else {
+			Actor_Says(kActorMcCoy, 8665, 14);
+		}
 	}
 }
 
@@ -290,6 +298,8 @@ void AIScriptLucy::Retired(int byActorId) {
 					if (!Game_Flag_Query(kFlagCrazylegsDead)) {
 						Loop_Actor_Walk_To_XYZ(kActorCrazylegs, -12.0f, -41.58f, 72.0f, 0, true, false, false);
 						Actor_Put_In_Set(kActorCrazylegs, kSceneKP06);
+						Delay(500);
+						Sound_Play(kSfxSMCAL3, 100, 0, 0, 50);
 					}
 				}
 				Delay(2000);
@@ -332,7 +342,7 @@ void AIScriptLucy::Retired(int byActorId) {
 			}	
 			Music_Play(kMusicCrysDie1, 25, 0, 1, -1, kMusicLoopPlayOnce, 0);
 			Actor_Clue_Acquire(kActorClovis, kClueMcCoyRetiredLucy, true, -1);
-			Actor_Modify_Friendliness_To_Other(kActorClovis, kActorMcCoy, -2);
+			Actor_Modify_Friendliness_To_Other(kActorClovis, kActorMcCoy, -4);
 			Game_Flag_Reset(kFlagMcCoyIsHelpingReplicants);
 			Actor_Modify_Friendliness_To_Other(kActorSteele, kActorMcCoy, 2);
 			Actor_Modify_Friendliness_To_Other(kActorGuzza, kActorMcCoy, 2);
@@ -361,7 +371,13 @@ bool AIScriptLucy::GoalChanged(int currentGoalNumber, int newGoalNumber) {
 			 && Game_Flag_Query(kFlagGordoRanAway)
 			 && Player_Query_Current_Scene() != kSceneHF03
 			) {
-				Actor_Set_Goal_Number(kActorLucy, kGoalLucyGoToHF03);
+				if (_vm->_cutContent) {
+					if (Game_Flag_Query(kFlagHF05CrazyLegsTalk1)) {
+						Actor_Set_Goal_Number(kActorLucy, kGoalLucyGoToHF03);
+					}
+				} else {
+					Actor_Set_Goal_Number(kActorLucy, kGoalLucyGoToHF03);
+				}
 			} else {
 				if (Random_Query(0, 1) == 1) {
 					Actor_Set_Goal_Number(kActorLucy, kGoalLucyGoToFreeSlotGAHJ);
@@ -379,7 +395,13 @@ bool AIScriptLucy::GoalChanged(int currentGoalNumber, int newGoalNumber) {
 			} else if (Player_Query_Current_Scene() == kSceneHF03) {
 				Actor_Set_Goal_Number(kActorLucy, kGoalLucyGoToFreeSlotGAG);
 			} else {
-				Actor_Set_Goal_Number(kActorLucy, kGoalLucyGoToHF03);
+				if (_vm->_cutContent) {
+					if (Game_Flag_Query(kFlagHF05CrazyLegsTalk1)) {
+						Actor_Set_Goal_Number(kActorLucy, kGoalLucyGoToHF03);
+					}
+				} else {
+					Actor_Set_Goal_Number(kActorLucy, kGoalLucyGoToHF03);
+				}
 			}
 		}
 		break;

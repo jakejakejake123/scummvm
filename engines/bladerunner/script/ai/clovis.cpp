@@ -153,6 +153,9 @@ void AIScriptClovis::OtherAgentEnteredCombatMode(int otherActorId, int combatMod
 	) {
 		Game_Flag_Set(kFlagKP07McCoyPulledGun);
 		Game_Flag_Set(kFlagMcCoyAttackedReplicants);
+		if (_vm->_cutContent) {
+			Music_Stop(1u);
+		}
 		// return true;
 	}
 	// return false;
@@ -225,6 +228,8 @@ void AIScriptClovis::Retired(int byActorId) {
 						if (!Game_Flag_Query(kFlagCrazylegsDead)) {
 							Loop_Actor_Walk_To_XYZ(kActorCrazylegs, -12.0f, -41.58f, 72.0f, 0, true, false, false);
 							Actor_Put_In_Set(kActorCrazylegs, kSceneKP06);
+							Delay(500);
+							Sound_Play(kSfxSMCAL3, 100, 0, 0, 50);
 						}
 					}
 					Delay(2000);
@@ -472,6 +477,9 @@ bool AIScriptClovis::GoalChanged(int currentGoalNumber, int newGoalNumber) {
 			Actor_Says(kActorClovis, 140, kAnimationModeTalk);
 			Actor_Says(kActorMcCoy, 2260, kAnimationModeTalk);
 			Actor_Says(kActorClovis, 150, kAnimationModeTalk);
+			if (_vm->_cutContent) {
+				Actor_Says(kActorClovis, 1330, kAnimationModeTalk); //05-1330.AUD	To the Heavens, brother. Off-World.
+			}
 			Actor_Set_Goal_Number(kActorClovis, kGoalClovisKP07Wait);
 		}
 		return true;
@@ -623,6 +631,11 @@ bool AIScriptClovis::GoalChanged(int currentGoalNumber, int newGoalNumber) {
 		return true;
 
 	case kGoalClovisKP07FlyAway:
+		if (_vm->_cutContent) {
+			Loop_Actor_Walk_To_Actor(kActorMcCoy, kActorClovis, 24, true, false);
+			Actor_Face_Actor(kActorMcCoy, kActorClovis, true);
+			Actor_Face_Actor(kActorClovis, kActorMcCoy, true);
+		}
 		Actor_Says(kActorMcCoy, 8501, kAnimationModeTalk);
 #if BLADERUNNER_ORIGINAL_BUGS
 #else
@@ -632,16 +645,39 @@ bool AIScriptClovis::GoalChanged(int currentGoalNumber, int newGoalNumber) {
 		// If you have some DNA data McCoy the dialogue will be different with McCoy hesitating to to hand over the data. If he doesn't have any he just
 		// says that he hopes that the data that Clovis already has is enough.
 		if (_vm->_cutContent) {
-			Delay (2000);
+			Delay (1000);
 			if (Actor_Clue_Query(kActorMcCoy, kClueDNATyrell)
 			|| Actor_Clue_Query(kActorMcCoy, kClueDNASebastian)
 			|| Actor_Clue_Query(kActorMcCoy, kClueDNAChew) 
 			|| Actor_Clue_Query(kActorMcCoy, kClueDNAMoraji) 
 			|| Actor_Clue_Query(kActorMcCoy, kClueDNALutherLance)
 			|| Actor_Clue_Query(kActorMcCoy, kClueDNAMarcus)) {
-				Actor_Says(kActorMcCoy, 8503, kAnimationModeTalk); //00-8503.AUD	I think I'll hold on to it for the moment.
-				Actor_Says(kActorClovis, 1280, kAnimationModeTalk); //05-1280.AUD	You are here. That’s enough for now. Perhaps trust will come later.
-			} 
+				if (Actor_Query_Friendliness_To_Other(kActorClovis, kActorMcCoy) < 51) {
+					Actor_Says(kActorMcCoy, 8503, kAnimationModeTalk); //00-8503.AUD	I think I'll hold on to it for the moment.
+					if (!Actor_Clue_Query(kActorClovis, kClueMcCoyRetiredLucy) 
+					&& !Actor_Clue_Query(kActorClovis, kClueMcCoyRetiredDektora))  {
+						Actor_Says(kActorClovis, 1280, kAnimationModeTalk); //05-1280.AUD	You are here. That’s enough for now. Perhaps trust will come later.
+					} else {
+						Delay(1500);
+					}
+				} else {
+					Actor_Change_Animation_Mode(kActorMcCoy, 23);
+					Actor_Change_Animation_Mode(kActorClovis, 23);
+					Delay(2000);
+					Item_Pickup_Spin_Effect(kModelAnimationDNADataDisc, 229, 215);
+					Actor_Says(kActorMcCoy, 8170, 13); //00-8170.AUD	There you go.
+					Delay(1000);
+				}
+			} else {
+				Actor_Says(kActorMcCoy, 8502, kAnimationModeTalk); //00-8502.AUD	I hope it's enough.
+				if (!Actor_Clue_Query(kActorClovis, kClueMcCoyRetiredLucy) 
+				&& !Actor_Clue_Query(kActorClovis, kClueMcCoyRetiredDektora) 
+				&& Actor_Query_Friendliness_To_Other(kActorClovis, kActorMcCoy) > 50) {
+					Actor_Says(kActorClovis, 1270, kAnimationModeTalk); //05-1270.AUD	It will have to be.
+				} else {
+					Delay(1500);
+				}
+			}
 		} else {
 			Actor_Says(kActorMcCoy, 8502, kAnimationModeTalk); //00-8502.AUD	I hope it's enough.
 			Actor_Says(kActorClovis, 1270, kAnimationModeTalk); //05-1270.AUD	It will have to be.
@@ -653,7 +689,15 @@ bool AIScriptClovis::GoalChanged(int currentGoalNumber, int newGoalNumber) {
 			if (Actor_Clue_Query(kActorMcCoy, kClueTyrellInterview)
 			&& 	Actor_Clue_Query(kActorMcCoy, kClueDNATyrell)) {
 				Actor_Says(kActorMcCoy, 8505, kAnimationModeTalk); //00-8505.AUD	It's true then. You've-- We've only got four years.
-				Actor_Says(kActorClovis, 1300, kAnimationModeTalk); //05-1300.AUD	Yes. Of course, I could be hit by lightning tomorrow but with the information 
+				if (!Actor_Clue_Query(kActorClovis, kClueMcCoyRetiredLucy) 
+				&& !Actor_Clue_Query(kActorClovis, kClueMcCoyRetiredDektora) 
+				&& Actor_Query_Friendliness_To_Other(kActorClovis, kActorMcCoy) > 50) {
+					Actor_Says(kActorClovis, 1300, kAnimationModeTalk); //05-1300.AUD	Yes. Of course, I could be hit by lightning tomorrow but with the information 
+				} else {
+					Delay(2000);
+					Actor_Says(kActorMcCoy, 1885, kAnimationModeTalk); //00-1885.AUD	I’ll take that as a yes.
+					Delay(1000);
+				}
 			}
 		} else {
 			Actor_Says(kActorMcCoy, 8505, kAnimationModeTalk); //
@@ -663,9 +707,18 @@ bool AIScriptClovis::GoalChanged(int currentGoalNumber, int newGoalNumber) {
 #else
 		Actor_Face_Heading(kActorClovis, 780, true);
 #endif // BLADERUNNER_ORIGINAL_BUGS
-		Actor_Says(kActorClovis, 1310, kAnimationModeTalk); //05-1310.AUD	He’s a hunter no more. He has come home. It’s time to go, my friend.
+		if (_vm->_cutContent) {
+			if (!Actor_Clue_Query(kActorClovis, kClueMcCoyRetiredLucy) 
+			&& !Actor_Clue_Query(kActorClovis, kClueMcCoyRetiredDektora) 
+			&& Actor_Query_Friendliness_To_Other(kActorClovis, kActorMcCoy) > 50) {
+				Actor_Says(kActorClovis, 1310, kAnimationModeTalk); //05-1310.AUD	He’s a hunter no more. He has come home. It’s time to go, my friend.
+			}
+		} else {
+			Actor_Says(kActorClovis, 1310, kAnimationModeTalk); //05-1310.AUD	He’s a hunter no more. He has come home. It’s time to go, my friend.
+		}
 		// Added in a line.
 		if (_vm->_cutContent) {
+			Music_Stop(1u);	
 			Actor_Says(kActorMcCoy, 8506, kAnimationModeTalk); //00-8506.AUD	Where are we headed?
 		}
 		Ambient_Sounds_Remove_All_Non_Looping_Sounds(true);

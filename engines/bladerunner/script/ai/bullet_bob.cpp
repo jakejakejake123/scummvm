@@ -143,6 +143,12 @@ void AIScriptBulletBob::ClickedByPlayer() {
 				Actor_Says(kActorMcCoy, 8920, 16); //00-8920.AUD	I gotta ask you a question.
 				Actor_Says(kActorBulletBob, 1820, 34); //14-1820.AUD	You want to make it as a Blade Runner, you ought to do your own investigations.
 			}
+		} else if (Actor_Query_In_Set(kActorBulletBob, kSetKP07)) {
+			Loop_Actor_Walk_To_Actor(kActorMcCoy, kActorBulletBob, 24, false, false);
+			Actor_Face_Actor(kActorMcCoy, kActorBulletBob, true);
+			Actor_Says(kActorMcCoy, 8915, 16); //00-8915.AUD	You got a minute, pal?
+			Actor_Says(kActorBulletBob, 1920, 36); //14-1920.AUD	Hey, Ray, relax! I'm your pal, ain't I?
+			Actor_Says(kActorBulletBob, 1930, 33); //14-1930.AUD	You don't have to step soft around me.
 		}
 	}
 	//return false;
@@ -199,7 +205,6 @@ void AIScriptBulletBob::Retired(int byActorId) {
 	if (_vm->_cutContent) {
 		if (Actor_Query_In_Set(kActorBulletBob, kSetKP07)) {
 			Global_Variable_Decrement(kVariableReplicantsSurvivorsAtMoonbus, 1);
-			Actor_Set_Goal_Number(kActorBulletBob, kGoalBulletBobGone);
 			// Made it so the player receives 200 chinyen when retiring Bob or anyother replicant in the moonbus. 
 			if (_vm->_cutContent) {
 				if (Query_Difficulty_Level() != kGameDifficultyEasy) {
@@ -219,11 +224,13 @@ void AIScriptBulletBob::Retired(int byActorId) {
 						if (!Game_Flag_Query(kFlagCrazylegsDead)) {
 							Loop_Actor_Walk_To_XYZ(kActorCrazylegs, -12.0f, -41.58f, 72.0f, 0, true, false, false);
 							Actor_Put_In_Set(kActorCrazylegs, kSceneKP06);
+							Delay(500);
+							Sound_Play(kSfxSMCAL3, 100, 0, 0, 50);
 						}
 					}
 					Delay(2000);
 					Player_Set_Combat_Mode(false);
-					Delay(2000); 
+					Delay(2000);  
 				}
 				Ambient_Sounds_Remove_All_Non_Looping_Sounds(true);
 				Ambient_Sounds_Remove_All_Looping_Sounds(1u);
@@ -255,9 +262,13 @@ bool AIScriptBulletBob::GoalChanged(int currentGoalNumber, int newGoalNumber) {
 	 &&  Player_Query_Current_Scene() == kSceneRC04
 	) {
 		if (_vm->_cutContent) {
-			Actor_Face_Actor(kActorBulletBob, kActorMcCoy, true);
+			if (!Game_Flag_Query(kFlagBulletBobWarned)) {
+				Actor_Face_Actor(kActorBulletBob, kActorMcCoy, true);
+				Actor_Says(kActorBulletBob, 120, 37);
+			}
+		} else {
+			Actor_Says(kActorBulletBob, 120, 37);
 		}
-		Actor_Says(kActorBulletBob, 120, 37);
 		// Made it so McCoy can only shoot Bob and says he is going to put something away if he suspects Bob of being a replicant.
 		// This will be if McCoy has the clues Hasan interview or VKBobGorskyReplicant. Also when Bob is a replicant a new cutscene will
 		// play of McCoy pointing his gun at Bob and Bob trying to reason with McCoy. McCoy reveals that he knows that Bob is a replicant which
@@ -266,98 +277,100 @@ bool AIScriptBulletBob::GoalChanged(int currentGoalNumber, int newGoalNumber) {
 		if (_vm->_cutContent) {
 			if (Actor_Clue_Query(kActorMcCoy, kClueHasanInterview)
 			||  Actor_Clue_Query(kActorMcCoy, kClueVKBobGorskyReplicant)) {
-				Actor_Face_Actor(kActorMcCoy, kActorBulletBob, true);
-				Actor_Says(kActorMcCoy, 4915, 13); //00-4915.AUD	I'm gonna put something away, but it ain't gonna be my gun.
-				Actor_Set_Targetable(kActorBulletBob, true);
-				// If Bullet Bob is a replicant and McCoy has discovered this when McCoy pulls his gun out this exchange will happen.
-				if (Game_Flag_Query(kFlagBulletBobIsReplicant)) {
-					Actor_Says(kActorBulletBob, 1610, 33); //14-1610.AUD	I've had enough McCoy.
-					Actor_Face_Heading(kActorBulletBob, 240, true);
-					Delay(500);
-					Actor_Face_Actor(kActorBulletBob, kActorMcCoy, true);
-					Actor_Change_Animation_Mode(kActorMcCoy, 5); // McCoy points his gun at Bob.
-					Actor_Says(kActorMcCoy, 8950, -1); //00-8950.AUD	Hold it right there!
-					Actor_Says(kActorBulletBob, 1780, 31); //14-1780.AUD	That's supposed to scare me?
-					Actor_Says(kActorMcCoy, 2215, -1); //00-2215.AUD	That’s right.
-					Delay (500);
-					Actor_Says(kActorBulletBob, 1440, -1); //14-1440.AUD	Why?
-					Delay (1000);
-					Actor_Says(kActorMcCoy, 6865, -1); //00-6865.AUD	You're a Replicant.
-					Delay (2000);
-					Actor_Says(kActorMcCoy, 840, 13); //00-0840.AUD	Did you hear me?
-					Loop_Actor_Walk_To_Waypoint(kActorMcCoy, 104, 0, false, false);
-					Actor_Face_Actor(kActorBulletBob, kActorMcCoy, true);
+				if (!Game_Flag_Query(kFlagBulletBobWarned)) {
 					Actor_Face_Actor(kActorMcCoy, kActorBulletBob, true);
-					Delay (2000);
-					Actor_Says(kActorMcCoy, 180, -1); //00-0180.AUD	Bob?
-					Actor_Says (kActorBulletBob, 1270, 37); //14-1270.AUD	(Laughing) I guess I picked the right line of work.
-					Delay (200);
-					Music_Play(kMusicMoraji, 71, 0, 0, -1, kMusicLoopPlayOnce, 2);
-					Actor_Face_Actor(kActorBulletBob, kActorMcCoy, true);
-					Actor_Change_Animation_Mode(kActorBulletBob, 4);
-					Delay(1500);
-					Sound_Play(kSfxSHOTCOK1, 75, 0, 0, 50);
-					Loop_Actor_Walk_To_XYZ(kActorMcCoy, 78.14, 0.31, -21.27, 0, false, true, false);
-					Actor_Face_Actor(kActorBulletBob, kActorMcCoy, true);
-					Actor_Face_Actor(kActorMcCoy, kActorBulletBob, true);
-					Sound_Play(kSfxGUNH1A, 100, 0, 0, 50);
-					Actor_Change_Animation_Mode(kActorMcCoy, 6);
-					Delay(1000);
-					Loop_Actor_Walk_To_XYZ(kActorMcCoy, 67.26, 0.24, -111.65, 0, false, true, false);
-					Actor_Face_Actor(kActorBulletBob, kActorMcCoy, true);
-					Ambient_Sounds_Play_Sound(kSfxSHOTGUN1, 97, 0, 0, 20);
-					Actor_Change_Animation_Mode(kActorBulletBob, 6);
-					Actor_Change_Animation_Mode(kActorMcCoy, 21);
-					Delay(1000);
-					Actor_Face_Actor(kActorMcCoy, kActorBulletBob, true);
-					Sound_Play(kSfxGUNH1A, 100, 0, 0, 50);
-					Actor_Change_Animation_Mode(kActorMcCoy, 6);
-					Delay(1500);
-					Loop_Actor_Walk_To_XYZ(kActorMcCoy, -3.38, 0.27, -48.37, 0, false, true, false);
-					Actor_Face_Actor(kActorBulletBob, kActorMcCoy, true);
-					Sound_Play(kSfxGUNH1A, 100, 0, 0, 50);
-					Actor_Change_Animation_Mode(kActorMcCoy, 6);
-					Actor_Says(kActorMcCoy, 490, 6); //00-0490.AUD	Suck on this, skin-job!
-					Actor_Set_Targetable(kActorBulletBob, false);
-					Actor_Set_Goal_Number(kActorBulletBob, kGoalBulletBobGone);
-					_animationFrame = 0;
-					_animationState = 3;
-					Ambient_Sounds_Play_Speech_Sound(kActorGordo, 9000, 100, 0, 0, 0); // not a typo, it's really from Gordo
-					Actor_Face_Heading(kActorBulletBob, 281, false);
-					//Made it so the clickable 2D region for the bullet proof vest is removed after you shoot Bob.
-					Scene_2D_Region_Remove(0);
-					Delay(2000);
-					Player_Set_Combat_Mode (false);
-					Loop_Actor_Walk_To_XYZ(kActorMcCoy, 28.04, 0.32, 7.86, 0, false, false, true);
-					Actor_Face_Actor(kActorMcCoy, kActorBulletBob, true);
-					Delay (1000);
-					Actor_Says(kActorMcCoy, 8600, 18); //00-8600.AUD	You keeping busy, pal?
-					Scene_Exits_Enable();
-					Game_Flag_Reset (kFlagMcCoyIsHelpingReplicants);
-					Actor_Clue_Acquire(kActorMcCoy, kClueBobShotInSelfDefense, true, kActorBulletBob);
-					Actor_Modify_Friendliness_To_Other(kActorSteele, kActorMcCoy, 2);
-					Actor_Modify_Friendliness_To_Other(kActorClovis, kActorMcCoy, -2);
-					Actor_Modify_Friendliness_To_Other(kActorGuzza, kActorMcCoy, 2);
-					Actor_Modify_Friendliness_To_Other(kActorGaff, kActorMcCoy, 2);
-					Scene_2D_Region_Remove(0);
-					Actor_Clue_Acquire(kActorMcCoy, kClueBobShotInSelfDefense, true, kActorBulletBob);
-					if (Query_Difficulty_Level() != kGameDifficultyEasy) {
-						Global_Variable_Increment (kVariableChinyen, 200);
-					}
-				} else {
-					if (!Game_Flag_Query(kFlagBulletBobIsReplicant)) {
-						Actor_Says(kActorBulletBob, 1840, 34); //14-1840.AUD	Okay, okay, look.
-						Actor_Says(kActorBulletBob, 1850, 35); //14-1850.AUD	I didn't want to get you riled up for no reason but here's the real skinny.
-						Actor_Says(kActorMcCoy, 4320, -1); //00-4320.AUD	Save the pitch for someone who gives a shit.
-						Actor_Says(kActorBulletBob, 1600, 33); //14-1600.AUD	Is that right?
-						Actor_Says(kActorMcCoy, 2215, 13); //00-2215.AUD	That’s right.
+					Actor_Says(kActorMcCoy, 4915, 13); //00-4915.AUD	I'm gonna put something away, but it ain't gonna be my gun.
+					Actor_Set_Targetable(kActorBulletBob, true);
+					// If Bullet Bob is a replicant and McCoy has discovered this when McCoy pulls his gun out this exchange will happen.
+					if (Game_Flag_Query(kFlagBulletBobIsReplicant)) {
+						Actor_Says(kActorBulletBob, 1610, 33); //14-1610.AUD	I've had enough McCoy.
+						Actor_Face_Heading(kActorBulletBob, 240, true);
+						Delay(500);
+						Actor_Face_Actor(kActorBulletBob, kActorMcCoy, true);
+						Actor_Change_Animation_Mode(kActorMcCoy, 5); // McCoy points his gun at Bob.
+						Actor_Says(kActorMcCoy, 8950, -1); //00-8950.AUD	Hold it right there!
+						Actor_Says(kActorBulletBob, 1780, 31); //14-1780.AUD	That's supposed to scare me?
+						Actor_Says(kActorMcCoy, 2215, -1); //00-2215.AUD	That’s right.
 						Delay (500);
-						Actor_Says(kActorBulletBob, 1440, 36); //14-1440.AUD	Why?
+						Actor_Says(kActorBulletBob, 1440, -1); //14-1440.AUD	Why?
 						Delay (1000);
 						Actor_Says(kActorMcCoy, 6865, -1); //00-6865.AUD	You're a Replicant.
+						Delay (2000);
+						Actor_Says(kActorMcCoy, 840, 13); //00-0840.AUD	Did you hear me?
+						Loop_Actor_Walk_To_Waypoint(kActorMcCoy, 104, 0, false, false);
+						Actor_Face_Actor(kActorBulletBob, kActorMcCoy, true);
+						Actor_Face_Actor(kActorMcCoy, kActorBulletBob, true);
+						Delay (2000);
+						Actor_Says(kActorMcCoy, 180, -1); //00-0180.AUD	Bob?
+						Actor_Says (kActorBulletBob, 1270, 37); //14-1270.AUD	(Laughing) I guess I picked the right line of work.
+						Delay (200);
+						Music_Play(kMusicMoraji, 71, 0, 0, -1, kMusicLoopPlayOnce, 2);
+						Actor_Face_Actor(kActorBulletBob, kActorMcCoy, true);
+						Actor_Change_Animation_Mode(kActorBulletBob, 4);
+						Delay(1500);
+						Sound_Play(kSfxSHOTCOK1, 75, 0, 0, 50);
+						Loop_Actor_Walk_To_XYZ(kActorMcCoy, 78.14, 0.31, -21.27, 0, false, true, false);
+						Actor_Face_Actor(kActorBulletBob, kActorMcCoy, true);
+						Actor_Face_Actor(kActorMcCoy, kActorBulletBob, true);
+						Sound_Play(kSfxGUNH1A, 100, 0, 0, 50);
+						Actor_Change_Animation_Mode(kActorMcCoy, 6);
+						Delay(1000);
+						Loop_Actor_Walk_To_XYZ(kActorMcCoy, 67.26, 0.24, -111.65, 0, false, true, false);
+						Actor_Face_Actor(kActorBulletBob, kActorMcCoy, true);
+						Ambient_Sounds_Play_Sound(kSfxSHOTGUN1, 97, 0, 0, 20);
+						Actor_Change_Animation_Mode(kActorBulletBob, 6);
+						Actor_Change_Animation_Mode(kActorMcCoy, 21);
+						Delay(1000);
+						Actor_Face_Actor(kActorMcCoy, kActorBulletBob, true);
+						Sound_Play(kSfxGUNH1A, 100, 0, 0, 50);
+						Actor_Change_Animation_Mode(kActorMcCoy, 6);
+						Delay(1500);
+						Loop_Actor_Walk_To_XYZ(kActorMcCoy, -3.38, 0.27, -48.37, 0, false, true, false);
+						Actor_Face_Actor(kActorBulletBob, kActorMcCoy, true);
+						Sound_Play(kSfxGUNH1A, 100, 0, 0, 50);
+						Actor_Change_Animation_Mode(kActorMcCoy, 6);
+						Actor_Says(kActorMcCoy, 490, 6); //00-0490.AUD	Suck on this, skin-job!
+						Actor_Set_Targetable(kActorBulletBob, false);
+						Actor_Set_Goal_Number(kActorBulletBob, kGoalBulletBobGone);
+						_animationFrame = 0;
+						_animationState = 3;
+						Ambient_Sounds_Play_Speech_Sound(kActorGordo, 9000, 100, 0, 0, 0); // not a typo, it's really from Gordo
+						Actor_Face_Heading(kActorBulletBob, 281, false);
+						//Made it so the clickable 2D region for the bullet proof vest is removed after you shoot Bob.
+						Scene_2D_Region_Remove(0);
+						Delay(2000);
+						Player_Set_Combat_Mode (false);
+						Loop_Actor_Walk_To_XYZ(kActorMcCoy, 28.04, 0.32, 7.86, 0, false, false, true);
+						Actor_Face_Actor(kActorMcCoy, kActorBulletBob, true);
 						Delay (1000);
-						Actor_Says(kActorBulletBob, 790, 36); //14-0790.AUD	It's funny. You thinking I'm a Rep.
-						Game_Flag_Set(kFlagBulletBobReplicantTalk);
+						Actor_Says(kActorMcCoy, 8600, 18); //00-8600.AUD	You keeping busy, pal?
+						Scene_Exits_Enable();
+						Game_Flag_Reset (kFlagMcCoyIsHelpingReplicants);
+						Actor_Clue_Acquire(kActorMcCoy, kClueBobShotInSelfDefense, true, kActorBulletBob);
+						Actor_Modify_Friendliness_To_Other(kActorSteele, kActorMcCoy, 2);
+						Actor_Modify_Friendliness_To_Other(kActorClovis, kActorMcCoy, -2);
+						Actor_Modify_Friendliness_To_Other(kActorGuzza, kActorMcCoy, 2);
+						Actor_Modify_Friendliness_To_Other(kActorGaff, kActorMcCoy, 2);
+						Scene_2D_Region_Remove(0);
+						Actor_Clue_Acquire(kActorMcCoy, kClueBobShotInSelfDefense, true, kActorBulletBob);
+						if (Query_Difficulty_Level() != kGameDifficultyEasy) {
+							Global_Variable_Increment (kVariableChinyen, 200);
+						}
+					} else {
+						if (!Game_Flag_Query(kFlagBulletBobIsReplicant)) {
+							Actor_Says(kActorBulletBob, 1840, 34); //14-1840.AUD	Okay, okay, look.
+							Actor_Says(kActorBulletBob, 1850, 35); //14-1850.AUD	I didn't want to get you riled up for no reason but here's the real skinny.
+							Actor_Says(kActorMcCoy, 4320, -1); //00-4320.AUD	Save the pitch for someone who gives a shit.
+							Actor_Says(kActorBulletBob, 1600, 33); //14-1600.AUD	Is that right?
+							Actor_Says(kActorMcCoy, 2215, 13); //00-2215.AUD	That’s right.
+							Delay (500);
+							Actor_Says(kActorBulletBob, 1440, 36); //14-1440.AUD	Why?
+							Delay (1000);
+							Actor_Says(kActorMcCoy, 6865, -1); //00-6865.AUD	You're a Replicant.
+							Delay (1000);
+							Actor_Says(kActorBulletBob, 790, 36); //14-0790.AUD	It's funny. You thinking I'm a Rep.
+							Game_Flag_Set(kFlagBulletBobReplicantTalk);
+						}
 					}
 				}
 			} else {
@@ -376,15 +389,25 @@ bool AIScriptBulletBob::GoalChanged(int currentGoalNumber, int newGoalNumber) {
 		&& !Game_Flag_Query(kFlagBulletBobIsReplicant)
 		&& Player_Query_Current_Scene() == kSceneRC04) {
 			Delay(2000);
-			Actor_Voice_Over(2100, kActorVoiceOver);
-			Actor_Voice_Over(2110, kActorVoiceOver);
-			Actor_Voice_Over(2120, kActorVoiceOver);
-			Actor_Voice_Over(2130, kActorVoiceOver);
-			Actor_Clue_Acquire(kActorMcCoy, kClueBobShotInColdBlood, true, kActorBulletBob);
-			Game_Flag_Set(kFlagMcCoyRetiredHuman);
-			Actor_Modify_Friendliness_To_Other(kActorClovis, kActorMcCoy, 2);
-			Actor_Modify_Friendliness_To_Other(kActorSteele, kActorMcCoy, -2);
-			Actor_Modify_Friendliness_To_Other(kActorGuzza, kActorMcCoy, -2);
+			if (Player_Query_Agenda() != kPlayerAgendaSurly 
+			&& Player_Query_Agenda() != kPlayerAgendaErratic) {
+				Actor_Voice_Over(2100, kActorVoiceOver);
+				Actor_Voice_Over(2110, kActorVoiceOver);
+				Actor_Voice_Over(2420, kActorVoiceOver);
+				Delay(1000);
+				Outtake_Play(kOuttakeAway1, true, -1);
+				Actor_Set_Goal_Number(kActorMcCoy, kGoalMcCoyArrested);
+			} else {
+				Actor_Voice_Over(2100, kActorVoiceOver);
+				Actor_Voice_Over(2110, kActorVoiceOver);
+				Actor_Voice_Over(2120, kActorVoiceOver);
+				Actor_Voice_Over(2130, kActorVoiceOver);
+				Actor_Clue_Acquire(kActorMcCoy, kClueBobShotInColdBlood, true, kActorBulletBob);
+				Game_Flag_Set(kFlagMcCoyRetiredHuman);
+				Actor_Modify_Friendliness_To_Other(kActorClovis, kActorMcCoy, 2);
+				Actor_Modify_Friendliness_To_Other(kActorSteele, kActorMcCoy, -2);
+				Actor_Modify_Friendliness_To_Other(kActorGuzza, kActorMcCoy, -2);
+			}
 		}
 		return true;
 	} else if ( newGoalNumber == kGoalBulletBobDead

@@ -197,6 +197,19 @@ void AIScriptEarlyQ::ClickedByPlayer() {
 				Actor_Says(kActorMcCoy, 8513, 18); //00-8513.AUD	Early, how's it hanging?
 				Actor_Says(kActorEarlyQ, 340, kAnimationModeTalk); //18-0340.AUD	No more free drinks for you, buddy boy.
 			}
+		} else if (Actor_Query_In_Set(kActorEarlyQ, kSetKP07)) {
+			Loop_Actor_Walk_To_Actor(kActorMcCoy, kActorEarlyQ, 24, false, false);
+			Actor_Face_Actor(kActorMcCoy, kActorEarlyQ, true);
+			Actor_Face_Actor(kActorEarlyQ, kActorMcCoy, true);
+			Actor_Says(kActorMcCoy, 8513, 18); //00-8513.AUD	Early, how's it hanging?
+			Actor_Says(kActorEarlyQ, 360, kAnimationModeTalk); //18-0360.AUD	Thick, slick and hard as a brick. How’s yours, General?
+		} else if (Game_Flag_Query(kFlagEarlyQDead)) {
+			if (Player_Query_Agenda() == kPlayerAgendaSurly 
+			|| Player_Query_Agenda() == kPlayerAgendaErratic) {
+				Actor_Says(kActorMcCoy, 8665, 13); //00-8665.AUD	Disgusting.
+			} else {	
+				Actor_Says(kActorMcCoy, 8630, 12);  // What a waste
+			}
 		}
 	}
 }
@@ -234,6 +247,16 @@ void AIScriptEarlyQ::OtherAgentEnteredCombatMode(int otherActorId, int combatMod
 		return; //true;
 	}
 
+	if (_vm->_cutContent) {
+		if (Player_Query_Current_Scene() == kSceneKP07
+		&& otherActorId == kActorMcCoy
+		&& combatMode
+		) {
+			Actor_Face_Actor(kActorEarlyQ, kActorMcCoy, true);
+			Ambient_Sounds_Play_Sound(kSfxLGCAL1, 97, 0, 0, 20);
+			Actor_Change_Animation_Mode(kActorEarlyQ, 6);
+		}
+	}
 	return; //false;
 }
 
@@ -284,11 +307,13 @@ void AIScriptEarlyQ::Retired(int byActorId) {
 						if (!Game_Flag_Query(kFlagCrazylegsDead)) {
 							Loop_Actor_Walk_To_XYZ(kActorCrazylegs, -12.0f, -41.58f, 72.0f, 0, true, false, false);
 							Actor_Put_In_Set(kActorCrazylegs, kSceneKP06);
+							Delay(500);
+							Sound_Play(kSfxSMCAL3, 100, 0, 0, 50);
 						}
 					}
 					Delay(2000);
 					Player_Set_Combat_Mode(false);
-					Delay(2000); 
+					Delay(2000);  
 				}
 				Ambient_Sounds_Remove_All_Non_Looping_Sounds(true);
 				Ambient_Sounds_Remove_All_Looping_Sounds(1u);
@@ -471,6 +496,8 @@ bool AIScriptEarlyQ::GoalChanged(int currentGoalNumber, int newGoalNumber) {
 		// Made it so when McCoy is drugged by Early Q McCoy now appears in his apartment.
 		if (_vm->_cutContent) {
 			Music_Stop(1u);
+			Ambient_Sounds_Remove_All_Non_Looping_Sounds(true);
+			Ambient_Sounds_Remove_All_Looping_Sounds(1u);
 			Game_Flag_Set(kFlagNR01McCoyIsDrugged);
 			Set_Enter(kSceneMA04, kSceneMA04);
 			Scene_Exits_Enable();
@@ -491,9 +518,26 @@ bool AIScriptEarlyQ::GoalChanged(int currentGoalNumber, int newGoalNumber) {
 		Actor_Face_Actor(kActorMcCoy, kActorEarlyQ, true);
 		Actor_Face_Actor(kActorEarlyQ, kActorMcCoy, true);
 		Actor_Change_Animation_Mode(kActorEarlyQ, 23);
-		Scene_Loop_Start_Special(kSceneLoopModeOnce, 2, false);
-		Ambient_Sounds_Play_Sound(kSfxDRUGOUT, 50, 99, 0, 0);
-		Actor_Set_Goal_Number(kActorMcCoy, kGoalMcCoyNR04Drink);
+		if (_vm->_cutContent) {
+			if (!Game_Flag_Query(kFlagEarlyQIsReplicant)) {
+				Scene_Loop_Start_Special(kSceneLoopModeOnce, 2, false);
+				Ambient_Sounds_Play_Sound(kSfxDRUGOUT, 50, 99, 0, 0);
+				Actor_Set_Goal_Number(kActorMcCoy, kGoalMcCoyNR04Drink);
+			} else {
+				Actor_Change_Animation_Mode(kActorMcCoy, 23);
+				Delay(1500);
+				Actor_Change_Animation_Mode(kActorMcCoy, 75);
+				Delay(4000);
+				Actor_Change_Animation_Mode(kActorMcCoy, kAnimationModeDie);
+				Ambient_Sounds_Play_Sound(kSfxMALEHURT, 90, 99, 0, 0);
+				Delay(350);
+				Actor_Retired_Here(kActorMcCoy, 12, 12, true, -1);
+			}
+		} else {
+			Scene_Loop_Start_Special(kSceneLoopModeOnce, 2, false);
+			Ambient_Sounds_Play_Sound(kSfxDRUGOUT, 50, 99, 0, 0);
+			Actor_Set_Goal_Number(kActorMcCoy, kGoalMcCoyNR04Drink);
+		}
 		break;
 
 	case kGoalEarlyQNR04GetShot:

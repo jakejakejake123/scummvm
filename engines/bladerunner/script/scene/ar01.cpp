@@ -176,9 +176,9 @@ bool SceneScriptAR01::ClickedOnActor(int actorId) {
 					if (Actor_Clue_Query(kActorMcCoy, kClueStrangeScale1)
 					|| Actor_Clue_Query(kActorMcCoy, kClueStrangeScale2)) {
 						Actor_Says(kActorMcCoy, 40, 11);
-						if (Actor_Query_Friendliness_To_Other(kActorFishDealer, kActorMcCoy) > 49) {
+						if (Actor_Query_Friendliness_To_Other(kActorFishDealer, kActorMcCoy) > 49) {		
 							Actor_Says(kActorFishDealer, 120, 14);
-							Actor_Says(kActorMcCoy, 45, 17); //00-0045.AUD	What other one?				
+							Actor_Says(kActorMcCoy, 45, 17); //00-0045.AUD	What other one?	
 							// The fish lady will say this extra line if she told you about the Peruvian woman before.
 							if  (Game_Flag_Query(kFlagAR01FishDealerTalkInsects)) {
 								Actor_Says(kActorFishDealer, 210, 14); //29-0210.AUD	What I said before. That yesterdays news. Here real fact of it.
@@ -205,28 +205,28 @@ bool SceneScriptAR01::ClickedOnActor(int actorId) {
 					Actor_Says(kActorFishDealer, 10, 14); //29-0010.AUD	They're no good companion. But fish, fish are good.
 					Actor_Says(kActorFishDealer, 20, 14); //29-0020.AUD	I have every kind of fish for you.
 					Actor_Says(kActorFishDealer, 30, 14); //29-0030.AUD	Blowfish, Dorado, miniature Sailfish. Very friendly.
-					Actor_Says(kActorMcCoy, 5, 17); //00-0005.AUD	No thanks. I got a dog at home.
-					Actor_Says(kActorFishDealer, 40, 14); //29-0040.AUD	Fish just as good as dog.
-					Actor_Says(kActorMcCoy, 10, 13); //00-0010.AUD	No, my dog is real.
-					Actor_Says(kActorFishDealer, 50, 14); //29-0050.AUD	Real?! Oh, you must make lots of money.
+					if (Player_Query_Agenda() != kPlayerAgendaSurly 
+					&& Player_Query_Agenda() != kPlayerAgendaErratic) {
+						Actor_Says(kActorMcCoy, 5, 17); //00-0005.AUD	No thanks. I got a dog at home.
+						Actor_Says(kActorFishDealer, 40, 14); //29-0040.AUD	Fish just as good as dog.
+						Actor_Says(kActorMcCoy, 10, 13); //00-0010.AUD	No, my dog is real.
+						Actor_Says(kActorFishDealer, 50, 14); //29-0050.AUD	Real?! Oh, you must make lots of money.
+					}
 					// If McCoy is surly or erratic their friendliness will lower and this will effect the coversation later on.
 					// It will also result in the fish lady not helping when trying to find the insect dealer and whne you ask her about the strange scale.
-					Actor_Says(kActorMcCoy, 15, 17); //00-0015.AUD	Let's get back to insects. Official LPD business.
-					Game_Flag_Set(kFlagAR01FishDealerMcCoyIsPolice);
-					Actor_Says(kActorFishDealer, 200, 14); //29-0200.AUD	Oh, all right. Where my head today?
 					if (Player_Query_Agenda() == kPlayerAgendaSurly 
 					|| Player_Query_Agenda() == kPlayerAgendaErratic) {
 						Actor_Says(kActorMcCoy, 8519, 14); //00-8519.AUD	What do you say we dish each other the straight goods.
+						Delay(1000);
 						Actor_Modify_Friendliness_To_Other(kActorFishDealer, kActorMcCoy, -2);
 						Actor_Says(kActorFishDealer, 180, 14); //29-0180.AUD	I can't stand all day gabbing away. My fish require attention.
 						Game_Flag_Set(kFlagAR01FishDealerTalk);
 						Actor_Set_Goal_Number(kActorFishDealer, 1);
 					} else {
-						if (Player_Query_Agenda() != kPlayerAgendaSurly 
-						&& Player_Query_Agenda() != kPlayerAgendaErratic) {
-							Actor_Says(kActorMcCoy, 7985, 17); //00-7985.AUD	It's okay.
-							Actor_Modify_Friendliness_To_Other(kActorFishDealer, kActorMcCoy, 2);
-						}
+						Actor_Says(kActorMcCoy, 15, 17); //00-0015.AUD	Let's get back to insects. Official LPD business.
+						Game_Flag_Set(kFlagAR01FishDealerMcCoyIsPolice);
+						Actor_Says(kActorFishDealer, 200, 14); //29-0200.AUD	Oh, all right. Where my head today?
+						Actor_Says(kActorMcCoy, 7985, 17); //00-7985.AUD	It's okay.
 						Actor_Says(kActorFishDealer, 60, 14); //29-0060.AUD	Ah! Down that end of Animal Row. You see big green sign?
 						Actor_Says(kActorFishDealer, 70, 14);
 						Game_Flag_Set(kFlagAR01FishDealerTalk);
@@ -240,7 +240,6 @@ bool SceneScriptAR01::ClickedOnActor(int actorId) {
 							Actor_Says(kActorFishDealer, 80, 14);
 							Actor_Says(kActorFishDealer, 90, 14);
 							Actor_Says(kActorMcCoy, 25, 13);
-							Game_Flag_Set(kFlagAR01FishDealerTalk);
 						}
 					}
 				} else if (!Game_Flag_Query(kFlagFishLadyTalkFinsished)) {	
@@ -258,7 +257,13 @@ bool SceneScriptAR01::ClickedOnActor(int actorId) {
 						} else {
 							Item_Pickup_Spin_Effect_From_Actor(kModelAnimationGoldfish, kActorFishDealer, 0, -40);
 							Game_Flag_Set(kFlagFishDealerBuyFishTalk);
-							dialogueWithFishDealerBuyGoldfish();
+							if (Player_Query_Agenda() == kPlayerAgendaSurly 
+							|| Player_Query_Agenda() == kPlayerAgendaErratic) {
+								Actor_Says(kActorMcCoy, 7005, 13);
+								Actor_Modify_Friendliness_To_Other(kActorFishDealer, kActorMcCoy, -2);
+							} else {
+								dialogueWithFishDealerBuyGoldfish();
+							}
 						}
 					} else {
 						if (Actor_Clue_Query(kActorMcCoy, kClueGoldfish)) {
@@ -290,6 +295,7 @@ bool SceneScriptAR01::ClickedOnActor(int actorId) {
 					Actor_Says(kActorMcCoy, 8514, 11); // Got anything new to tell me?
 					if (Actor_Query_Friendliness_To_Other(kActorFishDealer, kActorMcCoy) > 49) {
 						Actor_Says(kActorFishDealer, 170, 14); // Afraid not. But been busy today. Maybe you ask me later.
+						Actor_Set_Goal_Number(kActorFishDealer, 1);
 					} else {
 						Actor_Says(kActorFishDealer, 220, 14); //29-0220.AUD	I haven't heard much. Row been very quiet.
 						Actor_Set_Goal_Number(kActorFishDealer, 1);
@@ -393,6 +399,7 @@ bool SceneScriptAR01::ClickedOnExit(int exitId) {
 		&& Actor_Query_Goal_Number(kActorIzo) <= kGoalIzoEscape
 		) {
 			if (_vm->_cutContent) {
+				// Made it so Izo only kills McCoy if he is a replicant. If McCoy tries to leave animoid row when he is chasing Izo he will refuse.
 				if (Game_Flag_Query(kFlagIzoIsReplicant)) {	
 					Player_Loses_Control();
 					Actor_Put_In_Set(kActorIzo, kSetAR01_AR02);
@@ -425,13 +432,46 @@ bool SceneScriptAR01::ClickedOnExit(int exitId) {
 			if ( Game_Flag_Query(kFlagDNARowAvailable)
 			&& !Game_Flag_Query(kFlagDNARowAvailableTalk)
 			) {
-				Actor_Voice_Over(4310, kActorVoiceOver);
-				Actor_Voice_Over(4320, kActorVoiceOver);
-				Actor_Voice_Over(4330, kActorVoiceOver);
-				Actor_Voice_Over(4340, kActorVoiceOver);
+				if (_vm->_cutContent) {
+					if (Actor_Clue_Query(kActorMcCoy, kClueWeaponsCache)) {
+						Actor_Voice_Over(3480, kActorVoiceOver); //99-3480.AUD	Yeah, what a difference a day makes.
+						Delay(1000);
+						Actor_Voice_Over(3510, kActorVoiceOver); //99-3510.AUD	The picture was still a little blurry.
+					} else {
+						Actor_Voice_Over(4310, kActorVoiceOver); // 99-4310.AUD	I was fresh out of leads.	
+					}
+				} else {
+					Actor_Voice_Over(4310, kActorVoiceOver); // 99-4310.AUD	I was fresh out of leads.	
+				}
+				if (_vm->_cutContent) {
+					if (!Actor_Clue_Query(kActorMcCoy, kClueWeaponsCache)
+					&& !Actor_Clue_Query(kActorMcCoy, kClueBobShotInSelfDefense)
+					&& !Game_Flag_Query(kFlagMcCoyShotIzo)) {
+						Actor_Voice_Over(4320, kActorVoiceOver); //99-4320.AUD	Poking around Hawker's Circle had been a waste of time.
+					}
+				} else {
+					Actor_Voice_Over(4320, kActorVoiceOver); //99-4320.AUD	Poking around Hawker's Circle had been a waste of time.
+				}
+				if (_vm->_cutContent) {
+					if (!Actor_Clue_Query(kActorMcCoy, kClueWeaponsCache)) {
+						Actor_Voice_Over(4330, kActorVoiceOver); //99-4330.AUD	I had nothing to connect this Izo character to the Eisenduller murder.
+					}
+				} else {
+					Actor_Voice_Over(4330, kActorVoiceOver);
+				}
+				Actor_Voice_Over(4340, kActorVoiceOver); //99-4340.AUD	But if the Replicants had done in one Tyrell scientist, maybe they'd go after another.
 				Actor_Voice_Over(4350, kActorVoiceOver);
+				if (_vm->_cutContent) {
+					if (Player_Query_Agenda() != kPlayerAgendaSurly 
+					&& Player_Query_Agenda() != kPlayerAgendaErratic) {
+						Delay(500);
+						Actor_Says(kActorMcCoy, 170, 14); //00-0170.AUD	Damn.
+						Delay(500);
+						Actor_Says(kActorMcCoy, 6875, 13); //00-6875.AUD	I gotta go.
+					}
+				}		
 				Game_Flag_Set(kFlagDNARowAvailableTalk);
-				Game_Flag_Reset(kFlagIzoEscaped);
+				Game_Flag_Reset(kFlagIzoGotAway);
 				Game_Flag_Reset(kFlagIzoWarnedAboutCrystal);
 			}
 			Game_Flag_Reset(kFlagMcCoyInChinaTown);
@@ -563,7 +603,7 @@ void SceneScriptAR01::PlayerWalkedIn() {
 		Loop_Actor_Walk_To_XYZ(kActorMcCoy, -358.0f, 0.0f, -149.0f, 0, true, false, false);
 		Game_Flag_Reset(kFlagHC01toAR01);
 	}
-	// Added in some dispatcher dialogue.
+	// Added in some dialogue with the fish lady so McCoy will now learn Hasans name. Also added in some dispatcher dialogue.
 	if (_vm->_cutContent) {
 		if (!Game_Flag_Query(kFlagAR01Entered)) {
 			Player_Loses_Control();
@@ -582,7 +622,7 @@ void SceneScriptAR01::PlayerWalkedIn() {
 			Actor_Says(kActorMcCoy, 7815, 16); //00-7815.AUD	No.
 			Delay (500);
 			Actor_Says(kActorMcCoy, 660, 14); //00-0660.AUD	You seen any suspicious types around here lately?
-			Delay (3000);
+			Delay (2000);
 			Actor_Says(kActorMcCoy, 1885, kAnimationModeTalk); //00-1885.AUD	I’ll take that as a yes.
 			Actor_Says(kActorMcCoy, 875, 17); //00-0875.AUD	Where do I find him?
 			Delay (1000);

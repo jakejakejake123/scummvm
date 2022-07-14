@@ -79,17 +79,22 @@ bool SceneScriptKP05::ClickedOnItem(int itemId, bool a2) {
 	if (itemId == kItemPowerSource) {
 		if (!Loop_Actor_Walk_To_XYZ(kActorMcCoy, -1058.0f, 0.0f, 852.0f, 0, true, false, false)) {
 			Actor_Face_Item(kActorMcCoy, kItemPowerSource, true);
-			Actor_Clue_Acquire(kActorMcCoy, kCluePowerSource, true, -1);
-			Item_Remove_From_World(kItemPowerSource);
-			Item_Pickup_Spin_Effect(kModelAnimationPowerSource, 58, 321);
-			// Added in some lines for when McCoy finds the power source.
-			// Made it so McCoy says these lines as he picks up the power source.
 			if (_vm->_cutContent) {
-				Actor_Says(kActorMcCoy, 8885, 13); //00-8885.AUD	A power source.
 				if (Actor_Query_Goal_Number(kActorSadik) == kGoalSadikKP06NeedsReactorCoreFromMcCoy) {
+					Actor_Clue_Acquire(kActorMcCoy, kCluePowerSource, true, -1);
+					Item_Remove_From_World(kItemPowerSource);
+					Item_Pickup_Spin_Effect(kModelAnimationPowerSource, 58, 321);
+					Actor_Says(kActorMcCoy, 8885, 13); //00-8885.AUD	A power source.
 					Actor_Says(kActorMcCoy, 8495, 15); //00-8495.AUD	This might work.
+				} else {
+					Actor_Says(kActorMcCoy, 8885, 13); //00-8885.AUD	A power source.
+					Actor_Says(kActorMcCoy, 8525, -1); // 00-8525.AUD	Hmph
 				}
-			} 
+			} else {
+				Actor_Clue_Acquire(kActorMcCoy, kCluePowerSource, true, -1);
+				Item_Remove_From_World(kItemPowerSource);
+				Item_Pickup_Spin_Effect(kModelAnimationPowerSource, 58, 321);
+			}
 		}
 	}
 	return false;
@@ -137,6 +142,20 @@ void SceneScriptKP05::SceneFrameAdvanced(int frame) {
 }
 
 void SceneScriptKP05::ActorChangedGoal(int actorId, int newGoal, int oldGoal, bool currentSet) {
+	if (_vm->_cutContent) {
+		if (actorId == kActorSteele
+		&& oldGoal != kGoalSteeleGone
+		&& newGoal == kGoalSteeleGone
+		) {
+			Loop_Actor_Walk_To_Actor(kActorMcCoy, kActorSteele, 24, false, false);
+			Actor_Says(kActorSteele, 250, -1); //01-0250.AUD	(cough) Nice shot there, Slim.
+			Actor_Says(kActorMcCoy, 2120, -1); //00-2120.AUD	You couldn’t leave well enough alone.
+			Actor_Says(kActorSteele, 410, -1); //01-0410.AUD	My job… had my orders.
+			Actor_Says(kActorMcCoy, 2170, -1); //00-2170.AUD	And my animal? Guzza tell you to get rid of her? Or did you do that on your own?
+			Actor_Says(kActorSteele, 420, -1); //01-0420.AUD	Eat shit, Slim.
+			Scene_Exits_Enable();
+		}
+	}
 }
 
 void SceneScriptKP05::PlayerWalkedIn() {
@@ -171,24 +190,33 @@ void SceneScriptKP05::PlayerWalkedIn() {
 			Actor_Change_Animation_Mode(kActorSteele, kAnimationModeCombatIdle);
 			Scene_Exits_Disable();
 			Actor_Face_Actor(kActorSteele, kActorMcCoy, true);
-			Actor_Says(kActorSteele, 530, 15);
-			Actor_Says(kActorSteele, 540, 16);
 			Actor_Face_Actor(kActorMcCoy, kActorSteele, true);
+			Actor_Says(kActorSteele, 530, 15); //01-0530.AUD	You almost got away with it, Slim.
+			Actor_Says(kActorSteele, 540, 16); //01-0540.AUD	And I expected so much more from you.
 			Player_Set_Combat_Mode(true);
-			Actor_Says(kActorMcCoy, 2200, 3);
-			Actor_Says(kActorSteele, 550, 17);
-			Actor_Says(kActorMcCoy, 2205, 3);
-			Actor_Says(kActorSteele, 560, 15);
-			Actor_Says(kActorSteele, 570, 16);
-			Actor_Says(kActorSteele, 580, 13);
-			Actor_Says(kActorMcCoy, 2210, 3);
-			Actor_Says(kActorSteele, 590, 13);
-			Actor_Says(kActorMcCoy, 2215, 3);
-			Actor_Says(kActorSteele, 600, 16);
-			Actor_Says(kActorSteele, 610, 15);
-			Actor_Says(kActorMcCoy, 2220, 3);
-			Actor_Says(kActorSteele, 620, 15);
-			Actor_Says(kActorSteele, 630, 17);
+			Actor_Says(kActorMcCoy, 2200, 3); //00-2200.AUD	Why did you have to kill her?
+			if (!Game_Flag_Query(kFlagMcCoyIsInnocent)) {
+				Actor_Says(kActorSteele, 550, 17); //01-0550.AUD	Who, the mutt? The artificial pet of a Replicant? What'd you think I’d do?
+				Actor_Says(kActorMcCoy, 2205, 3); //00-2205.AUD	Show some mercy?
+				Actor_Says(kActorSteele, 560, 15); //01-0560.AUD	Well, I guess that’s why you’re there and I’m here.
+			} else {
+				Actor_Says(kActorSteele, 330, 58); //01-0330.AUD	Nobody gives a damn.
+			}
+			Actor_Says(kActorSteele, 570, 16); //01-0570.AUD	Now, why don’t you explain to me what you’re doing out here, Slim.
+			Actor_Says(kActorSteele, 580, 13); //01-0580.AUD	Maybe you can ease my suspicious mind.
+			Actor_Says(kActorMcCoy, 2210, 3); //00-2210.AUD	I’m just checking it out.
+			Actor_Says(kActorSteele, 590, 13); //01-0590.AUD	Just doing a little sightseeing?
+			Actor_Says(kActorMcCoy, 2215, 3); //00-2215.AUD	That’s right.
+			if (!Game_Flag_Query(kFlagMcCoyIsInnocent)) {
+				Actor_Says(kActorSteele, 600, 16); //01-0600.AUD	Right. And not fifty yards from your pal Clovis and the moonbus you hijacked.
+			}
+			Actor_Says(kActorSteele, 610, 15); //01-0610.AUD	You’re not convincing me too good, Slim.
+			Actor_Says(kActorMcCoy, 2220, 3); //00-2220.AUD	You gonna shoot me down right here?
+			if (Game_Flag_Query(kFlagMcCoyIsInnocent)) {
+				Actor_Says(kActorSteele, 630, 17); //01-0630.AUD	Maybe you wanna go on the Machine now? See if you can answer this question.
+			} else {
+				Actor_Says(kActorSteele, 620, 15); //01-0620.AUD	It’s as good a place as any.
+			}
 			// Added in some action music for your fight with Crystal.
 			if (_vm->_cutContent) {
 				Music_Play(kMusicMoraji, 71, 0, 0, -1, kMusicLoopPlayOnce, 2);
@@ -216,10 +244,6 @@ void SceneScriptKP05::PlayerWalkedIn() {
 		Actor_Says(kActorMcCoy, 2220, 3);
 		Actor_Says(kActorSteele, 620, 15);
 		Actor_Says(kActorSteele, 630, 17);
-		// Added in some action music for your fight with Crystal.
-		if (_vm->_cutContent) {
-			Music_Play(kMusicMoraji, 71, 0, 0, -1, kMusicLoopPlayOnce, 2);
-		}
 		Non_Player_Actor_Combat_Mode_On(kActorSteele, kActorCombatStateIdle, true, kActorMcCoy, 9, kAnimationModeCombatIdle, kAnimationModeCombatWalk, kAnimationModeCombatRun, 0, -1, -1, 20, 240, false);
 	}
 }

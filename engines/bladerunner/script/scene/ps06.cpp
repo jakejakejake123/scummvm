@@ -66,6 +66,8 @@ bool SceneScriptPS06::ClickedOn3DObject(const char *objectName, bool a2) {
 				// Made it so McCoy only says this line if he found the black paint on the hydrant at Runciters.
 				if (Actor_Clue_Query(kActorMcCoy, kClueLabPaintTransfer)) {
 					Actor_Voice_Over(3790, kActorVoiceOver); //99-3790.AUD	The car from Chinatown was the same vehicle that had smacked the hydrant at Runciter's. 
+				} else {
+					Actor_Says(kActorMcCoy, 690, -1); //00-0690.AUD	Gotcha.
 				}
 			} else {
 				Actor_Voice_Over(3790, kActorVoiceOver); //99-3790.AUD	The car from Chinatown was the same vehicle that had smacked the hydrant at Runciter's. {	
@@ -108,7 +110,7 @@ bool SceneScriptPS06::ClickedOn3DObject(const char *objectName, bool a2) {
 			return true;
 		} else {
 			bool uploadedClues = Actor_Clues_Transfer_New_To_Mainframe(kActorMcCoy);
-			if (!_vm->_cutContent || uploadedClues) {
+			if (uploadedClues) {
 				if (_vm->_cutContent) {
 					Actor_Clues_Transfer_New_From_Mainframe(kActorKlein);
 					Actor_Clues_Transfer_New_From_Mainframe(kActorSteele);
@@ -128,7 +130,7 @@ bool SceneScriptPS06::ClickedOn3DObject(const char *objectName, bool a2) {
 			}
 			Actor_Says(kActorAnsweringMachine, 340,  kAnimationModeTalk);         // downloading clues
 			bool downloadedClues = Actor_Clues_Transfer_New_From_Mainframe(kActorMcCoy);
-			if (!_vm->_cutContent || downloadedClues) {
+			if (downloadedClues) {
 				Ambient_Sounds_Play_Sound(kSfxDATALOAD, 50, 0, 0, 99);
 				if (_vm->_cutContent) {
 					Delay(800); // shorten delay in Restored Content mode

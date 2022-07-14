@@ -156,6 +156,15 @@ void AIScriptHanoi::ReceivedClue(int clueId, int fromActorId) {
 }
 
 void AIScriptHanoi::ClickedByPlayer() {
+	if (_vm->_cutContent) {
+		if (Actor_Query_In_Set(kActorHanoi, kSetKP07)) {
+			Loop_Actor_Walk_To_Actor(kActorMcCoy, kActorHanoi, 24, false, false);
+			Actor_Face_Actor(kActorMcCoy, kActorHanoi, true);
+			Actor_Face_Actor(kActorHanoi, kActorMcCoy, true);
+			Actor_Says(kActorMcCoy, 8915, 11); //00-8915.AUD	You got a minute, pal?
+			Actor_Says(kActorHanoi, 210, kAnimationModeTalk); //25-0210.AUD	Sod off, McCoy. I got no time for you.
+		}
+	}
 	if (Actor_Query_Goal_Number(kActorHanoi) == kGoalHanoiNR08WatchShow
 	 || Actor_Query_Goal_Number(kActorHanoi) == kGoalHanoiNR08Leave
 	) {
@@ -228,9 +237,14 @@ void AIScriptHanoi::OtherAgentEnteredCombatMode(int otherActorId, int combatMode
 		// redundant call to lose control here
 		Player_Loses_Control();
 #endif
-		Actor_Set_Goal_Number(kActorHanoi, kGoalHanoiThrowOutMcCoy);
-		}
-		return; //true;
+			Actor_Set_Goal_Number(kActorHanoi, kGoalHanoiThrowOutMcCoy);
+		} 
+	} else if (Player_Query_Current_Scene() == kSceneKP07
+	&& otherActorId == kActorMcCoy
+	&& combatMode
+	) {
+		Actor_Face_Actor(kActorHanoi, kActorMcCoy, true);
+		Actor_Change_Animation_Mode(kActorHanoi, kAnimationModeCombatAttack);
 	}
 	return; //false;
 }
@@ -261,15 +275,19 @@ void AIScriptHanoi::Retired(int byActorId) {
 
 			if (Global_Variable_Query(kVariableReplicantsSurvivorsAtMoonbus) == 0) {
 				Player_Loses_Control();
-				if (Game_Flag_Query(kFlagCrazylegsIsReplicant)) {
-					if (!Game_Flag_Query(kFlagCrazylegsDead)) {
-						Loop_Actor_Walk_To_XYZ(kActorCrazylegs, -12.0f, -41.58f, 72.0f, 0, true, false, false);
-						Actor_Put_In_Set(kActorCrazylegs, kSceneKP06);
+				if (_vm->_cutContent) {
+					if (Game_Flag_Query(kFlagCrazylegsIsReplicant)) {
+						if (!Game_Flag_Query(kFlagCrazylegsDead)) {
+							Loop_Actor_Walk_To_XYZ(kActorCrazylegs, -12.0f, -41.58f, 72.0f, 0, true, false, false);
+							Actor_Put_In_Set(kActorCrazylegs, kSceneKP06);
+							Delay(500);
+							Sound_Play(kSfxSMCAL3, 100, 0, 0, 50);
+						}
 					}
+					Delay(2000);
+					Player_Set_Combat_Mode(false);
+					Delay(2000); 
 				}
-				Delay(2000);
-				Player_Set_Combat_Mode(false);
-				Delay(2000); 
 				Ambient_Sounds_Remove_All_Non_Looping_Sounds(true);
 				Ambient_Sounds_Remove_All_Looping_Sounds(1u);
 				Game_Flag_Set(kFlagKP07toKP06);
@@ -435,6 +453,7 @@ bool AIScriptHanoi::GoalChanged(int currentGoalNumber, int newGoalNumber) {
 				Delay (1000);
 				Actor_Start_Speech_Sample(kActorMcCoy, 490); //00-0490.AUD	Suck on this, skin-job!
 				Sound_Play(kSfxGUNH1A, 100, 0, 0, 50);
+				Actor_Change_Animation_Mode(kActorMcCoy, 6);
 				Actor_Change_Animation_Mode(kActorHanoi, 21);
 				Loop_Actor_Walk_To_XYZ(kActorHanoi, 47.04, 0.18, 321.63, 0, false, false, false);
 				Music_Stop(1u);

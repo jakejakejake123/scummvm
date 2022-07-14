@@ -168,7 +168,6 @@ bool SceneScriptUG03::ClickedOnExit(int exitId) {
 		if (!Loop_Actor_Walk_To_XYZ(kActorMcCoy, -51.0f, 0.0f, 255.0f, 0, true, false, false)) {
 			Ambient_Sounds_Remove_All_Non_Looping_Sounds(true);
 			Ambient_Sounds_Remove_All_Looping_Sounds(1u);
-			Game_Flag_Set(kFlagUG03toUG04);
 			Set_Enter(kSetUG04, kSceneUG04);
 		}
 		return true;

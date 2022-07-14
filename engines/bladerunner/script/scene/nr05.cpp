@@ -342,13 +342,19 @@ void SceneScriptNR05::talkToEarlyQ() {
 		&& Actor_Query_Goal_Number(kActorLucy) != kGoalLucyGone) {
 			DM_Add_To_List_Never_Repeat_Once_Selected(900, 5, 6, 5); // LUCY
 		}
+		if (_vm->_cutContent) {
+			if (Actor_Clue_Query(kActorMcCoy, kClueLucy)) {
+				if (Actor_Query_Goal_Number(kActorLucy) != kGoalLucyGone) {
+					DM_Add_To_List_Never_Repeat_Once_Selected(1210, 4, 6, 2); // LUCY'S PHOTO
+				}
+			}
+		}
 		// Made it so the blonde woman option is now available if you have either the China bar photo or the woman in animoid row photo.
 		// Also made it so this option is only available if you also talked to Early Q about the jewelry. This is because Early Q mentions giving the jewelry to 'Hecuba'
 		// in this conversation which is a follow up of the previous conversation where he mentions giving the jewelry to one of his dancers.
 		if (_vm->_cutContent) {
 			if (Game_Flag_Query(kFlagEarlyQTalkJewelry)) {
-				if (Actor_Clue_Query(kActorMcCoy, kClueChinaBar)
-				|| Actor_Clue_Query(kActorMcCoy, kClueWomanInAnimoidRow)) {
+				if (Actor_Clue_Query(kActorMcCoy, kClueChinaBar)) {
 					// TODO A bug? kClueDektorasDressingRoom is acquired from EarlyQ
 					// at his office (nr04) while being threatened by McCoy.
 					// At which point EarlyQ already tells McCoy who the people on the photograph are.
@@ -370,8 +376,11 @@ void SceneScriptNR05::talkToEarlyQ() {
 		if (_vm->_cutContent) {
 			Actor_Says(kActorMcCoy, 8514, kAnimationModeTalk); //00-8514.AUD	Got anything new to tell me?
 			Actor_Says(kActorEarlyQ, 710, kAnimationModeTalk); //18-0710.AUD	The only thing I’ve heard lately is that ol’ moan of pleasure from an ultra-vixen, if you know what I mean.
-			Actor_Says(kActorMcCoy, 3910, kAnimationModeTalk); //00-3910.AUD	You’re lying.
-			Actor_Says(kActorEarlyQ, 740, kAnimationModeTalk); //18-0740.AUD	Hey, would this face lie to you?
+			if (Player_Query_Agenda() == kPlayerAgendaSurly
+			|| (Player_Query_Agenda() == kPlayerAgendaErratic)) {
+				Actor_Says(kActorMcCoy, 3910, kAnimationModeTalk); //00-3910.AUD	You’re lying.
+				Actor_Says(kActorEarlyQ, 740, kAnimationModeTalk); //18-0740.AUD	Hey, would this face lie to you?
+			}
 			Actor_Says(kActorMcCoy, 5150, kAnimationModeTalk); //00-5150.AUD	One more thing.
 		}
 		Actor_Says(kActorEarlyQ, 730, kAnimationModeTalk); //18-0730.AUD	I’m working right now, General. Ask me later.
@@ -407,7 +416,12 @@ void SceneScriptNR05::talkToEarlyQ() {
 					Actor_Says(kActorMcCoy, 3540, 15);
 					Actor_Says(kActorEarlyQ, 490, 16); //18-0490.AUD	Hecuba. She’s going on in a few.
 					Actor_Says(kActorEarlyQ, 500, 13); //18-0500.AUD	She’s one of my biggest earners too. She ain’t in any trouble now, is she?
-					Actor_Says(kActorMcCoy, 3545, 15);
+					if (Player_Query_Agenda() == kPlayerAgendaSurly
+					|| (Player_Query_Agenda() == kPlayerAgendaErratic)) {
+						Actor_Says(kActorMcCoy, 3545, 15);
+					} else {
+						Actor_Says(kActorMcCoy, 7815, 15); //00-7815.AUD	No.
+					}
 					Actor_Says(kActorEarlyQ, 520, 12); //18-0520.AUD	(sighs) Good, good. Wouldn’t wanna slaughter the goose that lays them golden eggs.
 					Actor_Clue_Acquire(kActorMcCoy, kClueEarlyInterviewA, true, kActorEarlyQ);
 					Game_Flag_Set(kFlagEarlyQTalkJewelry);
@@ -422,7 +436,12 @@ void SceneScriptNR05::talkToEarlyQ() {
 				Actor_Says(kActorMcCoy, 3540, 15);
 				Actor_Says(kActorEarlyQ, 490, 16); //18-0490.AUD	Hecuba. She’s going on in a few.
 				Actor_Says(kActorEarlyQ, 500, 13); //18-0500.AUD	She’s one of my biggest earners too. She ain’t in any trouble now, is she?
-				Actor_Says(kActorMcCoy, 3545, 15);
+				if (Player_Query_Agenda() == kPlayerAgendaSurly
+				|| (Player_Query_Agenda() == kPlayerAgendaErratic)) {
+					Actor_Says(kActorMcCoy, 3545, 15);
+				} else {
+					Actor_Says(kActorMcCoy, 7815, 15); //00-7815.AUD	No.
+				}
 				Actor_Says(kActorEarlyQ, 520, 12); //18-0520.AUD	(sighs) Good, good. Wouldn’t wanna slaughter the goose that lays them golden eggs.
 				Actor_Clue_Acquire(kActorMcCoy, kClueEarlyInterviewA, true, kActorEarlyQ);
 				Game_Flag_Set(kFlagEarlyQTalkJewelry);
@@ -451,39 +470,56 @@ void SceneScriptNR05::talkToEarlyQ() {
 
 	case 900: // LUCY
 		if (_vm->_cutContent) {
-			if (!Actor_Clue_Query(kActorMcCoy, kClueLucy)) {
-				Actor_Says(kActorMcCoy, 385, 9); //00-0385.AUD	I'm looking for a girl about 14 years old with pink hair. You seen her?
-			} else {
-				Actor_Says(kActorMcCoy, 3510, 23);
-			}
+			Actor_Says(kActorMcCoy, 385, 9); //00-0385.AUD	I'm looking for a girl about 14 years old with pink hair. You seen her?
 		} else {
-			Actor_Says(kActorMcCoy, 3510, 15);
+			Actor_Says(kActorMcCoy, 3510, 15); //00-3510.AUD	This girl one of yours?
 		}
-		Actor_Modify_Friendliness_To_Other(kActorEarlyQ, kActorMcCoy, -1);
+		if (!_vm->_cutContent) {
+			Actor_Modify_Friendliness_To_Other(kActorEarlyQ, kActorMcCoy, -1);
+		}
 		Actor_Says_With_Pause(kActorEarlyQ, 530, 1.2f, kAnimationModeTalk); //18-0530.AUD	This ain’t no daycare center, General.
-		// Made it so if Crazylegs is a rep he doesn't make those creepy comments about Lucy. If Early Q is a rep he actually cares about the reps and would never hurt Lucy
+		// Made it so if Early Q is a rep he doesn't make those creepy comments about Lucy. If Early Q is a rep he actually cares about the reps and would never hurt Lucy
 		// who is someone that the reps really care about.
-		if (_vm->_cutContent) {
-			if (!Game_Flag_Query(kFlagEarlyQIsReplicant)) {
-				if (Actor_Clue_Query(kActorMcCoy, kClueLucy)) {
-					Actor_Says(kActorEarlyQ, 540, 15); //18-0540.AUD	Of course, she ain’t half bad looking. My pappy always used to say ‘if there’s grass on the field, it’s time to play ball’.
-				}
-			}
-		} else {
+		if (!_vm->_cutContent) {
 			Actor_Says(kActorEarlyQ, 540, 15); //18-0540.AUD	Of course, she ain’t half bad looking. My pappy always used to say ‘if there’s grass on the field, it’s time to play ball’.
 		}
-		Actor_Says(kActorMcCoy, 3550, 13);
+		Actor_Says(kActorMcCoy, 3550, 13); //00-3550.AUD	So, she hasn’t been around here?
 		Actor_Says(kActorEarlyQ, 560, 14); //18-0560.AUD	Nah, she ain’t one of mine.
 		Actor_Says(kActorEarlyQ, 570, 13); //18-0570.AUD	Talk to Taffy. He gets most of the peddy business around here.
 		if (_vm->_cutContent) {
 			if (Player_Query_Agenda() != kPlayerAgendaSurly
 			&& (Player_Query_Agenda() != kPlayerAgendaErratic)) {
-				Actor_Says(kActorMcCoy, 3555, 12);
+				Actor_Says(kActorMcCoy, 3555, 12); //00-3555.AUD	It’s men like you that made this country great, Early.
 			}
 		} else {
 			Actor_Says(kActorMcCoy, 3555, 12);
 		}
 		Actor_Face_Heading(kActorEarlyQ, 849, false);
+		break;
+
+	case 1210: // LUCY'S PHOTO
+		if (_vm->_cutContent) {
+			Actor_Says(kActorMcCoy, 3510, 23); //00-3510.AUD	This girl one of yours?
+			Actor_Says_With_Pause(kActorEarlyQ, 530, 1.2f, kAnimationModeTalk); //18-0530.AUD	This ain’t no daycare center, General.
+			if (!Game_Flag_Query(kFlagEarlyQIsReplicant)) {
+				Actor_Says(kActorEarlyQ, 540, 15); //18-0540.AUD	Of course, she ain’t half bad looking. My pappy always used to say ‘if there’s grass on the field, it’s time to play ball’.
+				Actor_Says(kActorMcCoy, 8665, 13); //00-8665.AUD	Disgusting.
+				Delay(2000);
+			}
+			Actor_Says(kActorMcCoy, 3550, 13);
+			Actor_Says(kActorEarlyQ, 560, 14); //18-0560.AUD	Nah, she ain’t one of mine.
+			Actor_Says(kActorEarlyQ, 570, 13); //18-0570.AUD	Talk to Taffy. He gets most of the peddy business around here.
+			if (_vm->_cutContent) {
+				if (!Game_Flag_Query(kFlagEarlyQIsReplicant)) {
+					Actor_Says(kActorMcCoy, 2485, 19); //00-2485.AUD	I’ve a hard time believing that.
+				} else {
+					Actor_Says(kActorMcCoy, 3555, 12); //00-3555.AUD	It’s men like you that made this country great, Early.
+				}
+			} else {
+				Actor_Says(kActorMcCoy, 3555, 12);
+			}
+			Actor_Face_Heading(kActorEarlyQ, 849, false);
+		}
 		break;
 
 	case 910: // BLOND WOMAN
@@ -507,14 +543,26 @@ void SceneScriptNR05::talkToEarlyQ() {
 			Actor_Says(kActorEarlyQ, 580, 12); //18-0580.AUD	Hey. That kinda looks like Hecuba. The one I lent the jewelry to?
 			Actor_Says(kActorMcCoy, 3560, 13); 
 			Actor_Says(kActorEarlyQ, 590, 16); //18-0590.AUD	That’s it.
-			Actor_Says(kActorMcCoy, 3565, 16);
-			Actor_Says(kActorEarlyQ, 600, 13);
-			Actor_Says(kActorMcCoy, 3570, 14);
-			Actor_Says(kActorEarlyQ, 620, 15);
-			Actor_Says(kActorMcCoy, 3575, 13);
-			// Added in the this Early interview clue where he mentions Hecuba is Dektora.
 			if (_vm->_cutContent) {
-				Actor_Clue_Acquire(kActorMcCoy, kClueEarlyInterviewB1, true, kActorEarlyQ);
+				if (Player_Query_Agenda() == kPlayerAgendaSurly
+				|| (Player_Query_Agenda() == kPlayerAgendaErratic)) {
+					Actor_Says(kActorMcCoy, 3565, 16); //00-3565.AUD	There hasn’t been an exotic dancer who used her real name since Jesus was a pup.
+					Actor_Says(kActorEarlyQ, 600, 13);
+					Actor_Says(kActorMcCoy, 3570, 14); //00-3570.AUD	I’m gonna want to talk to her. When is she up?
+					Actor_Says(kActorEarlyQ, 620, 15); //18-0620.AUD	Next, General. Have a couple of drinks, relax a little. But wait until her act is over. I don’t want to deprive a lady of her livelihood.
+					Actor_Says(kActorMcCoy, 3575, 13); //00-3575.AUD	Oh, god forbid.
+					// Added in the this Early interview clue where he mentions Hecuba is Dektora.
+					Actor_Clue_Acquire(kActorMcCoy, kClueEarlyInterviewB1, true, kActorEarlyQ);
+				} else {
+					Actor_Says(kActorMcCoy, 4880, 16); //00-4880.AUD	Is that right?
+					Actor_Says(kActorEarlyQ, 740, 15); // 18-0740.AUD	Hey, would this face lie to you?
+				}
+			} else {
+				Actor_Says(kActorMcCoy, 3565, 16); //00-3565.AUD	There hasn’t been an exotic dancer who used her real name since Jesus was a pup.
+				Actor_Says(kActorEarlyQ, 600, 13);
+				Actor_Says(kActorMcCoy, 3570, 14);
+				Actor_Says(kActorEarlyQ, 620, 15);
+				Actor_Says(kActorMcCoy, 3575, 13);
 			}
 		} else {
 			// Early Q denies recongnizing Dektora

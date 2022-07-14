@@ -248,28 +248,23 @@ void SceneScriptMA02::PlayerWalkedIn() {
 				if (Game_Flag_Query(kFlagMcCoyIsInnocent) && Game_Flag_Query(kFlagDektoraIsReplicant)) { 
 					Actor_Voice_Over(1160, kActorVoiceOver); //99-1160.AUD	And if I’d gotten home a few minutes earlier…
 					Actor_Voice_Over(1170, kActorVoiceOver); //99-1170.AUD	it would have been me down there on the killing floor.
-					Actor_Voice_Over(1180, kActorVoiceOver); //99-1180.AUD	No, it was a message. Plain and simple.
 				} else if (Game_Flag_Query(kFlagMcCoyIsInnocent) && Game_Flag_Query(kFlagLucyIsReplicant)) { 
 					Actor_Voice_Over(1160, kActorVoiceOver); //99-1160.AUD	And if I’d gotten home a few minutes earlier…
 					Actor_Voice_Over(1170, kActorVoiceOver); //99-1170.AUD	it would have been me down there on the killing floor.
-					Actor_Voice_Over(1180, kActorVoiceOver); //99-1180.AUD	No, it was a message. Plain and simple.
 				} else if (!Game_Flag_Query(kFlagMcCoyIsInnocent) && Game_Flag_Query(kFlagDektoraIsReplicant)) {
 					Actor_Voice_Over(1160, kActorVoiceOver); //99-1160.AUD	And if I’d gotten home a few minutes earlier…
 					Actor_Voice_Over(1170, kActorVoiceOver); //99-1170.AUD	it would have been me down there on the killing floor.
-					Actor_Voice_Over(1180, kActorVoiceOver); //99-1180.AUD	No, it was a message. Plain and simple.
 				} else if (!Game_Flag_Query(kFlagMcCoyIsInnocent) && Game_Flag_Query(kFlagLucyIsReplicant)) {
 					Actor_Voice_Over(1160, kActorVoiceOver); //99-1160.AUD	And if I’d gotten home a few minutes earlier…
 					Actor_Voice_Over(1170, kActorVoiceOver); //99-1170.AUD	it would have been me down there on the killing floor.
-					Actor_Voice_Over(1180, kActorVoiceOver); //99-1180.AUD	No, it was a message. Plain and simple.
 				} else if (!Game_Flag_Query(kFlagMcCoyIsInnocent) && !Game_Flag_Query(kFlagDektoraIsReplicant)) {
 					Actor_Voice_Over(1160, kActorVoiceOver); //99-1160.AUD	And if I’d gotten home a few minutes earlier…
 					Actor_Voice_Over(1170, kActorVoiceOver); //99-1170.AUD	it would have been me down there on the killing floor.
-					Actor_Voice_Over(1180, kActorVoiceOver); //99-1180.AUD	No, it was a message. Plain and simple.
 				} else if (!Game_Flag_Query(kFlagMcCoyIsInnocent) && !Game_Flag_Query(kFlagLucyIsReplicant)) {
 					Actor_Voice_Over(1160, kActorVoiceOver); //99-1160.AUD	And if I’d gotten home a few minutes earlier…
 					Actor_Voice_Over(1170, kActorVoiceOver); //99-1170.AUD	it would have been me down there on the killing floor.
-					Actor_Voice_Over(1180, kActorVoiceOver); //99-1180.AUD	No, it was a message. Plain and simple.
 				}
+				Actor_Voice_Over(1180, kActorVoiceOver); //99-1180.AUD	No, it was a message. Plain and simple.
 				if (Game_Flag_Query(kFlagMcCoyIsInnocent) && !Game_Flag_Query(kFlagDektoraIsReplicant)) {
 					Actor_Voice_Over(1190, kActorVoiceOver); //99-1190.AUD	Crystal was giving me one last chance to disappear.
 					Actor_Clue_Acquire(kActorMcCoy, kClueCrystalsCigarette, true, kActorSteele);
@@ -277,24 +272,27 @@ void SceneScriptMA02::PlayerWalkedIn() {
 					Actor_Voice_Over(1190, kActorVoiceOver); //99-1190.AUD	Crystal was giving me one last chance to disappear.	 
 					Actor_Clue_Acquire(kActorMcCoy, kClueCrystalsCigarette, true, kActorSteele);
 				}
-				if (Game_Flag_Query(kFlagMcCoyIsInnocent) && Game_Flag_Query(kFlagDektoraIsReplicant)) { 
-					Actor_Voice_Over(1200, kActorVoiceOver); //99-1200.AUD	But now I had a little message of my own to deliver.
-					Actor_Clue_Acquire(kActorMcCoy, kClueCrystalsCigarette, true, kActorSteele);
-				} else if (Game_Flag_Query(kFlagMcCoyIsInnocent) && Game_Flag_Query(kFlagLucyIsReplicant)) { 
-					Actor_Voice_Over(1200, kActorVoiceOver); //99-1200.AUD	But now I had a little message of my own to deliver.
-					Actor_Clue_Acquire(kActorMcCoy, kClueCrystalsCigarette, true, kActorSteele);
-				} else if (!Game_Flag_Query(kFlagMcCoyIsInnocent) && Game_Flag_Query(kFlagDektoraIsReplicant)) {
-					Actor_Voice_Over(1200, kActorVoiceOver); //99-1200.AUD	But now I had a little message of my own to deliver.
-					Actor_Clue_Acquire(kActorMcCoy, kClueCrystalsCigarette, true, kActorSteele);	
-				} else if (!Game_Flag_Query(kFlagMcCoyIsInnocent) && Game_Flag_Query(kFlagLucyIsReplicant)) {
-					Actor_Voice_Over(1200, kActorVoiceOver); //99-1200.AUD	But now I had a little message of my own to deliver.
-					Actor_Clue_Acquire(kActorMcCoy, kClueCrystalsCigarette, true, kActorSteele);
-				} else if (!Game_Flag_Query(kFlagMcCoyIsInnocent) && !Game_Flag_Query(kFlagDektoraIsReplicant)) {
-					Actor_Voice_Over(1200, kActorVoiceOver); //99-1200.AUD	But now I had a little message of my own to deliver.
-					Actor_Clue_Acquire(kActorMcCoy, kClueCrystalsCigarette, true, kActorSteele);	
-				} else if (!Game_Flag_Query(kFlagMcCoyIsInnocent) && !Game_Flag_Query(kFlagLucyIsReplicant)) {
-					Actor_Voice_Over(1200, kActorVoiceOver); //99-1200.AUD	But now I had a little message of my own to deliver.
-					Actor_Clue_Acquire(kActorMcCoy, kClueCrystalsCigarette, true, kActorSteele);
+				if (Player_Query_Agenda() == kPlayerAgendaSurly 
+				|| Player_Query_Agenda() == kPlayerAgendaErratic) {
+					if (Game_Flag_Query(kFlagMcCoyIsInnocent) && Game_Flag_Query(kFlagDektoraIsReplicant)) { 
+						Actor_Voice_Over(1200, kActorVoiceOver); //99-1200.AUD	But now I had a little message of my own to deliver.
+						Actor_Clue_Acquire(kActorMcCoy, kClueCrystalsCigarette, true, kActorSteele);
+					} else if (Game_Flag_Query(kFlagMcCoyIsInnocent) && Game_Flag_Query(kFlagLucyIsReplicant)) { 
+						Actor_Voice_Over(1200, kActorVoiceOver); //99-1200.AUD	But now I had a little message of my own to deliver.
+						Actor_Clue_Acquire(kActorMcCoy, kClueCrystalsCigarette, true, kActorSteele);
+					} else if (!Game_Flag_Query(kFlagMcCoyIsInnocent) && Game_Flag_Query(kFlagDektoraIsReplicant)) {
+						Actor_Voice_Over(1200, kActorVoiceOver); //99-1200.AUD	But now I had a little message of my own to deliver.
+						Actor_Clue_Acquire(kActorMcCoy, kClueCrystalsCigarette, true, kActorSteele);	
+					} else if (!Game_Flag_Query(kFlagMcCoyIsInnocent) && Game_Flag_Query(kFlagLucyIsReplicant)) {
+						Actor_Voice_Over(1200, kActorVoiceOver); //99-1200.AUD	But now I had a little message of my own to deliver.
+						Actor_Clue_Acquire(kActorMcCoy, kClueCrystalsCigarette, true, kActorSteele);
+					} else if (!Game_Flag_Query(kFlagMcCoyIsInnocent) && !Game_Flag_Query(kFlagDektoraIsReplicant)) {
+						Actor_Voice_Over(1200, kActorVoiceOver); //99-1200.AUD	But now I had a little message of my own to deliver.
+						Actor_Clue_Acquire(kActorMcCoy, kClueCrystalsCigarette, true, kActorSteele);	
+					} else if (!Game_Flag_Query(kFlagMcCoyIsInnocent) && !Game_Flag_Query(kFlagLucyIsReplicant)) {
+						Actor_Voice_Over(1200, kActorVoiceOver); //99-1200.AUD	But now I had a little message of my own to deliver.
+						Actor_Clue_Acquire(kActorMcCoy, kClueCrystalsCigarette, true, kActorSteele);
+					}
 				}
 			} else {
 				Actor_Says(kActorMcCoy, 2385,  kAnimationModeTalk); //00-2385.AUD	Maggie! Come here girl.
@@ -331,6 +329,21 @@ void SceneScriptMA02::PlayerWalkedIn() {
 			if (!Game_Flag_Query(kFlagDirectorsCut)) {
 				Actor_Voice_Over(1240, kActorVoiceOver);
 				Actor_Voice_Over(1250, kActorVoiceOver);
+			}
+		}
+	}
+
+	if (_vm->_cutContent) {
+		if (Global_Variable_Query(kVariableChapter) == 1) {
+			if (!Game_Flag_Query(kFlagPhoneRung)) {
+				if (Actor_Clue_Query(kActorMcCoy, kClueMcCoyRetiredZuben)
+				|| Actor_Clue_Query(kActorMcCoy, kClueMcCoyLetZubenEscape)) {
+					Sound_Play(kSfxVIDFONE1, 100, 0, 0, 50);
+					Delay(2000);
+					Sound_Play(kSfxVIDFONE1, 100, 0, 0, 50);
+					Delay(3000);
+					Game_Flag_Set(kFlagPhoneRung);
+				}
 			}
 		}
 	}

@@ -189,7 +189,9 @@ void SceneScriptUG05::PlayerWalkedIn() {
 	if (Game_Flag_Query(kFlagHF05PoliceArrived)) {
 		if (Game_Flag_Query(kFlagHF07Hole)) {
 			Music_Stop(2u);
-
+			if (_vm->_cutContent) {
+				Music_Play(kMusicBRBlues, 52, 0, 3, -1, kMusicLoopPlayOnceRandomStart, 0);
+			}
 			Actor_Put_In_Set(kActorOfficerGrayford, kSetUG05);
 			Actor_Set_At_XYZ(kActorOfficerGrayford, 4.22f, -1.37f, -925.0f, 750);
 			Actor_Set_Goal_Number(kActorOfficerGrayford, kGoalOfficerGrayfordDead);

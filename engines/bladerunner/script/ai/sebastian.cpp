@@ -624,14 +624,32 @@ void AIScriptSebastian::setMcCoyIsABladeRunner() {
 	}
 	Actor_Says(kActorMcCoy, 7200, 14);
 	Actor_Says(kActorSebastian, 570, 16);
-	Actor_Says(kActorMcCoy, 7205, 17);
+	Actor_Says(kActorMcCoy, 7205, 17); //00-7205.AUD	The guys who broke in might be Replicants.
 	Actor_Says(kActorSebastian, 580, 13);
-	Actor_Says_With_Pause(kActorMcCoy, 7210, 1.0f, 16);
-	Actor_Says(kActorSebastian, 590, 12);
-	Actor_Says(kActorMcCoy, 7215, 19);
-	Actor_Says(kActorSebastian, 600, 14);
-	Actor_Says(kActorMcCoy, 7220, 13);
-	Actor_Says_With_Pause(kActorMcCoy, 7225, 0.80f, 14);
+	if (_vm->_cutContent) {
+		if (Player_Query_Agenda() != kPlayerAgendaSurly 
+		&& Player_Query_Agenda() != kPlayerAgendaErratic) {
+			Actor_Says_With_Pause(kActorMcCoy, 7210, 1.0f, 16); //00-7210.AUD	You worked on the Nexus-6 series, didn't you?
+			Actor_Says(kActorSebastian, 590, 12);
+			Actor_Says(kActorMcCoy, 7215, 19); //00-7215.AUD	Would you say that the Sixes are smarter than the old Fours and Fives?
+			Actor_Says(kActorSebastian, 600, 14);
+			Actor_Says(kActorMcCoy, 7220, 13); //00-7220.AUD	So, maybe they want to learn more about themselves.
+			Delay(1000);
+			if (Game_Flag_Query(kFlagMcCoyIsHelpingReplicants)) {
+				Actor_Says_With_Pause(kActorMcCoy, 7225, 0.80f, 14); //00-7225.AUD	Maybe they want to pick your brain about their brains.
+			}
+		} else {
+			Actor_Says(kActorMcCoy, 8330, 14); //00-8330.AUD	You tell me.
+			Delay(2000);
+		}
+	} else {
+		Actor_Says_With_Pause(kActorMcCoy, 7210, 1.0f, 16); //00-7210.AUD	You worked on the Nexus-6 series, didn't you?
+		Actor_Says(kActorSebastian, 590, 12);
+		Actor_Says(kActorMcCoy, 7215, 19); //00-7215.AUD	Would you say that the Sixes are smarter than the old Fours and Fives?
+		Actor_Says(kActorSebastian, 600, 14);
+		Actor_Says(kActorMcCoy, 7220, 13); //00-7220.AUD	So, maybe they want to learn more about themselves.
+		Actor_Says_With_Pause(kActorMcCoy, 7225, 0.80f, 14); //00-7225.AUD	Maybe they want to pick your brain about their brains.
+	}
 	Actor_Says(kActorSebastian, 610, 15);
 }
 

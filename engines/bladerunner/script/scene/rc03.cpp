@@ -248,19 +248,18 @@ bool SceneScriptRC03::ClickedOnExit(int exitId) {
 			if (_vm->_cutContent)  {
 				if (Global_Variable_Query(kVariableChapter) == 5
 				|| Game_Flag_Query(kFlagOfficerLearyKilledByBob)
-				) {
-				Actor_Says(kActorMcCoy, 8522, 14);
-			} else {
-				Game_Flag_Set(kFlagRC03toRC04);
-				Set_Enter(kSetRC04, kSceneRC04);
-			}
+				|| Game_Flag_Query(kFlagBulletBobArrested)
+				|| Actor_Query_Goal_Number(kActorBulletBob) > kGoalBulletBobGone) {
+					Actor_Says(kActorMcCoy, 8522, 14);
+				} else {
+					Set_Enter(kSetRC04, kSceneRC04);
+				}
 			} else if (Global_Variable_Query(kVariableChapter) == 3
 			 || Global_Variable_Query(kVariableChapter) == 5
 			 || Game_Flag_Query(kFlagBulletBobDead)
 			) {
 				Actor_Says(kActorMcCoy, 8522, 14);
 			} else {
-				Game_Flag_Set(kFlagRC03toRC04);
 				Set_Enter(kSetRC04, kSceneRC04);
 			}
 		}
@@ -303,9 +302,6 @@ void SceneScriptRC03::talkWithSteele() {
 	Actor_Says(kActorSteele, 1840, kAnimationModeTalk);
 	Actor_Says(kActorMcCoy, 4820, 12);
 	Actor_Says(kActorSteele, 1850, kAnimationModeTalk);
-	if (_vm->_cutContent) {
-		Actor_Says(kActorMcCoy, 4825, 13);
-	}
 	Actor_Says(kActorSteele, 1950, kAnimationModeTalk);
 	Actor_Says(kActorMcCoy, 4835, 14);
 	Actor_Says(kActorSteele, 1960, kAnimationModeTalk);
@@ -346,16 +342,17 @@ void SceneScriptRC03::PlayerWalkedIn() {
 						) {
 							if (Game_Flag_Query(kFlagMcCoyIsHelpingReplicants)) {
 								Actor_Set_Goal_Number(kActorSteele, kGoalSteeleApprehendIzo);
+								Sound_Play(kSfxSHOTCOK1, 75, 0, 0, 50);
 								Actor_Face_Actor(kActorMcCoy, kActorSteele, true);
 								Loop_Actor_Walk_To_XYZ(kActorIzo, 180.0f, -4.0f, 184.0f, 0, false, false, false);
 								Actor_Change_Animation_Mode(kActorIzo, kAnimationModeCombatAttack);
 								Actor_Force_Stop_Walking(kActorMcCoy);
 								Actor_Set_Goal_Number(kActorIzo, kGoalIzoRC03RunAway);
-								Actor_Says(kActorSteele, 1940, kAnimationModeTalk);
+								Actor_Says(kActorSteele, 1940, kAnimationModeTalk); //01-1940.AUD	Move it!
 								Loop_Actor_Walk_To_Actor(kActorSteele, kActorMcCoy, 60, false, true);
 								Actor_Face_Actor(kActorSteele, kActorMcCoy, true);
 								Actor_Face_Actor(kActorMcCoy, kActorSteele, true);
-								Actor_Says(kActorSteele, 1950, kAnimationModeTalk);
+								Actor_Says(kActorSteele, 1950, kAnimationModeTalk); //01-1950.AUD	I've been tracking Izo for a week and you ruined my whole plan in two seconds.
 								Actor_Says(kActorMcCoy, 4835, 14); //00-4835.AUD	Sorry, I bet you can still catch him if you want.
 								if (Actor_Query_Friendliness_To_Other(kActorSteele, kActorMcCoy) < 51) {
 									Actor_Says(kActorSteele, 1980, kAnimationModeTalk); //01-1980.AUD	If I didn't know any better, I'd think you wanted him to get away.
@@ -377,6 +374,7 @@ void SceneScriptRC03::PlayerWalkedIn() {
 							} else {
 								Actor_Set_Goal_Number(kActorSteele, kGoalSteeleApprehendIzo);
 								Player_Gains_Control();
+								Sound_Play(kSfxSHOTCOK1, 75, 0, 0, 50);
 								Actor_Change_Animation_Mode(kActorMcCoy, kAnimationModeDodge);
 								Loop_Actor_Walk_To_XYZ(kActorIzo, 180.0f, -4.0f, 184.0f, 0, false, false, false);
 								Actor_Change_Animation_Mode(kActorIzo, kAnimationModeCombatAttack);
@@ -404,6 +402,7 @@ void SceneScriptRC03::PlayerWalkedIn() {
 						Actor_Set_Goal_Number(kActorSteele, kGoalSteeleApprehendIzo);
 					}
 					Player_Gains_Control();
+					Scene_Exits_Enable();
 				}
 			} else {
 				Actor_Put_In_Set(kActorIzo, kSetRC03);
@@ -477,7 +476,7 @@ void SceneScriptRC03::PlayerWalkedIn() {
 		}
 	}
 	if (_vm->_cutContent) {
-		if (Game_Flag_Query(kFlagIzoEscaped)) {
+		if (Game_Flag_Query(kFlagIzoGotAway)) {
 			Player_Loses_Control();
 			Actor_Set_Goal_Number(kActorSteele, 200);
 			Actor_Put_In_Set(kActorSteele, kSetRC03);
@@ -501,21 +500,33 @@ void SceneScriptRC03::PlayerWalkedIn() {
 			Actor_Says(kActorMcCoy, 4820, 16); //00-4820.AUD	He probably went down in the sewers.
 			Actor_Says(kActorSteele, 1850, 59); //01-1850.AUD	Right where that dirt-bag belongs.
 			Actor_Says(kActorSteele, 1950, 59); //01-1950.AUD	I've been tracking Izo for a week and you ruined my whole plan in two seconds.
-			Game_Flag_Reset(kFlagIzoEscaped);
+			Game_Flag_Reset(kFlagIzoGotAway);
 			Game_Flag_Reset(kFlagIzoWarnedAboutCrystal);
+			Actor_Set_Goal_Number(kActorIzo, kGoalIzoRC03RunAway);
 			if (!Game_Flag_Query(kFlagIzoWarned)) {
 				if (Player_Query_Agenda() != kPlayerAgendaSurly 
 				&& Player_Query_Agenda() != kPlayerAgendaErratic) {
 					Actor_Says(kActorMcCoy, 4835, 13); //00-4835.AUD	Sorry, I bet you can still catch him if you want.
 					Actor_Says(kActorSteele, 1960, 60); //01-1960.AUD	Crawl down that hole and ruin a twenty thousand chinyen Yamamoto suit? I don't think so.
-				}
-				if (Actor_Query_Friendliness_To_Other(kActorSteele, kActorMcCoy) < 51) {
+					Actor_Says(kActorMcCoy, 2305, 13); //00-2305.AUD	I’m sorry.
+					if (Actor_Query_Friendliness_To_Other(kActorSteele, kActorMcCoy) > 50) {
+						Delay(2000);
+						Actor_Says(kActorSteele, 2110, 15); //01-2110.AUD	That's okay.
+					} else {
+						Actor_Says(kActorSteele, 1980, 60); //01-1980.AUD	If I didn't know any better, I'd think you wanted him to get away.
+						Actor_Says(kActorMcCoy, 4840, 16); //00-4840.AUD	You crazy? I've been tailing him myself.
+						Actor_Says(kActorSteele, 1990, 60); //01-1990.AUD	A little word of advice, Slim. Stay out of my way.
+						Actor_Modify_Friendliness_To_Other(kActorSteele, kActorMcCoy, -2);
+						Actor_Modify_Friendliness_To_Other(kActorGuzza, kActorMcCoy, -2);
+					}
+				} else {
+					Actor_Says(kActorMcCoy, 7835, 18); //00-7835.AUD	Is that so?
 					Actor_Says(kActorSteele, 1980, 60); //01-1980.AUD	If I didn't know any better, I'd think you wanted him to get away.
 					Actor_Says(kActorMcCoy, 4840, 16); //00-4840.AUD	You crazy? I've been tailing him myself.
+					Actor_Says(kActorSteele, 1990, 60); //01-1990.AUD	A little word of advice, Slim. Stay out of my way.
+					Actor_Modify_Friendliness_To_Other(kActorSteele, kActorMcCoy, -2);
+					Actor_Modify_Friendliness_To_Other(kActorGuzza, kActorMcCoy, -2);
 				}
-				Actor_Says(kActorSteele, 1990, 60); //01-1990.AUD	A little word of advice, Slim. Stay out of my way.
-				Actor_Modify_Friendliness_To_Other(kActorSteele, kActorMcCoy, -2);
-				Actor_Modify_Friendliness_To_Other(kActorGuzza, kActorMcCoy, -2);
 				Player_Gains_Control();
 				Actor_Set_Goal_Number(kActorSteele, kGoalSteeleLeaveRC03);
 			} else {

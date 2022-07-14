@@ -141,6 +141,7 @@ bool SceneScriptDR04::ClickedOnActor(int actorId) {
 				Actor_Says_With_Pause(kActorMoraji, 40, 0.0f, kAnimationModeTalk);
 				Actor_Says(kActorMoraji, 50, kAnimationModeTalk);
 				if (_vm->_cutContent) {
+					Actor_Clue_Acquire(kActorOfficerGrayford, kClueMorajiInterview, true, kActorMoraji);
 					if (Actor_Clue_Query(kActorMcCoy, kClueChewInterview)) {
 						Actor_Clue_Acquire(kActorMcCoy, kClueMorajiInterview, true, kActorMoraji);
 					}
@@ -219,7 +220,6 @@ bool SceneScriptDR04::ClickedOnExit(int exitId) {
 
 	if (exitId == 1) {
 		if (!Loop_Actor_Walk_To_XYZ(kActorMcCoy, -1067.0f, 7.18f, 421.0f, 0, true, false, false)) {
-			Game_Flag_Set(kFlagDR04toDR05);
 			Set_Enter(kSetDR05, kSceneDR05);
 		}
 		return true;

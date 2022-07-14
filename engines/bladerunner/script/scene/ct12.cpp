@@ -297,8 +297,13 @@ void SceneScriptCT12::PlayerWalkedIn() {
 		if (_vm->_cutContent) {
 			if (!Game_Flag_Query(kFlagMcCoyIsHelpingReplicants)) {
 				Actor_Says(kActorMcCoy, 675, kAnimationModeTalk); //00-0675.AUD	I understand it's got a hell of a retirement plan.
-			} else {	
-				Actor_Says(kActorMcCoy, 8610, 18); //00-8610.AUD	What's the word, friend?
+			} else {
+				if (Player_Query_Agenda() != kPlayerAgendaSurly
+				&& Player_Query_Agenda() != kPlayerAgendaErratic) {
+					Actor_Says(kActorMcCoy, 8610, 18); //00-8610.AUD	What's the word, friend?
+				} else {
+					Actor_Says(kActorMcCoy, 8514, 14); //00-8514.AUD	Got anything new to tell me?
+				}
 			}
 		} else {
 			Actor_Says(kActorMcCoy, 675, kAnimationModeTalk);
@@ -308,7 +313,15 @@ void SceneScriptCT12::PlayerWalkedIn() {
 		Actor_Says(kActorGaff, 30, kAnimationModeTalk);
 		Actor_Says(kActorMcCoy, 685, kAnimationModeTalk);
 		Actor_Says(kActorGaff, 40, kAnimationModeTalk);
-		Actor_Says(kActorMcCoy, 690, kAnimationModeTalk);
+		if (_vm->_cutContent) {
+			if (!Game_Flag_Query(kFlagMcCoyIsHelpingReplicants)) {
+				Actor_Says(kActorMcCoy, 690, kAnimationModeTalk); //00-0690.AUD	Gotcha.
+			} else {
+				Actor_Says(kActorMcCoy, 8320, kAnimationModeTalk); //00-8320.AUD	Really?
+			}
+		} else {
+			Actor_Says(kActorMcCoy, 690, kAnimationModeTalk); //00-0690.AUD	Gotcha.
+		}
 		Actor_Clue_Acquire(kActorMcCoy, kClueGaffsInformation, true, kActorGaff);
 		Game_Flag_Set(kFlagGaffApproachedMcCoyAboutZuben);
 		CDB_Set_Crime(kClueZubenSquadPhoto, kCrimeMoonbusHijacking);
@@ -319,7 +332,7 @@ void SceneScriptCT12::PlayerWalkedIn() {
 			Actor_Says(kActorGaff, 50, kAnimationModeTalk);
 			Actor_Says(kActorMcCoy, 695, kAnimationModeTalk);
 			Actor_Says(kActorGaff, 60, kAnimationModeTalk);
-			Actor_Says(kActorMcCoy, 700, kAnimationModeTalk);
+			Actor_Says(kActorMcCoy, 700, kAnimationModeTalk); //00-0700.AUD	I'm starting to understand.
 			Actor_Says(kActorGaff, 70, kAnimationModeTalk);
 			Actor_Clue_Acquire(kActorMcCoy, kClueMcCoyRetiredZuben, true, kActorGaff);
 			//Restored clue McCoy retired Zuben as an audio clue for McCoy.

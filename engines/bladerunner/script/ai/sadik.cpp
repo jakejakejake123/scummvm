@@ -135,9 +135,27 @@ void AIScriptSadik::ReceivedClue(int clueId, int fromActorId) {
 }
 
 void AIScriptSadik::ClickedByPlayer() {
+	if (_vm->_cutContent) {
+		if (Actor_Query_In_Set(kActorSadik, kSetKP07)) {
+			Loop_Actor_Walk_To_Actor(kActorMcCoy, kActorSadik, 24, false, false);
+			Actor_Face_Actor(kActorMcCoy, kActorSadik, true);
+			Actor_Face_Actor(kActorSadik, kActorMcCoy, true);
+			Actor_Says(kActorMcCoy, 3210, kAnimationModeTalk); //00-3210.AUD	Hey, man.
+			Actor_Says(kActorSadik, 280, kAnimationModeTalk); //08-0280.AUD	You for real I’m thinking.
+		}
+	}
 	if (Actor_Query_Goal_Number(kActorSadik) == kGoalSadikGone) {
 		Actor_Face_Actor(kActorMcCoy, kActorSadik, true);
-		Actor_Says(kActorMcCoy, 8580, 16);
+		if (_vm->_cutContent) {
+			if (Player_Query_Agenda() == kPlayerAgendaSurly 
+			|| Player_Query_Agenda() == kPlayerAgendaErratic) {
+				Actor_Says(kActorMcCoy, 8665, 13); //00-8665.AUD	Disgusting.
+			} else {	
+				Actor_Says(kActorMcCoy, 8630, 12);  // What a waste
+			}
+		} else {
+			Actor_Says(kActorMcCoy, 8665, 14);
+		}
 	}
 }
 
@@ -259,6 +277,8 @@ void AIScriptSadik::Retired(int byActorId) {
 					if (!Game_Flag_Query(kFlagCrazylegsDead)) {
 						Loop_Actor_Walk_To_XYZ(kActorCrazylegs, -12.0f, -41.58f, 72.0f, 0, true, false, false);
 						Actor_Put_In_Set(kActorCrazylegs, kSceneKP06);
+						Delay(500);
+						Sound_Play(kSfxSMCAL3, 100, 0, 0, 50);
 					}
 				}
 				Delay(2000);
@@ -481,10 +501,12 @@ bool AIScriptSadik::GoalChanged(int currentGoalNumber, int newGoalNumber) {
 				if (Player_Query_Agenda() == kPlayerAgendaSurly 
 				|| Player_Query_Agenda() == kPlayerAgendaErratic) {
 					Actor_Says(kActorMcCoy, 8485, kAnimationModeTalk); //00-8485.AUD	One is a start.
-				} else {
-					Actor_Says(kActorMcCoy, 2300, kAnimationModeTalk);
-					if (Game_Flag_Query(kFlagSadikIsReplicant)) {
-						Actor_Says(kActorSadik, 180, kAnimationModeTalk);
+					Delay(1000);
+				} 
+				Actor_Says(kActorMcCoy, 2300, kAnimationModeTalk); 
+				if (Game_Flag_Query(kFlagSadikIsReplicant)) {
+					if (Actor_Query_Friendliness_To_Other(kActorSadik, kActorMcCoy) > 50) {
+						Actor_Says(kActorSadik, 180, kAnimationModeTalk); //08-0180.AUD	My woman? She be killed by a Blade Runner. Revenge all I got left.
 						Actor_Says(kActorSadik, 190, kAnimationModeTalk);
 						if (Player_Query_Agenda() == kPlayerAgendaSurly 
 						|| Player_Query_Agenda() == kPlayerAgendaErratic) {
@@ -492,9 +514,11 @@ bool AIScriptSadik::GoalChanged(int currentGoalNumber, int newGoalNumber) {
 						} else {
 							Actor_Says(kActorMcCoy, 2310, kAnimationModeTalk); //00-2310.AUD	I understand.
 						}
-						Actor_Says(kActorSadik, 200, kAnimationModeTalk);
-					} else {
-						Actor_Says(kActorSadik, 140, kAnimationModeTalk);
+					}
+					Actor_Says(kActorSadik, 200, kAnimationModeTalk); //08-0200.AUD	Truth be told killing don’t help much.
+				} else {
+					if (Actor_Query_Friendliness_To_Other(kActorSadik, kActorMcCoy) > 50) {
+						Actor_Says(kActorSadik, 140, kAnimationModeTalk); //08-0140.AUD	You bet, mon. Human too. My woman, she be Replicant.
 						Actor_Says(kActorSadik, 150, kAnimationModeTalk);
 						if (Player_Query_Agenda() == kPlayerAgendaSurly 
 						|| Player_Query_Agenda() == kPlayerAgendaErratic) {
@@ -505,6 +529,7 @@ bool AIScriptSadik::GoalChanged(int currentGoalNumber, int newGoalNumber) {
 						Actor_Says(kActorSadik, 160, kAnimationModeTalk);
 						Actor_Says(kActorSadik, 170, kAnimationModeTalk);
 					}
+					Actor_Says(kActorSadik, 200, kAnimationModeTalk); //08-0200.AUD	Truth be told killing don’t help much.
 				}
 			}
 		} else {

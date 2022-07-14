@@ -154,12 +154,23 @@ bool SceneScriptAR02::ClickedOnActor(int actorId) {
 					Item_Pickup_Spin_Effect(kModelAnimationMaggieBracelet, 288, 257);
 					Actor_Says(kActorInsectDealer, 250, 14);
 					Player_Gains_Control();
-					dialogueWithInsectDealerBuyBracelet();
+					if (_vm->_cutContent) {
+						if (Player_Query_Agenda() == kPlayerAgendaSurly 
+						|| Player_Query_Agenda() == kPlayerAgendaErratic) {
+							Actor_Says(kActorMcCoy, 8575, 19); // More useless junk.
+							Actor_Modify_Friendliness_To_Other(kActorInsectDealer, kActorMcCoy, -2);
+						} else {
+							dialogueWithInsectDealerBuyBracelet();
+						}
+					} else {
+						dialogueWithInsectDealerBuyBracelet();
+					}
 				} else if (Game_Flag_Query(kFlagAR02InsectDealerTalk)) {
 					Actor_Says(kActorMcCoy, 75, 18);
 					Actor_Says(kActorInsectDealer, 60, 12);
 					Actor_Says(kActorInsectDealer, 70, 14);
 					if (_vm->_cutContent) {
+						// Made it so if Dektora purchased the scorpions at this point McCoy will ask about them if he saw them before.
 						if (Game_Flag_Query(kFlagAR02ScorpionsChecked) 
 						&& Game_Flag_Query(kFlagAR02DektoraBoughtScorpions) 
 						&& !Actor_Clue_Query(kActorMcCoy, kCluePurchasedScorpions)) {
@@ -170,7 +181,12 @@ bool SceneScriptAR02::ClickedOnActor(int actorId) {
 							Actor_Says(kActorMcCoy, 230, 19);
 							Actor_Says(kActorInsectDealer, 340, 13);
 							Actor_Says(kActorInsectDealer, 350, 12);
-							Actor_Says(kActorMcCoy, 235, 16);
+							if (Player_Query_Agenda() != kPlayerAgendaSurly 
+							&& Player_Query_Agenda() != kPlayerAgendaErratic) {
+								Actor_Says(kActorMcCoy, 235, 16); //00-0235.AUD	Gotcha.
+							} else {
+								Actor_Says(kActorMcCoy, 215, 13); // Thanks for your help
+							}
 							Actor_Clue_Acquire(kActorMcCoy, kCluePurchasedScorpions, false, kActorInsectDealer);	
 						}
 					}
@@ -188,22 +204,32 @@ bool SceneScriptAR02::ClickedOnActor(int actorId) {
 						}
 						Actor_Says(kActorInsectDealer, 290, 12);
 						Actor_Says(kActorInsectDealer, 300, 13);
-						Actor_Says(kActorMcCoy, 210, 15);
+						Actor_Says(kActorMcCoy, 210, 15); //00-0210.AUD	You know the name of the nightclub owner?
 						Actor_Says(kActorInsectDealer, 310, 12);
-						Actor_Says(kActorMcCoy, 215, 13); // Thanks for your help
 						if (_vm->_cutContent) {
-							if (Game_Flag_Query(kFlagAR02ScorpionsChecked)) {
-								if (Game_Flag_Query(kFlagAR02DektoraBoughtScorpions)) {
-									Actor_Says(kActorMcCoy, 220, 14);
-									Actor_Says(kActorInsectDealer, 320, 12);
-									Actor_Says(kActorMcCoy, 225, 13);
-									Actor_Says(kActorInsectDealer, 330, 14);
-									Actor_Says(kActorMcCoy, 230, 19);
-									Actor_Says(kActorInsectDealer, 340, 13);
-									Actor_Says(kActorInsectDealer, 350, 12);
-									Actor_Says(kActorMcCoy, 235, 16);
-									Actor_Clue_Acquire(kActorMcCoy, kCluePurchasedScorpions, false, kActorInsectDealer);
+							if (Player_Query_Agenda() != kPlayerAgendaSurly 
+							&& Player_Query_Agenda() != kPlayerAgendaErratic) {
+								Actor_Says(kActorMcCoy, 1315, 12); //00-1315.AUD	Thanks for your time.
+							} else {
+								Actor_Says(kActorMcCoy, 215, 13); // Thanks for your help
+							}
+							if (Game_Flag_Query(kFlagAR02ScorpionsChecked) 
+							&& Game_Flag_Query(kFlagAR02DektoraBoughtScorpions) 
+							&& !Actor_Clue_Query(kActorMcCoy, kCluePurchasedScorpions)) {
+								Actor_Says(kActorMcCoy, 220, 14);
+								Actor_Says(kActorInsectDealer, 320, 12);
+								Actor_Says(kActorMcCoy, 225, 13);
+								Actor_Says(kActorInsectDealer, 330, 14);
+								Actor_Says(kActorMcCoy, 230, 19);
+								Actor_Says(kActorInsectDealer, 340, 13);
+								Actor_Says(kActorInsectDealer, 350, 12);
+								if (Player_Query_Agenda() != kPlayerAgendaSurly 
+								&& Player_Query_Agenda() != kPlayerAgendaErratic) {
+									Actor_Says(kActorMcCoy, 235, 16); //00-0235.AUD	Gotcha.
+								} else {
+									Actor_Says(kActorMcCoy, 215, 13); // Thanks for your help
 								}
+								Actor_Clue_Acquire(kActorMcCoy, kCluePurchasedScorpions, false, kActorInsectDealer);
 							}
 						} else if (Game_Flag_Query(kFlagAR02DektoraBoughtScorpions)) {
 							Actor_Says(kActorMcCoy, 220, 14);
@@ -224,7 +250,9 @@ bool SceneScriptAR02::ClickedOnActor(int actorId) {
 									Actor_Says(kActorMcCoy, 240, 17); // How's business?
 									Actor_Says(kActorInsectDealer, 360, 13);
 									Actor_Says(kActorInsectDealer, 370, 14);
-									Actor_Says(kActorMcCoy, 245, 13);
+									if (!Game_Flag_Query(kFlagMcCoyIsHelpingReplicants)) {
+										Actor_Says(kActorMcCoy, 245, 13); //00-0245.AUD	Yeah, I can't imagine a better stocking-stuffer.
+									}
 									Delay (1000);
 									Actor_Says(kActorMcCoy, 8610, 17); // What's the word, friend?																	
 									Actor_Says(kActorInsectDealer, 400, 13); // I hear very little.
@@ -232,9 +260,32 @@ bool SceneScriptAR02::ClickedOnActor(int actorId) {
 									Actor_Says(kActorInsectDealer, 470, 13); // This slug, perhaps.
 									Game_Flag_Set(kFlagSlugTalk);
 									Item_Pickup_Spin_Effect_From_Actor(kModelAnimationSlug, kActorInsectDealer, 0, -40);
-									dialogueWithInsectDealerBuySlug();
+									if (!Game_Flag_Query(kFlagMcCoyIsHelpingReplicants)) {
+										Actor_Voice_Over(1860, kActorVoiceOver); //99-1860.AUD	No self-respecting human would own one of those frauds.
+									} else {
+										dialogueWithInsectDealerBuySlug();
+									}
 								} else {
-									Actor_Says(kActorMcCoy, 1315, 12); //00-1315.AUD	Thanks for your time.
+									if (Game_Flag_Query(kFlagAR02ScorpionsChecked) 
+									&& Game_Flag_Query(kFlagAR02DektoraBoughtScorpions) 
+									&& !Actor_Clue_Query(kActorMcCoy, kCluePurchasedScorpions)) {
+										Actor_Says(kActorMcCoy, 220, 14);
+										Actor_Says(kActorInsectDealer, 320, 12);
+										Actor_Says(kActorMcCoy, 225, 13);
+										Actor_Says(kActorInsectDealer, 330, 14);
+										Actor_Says(kActorMcCoy, 230, 19);
+										Actor_Says(kActorInsectDealer, 340, 13);
+										Actor_Says(kActorInsectDealer, 350, 12);
+										if (Player_Query_Agenda() != kPlayerAgendaSurly 
+										&& Player_Query_Agenda() != kPlayerAgendaErratic) {
+											Actor_Says(kActorMcCoy, 235, 16); //00-0235.AUD	Gotcha.
+										} else {
+											Actor_Says(kActorMcCoy, 215, 13); // Thanks for your help
+										}
+										Actor_Clue_Acquire(kActorMcCoy, kCluePurchasedScorpions, false, kActorInsectDealer);
+									} else {
+										Actor_Says(kActorMcCoy, 1315, 12); //00-1315.AUD	Thanks for your time.
+									}
 								}
 							}
 						}
@@ -269,9 +320,40 @@ bool SceneScriptAR02::ClickedOnActor(int actorId) {
 					Actor_Says(kActorHasan, 250, 12); //20-0250.AUD	I'm afraid not, noble one. But you shall surely be the first to know, if I do hear something.
 					if (Player_Query_Agenda() == kPlayerAgendaSurly 
 					|| Player_Query_Agenda() == kPlayerAgendaErratic) {
-						Actor_Says(kActorMcCoy, 6995, 18); //00-6995.AUD	That's not what I heard. You wanna set the record straight?
+						Actor_Says(kActorMcCoy, 3910, 16); //00-3910.AUD	You’re lying.
 						Actor_Says(kActorHasan, 270, 11); //20-0270.AUD	You sully my good name with such accusations. I speak only the truth, I swear!
-						Actor_Says(kActorMcCoy, 745, 14); //00-0745.AUD	I'm watching you, pal.
+						Actor_Says(kActorMcCoy, 940, 13);
+						// Quote 80 is *boop* in ENG and DEU versions
+						// In FRA, ITA versions it is identical to the second half of quote 70, and thus redundant
+						// In ESP version it is the missing second half of quote 70, and is required!
+						if (_vm->_cutContent
+							&& _vm->_language == Common::ES_ESP
+						) {
+							Actor_Says_With_Pause(kActorHasan, 70, 0.0f, 12);
+							Actor_Says(kActorHasan, 80, kAnimationModeTalk);
+						} else {
+							Actor_Says(kActorHasan, 70, 12);//20-0070.AUD	Certainly the LPD must have better things to do than to question a humble merchant over and over again about the same things.
+						}
+						Actor_Says(kActorHasan, 90, 12);//20-0090.AUD	Why aren't you out arresting criminals like that disreputable Bob fellow.
+						// Made it so McCoy only questions who Bob is and is directed to Bobs shop only if McCoy hasn't Met Bob.
+						if (!Game_Flag_Query(kFlagRC04Entered)) {
+							Actor_Says(kActorMcCoy, 180, 15); //00-0180.AUD	Bob?
+						}
+						Actor_Says(kActorHasan, 100, 14); //20-0100.AUD	He owns the armament shop up the street. He is insane, noble one. Insane.
+						Actor_Says(kActorHasan, 110, 12);
+						// Quote 130 is *boop* in ENG and DEU versions
+						// In FRA, ITA versions it is identical to the second half of quote 120, and thus redundant
+						// In ESP version it is the missing second half of quote 120, and is required!
+						if (_vm->_cutContent
+							&& _vm->_language == Common::ES_ESP
+						) {
+							Actor_Says_With_Pause(kActorHasan, 120, 0.0f, 13);
+							Actor_Says(kActorHasan, 130, kAnimationModeTalk);
+						} else {
+							Actor_Says(kActorHasan, 120, 13);
+						}
+						Actor_Modify_Friendliness_To_Other(kActorHasan, kActorMcCoy, -2);
+						Actor_Clue_Acquire(kActorMcCoy, kClueHasanInterview, false, kActorHasan);
 						Actor_Modify_Friendliness_To_Other(kActorHasan, kActorMcCoy, -2);
 					} else {
 						Actor_Says(kActorMcCoy, 8525, 13);
@@ -312,14 +394,19 @@ bool SceneScriptAR02::ClickedOnActor(int actorId) {
 						Actor_Says(kActorHasan, 310, 13);
 						Game_Flag_Set(kFlagHasanTalkFinished);
 						Item_Pickup_Spin_Effect_From_Actor(kModelAnimationGarterSnake, kActorHasan, 0, -40);
-						dialogueWithHassanBuySnake();
+						if (!Game_Flag_Query(kFlagMcCoyIsHelpingReplicants)) {
+							Actor_Voice_Over(1860, kActorVoiceOver); //99-1860.AUD	No self-respecting human would own one of those frauds.
+							Actor_Modify_Friendliness_To_Other(kActorHasan, kActorMcCoy, -2);
+						} else {
+							dialogueWithHassanBuySnake();
+						}
 					} else {
 						Actor_Says(kActorMcCoy, 8915, 14); // You got a minute, pal?
 						Actor_Says(kActorHasan, 260, 14); // My time is quite valuable, noble one
 						Game_Flag_Set(kFlagHasanTalkFinished);
 					}
 				} else { 
-					if (Actor_Query_Friendliness_To_Other(kActorHasan, kActorMcCoy) > 49) {
+					if (Actor_Query_Friendliness_To_Other(kActorHasan, kActorMcCoy) > 50) {
 						Actor_Says(kActorMcCoy, 1315, 13);		
 					} else {
 						Actor_Says(kActorMcCoy, 8595, 13); //00-8595.AUD	Hmm. He's damn unfriendly.				
@@ -354,7 +441,7 @@ bool SceneScriptAR02::ClickedOnItem(int itemId, bool a2) {
 							Actor_Says(kActorMcCoy, 1955, 14); //00-1955.AUD	We’re taking a little drive downtown.
 							Game_Flag_Set(kFlagAR02StungByScorpion);
 							Game_Flag_Set(kFlagInsectDealerArrested);
-							Music_Stop(3u);
+							Music_Stop(1u);
 							Delay (1000);
 							Item_Remove_From_World(kItemScorpions);
 							Actor_Put_In_Set(kActorInsectDealer, kSetPS09);
@@ -370,9 +457,8 @@ bool SceneScriptAR02::ClickedOnItem(int itemId, bool a2) {
 						Actor_Says(kActorInsectDealer, 0, 14); 
 						Actor_Says(kActorMcCoy, 55, 18);
 						Actor_Says(kActorInsectDealer, 10, 14);
-						if (Player_Query_Agenda() != kPlayerAgendaSurly 
-						&& Player_Query_Agenda() != kPlayerAgendaErratic) {
-							Actor_Says(kActorMcCoy, 60, 18);
+						if (Game_Flag_Query(kFlagMcCoyIsHelpingReplicants)) {
+							Actor_Says(kActorMcCoy, 60, 18); //00-0060.AUD	I don't think so. They are beautiful, though. I never seen one before.
 							Actor_Says(kActorInsectDealer, 20, 14);
 						} else {
 							Actor_Says(kActorMcCoy, 8980, 16); //00-8980.AUD	No, thanks, I'm saving for a rainy day.
@@ -450,18 +536,21 @@ void SceneScriptAR02::ActorChangedGoal(int actorId, int newGoal, int oldGoal, bo
 }
 
 void SceneScriptAR02::PlayerWalkedIn() {
-	// This is the scene that plays after McCoy tries to convince Crystal offscreen.
+	// This is the scene that plays after McCoy tries to convince Crystal offscreen about Izo not being involved in weapons smuggling.
 	if (Actor_Query_Goal_Number(kActorSteele) == kGoalSteeleRC03GoToAR02) {
 		Actor_Change_Animation_Mode(kActorSteele, kAnimationModeIdle);
 		Actor_Face_Actor(kActorMcCoy, kActorSteele, true);
 		Actor_Face_Actor(kActorSteele, kActorMcCoy, true);			
-		Actor_Says(kActorSteele, 1780, 14); //01-1780.AUD	(sigh) Sorry I missed all the laughs.
-		Actor_Says(kActorSteele, 1800, 16); //01-1800.AUD	You should have waited for me, Slim.
-		Actor_Says(kActorMcCoy, 2305, 15); //00-2305.AUD	I’m sorry.
-		Actor_Says(kActorSteele, 2110, 15); //01-2110.AUD	That's okay.
-		Actor_Says(kActorMcCoy, 5260, 18); //00-5260.AUD	Happy trails, Steele.
-		Actor_Says(kActorSteele, 2350, 16);  //01-2350.AUD	Ditto.
-		// Removed invisibility code and made it so Steele actually runs offscreen completely.
+		if (Actor_Query_Friendliness_To_Other(kActorSteele, kActorMcCoy) > 50) {
+			Actor_Says(kActorSteele, 1780, 14); //01-1780.AUD	(sigh) Sorry I missed all the laughs.
+			Actor_Says(kActorMcCoy, 3825, 15); //00-3825.AUD	Next time.
+			Actor_Says(kActorMcCoy, 5260, 18); //00-5260.AUD	Happy trails, Steele.
+			Actor_Says(kActorSteele, 2350, 16);  //01-2350.AUD	Ditto.
+		} else {
+			Actor_Says(kActorSteele, 1800, 16); //01-1800.AUD	You should have waited for me, Slim.
+			Actor_Says(kActorMcCoy, 2305, 15); //00-2305.AUD	I’m sorry.
+			Actor_Says(kActorSteele, 1990, 15); //01-1990.AUD	A little word of advice, Slim. Stay out of my way.
+		}
 		Loop_Actor_Walk_To_XYZ(kActorSteele, -700.99, 0.74, -916.12, 48, false, true, false);
 		Actor_Set_Goal_Number(kActorSteele, kGoalSteeleLeaveRC03);
 		Player_Gains_Control();
@@ -491,22 +580,14 @@ void SceneScriptAR02::dialogueWithInsectDealer1() {
 			if (Actor_Clue_Query(kActorMcCoy, kClueDragonflyEarring)
 	   		|| Actor_Clue_Query(kActorMcCoy, kClueBombingSuspect)) {
 				DM_Add_To_List_Never_Repeat_Once_Selected(490, 3, 5, 5); // EARRING
-			  }
+			}
 		}
 	} else if (Actor_Clue_Query(kActorMcCoy, kClueDragonflyEarring)
 	    || Actor_Clue_Query(kActorMcCoy, kClueBombingSuspect)
 	) {
 		DM_Add_To_List_Never_Repeat_Once_Selected(490, 3, 5, 5); // EARRING
 	}
-	if (_vm->_cutContent) {
-		if (Global_Variable_Query(kVariableChapter) < 4) {
-			if (Actor_Clue_Query(kActorMcCoy, kClueDragonflyAnklet)
-	  		&& !Actor_Clue_Query(kActorMcCoy, kClueDragonflyEarring)
-	    	&& !Actor_Clue_Query(kActorMcCoy, kClueBombingSuspect)) {
-				DM_Add_To_List_Never_Repeat_Once_Selected(500, 3, 5, 5); // ANKLET
-			}
-		}
-	} else if (Actor_Clue_Query(kActorMcCoy, kClueDragonflyAnklet)
+	if (Actor_Clue_Query(kActorMcCoy, kClueDragonflyAnklet)
 	    && !Actor_Clue_Query(kActorMcCoy, kClueDragonflyEarring)
 	    && !Actor_Clue_Query(kActorMcCoy, kClueBombingSuspect)
 	) {
@@ -524,8 +605,7 @@ void SceneScriptAR02::dialogueWithInsectDealer1() {
 	switch (answerValue) {
 	case 490: // EARRING
 		if (_vm->_cutContent) {
-			if (Player_Query_Agenda() != kPlayerAgendaSurly 
-			&& Player_Query_Agenda() != kPlayerAgendaErratic) {
+			if (Game_Flag_Query(kFlagMcCoyIsHelpingReplicants)) {
 				Actor_Says(kActorMcCoy, 8475, 12); //00-8475.AUD	Nice looking creatures you have around here.
 				Actor_Says(kActorInsectDealer, 10, 12); // 16-0010.AUD	Sí. Finest quality. Perhaps you purchase one?
 				Actor_Says(kActorMcCoy, 35, 15); //00-0035.AUD	I'll pass.
@@ -561,20 +641,31 @@ void SceneScriptAR02::dialogueWithInsectDealer1() {
 				Actor_Says(kActorInsectDealer, 90, 12);
 				Actor_Says(kActorMcCoy, 85, 17);
 				Actor_Says(kActorInsectDealer, 100, 14);
-				Actor_Says(kActorInsectDealer, 110, 12);
+				Actor_Says(kActorInsectDealer, 110, 12); //16-0110.AUD	Very rare, señor. Estate item and most likely part of large collection.
 				if (_vm->_cutContent) {
 					Actor_Says(kActorMcCoy, 8517, kAnimationModeTalk); //00-8517.AUD	But how do you know?
 				}
 				Actor_Says(kActorInsectDealer, 120, 12);
-				Actor_Says(kActorMcCoy, 90, 13);
+				Actor_Says(kActorMcCoy, 90, 13); //00-0090.AUD	More than I can afford.
 				Actor_Says(kActorInsectDealer, 130, 12);
 				Actor_Says(kActorInsectDealer, 140, 14);
-				Actor_Says(kActorMcCoy, 95, 15);
+				Actor_Says(kActorMcCoy, 95, 15); //00-0095.AUD	If this is from a collection I'm also looking for the other pieces.
 				Actor_Says(kActorInsectDealer, 150, 12);
-				Actor_Says(kActorInsectDealer, 160, 13);
-				Actor_Says(kActorInsectDealer, 170, 14);
-				Actor_Says(kActorMcCoy, 100, 16);
-				Actor_Says(kActorInsectDealer, 180, 13);
+				Actor_Says(kActorInsectDealer, 160, 13); //16-0160.AUD	then you buy a piece, right? For special lady friend?
+				Actor_Says(kActorInsectDealer, 170, 14); //16-0170.AUD	You come back later.
+				if (_vm->_cutContent) {
+					if (Game_Flag_Query(kFlagMcCoyIsHelpingReplicants)) {
+						Actor_Says(kActorMcCoy, 100, 16); //00-0100.AUD	I'll do that.
+						Actor_Says(kActorInsectDealer, 180, 13); //16-0180.AUD	Ah, you take care chasing the Dragon.
+					} else {
+						Actor_Says(kActorMcCoy, 7980, 19); //00-7980.AUD	Yeah. Maybe.
+						Actor_Says(kActorInsectDealer, 170, 14); //16-0170.AUD	You come back later.
+					}
+				} else {
+					Actor_Says(kActorInsectDealer, 170, 14); //16-0170.AUD	You come back later.
+					Actor_Says(kActorMcCoy, 100, 16); //00-0100.AUD	I'll do that.
+					Actor_Says(kActorInsectDealer, 180, 13); //16-0180.AUD	Ah, you take care chasing the Dragon.
+				}
 				Game_Flag_Set(kFlagAR02InsectDealerInterviewed);
 				Actor_Clue_Acquire(kActorMcCoy, kCluePeruvianLadyInterview, true, kActorInsectDealer);
 			}
@@ -631,33 +722,31 @@ void SceneScriptAR02::dialogueWithInsectDealerBuyBracelet() {
 	}
 
 	if (Global_Variable_Query(kVariableChinyen) >= 15
-	    || Query_Difficulty_Level() == kGameDifficultyEasy
-	) {
-		DM_Add_To_List_Never_Repeat_Once_Selected(530, 7, 5, 3); // BUY
+	|| Query_Difficulty_Level() == kGameDifficultyEasy) {
+		if (Player_Query_Agenda() != kPlayerAgendaSurly 
+		&& Player_Query_Agenda() != kPlayerAgendaErratic) {
+			DM_Add_To_List_Never_Repeat_Once_Selected(530, 7, 5, 3); // BUY
+		} else {
+			DM_Add_To_List_Never_Repeat_Once_Selected(540, 3, 5, 7); // NO THANKS
+		}
+	} else {
+		DM_Add_To_List_Never_Repeat_Once_Selected(540, 3, 5, 7); // NO THANKS
 	}
-	DM_Add_To_List_Never_Repeat_Once_Selected(540, 3, 5, 7); // NO THANKS
 
 	Dialogue_Menu_Appear(320, 240);
 	int answerValue = Dialogue_Menu_Query_Input();
 	Dialogue_Menu_Disappear();
 
 	if (answerValue == 530) { // BUY
-		if (_vm->_cutContent) {
-			if (Player_Query_Agenda() != kPlayerAgendaSurly 
-			&& Player_Query_Agenda() != kPlayerAgendaErratic) {
-				Actor_Says(kActorMcCoy, 7000, 23); //00-7000.AUD	Yeah, okay. I'll take it.
-			} else {
-				Actor_Says(kActorMcCoy, 120, 23);
-			}
-		} else {
-			Actor_Says(kActorMcCoy, 120, 12);
-		}
+		Actor_Says(kActorMcCoy, 120, 12);
 		if (Query_Difficulty_Level() != kGameDifficultyEasy) {
 			Global_Variable_Decrement(kVariableChinyen, 15);
 		}
 		Actor_Clue_Acquire(kActorMcCoy, kClueMaggieBracelet, true, kActorInsectDealer);
 		if (!_vm->_cutContent) {
 			Actor_Modify_Friendliness_To_Other(kActorInsectDealer, kActorMcCoy, 5);
+		} else {
+			Actor_Modify_Friendliness_To_Other(kActorInsectDealer, kActorMcCoy, 2);
 		}
 	} else if (answerValue == 540) { // NO THANKS
 		Actor_Says(kActorMcCoy, 125, 13);
@@ -665,7 +754,14 @@ void SceneScriptAR02::dialogueWithInsectDealerBuyBracelet() {
 		Actor_Says(kActorMcCoy, 130, 15);
 		Actor_Says(kActorInsectDealer, 270, kAnimationModeTalk);
 		Actor_Says(kActorInsectDealer, 280, kAnimationModeTalk);
-		Actor_Says(kActorMcCoy, 135, 11);
+		if (_vm->_cutContent) {
+			if (Player_Query_Agenda() != kPlayerAgendaSurly 
+			&& Player_Query_Agenda() != kPlayerAgendaErratic) {
+				Actor_Says(kActorMcCoy, 135, 11);
+			}
+		} else {
+			Actor_Says(kActorMcCoy, 135, 11);
+		}
 		if (!_vm->_cutContent) {
 			Actor_Modify_Friendliness_To_Other(kActorInsectDealer, kActorMcCoy, -5);
 		}
@@ -682,11 +778,16 @@ void SceneScriptAR02::dialogueWithInsectDealerBuySlug() {
 	Dialogue_Menu_Clear_Never_Repeat_Was_Selected_Flag(540);
 
 	if (Global_Variable_Query(kVariableChinyen) >= 125
-	    || Query_Difficulty_Level() == kGameDifficultyEasy
-	) {
-		DM_Add_To_List_Never_Repeat_Once_Selected(530, 7, 5, 3); // BUY
+	|| Query_Difficulty_Level() == kGameDifficultyEasy) {
+		if (Player_Query_Agenda() != kPlayerAgendaSurly 
+		&& Player_Query_Agenda() != kPlayerAgendaErratic) {
+			DM_Add_To_List_Never_Repeat_Once_Selected(530, 7, 5, 3); // BUY
+		} else {
+			DM_Add_To_List_Never_Repeat_Once_Selected(540, 3, 5, 7); // NO THANKS
+		}
+	} else {
+		DM_Add_To_List_Never_Repeat_Once_Selected(540, 3, 5, 7); // NO THANKS
 	}
-	DM_Add_To_List_Never_Repeat_Once_Selected(540, 3, 5, 7); // NO THANKS
 
 	Dialogue_Menu_Appear(320, 240);
 	int answerValue = Dialogue_Menu_Query_Input();
@@ -729,7 +830,7 @@ void SceneScriptAR02::dialogueWithHassan() {
 	}
 	if (!_vm->_cutContent) {
 		if (Global_Variable_Query(kVariableChapter) < 4) {
-			if (Actor_Clue_Query(kActorMcCoy, kClueDragonflyEarring)) {
+			if (!Actor_Clue_Query(kActorMcCoy, kCluePeruvianLadyInterview)) {
 				DM_Add_To_List_Never_Repeat_Once_Selected(560, 6, 5, 7); // EARRING
 			}
 		}
@@ -773,6 +874,7 @@ void SceneScriptAR02::dialogueWithHassan() {
 						Actor_Says(kActorMcCoy, 2635, 18); //00-2635.AUD	I’m all ears.
 						Actor_Says(kActorHasan, 40, 12); //20-0040.AUD	I told the last detective I sold the snake to Taffy Lewis.
 						Actor_Says(kActorMcCoy, 165, 13); //00-0165.AUD	The last detective?
+						Delay(1000);
 						Actor_Says(kActorMcCoy, 4130, kAnimationModeTalk); //00-4130.AUD	Anything else?
 						Actor_Says(kActorHasan, 50, 13); //20-0050.AUD	His name was Deckard.
 						Actor_Says(kActorMcCoy, 170, 19); //00-0170.AUD	Damn.
@@ -834,13 +936,13 @@ void SceneScriptAR02::dialogueWithHassan() {
 			Actor_Says(kActorHasan, 230, 11); // and will cut a wonderful deal to friends.
 		}
 		break;
-
+	// This is the code for the arrest option for Hasan.
 	case 1250:
 		Actor_Says(kActorMcCoy, 7930, 14); //00-7930.AUD	Stay right where you are.
 		Actor_Says(kActorHasan, 60, 11); //20-0060.AUD	What's the problem, noble one?
 		Actor_Says(kActorMcCoy, 1955, 14); //00-1955.AUD	We’re taking a little drive downtown.
 		Game_Flag_Set(kFlagHasanArrested);
-		Music_Stop(3u);
+		Music_Stop(1u);
 		Delay(1000);
 		Actor_Put_In_Set(kActorHasan, kSetPS09);
 		Actor_Set_At_XYZ(kActorHasan, -300.0f, 0.33f, -330.0f, 512);
@@ -853,9 +955,9 @@ void SceneScriptAR02::dialogueWithHassan() {
 		break;
 
 	case 570: // DONE
+		// This time around Hasan will only get angry with McCoy and tell him about Bob if they have low friendliness with each other.
 		if (_vm->_cutContent) {
-			if (!Actor_Clue_Query(kActorMcCoy, kClueHasanInterview)
-			&& Actor_Query_Friendliness_To_Other(kActorHasan, kActorMcCoy) < 50)  {
+			if (!Actor_Clue_Query(kActorMcCoy, kClueHasanInterview)) {
 				Actor_Says(kActorMcCoy, 940, 13);
 				// Quote 80 is *boop* in ENG and DEU versions
 				// In FRA, ITA versions it is identical to the second half of quote 70, and thus redundant
@@ -924,11 +1026,16 @@ void SceneScriptAR02::dialogueWithHassanBuySnake() {
 	Dialogue_Menu_Clear_Never_Repeat_Was_Selected_Flag(540);
 
 	if (Global_Variable_Query(kVariableChinyen) >= 175
-	    || Query_Difficulty_Level() == kGameDifficultyEasy
-	) {
-		DM_Add_To_List_Never_Repeat_Once_Selected(530, 7, 5, 3); // BUY
+	    || Query_Difficulty_Level() == kGameDifficultyEasy) {
+		if (Player_Query_Agenda() != kPlayerAgendaSurly 
+		&& Player_Query_Agenda() != kPlayerAgendaErratic) {
+			DM_Add_To_List_Never_Repeat_Once_Selected(530, 7, 5, 3); // BUY
+		} else {
+			DM_Add_To_List_Never_Repeat_Once_Selected(540, 3, 5, 7); // NO THANKS
+		}
+	} else {
+		DM_Add_To_List_Never_Repeat_Once_Selected(540, 3, 5, 7); // NO THANKS
 	}
-	DM_Add_To_List_Never_Repeat_Once_Selected(540, 3, 5, 7); // NO THANKS
 
 	Dialogue_Menu_Appear(320, 240);
 	int answerValue = Dialogue_Menu_Query_Input();

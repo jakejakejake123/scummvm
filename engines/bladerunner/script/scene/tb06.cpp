@@ -57,6 +57,11 @@ void SceneScriptTB06::SceneLoaded() {
 	if (!Game_Flag_Query(kFlagTB06KitchenBoxTaken)) {
 		Item_Add_To_World(kItemKitchenBox, kModelAnimationKingstonKitchenBox, kSetTB06, 18.0f, 149.65f, -599.0f, 0, 6, 6, false, true, false, true);
 	}
+	if (_vm->_cutContent) {
+		if (!Actor_Clue_Query(kActorMcCoy, kCluePoliceWeaponUsed)) {
+			Item_Add_To_World(kItemCigarette, kModelAnimationCrystalsCigarette, kSetTB06, 58.28f, 149.60f, -653.94f, 0, 6, 6, false, true, false, true);
+		}
+	}
 
 	if (Actor_Query_Goal_Number(kActorPhotographer) != 199) {
 		Item_Add_To_World(kItemDeadDogA, kModelAnimationDeadDogA, kSetTB06, -46.82f, 149.6f, -666.88f, 0, 12, 12, false, true, false, true);
@@ -78,28 +83,37 @@ bool SceneScriptTB06::ClickedOnActor(int actorId) {
 		if (!Loop_Actor_Walk_To_Actor(kActorMcCoy, kActorMarcus, 24, true, false)) {
 			if (!Actor_Clue_Query(kActorMcCoy, kClueDetonatorWire)) {
 				Actor_Voice_Over(2300, kActorVoiceOver);
-				Actor_Voice_Over(2310, kActorVoiceOver);
+				Actor_Voice_Over(2310, kActorVoiceOver); //99-2310.AUD	And not just because he'd been plastered on the wall with a thousand strokes.				
 				Item_Pickup_Spin_Effect(kModelAnimationDetonatorWire, 66, 397);
 				Actor_Voice_Over(2320, kActorVoiceOver);
 				if (Game_Flag_Query(kFlagSadikIsReplicant)) {
 					Actor_Voice_Over(2330, kActorVoiceOver);
 					Actor_Voice_Over(2340, kActorVoiceOver);
 				}
-				Actor_Voice_Over(2350, kActorVoiceOver);
+				if (_vm->_cutContent) {
+					if (Actor_Clue_Query(kActorMcCoy, kCluePoliceWeaponUsed)
+					|| Actor_Clue_Query(kActorMcCoy, kClueTyrellSecurityPhoto)) {
+						Actor_Voice_Over(2350, kActorVoiceOver);
+					}
+				} else {
+					Actor_Voice_Over(2350, kActorVoiceOver);
+				}
 				if (_vm->_cutContent) {
 					Actor_Clue_Acquire(kActorMcCoy, kClueDetonatorWire, true, kActorMarcus);
 				} else {
 					Actor_Clue_Acquire(kActorMcCoy, kClueDetonatorWire, true, -1);
 				}
-			} else if (_vm->_cutContent) {
-				if (Player_Query_Agenda() == kPlayerAgendaSurly 
-				|| Player_Query_Agenda() == kPlayerAgendaErratic) {
-					Actor_Says(kActorMcCoy, 8665, 13); //00-8665.AUD	Disgusting.
-				} else {	
-					Actor_Says(kActorMcCoy, 8630, 12);  // What a waste
+			} else { 
+				if (_vm->_cutContent) {
+					if (Player_Query_Agenda() == kPlayerAgendaSurly 
+					|| Player_Query_Agenda() == kPlayerAgendaErratic) {
+						Actor_Says(kActorMcCoy, 8665, 13); //00-8665.AUD	Disgusting.
+					} else {	
+						Actor_Says(kActorMcCoy, 8630, 12);  // What a waste
+					}
+				} else {
+					Actor_Says(kActorMcCoy, 8665, 13);
 				}
-			} else {
-				Actor_Says(kActorMcCoy, 8665, 13);
 			}
 			return false;
 		}
@@ -114,6 +128,7 @@ bool SceneScriptTB06::ClickedOnItem(int itemId, bool a2) {
 			if (_vm->_cutContent) {
 				if (!Actor_Clue_Query(kActorMcCoy, kClueAttemptedFileAccess)) {
 					Actor_Says(kActorMcCoy, 8790, 3); //00-8790.AUD	A dog collar.
+					Actor_Says(kActorMcCoy, 8525, 13); // 00-8525.AUD	Hmph.
 				} else {
 					Actor_Voice_Over(4160, kActorVoiceOver);
 					Item_Pickup_Spin_Effect(kModelAnimationDogCollar, 341, 368);
@@ -135,18 +150,40 @@ bool SceneScriptTB06::ClickedOnItem(int itemId, bool a2) {
 	if (itemId == kItemKitchenBox) {
 		if (!Loop_Actor_Walk_To_Item(kActorMcCoy, kItemKitchenBox, 12, true, false)) {
 			Actor_Face_Item(kActorMcCoy, kItemKitchenBox, true);
-			Actor_Clue_Acquire(kActorMcCoy, kClueKingstonKitchenBox1, true, -1);
-			Item_Remove_From_World(kItemKitchenBox);
-			Item_Pickup_Spin_Effect(kModelAnimationKingstonKitchenBox, 390, 368);
-			Actor_Says(kActorMcCoy, 8775, kAnimationModeTalk);
-			Game_Flag_Set(kFlagTB06KitchenBoxTaken);
+			if (_vm->_cutContent) {
+				if (!Actor_Clue_Query(kActorMcCoy, kClueTyrellGuardInterview)) {
+					Actor_Says(kActorMcCoy, 8775, kAnimationModeTalk);
+					Actor_Says(kActorMcCoy, 8525, 13); // 00-8525.AUD	Hmph.
+				} else {
+					Actor_Clue_Acquire(kActorMcCoy, kClueKingstonKitchenBox1, true, -1);
+					Item_Remove_From_World(kItemKitchenBox);
+					Item_Pickup_Spin_Effect(kModelAnimationKingstonKitchenBox, 390, 368);
+					Actor_Says(kActorMcCoy, 8775, kAnimationModeTalk);
+					Game_Flag_Set(kFlagTB06KitchenBoxTaken);
+				}
+			} else {
+				Actor_Clue_Acquire(kActorMcCoy, kClueKingstonKitchenBox1, true, -1);
+				Item_Remove_From_World(kItemKitchenBox);
+				Item_Pickup_Spin_Effect(kModelAnimationKingstonKitchenBox, 390, 368);
+				Actor_Says(kActorMcCoy, 8775, kAnimationModeTalk);
+				Game_Flag_Set(kFlagTB06KitchenBoxTaken);
+			}
 			return true;
 		}
 	}
-	if (itemId == kItemChopstickWrapper) { // this item is not here, it is in RC51
-		if (!Loop_Actor_Walk_To_Item(kActorMcCoy, kItemChopstickWrapper, 12, true, false)) {
-			Actor_Face_Item(kActorMcCoy, kItemChopstickWrapper, true);
-			Actor_Says(kActorMcCoy, 5285, kAnimationModeTalk);
+	if (itemId == kItemCigarette) { 
+		if (!Loop_Actor_Walk_To_Item(kActorMcCoy, kItemCigarette, 12, true, false)) {
+			Actor_Face_Item(kActorMcCoy, kItemCigarette, true);
+			Item_Pickup_Spin_Effect(kModelAnimationAmmoType00, 287, 412);
+			Item_Remove_From_World(kItemCigarette);
+			Delay(1000);
+			Actor_Voice_Over(4190, kActorVoiceOver); //99-4190.AUD	Where have I seen that before?
+			Actor_Change_Animation_Mode(kActorMcCoy, 23);
+			Delay(1200);
+			Actor_Says(kActorMcCoy, 5690, -1); //00-5690.AUD	Huh?
+			Delay(1000);
+			Actor_Says(kActorMcCoy, 8705, 19); //00-8705.AUD	That's damn strange.
+			Actor_Clue_Acquire(kActorMcCoy, kCluePoliceWeaponUsed, true, -1);			
 			return true;
 		}
 	}
@@ -163,11 +200,15 @@ bool SceneScriptTB06::ClickedOnItem(int itemId, bool a2) {
 				Actor_Voice_Over(2400, kActorVoiceOver);
 				// Added in some lines for when McCoy examines the dead dogs. 
 				if (_vm->_cutContent) {
-					Actor_Face_Actor(kActorMcCoy, kActorPhotographer, true);
-					Actor_Face_Actor(kActorPhotographer, kActorMcCoy, true);
-					Actor_Says(kActorMcCoy, 8516, kAnimationModeTalk); //00-8516.AUD	Any idea if they were real dogs?
-					Actor_Says(kActorPhotographer, 60, kAnimationModeTalk); //37-0060.AUD	I've hit a brick, McCoy. You're running this investigation, right?
 					Game_Flag_Set(kFlagDeadDogsTalk);
+					if (Actor_Query_Is_In_Current_Set(kActorPhotographer)) {
+						Actor_Face_Actor(kActorMcCoy, kActorPhotographer, true);
+						Actor_Face_Actor(kActorPhotographer, kActorMcCoy, true);
+						if (!Game_Flag_Query(kFlagMcCoyIsHelpingReplicants)) {
+							Actor_Says(kActorMcCoy, 8516, kAnimationModeTalk); //00-8516.AUD	Any idea if they were real dogs?
+							Actor_Says(kActorPhotographer, 60, kAnimationModeTalk); //37-0060.AUD	I've hit a brick, McCoy. You're running this investigation, right?
+						}
+					}
 				}
 			} else {
 				Actor_Says(kActorMcCoy, 8630, 12);  // What a waste
@@ -255,16 +296,16 @@ void SceneScriptTB06::PlayerWalkedIn() {
 					Actor_Says(kActorMcCoy, 6990, 18); //00-6990.AUD	Enlighten me.
 					Actor_Says(kActorPhotographer, 90, kAnimationModeTalk); //37-0090.AUD	Gaff said you didn't need to hear this but I guess you deserve to know.
 					Actor_Says(kActorMcCoy, 4940, 13); //00-4940.AUD	Okay, let's have it.
+					Actor_Face_Actor(kActorPhotographer, kActorMarcus, true);
 					Actor_Says(kActorPhotographer, 10, kAnimationModeTalk); //37-0010.AUD	You could strain him through a sieve.
-					AI_Movement_Track_Pause(kActorPhotographer);
-					Actor_Face_Actor(kActorPhotographer, kActorMcCoy, true);
+					Actor_Face_Actor(kActorMcCoy, kActorPhotographer, true);
 					Delay(1000);
 					Actor_Face_Actor(kActorMcCoy, kActorMarcus, true);
 					Delay(2000);
 					Actor_Face_Actor(kActorMcCoy, kActorPhotographer, true);
 					Delay(2000);
 					Actor_Says(kActorMcCoy, 665, 16); //00-0665.AUD	Real funny, pal.
-					Actor_Says(kActorMcCoy, 4130, kAnimationModeTalk); //00-4130.AUD	Anything else?
+					Actor_Says(kActorMcCoy, 4130, 18); //00-4130.AUD	Anything else?
 					Actor_Says(kActorPhotographer, 60, kAnimationModeTalk); //37-0060.AUD	I've hit a brick, McCoy. You're running this investigation, right?
 					AI_Movement_Track_Unpause(kActorPhotographer);
 				} else {

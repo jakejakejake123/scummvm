@@ -199,6 +199,9 @@ void SceneScriptCT02::dialogueWithZuben() {
 	if (Actor_Clue_Query(kActorMcCoy, kClueHowieLeeInterview)) {
 		++evidenceCount;
 	}
+	if (Actor_Clue_Query(kActorMcCoy, kClueSightingMcCoyRuncitersShop)) {
+		++evidenceCount;
+	}
 #if BLADERUNNER_ORIGINAL_BUGS
 	if (evidenceCount > 3) {
 		DM_Add_To_List_Never_Repeat_Once_Selected(290, -1, 4, 8); // VOIGT-KAMPFF
@@ -224,7 +227,7 @@ void SceneScriptCT02::dialogueWithZuben() {
 	// -. Make McCoy able to VK Zuben even in Polite mode
 	//
 	if (_vm->_cutContent) {
-		if (evidenceCount > 1
+		if (evidenceCount > 2
 		&& (Actor_Clue_Query(kActorMcCoy, kClueSushiMenu))) { 
 			DM_Add_To_List_Never_Repeat_Once_Selected(290, 0, 4, 8); // VOIGT-KAMPFF
 		}
@@ -249,11 +252,26 @@ void SceneScriptCT02::dialogueWithZuben() {
 		}
 		Actor_Says(kActorZuben, 30, 17);
 		Actor_Says(kActorZuben, 40, 15);
-		Actor_Says(kActorMcCoy, 410, 9);
-		Actor_Says(kActorZuben, 50, 18);
-		Actor_Says(kActorMcCoy, 415, 10);
-		Actor_Clue_Acquire(kActorMcCoy, kClueZubenInterview, false, -1);
-		Actor_Modify_Friendliness_To_Other(kActorZuben, kActorMcCoy, -5);
+		// Made it so McCoy only receives the Zuben interview clue if he is either surly or erratic which leads to McCoy pushing Zuben into revealing what he knows.
+		if (_vm->_cutContent) {
+			if (Player_Query_Agenda() == kPlayerAgendaSurly 
+			|| Player_Query_Agenda() == kPlayerAgendaErratic) {
+				Actor_Says(kActorMcCoy, 410, 9); //00-0410.AUD	Think hard.
+				Actor_Says(kActorZuben, 50, 18);
+				Actor_Says(kActorMcCoy, 415, 10);
+				Actor_Clue_Acquire(kActorMcCoy, kClueZubenInterview, false, kActorZuben);
+				Actor_Modify_Friendliness_To_Other(kActorZuben, kActorMcCoy, -5);
+			} else {
+				Actor_Says(kActorMcCoy, 4270, 18); //00-4270.AUD	I got some more questions for you.
+				Actor_Modify_Friendliness_To_Other(kActorZuben, kActorMcCoy, -5);
+			}
+		} else {
+			Actor_Says(kActorMcCoy, 410, 9);
+			Actor_Says(kActorZuben, 50, 18);
+			Actor_Says(kActorMcCoy, 415, 10);
+			Actor_Clue_Acquire(kActorMcCoy, kClueZubenInterview, false, -1);
+			Actor_Modify_Friendliness_To_Other(kActorZuben, kActorMcCoy, -5);
+		}
 		break;
 
 	case 280: // LUCY
@@ -267,20 +285,21 @@ void SceneScriptCT02::dialogueWithZuben() {
 		if (_vm->_cutContent) {
 			if (Player_Query_Agenda() != kPlayerAgendaSurly 
 			&& Player_Query_Agenda() != kPlayerAgendaErratic) {
-				Actor_Says(kActorMcCoy, 400, 9);
+				Actor_Says(kActorMcCoy, 400, 9); //00-0400.AUD	It won't take too long.
 			}
 		} else {
 			Actor_Says(kActorMcCoy, 400, 9);
 		}
-		Actor_Says(kActorZuben, 70, 17);
+		Actor_Says(kActorZuben, 70, 17); //19-0070.AUD	Test? What kind of test?
+		// If McCoy is surly or erratic he won't answer Zubens question and instead will just forcefully tell him to sit down.
 		if (_vm->_cutContent) {
 			if (Player_Query_Agenda() == kPlayerAgendaSurly 
 			|| Player_Query_Agenda() == kPlayerAgendaErratic) {
-				Actor_Says(kActorMcCoy, 3405, 13);
+				Actor_Says(kActorMcCoy, 3405, 13); //00-3405.AUD	Sit down.
 				Delay(2000);
-				Actor_Says(kActorMcCoy, 3410, 14);
+				Actor_Says(kActorMcCoy, 3410, 14); //00-3410.AUD	Sit down!
 			} else {
-				Actor_Says(kActorMcCoy, 420, 10);
+				Actor_Says(kActorMcCoy, 420, 10); //00-0420.AUD	Kind of a personality test. Totally routine.
 				Actor_Says(kActorZuben, 80, 14);
 			}
 		} else {
@@ -294,7 +313,16 @@ void SceneScriptCT02::dialogueWithZuben() {
 		break;
 
 	case 300: // DONE
-		Actor_Says(kActorMcCoy, 405, 11);
+		if (_vm->_cutContent) {
+			if (Player_Query_Agenda() == kPlayerAgendaSurly 
+			|| Player_Query_Agenda() == kPlayerAgendaErratic) {
+				Actor_Says(kActorMcCoy, 745, 14); //00-0745.AUD	I'm watching you, pal.
+			} else {
+				Actor_Says(kActorMcCoy, 405, 11);
+			}
+		} else {
+			Actor_Says(kActorMcCoy, 405, 11);
+		}
 		break;
 	}
 
@@ -344,7 +372,7 @@ bool SceneScriptCT02::ClickedOnActor(int actorId) {
 						Actor_Says(kActorMcCoy, 8225, 14); //00-8225.AUD	Just relax.
 						Actor_Says(kActorMcCoy, 375, 13); //00-0375.AUD	This will only take a minute.
 					}
-					Actor_Says(kActorMcCoy, 385, 9);
+					Actor_Says(kActorMcCoy, 385, 9); //00-0385.AUD	I'm looking for a girl about 14 years old with pink hair. You seen her?
 					Actor_Says(kActorZuben, 40, 19);
 					Actor_Modify_Friendliness_To_Other(kActorZuben, kActorMcCoy, -2);
 					Game_Flag_Set(kFlagCT02ZubenTalk);
@@ -375,6 +403,7 @@ bool SceneScriptCT02::ClickedOnItem(int itemId, bool a2) {
 				Actor_Voice_Over(3300, kActorVoiceOver); //99-3300.AUD	I recognized the wrapper.
 				Actor_Voice_Over(3310, kActorVoiceOver); //99-3310.AUD	The same brand of candy that Lucy had on her desk at Runciter’s.
 			} else {
+				Actor_Says(kActorMcCoy, 8875, 13); //00-8875.AUD	A brown cow candy wrapper.
 				Actor_Says(kActorMcCoy, 8525, 14); // 00-8525.AUD	Hmph.
 			}
 			return true;

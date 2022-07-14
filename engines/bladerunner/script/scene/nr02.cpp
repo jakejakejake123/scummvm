@@ -221,7 +221,12 @@ void SceneScriptNR02::PlayerWalkedIn() {
 					Actor_Set_At_XYZ(kActorDektora, -141.56, -23.67, 356.49, 0);
 					Actor_Face_Actor(kActorMcCoy, kActorDektora, true);
 					Actor_Face_Actor(kActorDektora, kActorMcCoy, true);
-					Actor_Says(kActorMcCoy, 6425, 11); //00-6425.AUD	You shouldn’t be here!
+					if (Player_Query_Agenda() == kPlayerAgendaSurly 
+					|| Player_Query_Agenda() == kPlayerAgendaErratic) {
+						Actor_Says(kActorMcCoy, 6425, 14); //00-6425.AUD	You shouldn’t be here!
+					} else {
+						Actor_Says(kActorMcCoy, 7960, 13); //00-7960.AUD	Dektora?
+					}
 					Actor_Says(kActorDektora, 1280, 12); //03-1280.AUD	I had to see you.
 					Actor_Says(kActorMcCoy, 6430, 13); //00-6430.AUD	If they find you with me—
 					Actor_Says(kActorDektora, 1290, 13); //03-1290.AUD	I know, I’m in danger too.
@@ -236,27 +241,34 @@ void SceneScriptNR02::PlayerWalkedIn() {
 						Actor_Says(kActorDektora, 1340, 14); //03-1340.AUD	Of course not. I didn’t come down on the moonbus with him.
 						Actor_Says(kActorDektora, 1350, 12); //03-1350.AUD	And I remember growing up back East. My mother, my father.
 						Actor_Says(kActorDektora, 1360, 13); //03-1360.AUD	I had a spotted pony. She would take carrots right out of my mouth!
-						Actor_Says(kActorMcCoy, 6445, 11); //00-6445.AUD	Memories can be implanted.
-						Actor_Says(kActorDektora, 1370, 12); //03-1370.AUD	Not mine. Mine are real!
-						Actor_Says(kActorDektora, 1380, 13); //03-1380.AUD	God damn Tyrell!
-					}				
+						if (Player_Query_Agenda() == kPlayerAgendaSurly 
+						|| Player_Query_Agenda() == kPlayerAgendaErratic) {
+							Actor_Says(kActorMcCoy, 6445, 11); //00-6445.AUD	Memories can be implanted.
+							Actor_Says(kActorDektora, 1370, 12); //03-1370.AUD	Not mine. Mine are real!
+							Actor_Says(kActorDektora, 1380, 13); //03-1380.AUD	God damn Tyrell!
+						}
+					}	
+					Actor_Clue_Acquire(kActorMcCoy, kClueDektoraConfession, true, kActorDektora);		
 					Actor_Says(kActorMcCoy, 6535, 11); //00-6535.AUD	I need to see Clovis ASAP.
 					Actor_Says(kActorDektora, 1410, 12); //03-1410.AUD	You must be patient. He’ll find you, when he’s ready
 					Music_Stop(1u);
 					Delay(1000);
 					Music_Play(kMusicLoveSong, 35, 0, 3, -1, kMusicLoopPlayOnce, 1);
 					Actor_Says(kActorDektora, 1130, 13); //03-1130.AUD	He is very jealous. You don’t understand
-					if (Player_Query_Agenda() == kPlayerAgendaSurly 
-					|| Player_Query_Agenda() == kPlayerAgendaErratic) { 
+					if (!Game_Flag_Query(kFlagMcCoyIsHelpingReplicants)) {
 						Actor_Says(kActorMcCoy, 6365, 13); //00-6365.AUD	Jealous, huh? On top of everything else?
 					}
 					Actor_Says(kActorDektora, 1140, 13); //03-1140.AUD	He is a very complicated man. He wants so much. Things he just can’t have.
-					Actor_Says(kActorMcCoy, 6370, 12); //00-6370.AUD	Then he’s no different from anybody else.
-					Actor_Says(kActorDektora, 1150, 15); //03-1150.AUD	God forbid you ever have to find out how different he is.
-					Actor_Says(kActorDektora, 1160, 13); //03-1160.AUD	How dangerous he can be. And if he thinks that you and I… It can only bring trouble.
+					if (!Game_Flag_Query(kFlagMcCoyIsHelpingReplicants)) {
+						Actor_Says(kActorMcCoy, 6370, 12); //00-6370.AUD	Then he’s no different from anybody else.
+						Actor_Says(kActorDektora, 1150, 15); //03-1150.AUD	God forbid you ever have to find out how different he is.
+						Actor_Says(kActorDektora, 1160, 13); //03-1160.AUD	How dangerous he can be. And if he thinks that you and I… It can only bring trouble.
+					}
 					if (!Game_Flag_Query(kFlagDektoraIsReplicant)) {
-						Actor_Says(kActorMcCoy, 8510, 11); //00-8510.AUD	You got a real thing for machines, don't ya?
-						Delay (2000);
+						if (!Game_Flag_Query(kFlagMcCoyIsHelpingReplicants)) {
+							Actor_Says(kActorMcCoy, 8510, 11); //00-8510.AUD	You got a real thing for machines, don't ya?
+							Delay(2000);
+						}
 					}
 					Actor_Says(kActorMcCoy, 6380, 12); //00-6380.AUD	Clovis is pretty low priority right now. I’ve been framed and I got the rest of the LPD trying to find me.
 					Actor_Says(kActorDektora, 1170, 13); //03-1170.AUD	We’re both running then.
@@ -264,24 +276,34 @@ void SceneScriptNR02::PlayerWalkedIn() {
 					Actor_Says(kActorMcCoy, 6375, 13); //00-6375.AUD	Are we?
 					Actor_Says(kActorDektora, 1190, 13); //03-1190.AUD	Blade Runners?
 					Actor_Says(kActorMcCoy, 6390, 16); //00-6390.AUD	They think I’m a Replicant.
-					Actor_Says(kActorDektora, 1200, 13); //03-1200.AUD	Do they now?
-					if (Player_Query_Agenda() == kPlayerAgendaSurly 
-					|| Player_Query_Agenda() == kPlayerAgendaErratic) { 
-						Actor_Says(kActorMcCoy, 6395, 13); //00-6395.AUD	Glad I amuse you.
-						Actor_Says(kActorDektora, 1210, 13); //03-1210.AUD	I’m sorry. It’s just…
+					if (Game_Flag_Query(kFlagDektoraIsReplicant)) {
+						Actor_Says(kActorDektora, 1200, 13); //03-1200.AUD	Do they now?
+						if (Player_Query_Agenda() == kPlayerAgendaSurly 
+						|| Player_Query_Agenda() == kPlayerAgendaErratic) { 
+							Actor_Says(kActorMcCoy, 6395, 13); //00-6395.AUD	Glad I amuse you.
+							Actor_Says(kActorDektora, 1210, 13); //03-1210.AUD	I’m sorry. It’s just…
+						}
+					} else {
+						Actor_Says(kActorDektora, 1220, 13); //03-1220.AUD	Their thinking it doesn’t make you one. It’s what you feel that’s important.
 					}
-					Actor_Says(kActorDektora, 1220, 13); //03-1220.AUD	Their thinking it doesn’t make you one. It’s what you feel that’s important.
 					Actor_Says(kActorMcCoy, 6400, 11); //00-6400.AUD	I’m a human being.
-					Actor_Says(kActorDektora, 1230, 13); //03-1230.AUD	But do you ever have doubts?
-					Actor_Says(kActorDektora, 1240, 16); //03-1240.AUD	Do you ever wonder if your memories actually belong to you?
+					if (Game_Flag_Query(kFlagDektoraIsReplicant)) {
+						Actor_Says(kActorDektora, 1230, 13); //03-1230.AUD	But do you ever have doubts?
+					} else {
+						Actor_Says(kActorDektora, 1240, 16); //03-1240.AUD	Do you ever wonder if your memories actually belong to you?
+					}
+					Delay(1500);
 					Actor_Says(kActorMcCoy, 6405, 13); //00-6405.AUD	I dream about a place. More mine than anywhere else. Full of sun and light. And warmth.
 					Actor_Says(kActorDektora, 1250, 13); //03-1250.AUD	I’ve seen that place. I’ve dreamed about it too.
+					Delay(1000);
+					Actor_Says(kActorMcCoy, 6410, 13); //00-6410.AUD	Maybe all Reps--
 					if (!Game_Flag_Query(kFlagDektoraIsReplicant)) {
-						Actor_Says(kActorMcCoy, 6410, 13); //00-6410.AUD	Maybe all Reps--
 						Actor_Says(kActorDektora, 1260, 13); //03-1260.AUD	Don’t say it!
+						Delay(2000);
 					} else {
 						Actor_Says(kActorDektora, 1270, 13); //03-1270.AUD	When you see yourself there, are you alone?
 						Actor_Says(kActorMcCoy, 6415, 11); //00-6415.AUD	Sometimes.
+						Delay(2000);
 					}
 					Actor_Says(kActorMcCoy, 6450, 13); //00-6450.AUD	It’s too dangerous for you around here. You gotta hide. Go underground.
 					Actor_Says(kActorMcCoy, 6455, 11); //00-6455.AUD	In the meantime, I’ve gotta see Clovis.

@@ -260,6 +260,7 @@ void SceneScriptTB07::McCoyTalkWithRachaelAndTyrell() {
 				Actor_Says(kActorRachael, 510, 12); //57-0510.AUD	Dr. Tyrell.
 				Actor_Says(kActorMcCoy, 5335, 16);
 				Actor_Says(kActorRachael, 520, 17); //57-0520.AUD	Eldon wouldn't make up something like that.
+				Actor_Modify_Friendliness_To_Other(kActorRachael, kActorMcCoy, -2);
 			}
 		}
 	} else {
@@ -278,61 +279,98 @@ void SceneScriptTB07::McCoyTalkWithRachaelAndTyrell() {
 	Actor_Says(kActorMcCoy, 5340, kAnimationModeTalk);
 	Actor_Start_Speech_Sample(kActorRachael, 530); //57-0530.AUD	Yes, I'm Rachael. Dr. Tyrell is very busy.
 	Loop_Actor_Walk_To_XYZ(kActorRachael, -4.15f, 12.0f, 54.73f, 0, false, false, false);
-	Actor_Says(kActorRachael, 540, 16);
-	Actor_Says(kActorMcCoy, 5345, 18);
-	if (_vm->_cutContent
-	    && (_vm->_language == Common::ES_ESP
-	        || _vm->_language == Common::IT_ITA)
-	) {
-		// Quote 560 is the second half of the sentence about Tyrell having important meetings to attend to
-		// In ENG, DEU and FRA it is redundant because it, instead, re-uses a cut line from the removed elevator scene "Copies, only copies"
-		// However, it's needed in ESP and ITA
-		Actor_Says_With_Pause(kActorRachael, 550, 0.0f, 13);
-		Actor_Says(kActorRachael, 560, kAnimationModeTalk);
-	} else {
-		Actor_Says(kActorRachael, 550, 13);
-	}
-	Actor_Says(kActorRachael, 570, 18);
-	Actor_Says_With_Pause(kActorMcCoy, 5350, 0.0f, 18);
-	Actor_Says(kActorRachael, 580, 16);
-	Actor_Says(kActorMcCoy, 5355, 16);
-	Actor_Says(kActorRachael, 590, 17); //57-0590.AUD	I can't tell you who killed him, if that's what you're asking.
-	Actor_Says(kActorMcCoy, 5360, 17); //00-5360.AUD	We've already got a suspect.
-	Actor_Says(kActorMcCoy, 5365, 13);  //00-5365.AUD	What I want to know is why the killer would be interested in Replicant DNA information.
-	Actor_Says_With_Pause(kActorRachael, 600, 1.0f, 12); //57-0600.AUD	That's a stupid question.
-	Actor_Says(kActorMcCoy, 5370, kAnimationModeTalk); //00-5370.AUD	Oh, yeah? Why is that?
-	Loop_Actor_Walk_To_XYZ(kActorRachael, -24.15f, 12.0f, -10.84f, 0, false, false, false);
-	Actor_Says(kActorRachael, 610, 13); //57-0610.AUD	Your suspect is obviously a Replicant. A very dangerous one.
+	Actor_Says(kActorRachael, 540, 16); //57-0540.AUD	I'm fully familiar with all Tyrell operations.
 	if (_vm->_cutContent) {
-		if (!Game_Flag_Query(kFlagMcCoyIsHelpingReplicants)) {
-			Actor_Face_Actor(kActorMcCoy, kActorRachael, true);
-			Actor_Says(kActorMcCoy, 5375, 18); //00-5375.AUD	I thought Replicants were safe! “More human than human”.
-			Actor_Says(kActorMcCoy, 5380, 19); //00-5380.AUD	Isn't Dr. Tyrell pushing to make it legal to use Rep labor to clean up the Kipple?
-			Actor_Face_Actor(kActorRachael, kActorMcCoy, true);
-			Actor_Says(kActorRachael, 620, 18); //57-0620.AUD	Are we here to discuss corporate policy or Marcus Eisenduller's murder?
-			Actor_Says_With_Pause(kActorMcCoy, 5385, 2.0f, 12); //00-5385.AUD	A little of both.
+		if (Player_Query_Agenda() == kPlayerAgendaSurly 
+		|| Player_Query_Agenda() == kPlayerAgendaErratic) {
+			Actor_Says(kActorMcCoy, 5345, 18); //00-5345.AUD	He does know I'm a cop, right? Blade Runner unit?
+			if (_vm->_cutContent
+				&& (_vm->_language == Common::ES_ESP
+					|| _vm->_language == Common::IT_ITA)
+			) {
+				// Quote 560 is the second half of the sentence about Tyrell having important meetings to attend to
+				// In ENG, DEU and FRA it is redundant because it, instead, re-uses a cut line from the removed elevator scene "Copies, only copies"
+				// However, it's needed in ESP and ITA
+				Actor_Says_With_Pause(kActorRachael, 550, 0.0f, 13);
+				Actor_Says(kActorRachael, 560, kAnimationModeTalk);
+			} else {
+				Actor_Says(kActorRachael, 550, 13); //57-0550.AUD	Dr. Tyrell has already met with one Blade Runner today and has important business to attend to.
+			}
+			if (Actor_Query_Friendliness_To_Other(kActorRachael, kActorMcCoy) < 50) {
+				Actor_Says(kActorRachael, 570, 18); //57-0570.AUD	Your department should coordinate its efforts better.
+				Actor_Says_With_Pause(kActorMcCoy, 5350, 0.0f, 18); //00-5350.AUD	Yeah, but--
+				Actor_Says(kActorRachael, 580, 16); //57-0580.AUD	You may speak to me or you may leave. I can't offer you any other choices.
+			}
 		}
 	} else {
-		Actor_Says(kActorMcCoy, 5375, 18); //00-5375.AUD	I thought Replicants were safe! “More human than human”.
-		Actor_Says(kActorMcCoy, 5380, 19); //00-5380.AUD	Isn't Dr. Tyrell pushing to make it legal to use Rep labor to clean up the Kipple?
-		Actor_Face_Actor(kActorRachael, kActorMcCoy, true);
+		Actor_Says(kActorMcCoy, 5345, 18); //00-5345.AUD	He does know I'm a cop, right? Blade Runner unit?
+		if (_vm->_cutContent
+			&& (_vm->_language == Common::ES_ESP
+				|| _vm->_language == Common::IT_ITA)
+		) {
+			// Quote 560 is the second half of the sentence about Tyrell having important meetings to attend to
+			// In ENG, DEU and FRA it is redundant because it, instead, re-uses a cut line from the removed elevator scene "Copies, only copies"
+			// However, it's needed in ESP and ITA
+			Actor_Says_With_Pause(kActorRachael, 550, 0.0f, 13);
+			Actor_Says(kActorRachael, 560, kAnimationModeTalk);
+		} else {
+			Actor_Says(kActorRachael, 550, 13); //57-0550.AUD	Dr. Tyrell has already met with one Blade Runner today and has important business to attend to.
+		}
+		Actor_Says(kActorRachael, 570, 18); //57-0570.AUD	Your department should coordinate its efforts better.
+		Actor_Says_With_Pause(kActorMcCoy, 5350, 0.0f, 18); //00-5350.AUD	Yeah, but--
+		Actor_Says(kActorRachael, 580, 16); //57-0580.AUD	You may speak to me or you may leave. I can't offer you any other choices.
+	}
+	Actor_Says(kActorMcCoy, 5355, 16); //00-5355.AUD	Fair enough. I wanted to ask about Marcus Eisenduller.
+	Actor_Says(kActorRachael, 590, 17); //57-0590.AUD	I can't tell you who killed him, if that's what you're asking.
+	if (_vm->_cutContent) {
+		if (Actor_Clue_Query(kActorMcCoy, kClueBombingSuspect)) {
+			Actor_Says(kActorMcCoy, 5360, 17); //00-5360.AUD	We've already got a suspect.
+		}
+	} else {
+		Actor_Says(kActorMcCoy, 5360, 17); //00-5360.AUD	We've already got a suspect.
+	}
+	Actor_Says(kActorMcCoy, 5365, 13);  //00-5365.AUD	What I want to know is why the killer would be interested in Replicant DNA information.
+	if (_vm->_cutContent) {
+		if (Actor_Query_Friendliness_To_Other(kActorRachael, kActorMcCoy) < 50) {
+			Actor_Says_With_Pause(kActorRachael, 600, 1.0f, 12); //57-0600.AUD	That's a stupid question.
+			Actor_Says(kActorMcCoy, 5370, kAnimationModeTalk); //00-5370.AUD	Oh, yeah? Why is that?
+		}
+	} else {
+		Actor_Says_With_Pause(kActorRachael, 600, 1.0f, 12); //57-0600.AUD	That's a stupid question.
+		Actor_Says(kActorMcCoy, 5370, kAnimationModeTalk); //00-5370.AUD	Oh, yeah? Why is that?
+	}
+	Loop_Actor_Walk_To_XYZ(kActorRachael, -24.15f, 12.0f, -10.84f, 0, false, false, false);
+	Actor_Says(kActorRachael, 610, 13); //57-0610.AUD	Your suspect is obviously a Replicant. A very dangerous one.
+	Actor_Face_Actor(kActorMcCoy, kActorRachael, true);
+	Actor_Says(kActorMcCoy, 5375, 18); //00-5375.AUD	I thought Replicants were safe! “More human than human”.
+	Actor_Says(kActorMcCoy, 5380, 19); //00-5380.AUD	Isn't Dr. Tyrell pushing to make it legal to use Rep labor to clean up the Kipple?
+	Actor_Face_Actor(kActorRachael, kActorMcCoy, true);
+	if (_vm->_cutContent) {
+		if (Actor_Query_Friendliness_To_Other(kActorRachael, kActorMcCoy) < 50) {
+			Actor_Says(kActorRachael, 620, 18); //57-0620.AUD	Are we here to discuss corporate policy or Marcus Eisenduller's murder?
+			Actor_Says_With_Pause(kActorMcCoy, 5385, 2.0f, 12); //00-5385.AUD	A little of both.
+		} else {
+			Actor_Says(kActorRachael, 290, 12);  //57-0290.AUD	That's right.
+		}
+	} else {	
 		Actor_Says(kActorRachael, 620, 18); //57-0620.AUD	Are we here to discuss corporate policy or Marcus Eisenduller's murder?
 		Actor_Says_With_Pause(kActorMcCoy, 5385, 2.0f, 12); //00-5385.AUD	A little of both.
 	}
 	Actor_Says_With_Pause(kActorMcCoy, 5390, 2.0f, 14); //00-5390.AUD	You heard about the moonbus hijacking?
 	Actor_Says(kActorMcCoy, 5395, 15);
 	Actor_Says_With_Pause(kActorRachael, 630, 0.0f, 14);
-	// Made it so McCoy only refers to repliacants as pets if he is sury or erratic. Since McCoy is more sympathetic towards replicants when speaking to Rachael later
-	// on based on his agenda this change feels appropraiate. 
 	if (_vm->_cutContent) {
-		if (!Game_Flag_Query(kFlagMcCoyIsHelpingReplicants)) {
+		if (Player_Query_Agenda() == kPlayerAgendaSurly 
+		|| Player_Query_Agenda() == kPlayerAgendaErratic) {
 			Actor_Says(kActorMcCoy, 5400, 18); //00-5400.AUD	I'm surprised you are not doing spin control.
+		}
+		if (!Game_Flag_Query(kFlagMcCoyIsHelpingReplicants)) {
 			Actor_Says(kActorMcCoy, 5405, kAnimationModeTalk); //00-5405.AUD	The public gets nervous when your pets wander around the city without a leash.
-			Actor_Says(kActorRachael, 640, 12); //57-0640.AUD	Replicants aren't pets.
-			Actor_Says(kActorMcCoy, 5410, 16); //00-5410.AUD	Right. Pets live longer and don't go around killing people.
+			if (Actor_Query_Friendliness_To_Other(kActorRachael, kActorMcCoy) < 50) {
+				Actor_Says(kActorRachael, 640, 12); //57-0640.AUD	Replicants aren't pets.
+				Actor_Says(kActorMcCoy, 5410, 16); //00-5410.AUD	Right. Pets live longer and don't go around killing people.
+			}
 			Actor_Modify_Friendliness_To_Other(kActorRachael, kActorMcCoy, -2);
-		} else { 
-			Delay (2000);
 		}
 	} else {
 		Actor_Says(kActorMcCoy, 5400, 18); //00-5400.AUD	I'm surprised you are not doing spin control.
@@ -343,12 +381,20 @@ void SceneScriptTB07::McCoyTalkWithRachaelAndTyrell() {
 	Actor_Says(kActorRachael, 650, 15); //57-0650.AUD	They-- There are safeguards in the design.
 	Actor_Says_With_Pause(kActorMcCoy, 5415, 1.0f, 17); //00-5415.AUD	Yeah, I've seen the data. Implanted memories. A four-year lifespan.
 	if (_vm->_cutContent) {
+		if (Game_Flag_Query(kFlagMcCoyIsHelpingReplicants)) {
+			Delay(1000);
+			Actor_Says(kActorMcCoy, 8420, 19); //00-8420.AUD	Must be rough.
+		} else {
+			Actor_Says(kActorMcCoy, 8145, 14); //00-8145.AUD	That'd make a Rep scared.
+		}
 		if (Player_Query_Agenda() != kPlayerAgendaSurly 
 		&& Player_Query_Agenda() != kPlayerAgendaErratic) {
 			Actor_Says(kActorMcCoy, 5420, 14); //00-5420.AUD	I'd probably get a little crazy too but I don't think I'd start killing people.
-			Actor_Says(kActorRachael, 660, 15);
-		} else { 
-			Actor_Says(kActorRachael, 290, 12);  //57-0290.AUD	That's right.
+			if (Actor_Query_Friendliness_To_Other(kActorRachael, kActorMcCoy) < 50) {
+				Actor_Says(kActorRachael, 660, 15);
+			}
+		} else {
+			Actor_Says(kActorRachael, 140, 12); //57-0140.AUD	How observant.
 		}
 	} else {
 		Actor_Says(kActorMcCoy, 5420, 14);
@@ -379,6 +425,7 @@ void SceneScriptTB07::McCoyTalkWithRachaelAndTyrell() {
 			Actor_Says(kActorMcCoy, 5430, 17); //00-5430.AUD	Not really, no.
 		} else {
 			Actor_Says(kActorMcCoy, 7980, 19); //00-7980.AUD	Yeah. Maybe.
+			Delay(500);
 		}
 	} else {
 		Actor_Says(kActorMcCoy, 5430, 17); //00-5430.AUD	Not really, no.
@@ -399,7 +446,13 @@ void SceneScriptTB07::McCoyTalkWithRachaelAndTyrell() {
 		Actor_Says_With_Pause(kActorTyrell, 80, 1.0f, 12);
 	}
 	Actor_Says(kActorTyrell, 90, 15);
-	Actor_Says_With_Pause(kActorMcCoy, 5450, 1.0f, 15);
+	if (_vm->_cutContent) {
+		if (!Game_Flag_Query(kFlagMcCoyIsHelpingReplicants)) {
+			Actor_Says_With_Pause(kActorMcCoy, 5450, 1.0f, 15);
+		}
+	} else {
+		Actor_Says_With_Pause(kActorMcCoy, 5450, 1.0f, 15);
+	}
 	Actor_Says(kActorMcCoy, 5455, 12);
 	Actor_Says(kActorTyrell, 100, 14);
 	// Added in the moonbus 2 clue. Essentially it is the dialogue where Rachael and McCoy talk about the moonbus hijacking.

@@ -136,18 +136,51 @@ bool SceneScriptHF01::ClickedOnActor(int actorId) {
 					Actor_Face_Actor(kActorMurray, kActorMia, true);
 				}
 				Actor_Says(kActorMurray, 50, 12); //31-0050.AUD	Coming right up.
-				Item_Pickup_Spin_Effect(kModelAnimationLichenDogWrapper, 396, 359);
 				if (_vm->_cutContent) {
+					Delay(1000);
 					Actor_Face_Actor(kActorMurray, kActorMcCoy, true);
-					Delay (1000);
-				} else {
-					Actor_Face_Heading(kActorMurray, 271, false); 
+					Actor_Change_Animation_Mode(kActorMcCoy, 23);
+					Delay(2000);
+				}
+				Item_Pickup_Spin_Effect(kModelAnimationLichenDogWrapper, 396, 359);
+				if (!_vm->_cutContent) {
+					Actor_Face_Actor(kActorMia, kActorMcCoy, true);
+					Actor_Says(kActorMia, 60, kAnimationModeTalk); //22-0060.AUD	We got a two for one special today, Ray. How about it?
+					if (Player_Query_Agenda() == kPlayerAgendaSurly 
+					|| Player_Query_Agenda() == kPlayerAgendaErratic) {
+						Actor_Voice_Over(910, kActorVoiceOver);  //99-0910.AUD	The thought of eating another one of those green-dogs made my stomach roll.
+						Actor_Says(kActorMcCoy, 1475, 18); //00-1475.AUD	No thanks. But I got a question for you guys.
+					} else {
+						Actor_Says(kActorMcCoy, 4940, 13); //00-4940.AUD	Okay, let's have it.
+						Actor_Change_Animation_Mode(kActorMcCoy, 23);
+						Delay(2000);
+						Item_Pickup_Spin_Effect(kModelAnimationLichenDogWrapper, 396, 359);
+						Actor_Says(kActorMcCoy, 3935, 14); // 00-3935.AUD	Thanks.
+					}
 				}
 				Actor_Says(kActorMurray, 60, 12); //31-0060.AUD	You know anything about politics, Ray? Famous quotes, things like that?
-				Actor_Says(kActorMcCoy, 1465, 15);
+				if (_vm->_cutContent) {
+					if (Player_Query_Agenda() == kPlayerAgendaSurly 
+					|| Player_Query_Agenda() == kPlayerAgendaErratic) {
+						Actor_Says(kActorMcCoy, 1465, 15);
+					} else {
+						Actor_Says(kActorMcCoy, 1025, 13); //00-1025.AUD	Absolutely.
+					}
+				} else {
+					Actor_Says(kActorMcCoy, 1465, 15);
+				}
 				Actor_Face_Actor(kActorMurray, kActorMcCoy, true);
 				Actor_Says(kActorMurray, 70, 13);
-				Actor_Says(kActorMcCoy, 1470, 14);
+				if (_vm->_cutContent) {
+					if (Player_Query_Agenda() == kPlayerAgendaSurly 
+					|| Player_Query_Agenda() == kPlayerAgendaErratic) {
+						Actor_Says(kActorMcCoy, 1470, 14);
+					} else {
+						Actor_Says(kActorMcCoy, 7980, 19); //00-7980.AUD	Yeah. Maybe.
+					}
+				} else {
+					Actor_Says(kActorMcCoy, 1470, 14);
+				}
 				Actor_Says(kActorMia, 30, kAnimationModeTalk);
 				if (_vm->_cutContent) {
 					Actor_Face_Actor(kActorMurray, kActorMia, true);
@@ -161,11 +194,6 @@ bool SceneScriptHF01::ClickedOnActor(int actorId) {
 					Actor_Says(kActorMurray, 100, 15); //31-0100.AUD	Ah, right. I forgot.
 					Actor_Says(kActorMia, 50, kAnimationModeTalk); //22-0050.AUD	(snickers) You're forgetting a lot in your old age.
 					Actor_Says(kActorMurray, 110, 14); //31-0110.AUD	Right behind you, lady.
-					Actor_Face_Actor(kActorMurray, kActorMcCoy, true);
-					Actor_Face_Actor(kActorMia, kActorMcCoy, true);
-					Actor_Says(kActorMia, 60, kAnimationModeTalk); //22-0060.AUD	We got a two for one special today, Ray. How about it?
-					Actor_Voice_Over(910, kActorVoiceOver);  //99-0910.AUD	The thought of eating another one of those green-dogs made my stomach roll.
-					Actor_Says(kActorMcCoy, 1475, 18); //00-1475.AUD	No thanks. But I got a question for you guys.
 				} else {
 					Actor_Says(kActorMia, 50, kAnimationModeTalk);
 					Actor_Says(kActorMurray, 110, 14);
@@ -187,28 +215,51 @@ bool SceneScriptHF01::ClickedOnActor(int actorId) {
 				Actor_Says(kActorMcCoy, 8630, 13);
 				return true;
 			}
-
-			if (Global_Variable_Query(kVariableChapter) == 5
-			 && (Actor_Clue_Query(kActorMcCoy, kCluePhoneCallDektora1)
-			  || Actor_Clue_Query(kActorMcCoy, kCluePhoneCallLucy1)
-			 )
-			 && !Game_Flag_Query(kFlagCrazylegsArrested)
-			 &&  Actor_Query_Goal_Number(kActorCrazylegs) != kGoalCrazyLegsLeavesShowroom
-			 &&  Game_Flag_Query(kFlagMcCoyIsHelpingReplicants)
-			 && !Game_Flag_Query(kFlagHF01TalkToLovedOne)
-			) {
-				Game_Flag_Set(kFlagHF01TalkToLovedOne);
-				Actor_Face_Actor(kActorMcCoy, affectionTowardsActor, true);
-				Actor_Face_Actor(affectionTowardsActor, kActorMcCoy, true);
-				if (affectionTowardsActor == kActorDektora) {
-					talkWithDektora();
-				} else if (affectionTowardsActor == kActorLucy) {
-					talkWithLucy();
+			if (_vm->_cutContent) {
+				if (Global_Variable_Query(kVariableChapter) == 5
+				&& (Actor_Clue_Query(kActorMcCoy, kCluePhoneCallDektora1)
+				|| Actor_Clue_Query(kActorMcCoy, kCluePhoneCallLucy1)
+				)
+				&& !Game_Flag_Query(kFlagCrazylegsArrested)
+				&&  Actor_Query_Goal_Number(kActorCrazylegs) != kGoalCrazyLegsLeavesShowroom
+				&& !Game_Flag_Query(kFlagHF01TalkToLovedOne)
+				) {
+					Game_Flag_Set(kFlagHF01TalkToLovedOne);
+					Actor_Face_Actor(kActorMcCoy, affectionTowardsActor, true);
+					Actor_Face_Actor(affectionTowardsActor, kActorMcCoy, true);
+					if (affectionTowardsActor == kActorDektora) {
+						talkWithDektora();
+					} else if (affectionTowardsActor == kActorLucy) {
+						talkWithLucy();
+					}
+					Async_Actor_Walk_To_XYZ(affectionTowardsActor, -175.0f, 8.0f, -617.0f, 0, false);
+					Loop_Actor_Walk_To_XYZ(kActorMcCoy, -137.0f, 8.0f, -577.0f, 0, false, false, true);
+					Game_Flag_Set(kFlagHF01toHF05);
+					Set_Enter(kSetHF05, kSceneHF05);
 				}
-				Async_Actor_Walk_To_XYZ(affectionTowardsActor, -175.0f, 8.0f, -617.0f, 0, false);
-				Loop_Actor_Walk_To_XYZ(kActorMcCoy, -137.0f, 8.0f, -577.0f, 0, false, false, true);
-				Game_Flag_Set(kFlagHF01toHF05);
-				Set_Enter(kSetHF05, kSceneHF05);
+			} else {
+				if (Global_Variable_Query(kVariableChapter) == 5
+				&& (Actor_Clue_Query(kActorMcCoy, kCluePhoneCallDektora1)
+				|| Actor_Clue_Query(kActorMcCoy, kCluePhoneCallLucy1)
+				)
+				&& !Game_Flag_Query(kFlagCrazylegsArrested)
+				&&  Actor_Query_Goal_Number(kActorCrazylegs) != kGoalCrazyLegsLeavesShowroom
+				&&  Game_Flag_Query(kFlagMcCoyIsHelpingReplicants)
+				&& !Game_Flag_Query(kFlagHF01TalkToLovedOne)
+				) {
+					Game_Flag_Set(kFlagHF01TalkToLovedOne);
+					Actor_Face_Actor(kActorMcCoy, affectionTowardsActor, true);
+					Actor_Face_Actor(affectionTowardsActor, kActorMcCoy, true);
+					if (affectionTowardsActor == kActorDektora) {
+						talkWithDektora();
+					} else if (affectionTowardsActor == kActorLucy) {
+						talkWithLucy();
+					}
+					Async_Actor_Walk_To_XYZ(affectionTowardsActor, -175.0f, 8.0f, -617.0f, 0, false);
+					Loop_Actor_Walk_To_XYZ(kActorMcCoy, -137.0f, 8.0f, -577.0f, 0, false, false, true);
+					Game_Flag_Set(kFlagHF01toHF05);
+					Set_Enter(kSetHF05, kSceneHF05);
+				}
 			}
 		}
 	}
@@ -389,18 +440,26 @@ void SceneScriptHF01::PlayerWalkedIn() {
 			Actor_Says(kActorZuben, 140, 14); //19-0140.AUD	Stay away!
 			Actor_Says(kActorMcCoy, 7280, 11); //00-7280.AUD	You remember me?
 			Actor_Says(kActorZuben, 150, 15); //19-0150.AUD	You chased Zuben.
-			Actor_Says(kActorMcCoy, 7285, 12); //00-7285.AUD	But I didn't kill you, did I?
+			if (Game_Flag_Query(kFlagMcCoyIsHelpingReplicants)) {
+				Actor_Says(kActorMcCoy, 7285, 12); //00-7285.AUD	But I didn't kill you, did I?
+			} else {
+				Actor_Says(kActorMcCoy, 2790, 18); //00-2790.AUD	Uh-huh.
+			}
 			Actor_Says(kActorZuben, 160, 13); //19-0160.AUD	You following me?
 			Actor_Says(kActorMcCoy, 7305, 15); //00-7305.AUD	No, it's just a coincidence.
-			Delay(1000);
-			Actor_Says(kActorMcCoy, 5600, 14); //00-5600.AUD	Let me ask you something.
-			if (Actor_Query_Goal_Number(kActorLucy) != kGoalLucyGone) {
+			Delay(2000);
+			Actor_Says(kActorMcCoy, 4270, 18); //00-4270.AUD	I got some more questions for you.
+			if (Actor_Query_Goal_Number(kActorLucy) < kGoalLucyGone) {
 				Actor_Says(kActorMcCoy, 7295, 11); //00-7295.AUD	The girl. I need to know where's the girl.
 				Actor_Says(kActorZuben, 200, 12); //19-0200.AUD	Girl?
 				Actor_Says(kActorMcCoy, 7315, 16); //00-7315.AUD	Lucy.
 				Actor_Says(kActorZuben, 210, 12); //19-0210.AUD	She daughter. She with Clovis.
 				Delay(1000);
 				Actor_Says(kActorZuben, 220, 14); //19-0220.AUD	You not hurt her.
+				if (Game_Flag_Query(kFlagMcCoyIsHelpingReplicants)) {
+					Actor_Says(kActorMcCoy, 7940, 13);	//00-7940.AUD	Right.
+					Delay(1000);
+				}
 				Actor_Says(kActorMcCoy, 7320, 17); //00-7320.AUD	Is she a Replicant?
 				if (Game_Flag_Query(kFlagLucyIsReplicant)) {
 					Actor_Says(kActorZuben, 230, 14); //19-0230.AUD	Daughter sick. Only four years to live. Four years. Daughter Zuben whole family.
@@ -415,8 +474,7 @@ void SceneScriptHF01::PlayerWalkedIn() {
 					Actor_Clue_Acquire(kActorMcCoy, kClueZubenTalksAboutLucy1, false, kActorZuben);
 				} else {
 					Actor_Says(kActorZuben, 250, 14); //19-0250.AUD	Daughter not like me.
-					if (!Actor_Clue_Query(kActorMcCoy, kClueLucyIncept)
-					&& !Actor_Clue_Query(kActorMcCoy, kClueVKLucyReplicant)) {
+					if (!Actor_Clue_Query(kActorMcCoy, kClueVKLucyHuman)) {
 						Actor_Says(kActorMcCoy, 7335, 14); //00-7335.AUD	She's not a Replicant?
 					}
 					Actor_Says(kActorZuben, 260, 15); //19-0260.AUD	She good girl. She stay with Clovis.
@@ -425,7 +483,7 @@ void SceneScriptHF01::PlayerWalkedIn() {
 					if (Game_Flag_Query(kFlagMcCoyIsHelpingReplicants)) {	
 						Actor_Says(kActorMcCoy, 7345, 12); //00-7345.AUD	Right, no hurt. No hurt anymore.
 					} else {
-						Delay(2000);
+						Delay(1000);
 					}
 					Actor_Clue_Acquire(kActorMcCoy, kClueZubenTalksAboutLucy2, false, kActorZuben);
 				}
@@ -459,7 +517,7 @@ void SceneScriptHF01::PlayerWalkedIn() {
 			if (Game_Flag_Query(kFlagMcCoyIsHelpingReplicants)) {
 				Actor_Says(kActorMcCoy, 7310, 16); //00-7310.AUD	No, I'm trying to help him and you.
 				Actor_Says(kActorZuben, 190, 15); //19-0190.AUD	We do good without you. Do good without anybody.
-				Actor_Says(kActorMcCoy, 7835, 14);	//00-7835.AUD	Is that so?
+				Actor_Says(kActorMcCoy, 5065, 18); //00-5065.AUD	Is that right?
 			}
 			Actor_Says(kActorZuben, 170, 14); //19-0170.AUD	Now I go.
 			Loop_Actor_Walk_To_XYZ(kActorZuben,  200.17, 0.29, -190.72 , 0, true, false, false);
@@ -476,8 +534,7 @@ void SceneScriptHF01::PlayerWalkedIn() {
 		}
 		// Made it so Leary only appears in this scene if he is not dead.
 		if (_vm->_cutContent) {
-			if (Actor_Query_Goal_Number(kActorOfficerLeary) != kGoalOfficerLearyDead
-			&& !Game_Flag_Query(kFlagOfficerLearyKilledByBob)) {
+			if (!Game_Flag_Query(kFlagOfficerLearyKilledByBob)) {
 				Actor_Put_In_Set(kActorOfficerLeary, kSetHF01);
 				Actor_Set_At_XYZ(kActorOfficerLeary, 8.2f, 8.0f, -346.67f, 1021);
 			}
@@ -490,8 +547,7 @@ void SceneScriptHF01::PlayerWalkedIn() {
 			Actor_Set_At_XYZ(kActorOfficerGrayford, 51.21f, 8.0f, -540.78f, 796);
 		}
 		if (_vm->_cutContent) {
-			if (Actor_Query_Goal_Number(kActorOfficerLeary) != kGoalOfficerLearyDead
-			&& !Game_Flag_Query(kFlagOfficerLearyKilledByBob)) {
+			if (!Game_Flag_Query(kFlagOfficerLearyKilledByBob)) {
 				Non_Player_Actor_Combat_Mode_On(kActorOfficerLeary, kActorCombatStateUncover, true, kActorMcCoy, 4, kAnimationModeCombatIdle, kAnimationModeCombatWalk, kAnimationModeCombatRun, 0, 0, 0, 100, 300, false);
 			}
 		} else {
@@ -629,9 +685,11 @@ void SceneScriptHF01::dialogueWithMiaAndMurray() {
 	Dialogue_Menu_Clear_List();
 	if (_vm->_cutContent) {
 		if (Actor_Query_Friendliness_To_Other(kActorMurray, kActorMcCoy) > 49) {
-			if (Actor_Clue_Query(kActorMcCoy, kClueLucy) 
-			&& Actor_Query_Goal_Number(kActorLucy) != kGoalLucyGone) {
-				DM_Add_To_List_Never_Repeat_Once_Selected(440, 8, 6, 3); // LUCY PHOTO
+			if (Actor_Clue_Query(kActorMcCoy, kClueLucy)
+			|| Actor_Clue_Query(kActorMcCoy, kClueLucyWithDektora)) {
+				if (Actor_Query_Goal_Number(kActorLucy) != kGoalLucyGone) {
+					DM_Add_To_List_Never_Repeat_Once_Selected(440, 8, 6, 3); // LUCY PHOTO
+				}
 			}
 		}
 	} else if (Actor_Clue_Query(kActorMcCoy, kClueLucy)) {
@@ -640,9 +698,10 @@ void SceneScriptHF01::dialogueWithMiaAndMurray() {
 	if (_vm->_cutContent) {
 		if (Actor_Query_Friendliness_To_Other(kActorMurray, kActorMcCoy) > 49) {
 			if (!Actor_Clue_Query(kActorMcCoy, kClueLucy)
+			&& !Actor_Clue_Query(kActorMcCoy, kClueLucyWithDektora)
 			&& Actor_Query_Goal_Number(kActorLucy) != kGoalLucyGone) {
 				 DM_Add_To_List_Never_Repeat_Once_Selected(450, 7, 6, 3); // LUCY
-			 }
+			}
 		}
 	} else if (!Actor_Clue_Query(kActorMcCoy, kClueLucy)
 		 &&  Actor_Clue_Query(kActorMcCoy, kClueRunciterInterviewA)) {
@@ -765,13 +824,13 @@ void SceneScriptHF01::dialogueWithMiaAndMurray() {
 			// he apolgises for upsetting them and they tell McCoy what he wants to know. 
 			if (Player_Query_Agenda() == kPlayerAgendaSurly 
 			|| Player_Query_Agenda() == kPlayerAgendaErratic) {
-				Actor_Says(kActorMcCoy, 8519, 14);//00-8519.AUD	What do you say we dish each other the straight goods.
+				Actor_Says(kActorMcCoy, 6985, 16); //00-6985.AUD	Got the straight scoop for me or what?
 				Actor_Says(kActorMurray, 200, kAnimationModeTalk); //31-0200.AUD	Now, we aren't asking for any trouble, Ray. 
 				Actor_Face_Actor(kActorMia, kActorMurray, true);
 				Actor_Says(kActorMia, 130, 12); //22-0130.AUD	He's the police, sweetie.	
 				Delay (1000);
 				Actor_Face_Actor(kActorMcCoy, kActorMia, true);
-				Actor_Says(kActorMcCoy, 4360, 16); //00-4360.AUD	Tell it straight or I'm gonna make sure you get the same as he gets. Full conspiracy, payable for 25.
+				Actor_Says(kActorMcCoy, 8519, 14);//00-8519.AUD	What do you say we dish each other the straight goods.
 				Actor_Modify_Friendliness_To_Other(kActorMurray, kActorMcCoy, -2);
 				Delay (1000);
 				Actor_Face_Actor(kActorMurray, kActorMia, true);
@@ -805,12 +864,12 @@ void SceneScriptHF01::dialogueWithMiaAndMurray() {
 
 	// Restored dialogur for the black sedan option.
 	case 1130: // BLACK SEDAN
-		Actor_Says(kActorMcCoy, 1525, 13); //00-1525.AUD	You ever see a black ground car around here?
 		Actor_Face_Actor(kActorMia, kActorMcCoy, true);
+		Actor_Face_Actor(kActorMurray, kActorMcCoy, true);
+		Actor_Says(kActorMcCoy, 1525, 13); //00-1525.AUD	You ever see a black ground car around here?
 		Actor_Says(kActorMia, 150, kAnimationModeTalk); //22-0150.AUD	Oh, sure.
 		Actor_Says(kActorMcCoy, 1530, 15); //00-1530.AUD	When?
 		Actor_Says(kActorMia, 160, kAnimationModeTalk); //22-0160.AUD	Well, let's see, er, we saw three this afternoon.
-		Actor_Face_Actor(kActorMurray, kActorMcCoy, true); 
 		Actor_Says(kActorMurray, 250, kAnimationModeTalk); //31-0250.AUD	At least six this morning.
 		Actor_Says(kActorMia, 170, kAnimationModeTalk); //22-0170.AUD	Oh, and yesterday was even busier.
 		Delay (2000);
@@ -837,25 +896,25 @@ void SceneScriptHF01::dialogueWithMiaAndMurray() {
 	case 480: // DONE
 		if (_vm->_cutContent) {
 			if (Actor_Query_Friendliness_To_Other(kActorMurray, kActorMcCoy) > 49) {
-				Actor_Face_Actor(kActorMurray, kActorMcCoy, true);
-				Actor_Face_Actor(kActorMia, kActorMcCoy, true);
-				Actor_Says(kActorMcCoy, 8514, 16); //00-8514.AUD	Got anything new to tell me?
-				Actor_Says(kActorMurray, 270, 13); //31-0270.AUD	We haven't heard anything lately. It's like the city's dead or something. 
-				Actor_Face_Actor(kActorMia, kActorMurray, true);
-				Actor_Says(kActorMia, 200, 12); //22-0200.AUD	You mean the city's asleep.
-				Actor_Face_Actor(kActorMurray, kActorMia, true);
-				Actor_Says(kActorMurray, 280, 13); //31-0280.AUD	No! I mean exactly what I said.
-				Actor_Says(kActorMcCoy, 1500, 16);
-				Actor_Face_Actor(kActorMurray, kActorMia, true);
-				Actor_Face_Heading(kActorMia, 511, false);
-				Actor_Face_Actor(kActorMurray, kActorMia, true);
-				Actor_Face_Heading(kActorMia, 511, false);
+				if (!Game_Flag_Query(kFlagMiaAndMurrayFinishedTalk)) {
+					Actor_Face_Actor(kActorMurray, kActorMcCoy, true);
+					Actor_Face_Actor(kActorMia, kActorMcCoy, true);
+					Actor_Says(kActorMcCoy, 6980, 16); //00-6980.AUD	What's the word on the street.
+					Actor_Says(kActorMurray, 270, 13); //31-0270.AUD	We haven't heard anything lately. It's like the city's dead or something. 
+					Actor_Face_Actor(kActorMia, kActorMurray, true);
+					Actor_Says(kActorMia, 200, 12); //22-0200.AUD	You mean the city's asleep.
+					Actor_Face_Actor(kActorMurray, kActorMia, true);
+					Actor_Says(kActorMurray, 280, 13); //31-0280.AUD	No! I mean exactly what I said.
+					Actor_Face_Actor(kActorMurray, kActorMia, true);
+					Actor_Face_Heading(kActorMia, 511, false);
+					Game_Flag_Set(kFlagMiaAndMurrayFinishedTalk);
+				}
 			} else if (!Game_Flag_Query(kFlagMiaMurrayAnnoyedTalk)
 			&& (Actor_Query_Friendliness_To_Other(kActorMurray, kActorMcCoy) < 50)) {
 				Actor_Face_Actor(kActorMurray, kActorMia, true);
 				Actor_Face_Heading(kActorMia, 511, false);
 				Actor_Says(kActorMcCoy, 3970, 14); //00-3970.AUD	Hey.
-				Delay (1000);
+				Delay(1000);
 				Actor_Says(kActorMcCoy, 815, 14); //00-0815.AUD	Listen to me!
 				Actor_Face_Actor(kActorMia, kActorMurray, true);
 				Actor_Says(kActorMia, 210, 12); //22-0210.AUD	Hmph! Is that rude boy talking to us?
@@ -864,17 +923,39 @@ void SceneScriptHF01::dialogueWithMiaAndMurray() {
 				Actor_Says(kActorMia, 220, 12); //22-0220.AUD	And after how he's been behaving. Well, surely he can't expect us to help him.
 				Actor_Says(kActorMurray, 300, 11); //31-0300.AUD	For once we're in agreement. 
 				Actor_Face_Actor(kActorMia, kActorMcCoy, true);
-				Actor_Says(kActorMia, 230, 12); //22-0230.AUD	Hmph! No more free ‘dogs for you, young man.
-				Actor_Says(kActorMcCoy, 3910, 16); //00-3910.AUD	You’re lying.
-				Actor_Face_Actor(kActorMia, kActorMurray, true);
-				Actor_Says(kActorMia, 240, 12); //22-0240.AUD	Oh, dear! He caught us in a fib, Murray.
+				Actor_Says(kActorMia, 230, 12); //22-0230.AUD	Hmph! No more free ‘dogs for you, young man.				
+				Delay(2000);
 				Actor_Face_Actor(kActorMurray, kActorMia, true);
 				Actor_Face_Heading(kActorMia, 511, false);
 				Game_Flag_Set(kFlagMiaMurrayAnnoyedTalk);
 			} else if (Game_Flag_Query(kFlagMiaMurrayAnnoyedTalk)) {
-				Actor_Says(kActorMcCoy, 745, 14); //00-0745.AUD	I'm watching you, pal.
-				Actor_Face_Actor(kActorMurray, kActorMia, true);
-				Actor_Face_Heading(kActorMia, 511, false);
+				Actor_Face_Actor(kActorMurray, kActorMcCoy, true);
+				Actor_Face_Actor(kActorMia, kActorMcCoy, true);
+				Actor_Says(kActorMcCoy, 8520, 14); //00-8520.AUD	What do you know?
+				Actor_Says(kActorMurray, 270, 13); //31-0270.AUD	We haven't heard anything lately. It's like the city's dead or something. 
+				Actor_Says(kActorMcCoy, 3910, 16); //00-3910.AUD	You’re lying.
+				Delay(1000);
+				Actor_Face_Actor(kActorMia, kActorMurray, true);
+				Actor_Says(kActorMia, 240, 12); //22-0240.AUD	Oh, dear! He caught us in a fib, Murray.
+				Delay(1000);
+				Actor_Face_Actor(kActorMia, kActorMcCoy, true);
+				Actor_Says(kActorMcCoy, 4360, 16); //00-4360.AUD	Tell it straight or I'm gonna make sure you get the same as he gets. Full conspiracy, payable for 25.
+				Delay(2000);
+				Actor_Says(kActorMcCoy, 3095, 18); //00-3095.AUD	Now we’re gonna take a little ride downtown.	
+				Game_Flag_Set(kFlagMiaAndMurrayArrested);
+				Delay(1000);
+				Actor_Put_In_Set(kActorMurray, kSetPS09);
+				Actor_Set_At_XYZ(kActorMurray, -455.0f, 0.2f, -210.0f, 518);
+				Actor_Put_In_Set(kActorMia, kSetPS09);
+				Actor_Set_At_XYZ(kActorMia, -460.0f, 0.2f, -239.0f, 518);
+				Game_Flag_Reset(kFlagSpinnerAtHF01);
+				Game_Flag_Set(kFlagSpinnerAtPS01);
+				Scene_Exits_Enable();
+				Game_Flag_Reset(kFlagMcCoyInHysteriaHall);
+				Game_Flag_Set(kFlagMcCoyInPoliceStation);
+				Set_Enter(kSetPS09, kScenePS09);
+			} else if (Game_Flag_Query(kFlagMiaAndMurrayFinishedTalk)) {
+				Actor_Says(kActorMcCoy, 1500, 16);
 			}
 		} else {
 			Actor_Says(kActorMcCoy, 1500, 16);
@@ -885,36 +966,99 @@ void SceneScriptHF01::dialogueWithMiaAndMurray() {
 
 void SceneScriptHF01::talkWithDektora() {
 	Actor_Says(kActorDektora, 0, kAnimationModeTalk);
-	Actor_Says(kActorMcCoy, 1400, kAnimationModeTalk);
-	Actor_Says(kActorDektora, 10, kAnimationModeTalk);
-	Actor_Says(kActorMcCoy, 1405, kAnimationModeTalk);
-	Actor_Says(kActorDektora, 20, kAnimationModeTalk);
-	Actor_Says(kActorMcCoy, 1410, kAnimationModeTalk);
-	Actor_Says(kActorDektora, 30, kAnimationModeTalk);
-	Actor_Says(kActorMcCoy, 1415, kAnimationModeTalk);
-	Actor_Says(kActorDektora, 40, kAnimationModeTalk);
-	Actor_Says(kActorDektora, 50, kAnimationModeTalk);
-	Actor_Says(kActorDektora, 60, kAnimationModeTalk);
-	Actor_Says(kActorDektora, 70, kAnimationModeTalk);
-	Actor_Says(kActorMcCoy, 1420, kAnimationModeTalk);
-	Actor_Says(kActorDektora, 80, kAnimationModeTalk);
+	if (_vm->_cutContent) {
+		if (Player_Query_Agenda() != kPlayerAgendaSurly 
+		&& Player_Query_Agenda() != kPlayerAgendaErratic) {
+			Actor_Says(kActorMcCoy, 1400, kAnimationModeTalk); //00-1400.AUD	I promised you, didn't I?
+		}
+	} else {
+		Actor_Says(kActorMcCoy, 1400, kAnimationModeTalk); //00-1400.AUD	I promised you, didn't I?
+	}
+	Actor_Says(kActorDektora, 10, kAnimationModeTalk); //03-0010.AUD	You’re one of the few people I’ve known who actually keep their promises.
+	
+	Actor_Says(kActorMcCoy, 1405, kAnimationModeTalk); //00-1405.AUD	Where's Clovis?
+	Actor_Says(kActorDektora, 20, kAnimationModeTalk); //03-0020.AUD	He’s not coming with us.
+	Actor_Says(kActorMcCoy, 1410, kAnimationModeTalk); //00-1410.AUD	You're gonna miss him?
+	Actor_Says(kActorDektora, 30, kAnimationModeTalk); //03-0030.AUD	I’ve practically forgotten him already.
+	if (_vm->_cutContent) {
+		if (Game_Flag_Query(kFlagMcCoyIsHelpingReplicants)) {
+			Actor_Says(kActorMcCoy, 1415, kAnimationModeTalk); //00-1415.AUD	Some ways I wish I'd gotten to know him better.
+			Actor_Says(kActorDektora, 40, kAnimationModeTalk); //03-0040.AUD	Then you know him better than you think.
+			Actor_Says(kActorDektora, 50, kAnimationModeTalk); //03-0050.AUD	There’s a strange bond that exists between the two of you.
+			Actor_Says(kActorDektora, 60, kAnimationModeTalk); //03-0060.AUD	I felt it from the start.
+			Actor_Says(kActorDektora, 70, kAnimationModeTalk); //03-0070.AUD	That’s one of the reasons I was so drawn to you.
+		} 
+	} else {
+		Actor_Says(kActorMcCoy, 1415, kAnimationModeTalk); //00-1415.AUD	Some ways I wish I'd gotten to know him better.
+		Actor_Says(kActorDektora, 40, kAnimationModeTalk); //03-0040.AUD	Then you know him better than you think.
+		Actor_Says(kActorDektora, 50, kAnimationModeTalk); //03-0050.AUD	There’s a strange bond that exists between the two of you.
+		Actor_Says(kActorDektora, 60, kAnimationModeTalk); //03-0060.AUD	I felt it from the start.
+		Actor_Says(kActorDektora, 70, kAnimationModeTalk); //03-0070.AUD	That’s one of the reasons I was so drawn to you.
+	}
+	Actor_Says(kActorMcCoy, 1420, kAnimationModeTalk); //00-1420.AUD	Are you ready?
+	Actor_Says(kActorDektora, 80, kAnimationModeTalk); //03-0080.AUD	Like I’m beginning a whole new life.
 }
 
 void SceneScriptHF01::talkWithLucy() {
-	Actor_Says(kActorLucy, 0, kAnimationModeTalk);
-	Actor_Says(kActorMcCoy, 1425, kAnimationModeTalk);
-	Actor_Says(kActorLucy, 10, kAnimationModeTalk);
-	Actor_Says(kActorLucy, 20, kAnimationModeTalk);
-	Actor_Says(kActorMcCoy, 1430, kAnimationModeTalk);
-	Actor_Says(kActorLucy, 30, kAnimationModeTalk);
-	Actor_Says(kActorMcCoy, 1435, kAnimationModeTalk);
-	Actor_Says(kActorLucy, 40, kAnimationModeTalk);
-	Actor_Says(kActorLucy, 50, kAnimationModeTalk);
-	Actor_Says(kActorMcCoy, 1440, kAnimationModeTalk);
-	Actor_Says(kActorLucy, 60, kAnimationModeTalk);
-	Actor_Says(kActorLucy, 70, kAnimationModeTalk);
-	Actor_Says(kActorMcCoy, 1445, kAnimationModeTalk);
-	Actor_Says(kActorLucy, 80, kAnimationModeTalk);
+	Actor_Says(kActorLucy, 0, kAnimationModeTalk); //06-0000.AUD	I knew you’d come.
+	if (_vm->_cutContent) {
+		if (Player_Query_Agenda() != kPlayerAgendaSurly 
+		&& Player_Query_Agenda() != kPlayerAgendaErratic) {
+			Actor_Says(kActorMcCoy, 1425, kAnimationModeTalk); //00-1425.AUD	I promised you, didn't I?
+		}
+	} else {
+		Actor_Says(kActorMcCoy, 1425, kAnimationModeTalk); //00-1425.AUD	I promised you, didn't I?
+	}
+	Actor_Says(kActorLucy, 10, kAnimationModeTalk); //06-0010.AUD	Father wanted me to stay with him.
+	Actor_Says(kActorLucy, 20, kAnimationModeTalk); //06-0020.AUD	But when I told him I was going with you, he gave us his blessing.
+	if (_vm->_cutContent) {
+		if (Game_Flag_Query(kFlagMcCoyIsHelpingReplicants)) {
+			Actor_Says(kActorMcCoy, 1430, kAnimationModeTalk); //00-1430.AUD	He is an extraordinary guy.
+			Actor_Says(kActorLucy, 30, kAnimationModeTalk); //06-0030.AUD	I know.
+		}
+	} else {
+		Actor_Says(kActorMcCoy, 1430, kAnimationModeTalk); //00-1430.AUD	He is an extraordinary guy.
+		Actor_Says(kActorLucy, 30, kAnimationModeTalk); //06-0030.AUD	I know.
+	}
+	Actor_Says(kActorMcCoy, 1435, kAnimationModeTalk); //00-1435.AUD	You're gonna miss him?
+	Actor_Says(kActorLucy, 40, kAnimationModeTalk); //06-0040.AUD	Of course, but now that I have you
+	Actor_Says(kActorLucy, 50, kAnimationModeTalk); //06-0050.AUD	everything will be all right, won’t it?
+	if (_vm->_cutContent) {
+		if (Player_Query_Agenda() != kPlayerAgendaSurly 
+		&& Player_Query_Agenda() != kPlayerAgendaErratic) {
+			Actor_Says(kActorMcCoy, 1440, kAnimationModeTalk); //00-1440.AUD	Sure it will.
+		} else {
+			Actor_Says(kActorMcCoy, 7330, 16); //00-7330.AUD	Let's hope so.
+		}
+	} else {
+		Actor_Says(kActorMcCoy, 1440, kAnimationModeTalk); //00-1440.AUD	Sure it will.
+	}
+	Actor_Says(kActorLucy, 60, kAnimationModeTalk); //06-0060.AUD	Promise me that we’re going to find that special place!
+	Actor_Says(kActorLucy, 70, kAnimationModeTalk); //06-0070.AUD	The one with the trees and the flowers and the beautiful clear lake.
+	if (_vm->_cutContent) {
+		if (Player_Query_Agenda() != kPlayerAgendaSurly 
+		&& Player_Query_Agenda() != kPlayerAgendaErratic) {
+			Actor_Says(kActorMcCoy, 1445, kAnimationModeTalk); //00-1445.AUD	It exists somewhere.
+			Actor_Says(kActorLucy, 80, kAnimationModeTalk); //06-0080.AUD	It’s so much more than a dream, isn’t it?
+			Actor_Says(kActorLucy, 3030, kAnimationModeTalk);
+		} else {
+			Actor_Says(kActorMcCoy, 7980, 19); //00-7980.AUD	Yeah. Maybe.
+			Actor_Says(kActorLucy, 2240, kAnimationModeTalk); // 06-2240.AUD	What?
+			Delay(2000);
+			Actor_Says(kActorLucy, 2210, kAnimationModeTalk); //06-2210.AUD	I should've known.
+			Delay(1000);
+			Actor_Says(kActorLucy, 1200, kAnimationModeTalk); //06-1200.AUD	It’s not fair!
+			Actor_Says(kActorMcCoy, 6870, 14); //00-6870.AUD	No. But you had to know.
+			Delay(1500);
+			Actor_Says(kActorMcCoy, 8075, kAnimationModeTalk); //00-8075.AUD	 Let's move on.
+			Actor_Says(kActorLucy, 1130, kAnimationModeTalk); //06-1130.AUD	Uh-huh.
+		}
+	} else {
+		Actor_Says(kActorMcCoy, 1445, kAnimationModeTalk); //00-1445.AUD	It exists somewhere.
+		Actor_Says(kActorLucy, 80, kAnimationModeTalk); //06-0080.AUD	It’s so much more than a dream, isn’t it?
+		Actor_Says(kActorLucy, 3030, kAnimationModeTalk);
+	}
+	Actor_Says(kActorLucy, 80, kAnimationModeTalk); //06-0080.AUD	It’s so much more than a dream, isn’t it?
 	Actor_Says(kActorLucy, 3030, kAnimationModeTalk);
 }
 

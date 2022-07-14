@@ -157,8 +157,10 @@ void SceneScriptUG19::PlayerWalkedIn() {
 					Actor_Says(kActorGordo, 1110, 12); //02-1110.AUD	I’m everywhere the spotlight is, baby. You tend to yours and I’ll take care of mine.
 				} else {
 					Actor_Says(kActorMcCoy, 6550, 14); //00-6550.AUD	You’re still hanging around?
-					Actor_Says(kActorGordo, 1090, 15); //02-1090.AUD	Wasn’t too damn cool the way it went down back there.
-					Actor_Says(kActorMcCoy, 6520, 14); //00-6520.AUD	You’re alive, aren’t ya?
+					if (Actor_Query_Friendliness_To_Other(kActorGordo, kActorMcCoy) < 51) {
+						Actor_Says(kActorGordo, 1090, 15); //02-1090.AUD	Wasn’t too damn cool the way it went down back there.
+						Actor_Says(kActorMcCoy, 6520, 14); //00-6520.AUD	You’re alive, aren’t ya?
+					}
 					Actor_Says(kActorGordo, 1320, 16); //02-1320.AUD	Pretty astute, my man.
 				} 
 				// Made it so McCoy only asks if Gordo stole the cheese if he has the stolen chesse clue and Gordo didn't confess to stealing the cheese in act 3.
@@ -167,14 +169,22 @@ void SceneScriptUG19::PlayerWalkedIn() {
 					if (!Actor_Clue_Query(kActorMcCoy, kClueGordoConfession)) {
 						Actor_Says(kActorMcCoy, 6540, 23); //00-6540.AUD	Did you steal this cheese from Kingston Kitchen?	
 						Actor_Says(kActorGordo, 1280, 13); //02-1280.AUD	Hey, baby. I may steal a line or two. But I’d never steal some cheese. I don’t do dairy.
-						Actor_Says(kActorMcCoy, 6590, 15); //00-6590.AUD	The owner described you to a tee. Even down to that rotten bow tie you always wear. 
+						if (Player_Query_Agenda() == kPlayerAgendaSurly 
+						|| Player_Query_Agenda() == kPlayerAgendaErratic) {
+							Actor_Says(kActorMcCoy, 6590, 15); //00-6590.AUD	The owner described you to a tee. Even down to that rotten bow tie you always wear. 
+						} else {
+							Actor_Says(kActorMcCoy, 6995, 18); //00-6995.AUD	That's not what I heard. You wanna set the record straight?
+						}
 					} else {
 						Actor_Says(kActorMcCoy, 3250, kAnimationModeTalk);
 					}
 					Actor_Clue_Acquire(kActorMcCoy, kClueGordoInterview2, true, kActorGordo);	
 					Actor_Says(kActorMcCoy, 6600, 13); //00-6600.AUD	Why the big deal over food?
 					Actor_Says(kActorGordo, 1310, 14); //02-1310.AUD	It was just some cheese, McCoy. And some takeout cartons.
-					Actor_Says(kActorMcCoy, 6595, 15); //00-6595.AUD	And you gave the takeout cartons to Sadik. 
+					if (Actor_Clue_Query(kActorMcCoy, kClueKingstonKitchenBox1)
+					|| Actor_Clue_Query(kActorMcCoy, kClueKingstonKitchenBox2)) {
+						Actor_Says(kActorMcCoy, 6595, 15); //00-6595.AUD	And you gave the takeout cartons to Sadik. 
+					}
 					Actor_Says(kActorMcCoy, 6555, 15); //00-6555.AUD	Let’s hear the rest of it.
 					if (Game_Flag_Query(kFlagLucyIsReplicant)) {
 						Actor_Says(kActorGordo, 1330, 16); //02-1330.AUD	Anything good is damn hard to come by. Poor Lucy wasn’t doing so hot.
@@ -197,7 +207,9 @@ void SceneScriptUG19::PlayerWalkedIn() {
 					if (Actor_Clue_Query(kActorGordo, kClueMcCoyHelpedGordo)) {
 						Actor_Says(kActorGordo, 1160, 13); //02-1160.AUD	Shoot. All you gotta do is look to your own.
 						Actor_Says(kActorMcCoy, 6565, 15); //00-6565.AUD	Someone inside the Blade Runner unit?
-						Actor_Says(kActorGordo, 1170, 14); //02-1170.AUD	Smart. Real genius level you are
+						if (Actor_Query_Friendliness_To_Other(kActorGordo, kActorMcCoy) < 51) {
+							Actor_Says(kActorGordo, 1170, 14); //02-1170.AUD	Smart. Real genius level you are
+						}
 						Actor_Clue_Acquire(kActorMcCoy, kClueGordoBlabs, true, kActorGordo);
 					} else {
 						Actor_Says(kActorGordo, 1180, 14); //02-1180.AUD	Hey, baby. Nine times out of ten I give the audience what they want.
@@ -206,9 +218,13 @@ void SceneScriptUG19::PlayerWalkedIn() {
 						if (Player_Query_Agenda() == kPlayerAgendaSurly 
 						|| Player_Query_Agenda() == kPlayerAgendaErratic) {
 							Actor_Says(kActorMcCoy, 6560, 15); //00-6560.AUD	Big loss. The fifties went out in the nineties. Now I want you to throw me a name.
-							Actor_Says(kActorGordo, 1290, 11); //02-1290.AUD	Nice words coming from a fashion plate like you.
-							Actor_Says(kActorGordo, 1300, 13); //02-1300.AUD	When did you last press that shirt? 1492?
-							Actor_Says(kActorMcCoy, 665, 15); //00-0665.AUD	Real funny, pal.
+							if (Actor_Query_Friendliness_To_Other(kActorGordo, kActorMcCoy) < 51) {
+								Actor_Says(kActorGordo, 1290, 11); //02-1290.AUD	Nice words coming from a fashion plate like you.
+								Actor_Says(kActorGordo, 1300, 13); //02-1300.AUD	When did you last press that shirt? 1492?
+								Actor_Says(kActorMcCoy, 665, 15); //00-0665.AUD	Real funny, pal.
+							} else {
+								Actor_Says(kActorGordo, 1030, 11); //02-1030.AUD	Sorry, Charlie.
+							}
 						}
 					}
 				}
@@ -216,26 +232,31 @@ void SceneScriptUG19::PlayerWalkedIn() {
 				Actor_Says(kActorGordo, 1140, 14); //02-1140.AUD	You know what Clovis would do, if he found out I was even talking to you? 
 				Actor_Says(kActorGordo, 1150, 13); //02-1150.AUD	Eleven to one I’d never rumba again!
 				Actor_Says(kActorMcCoy, 6570, 15); //00-6570.AUD	You know he wants to meet with me.	
+				Actor_Says(kActorGordo, 1210, 15); //02-1210.AUD	Sure. But he wants to pick the venue. And he doesn’t like to be hurried into anything.
 				Actor_Says(kActorGordo, 1220, 12); //02-1220.AUD	Hell, I don’t know why you’re so gung-ho to see the man anyway.
 				Actor_Says(kActorMcCoy, 6575, 15); //00-6575.AUD	I need some answers, that’s why. I’m running out of time.
 				if (Game_Flag_Query(kFlagGordoIsReplicant)) {
 					Actor_Says(kActorGordo, 1230, 13); //02-1230.AUD	Join the club. 
 					Actor_Says(kActorMcCoy, 6580, 15); //00-6580.AUD	I ain’t a member of your club.	
-				} else {
-					Actor_Says(kActorGordo, 1240, 12); //02-1240.AUD	Easy, boss. I’m just saying… that we’re all like a bunch of kids’ tops.
-					Actor_Says(kActorGordo, 1250, 13); //02-1250.AUD	Been wound up with a string and sent off spinning in all directions.
-					Actor_Says(kActorGordo, 1260, 15); //02-1260.AUD	Never know when you’re gonna be flying off the table, ya dig?
-					Actor_Says(kActorGordo, 1270, 11); //02-1270.AUD	And when the spinning is gonna stop.
+				} 
+				Actor_Says(kActorGordo, 1240, 12); //02-1240.AUD	Easy, boss. I’m just saying… that we’re all like a bunch of kids’ tops.
+				Actor_Says(kActorGordo, 1250, 13); //02-1250.AUD	Been wound up with a string and sent off spinning in all directions.
+				Actor_Says(kActorGordo, 1260, 15); //02-1260.AUD	Never know when you’re gonna be flying off the table, ya dig?
+				Actor_Says(kActorGordo, 1270, 11); //02-1270.AUD	And when the spinning is gonna stop.
+				if (Player_Query_Agenda() == kPlayerAgendaSurly 
+				|| Player_Query_Agenda() == kPlayerAgendaErratic) {
 					Actor_Says(kActorMcCoy, 6585, 15); //00-6585.AUD	That’s real profound, Gordo.
-					Actor_Says(kActorGordo, 620, 16); //02-0620.AUD		Look I’d love to stay and jawbone but the show must go on, you dig?
-					// Removed code that makes Gordo invisible. Also added in code so McCoy moves out of the way when Gordo leaves so Gordo doesn't phase through McCoy.
-					Player_Loses_Control();
-					Loop_Actor_Walk_To_XYZ(kActorMcCoy, 115.51, 11.73, -40.11, 0, true, false, false);
-					Actor_Face_Actor(kActorMcCoy, kActorGordo, true);
-					Loop_Actor_Walk_To_XYZ(kActorGordo, 180.04, 11.73, -5.42, 0, true, false, false);
-					Player_Gains_Control();
-					Game_Flag_Set(kFlagGordoTalkAct4);
+				} else {
+					Actor_Says(kActorMcCoy, 4880, 13); //00-4880.AUD	Is that right?
 				}
+				Actor_Says(kActorGordo, 620, 16); //02-0620.AUD		Look I’d love to stay and jawbone but the show must go on, you dig?
+				// Removed code that makes Gordo invisible. Also added in code so McCoy moves out of the way when Gordo leaves so Gordo doesn't phase through McCoy.
+				Player_Loses_Control();
+				Loop_Actor_Walk_To_XYZ(kActorMcCoy, 115.51, 11.73, -40.11, 0, true, false, false);
+				Actor_Face_Actor(kActorMcCoy, kActorGordo, true);
+				Loop_Actor_Walk_To_XYZ(kActorGordo, 180.04, 11.73, -5.42, 0, true, false, false);
+				Player_Gains_Control();
+				Game_Flag_Set(kFlagGordoTalkAct4);
 			}
 		}
 	}

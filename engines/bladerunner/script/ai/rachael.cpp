@@ -431,8 +431,10 @@ void AIScriptRachael::dialogue_start() {
 		&& Player_Query_Agenda() != kPlayerAgendaErratic) {
 			Actor_Says(kActorMcCoy, 2755, 3);                  // AreYouAlrightALittlePale
 			Actor_Says(kActorRachael, 30, 13);                  // CertainlyHadBetterDaysInMyLifeButImFine
-			Actor_Says(kActorRachael, 40, 15);                  // ThankYouForAsking
-			Actor_Modify_Friendliness_To_Other(kActorRachael, kActorMcCoy, 2);
+			if (Actor_Query_Friendliness_To_Other(kActorRachael, kActorMcCoy) > 49) {
+				Actor_Says(kActorRachael, 40, 15);                  // ThankYouForAsking
+				Actor_Modify_Friendliness_To_Other(kActorRachael, kActorMcCoy, 2);
+			}
 		}
 	} else {
 		// original code -- un-triggered
@@ -452,15 +454,21 @@ void AIScriptRachael::dialogue_agenda1() {
 	// polite or Rep friendly case
 	if (_vm->_cutContent) {
 		Actor_Says(kActorMcCoy, 2795, 13);                      // YouAreUpset
-		Actor_Says(kActorRachael, 140, 15);                     // HowObservant
+		Actor_Says(kActorRachael, 140, 15);                     //57-0140.AUD	How observant.
 		Actor_Says(kActorMcCoy, 2800, 12);                      // WhatTheMatterGoodListener
-		Actor_Says(kActorRachael, 150, 16);                     // HowObservant
+		if (Actor_Query_Friendliness_To_Other(kActorRachael, kActorMcCoy) < 50) {
+			Actor_Says(kActorRachael, 150, 16);                     // 57-0150.AUD	I'm sure you are Mr. McCoy. I just don't much feel like talking at the moment.
+		} else {
+			Delay(2000);
+		}
 		Actor_Says(kActorMcCoy, 2805, 18);                      // DidYourUncleSaySomethingToYou
 		Actor_Says(kActorRachael, 160, 14);                     // HeCanBeSoCruel
 		Actor_Says(kActorRachael, 170, 13);                     // HereIAmPouringMyHeartOut
 		if (!Game_Flag_Query(kFlagMcCoyIsHelpingReplicants)) {
 			Actor_Says(kActorMcCoy, 2810, 14);                      // NotHowILookAtIt
-			Actor_Says(kActorRachael, 180, 13);                     // GotToLiveWithYourself
+			if (Actor_Query_Friendliness_To_Other(kActorRachael, kActorMcCoy) < 50) {
+				Actor_Says(kActorRachael, 180, 13);                     // GotToLiveWithYourself
+			}
 		}
 		Actor_Says(kActorMcCoy, 2815, 12);                      // NotSomeKillingMachineRachael
 		if (Game_Flag_Query(kFlagMcCoyIsHelpingReplicants)) {
@@ -482,18 +490,20 @@ void AIScriptRachael::dialogue_agenda1() {
 				Actor_Says(kActorRachael, 230, 14);                     // BravoShouldWeCallThePressConf -  new switched to here
 			}
 			Actor_Says(kActorMcCoy, 2840, 12);                      // MaybeTheyVeGottenARawDeal
+			Delay(1000);
 		}
 		if (!Game_Flag_Query(kFlagMcCoyIsHelpingReplicants)) {
 			Actor_Says(kActorMcCoy, 2780, 17);                      // ReplicantsArentPeople
-			Delay(2000);
-			Actor_Says(kActorRachael, 240, 13);                     // ImagineSomebodyEngineeringYourMind
-			Actor_Says(kActorRachael, 250, 15);                     // PuttingWhateverThoughtsAndMemories
-			Actor_Says(kActorRachael, 260, 16);                     // NothingInThisWorldWouldBelongToyou
-			Actor_Says(kActorMcCoy, 2845, 13);                      // No
-			Actor_Says(kActorRachael, 270, 13);                     // ThinkAboutItMcCoy
-			Actor_Says(kActorRachael, 280, 14);                     // MaybeYouArentSoDifferentFromThoseRepsAfterAll
-			Delay(2000);
-		} else {
+			Delay(1000);
+		}
+		Actor_Says(kActorRachael, 240, 13);                     // ImagineSomebodyEngineeringYourMind
+		Actor_Says(kActorRachael, 250, 15);                     // PuttingWhateverThoughtsAndMemories
+		Actor_Says(kActorRachael, 260, 16);                     // NothingInThisWorldWouldBelongToyou
+		Actor_Says(kActorMcCoy, 2845, 13);                      // No
+		Actor_Says(kActorRachael, 270, 13);                     // ThinkAboutItMcCoy
+		Actor_Says(kActorRachael, 280, 14);                     // MaybeYouArentSoDifferentFromThoseRepsAfterAll
+		Delay(2000);
+		if (Game_Flag_Query(kFlagMcCoyIsHelpingReplicants)) {
 			Actor_Says(kActorMcCoy, 2850, 13);                      // ISupposeAllRepsInOneWayOrAnother
 			Actor_Says(kActorMcCoy, 2855, 14);                      // ProgrammedToDoThingsThinkThings
 			Actor_Says(kActorRachael, 290, 14);                     // ThatsRight
@@ -542,18 +552,24 @@ void AIScriptRachael::dialogue_agenda2() {
 		Actor_Says(kActorMcCoy, 2760, 14);                   // InterestingGuyYourUncleCharacterator-Rachael
 		Actor_Says(kActorRachael, 50, 15);                   // IDontThinkHeDAppreciateBeingCalledThat  new anim 15
 		Actor_Says(kActorMcCoy, 2765, 16);                   // ImSureHeIsABrilliantMan  new anim 16
-		Actor_Modify_Friendliness_To_Other(kActorRachael, kActorMcCoy, -2);
 		if (!Game_Flag_Query(kFlagMcCoyIsHelpingReplicants)) {
 			Actor_Says_With_Pause(kActorMcCoy, 2770, 0.0f, 17);  // AnyoneWhoCouldCreateNexus6StateOfArt  new anim 17
+			Actor_Modify_Friendliness_To_Other(kActorRachael, kActorMcCoy, -2);
 		}
 		Actor_Says(kActorRachael, 60, 14);                   // KeepingPeopleLikeYouEmployedIsntHe
 		if (Game_Flag_Query(kFlagMcCoyIsHelpingReplicants)) {
 			Actor_Says(kActorMcCoy, 2775, 16);                   // IdJustAsSoonNotDoThisJob.
-			Actor_Says(kActorRachael, 70, 13);                   // DoYouReallyExpectMeToBelieveThat
+			if (Actor_Query_Friendliness_To_Other(kActorRachael, kActorMcCoy) < 50) {
+				Actor_Says(kActorRachael, 70, 13);                   // DoYouReallyExpectMeToBelieveThat
+			}
 		} else {
 			Delay(2000);
 		}
-		Actor_Says(kActorRachael, 80, 14);                   // ISawThatLookInYourEye
+		if (Actor_Query_Friendliness_To_Other(kActorRachael, kActorMcCoy) < 50) {
+			Actor_Says(kActorRachael, 80, 14);                   // ISawThatLookInYourEye
+		} else {
+			Actor_Says(kActorRachael, 270, 14);                      // 57-0270.AUD	Think about it Mr. McCoy.
+		}
 		Actor_Says(kActorRachael, 90, 15);                   // LikeNothingButToKillInnocentPeople
 		if (!Game_Flag_Query(kFlagMcCoyIsHelpingReplicants)) {
 			Actor_Says(kActorMcCoy, 2780, 17);                   // ReplicantsArentPeople
@@ -596,12 +612,12 @@ void AIScriptRachael::dialogue_agenda2() {
 void AIScriptRachael::dialogue_act4() {
 	Actor_Says(kActorMcCoy, 2865, 17);   // Lobby
 	if (_vm->_cutContent) {
-		Actor_Face_Actor(kActorRachael, kActorMcCoy, true);
-		Delay(1000);
-		Actor_Says(kActorRachael, 320, 12);  //  McCoy
 		Game_Flag_Set(kFlagMA06toMA07); // to Ground Floor / Lobby
 		Delay(500);
 		AI_Movement_Track_Pause(kActorRachael);
+		Actor_Face_Actor(kActorRachael, kActorMcCoy, true);
+		Delay(1000);
+		Actor_Says(kActorRachael, 320, 12);  //  McCoy
 		Music_Play(kMusicBRBlues, 52, 0, 2, -1, kMusicLoopPlayOnce, 1);
 		Actor_Face_Actor(kActorMcCoy, kActorRachael, true);
 		Actor_Says(kActorMcCoy, 855, 19); // 00-0855.AUD	What?
@@ -614,10 +630,12 @@ void AIScriptRachael::dialogue_act4() {
 	Actor_Says(kActorMcCoy, 2880, 16);   //  Suddenly
 	Actor_Says(kActorMcCoy, 2885, 12);   //  MyAnimalMaggiePrizedPosessionDisappeared
 	if (_vm->_cutContent) {
-		if (Actor_Query_Friendliness_To_Other(kActorRachael, kActorMcCoy) > 50) {
+		if (Actor_Query_Friendliness_To_Other(kActorRachael, kActorMcCoy) > 49) {
 			Actor_Says(kActorRachael, 360, 3);   //  ImSorry
 			Actor_Says(kActorRachael, 370, 3);   //  IKnowTheFeeling
 			Actor_Says(kActorMcCoy, 2890, 18);   //  You do?
+		} else { 
+			Delay(1000);
 		}
 	}
 	Actor_Says(kActorRachael, 380, 18);  //  EverythingWeBelieve
@@ -633,20 +651,34 @@ void AIScriptRachael::dialogue_act4() {
 	Actor_Says(kActorMcCoy, 2910, 14);   //  NotLosingMyMindEscapedReplicant
 	Actor_Says(kActorMcCoy, 2920, 17);   //  SomeoneSettingMeUpUsingMe
 	Actor_Says(kActorRachael, 450, 3);   //  NothingWrongWithAcceptingWhatYouAre
-	if (!Game_Flag_Query(kFlagMcCoyIsHelpingReplicants)) {
+	if (_vm->_cutContent) {
+		if (!Game_Flag_Query(kFlagMcCoyIsHelpingReplicants)) {
+			if (Player_Query_Agenda() != kPlayerAgendaSurly 
+			&& Player_Query_Agenda() != kPlayerAgendaErratic) {
+				Actor_Says(kActorMcCoy, 6400, 11); //00-6400.AUD	I’m a human being.
+			} else {
+				Actor_Says(kActorMcCoy, 2925, 15);   //  NotAReplicantGoddamnit
+			}
+			Actor_Says(kActorMcCoy, 2930, 14);   //  MaybeYouCanHelpMeYouAreTyrellsNiece
+			Actor_Says(kActorRachael, 460, 13);  //  Why not take that V-K test
+			Actor_Says(kActorMcCoy, 2935, 19);   //  YeahGoodIdeaMaybeIllDoThat
+		} else {
+			Delay(2000);
+		} 
+	} else {
 		Actor_Says(kActorMcCoy, 2925, 15);   //  NotAReplicantGoddamnit
 		Actor_Says(kActorMcCoy, 2930, 14);   //  MaybeYouCanHelpMeYouAreTyrellsNiece
 		Actor_Says(kActorRachael, 460, 13);  //  Why not take that V-K test
 		Actor_Says(kActorMcCoy, 2935, 19);   //  YeahGoodIdeaMaybeIllDoThat
-	} else {
-		Delay(2000);
 	}	
 	if (_vm->_cutContent) {
-		if (Actor_Query_Friendliness_To_Other(kActorRachael, kActorMcCoy) > 50) {
+		if (Actor_Query_Friendliness_To_Other(kActorRachael, kActorMcCoy) > 49) {
 			Actor_Says(kActorRachael, 470, 18);  //  Hope you get the answers looking for McCoy.
 		} else {
 			Actor_Says_With_Pause(kActorRachael, 300, 1.0f, 3); // GoodbyeMcCoy
 		}
+	} else {
+		Actor_Says(kActorRachael, 470, 18);  //  Hope you get the answers looking for McCoy.
 	}
 }
 

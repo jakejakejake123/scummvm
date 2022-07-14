@@ -222,7 +222,6 @@ void SceneScriptCT08::PlayerWalkedIn() {
 		Game_Flag_Reset(kFlagCT06toCT08);
 	} else {
 		Loop_Actor_Walk_To_XYZ(kActorMcCoy, -156.0f, 0.0f, 128.0f, 0, false, false, false);
-		Game_Flag_Reset(kFlagCT09toCT08);
 	}
 }
 

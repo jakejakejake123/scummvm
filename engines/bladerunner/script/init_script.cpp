@@ -2309,6 +2309,7 @@ void InitScript::Init_SDB() {
 		SDB_Add_Replicant_Clue(kSuspectSadik, kClueTyrellSalesPamphletLolita);
 		SDB_Add_Other_Clue(kSuspectSadik, kClueCrimeSceneNotes);
 		SDB_Add_MO_Clue(kSuspectSadik, kClueTyrellGuardInterview);
+		SDB_Add_MO_Clue(kSuspectSadik, kCluePoliceWeaponUsed);
 		SDB_Add_Whereabouts_Clue(kSuspectSadik, kClueTyrellSecurityPhoto);
 		SDB_Add_Whereabouts_Clue(kSuspectSadik, kClueKingstonKitchenBox2);
 		SDB_Add_Whereabouts_Clue(kSuspectSadik, kClueMoonbus1);
@@ -2423,6 +2424,7 @@ void InitScript::Init_SDB() {
 		SDB_Add_Other_Clue(kSuspectZuben, kClueCrowdInterviewB);
 		SDB_Add_Non_Replicant_Clue(kSuspectZuben, kClueGaffsInformation);
 		SDB_Add_MO_Clue(kSuspectZuben, kClueRunciterInterviewA);
+		SDB_Add_MO_Clue(kSuspectZuben, kClueSightingMcCoyRuncitersShop);
 		SDB_Add_Whereabouts_Clue(kSuspectZuben, kClueRuncitersVideo);
 		SDB_Add_Other_Clue(kSuspectZuben, kClueIzosWarning);
 		SDB_Add_Non_Replicant_Clue(kSuspectZuben, kClueMcCoyRetiredZuben);
@@ -2816,6 +2818,7 @@ void InitScript::Init_CDB() {
 		CDB_Set_Crime(kClueMcCoyShotZubenInTheBack, kCrimeAnimalMurder);
 		CDB_Set_Crime(kClueSightingMcCoyRuncitersShop, kCrimeAnimalMurder);
 		CDB_Set_Crime(kClueCrystalVisitedChinatown, kCrimeAnimalMurder);
+		CDB_Set_Crime(kClueSightingMcCoyRuncitersShop, kCrimeAnimalMurder);
 	}
 	CDB_Set_Crime(kClueZubenSquadPhoto, kCrimeAnimalMurder);
 
@@ -2841,6 +2844,7 @@ void InitScript::Init_CDB() {
 		CDB_Set_Crime(kClueStolenCheese, kCrimeEisendullerMurder);
 		CDB_Set_Crime(kClueGordoConfession, kCrimeEisendullerMurder);
 		CDB_Set_Crime(kClueDNAMarcus, kCrimeEisendullerMurder);
+		CDB_Set_Crime(kCluePoliceWeaponUsed, kCrimeEisendullerMurder);
 	}
 	CDB_Set_Crime(kClueTyrellSecurityPhoto, kCrimeEisendullerMurder);
 
@@ -3227,7 +3231,7 @@ void InitScript::Init_CDB() {
 		CDB_Set_Clue_Asset_Type(kClueMcCoyKilledRunciter2, kClueTypeAudioRecording);
 		CDB_Set_Clue_Asset_Type(kClueMcCoyBetrayal, kClueTypeAudioRecording);
 		CDB_Set_Clue_Asset_Type(kClueMcCoyShotGuzza, kClueTypeAudioRecording);
-		CDB_Set_Clue_Asset_Type(kCluePoliceWeaponUsed, kClueTypeAudioRecording);
+		CDB_Set_Clue_Asset_Type(kCluePoliceWeaponUsed, kClueTypeObject);
 		CDB_Set_Clue_Asset_Type(kClueMoonbusCloseup, kClueTypeAudioRecording);
 		CDB_Set_Clue_Asset_Type(kClueMcCoyLetZubenEscape, kClueTypeAudioRecording);
 		CDB_Set_Clue_Asset_Type(kClueBobShotInSelfDefense, kClueTypeAudioRecording);
@@ -3242,7 +3246,7 @@ void InitScript::Init_CDB() {
 		CDB_Set_Clue_Asset_Type(kClueMcCoyRetiredLutherLance, kClueTypeAudioRecording);
 		CDB_Set_Clue_Asset_Type(kClueCrystalVisitedRunciters, kClueTypeObject);
 		CDB_Set_Clue_Asset_Type(kClueCrystalVisitedChinatown, kClueTypeObject);
-		CDB_Set_Clue_Asset_Type(kClueSightingMcCoyRuncitersShop, kClueTypeAudioRecording);
+		CDB_Set_Clue_Asset_Type(kClueSightingMcCoyRuncitersShop, kClueTypeObject);
 		CDB_Set_Clue_Asset_Type(kClueMcCoyIsABladeRunner, kClueTypeAudioRecording);
 		CDB_Set_Clue_Asset_Type(kClueMcCoyHelpedDektora, kClueTypeAudioRecording);
 		CDB_Set_Clue_Asset_Type(kClueMcCoyHelpedLucy, kClueTypeAudioRecording);
@@ -3250,7 +3254,8 @@ void InitScript::Init_CDB() {
 		CDB_Set_Clue_Asset_Type(kClueMcCoyShotZubenInTheBack, kClueTypeAudioRecording);
 		CDB_Set_Clue_Asset_Type(kClueZubenRunsAway, kClueTypeAudioRecording);
 		CDB_Set_Clue_Asset_Type(kClueMcCoyPulledAGun, kClueTypeAudioRecording);
-	}
+		CDB_Set_Clue_Asset_Type(kCluePoliceIssueWeapons, kClueTypeAudioRecording);
+	} 
 }
 
 void InitScript::Init_Spinner() {
@@ -3267,7 +3272,9 @@ void InitScript::Init_Spinner() {
 }
 
 void InitScript::Init_Actor_Friendliness() {
-	Actor_Set_Friendliness_To_Other(kActorSteele, kActorMcCoy, 65);
+	if (!_vm->_cutContent) {
+		Actor_Set_Friendliness_To_Other(kActorSteele, kActorMcCoy, 65);
+	}
 	Actor_Set_Friendliness_To_Other(kActorSteele, kActorGuzza, 60);
 	Actor_Set_Friendliness_To_Other(kActorSteele, kActorGrigorian, 30);
 	Actor_Set_Friendliness_To_Other(kActorSteele, kActorRunciter, 35);
@@ -3299,8 +3306,10 @@ void InitScript::Init_Actor_Friendliness() {
 	Actor_Set_Friendliness_To_Other(kActorGuzza, kActorKlein, 60);
 	Actor_Set_Friendliness_To_Other(kActorGuzza, kActorSergeantWalls, 60);
 	Actor_Set_Friendliness_To_Other(kActorGuzza, kActorGaff, 65);
-	Actor_Set_Friendliness_To_Other(kActorClovis, kActorMcCoy, 63);
-	Actor_Set_Friendliness_To_Other(kActorLucy, kActorMcCoy, 50);
+	if (!_vm->_cutContent) {
+		Actor_Set_Friendliness_To_Other(kActorClovis, kActorMcCoy, 63);
+		Actor_Set_Friendliness_To_Other(kActorLucy, kActorMcCoy, 50);
+	}
 	Actor_Set_Friendliness_To_Other(kActorGrigorian, kActorSteele, 30);
 	Actor_Set_Friendliness_To_Other(kActorGrigorian, kActorGordo, 70);
 	Actor_Set_Friendliness_To_Other(kActorGrigorian, kActorGuzza, 30);
@@ -3360,7 +3369,9 @@ void InitScript::Init_Actor_Friendliness() {
 	Actor_Set_Friendliness_To_Other(kActorOfficerGrayford, kActorKlein, 80);
 	Actor_Set_Friendliness_To_Other(kActorOfficerGrayford, kActorSergeantWalls, 85);
 	Actor_Set_Friendliness_To_Other(kActorOfficerGrayford, kActorGaff, 85);
-	Actor_Set_Friendliness_To_Other(kActorHowieLee, kActorMcCoy, 60);
+	if (!_vm->_cutContent) {
+		Actor_Set_Friendliness_To_Other(kActorHowieLee, kActorMcCoy, 60);
+	}
 	Actor_Set_Friendliness_To_Other(kActorHowieLee, kActorSteele, 60);
 	Actor_Set_Friendliness_To_Other(kActorHowieLee, kActorGordo, 65);
 	Actor_Set_Friendliness_To_Other(kActorHowieLee, kActorGuzza, 65);
@@ -3394,6 +3405,34 @@ void InitScript::Init_Actor_Friendliness() {
 	Actor_Set_Friendliness_To_Other(kActorGaff, kActorHowieLee, 80);
 	Actor_Set_Friendliness_To_Other(kActorGaff, kActorKlein, 70);
 	Actor_Set_Friendliness_To_Other(kActorGaff, kActorSergeantWalls, 70);
+	if (_vm->_cutContent) {
+		Actor_Set_Friendliness_To_Other(kActorSteele, kActorMcCoy, 50);
+		Actor_Set_Friendliness_To_Other(kActorClovis, kActorMcCoy, 50);
+		Actor_Set_Friendliness_To_Other(kActorGuzza, kActorMcCoy, 50);
+		Actor_Set_Friendliness_To_Other(kActorGaff, kActorMcCoy, 50);
+		Actor_Set_Friendliness_To_Other(kActorRunciter, kActorMcCoy, 50);
+		Actor_Set_Friendliness_To_Other(kActorOfficerLeary, kActorMcCoy, 50);
+		Actor_Set_Friendliness_To_Other(kActorKlein, kActorMcCoy, 50);
+		Actor_Set_Friendliness_To_Other(kActorGrigorian, kActorMcCoy, 50);
+		Actor_Set_Friendliness_To_Other(kActorHowieLee, kActorMcCoy, 50);
+		Actor_Set_Friendliness_To_Other(kActorGordo, kActorMcCoy, 50);
+		Actor_Set_Friendliness_To_Other(kActorTransient, kActorMcCoy, 50);
+		Actor_Set_Friendliness_To_Other(kActorTyrellGuard, kActorMcCoy, 50);
+		Actor_Set_Friendliness_To_Other(kActorFishDealer, kActorMcCoy, 50);
+		Actor_Set_Friendliness_To_Other(kActorHasan, kActorMcCoy, 50);
+		Actor_Set_Friendliness_To_Other(kActorInsectDealer, kActorMcCoy, 50);
+		Actor_Set_Friendliness_To_Other(kActorBulletBob, kActorMcCoy, 50);
+		Actor_Set_Friendliness_To_Other(kActorIsabella, kActorMcCoy, 50);
+		Actor_Set_Friendliness_To_Other(kActorChew, kActorMcCoy, 50);
+		Actor_Set_Friendliness_To_Other(kActorRachael, kActorMcCoy, 50);
+		Actor_Set_Friendliness_To_Other(kActorSebastian, kActorMcCoy, 50);
+		Actor_Set_Friendliness_To_Other(kActorSadik, kActorMcCoy, 50);
+		Actor_Set_Friendliness_To_Other(kActorMurray, kActorMcCoy, 50);
+		Actor_Set_Friendliness_To_Other(kActorCrazylegs, kActorMcCoy, 50);
+		Actor_Set_Friendliness_To_Other(kActorDektora, kActorMcCoy, 50);
+		Actor_Set_Friendliness_To_Other(kActorIzo, kActorMcCoy, 50);
+		Actor_Set_Friendliness_To_Other(kActorLuther, kActorMcCoy, 50);
+	}	
 }
 
 void InitScript::Init_Actor_Combat_Aggressiveness() {

@@ -212,6 +212,14 @@ void AIScriptMaggie::ReceivedClue(int clueId, int fromActorId) {
 }
 
 void AIScriptMaggie::ClickedByPlayer() {
+	if (_vm->_cutContent) {
+		if (Actor_Query_In_Set(kActorMaggie, kSetKP07)) {
+			Loop_Actor_Walk_To_Actor(kActorMcCoy, kActorMaggie, 24, true, false);
+			Actor_Face_Actor(kActorMcCoy, kActorMaggie, true);
+			Actor_Face_Actor(kActorMaggie, kActorMcCoy, true);
+			Actor_Says(kActorMcCoy, 2400, kAnimationModeFeeding);
+		}
+	}
 	if (!Game_Flag_Query(kFlagMcCoyIsHelpingReplicants)
 	 &&  Global_Variable_Query(kVariableChapter) == 5
 	) {

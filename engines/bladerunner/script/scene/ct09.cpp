@@ -89,11 +89,11 @@ bool SceneScriptCT09::ClickedOnActor(int actorId) {
 			if (!Loop_Actor_Walk_To_XYZ(kActorMcCoy, 270.0f, 348.52f, 846.0f, 12, true, false, false)) {
 				Player_Loses_Control();
 				Actor_Face_Actor(kActorMcCoy, kActorDeskClerk, true);
+				// Made it so the clerk faces McCoy when he talks to him.
+				if (_vm->_cutContent) {
+					Actor_Face_Actor(kActorDeskClerk, kActorMcCoy, true);
+				}
 				if (Global_Variable_Query(kVariableChapter) < 3) { // it is impossible to get here before chapter 3
-					// Made it so the clerk faces McCoy when he talks to him.
-					if (_vm->_cutContent) {
-						Actor_Face_Actor(kActorDeskClerk, kActorMcCoy, true);
-					}
 					Actor_Says(kActorMcCoy, 650, kAnimationModeTalk);
 					Actor_Says(kActorDeskClerk, 250, 12);
 					Actor_Says(kActorMcCoy, 665, 18);
@@ -149,24 +149,31 @@ bool SceneScriptCT09::ClickedOnActor(int actorId) {
 					}
 					// Made it so the desk clerk treats you differently depending on your actions. If you helped the clerk out with Leon he will be nice to you.
 					// If you helped out the clerk but rang the bell he will be neutral towrds you. If you didn't help out the clerk he will be mean to you.
-				} else if (_vm->_cutContent && Game_Flag_Query (kFlagCT09DeskClerkTalk2)) {
-					if (!Game_Flag_Query(kFlagBellRung) 
-					&& Game_Flag_Query(kFlagCT09LeonInterrupted)) {
-						Actor_Says(kActorMcCoy, 660, 14); //00-0660.AUD	You seen any suspicious types around here lately?
-						Actor_Says(kActorDeskClerk, 230, 13); //27-0230.AUD	Hey, rest up them dogs right down in the lobby here.
-						Actor_Says(kActorDeskClerk, 240, 15); //27-0240.AUD	I assure you. You'll see a lot of fine people strolling through
-						Actor_Says(kActorMcCoy, 3140, 16); //00-3140.AUD	Thanks.
-						Player_Gains_Control();
-					} else if (Game_Flag_Query(kFlagBellRung)
-					&& Game_Flag_Query(kFlagCT09LeonInterrupted)) {
-						Actor_Says(kActorMcCoy, 650, 18); //00-0650.AUD	You seen any suspicious types around here lately?
-						Actor_Says(kActorDeskClerk, 220, 15); //27-0220.AUD	Howley, that's all I do see. You think this is a Club Med or something?	
-					} else {
-						Actor_Says(kActorMcCoy, 660, 14); //00-0660.AUD	You seen any suspicious types around here lately?
-						Actor_Says(kActorDeskClerk, 250, 13); //27-0250.AUD	You're pretty suspicious.
-						Actor_Says(kActorMcCoy, 665, 16); //00-0665.AUD	Real funny, pal.
-						Actor_Says(kActorDeskClerk, 270, 15); //27-0270.AUD	I mind my own business, pal. I don't see who goes in and I don't see who goes out.
-					}		
+				} else if (_vm->_cutContent) {
+					if (Game_Flag_Query (kFlagCT09DeskClerkTalk2)) {
+						if (!Game_Flag_Query(kFlagBellRung) 
+						&& Game_Flag_Query(kFlagCT09LeonInterrupted)) {
+							Actor_Says(kActorMcCoy, 660, 14); //00-0660.AUD	You seen any suspicious types around here lately?
+							Actor_Says(kActorDeskClerk, 230, 13); //27-0230.AUD	Hey, rest up them dogs right down in the lobby here.
+							Actor_Says(kActorDeskClerk, 240, 15); //27-0240.AUD	I assure you. You'll see a lot of fine people strolling through
+							Actor_Says(kActorMcCoy, 3140, 16); //00-3140.AUD	Thanks.
+							Player_Gains_Control();
+						} else if (Game_Flag_Query(kFlagBellRung)
+						&& Game_Flag_Query(kFlagCT09LeonInterrupted)) {
+							Actor_Says(kActorMcCoy, 650, 18); //00-0650.AUD	You seen any suspicious types around here lately?
+							Actor_Says(kActorDeskClerk, 220, 15); //27-0220.AUD	Howley, that's all I do see. You think this is a Club Med or something?	
+						} else if (!Game_Flag_Query(kFlagCT09LeonInterrupted)) {
+							Actor_Says(kActorMcCoy, 660, 14); //00-0660.AUD	You seen any suspicious types around here lately?
+							Actor_Says(kActorDeskClerk, 250, 13); //27-0250.AUD	You're pretty suspicious.
+							if (Player_Query_Agenda() != kPlayerAgendaSurly 
+							&& Player_Query_Agenda() != kPlayerAgendaErratic) {
+								Actor_Says(kActorMcCoy, 2685, 13);
+							} else {
+								Actor_Says(kActorMcCoy, 665, 16); //00-0665.AUD	Real funny, pal.
+							}
+							Actor_Says(kActorDeskClerk, 270, 15); //27-0270.AUD	I mind my own business, pal. I don't see who goes in and I don't see who goes out.
+						}	
+					}	
 				} else {
 					Actor_Says(kActorMcCoy, 650, 18);
 					Actor_Says(kActorDeskClerk, 220, 15);
@@ -189,7 +196,6 @@ bool SceneScriptCT09::ClickedOnExit(int exitId) {
 			Loop_Actor_Walk_To_XYZ(kActorMcCoy, 235.0f, 348.52f, 599.0f, 0, false, false, false);
 			Ambient_Sounds_Remove_All_Non_Looping_Sounds(true);
 			Ambient_Sounds_Remove_All_Looping_Sounds(1u);
-			Game_Flag_Set(kFlagCT09toCT08);
 			Set_Enter(kSetCT08_CT51_UG12, kSceneCT08);
 		}
 		return true;
@@ -199,7 +205,6 @@ bool SceneScriptCT09::ClickedOnExit(int exitId) {
 		if (!Loop_Actor_Walk_To_XYZ(kActorMcCoy, 107.0f, 348.52f, 927.0f, 0, true, false, false)) {
 			Ambient_Sounds_Remove_All_Non_Looping_Sounds(true);
 			Ambient_Sounds_Remove_All_Looping_Sounds(1u);
-			Game_Flag_Set(kFlagCT09toCT11);
 			Set_Enter(kSetCT11, kSceneCT11);
 		}
 		return true;
@@ -209,7 +214,6 @@ bool SceneScriptCT09::ClickedOnExit(int exitId) {
 		if (!Loop_Actor_Walk_To_XYZ(kActorMcCoy, 159.0f, 349.0f, 570.0f, 0, true, false, false)) {
 			Ambient_Sounds_Remove_All_Non_Looping_Sounds(true);
 			Ambient_Sounds_Remove_All_Looping_Sounds(1u);
-			Game_Flag_Set(kFlagCT09toCT10);
 			Set_Enter(kSetCT10, kSceneCT10);
 		}
 		return true;
@@ -245,12 +249,8 @@ void SceneScriptCT09::PlayerWalkedIn() {
 		Game_Flag_Set(kFlagCT09Entered);
 		Actor_Set_Goal_Number(kActorLeon, kGoalLeonHoldingDeskClerk);
 		leonScene = true;
-		if (_vm->_cutContent) {
-			// don't allow McCoy to leave until the situation is resolved
-			// (the vanilla game allows him to leave)
-			// Jake - Removed the code which disables the scene exits so when Leon approaches McCoy and the player has been given control
-			// they have a chance to escape. 
-		}
+		// Jake - Removed the code which disables the scene exits so when Leon approaches McCoy and the player has been given control
+		// they have a chance to escape. 
 	}
 
 	if (Game_Flag_Query(kFlagCT10toCT09)) {
@@ -268,7 +268,6 @@ void SceneScriptCT09::PlayerWalkedIn() {
 		} else {
 			Loop_Actor_Walk_To_XYZ(kActorMcCoy, 124.0f, 348.52f, 886.0f, 0, false, false, false);
 		}
-		Game_Flag_Reset(kFlagCT11toCT09);
 	}
 
 	if (Actor_Query_Goal_Number(kActorDeskClerk) == kGoalDeskClerkRecovered) {
@@ -278,16 +277,19 @@ void SceneScriptCT09::PlayerWalkedIn() {
 			}
 			Actor_Says(kActorDeskClerk, 70, 13);
 			Actor_Face_Actor(kActorMcCoy, kActorDeskClerk, true);
-			Actor_Says(kActorMcCoy, 600, 17);
+			Actor_Says(kActorMcCoy, 600, 17); //00-0600.AUD	He looked familiar.
 			Actor_Says(kActorDeskClerk, 80, 14);
 			if (_vm->_cutContent) {
 				if (Player_Query_Agenda() != kPlayerAgendaSurly 
 				&& Player_Query_Agenda() != kPlayerAgendaErratic) {
-					Actor_Says(kActorMcCoy, 605, 13);
+					Actor_Says(kActorMcCoy, 605, 13); //00-0605.AUD	“To Protect and to Serve.”
+				} else {
+					Delay(2000);
 				}
 			} else {
-				Actor_Says(kActorDeskClerk, 90, 15);
+				Actor_Says(kActorMcCoy, 605, 13); //00-0605.AUD	“To Protect and to Serve.”
 			}
+			Actor_Says(kActorDeskClerk, 90, 15);
 		} else {
 			// Quote 30 is *boop* in ENG and DEU versions
 			// In FRA version it is muted
@@ -304,9 +306,6 @@ void SceneScriptCT09::PlayerWalkedIn() {
 				}
 				Actor_Says(kActorDeskClerk, 20, 12);
 			}
-			if (!_vm->_cutContent) {
-				Actor_Face_Actor(kActorMcCoy, kActorDeskClerk, true);
-			}
 			if (_vm->_cutContent) {
 				Actor_Face_Actor(kActorMcCoy, kActorDeskClerk, true);
 				if (Player_Query_Agenda() == kPlayerAgendaSurly 
@@ -316,19 +315,22 @@ void SceneScriptCT09::PlayerWalkedIn() {
 					Actor_Says(kActorMcCoy, 590, 16);
 					Actor_Says(kActorDeskClerk, 50, 14);
 					Actor_Says(kActorMcCoy, 595, 14);
+					Actor_Says(kActorDeskClerk, 60, 13);
+					Actor_Modify_Friendliness_To_Other(kActorDeskClerk, kActorMcCoy, -1);
 				} else {
+					Delay(2000);
 					Actor_Says(kActorMcCoy, 2305, 13); //00-2305.AUD	I’m sorry.
-					Game_Flag_Set(kFlagCT09DeskClerkTalk2);
 				}
 			} else {
+				Actor_Face_Actor(kActorMcCoy, kActorDeskClerk, true);
 				Actor_Says(kActorMcCoy, 585, 18);
 				Actor_Says(kActorDeskClerk, 40, 15);
 				Actor_Says(kActorMcCoy, 590, 16);
 				Actor_Says(kActorDeskClerk, 50, 14);
 				Actor_Says(kActorMcCoy, 595, 14);
+				Actor_Says(kActorDeskClerk, 60, 13);
+				Actor_Modify_Friendliness_To_Other(kActorDeskClerk, kActorMcCoy, -1);
 			}
-			Actor_Says(kActorDeskClerk, 60, 13);
-			Actor_Modify_Friendliness_To_Other(kActorDeskClerk, kActorMcCoy, -1);
 		}
 		Actor_Set_Goal_Number(kActorDeskClerk, kGoalDeskClerkDefault);
 	}

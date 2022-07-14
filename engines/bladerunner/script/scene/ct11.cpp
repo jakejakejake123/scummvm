@@ -66,7 +66,8 @@ void SceneScriptCT11::SceneLoaded() {
 			Scene_2D_Region_Add(0, 505, 316, 513, 321);
 			Game_Flag_Set(kFlagCT11DogWrapperAvailable);
 		}
-
+		// Made it so Grigorians note will appear in the car under any circumstance other than Gordo being a replicant and Dektora being human. If that is the case the reps never would have gone to Crazylegs and
+		// Grigorians note to Crazylegs wouldn't be in the car.
 		if (_vm->_cutContent) {
 		    if (!Actor_Clue_Query(kActorMcCoy, kClueGrigoriansNote)) {
 		    	if (Game_Flag_Query(kFlagDektoraIsReplicant)
@@ -149,7 +150,6 @@ bool SceneScriptCT11::ClickedOnItem(int itemId, bool a2) {
 bool SceneScriptCT11::ClickedOnExit(int exitId) {
 	if (exitId == 0) {
 		if (!Loop_Actor_Walk_To_XYZ(kActorMcCoy, 121.0f, 9.68f, -42.0f, 0, true, false, false)) {
-			Game_Flag_Set(kFlagCT11toCT09);
 			Set_Enter(kSetCT09, kSceneCT09);
 		}
 		return true;
@@ -180,6 +180,7 @@ bool SceneScriptCT11::ClickedOn2DRegion(int region) {
 	if (region == 0 && Game_Flag_Query(kFlagCT11DogWrapperAvailable)) {
 		if (!Loop_Actor_Walk_To_XYZ(kActorMcCoy, 686.0f, 0.0f, 658.0f, 12, true, false, false)) {
 			Actor_Face_Heading(kActorMcCoy, 47, false);
+			// Made it so McCoy will only pick up the lichen dog wrapper from within the car if he has found enough clues to deem the car suspicious.
 			if (_vm->_cutContent) {
 				if (Actor_Clue_Query(kActorMcCoy, kClueCar)
 				|| Game_Flag_Query(kFlagCarFound)
@@ -200,7 +201,7 @@ bool SceneScriptCT11::ClickedOn2DRegion(int region) {
 					Scene_2D_Region_Remove(0);
 		#endif // !BLADERUNNER_ORIGINAL_BUGS
 				} else {
-					Actor_Says(kActorMcCoy, 8525, 14); // 00-8525.AUD	Hmph.
+					Actor_Says(kActorMcCoy, 8525, 13); // 00-8525.AUD	Hmph.
 				}
 			} else {
 				Item_Remove_From_World(kItemDogWrapper);		
@@ -232,7 +233,7 @@ bool SceneScriptCT11::ClickedOn2DRegion(int region) {
 			Item_Remove_From_World(kItemNote);
 			Actor_Clue_Acquire(kActorMcCoy, kClueGrigoriansNote, false, -1);
 			Item_Pickup_Spin_Effect(kModelAnimationGrigoriansNote, 512, 326);
-			Actor_Voice_Over(8840, kActorMcCoy);
+			Actor_Says(kActorMcCoy, 8840, 13); //00-8840.AUD	A note.
 			Scene_2D_Region_Remove(2);
 			if (_vm->_cutContent) {
 				CDB_Set_Crime(kClueGrigoriansNote, kCrimeReplicantHarboring);
@@ -296,7 +297,7 @@ bool SceneScriptCT11::ClickedOn2DRegion(int region) {
 #endif // !BLADERUNNER_ORIGINAL_BUGS
 					} else {
 						Actor_Says(kActorMcCoy, 8525, 12); //00-8525.AUD	Hmph.
-						Actor_Says(kActorMcCoy, 8524, 12); //00-8524.AUD	That's a washout.
+						Actor_Says(kActorMcCoy, 8524, 13); //00-8524.AUD	That's a washout.
 					}
 				}
 			} else {
@@ -359,17 +360,16 @@ void SceneScriptCT11::PlayerWalkedIn() {
 		Loop_Actor_Walk_To_XYZ(kActorMcCoy, 125.0f, 9.68f, 74.0f, 0, false, false, false);
 		Actor_Set_Immunity_To_Obstacles(kActorMcCoy, false);
 		Player_Gains_Control();
-		Game_Flag_Reset(kFlagCT09toCT11);
 	}
 		if (_vm->_cutContent) {
 			if (!Game_Flag_Query(kFlagCT11Visited)) {
 				Game_Flag_Set (kFlagCT11Visited);
 				ADQ_Add(kActorDispatcher, 220, kAnimationModeTalk); //38-0220.AUD	Attention all Sector 3 units.
 				ADQ_Add(kActorDispatcher, 230, kAnimationModeTalk); //38-0230.AUD	Be advised. 2-11 in progress. Kitty Hawk Savings and Loan. Corner of Peach and Lincoln.
+				ADQ_Add(kActorOfficerGrayford, 490, kAnimationModeTalk); // 24-0490.AUD	LA, 34 Metro 3. Copied. ETA two minutes. Be advised 34 is a two men Unit.
 				ADQ_Add(kActorDispatcher, 240, kAnimationModeTalk); //38-0240.AUD	Units responding identify..
 				ADQ_Add(kActorOfficerGrayford, 500, kAnimationModeTalk); //24-0500.AUD	LA, Two men Unit 32 Metro 3 is responding to provide backup. ETA three minutes.
 				ADQ_Add(kActorDispatcher, 250, kAnimationModeTalk); //38-0250.AUD	LA Copy. Units 34 and 32 en route. 2-11 in progress at Peach and Lincoln.
-				ADQ_Add(kActorOfficerGrayford, 490 , kAnimationModeTalk); // 24-0490.AUD	LA, 34 Metro 3. Copied. ETA two minutes. Be advised 34 is a two men Unit.
 				ADQ_Add(kActorDispatcher, 260, kAnimationModeTalk); //38-0260.AUD	All Sector 3 units. Hold your traffic until we confirm a Code 4.
 				ADQ_Add_Pause(1000);
 				ADQ_Add(kActorOfficerGrayford, 510, kAnimationModeTalk); //24-0510.AUD	LA, Units 34 and 32 are 10-97

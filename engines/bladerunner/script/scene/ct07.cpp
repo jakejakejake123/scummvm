@@ -96,6 +96,7 @@ void SceneScriptCT07::PlayerWalkedIn() {
 	Non_Player_Actor_Combat_Mode_On(kActorZuben, kActorCombatStateIdle, false, kActorMcCoy, 2, kAnimationModeCombatIdle, kAnimationModeCombatWalk, kAnimationModeCombatRun, 0, 0, 100, 15, 300, false);
 	Game_Flag_Set(kFlagCT07ZubenAttack);
 	Actor_Face_Actor(kActorMcCoy, kActorZuben, true);
+	// Made it so if McCoy decided to spare replicant Runciter he will automatically spare Zuben.
 	if (_vm->_cutContent) {
 		if (Game_Flag_Query(kFlagMcCoyIsHelpingReplicants)	
 		&& !Game_Flag_Query(kFlagMcCoyShotAtZuben)) {
@@ -121,11 +122,14 @@ void SceneScriptCT07::PlayerWalkedIn() {
 			Actor_Says(kActorMcCoy, 485, 14);
 			Game_Flag_Set(kFlagZubenSpared);
 			Game_Flag_Set(kFlagMcCoyIsHelpingReplicants);
+			Game_Flag_Set(kFlagZubenEncounter);
+			Actor_Set_Goal_Number(kActorGaff, kGoalGaffCT05Wait);
 			Actor_Modify_Friendliness_To_Other(kActorSteele, kActorMcCoy, -2);
 			Actor_Modify_Friendliness_To_Other(kActorGuzza, kActorMcCoy, -2);
 			Actor_Modify_Friendliness_To_Other(kActorClovis, kActorMcCoy, 2);
 			Actor_Set_Goal_Number(kActorGordo, kGoalGordoCT05WalkThrough);
 			Actor_Clue_Acquire(kActorZuben, kClueMcCoyLetZubenEscape, true, -1);
+			Actor_Clue_Acquire(kActorLucy, kClueMcCoyLetZubenEscape, true, -1);
 			Actor_Set_Goal_Number(kActorZuben, kGoalZubenCT07RunToFreeSlotA);
 			if (Random_Query(1, 3) < 3) {
 				Actor_Clue_Acquire(kActorZuben, kClueMcCoysDescription, true, -1);

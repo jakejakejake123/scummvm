@@ -101,7 +101,13 @@ bool SceneScriptPS07::ClickedOnActor(int actorId) {
 			                                  || Game_Flag_Query(kFlagMcCoyHasChromeDebris))))
 			) {
 				Actor_Face_Actor(kActorKlein, kActorMcCoy, true);
-				Actor_Says(kActorKlein, 30, 12);
+				if (_vm->_cutContent) {
+					if (Actor_Query_Friendliness_To_Other(kActorKlein, kActorMcCoy) > 49) {
+						Actor_Says(kActorKlein, 30, 12); //30-0030.AUD	I was wondering when you'd show your mug around here, McCoy.
+					}
+				} else {
+					Actor_Says(kActorKlein, 30, 12); //30-0030.AUD	I was wondering when you'd show your mug around here, McCoy.
+				}
 				Game_Flag_Set(kFlagPS07KleinTalkClues);
 			} else {
 				if (Game_Flag_Query(kFlagPS07KleinTalkClues)) {
@@ -120,7 +126,7 @@ bool SceneScriptPS07::ClickedOnActor(int actorId) {
 				Actor_Says(kActorKlein, 50, 16);
 				if (_vm->_cutContent) {
 					if (!Actor_Clue_Query(kActorMcCoy, kClueBobInterview1)) {
-						Actor_Says(kActorMcCoy, 4135, 13);
+						Actor_Says(kActorMcCoy, 4135, 13); //00-4135.AUD	How's that?
 					}
 				} else {
 					Actor_Says(kActorMcCoy, 4135, 13);
@@ -129,7 +135,7 @@ bool SceneScriptPS07::ClickedOnActor(int actorId) {
 				Actor_Says(kActorKlein, 70, 12);
 				if (_vm->_cutContent) {
 					if (!Actor_Clue_Query(kActorMcCoy, kClueBobInterview1)) {
-						Actor_Says(kActorMcCoy, 4140, 13);
+						Actor_Says(kActorMcCoy, 4140, 13); //00-4140.AUD	What can I conclude from that?
 					}
 				} else {
 					Actor_Says(kActorMcCoy, 4140, 13);
@@ -155,15 +161,27 @@ bool SceneScriptPS07::ClickedOnActor(int actorId) {
 					&& Player_Query_Agenda() != kPlayerAgendaErratic) {
 						Actor_Says(kActorMcCoy, 620, 18); //-	00-0620.AUD	Try me.
 					} else {
-						Actor_Says(kActorMcCoy, 8445, 14); //00-8445.AUD	Cough it up!
+						Actor_Says(kActorMcCoy, 8455, 14); //00-8455.AUD	Let me judge what's gonna make me upset.
+						Delay(1000);
+						Actor_Says(kActorMcCoy, 6985, 16); //00-6985.AUD	Got the straight scoop for me or what?
 						Actor_Modify_Friendliness_To_Other(kActorKlein, kActorMcCoy, -3);
 					}
 				}
 				Actor_Says(kActorKlein, 110, 12); //-	30-0110.AUD	About 50% were real. The rest were fakes.
 				Actor_Says(kActorMcCoy, 4150, 15);
-				Actor_Says(kActorKlein, 120, 14);
-				Actor_Says(kActorMcCoy, 4155, 17);
-				Actor_Says(kActorKlein, 130, 15);
+				if (_vm->_cutContent) {
+					if (Actor_Query_Friendliness_To_Other(kActorKlein, kActorMcCoy) > 44) {
+						Actor_Says(kActorKlein, 120, 14);
+						Actor_Says(kActorMcCoy, 4155, 17);
+						Actor_Says(kActorKlein, 130, 15);
+					} else {
+						Delay(1000);
+					}
+				} else {
+					Actor_Says(kActorKlein, 120, 14);
+					Actor_Says(kActorMcCoy, 4155, 17);
+					Actor_Says(kActorKlein, 130, 15);
+				}
 				Actor_Says(kActorMcCoy, 4160, 13); //-	00-4160.AUD	What about the wounds?
 				Actor_Says(kActorKlein, 140, 16); 
 				// quote 150 is *boop* in ENG version
@@ -184,16 +202,17 @@ bool SceneScriptPS07::ClickedOnActor(int actorId) {
 						Actor_Modify_Friendliness_To_Other(kActorKlein, kActorMcCoy, -3);
 						Actor_Set_Goal_Number(kActorKlein, kGoalKleinMovingInLab01); 
 					} else {
-						Actor_Says(kActorMcCoy, 4165, 18);
-						Actor_Says(kActorKlein, 160, 13);
-						if (Player_Query_Agenda() != kPlayerAgendaSurly
-						&& (Player_Query_Agenda() != kPlayerAgendaErratic)) {
-							Actor_Says(kActorMcCoy, 4170, 19); // 00-4170.AUD	Nice bunch of Reps I'm tailing.
-							Actor_Says(kActorMcCoy, 4175, 19); // 00-4175.AUD	Hope you're not pulling a meat cleaver out of my back next week.
+						if (Actor_Clue_Query(kActorMcCoy, kClueSightingMcCoyRuncitersShop)) {
+							Actor_Says(kActorMcCoy, 4165, 18);
+							Actor_Says(kActorKlein, 160, 13);
+						}
+						Actor_Says(kActorMcCoy, 4170, 19); // 00-4170.AUD	Nice bunch of Reps I'm tailing.
+						Actor_Says(kActorMcCoy, 4175, 19); // 00-4175.AUD	Hope you're not pulling a meat cleaver out of my back next week.
+						if (Actor_Query_Friendliness_To_Other(kActorKlein, kActorMcCoy) > 49) {
 							Actor_Says(kActorKlein, 210, 12); //30-0210.AUD  	Ha, you're a real funny guy, McCoy.
 							Actor_Modify_Friendliness_To_Other(kActorKlein, kActorMcCoy, 3);
-							Actor_Set_Goal_Number(kActorKlein, kGoalKleinMovingInLab01);
 						}
+						Actor_Set_Goal_Number(kActorKlein, kGoalKleinMovingInLab01);
 					}	
 				} else {
 					Actor_Says(kActorMcCoy, 4165, 18);
@@ -236,21 +255,26 @@ bool SceneScriptPS07::ClickedOnActor(int actorId) {
 				// Made it so McCoy only makes that mean spirited joke towards Dinos wife if he is surly or erratic.
 				// Also adjusted the friendliness loss towards Dino so doesn't walk off when McCoy insults his wife.
 				// Seems a bit unfair to punish the player so harshly by having Dino  walk off because of a single comment.
+				Actor_Says(kActorKlein, 200, 16);
 				if (_vm->_cutContent) {
 					if (Player_Query_Agenda() == kPlayerAgendaSurly 
 					|| Player_Query_Agenda() == kPlayerAgendaErratic) {
-						Actor_Says(kActorKlein, 200, 16);
 						Actor_Says(kActorMcCoy, 4185, 18); //00-4185.AUD	I heard your wife got her license back.
-						Delay(2000);
+						Delay(1000);
 						Actor_Says(kActorKlein, 280, 13); //30-0280.AUD	Come back at me when you got something worthwhile, McCoy.
 						Actor_Modify_Friendliness_To_Other(kActorKlein, kActorMcCoy, -3);
 						Actor_Set_Goal_Number(kActorKlein, kGoalKleinMovingInLab01);
 			  	    } else {
-					    Actor_Says(kActorKlein, 200, 16);
-						Actor_Says(kActorMcCoy, 4195, 13);
-						Actor_Says(kActorKlein, 240, 16); 
-						Game_Flag_Set(kFlagKleinCarIdentityTalk);
-						Actor_Set_Goal_Number(kActorKlein, kGoalKleinMovingInLab01);
+						if (!Game_Flag_Query(kFlagKleinCarIdentityTalk)) {
+							Actor_Says(kActorMcCoy, 4195, 13);
+							if (Actor_Query_Friendliness_To_Other(kActorKlein, kActorMcCoy) > 46) {
+								Actor_Says(kActorKlein, 240, 16); 
+								Game_Flag_Set(kFlagKleinCarIdentityTalk);
+							} else {
+								Actor_Says(kActorKlein, 0, 16); //30-0000.AUD	Zip, man. Try me later.
+							}
+							Actor_Set_Goal_Number(kActorKlein, kGoalKleinMovingInLab01);
+						}
 				    }
 				} else {
 					Actor_Says(kActorKlein, 200, 16);
@@ -268,8 +292,32 @@ bool SceneScriptPS07::ClickedOnActor(int actorId) {
 			) {
 				Game_Flag_Set(kFlagPS07KleinTalkChromeDebris);
 				Actor_Says(kActorKlein, 220, 12);
-				Actor_Says(kActorMcCoy, 4190, 13);
-				Actor_Says(kActorKlein, 230, 14);
+				if (_vm->_cutContent) {
+					if (Player_Query_Agenda() != kPlayerAgendaSurly 
+					&& Player_Query_Agenda() != kPlayerAgendaErratic) {
+						Actor_Says(kActorMcCoy, 4190, 13); //00-4190.AUD	Nice set of wheels.
+						if (Actor_Query_Friendliness_To_Other(kActorKlein, kActorMcCoy) > 49) {
+							Actor_Says(kActorKlein, 230, 14);
+						}
+					} else {
+						Actor_Says(kActorMcCoy, 5065, 18); //00-5065.AUD	Is that right?
+					}
+				} else {
+					Actor_Says(kActorMcCoy, 4190, 13); //00-4190.AUD	Nice set of wheels.
+					Actor_Says(kActorKlein, 230, 14);
+				}
+				if (_vm->_cutContent) {
+					if (!Game_Flag_Query(kFlagKleinCarIdentityTalk)) {
+						Actor_Says(kActorMcCoy, 4195, 13); //00-4195.AUD	Any way to find the car's owner?
+						if (Actor_Query_Friendliness_To_Other(kActorKlein, kActorMcCoy) > 46) {
+							Actor_Says(kActorKlein, 240, 16); 
+							Game_Flag_Set(kFlagKleinCarIdentityTalk);
+						} else {
+							Actor_Says(kActorKlein, 0, 16); //30-0000.AUD	Zip, man. Try me later.
+						}
+						Actor_Set_Goal_Number(kActorKlein, kGoalKleinMovingInLab01);
+					}
+				}
 				// Car VIN
 				// quote 250 is *boop* in ENG version
 				// it is redundant in DEU and FRA versions (identical to second half of quote 240)
@@ -288,9 +336,10 @@ bool SceneScriptPS07::ClickedOnActor(int actorId) {
 			// still see the Maggie inscription on the 'gold chain' but Sadik did mention having a lover that was killed by a blade runner.
 			// Could it be that her name was also Maggie? It certainly is a possibility and would be pretty if it were true.
 			if (_vm->_cutContent 
-			&& Actor_Clue_Query(kActorMcCoy, kClueTyrellSecurityPhoto)	
+			&& (Global_Variable_Query(kVariableChapter) == 2) 	
 			&& !Actor_Clue_Query(kActorMcCoy, kClueLabAnalysisGoldChain)
-			&& (Actor_Query_Friendliness_To_Other(kActorKlein, kActorMcCoy) > 50)) {
+			&& Actor_Clue_Query(kActorMcCoy, kClueTyrellSecurityPhoto)	
+			&& (Actor_Query_Friendliness_To_Other(kActorKlein, kActorMcCoy) > 49)) {
 				Actor_Says(kActorKlein, 260, 12); //30-0260.AUD Yeah, dig this. It's been doing the circuits throughout the station.
 				Item_Pickup_Spin_Effect(kModelAnimationMaggieBracelet, 180, 228); 
 				Actor_Voice_Over(4190, kActorVoiceOver); //99-4190.AUD	Where have I seen that before?
@@ -300,7 +349,7 @@ bool SceneScriptPS07::ClickedOnActor(int actorId) {
 			}				
 			// Altered code so Dinos response to McCoy if he has nothing left to analyze is determined based on his friendliness with McCoy.
 			if (_vm->_cutContent) {
-				if (Actor_Query_Friendliness_To_Other(kActorKlein, kActorMcCoy) == 50) {
+				if (Actor_Query_Friendliness_To_Other(kActorKlein, kActorMcCoy) >= 50) {
 					Actor_Says(kActorKlein, 40, 13); //30-0040.AUD	Not right now. If anything else turns up, you'll be the first to know.
 				} else if 
 					(Actor_Query_Friendliness_To_Other(kActorKlein, kActorMcCoy) == 47) {
@@ -311,7 +360,6 @@ bool SceneScriptPS07::ClickedOnActor(int actorId) {
 				} else if 
 					(Actor_Query_Friendliness_To_Other(kActorKlein, kActorMcCoy) == 41) {
 					Actor_Says(kActorKlein, 280, 13); //30-0280.AUD	Come back at me when you got something worthwhile, McCoy.
-					// If the relationship is between 40 - 43 Dino walks up to you but says nothing because he is very upset with McCoy.
 				}
 			} else {
 				Actor_Says(kActorKlein, 0, 13);

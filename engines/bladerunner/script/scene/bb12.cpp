@@ -31,7 +31,6 @@ void SceneScriptBB12::InitializeScene() {
 		Setup_Scene_Information(-129.0f, 0.0f,  64.0f, 307);
 	} else {
 		Setup_Scene_Information(  54.0f, 0.0f, 200.0f,   0);
-		Game_Flag_Reset(kFlagBB05toBB12);
 	}
 
 	Scene_Exit_Add_2D_Exit(0,   0,   0,  30, 479, 3);
@@ -111,9 +110,17 @@ bool SceneScriptBB12::ClickedOnActor(int actorId) {
 			Actor_Face_Actor(kActorMcCoy, kActorSebastian, true);
 			Actor_Says(kActorMcCoy, 7235, 18); //00-7235.AUD	You make her, too?
 			Actor_Face_Actor(kActorSebastian, kActorMcCoy, true);
-			Actor_Says(kActorSebastian, 630, 13); //56-0630.AUD	I-- I found her. On the street.
-			Actor_Says(kActorSebastian, 640, 13); //56-0640.AUD	But she's mine now.
-			Actor_Says(kActorMcCoy, 7240, 18); //00-7240.AUD	Easy boy, I'm not gonna take her away from ya.
+			if (Actor_Query_Friendliness_To_Other(kActorSebastian, kActorMcCoy) < 50) {
+				Actor_Says(kActorSebastian, 70, kAnimationModeTalk); //56-0070.AUD	Yes?
+				Delay(1000);
+			} else {
+				Actor_Says(kActorSebastian, 630, 13); //56-0630.AUD	I-- I found her. On the street.
+				Actor_Says(kActorSebastian, 640, 13); //56-0640.AUD	But she's mine now.
+				if (Player_Query_Agenda() != kPlayerAgendaSurly 
+				&& Player_Query_Agenda() != kPlayerAgendaErratic) {
+					Actor_Says(kActorMcCoy, 7240, 18); //00-7240.AUD	Easy boy, I'm not gonna take her away from ya.
+				}
+			}
 			Actor_Face_Actor(kActorMcCoy, kActorDektora, true);
 			if (Player_Query_Agenda() != kPlayerAgendaSurly 
 			&& Player_Query_Agenda() != kPlayerAgendaErratic) {
@@ -121,7 +128,9 @@ bool SceneScriptBB12::ClickedOnActor(int actorId) {
 			} else {
 				Actor_Says(kActorMcCoy, 8700, 18); //00-8700.AUD	Never seen anything like that before.
 			}
-			Actor_Says(kActorSebastian, 650, 14); //56-0650.AUD	I haven't named her yet.
+			if (Actor_Query_Friendliness_To_Other(kActorSebastian, kActorMcCoy) < 50) {
+				Actor_Says(kActorSebastian, 650, 14); //56-0650.AUD	I haven't named her yet.
+			}
 			Actor_Says(kActorMcCoy, 7250, 13); //00-7250.AUD	She almost looks real.
 			Actor_Says(kActorSebastian, 660, 14); //56-0660.AUD	She isn't. Believe you me.
 			Actor_Says(kActorMcCoy, 7255, 15); //00-7255.AUD	You know, I can't place her for sure but she looks familiar.
@@ -146,6 +155,9 @@ bool SceneScriptBB12::ClickedOnActor(int actorId) {
 				Actor_Says(kActorMcCoy, 7260, 16); //00-7260.AUD	Didn't I see an incept tape at the--
 				Actor_Change_Animation_Mode(kActorMcCoy, 4);
 				Actor_Says(kActorSebastian, 680, 14); //56-0680.AUD	Hey, you don't need to do that.
+				Actor_Says(kActorMcCoy, 2775, -1); //00-2775.AUD	Hey, I'd just as soon not do this job.
+				Actor_Says(kActorSebastian, 560, 20); //56-0560.AUD	You-- You're a Blade Runner, aren't you?
+				Actor_Says(kActorMcCoy, 7200, -1); //00-7200.AUD	Bingo.
 				Actor_Change_Animation_Mode(kActorMcCoy, 5);
 				Loop_Actor_Walk_To_XYZ(kActorSebastian,  6.18, 0.29, -33.29, 0, false, false, true); 
 				Actor_Face_Actor(kActorSebastian, kActorMcCoy, true);
@@ -169,15 +181,16 @@ bool SceneScriptBB12::ClickedOnActor(int actorId) {
 				Actor_Says(kActorMcCoy, 1970, 4); //00-1970.AUD	You should start thinking about the company you keep.
 				Delay(1000);
 				Actor_Says(kActorSebastian, 110, 16); //56-0110.AUD	Well, if you insist... 
+				Actor_Clue_Acquire(kActorSebastian, kClueMcCoyIsABladeRunner, true, kActorMcCoy);
 				Delay(1000);
 				Player_Loses_Control();
 				Loop_Actor_Walk_To_XYZ(kActorMcCoy, 54.0f, 0.0f, 200.0f, 0, false, false, true);
 				Player_Gains_Control();
 				Actor_Set_Targetable(kActorGeneralDoll, false);
-				Music_Stop(3u);
+				Music_Stop(1u);
 				Ambient_Sounds_Remove_All_Non_Looping_Sounds(true);
 				Ambient_Sounds_Remove_All_Looping_Sounds(1u);
-				Music_Play(kMusicBRBlues, 52, 0, 2, -1, kMusicLoopPlayOnce, 0);
+				Music_Play(kMusicBRBlues, 52, 0, 2, -1, kMusicLoopPlayOnce, 1);
 				Game_Flag_Set(kFlagBB12toBB05);
 				Set_Enter(kSetBB05, kSceneBB05);
 				Game_Flag_Set(kFlagNewDoll);

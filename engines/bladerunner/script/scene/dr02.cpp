@@ -44,6 +44,7 @@ void SceneScriptDR02::InitializeScene() {
 		// improved navigation of this set of scenes
 		Scene_Exit_Add_2D_Exit(3,  0,   0,  34, 479, 3);
 		Scene_Exit_Add_2D_Exit(4, 34, 445, 605, 479, 2);
+		// Code for inserting the shoeshine man into the set.
 		Actor_Put_In_Set(kActorShoeshineMan, kSetDR01_DR02_DR04);
 		Actor_Set_At_XYZ(kActorShoeshineMan, -1160.0f, -0.04f, -235.0f, 524);
 	}
@@ -147,6 +148,8 @@ bool SceneScriptDR02::ClickedOn3DObject(const char *objectName, bool a2) {
 }
 
 bool SceneScriptDR02::ClickedOnActor(int actorId) {
+	// This is the code for when you click on the shoeshine man. Depending on McCoys agenda he will will either be nice to the shoeshine man and give him some money
+	// or he will simply tell the shoeshine man to get lost. If McCoy helps the shoeshine man he will give McCoy several clues throughout the game when McCoy interacts with him.   
 	if (actorId == kActorShoeshineMan) {
 		if (!Loop_Actor_Walk_To_XYZ(kActorMcCoy, -1098.15f, -0.04f, -201.53f, 0, true, false, false)) {
 			if (!Game_Flag_Query(kFlagShoeshineManTalk)) {
@@ -170,8 +173,6 @@ bool SceneScriptDR02::ClickedOnActor(int actorId) {
 						Actor_Change_Animation_Mode(kActorMcCoy, 23);
 						Delay(2000);
 						Actor_Says(kActorMcCoy, 8170, 13); //00-8170.AUD	There you go.
-						Delay(1000);
-						Actor_Says(kActorMcCoy, 8502, 15); //00-8502.AUD	I hope it's enough.
 						Delay(3000);
 						Actor_Says(kActorMcCoy, 8395, 13); //00-8395.AUD	You don't have anything to say?
 						Delay(2000);
@@ -247,8 +248,8 @@ bool SceneScriptDR02::ClickedOnActor(int actorId) {
 						Delay(1000);
 						Actor_Says(kActorMcCoy, 3935, kAnimationModeTalk); //00-3935.AUD	Thanks.
 						Actor_Face_Heading(kActorShoeshineMan, 524, false);
-					} else if (!Actor_Clue_Query(kActorMcCoy, kCluePartialLicenseNumber)
-					&& Global_Variable_Query(kVariableChapter) > 2)  {
+					} else if (Actor_Clue_Query(kActorMcCoy, kCluePartialLicenseNumber)
+					&& !Actor_Clue_Query(kActorMcCoy, kClueLicensePlate)) {
 						Actor_Says(kActorMcCoy, 8990, 17);//00-8990.AUD	What have you got there?
 						Delay(2000);
 						Item_Pickup_Spin_Effect(kModelAnimationLicensePlate, 123, 291);

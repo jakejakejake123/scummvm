@@ -69,7 +69,15 @@ void AIScriptCrazylegs::ReceivedClue(int clueId, int fromActorId) {
 }
 
 void AIScriptCrazylegs::ClickedByPlayer() {
-	//return false;
+	if (_vm->_cutContent) {
+		if (Actor_Query_In_Set(kActorCrazylegs, kSetKP07)) {
+			Loop_Actor_Walk_To_Actor(kActorMcCoy, kActorCrazylegs, 24, false, false);
+			Actor_Face_Actor(kActorMcCoy, kActorCrazylegs, true);
+			Actor_Face_Actor(kActorCrazylegs, kActorMcCoy, true);
+			Actor_Says(kActorMcCoy, 1730, kAnimationModeTalk); //00-1730.AUD	You’re a stand up guy, Crazy.
+			Actor_Says(kActorCrazylegs, 80, 23); //09-0080.AUD	That I am.
+		}
+	}
 }
 
 void AIScriptCrazylegs::EnteredSet(int setId) {

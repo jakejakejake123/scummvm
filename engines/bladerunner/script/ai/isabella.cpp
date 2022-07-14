@@ -71,11 +71,34 @@ void AIScriptIsabella::ClickedByPlayer() {
 				if (Actor_Clue_Query(kActorMcCoy, kClueSpecialIngredient)
 				&& !Actor_Clue_Query(kActorMcCoy, kClueStolenCheese)
 				&& !Game_Flag_Query(kFlagIsabellaCheeseTalk)) {
-					Actor_Says(kActorMcCoy, 1305, 14); //00-1305.AUD	Mia and Murray tell me you're using cheese in your stew. Real cheese.
 					Game_Flag_Set(kFlagIsabellaCheeseTalk);
+					Actor_Says(kActorMcCoy, 1305, 14); //00-1305.AUD	Mia and Murray tell me you're using cheese in your stew. Real cheese.
 					Actor_Says(kActorIsabella, 160, kAnimationModeTalk); //59-0160.AUD	Them old buzzards. What they know?
+					if (Actor_Query_Is_In_Current_Set(kActorMurray)) {
+						Actor_Face_Actor(kActorMcCoy, kActorMurray, true);
+						Actor_Face_Actor(kActorIsabella, kActorMurray, true);
+						Actor_Face_Actor(kActorMurray, kActorIsabella, true);
+						Actor_Face_Actor(kActorMia, kActorIsabella, true);
+						Actor_Says(kActorMia, 140, kAnimationModeTalk); //22-0140.AUD	That stew she makes, it always did taste a little gamey.
+						Actor_Says(kActorMurray, 220, kAnimationModeTalk); //31-0220.AUD	She's always bragging about her special ingredient.
+						Actor_Says(kActorMurray, 230, kAnimationModeTalk); //31-0230.AUD	And she charges an arm and leg for it, too.
+						Actor_Says(kActorMurray, 320, kAnimationModeTalk); //31-0320.AUD	Ah... when I was young we respected our elders.
+						Delay(1000);
+						Actor_Face_Actor(kActorIsabella, kActorMcCoy, true);
+						Actor_Face_Actor(kActorMcCoy, kActorIsabella, true);
+					}
+					Actor_Says(kActorIsabella, 140, kAnimationModeTalk); //59-0140.AUD	Don't know nothing about cheese. That stuff illegal. It bad news.
 					Actor_Says(kActorMcCoy, 1365, 13); //00-1365.AUD	I'm not looking to bust the dealer. I just want to know who bought it.
-					Delay (2000);
+					Delay(2000);
+					if (Actor_Query_Is_In_Current_Set(kActorMurray)) {
+						Actor_Face_Actor(kActorMcCoy, kActorMurray, true);
+						Actor_Face_Actor(kActorIsabella, kActorMurray, true);
+						Actor_Face_Actor(kActorMurray, kActorIsabella, true);
+						Actor_Says(kActorMurray, 260, kAnimationModeTalk); //31-0260.AUD	Spit it out, woman! McCoy doesn't have all day!
+						Delay (1000);
+						Actor_Face_Actor(kActorIsabella, kActorMcCoy, true);
+						Actor_Face_Actor(kActorMcCoy, kActorIsabella, true);
+					}					
 					if (Player_Query_Agenda() == kPlayerAgendaSurly 
 					|| Player_Query_Agenda() == kPlayerAgendaErratic) {
 						Actor_Says(kActorMcCoy, 4360, 16); //00-4360.AUD	Tell it straight or I'm gonna make sure you get the same as he gets. Full conspiracy, payable for 25.
@@ -103,11 +126,13 @@ void AIScriptIsabella::ClickedByPlayer() {
 							Actor_Face_Actor(kActorIsabella, kActorMcCoy, true);
 							Actor_Says(kActorMcCoy, 6540, 23); //00-6540.AUD	Did you steal this cheese from Kingston Kitchen?	
 							Actor_Face_Actor(kActorIsabella, kActorGordo, true);
-							Actor_Says(kActorGordo, 1280, 13); //02-1280.AUD	Hey, baby. I may steal a line or two. But I’d never steal some cheese. I don’t do dairy.
 							Actor_Says(kActorMcCoy, 6600, 13); //00-6600.AUD	Why the big deal over food?
 							Actor_Says(kActorGordo, 1310, 14); //02-1310.AUD	It was just some cheese, McCoy. And some takeout cartons.
 							Actor_Face_Actor(kActorIsabella, kActorMcCoy, true);
-							Actor_Says(kActorMcCoy, 6595, 15); //00-6595.AUD	And you gave the takeout cartons to Sadik. 
+							if (Actor_Clue_Query(kActorMcCoy, kClueKingstonKitchenBox1)
+							|| Actor_Clue_Query(kActorMcCoy, kClueKingstonKitchenBox2)) {
+								Actor_Says(kActorMcCoy, 6595, 15); //00-6595.AUD	And you gave the takeout cartons to Sadik. 
+							}
 							Actor_Says(kActorMcCoy, 6555, 15); //00-6555.AUD	Let’s hear the rest of it.
 							if (Game_Flag_Query(kFlagLucyIsReplicant)) {
 								Actor_Face_Actor(kActorIsabella, kActorGordo, true);

@@ -181,7 +181,7 @@ void SceneScriptPS05::ActorChangedGoal(int actorId, int newGoal, int oldGoal, bo
 
 void SceneScriptPS05::PlayerWalkedIn() {
 	if (_vm->_cutContent) {
-		if (!Game_Flag_Query(kFlagPS15Entered)) {
+		if (!Game_Flag_Query(kFlagPS05Entered)) {
 			Player_Loses_Control();
 			Delay(1000);
 			Actor_Face_Object(kActorMcCoy, "ASHTRAY", true);
@@ -195,6 +195,7 @@ void SceneScriptPS05::PlayerWalkedIn() {
 			Loop_Actor_Walk_To_Waypoint(kActorMcCoy, 2, 24, true, false);
 			Ambient_Sounds_Remove_All_Non_Looping_Sounds(true);
 			Ambient_Sounds_Remove_All_Looping_Sounds(1u);
+			Game_Flag_Set(kFlagPS05Entered);
 			Set_Enter(kSetPS15, kScenePS15);
 		}
 	}
@@ -279,7 +280,7 @@ void SceneScriptPS05::turnOnTV() {
 				ADQ_Add(kActorNewscaster, 140, kAnimationModeTalk);
 				ADQ_Add(kActorNewscaster, 150, kAnimationModeTalk);
 				if (_vm->_cutContent) {
-					if (Actor_Query_Friendliness_To_Other(kActorGuzza, kActorMcCoy) < 51) {
+					if (Actor_Query_Friendliness_To_Other(kActorGuzza, kActorMcCoy) < 50) {
 						ADQ_Add(kActorGuzza, 1600, kAnimationModeTalk);
 					} else {
 						ADQ_Add(kActorGuzza, 1570, kAnimationModeTalk);

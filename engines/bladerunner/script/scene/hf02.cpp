@@ -76,26 +76,47 @@ bool SceneScriptHF02::MouseClick(int x, int y) {
 }
 
 bool SceneScriptHF02::ClickedOn3DObject(const char *objectName, bool a2) {
-	// Restored the bard. Whenever you click on him you lose 5 chinyen and receive a card with poetry on it.
-	if (Object_Query_Click("BARD_NEON", objectName)) {
-		if (!Loop_Actor_Walk_To_Scene_Object(kActorMcCoy, "BARD_NEON", 24, true, false)) {
-			Actor_Face_Object(kActorMcCoy, "BARD_NEON", true);
-			Sound_Play(kSfxFORTUNE1, 47, -80, 0, 50); 
-			Delay (3000);
-			if (Random_Query(1, 2) == 1) {
-				Actor_Voice_Over(1690, kActorVoiceOver); //99-1690.AUD	“Never seek to tell thy love, love that never told can be.”
-				Actor_Voice_Over(1700, kActorVoiceOver); //99-1700.AUD	Poetry. I was running into a lot of that crap lately.
-				if (Query_Difficulty_Level() != kGameDifficultyEasy) {
-					Global_Variable_Decrement(kVariableChinyen, 2);
-				}
-			} else {
-				Actor_Says(kActorMcCoy, 8525, 13); //00-8525.AUD	Hmph.
-				Actor_Says(kActorMcCoy, 250, 15); //00-0250.AUD	Frog and toad are friends. What the hell is that?
-				// So this is where Lucy got this line from that we found written on the poster at Runciters.
-				Delay (1000);
-				Actor_Says(kActorMcCoy, 2340, kAnimationModeTalk); // 00-2340.AUD	I never did like poetry.
-				if (Query_Difficulty_Level() != kGameDifficultyEasy) {
-					Global_Variable_Decrement(kVariableChinyen, 2);
+	// Restored the bard. Whenever you click on him you lose 2 chinyen and receive a card with poetry on it.
+	if (_vm->_cutContent) {
+		if (Object_Query_Click("BARD_NEON", objectName)) {
+			if (!Loop_Actor_Walk_To_Scene_Object(kActorMcCoy, "BARD_NEON", 24, true, false)) {
+				Actor_Face_Object(kActorMcCoy, "BARD_NEON", true);
+				if (Global_Variable_Query(kVariableChinyen) >= 2
+				|| Query_Difficulty_Level() == kGameDifficultyEasy) {
+					Actor_Change_Animation_Mode(kActorMcCoy, 23);
+					Delay(2000);
+					Sound_Play(kSfxFORTUNE1, 47, -80, 0, 50);
+					Delay(1000);
+					Actor_Change_Animation_Mode(kActorMcCoy, 23);
+					Delay(2000);
+					if (Random_Query(1, 2) == 1) {
+						Actor_Voice_Over(1690, kActorVoiceOver); //99-1690.AUD	“Never seek to tell thy love, love that never told can be.
+						if (Player_Query_Agenda() == kPlayerAgendaSurly 
+						|| Player_Query_Agenda() == kPlayerAgendaErratic) {
+							Actor_Voice_Over(1700, kActorVoiceOver); //99-1700.AUD	Poetry. I was running into a lot of that crap lately.
+						} else {
+							Actor_Says(kActorMcCoy, 2340, kAnimationModeTalk); // 00-2340.AUD	I never did like poetry.
+						}
+						if (Query_Difficulty_Level() != kGameDifficultyEasy) {
+							Global_Variable_Decrement(kVariableChinyen, 2);
+						}
+					} else {
+						Actor_Says(kActorMcCoy, 8525, 13); //00-8525.AUD	Hmph.
+						Actor_Says(kActorMcCoy, 250, 15); //00-0250.AUD	Frog and toad are friends. What the hell is that?
+						// So this is where Lucy got this line from that we found written on the poster at Runciters.
+						Delay (1000);
+						if (Player_Query_Agenda() == kPlayerAgendaSurly 
+						|| Player_Query_Agenda() == kPlayerAgendaErratic) {
+							Actor_Voice_Over(1700, kActorVoiceOver); //99-1700.AUD	Poetry. I was running into a lot of that crap lately.
+						} else {
+							Actor_Says(kActorMcCoy, 2340, kAnimationModeTalk); // 00-2340.AUD	I never did like poetry.
+						}
+						if (Query_Difficulty_Level() != kGameDifficultyEasy) {
+							Global_Variable_Decrement(kVariableChinyen, 2);
+						}
+					}
+				} else {
+					Actor_Says(kActorMcCoy, 8525, 13); // 00-8525.AUD	Hmph.
 				}
 			}
 		}

@@ -156,22 +156,24 @@ bool SceneScriptCT04::ClickedOn3DObject(const char *objectName, bool a2) {
 				Actor_Change_Animation_Mode(kActorMcCoy, 38);
 				if (_vm->_cutContent) { 
 					if (Actor_Clue_Query(kActorMcCoy, kCluePartialLicenseNumber)) {
-						Actor_Clue_Acquire(kActorMcCoy, kClueLicensePlate, true, kActorZuben);
-						Item_Pickup_Spin_Effect(kModelAnimationLicensePlate, 392, 225);
-						Game_Flag_Set(kFlagCT04LicensePlaceFound); 
-						//Restored the license plate match clue. When McCoy finds the license plate in the dumpster and he has the partial license plate photo clue
-						//he runs a test on the KIA and it is a positive match. Also added in code to the esper script so the same happens if it is the other way around.
-						Actor_Says(kActorMcCoy, 8760, -1);//00-8760.AUD	A license plate.
-						Delay(2000);
-						Actor_Says(kActorMcCoy, 8525, 9); //00-8525.AUD	Hmph.
-						Actor_Says(kActorAnsweringMachine, 390, kAnimationModeTalk); // 39-0390.AUD	Begin test.
-						Ambient_Sounds_Play_Sound(kSfxDATALOAD, 50, 0, 0, 99);
-						Delay(2000);
-						Ambient_Sounds_Play_Sound(kSfxBEEPNEAT, 80, 0, 0, 99);
-						Actor_Says(kActorAnsweringMachine, 420, 19); //39-0420.AUD	Positive result.
-						Actor_Says(kActorAnsweringMachine, 470, kAnimationModeTalk); //39-0470.AUD	End test.
-						Actor_Says(kActorMcCoy, 7200, 13); //00-7200.AUD	Bingo.
-						Actor_Clue_Acquire(kActorMcCoy, kClueLicensePlateMatch, true, -1); 
+						if (!Actor_Clue_Query(kActorMcCoy, kClueLicensePlate)) {
+							Actor_Clue_Acquire(kActorMcCoy, kClueLicensePlate, true, kActorZuben);
+							Item_Pickup_Spin_Effect(kModelAnimationLicensePlate, 392, 225);
+							Game_Flag_Set(kFlagCT04LicensePlaceFound); 
+							//Restored the license plate match clue. When McCoy finds the license plate in the dumpster and he has the partial license plate photo clue
+							//he runs a test on the KIA and it is a positive match. Also added in code to the esper script so the same happens if it is the other way around.
+							Actor_Says(kActorMcCoy, 8760, -1);//00-8760.AUD	A license plate.
+							Delay(2000);
+							Actor_Says(kActorMcCoy, 8525, 9); //00-8525.AUD	Hmph.
+							Actor_Says(kActorAnsweringMachine, 390, kAnimationModeTalk); // 39-0390.AUD	Begin test.
+							Ambient_Sounds_Play_Sound(kSfxDATALOAD, 50, 0, 0, 99);
+							Delay(2000);
+							Ambient_Sounds_Play_Sound(kSfxBEEPNEAT, 80, 0, 0, 99);
+							Actor_Says(kActorAnsweringMachine, 420, 19); //39-0420.AUD	Positive result.
+							Actor_Says(kActorAnsweringMachine, 470, kAnimationModeTalk); //39-0470.AUD	End test.
+							Actor_Says(kActorMcCoy, 7200, 13); //00-7200.AUD	Bingo.
+							Actor_Clue_Acquire(kActorMcCoy, kClueLicensePlateMatch, true, -1); 
+						}
 			  		} else {
 						Ambient_Sounds_Play_Sound(kSfxGARBAGE, 45, 30, 30, 0);
 						Actor_Voice_Over(1810, kActorVoiceOver);
@@ -200,13 +202,25 @@ bool SceneScriptCT04::ClickedOn3DObject(const char *objectName, bool a2) {
 
 void SceneScriptCT04::dialogueWithHomeless() {
 	Dialogue_Menu_Clear_List();
-	if (Global_Variable_Query(kVariableChinyen) > 10
-	 || Query_Difficulty_Level() == kGameDifficultyEasy
-	) {
-		DM_Add_To_List_Never_Repeat_Once_Selected(410, 8, 4, -1); // YES
+	// Made it so McCoy only gives the homeless man money if he is not surly or erratic and he has enough money.
+	if (_vm->_cutContent) { 
+		if (Player_Query_Agenda() != kPlayerAgendaSurly 
+		&& Player_Query_Agenda() != kPlayerAgendaErratic) {
+			if (Global_Variable_Query(kVariableChinyen) >= 10
+			|| Query_Difficulty_Level() == kGameDifficultyEasy) {
+				DM_Add_To_List_Never_Repeat_Once_Selected(410, 8, 4, -1); // YES
+			} else {
+				DM_Add_To_List_Never_Repeat_Once_Selected(420, 2, 6, 8); // NO
+			}
+		}
+	} else {
+		if (Global_Variable_Query(kVariableChinyen) > 10
+		|| Query_Difficulty_Level() == kGameDifficultyEasy) {
+			DM_Add_To_List_Never_Repeat_Once_Selected(410, 8, 4, -1); // YES
+		} else {
+			DM_Add_To_List_Never_Repeat_Once_Selected(420, 2, 6, 8); // NO
+		}
 	}
-	DM_Add_To_List_Never_Repeat_Once_Selected(420, 2, 6, 8); // NO
-
 	Dialogue_Menu_Appear(320, 240);
 	int answer = Dialogue_Menu_Query_Input();
 	Dialogue_Menu_Disappear();
@@ -251,14 +265,16 @@ bool SceneScriptCT04::ClickedOnActor(int actorId) {
 	if (actorId == kActorTransient) {
 		if (Game_Flag_Query(kFlagCT04HomelessKilledByMcCoy)) {
 			if (!Loop_Actor_Walk_To_Actor(kActorMcCoy, kActorTransient, 36, true, false)) {
-				Actor_Voice_Over(290, kActorVoiceOver);
-				Actor_Voice_Over(300, kActorVoiceOver);
+				Actor_Voice_Over(290, kActorVoiceOver); //99-0290.AUD	He was just an old bum. Not Howie's cook and certainly not a Replicant.
 				if (_vm->_cutContent) { 
 					if (Player_Query_Agenda() == kPlayerAgendaSurly 
 					|| Player_Query_Agenda() == kPlayerAgendaErratic) {
-						Actor_Voice_Over(310, kActorVoiceOver);
+						Actor_Voice_Over(310, kActorVoiceOver); //99-0310.AUD	If I was gonna get clear of this, I needed to tell Guzza. And the sooner the better.
+					} else {
+						Actor_Voice_Over(300, kActorVoiceOver); //99-0300.AUD	I'd screwed up. Plain and simple.
 					}
 				} else {
+					Actor_Voice_Over(300, kActorVoiceOver); //99-0300.AUD	I'd screwed up. Plain and simple.
 					Actor_Voice_Over(310, kActorVoiceOver);
 				}
 			}

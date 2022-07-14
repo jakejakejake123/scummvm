@@ -117,7 +117,6 @@ bool SceneScriptBB10::ClickedOnExit(int exitId) {
 			Footstep_Sound_Override_Off();
 			Ambient_Sounds_Remove_All_Non_Looping_Sounds(true);
 			Ambient_Sounds_Remove_All_Looping_Sounds(1u);
-			Game_Flag_Set(kFlagBB10toBB11);
 			Set_Enter(kSetBB11, kSceneBB11);
 		}
 		return true;

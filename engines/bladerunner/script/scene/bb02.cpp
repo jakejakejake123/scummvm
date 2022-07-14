@@ -128,7 +128,6 @@ bool SceneScriptBB02::ClickedOnExit(int exitId) {
 	if (exitId == 2) {
 		if (!Loop_Actor_Walk_To_XYZ(kActorMcCoy, 86.0f, -415.06f, 174.0f, 0, true, false, false)) {
 			Loop_Actor_Walk_To_XYZ(kActorMcCoy, 179.0f, -415.06f, 274.0f, 0, false, false, false);
-			Game_Flag_Set(kFlagBB02toBB03);
 			Game_Flag_Reset(kFlagBB02ElevatorDown);
 			Set_Enter(kSetBB03, kSceneBB03);
 		}

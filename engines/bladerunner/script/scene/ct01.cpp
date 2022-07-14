@@ -200,8 +200,8 @@ bool SceneScriptCT01::ClickedOnActor(int actorId) {
 					} else {
 						Actor_Says(kActorMcCoy, 3970, 14); //00-3970.AUD	Hey.
 					}
-					if (Actor_Query_Friendliness_To_Other(kActorHowieLee, kActorMcCoy) < 60) {
-						Actor_Says(kActorMcCoy, 8614, 13);//00-8514.AUD	Got anything new to tell me?
+					if (Actor_Query_Friendliness_To_Other(kActorHowieLee, kActorMcCoy) < 50) {
+						Actor_Says(kActorMcCoy, 8514, 13);//00-8514.AUD	Got anything new to tell me?
 						Actor_Says(kActorHowieLee, 180, 13); //28-0180.AUD	Nothing, nothing. Customer here to eat.
 						Game_Flag_Set(kFlagCT01McCoyTalkedToHowieLee);
 						Actor_Set_Goal_Number(kActorHowieLee, kGoalHowieLeeDefault);
@@ -231,8 +231,7 @@ bool SceneScriptCT01::ClickedOnActor(int actorId) {
 				} else {
 					if (Game_Flag_Query(kFlagZubenRetired) 
 					&& !Game_Flag_Query(kFlagCT01TalkToHowieAboutDeadZuben)) {
-						if (Player_Query_Agenda() != kPlayerAgendaSurly 
-						&& Player_Query_Agenda() != kPlayerAgendaErratic) {
+						if (Game_Flag_Query(kFlagMcCoyIsHelpingReplicants)) {
 							Game_Flag_Set(kFlagCT01TalkToHowieAboutDeadZuben);
 							Actor_Says(kActorMcCoy, 330, 17); //00-0330.AUD	Hey, Howie, what's cooking?
 							Actor_Says(kActorHowieLee, 130, 13); //28-0130.AUD	Nothing now, McCoy.
@@ -246,7 +245,7 @@ bool SceneScriptCT01::ClickedOnActor(int actorId) {
 							Actor_Says(kActorMcCoy, 1970, 13); //00-1970.AUD	You should start thinking about the company you keep.
 							Actor_Says(kActorHowieLee, 220, 14); //28-0220.AUD	Fine. But Howie do you favors no more.	
 							Actor_Says(kActorMcCoy, 3095, 15); //00-3095.AUD	Now we’re gonna take a little ride downtown.
-							Music_Stop(3u);
+							Music_Stop(1u);
 							Delay (1000);
 							Game_Flag_Set(kFlagHowieLeeArrested); 
 							AI_Movement_Track_Flush(kActorHowieLee);
@@ -259,11 +258,11 @@ bool SceneScriptCT01::ClickedOnActor(int actorId) {
 							Set_Enter(kSetPS09, kScenePS09);
 						}	
 					} else if (Game_Flag_Query(kFlagCT01TalkToHowieAboutDeadZuben)
-					&& Actor_Query_Friendliness_To_Other(kActorHowieLee, kActorMcCoy) < 60) {
+					&& Actor_Query_Friendliness_To_Other(kActorHowieLee, kActorMcCoy) < 50) {
 						Actor_Says(kActorMcCoy, 310, 11);    // keeping out of trouble...?
 						Actor_Says(kActorHowieLee, 190, 13); // I look like I got time for chit-er chat-er?
 					} else if (Game_Flag_Query(kFlagCT01TalkToHowieAboutDeadZuben)
-					&& Actor_Query_Friendliness_To_Other(kActorHowieLee, kActorMcCoy) > 59) {
+					&& Actor_Query_Friendliness_To_Other(kActorHowieLee, kActorMcCoy) > 49) {
 						Actor_Says(kActorMcCoy, 330, 13);
 						Actor_Says(kActorHowieLee, 160, 15);  // real busy tonight
 					} else if (Game_Flag_Query(kFlagCT01ZubenGone)) {
@@ -329,6 +328,8 @@ bool SceneScriptCT01::ClickedOnActor(int actorId) {
 
 	if (actorId == kActorGordo) {
 		if (Actor_Query_Goal_Number(kActorGordo) == kGoalGordoDefault) { 
+			// Made it so McCoy now stands slightly to the left of Gordo and speaks to him over the counter. This is so McCoy is now facing Gordo head on. This is because I have added in moments
+			// where McCoy shows Gordo Lucys photo and it wouldn't make sense for McCoy to do this if he is standing directly behind Gordo and Gordo can't see him.
 			if (_vm->_cutContent) {
 				if (Loop_Actor_Walk_To_XYZ(kActorMcCoy, -281.12f, -1.68f, 376.24f, 6, true, false, false)) 
 				return false;
@@ -343,9 +344,9 @@ bool SceneScriptCT01::ClickedOnActor(int actorId) {
 				Actor_Says(kActorMcCoy, 335, 18);
 				Actor_Says(kActorGordo, 20, 30);
 			} else {
-				Actor_Says(kActorMcCoy, 4870, 23);
+				Actor_Says(kActorMcCoy, 4870, 23); //00-4870.AUD	Ray McCoy, Rep Detect.
 				Actor_Says(kActorGordo, 890, 30);//02-0890.AUD	What's shaking baby? Haven't I seen you around these parts before?
-				Actor_Says(kActorMcCoy, 6465, 15);
+				Actor_Says(kActorMcCoy, 6465, 15); //00-6465.AUD	Could be. I get around.
 			}
 			Game_Flag_Set(kFlagCT01GordoTalk);
 			Actor_Clue_Acquire(kActorGordo, kClueMcCoysDescription, true, kActorMcCoy);
@@ -357,21 +358,23 @@ bool SceneScriptCT01::ClickedOnActor(int actorId) {
 			Actor_Modify_Friendliness_To_Other(kActorGordo, kActorMcCoy, -1);
 		} else {
 			if (Actor_Query_Goal_Number(kActorGordo) == kGoalGordoDefault) {
+				// Made it so Gordo now offers his autograph to McCoy when they first meet. This was done because when Gordo does this he mentions his name and this fixes a minor plot hole later on where you can talk to Gordo in act 2
+				// and you can receive the Gordo interview clue even though McCoy does not know Gordos name. Also depending on McCoys agenda he will either accept the autograph allowing him to ask Gordo about Lucy or McCoy will refuse the autograph
+				// and this will lead to the dialogue that usually plays where McCoy tries to bribe Gordo for infoemation.
 				if (_vm->_cutContent) {
-					Actor_Says(kActorMcCoy, 940, 13);
+					Actor_Says(kActorMcCoy, 940, 13); //00-0940.AUD	I need to ask you--
 					Actor_Says(kActorGordo, 300, 30);//02-0300.AUD	You want an autograph?
 					Actor_Says(kActorGordo, 310, 30);//02-0310.AUD	I know you ain’t heard me yet
 					Actor_Says(kActorGordo, 320, 30);//02-0320.AUD	but Gordo Frizz’s autograph’s gonna be worth a pile of chinyen some day.
 					if (Player_Query_Agenda() == kPlayerAgendaSurly 
 					|| Player_Query_Agenda() == kPlayerAgendaErratic) {
-						Actor_Says(kActorMcCoy, 3215, kAnimationModeTalk);
+						Actor_Says(kActorMcCoy, 3215, 18); //00-3215.AUD	I’ll hold my breath.
 						Actor_Says(kActorMcCoy, 8920, 14); //00-8920.AUD	I gotta ask you a question.
-						Actor_Says(kActorGordo, 20, 30);
-						Actor_Says(kActorMcCoy, 340, 13);
-						Actor_Says(kActorMcCoy, 345, 11);
-						Actor_Says(kActorGordo, 30, 30);
-						Actor_Says(kActorMcCoy, 350, 13);
-						Actor_Says(kActorGordo, 40, 30);
+						Actor_Says(kActorGordo, 20, 30); //02-0020.AUD	Sorry, my man. I just don't got the time.
+						Actor_Says(kActorMcCoy, 345, 11); //00-0345.AUD	Wanna make some money?
+						Actor_Says(kActorGordo, 30, 30); //02-0030.AUD	Pay me large, you got my rapt attention.
+						Actor_Says(kActorMcCoy, 350, 13); //00-0350.AUD	Depends on how much the information is worth.
+						Actor_Says(kActorGordo, 40, 30); //02-0040.AUD	Unfortunately, my man, I got to book.
 						Actor_Modify_Friendliness_To_Other(kActorGordo, kActorMcCoy, -2);
 						Player_Loses_Control();
 					} else {
@@ -380,15 +383,17 @@ bool SceneScriptCT01::ClickedOnActor(int actorId) {
 						Delay(2000);
 						Actor_Says(kActorMcCoy, 8920, 14); //00-8920.AUD	I gotta ask you a question.
 						if (Actor_Clue_Query(kActorMcCoy, kClueLucy)) {
-							Actor_Says(kActorMcCoy, 265, 23);
+							Actor_Says(kActorMcCoy, 265, 23); //00-0265.AUD	This girl ever eat around here?
 						} else {
-							Actor_Says(kActorMcCoy, 385, 18);
+							Actor_Says(kActorMcCoy, 385, 18); //00-0385.AUD	I'm looking for a girl about 14 years old with pink hair. You seen her?
 						}
-						Actor_Says(kActorGordo, 430, 30); 
-						Actor_Says(kActorGordo, 440, 30); 
-						Actor_Says(kActorGordo, 450, 30); 
-						Actor_Says(kActorMcCoy, 3280, 15);
-						Actor_Says(kActorGordo, 40, 30);
+						Actor_Says(kActorGordo, 430, 30);  //02-0430.AUD	She was one of those skin-jobs?
+						Actor_Says(kActorGordo, 440, 30);  //02-0440.AUD	Between you and me I hear they are all over the place down here.
+						Actor_Says(kActorGordo, 450, 30); //02-0450.AUD	You ought to call in a few more of the hunters to clear the place out.
+						Actor_Says(kActorMcCoy, 3280, 15); //00-3280.AUD	Hunter? Ain’t too often I hear ‘em called that.
+						Actor_Says(kActorGordo, 40, 30); //02-0040.AUD	Unfortunately, my man, I got to book.
+						// McCoy will now receive the Gordo interview 3 clue regardless of Gordos replicant status. I have added in several new scenes involving Gordo and one of
+						// them can only occur if he is human and you have this clue.
 						Actor_Clue_Acquire(kActorMcCoy, kClueGordoInterview3, false, kActorGordo);
 						Actor_Modify_Friendliness_To_Other(kActorGordo, kActorMcCoy, -2);
 						Player_Loses_Control();
@@ -646,6 +651,7 @@ void SceneScriptCT01::PlayerWalkedIn() {
 		//Narratively it makes more sense for the dispatcher dialogue talking about an incident happening in China town to play when the player is actually in China town.
 		//Also I have restored the dispatcher dialogue for when either Leary or Grayford finds the car and calls it in so a flag had been added in called Leary checks car has been
 		//added in. This other dispatcher dialogue plays after you talk to Gaff in act 1 and will happen either in China town or McCoys apartment.
+		// Also I made it so McCoy will only store this dispatch message as a clue within the KIA if he has enough clues tthat tell him of its relevance.
 		if (_vm->_cutContent) {
 			if (!Game_Flag_Query(kFlagCT01Visit)) {
 				if (Actor_Clue_Query(kActorMcCoy, kCluePaintTransfer)
@@ -718,6 +724,12 @@ void SceneScriptCT01::dialogueWithHowieLee() {
 		DM_Add_To_List_Never_Repeat_Once_Selected(40, 4, 5, 6); // LUCY PHOTO
 	}
 
+	if (_vm->_cutContent) {
+		if (!Actor_Clue_Query(kActorMcCoy, kClueLucy)) {
+			DM_Add_To_List_Never_Repeat_Once_Selected(450, 7, 6, 3); // LUCY
+		}
+	}
+
 	if (
 	 (   Actor_Clue_Query(kActorMcCoy, kClueChopstickWrapper)
 	  || Actor_Clue_Query(kActorMcCoy, kClueSushiMenu)
@@ -741,11 +753,14 @@ void SceneScriptCT01::dialogueWithHowieLee() {
 		DM_Add_To_List_Never_Repeat_Once_Selected(80, 3, 4, 8); // EMPLOYEE
 	}
 
-	if ((Actor_Clue_Query(kActorMcCoy, kClueCarColorAndMake)
-	    || (_vm->_cutContent && Actor_Clue_Query(kActorMcCoy, kClueLabPaintTransfer)))
-	    && Actor_Clue_Query(kActorMcCoy, kClueDispatchHitAndRun) // this clue is now acquired in restored Cut Content
-	) {
-		DM_Add_To_List_Never_Repeat_Once_Selected(90, 5, 4, 5); // HIT AND RUN
+	if (_vm->_cutContent) { 
+		if (Actor_Clue_Query(kActorMcCoy, kCluePaintTransfer)
+		|| Actor_Clue_Query(kActorMcCoy, kClueCrowdInterviewB)
+		|| Actor_Clue_Query(kActorMcCoy, kClueCarColorAndMake)) {
+			if (Actor_Clue_Query(kActorMcCoy, kClueDispatchHitAndRun)) {
+				DM_Add_To_List_Never_Repeat_Once_Selected(90, 5, 4, 5); // HIT AND RUN
+			}
+		}
 	}
 
 	DM_Add_To_List_Never_Repeat_Once_Selected(70, 7, 3, -1); // SMALL TALK
@@ -757,8 +772,33 @@ void SceneScriptCT01::dialogueWithHowieLee() {
 
 	switch (answer) {
 	case 40: // LUCY PHOTO
-		Actor_Says(kActorMcCoy, 265, 11);
-		Actor_Says(kActorHowieLee, 20, 14);
+		if (_vm->_cutContent) {
+			Actor_Says(kActorMcCoy, 265, 23);
+		} else {
+			Actor_Says(kActorMcCoy, 265, 11);
+		}
+		Actor_Says(kActorHowieLee, 20, 14); //28-0020.AUD	Nah. All gaijin look alike to old man.
+		if (!_vm->_cutContent) {
+			if (Actor_Query_Is_In_Current_Set(kActorZuben)) {
+				if (Actor_Query_Goal_Number(kActorZuben) == kGoalZubenDefault) {
+					Actor_Face_Actor(kActorHowieLee, kActorZuben, true);
+					Actor_Says(kActorHowieLee, 120, 14);
+					Actor_Face_Actor(kActorZuben, kActorHowieLee, true);
+					Actor_Says(kActorZuben, 40, 18);
+					Actor_Face_Heading(kActorZuben, 103, false);
+					Actor_Face_Actor(kActorHowieLee, kActorMcCoy, true);
+					if (Actor_Query_Is_In_Current_Set(kActorGordo)) {
+						//Removed friendliness decrement for Zuben and Gordo for same reasons that I mentioned above.
+						Actor_Clue_Acquire(kActorGordo, kClueMcCoysDescription, true, kActorMcCoy);
+					}
+				}
+			}
+		}
+		break;
+
+	case 450: // Lucy	
+		Actor_Says(kActorMcCoy, 385, 13); //00-0385.AUD	I'm looking for a girl about 14 years old with pink hair. You seen her?
+		Actor_Says(kActorHowieLee, 20, 14); //28-0020.AUD	Nah. All gaijin look alike to old man.
 		if (Actor_Query_Is_In_Current_Set(kActorZuben)) {
 			if (Actor_Query_Goal_Number(kActorZuben) == kGoalZubenDefault) {
 				Actor_Face_Actor(kActorHowieLee, kActorZuben, true);
@@ -778,10 +818,19 @@ void SceneScriptCT01::dialogueWithHowieLee() {
 	case 50: // RUNCITER CLUES
 		if (Actor_Clue_Query(kActorMcCoy, kClueChopstickWrapper)) {
 			Actor_Says(kActorMcCoy, 270, 11);
-			Actor_Says(kActorHowieLee, 30, 16);
+			Actor_Says(kActorHowieLee, 30, 16); //28-0030.AUD	Could be. Chopstick come from Yoshi's restaurant supply.
 		} else {
 			Actor_Says(kActorMcCoy, 280, 11);
-			Actor_Says(kActorHowieLee, 40, 14);
+			Actor_Says(kActorHowieLee, 40, 14); //28-0040.AUD	Yes sir. You do Howie a favor? Distribute all throughout police station?
+			if (_vm->_cutContent) {
+				if (Player_Query_Agenda() == kPlayerAgendaSurly 
+				|| Player_Query_Agenda() == kPlayerAgendaErratic) { 
+					Actor_Says(kActorMcCoy, 7815, 18); //00-7815.AUD	No.	
+				} else {
+					Actor_Says(kActorMcCoy, 1025, kAnimationModeTalk); //00-1025.AUD	Absolutely.
+					Actor_Modify_Friendliness_To_Other(kActorHowieLee, kActorMcCoy, 2);
+				}
+			}
 		}
 		Game_Flag_Set(kFlagCT01Evidence1Linked);
 		break;
@@ -800,8 +849,8 @@ void SceneScriptCT01::dialogueWithHowieLee() {
 			//Altered code so depending on McCoys agenda he will either do Howie the favour or not and 
 			//their friendliness rating will be adjusted accordingly.
 			if (_vm->_cutContent) {
-		  	  if (Player_Query_Agenda() == kPlayerAgendaSurly 
-			  || Player_Query_Agenda() == kPlayerAgendaErratic) { 
+				if (Player_Query_Agenda() == kPlayerAgendaSurly 
+				|| Player_Query_Agenda() == kPlayerAgendaErratic) { 
 					Actor_Says(kActorMcCoy, 7815, 18); //00-7815.AUD	No.	
 				} else {
 					Actor_Says(kActorMcCoy, 1025, kAnimationModeTalk); //00-1025.AUD	Absolutely.
@@ -822,37 +871,40 @@ void SceneScriptCT01::dialogueWithHowieLee() {
 
 	case 70: // SMALL TALK
 		Actor_Says(kActorMcCoy, 290, 13); // what's real fresh tonight
-		if (((!_vm->_cutContent && Actor_Query_Friendliness_To_Other(kActorHowieLee, kActorMcCoy) > 49)
 		// Made it so Howie prioritises McCoy over everyone else if McCoy agreed to distibute his menus throughout the police station.
 		// This is only achieveable if you don't click on Zuben and act mean towards Howie and agree to his equest.
-		     || Actor_Query_Friendliness_To_Other(kActorHowieLee, kActorMcCoy) > 62)
-		    && (Global_Variable_Query(kVariableChinyen) > 10
-		     || Query_Difficulty_Level() == kGameDifficultyEasy)
-		) {
-			Actor_Says(kActorHowieLee, 50, kAnimationModeTalk);
-			Actor_Says(kActorHowieLee, 60, kAnimationModeTalk);
-			if (_vm->_cutContent) {
-				Actor_Says(kActorMcCoy, 320, 13);
-			}
-			Actor_Face_Actor(kActorHowieLee, kActorMcCoy, true);
-			Actor_Says(kActorHowieLee, 70, 16);
-			//Made it so when you buy food from Howie Lee a food box appears onscreen so the player knows that they bought something. Originally I never
-			//even knew that McCoy buys food from Howie since the topic is called small talk and an item doesn't flash on screen so this should help alleviate
-			//this confusion.
-			if (_vm->_cutContent) {
-				Item_Pickup_Spin_Effect(kModelAnimationKingstonKitchenBox, 454, 297);
-			}
-			Actor_Says(kActorMcCoy, 325, 13);
-			if (Query_Difficulty_Level() != kGameDifficultyEasy) {
-				Global_Variable_Decrement(kVariableChinyen, 10);
-			}
-			Game_Flag_Set(kFlagCT01BoughtHowieLeeFood);
-		} else {
-			Actor_Says(kActorHowieLee, 130, 15); // nothing now
-			if (_vm->_cutContent) {
+		if (_vm->_cutContent) { 
+			if (Actor_Query_Friendliness_To_Other(kActorHowieLee, kActorMcCoy) > 50) {
+				if (Global_Variable_Query(kVariableChinyen) >= 10
+				|| Query_Difficulty_Level() == kGameDifficultyEasy) {
+					Actor_Says(kActorHowieLee, 50, kAnimationModeTalk); //28-0050.AUD	Special shipment of Toro just arrived.
+					Actor_Says(kActorHowieLee, 60, kAnimationModeTalk); //28-0060.AUD	I fix you right up. No one else.
+					Actor_Says(kActorMcCoy, 320, 13); //00-0320.AUD	It's already been tested?
+					Actor_Face_Actor(kActorHowieLee, kActorMcCoy, true);
+					Actor_Says(kActorHowieLee, 70, 16); //28-0070.AUD	Clean as a whistle.
+					//Made it so when you buy food from Howie Lee a food box appears onscreen so the player knows that they bought something. Originally I never
+					//even knew that McCoy buys food from Howie since the topic is called small talk and an item doesn't flash on screen so this should help alleviate
+					//this confusion.
+					Item_Pickup_Spin_Effect(kModelAnimationKingstonKitchenBox, 454, 297);
+					if (Player_Query_Agenda() != kPlayerAgendaSurly 
+					&& Player_Query_Agenda() != kPlayerAgendaErratic) {
+						Actor_Says(kActorMcCoy, 325, 13); //00-0325.AUD	You're a prince, Howie.
+					}
+					if (Query_Difficulty_Level() != kGameDifficultyEasy) {
+						Global_Variable_Decrement(kVariableChinyen, 10);
+					}
+					Game_Flag_Set(kFlagCT01BoughtHowieLeeFood);
+				}
+			} else {
+				Actor_Says(kActorHowieLee, 130, 15); // nothing now
 				Actor_Says(kActorMcCoy, 8565, 14); // really?
 				Actor_Says(kActorHowieLee, 80, 16); // No, sir. Any luck...
 			}
+		} else {
+			Actor_Says(kActorHowieLee, 50, kAnimationModeTalk); //28-0050.AUD	Special shipment of Toro just arrived.
+			Actor_Says(kActorHowieLee, 60, kAnimationModeTalk); //28-0060.AUD	I fix you right up. No one else.
+			Actor_Says(kActorHowieLee, 70, 16); //28-0070.AUD	Clean as a whistle.
+			Actor_Says(kActorMcCoy, 325, 13);
 		}
 		break;
 
@@ -860,7 +912,7 @@ void SceneScriptCT01::dialogueWithHowieLee() {
 		Actor_Says(kActorMcCoy, 295, 11);
 		// Made it so if your friendliness is low with Howie Lee he will not tell you about Zuben.
 		if (_vm->_cutContent) {
-			if (Actor_Query_Friendliness_To_Other(kActorHowieLee, kActorMcCoy) < 60) {
+			if (Actor_Query_Friendliness_To_Other(kActorHowieLee, kActorMcCoy) < 50) {
 				Actor_Says(kActorHowieLee, 190, 14);	//28-0190.AUD	I look like I got time for chit-er chat-er?
 			} else {
 				Actor_Says(kActorHowieLee, 90, 14);
@@ -893,9 +945,15 @@ void SceneScriptCT01::dialogueWithHowieLee() {
 		//Added in some more dialogue.
 		if (_vm->_cutContent) {
 			Actor_Says(kActorMcCoy, 8514, 13); //00-8514.AUD	Got anything new to tell me?
-			Actor_Says(kActorHowieLee, 180, kAnimationModeTalk); //28-0180.AUD	Nothing, nothing. Customer here to eat.
+			if (Actor_Query_Friendliness_To_Other(kActorHowieLee, kActorMcCoy) < 50) {  
+				Actor_Says(kActorHowieLee, 190, 13); // I look like I got time for chit-er chat-er?
+			} else {
+				Actor_Says(kActorHowieLee, 180, kAnimationModeTalk); //28-0180.AUD	Nothing, nothing. Customer here to eat.
+				Actor_Says(kActorMcCoy, 305, 18);
+			}
+		} else {
+			Actor_Says(kActorMcCoy, 305, 18);
 		}
-		Actor_Says(kActorMcCoy, 305, 18);
 		break;
 	}
 }

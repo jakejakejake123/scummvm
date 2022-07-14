@@ -26,7 +26,6 @@ namespace BladeRunner {
 
 void SceneScriptCT10::InitializeScene() {
 	Setup_Scene_Information(-121.0f, 0.0f, -78.0f, 446);
-	Game_Flag_Reset(kFlagCT09toCT08); // a bug?
 
 	Scene_Exit_Add_2D_Exit(0, 135, 74, 238, 340, 0);
 
@@ -83,7 +82,7 @@ void SceneScriptCT10::checkCabinet() {
 				Item_Pickup_Spin_Effect(kModelAnimationBadge, 435, 258);
 				Actor_Says(kActorMcCoy, 8860, 12); //00-8860.AUD	Holden's badge.
 				Actor_Clue_Acquire(kActorMcCoy, kClueHoldensBadge, true, kActorLeon);	
-			} else {
+			} else if (Actor_Clue_Query(kActorMcCoy, kClueHoldensBadge)) {
 				Actor_Clue_Acquire(kActorMcCoy, kClueInceptShotsLeon, true, kActorLeon);
 				Item_Pickup_Spin_Effect(kModelAnimationPhoto, 435, 258);
 				Delay (2000);

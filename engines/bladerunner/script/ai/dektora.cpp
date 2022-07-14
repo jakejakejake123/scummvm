@@ -232,9 +232,27 @@ void AIScriptDektora::ReceivedClue(int clueId, int fromActorId) {
 }
 
 void AIScriptDektora::ClickedByPlayer() {
+	if (_vm->_cutContent) {
+		if (Actor_Query_In_Set(kActorDektora, kSetKP07)) {
+			Loop_Actor_Walk_To_Actor(kActorMcCoy, kActorDektora, 24, false, false);
+			Actor_Face_Actor(kActorMcCoy, kActorDektora, true);
+			Actor_Face_Actor(kActorDektora, kActorMcCoy, true);
+			Actor_Says(kActorMcCoy, 6860, 13); //00-6860.AUD	Are you ready?
+			Actor_Says(kActorDektora, 1110, kAnimationModeTalk); //03-1110.AUD	Yes, I am.
+		}
+	}
 	if (Actor_Query_Goal_Number(kActorDektora) == kGoalDektoraGone) {
 		Actor_Face_Actor(0, kActorDektora, true);
-		Actor_Says(kActorMcCoy, 8630, 12);  // What a waste
+		if (_vm->_cutContent) {
+			if (Player_Query_Agenda() == kPlayerAgendaSurly 
+			|| Player_Query_Agenda() == kPlayerAgendaErratic) {
+				Actor_Says(kActorMcCoy, 8665, 13); //00-8665.AUD	Disgusting.
+			} else {	
+				Actor_Says(kActorMcCoy, 8630, 12);  // What a waste
+			}
+		} else {
+			Actor_Says(kActorMcCoy, 8665, 14);
+		}
 		return; //true;
 	}
 
@@ -346,7 +364,7 @@ bool AIScriptDektora::ShotAtAndHit() {
 
 void AIScriptDektora::Retired(int byActorId) {
 	if (byActorId == kActorMcCoy) {
-		if (!_vm->_cutContent) {
+		if (_vm->_cutContent) {
 			Actor_Modify_Friendliness_To_Other(kActorClovis, kActorMcCoy, -5);
 		}
 	}
@@ -375,11 +393,13 @@ void AIScriptDektora::Retired(int byActorId) {
 					if (!Game_Flag_Query(kFlagCrazylegsDead)) {
 						Loop_Actor_Walk_To_XYZ(kActorCrazylegs, -12.0f, -41.58f, 72.0f, 0, true, false, false);
 						Actor_Put_In_Set(kActorCrazylegs, kSceneKP06);
+						Delay(500);
+						Sound_Play(kSfxSMCAL3, 100, 0, 0, 50);
 					}
 				}
 				Delay(2000);
 				Player_Set_Combat_Mode(false);
-				Delay(2000);
+				Delay(2000);  
 			}
 			Ambient_Sounds_Remove_All_Non_Looping_Sounds(true);
 			Ambient_Sounds_Remove_All_Looping_Sounds(1u);
