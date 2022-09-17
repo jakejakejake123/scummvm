@@ -105,11 +105,36 @@ void AIScriptCrazylegs::OtherAgentEnteredCombatMode(int otherActorId, int combat
 				if (!Game_Flag_Query(kFlagCrazylegsIsReplicant)) {
 					Actor_Says(kActorCrazylegs, 430, 3);
 					Actor_Says_With_Pause(kActorCrazylegs, 440, 0.0f, 3);
-					Actor_Says(kActorMcCoy, 1870, -1);
-					Actor_Says(kActorCrazylegs, 450, 3);
+					if (Actor_Clue_Query(kActorMcCoy, kClueGrigoriansResources) 
+	   				&& Actor_Clue_Query(kActorMcCoy, kClueGrigoriansNote)) {
+					    if (Actor_Clue_Query(kActorMcCoy, kClueCarRegistration1) 
+	   					|| Actor_Clue_Query(kActorMcCoy, kClueCarRegistration3)) {
+							Actor_Says(kActorMcCoy, 6865, -1); //00-6865.AUD	You're a Replicant. 
+							Actor_Says(kActorCrazylegs, 540, 12); //09-0540.AUD	Huh, what--?
+							Delay(500);
+							Actor_Says(kActorCrazylegs, 550, 13); //09-0550.AUD	That’s impossible.
+							Actor_Says(kActorMcCoy, 7835, -1); //00-7835.AUD	Is that so?
+							Actor_Says(kActorCrazylegs, 790, 14); //09-0790.AUD	Gotta be a thousand dealers in the city and you’re picking on me.
+							Actor_Set_Targetable(kActorCrazylegs, true);
+							Player_Gains_Control();
+						}
+					} else if (Actor_Clue_Query(kActorMcCoy, kClueCrazysInvolvement)) {
+						Actor_Says(kActorMcCoy, 6865, -1); //00-6865.AUD	You're a Replicant. 
+						Actor_Says(kActorCrazylegs, 540, 12); //09-0540.AUD	Huh, what--?
+						Delay(500);
+						Actor_Says(kActorCrazylegs, 550, 13); //09-0550.AUD	That’s impossible.
+						Actor_Says(kActorMcCoy, 7835, -1); //00-7835.AUD	Is that so?
+						Actor_Says(kActorCrazylegs, 790, 14); //09-0790.AUD	Gotta be a thousand dealers in the city and you’re picking on me.
+						Actor_Set_Targetable(kActorCrazylegs, true);
+						Player_Gains_Control();
+					} else {
+						Actor_Says(kActorMcCoy, 1870, -1);
+						Actor_Says(kActorCrazylegs, 450, 3);
+						Player_Gains_Control();
+					}
 				} else {
-					if (Actor_Clue_Query(kActorMcCoy, kClueCrazysInvolvement)) {
-						Actor_Says(kActorCrazylegs, 480, 13); //09-0480.AUD	Hey, keep your paws off that, Ray!
+					Actor_Says(kActorCrazylegs, 480, 13); //09-0480.AUD	Hey, keep your paws off that, Ray!
+					if (Actor_Clue_Query(kActorMcCoy, kClueCrazysInvolvement)) {	
 						Actor_Says(kActorMcCoy, 525, -1); //00-0525.AUD	I've seen you before...
 						Actor_Says(kActorCrazylegs, 540, 12); //09-0540.AUD	Huh, what--?
 						Actor_Says(kActorMcCoy, 7260, -1); //00-7260.AUD	Didn't I see an incept tape at the—
@@ -128,25 +153,25 @@ void AIScriptCrazylegs::OtherAgentEnteredCombatMode(int otherActorId, int combat
 						Player_Gains_Control();
 					} else if (Actor_Clue_Query(kActorMcCoy, kClueGrigoriansResources) 
 	   				&& Actor_Clue_Query(kActorMcCoy, kClueGrigoriansNote)) {
-						Actor_Says(kActorCrazylegs, 480, 13); //09-0480.AUD	Hey, keep your paws off that, Ray!
-						Actor_Says(kActorMcCoy, 525, -1); //00-0525.AUD	I've seen you before...
-						Actor_Says(kActorCrazylegs, 540, 12); //09-0540.AUD	Huh, what--?
-						Actor_Says(kActorMcCoy, 7260, -1); //00-7260.AUD	Didn't I see an incept tape at the—
-						Actor_Says(kActorCrazylegs, 1120, 14); //09-1120.AUD	I don’t know what you’re talking about.
-						Delay (1000);
-						Actor_Says(kActorMcCoy, 6865, -1); //00-6865.AUD	You're a Replicant.
-						Actor_Says(kActorCrazylegs, 550, 13); //09-0550.AUD	That’s impossible.
-						Delay (1000);
-						Actor_Says(kActorMcCoy, 2755, -1); //00-2755.AUD	You all right? You look a little pale.
-						Delay (2000);
-						Actor_Says(kActorCrazylegs, 1000, 12); //09-1000.AUD	I got customers on the line, so I ain’t got time to chit chat.
-						Actor_Set_Goal_Number(kActorCrazylegs, kGoalCrazyLegsLeavesShowroom);
-						Actor_Says(kActorMcCoy, 8955, -1); //00-8955.AUD	Stop!
-						Actor_Clue_Acquire(kActorMcCoy, kClueMcCoyPulledAGun, false, kActorCrazylegs);
-						Actor_Set_Targetable(kActorCrazylegs, true);
-						Player_Gains_Control();
-				    } else {
-						Actor_Says(kActorCrazylegs, 480, 13); //09-0480.AUD	Hey, keep your paws off that, Ray!
+					    if (Actor_Clue_Query(kActorMcCoy, kClueCarRegistration1) 
+	   					|| Actor_Clue_Query(kActorMcCoy, kClueCarRegistration3)) {
+							Actor_Says(kActorMcCoy, 525, -1); //00-0525.AUD	I've seen you before...
+							Actor_Says(kActorCrazylegs, 540, 12); //09-0540.AUD	Huh, what--?
+							Actor_Says(kActorMcCoy, 7260, -1); //00-7260.AUD	Didn't I see an incept tape at the—
+							Actor_Says(kActorCrazylegs, 1120, 14); //09-1120.AUD	I don’t know what you’re talking about.
+							Delay (1000);
+							Actor_Says(kActorMcCoy, 6865, -1); //00-6865.AUD	You're a Replicant.
+							Actor_Says(kActorCrazylegs, 550, 13); //09-0550.AUD	That’s impossible.
+							Delay (1000);
+							Actor_Says(kActorMcCoy, 2755, -1); //00-2755.AUD	You all right? You look a little pale.
+							Delay (2000);
+							Actor_Says(kActorCrazylegs, 1000, 12); //09-1000.AUD	I got customers on the line, so I ain’t got time to chit chat.
+							Actor_Set_Goal_Number(kActorCrazylegs, kGoalCrazyLegsLeavesShowroom);
+							Actor_Says(kActorMcCoy, 8955, -1); //00-8955.AUD	Stop!
+							Actor_Clue_Acquire(kActorMcCoy, kClueMcCoyPulledAGun, false, kActorCrazylegs);
+							Actor_Set_Targetable(kActorCrazylegs, true);
+							Player_Gains_Control();
+						}
 					}
 				}
 			} else {

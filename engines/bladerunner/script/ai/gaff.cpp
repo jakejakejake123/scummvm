@@ -74,23 +74,20 @@ void AIScriptGaff::CompletedMovementTrack() {
 		if (_vm->_cutContent) {
 			if (!Game_Flag_Query(kFlagMcCoyIsHelpingReplicants)) {
 				Actor_Says(kActorMcCoy, 670, kAnimationModeTalk); //00-0670.AUD	Working on it.
+				Actor_Says(kActorGaff, 10, kAnimationModeTalk);
+				Actor_Says(kActorMcCoy, 675, kAnimationModeTalk); //00-0675.AUD	I understand it's got a hell of a retirement plan.
+				Delay(500);
+			} else {
+				Actor_Says(kActorMcCoy, 4880, 13); //00-4880.AUD	Is that right?
+				Delay(500);
 			}
 		} else {
 			Actor_Says(kActorMcCoy, 670, kAnimationModeTalk);
+			Actor_Says(kActorGaff, 10, kAnimationModeTalk);
+			Actor_Says(kActorMcCoy, 675, kAnimationModeTalk); //00-0675.AUD	I understand it's got a hell of a retirement plan.
 		}
-		Actor_Says(kActorGaff, 10, kAnimationModeTalk);
 		if (_vm->_cutContent) {
-			if (!Game_Flag_Query(kFlagMcCoyIsHelpingReplicants)) {
-				Actor_Says(kActorMcCoy, 675, kAnimationModeTalk); //00-0675.AUD	I understand it's got a hell of a retirement plan.
-			}
-			if (Player_Query_Agenda() != kPlayerAgendaSurly 
-			&& Player_Query_Agenda() != kPlayerAgendaErratic) {
-				Actor_Says(kActorMcCoy, 8610, 18); //00-8610.AUD	What's the word, friend?
-			} else {
-				Actor_Says(kActorMcCoy, 8514, 14);//00-8514.AUD	Got anything new to tell me?
-			}
-		} else {
-			Actor_Says(kActorMcCoy, 675, kAnimationModeTalk);
+			Actor_Says(kActorMcCoy, 8514, 14); //00-8514.AUD	Got anything new to tell me?
 		}
 		Actor_Says(kActorGaff, 20, kAnimationModeTalk);
 		Actor_Says(kActorMcCoy, 680, kAnimationModeTalk);
@@ -122,7 +119,13 @@ void AIScriptGaff::CompletedMovementTrack() {
 			Actor_Says(kActorGaff, 80, kAnimationModeTalk);
 			Actor_Says(kActorGaff, 90, kAnimationModeTalk);
 			Actor_Says(kActorMcCoy, 705, kAnimationModeTalk);
-			Actor_Says(kActorGaff, 100, kAnimationModeTalk);
+			if (_vm->_cutContent) {
+				if (Actor_Query_Friendliness_To_Other(kActorGaff, kActorMcCoy) > 49) {
+					Actor_Says(kActorGaff, 100, kAnimationModeTalk);
+				}
+			} else {
+				Actor_Says(kActorGaff, 100, kAnimationModeTalk);
+			}
 			Actor_Clue_Acquire(kActorGaff, kClueMcCoyLetZubenEscape, true, -1);
 			if (_vm->_cutContent) {
 				Actor_Clue_Acquire(kActorMcCoy, kClueMcCoyLetZubenEscape, true, kActorGaff);
@@ -197,22 +200,7 @@ void AIScriptGaff::ClickedByPlayer() {
 		AI_Movement_Track_Pause(kActorGaff);
 		Actor_Face_Actor(kActorMcCoy, kActorGaff, true);
 		Actor_Face_Actor(kActorGaff, kActorMcCoy, true);
-		if (Random_Query(1, 3) == 1) {
-			Actor_Says(kActorMcCoy, 3970, 14);
-			Actor_Says(kActorGaff, 100, 13);
-		} else if (Random_Query(1, 3) == 2) {
-			Actor_Says(kActorMcCoy, 3970, 14);
-			Actor_Says(kActorGaff, 110, 13);
-		} else {
-			Actor_Says(kActorMcCoy, 3970, 14);
-			Actor_Says(kActorGaff, 180, 13);
-		}
-		if (Game_Flag_Query(kFlagGaffTalk)) {
-			AI_Movement_Track_Unpause(kActorGaff);
-		}
-		// return true;
-		// Restored some dialogue for Gaff when you talk to him in DNA row.
-		if (_vm->_cutContent) {
+		if (_vm->_cutContent) {	
 			if (!Game_Flag_Query(kFlagGaffTalk)) {
 				if (Player_Query_Agenda() != kPlayerAgendaSurly 
 				&& Player_Query_Agenda() != kPlayerAgendaErratic) {
@@ -236,17 +224,37 @@ void AIScriptGaff::ClickedByPlayer() {
 				if (!Game_Flag_Query(kFlagMcCoyIsHelpingReplicants)) {
 					Actor_Says(kActorMcCoy, 6925, 18); //00-6925.AUD	Don't bet on it.
 				} else {
-					Actor_Says(kActorMcCoy, 8265, 14); //00-8265.AUD	Really?
+					Actor_Says(kActorMcCoy, 8320, kAnimationModeTalk); //00-8320.AUD	Really?
 				}
 				Actor_Says(kActorGaff, 190, kAnimationModeTalk); //53-0190.AUD	It's like I said before. You retire a human, your career is over.
 				Actor_Says(kActorGaff, 200, kAnimationModeTalk); //53-0200.AUD	Your life too, maybe.
 				Delay (1000);
 				Game_Flag_Set(kFlagGaffTalk);
 				AI_Movement_Track_Unpause(kActorGaff);
+			} else {
+				Actor_Says(kActorMcCoy, 3970, 14);
+				if (Actor_Query_Friendliness_To_Other(kActorGaff, kActorMcCoy) > 50) {
+					Actor_Says(kActorGaff, 100, 13); //53-0100.AUD	Go home and get some rest. I'm sure you need it.
+				} else if (Actor_Query_Friendliness_To_Other(kActorGaff, kActorMcCoy) < 50) {
+					Actor_Says(kActorGaff, 180, 13); //53-0180.AUD	You killed anyone yet?
+				} else if (Actor_Query_Friendliness_To_Other(kActorGaff, kActorMcCoy) == 50) {
+					Actor_Says(kActorGaff, 110, 13); //53-0110.AUD	Tough day, McCoy.
+				}
 			}
-		} 
-	}
-		
+		} else {
+			if (Random_Query(1, 3) == 1) {
+				Actor_Says(kActorMcCoy, 3970, 14);
+				Actor_Says(kActorGaff, 100, 13);
+			} else if (Random_Query(1, 3) == 2) {
+				Actor_Says(kActorMcCoy, 3970, 14);
+				Actor_Says(kActorGaff, 110, 13);
+			} else {
+				Actor_Says(kActorMcCoy, 3970, 14);
+				Actor_Says(kActorGaff, 180, 13);
+			}
+			AI_Movement_Track_Unpause(kActorGaff);
+		}		
+	}	
 	// return false;
 }
 
@@ -395,7 +403,7 @@ bool AIScriptGaff::GoalChanged(int currentGoalNumber, int newGoalNumber) {
 		Actor_Face_Actor(kActorGaff, kActorMcCoy, true);
 		Actor_Says(kActorGaff, 110, 12);
 		Actor_Face_Actor(kActorMcCoy, kActorGaff, true);
-		Actor_Says(kActorMcCoy, 2945, 14);
+		Actor_Says(kActorMcCoy, 2945, 14); //00-2945.AUD	You could say that.
 		Loop_Actor_Walk_To_Actor(kActorGaff, kActorMcCoy, 180, false, false);
 		// Made it so if McCoy already talked to Steele in act 4 Gaff won't mention that she is looking for McCoy.
 		if (_vm->_cutContent) {
@@ -405,8 +413,18 @@ bool AIScriptGaff::GoalChanged(int currentGoalNumber, int newGoalNumber) {
 		} else {
 			Actor_Says(kActorGaff, 120, 16); //53-0120.AUD	Steele is looking for you. And Bryant.
 		}
-		Actor_Says(kActorGaff, 130, 13);
-		Actor_Says(kActorMcCoy, 2950, kAnimationModeTalk);
+		Actor_Says(kActorGaff, 130, 13); //53-0130.AUD	You've been keeping the whole department hopping. You and Guzza.
+		if (_vm->_cutContent) {
+			if (Player_Query_Agenda() == kPlayerAgendaSurly 
+			|| Player_Query_Agenda() == kPlayerAgendaErratic) {
+				Actor_Says(kActorMcCoy, 8115, kAnimationModeTalk); //00-8115.AUD	I'll bet.
+				Delay(1000);
+			} else {
+				Actor_Says(kActorMcCoy, 2950, kAnimationModeTalk); //00-2950.AUD	I know.
+			}
+		} else {
+			Actor_Says(kActorMcCoy, 2950, kAnimationModeTalk); //00-2950.AUD	I know.
+		}
 		Actor_Says(kActorMcCoy, 2955, 16); //00-2955.AUD	You're looking for me, too, Gaff?
 		// Made it so Gaff shoots McCoy if McCoy killed either Leary or Grayford. I mean Gaff is in a good mood but not a ignoring the murder of two 
 		// police officers good mood. He will let the murder of Runciter and Guzza slide however.
@@ -415,7 +433,12 @@ bool AIScriptGaff::GoalChanged(int currentGoalNumber, int newGoalNumber) {
 			|| Game_Flag_Query(kFlagOfficerLearyShot)) {
 				Actor_Says(kActorGaff, 190, kAnimationModeTalk); //53-0190.AUD	It's like I said before. You retire a human, your career is over.
 				Actor_Says(kActorGaff, 200, kAnimationModeTalk); //53-0200.AUD	Your life too, maybe.
-				Actor_Says(kActorMcCoy, 7835, 18); //00-7835.AUD	Is that so?
+				if (Player_Query_Agenda() == kPlayerAgendaSurly 
+				|| Player_Query_Agenda() == kPlayerAgendaErratic) {
+					Actor_Says(kActorMcCoy, 4320, 14); //00-4320.AUD	Save the pitch for someone who gives a shit.
+				} else {
+					Actor_Says(kActorMcCoy, 7835, 18); //00-7835.AUD	Is that so?
+				}
 				Delay (1000);
 				Actor_Says(kActorMcCoy, 8990, 14); //00-8990.AUD	What have you got there?
 				Delay (1000);
@@ -426,20 +449,42 @@ bool AIScriptGaff::GoalChanged(int currentGoalNumber, int newGoalNumber) {
 				Actor_Change_Animation_Mode(kActorMcCoy, kAnimationModeDie);
 				Actor_Retired_Here(kActorMcCoy, 12, 12, true, -1);
 			} else {
-				Actor_Says_With_Pause(kActorGaff, 140, 1.0f, 14);
+				Actor_Says_With_Pause(kActorGaff, 140, 1.0f, 14); 
+				if (Player_Query_Agenda() == kPlayerAgendaSurly 
+				|| Player_Query_Agenda() == kPlayerAgendaErratic) {
+					Actor_Says(kActorMcCoy, 4340, 15); //00-4340.AUD	Sure you are.
+				} else {
+					Actor_Says(kActorMcCoy, 6920, 16); //00-6920.AUD	I like to hear that.
+				}
 				Loop_Actor_Walk_To_Actor(kActorMcCoy, kActorGaff, 36, false, false);
 				Actor_Says(kActorGaff, 150, kAnimationModeTalk);
-				Actor_Says(kActorMcCoy, 2960, 12);
-				Actor_Says_With_Pause(kActorGaff, 160, 1.0f, 16);
-				Actor_Says(kActorMcCoy, 2965, 13);
-				Actor_Says_With_Pause(kActorGaff, 170, 1.0f, kAnimationModeTalk);
-				Actor_Says_With_Pause(kActorGaff, 180, 1.0f, 12);
-				Actor_Says(kActorGaff, 190, 14);
-				Actor_Says(kActorGaff, 200, 15);
+				if (Player_Query_Agenda() == kPlayerAgendaSurly 
+				|| Player_Query_Agenda() == kPlayerAgendaErratic) {
+					Actor_Says(kActorMcCoy, 2960, 12); //00-2960.AUD	Yeah, well, I've been too busy to visit lately.
+				} else {
+					Actor_Says(kActorMcCoy, 5705, 13); //00-5705.AUD	Uh-huh.
+				}
+				Actor_Says_With_Pause(kActorGaff, 160, 1.0f, 16); //53-0160.AUD	You gonna turn yourself in?
+				if (Player_Query_Agenda() == kPlayerAgendaSurly 
+				|| Player_Query_Agenda() == kPlayerAgendaErratic) {
+					Actor_Says(kActorMcCoy, 5855, 14); //00-5855.AUD	Not a chance.
+				} else {
+					Actor_Says(kActorMcCoy, 2965, 13); //00-2965.AUD	I'm thinking about it.
+					if (Actor_Query_Friendliness_To_Other(kActorGaff, kActorMcCoy) < 50) {
+						Actor_Says_With_Pause(kActorGaff, 170, 1.0f, kAnimationModeTalk); //53-0170.AUD	Think hard.
+					}
+				}
+				if (Actor_Query_Friendliness_To_Other(kActorGaff, kActorMcCoy) < 50) {
+					Actor_Says_With_Pause(kActorGaff, 180, 1.0f, 12); //53-0180.AUD	You killed anyone yet?
+				}
+				Actor_Says(kActorGaff, 190, 14); //53-0190.AUD	It's like I said before. You retire a human, your career is over.
+				if (Actor_Query_Friendliness_To_Other(kActorGaff, kActorMcCoy) < 50) {
+					Actor_Says(kActorGaff, 200, 15); //53-0200.AUD	Your life too, maybe.
+				}
 				Async_Actor_Walk_To_XYZ(kActorGaff, -388.44f, -162.8f, 165.08f, false, false);
 				Delay(4000);
 				Player_Gains_Control();
-				Actor_Start_Speech_Sample(kActorGaff, 210);
+				Actor_Start_Speech_Sample(kActorGaff, 210); //53-0210.AUD	But we don't live forever, do we?
 				Music_Stop(3u);
 				Actor_Set_Goal_Number(kActorGaff, kGoalGaffMA07Left);
 			}

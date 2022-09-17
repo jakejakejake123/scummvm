@@ -945,6 +945,8 @@ bool AIScriptIzo::UpdateAnimation(int *animation, int *frame) {
 			Scene_Loop_Start_Special(kSceneLoopModeOnce, 2, true); // HC01 - IzoFlashLoop
 			if (!_vm->_cutContent) {
 				Player_Set_Combat_Mode(true);
+			} else {
+				Actor_Change_Animation_Mode(kActorMcCoy, 21);
 			}
 		}
 		if (_animationFrame >= Slice_Animation_Query_Number_Of_Frames(kModelAnimationIzoHoldingCameraUsesFlash)) {

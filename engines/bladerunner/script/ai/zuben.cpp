@@ -433,6 +433,11 @@ bool AIScriptZuben::GoalChanged(int currentGoalNumber, int newGoalNumber) {
 				Actor_Set_Goal_Number(kActorZuben, kGoalZubenCT07RunToFreeSlotA);
 				if (Player_Query_Agenda() != kPlayerAgendaSurly 
 				&& Player_Query_Agenda() != kPlayerAgendaErratic) {
+					Delay(1000);
+					Actor_Says(kActorMcCoy, 3690, 13); //00-3690.AUD	Look. I wanna warn you. There’s a woman looking for you and your friends.
+					Actor_Says(kActorMcCoy, 3700, 15); //00-3700.AUD	If I found you, so will she.
+					Delay(1000);
+					Actor_Says(kActorMcCoy, 1660, 14); //00-1660.AUD	Go! Quickly.
 					Game_Flag_Set(kFlagZubenSpared);
 					Game_Flag_Set(kFlagMcCoyIsHelpingReplicants);
 					Game_Flag_Set(kFlagZubenEncounter);

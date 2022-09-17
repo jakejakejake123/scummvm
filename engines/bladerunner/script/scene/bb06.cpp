@@ -132,6 +132,9 @@ bool SceneScriptBB06::ClickedOn3DObject(const char *objectName, bool a2) {
 					Actor_Voice_Over(70, kActorVoiceOver);
 				} else {
 					Actor_Voice_Over(50, kActorVoiceOver);
+					if (_vm->_cutContent) {
+						Un_Combat_Target_Object("BOX31");
+					}
 				}
 			}
 		}

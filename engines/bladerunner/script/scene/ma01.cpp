@@ -172,6 +172,11 @@ bool SceneScriptMA01::ClickedOnExit(int exitId) {
 						Actor_Says(kActorMcCoy, 480, 16);
 						Actor_Says(kActorZuben, 130, 17);
 						Actor_Says(kActorMcCoy, 485, 14);
+						Delay(1000);
+						Actor_Says(kActorMcCoy, 3690, 15); //00-3690.AUD	Look. I wanna warn you. There’s a woman looking for you and your friends.
+						Actor_Says(kActorMcCoy, 3700, 15); //00-3700.AUD	If I found you, so will she.
+						Delay(1000);
+						Actor_Says(kActorMcCoy, 1660, 15); //00-1660.AUD	Go! Quickly.
 						Game_Flag_Set(kFlagZubenSpared);
 						Game_Flag_Set(kFlagMcCoyIsHelpingReplicants);
 						Scene_Exits_Enable();

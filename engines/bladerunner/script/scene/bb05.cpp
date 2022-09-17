@@ -223,6 +223,9 @@ void SceneScriptBB05::PlayerWalkedIn() {
 				if (Player_Query_Agenda() != kPlayerAgendaSurly
 				&& Player_Query_Agenda() != kPlayerAgendaErratic) {
 					Actor_Says(kActorMcCoy, 7070, 18); //00-7070.AUD	You got it.
+					Actor_Set_Targetable(kActorGeneralDoll, false);
+				} else {
+					Actor_Set_Targetable(kActorGeneralDoll, true);
 				}
 			} else {
 				Actor_Says(kActorMcCoy, 7070, 18); 

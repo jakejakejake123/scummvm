@@ -779,17 +779,9 @@ void SceneScriptUG18::talkWithGuzza() {
 	}
 	Actor_Says(kActorMcCoy, 5875, 13); //00-5875.AUD	Let me guess. Clovis gave them to you.
 	Actor_Says(kActorGuzza, 830, 3); //04-0830.AUD	I must seem pretty gullible but it sounded on the level.
-	if (_vm->_cutContent) {
-		if (Actor_Query_Friendliness_To_Other(kActorGuzza, kActorMcCoy) > 50) {
-			Actor_Says(kActorGuzza, 840, 12); //04-0840.AUD	He called you his brother. Said you came down in the moonbus with all of them.
-			Actor_Says(kActorGuzza, 850, 14); //04-0850.AUD	He said Tyrell was using you to get inside the LPD.
-			Actor_Says(kActorGuzza, 860, 13); //04-0860.AUD	You hadn’t been on the job too long, so I thought… maybe.
-		}
-	} else {
-		Actor_Says(kActorGuzza, 840, 12); //04-0840.AUD	He called you his brother. Said you came down in the moonbus with all of them.
-		Actor_Says(kActorGuzza, 850, 14); //04-0850.AUD	He said Tyrell was using you to get inside the LPD.
-		Actor_Says(kActorGuzza, 860, 13); //04-0860.AUD	You hadn’t been on the job too long, so I thought… maybe.
-	}
+	Actor_Says(kActorGuzza, 840, 12); //04-0840.AUD	He called you his brother. Said you came down in the moonbus with all of them.
+	Actor_Says(kActorGuzza, 850, 14); //04-0850.AUD	He said Tyrell was using you to get inside the LPD.
+	Actor_Says(kActorGuzza, 860, 13); //04-0860.AUD	You hadn’t been on the job too long, so I thought… maybe.
 	Actor_Says(kActorMcCoy, 5880, 15); //00-5880.AUD	You’d screw with my head? How convenient.
 #if BLADERUNNER_ORIGINAL_BUGS
 	Actor_Says(kActorMcCoy, 5885, 9);

@@ -98,18 +98,19 @@ void AIScriptSebastian::OtherAgentEnteredCombatMode(int otherActorId, int combat
 	) {
 		//Made it so McCoy is a little more aggressive towards Sebastian when he pulls out his gun if he is surly or erratic.
 		if (_vm->_cutContent) {
-			Actor_Says(kActorSebastian, 680, 12); //56-0680.AUD	Hey, you don't need to do that.
+			Actor_Face_Actor(kActorSebastian, kActorMcCoy, true);
+			Actor_Face_Actor(kActorMcCoy, kActorSebastian, true);
+			if (Actor_Query_Friendliness_To_Other(kActorSebastian, kActorMcCoy) > 49) {
+				Actor_Says(kActorSebastian, 680, 12); //56-0680.AUD	Hey, you don't need to do that.
+			} else {
+				Actor_Says(kActorSebastian, 700, 15); //56-0700.AUD	Please! You don't have to pull your gun in here.
+			}
 			if (Player_Query_Agenda() == kPlayerAgendaSurly 
 			|| Player_Query_Agenda() == kPlayerAgendaErratic) {
-				Actor_Face_Actor(kActorMcCoy, kActorSebastian, true);
-				Actor_Says_With_Pause(kActorMcCoy, 7265, 0.0f, kAnimationModeCombatIdle); //00-7265.AUD	Think real hard JF. You got anything here that someone would want?
-				Actor_Change_Animation_Mode(kActorMcCoy, kAnimationModeCombatIdle);
-				Delay(500);
-				Actor_Says(kActorSebastian, 690, 16);
+				Actor_Says_With_Pause(kActorMcCoy, 7265, 0.0f, -1); //00-7265.AUD	Think real hard JF. You got anything here that someone would want?
+				Actor_Says(kActorSebastian, 690, 16);//56-0690.AUD	There's nothing in here. People don't even like to come inside my building.
 			} else {
-				Actor_Says_With_Pause(kActorMcCoy, 7270, 0.0f, kAnimationModeCombatIdle); //00-7270.AUD	I got ambushed in here once before. It ain't gonna happen again.
-				Actor_Says(kActorSebastian, 700, 15); //56-0700.AUD	Please! You don't have to pull your gun in here.
-				Actor_Change_Animation_Mode(kActorMcCoy, kAnimationModeCombatIdle);
+				Actor_Says_With_Pause(kActorMcCoy, 7270, 0.0f, -1); //00-7270.AUD	I got ambushed in here once before. It ain't gonna happen again.	
 			}
 			Actor_Modify_Friendliness_To_Other(kActorSebastian, kActorMcCoy, -2);
 		} else {

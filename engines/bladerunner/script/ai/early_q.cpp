@@ -424,13 +424,27 @@ bool AIScriptEarlyQ::GoalChanged(int currentGoalNumber, int newGoalNumber) {
 		// Made it so when Early Q is a replicant and McCoy pulls his gun on Early Q he won't give up Dektora and the reps. Instead Early Q will remain calm and try to bargain with Mccoy.
 		if (_vm->_cutContent) {
 			if (Game_Flag_Query(kFlagEarlyQIsReplicant)) {		
-				Actor_Says(kActorMcCoy, 8950, kAnimationModeCombatAim); //00-8950.AUD	Hold it right there!
+				if (Player_Query_Agenda() == kPlayerAgendaSurly 
+				|| (Player_Query_Agenda() == kPlayerAgendaErratic)) {
+					Actor_Says(kActorMcCoy, 8950, -1); //00-8950.AUD	Hold it right there!
+				} else {
+					Actor_Says(kActorMcCoy, 460, -1); //00-0460.AUD	Hold it right there!
+				}
 				Delay (1000);
-				Actor_Says(kActorMcCoy, 3400, kAnimationModeCombatAim); //00-3400.AUD	Cough up some dirt, Early. Or I’m taking this disc downtown.
-				Actor_Says(kActorEarlyQ, 160, kAnimationModeTalk); //18-0160.AUD	I’ll throw in a night with one of my dancers.
+				if (Player_Query_Agenda() == kPlayerAgendaSurly 
+				|| (Player_Query_Agenda() == kPlayerAgendaErratic)) {
+					Actor_Says(kActorMcCoy, 3400, kAnimationModeCombatAim); //00-3400.AUD	Cough up some dirt, Early. Or I’m taking this disc downtown.
+				} else {
+					Actor_Says(kActorMcCoy, 6985, kAnimationModeCombatAim); //00-6985.AUD	Got the straight scoop for me or what?
+				}
+				Actor_Says(kActorEarlyQ, 120, kAnimationModeTalk); //18-0120.AUD	You can have whatever you little heart desires, General.
+				Delay (1000);
 				Actor_Says(kActorMcCoy, 3405, kAnimationModeCombatAim); //00-3405.AUD	Sit down.
-				Delay (2000);
-				Actor_Says(kActorMcCoy, 3410, kAnimationModeCombatAim); //00-3410.AUD	Sit down!
+				Delay (1000);
+				if (Player_Query_Agenda() == kPlayerAgendaSurly 
+				|| (Player_Query_Agenda() == kPlayerAgendaErratic)) {
+					Actor_Says(kActorMcCoy, 3410, kAnimationModeCombatAim); //00-3410.AUD	Sit down!
+				}
 				_vm->_aiScripts->callChangeAnimationMode(kActorMcCoy, kAnimationModeCombatIdle);
 				Player_Loses_Control();
 				Loop_Actor_Walk_To_XYZ(kActorMcCoy, 31.22f, 0.0f, 267.51f, 0, true, false, false);
@@ -438,12 +452,22 @@ bool AIScriptEarlyQ::GoalChanged(int currentGoalNumber, int newGoalNumber) {
 				Actor_Set_Goal_Number(kActorEarlyQ, kGoalEarlyQNR04SitDown);
 			} else {
 				Actor_Says(kActorEarlyQ, 130, kAnimationModeTalk); //18-0130.AUD	(grunts) Whoa!
-				Actor_Says(kActorMcCoy, 3400, kAnimationModeCombatAim); ////00-3400.AUD	Cough up some dirt, Early. Or I’m taking this disc downtown.
+				if (Player_Query_Agenda() == kPlayerAgendaSurly 
+				|| (Player_Query_Agenda() == kPlayerAgendaErratic)) {
+					Actor_Says(kActorMcCoy, 3400, kAnimationModeCombatAim); //00-3400.AUD	Cough up some dirt, Early. Or I’m taking this disc downtown.
+				} else {
+					Actor_Says(kActorMcCoy, 6985, kAnimationModeCombatAim); //00-6985.AUD	Got the straight scoop for me or what?
+				}
 				Actor_Says_With_Pause(kActorEarlyQ, 140, 1.0f, kAnimationModeTalk); //18-0140.AUD	You want Dektora? Is that it? The girl with the Rep friends?
 				Actor_Says_With_Pause(kActorEarlyQ, 150, 1.0f, kAnimationModeTalk);
-				Actor_Says(kActorMcCoy, 3405, kAnimationModeCombatAim);
+				Delay(2000);
 				Actor_Says(kActorEarlyQ, 160, kAnimationModeTalk);
-				Actor_Says(kActorMcCoy, 3410, kAnimationModeCombatAim);
+				Actor_Says(kActorMcCoy, 3405, kAnimationModeCombatAim);
+				Delay(1000);
+				if (Player_Query_Agenda() == kPlayerAgendaSurly 
+				|| (Player_Query_Agenda() == kPlayerAgendaErratic)) {
+					Actor_Says(kActorMcCoy, 3410, kAnimationModeCombatAim); //00-3410.AUD	Sit down!
+				}
 				Actor_Clue_Acquire(kActorMcCoy, kClueEarlyQInterview, false, kActorEarlyQ);
 				_vm->_aiScripts->callChangeAnimationMode(kActorMcCoy, kAnimationModeCombatIdle);
 				Player_Loses_Control();
@@ -577,6 +601,9 @@ bool AIScriptEarlyQ::GoalChanged(int currentGoalNumber, int newGoalNumber) {
 					Actor_Modify_Friendliness_To_Other(kActorGuzza, kActorMcCoy, -2);
 					Actor_Set_Targetable(kActorEarlyQ, false);
 					Game_Flag_Set(kFlagMcCoyRetiredHuman);
+					if (Game_Flag_Query(kFlagHanoiIsReplicant)) {
+						Actor_Set_Goal_Number(kActorHanoi, kGoalHanoiNR04Enter);
+					}
 				}
 			}
 		} else {

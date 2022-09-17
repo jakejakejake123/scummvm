@@ -172,7 +172,14 @@ bool AIScriptClovis::ShotAtAndHit() {
 			Actor_Set_Goal_Number(kActorClovis, kGoalClovisGone);
 			shotAnim();
 			Actor_Set_Targetable(kActorClovis, false);
-			ADQ_Add(kActorMcCoy, 2340, -1);
+			if (_vm->_cutContent) {
+				if (Player_Query_Agenda() == kPlayerAgendaSurly 
+				|| (Player_Query_Agenda() == kPlayerAgendaErratic)) {
+					ADQ_Add(kActorMcCoy, 2340, -1); //00-2340.AUD	I never did like poetry.
+				}
+			} else {
+				ADQ_Add(kActorMcCoy, 2340, -1); //00-2340.AUD	I never did like poetry.
+			}
 			Music_Stop(3u);
 			// Made it so McCoy receives 200 chinyen when he retires Clovis.
 			if (_vm->_cutContent) {
@@ -361,7 +368,15 @@ bool AIScriptClovis::GoalChanged(int currentGoalNumber, int newGoalNumber) {
 		return true;
 
 	case kGoalClovisBB11TalkToMcCoy:
-		Actor_Says(kActorClovis, 60, 30);
+		if (_vm->_cutContent) {
+			if (Actor_Query_Friendliness_To_Other(kActorClovis, kActorMcCoy) > 50) {
+				Actor_Says(kActorClovis, 60, 30); //05-0060.AUD	You're weak my friend. I expected so much more from you.
+			} else {
+				Actor_Says(kActorClovis, 550, 30); //05-0550.AUD	You’re making me very unhappy, old friend.
+			}
+		} else {
+			Actor_Says(kActorClovis, 60, 30); //05-0060.AUD	You're weak my friend. I expected so much more from you.
+		}
 		Actor_Says(kActorSadik, 30, kAnimationModeTalk);
 		Actor_Says(kActorClovis, 70, 30);
 		Actor_Says(kActorClovis, 80, 30);
@@ -471,12 +486,26 @@ bool AIScriptClovis::GoalChanged(int currentGoalNumber, int newGoalNumber) {
 	case kGoalClovisKP06TalkToMcCoy:
 		if (Player_Query_Current_Scene() == kSetKP05_KP06) {
 			Actor_Says(kActorClovis, 110, kAnimationModeTalk);
-			Actor_Says(kActorMcCoy, 2255, kAnimationModeTalk);
-			Actor_Says(kActorClovis, 120, kAnimationModeTalk);
-			Actor_Says(kActorClovis, 130, kAnimationModeTalk);
+			if (_vm->_cutContent) {
+				if (Player_Query_Agenda() == kPlayerAgendaSurly 
+				|| (Player_Query_Agenda() == kPlayerAgendaErratic)) {
+					Actor_Says(kActorMcCoy, 2255, kAnimationModeTalk); //00-2255.AUD	She was innocent, you bastard!
+				} else {
+					Actor_Says(kActorMcCoy, 2240, kAnimationModeTalk); //00-2240.AUD	You bastard! She was an innocent!
+				}
+			} else {
+				Actor_Says(kActorMcCoy, 2255, kAnimationModeTalk);
+			}
+			Actor_Says(kActorClovis, 120, kAnimationModeTalk); //05-0120.AUD	Can’t see it yet? You came down to Terra with us, McCoy.
+			if (_vm->_cutContent) {
+				Actor_Says(kActorMcCoy, 2260, kAnimationModeTalk); 
+			}
+			Actor_Says(kActorClovis, 130, kAnimationModeTalk); //05-0130.AUD	The police got a hold of you and Tyrell created your past.
 			Actor_Says(kActorClovis, 140, kAnimationModeTalk);
-			Actor_Says(kActorMcCoy, 2260, kAnimationModeTalk);
-			Actor_Says(kActorClovis, 150, kAnimationModeTalk);
+			if (!_vm->_cutContent) {
+				Actor_Says(kActorMcCoy, 2260, kAnimationModeTalk); 
+			}
+			Actor_Says(kActorClovis, 150, kAnimationModeTalk); //05-0150.AUD	Come join me. Our final party before returning to the heavens.
 			if (_vm->_cutContent) {
 				Actor_Says(kActorClovis, 1330, kAnimationModeTalk); //05-1330.AUD	To the Heavens, brother. Off-World.
 			}
@@ -509,26 +538,29 @@ bool AIScriptClovis::GoalChanged(int currentGoalNumber, int newGoalNumber) {
 	case kGoalClovisKP07TalkToMcCoy:
 		// Made it so McCoy only says that all the reps are dead besides Clovis if that is the case.
 		if (_vm->_cutContent) {
-			if ((((((((((Actor_Query_Goal_Number(kActorZuben) == kGoalZubenGone)))))))))) {
-				if (((((((((Game_Flag_Query(kFlagLucyIsReplicant)
-				&& Actor_Query_Goal_Number(kActorLucy) == kGoalLucyGone))))))))) {
-					if ((((((((Game_Flag_Query(kFlagDektoraIsReplicant) 
-					&& Actor_Query_Goal_Number(kActorDektora) == kGoalDektoraGone)))))))) {
-						if (((((((Game_Flag_Query(kFlagIzoIsReplicant) 
-						&& Actor_Query_Goal_Number(kActorIzo) == kGoalIzoGone))))))) {
-							if ((((((Game_Flag_Query(kFlagGordoIsReplicant) 
-							&& Actor_Query_Goal_Number(kActorGordo) == kGoalGordoGone)))))) {
-								if (((((Game_Flag_Query(kFlagLutherLanceIsReplicant) 
-								&& Actor_Query_Goal_Number(kActorLuther) == kGoalLutherGone))))) {
-									if ((((Game_Flag_Query(kFlagBulletBobIsReplicant) 
-									&& Actor_Query_Goal_Number(kActorBulletBob) == kGoalBulletBobGone)))) {
-										if (((Game_Flag_Query(kFlagCrazylegsIsReplicant) 
-										&& Game_Flag_Query(kFlagCrazylegsDead))))  {
-											if ((Game_Flag_Query(kFlagEarlyQIsReplicant) 
-											&& Game_Flag_Query(kFlagEarlyQDead)))  {
-												if (Game_Flag_Query(kFlagHanoiIsReplicant) 
-												&& Game_Flag_Query(kFlagHanoiDead))  {
-													Actor_Says(kActorMcCoy, 2345, 16); //00-2345.AUD	They’re all dead. You’re the last one.
+			if (((((((((((Game_Flag_Query(kFlagRunciterIsReplicant) 
+			&& Actor_Query_Goal_Number(kActorRunciter) == kGoalRunciterDead))))))))))) {
+				if ((((((((((Actor_Query_Goal_Number(kActorZuben) == kGoalZubenGone)))))))))) {
+					if (((((((((Game_Flag_Query(kFlagLucyIsReplicant)
+					&& Actor_Query_Goal_Number(kActorLucy) == kGoalLucyGone))))))))) {
+						if ((((((((Game_Flag_Query(kFlagDektoraIsReplicant) 
+						&& Actor_Query_Goal_Number(kActorDektora) == kGoalDektoraGone)))))))) {
+							if (((((((Game_Flag_Query(kFlagIzoIsReplicant) 
+							&& Actor_Query_Goal_Number(kActorIzo) == kGoalIzoGone))))))) {
+								if ((((((Game_Flag_Query(kFlagGordoIsReplicant) 
+								&& Actor_Query_Goal_Number(kActorGordo) == kGoalGordoGone)))))) {
+									if (((((Game_Flag_Query(kFlagLutherLanceIsReplicant) 
+									&& Actor_Query_Goal_Number(kActorLuther) == kGoalLutherGone))))) {
+										if ((((Game_Flag_Query(kFlagBulletBobIsReplicant) 
+										&& Actor_Query_Goal_Number(kActorBulletBob) == kGoalBulletBobGone)))) {
+											if (((Game_Flag_Query(kFlagCrazylegsIsReplicant) 
+											&& Game_Flag_Query(kFlagCrazylegsDead))))  {
+												if ((Game_Flag_Query(kFlagEarlyQIsReplicant) 
+												&& Game_Flag_Query(kFlagEarlyQDead)))  {
+													if (Game_Flag_Query(kFlagHanoiIsReplicant) 
+													&& Game_Flag_Query(kFlagHanoiDead))  {
+														Actor_Says(kActorMcCoy, 2345, 16); //00-2345.AUD	They’re all dead. You’re the last one.
+													}
 												}
 											}
 										}
@@ -574,7 +606,7 @@ bool AIScriptClovis::GoalChanged(int currentGoalNumber, int newGoalNumber) {
 			if (!Game_Flag_Query(kFlagClovisTalkUnsympathetic)) {
 				Actor_Says(kActorClovis, 220, -1); //05-0220.AUD	I should have cherished what little time I had instead of wasting it in one precious minute... on revenge. (coughs)
 			} else {
-				Delay(2000);
+				Delay(1000);
 			}
 		} else {
 			Actor_Says(kActorClovis, 220, -1); //05-0220.AUD	I should have cherished what little time I had instead of wasting it in one precious minute... on revenge. (coughs)
@@ -661,10 +693,10 @@ bool AIScriptClovis::GoalChanged(int currentGoalNumber, int newGoalNumber) {
 						Delay(1500);
 					}
 				} else {
+					Item_Pickup_Spin_Effect(kModelAnimationDNADataDisc, 229, 215);
 					Actor_Change_Animation_Mode(kActorMcCoy, 23);
 					Actor_Change_Animation_Mode(kActorClovis, 23);
 					Delay(2000);
-					Item_Pickup_Spin_Effect(kModelAnimationDNADataDisc, 229, 215);
 					Actor_Says(kActorMcCoy, 8170, 13); //00-8170.AUD	There you go.
 					Delay(1000);
 				}
@@ -684,20 +716,21 @@ bool AIScriptClovis::GoalChanged(int currentGoalNumber, int newGoalNumber) {
 		}
 		Actor_Says(kActorMcCoy, 8504, kAnimationModeTalk); //00-8504.AUD	I've got questions of my own.
 		Actor_Says(kActorClovis, 1290, kAnimationModeTalk); //05-1290.AUD	No doubt. But answers will take time. And time is precious. To all of us.
-		// Added code so Clovis will only mention McCoy having the information from Tyrell if McCoy has the Tyrell DNA data and he interviewed Tyrell.
+		Actor_Says(kActorMcCoy, 8505, kAnimationModeTalk); //00-8505.AUD	It's true then. You've-- We've only got four years.
 		if (_vm->_cutContent) {
-			if (Actor_Clue_Query(kActorMcCoy, kClueTyrellInterview)
-			&& 	Actor_Clue_Query(kActorMcCoy, kClueDNATyrell)) {
-				Actor_Says(kActorMcCoy, 8505, kAnimationModeTalk); //00-8505.AUD	It's true then. You've-- We've only got four years.
-				if (!Actor_Clue_Query(kActorClovis, kClueMcCoyRetiredLucy) 
-				&& !Actor_Clue_Query(kActorClovis, kClueMcCoyRetiredDektora) 
-				&& Actor_Query_Friendliness_To_Other(kActorClovis, kActorMcCoy) > 50) {
+			if (Actor_Clue_Query(kActorMcCoy, kClueDNATyrell)
+			&& Actor_Clue_Query(kActorMcCoy, kClueDNASebastian)
+			&& Actor_Clue_Query(kActorMcCoy, kClueDNAChew) 
+			&& Actor_Clue_Query(kActorMcCoy, kClueDNAMoraji) 
+			&& Actor_Clue_Query(kActorMcCoy, kClueDNALutherLance)
+			&& Actor_Clue_Query(kActorMcCoy, kClueDNAMarcus)) {
+				Actor_Says(kActorClovis, 1300, kAnimationModeTalk); //05-1300.AUD	Yes. Of course, I could be hit by lightning tomorrow but with the information 
 					Actor_Says(kActorClovis, 1300, kAnimationModeTalk); //05-1300.AUD	Yes. Of course, I could be hit by lightning tomorrow but with the information 
-				} else {
-					Delay(2000);
-					Actor_Says(kActorMcCoy, 1885, kAnimationModeTalk); //00-1885.AUD	I’ll take that as a yes.
-					Delay(1000);
-				}
+				Actor_Says(kActorClovis, 1300, kAnimationModeTalk); //05-1300.AUD	Yes. Of course, I could be hit by lightning tomorrow but with the information 
+			} else {
+				Delay(2000);
+				Actor_Says(kActorMcCoy, 1885, kAnimationModeTalk); //00-1885.AUD	I’ll take that as a yes.
+				Delay(1000);
 			}
 		} else {
 			Actor_Says(kActorMcCoy, 8505, kAnimationModeTalk); //
@@ -717,9 +750,9 @@ bool AIScriptClovis::GoalChanged(int currentGoalNumber, int newGoalNumber) {
 			Actor_Says(kActorClovis, 1310, kAnimationModeTalk); //05-1310.AUD	He’s a hunter no more. He has come home. It’s time to go, my friend.
 		}
 		// Added in a line.
-		if (_vm->_cutContent) {
-			Music_Stop(1u);	
+		if (_vm->_cutContent) {	
 			Actor_Says(kActorMcCoy, 8506, kAnimationModeTalk); //00-8506.AUD	Where are we headed?
+			Music_Stop(1u);
 		}
 		Ambient_Sounds_Remove_All_Non_Looping_Sounds(true);
 		Ambient_Sounds_Remove_All_Looping_Sounds(1u);

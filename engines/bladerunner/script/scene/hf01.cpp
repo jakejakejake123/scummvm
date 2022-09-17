@@ -588,22 +588,45 @@ void SceneScriptHF01::PlayerWalkedIn() {
 	if (_vm->_cutContent) {
 		if (Game_Flag_Query(kFlagCrazylegsShot)) {
 			Game_Flag_Reset(kFlagCrazylegsArrestedTalk);
-			if (Player_Query_Agenda() != kPlayerAgendaSurly 
-			&& Player_Query_Agenda() != kPlayerAgendaErratic) {
-				Actor_Voice_Over(1410, kActorVoiceOver); //99-1410.AUD	I’d retired another Replicant so more money was headed my way but I didn’t feel so good about it.
-				Actor_Voice_Over(1670, kActorVoiceOver); //99-1670.AUD	Still it was a hell of a way to go.
+			if (Game_Flag_Query(kFlagCrazylegsIsReplicant)) {
+				if (Player_Query_Agenda() != kPlayerAgendaSurly 
+				&& Player_Query_Agenda() != kPlayerAgendaErratic) {
+					Actor_Voice_Over(1410, kActorVoiceOver); //99-1410.AUD	I’d retired another Replicant so more money was headed my way but I didn’t feel so good about it.
+					Actor_Voice_Over(1670, kActorVoiceOver); //99-1670.AUD	Still it was a hell of a way to go.
+				} else {
+					Actor_Voice_Over(920, kActorVoiceOver); //99-0920.AUD	Easy money.
+				}
+				Actor_Modify_Friendliness_To_Other(kActorSteele, kActorMcCoy, 2);
+				Actor_Modify_Friendliness_To_Other(kActorClovis, kActorMcCoy, -2);
+				Actor_Modify_Friendliness_To_Other(kActorGuzza, kActorMcCoy, 2);
+				Actor_Modify_Friendliness_To_Other(kActorGaff, kActorMcCoy, 2);
+				Actor_Set_Goal_Number(kActorCrazylegs, kGoalCrazyLegsLeavesShowroom);
+				Game_Flag_Reset(kFlagCrazylegsShot);
+				if (Query_Difficulty_Level() != kGameDifficultyEasy) {
+					Global_Variable_Increment (kVariableChinyen, 200);
+				}		
 			} else {
-				Actor_Voice_Over(920, kActorVoiceOver); //99-0920.AUD	Easy money.
+				if (Player_Query_Agenda() != kPlayerAgendaSurly 
+				&& Player_Query_Agenda() != kPlayerAgendaErratic) {
+					Actor_Voice_Over(2410, kActorVoiceOver); //99-2410.AUD	He went down too easy. Just one shot.
+					Actor_Voice_Over(2420, kActorVoiceOver);
+					Delay(1000);
+					Outtake_Play(kOuttakeAway1, true, -1);
+					Actor_Set_Goal_Number(kActorMcCoy, kGoalMcCoyArrested);
+				} else {
+					Actor_Voice_Over(2410, kActorVoiceOver); //99-2410.AUD	He went down too easy. Just one shot.
+					Delay(1000);
+					Actor_Voice_Over(2100, kActorVoiceOver); //99-2100.AUD	I'd crossed the line.
+					Actor_Voice_Over(2120, kActorVoiceOver); //99-2120.AUD	I didn't have a lot of time and my options were pretty lousy.
+					Actor_Voice_Over(2130, kActorVoiceOver);
+					Actor_Set_Goal_Number(kActorCrazylegs, kGoalCrazyLegsLeavesShowroom);
+					Game_Flag_Reset(kFlagCrazylegsShot);
+					Game_Flag_Set(kFlagMcCoyRetiredHuman);
+					Actor_Modify_Friendliness_To_Other(kActorClovis, kActorMcCoy, 2);
+					Actor_Modify_Friendliness_To_Other(kActorSteele, kActorMcCoy, -2);
+					Actor_Modify_Friendliness_To_Other(kActorGuzza, kActorMcCoy, -2);
+				}
 			}
-			Actor_Modify_Friendliness_To_Other(kActorSteele, kActorMcCoy, 2);
-			Actor_Modify_Friendliness_To_Other(kActorClovis, kActorMcCoy, -2);
-			Actor_Modify_Friendliness_To_Other(kActorGuzza, kActorMcCoy, 2);
-			Actor_Modify_Friendliness_To_Other(kActorGaff, kActorMcCoy, 2);
-			Actor_Set_Goal_Number(kActorCrazylegs, kGoalCrazyLegsLeavesShowroom);
-			Game_Flag_Reset(kFlagCrazylegsShot);
-			if (Query_Difficulty_Level() != kGameDifficultyEasy) {
-				Global_Variable_Increment (kVariableChinyen, 200);
-			}		
 		}
 	}
 	if (Game_Flag_Query(kFlagCrazylegsArrestedTalk)) {

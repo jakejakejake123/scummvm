@@ -111,6 +111,10 @@ bool SceneScriptCT09::ClickedOnActor(int actorId) {
 				}
 				// Restored some dialogue for the desk clerk where McCoy asks him about the back room. If McCoy didn't help the desk clerk he will be more resistant to answering McCoys question.
 				if (_vm->_cutContent && !Game_Flag_Query (kFlagCT09DeskClerkTalk2)) {
+					Actor_Face_Heading(kActorMcCoy, 240, true);
+					Delay(1500);
+					Actor_Face_Actor(kActorMcCoy, kActorDeskClerk, true);
+					Delay(1000);
 					Actor_Says(kActorMcCoy, 610, 15); //00-0610.AUD	What do you got back there?
 					Actor_Says(kActorDeskClerk, 100, 13); //27-0100.AUD	Excuse me?
 					Actor_Says(kActorMcCoy, 615, 18); //00-0615.AUD	The back room.
@@ -137,6 +141,7 @@ bool SceneScriptCT09::ClickedOnActor(int actorId) {
 							Actor_Says(kActorMcCoy, 625, 13); //00-0625.AUD	So, now there's nothing in there.
 							Actor_Says(kActorDeskClerk, 140, 13); //27-0140.AUD	Rumor has it the boss wants to rent it out. What a dump.
 							Actor_Says(kActorDeskClerk, 150, 15); //27-0150.AUD	Maybe if we paid you, someone would actually want to stay there. (laughs)
+							Actor_Clue_Acquire(kActorMcCoy, kClueGracefulFootprints, true, kActorDeskClerk);
 							Game_Flag_Set(kFlagCT09DeskClerkTalk2);
 						}
 					} else { 	
@@ -145,6 +150,7 @@ bool SceneScriptCT09::ClickedOnActor(int actorId) {
 						Actor_Says(kActorMcCoy, 625, 13); //00-0625.AUD	So, now there's nothing in there.
 						Actor_Says(kActorDeskClerk, 140, 13); //27-0140.AUD	Rumor has it the boss wants to rent it out. What a dump.
 						Actor_Says(kActorDeskClerk, 150, 15); //27-0150.AUD	Maybe if we paid you, someone would actually want to stay there. (laughs)
+						Actor_Clue_Acquire(kActorMcCoy, kClueGracefulFootprints, true, kActorDeskClerk);
 						Game_Flag_Set(kFlagCT09DeskClerkTalk2);
 					}
 					// Made it so the desk clerk treats you differently depending on your actions. If you helped the clerk out with Leon he will be nice to you.

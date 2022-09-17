@@ -434,24 +434,27 @@ bool SceneScriptAR02::ClickedOnItem(int itemId, bool a2) {
 						Actor_Says(kActorInsectDealer, 190, 14); //16-0190.AUD	Sí, good products. Scorpions my best work. Finest quality. Even poison.
 						Actor_Says(kActorMcCoy, 105, 18); //00-0105.AUD	Isn't that illegal?
 						Actor_Says(kActorInsectDealer, 200, 14); //16-0200.AUD	I have permit, señor. My customers demand authenticity.
-						Actor_Says(kActorMcCoy, 3910, 14); //00-3910.AUD	You’re lying
-						Actor_Says(kActorInsectDealer, 420, 14); //16-0420.AUD	Believe what you will, señor. But I speak the truth.
-						Actor_Says(kActorMcCoy, 7835, 18); //00-7835.AUD	Is that so?
-						if (Global_Variable_Query(kVariableChapter) < 4) {
-							Actor_Says(kActorMcCoy, 1955, 14); //00-1955.AUD	We’re taking a little drive downtown.
-							Game_Flag_Set(kFlagAR02StungByScorpion);
-							Game_Flag_Set(kFlagInsectDealerArrested);
-							Music_Stop(1u);
-							Delay (1000);
-							Item_Remove_From_World(kItemScorpions);
-							Actor_Put_In_Set(kActorInsectDealer, kSetPS09);
-							Actor_Set_At_XYZ(kActorInsectDealer, -300.0f, 0.33f, -280.0f, 512);
-							Game_Flag_Reset(kFlagSpinnerAtAR01);
-							Game_Flag_Set(kFlagSpinnerAtPS01);
-							Game_Flag_Reset(kFlagMcCoyInAnimoidRow);
-							Game_Flag_Set(kFlagMcCoyInPoliceStation);
-							Outtake_Play(kOuttakeAway1, true, -1);
-							Set_Enter(kSetPS09, kScenePS09);
+						if (Player_Query_Agenda() == kPlayerAgendaSurly 
+						|| Player_Query_Agenda() == kPlayerAgendaErratic) {
+							Actor_Says(kActorMcCoy, 3910, 14); //00-3910.AUD	You’re lying
+							Actor_Says(kActorInsectDealer, 420, 14); //16-0420.AUD	Believe what you will, señor. But I speak the truth.
+							Actor_Says(kActorMcCoy, 7835, 18); //00-7835.AUD	Is that so?
+							if (Global_Variable_Query(kVariableChapter) < 4) {
+								Actor_Says(kActorMcCoy, 1955, 14); //00-1955.AUD	We’re taking a little drive downtown.
+								Game_Flag_Set(kFlagAR02StungByScorpion);
+								Game_Flag_Set(kFlagInsectDealerArrested);
+								Music_Stop(1u);
+								Delay (1000);
+								Item_Remove_From_World(kItemScorpions);
+								Actor_Put_In_Set(kActorInsectDealer, kSetPS09);
+								Actor_Set_At_XYZ(kActorInsectDealer, -300.0f, 0.33f, -280.0f, 512);
+								Game_Flag_Reset(kFlagSpinnerAtAR01);
+								Game_Flag_Set(kFlagSpinnerAtPS01);
+								Game_Flag_Reset(kFlagMcCoyInAnimoidRow);
+								Game_Flag_Set(kFlagMcCoyInPoliceStation);
+								Outtake_Play(kOuttakeAway1, true, -1);
+								Set_Enter(kSetPS09, kScenePS09);
+							}
 						}
 					} else {	
 						Actor_Says(kActorInsectDealer, 0, 14); 
@@ -955,7 +958,6 @@ void SceneScriptAR02::dialogueWithHassan() {
 		break;
 
 	case 570: // DONE
-		// This time around Hasan will only get angry with McCoy and tell him about Bob if they have low friendliness with each other.
 		if (_vm->_cutContent) {
 			if (!Actor_Clue_Query(kActorMcCoy, kClueHasanInterview)) {
 				Actor_Says(kActorMcCoy, 940, 13);

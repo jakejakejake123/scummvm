@@ -83,9 +83,20 @@ void KIAScript::SCRIPT_KIA_DLL_Play_Clue_Asset_Script(int notUsed, int clueId) {
 		KIA_Play_Actor_Dialogue(kActorVoiceOver, 1990);
 		break;
 	case kClueGracefulFootprints:
-		KIA_Play_Actor_Dialogue(kActorVoiceOver, 1970);
-		KIA_Play_Actor_Dialogue(kActorVoiceOver, 1980);
-		KIA_Play_Actor_Dialogue(kActorVoiceOver, 1990);
+		if (!_vm->_cutContent) {
+			KIA_Play_Actor_Dialogue(kActorVoiceOver, 1970);
+			KIA_Play_Actor_Dialogue(kActorVoiceOver, 1980);
+			KIA_Play_Actor_Dialogue(kActorVoiceOver, 1990);
+		} else {
+			KIA_Play_Actor_Dialogue(kActorMcCoy, 610); //00-0610.AUD	What do you got back there?
+			KIA_Play_Actor_Dialogue(kActorDeskClerk, 100); //27-0100.AUD	Excuse me?
+			KIA_Play_Actor_Dialogue(kActorMcCoy, 615); //00-0615.AUD	The back room.
+			KIA_Play_Actor_Dialogue(kActorDeskClerk, 120); //27-0120.AUD	Used to store all the booty the tenants left behind in there.
+			KIA_Play_Actor_Dialogue(kActorDeskClerk, 130);  //27-0130.AUD	My boss sold everything to a Mongolian guy last month
+			KIA_Play_Actor_Dialogue(kActorMcCoy, 625); //00-0625.AUD	So, now there's nothing in there.
+			KIA_Play_Actor_Dialogue(kActorDeskClerk, 140); //27-0140.AUD	Rumor has it the boss wants to rent it out. What a dump.
+			KIA_Play_Actor_Dialogue(kActorDeskClerk, 150); //27-0150.AUD	Maybe if we paid you, someone would actually want to stay there. (laughs)
+		}
 		break;
 	case kClueShellCasings:
 		KIA_Play_Slice_Model(kModelAnimationShellCasings);
@@ -2214,7 +2225,6 @@ void KIAScript::SCRIPT_KIA_DLL_Play_Clue_Asset_Script(int notUsed, int clueId) {
 		KIA_Play_Actor_Dialogue(kActorSadik, 10); //08-0010.AUD	I told you we should have blown up the whole block.
 		KIA_Play_Actor_Dialogue(kActorClovis, 40); //05-0040.AUD	It would have created problems down the line.
 		KIA_Play_Actor_Dialogue(kActorSadik, 20); //08-0020.AUD	We got problem now, mon.
-		KIA_Play_Actor_Dialogue(kActorClovis, 60); //05-0060.AUD	You're weak my friend. I expected so much more from you.
 		KIA_Play_Actor_Dialogue(kActorSadik, 30); //08-0030.AUD	I'm thinkin' our brother not hearin' too good.
 		KIA_Play_Actor_Dialogue(kActorClovis, 70); //05-0070.AUD	Oh, he hears us.
 		KIA_Play_Actor_Dialogue(kActorClovis, 80); //05-0080.AUD	Isn't that right, McCoy?
@@ -2327,7 +2337,6 @@ void KIAScript::SCRIPT_KIA_DLL_Play_Clue_Asset_Script(int notUsed, int clueId) {
 		KIA_Play_Actor_Dialogue(kActorMcCoy, 180); //00-0180.AUD	Bob?
 		KIA_Play_Actor_Dialogue(kActorBulletBob, 1270); //14-1270.AUD	(Laughing) I guess I picked the right line of work.
 		KIA_Play_Actor_Dialogue(kActorVoiceOver, 920); //99-0920.AUD	Easy money.
-		KIA_Play_Actor_Dialogue(kActorMcCoy, 8600); //00-8600.AUD	You keeping busy, pal?
 		break;
 		// This clue uses the dialogue that I added in for when you find the form at the homeless mans place.
 	case kCluePoliceWeaponUsed:

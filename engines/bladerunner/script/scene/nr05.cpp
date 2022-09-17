@@ -108,8 +108,14 @@ bool SceneScriptNR05::ClickedOn3DObject(const char *objectName, bool a2) {
 
 bool SceneScriptNR05::ClickedOnActor(int actorId) {
 	if (actorId == kActorEarlyQBartender) {
-		if (!Loop_Actor_Walk_To_Actor(kActorMcCoy, kActorEarlyQBartender, 120, true, false)) {
-			talkToBartender();
+		if (_vm->_cutContent) {
+			if (!Loop_Actor_Walk_To_XYZ(kActorMcCoy, -656.61f, 0.41f, -399.82f, 0, true, false, false)) {
+				talkToBartender();
+			}
+		} else {
+			if (!Loop_Actor_Walk_To_Actor(kActorMcCoy, kActorEarlyQBartender, 120, true, false)) {
+				talkToBartender();
+			}
 		}
 		return true;
 	}
@@ -278,24 +284,45 @@ void SceneScriptNR05::talkToBartender() {
 		}
 
 	} else {
-		Actor_Says(kActorMcCoy, 3480, 19);
-		Actor_Says(kActorEarlyQBartender, 30, 12);
-		Actor_Says(kActorMcCoy, 3485, kAnimationModeTalk);
-		Actor_Says(kActorEarlyQBartender, 40, 13);
-		// Added in some dialogue.
 		if (_vm->_cutContent) {
-			Actor_Says(kActorMcCoy, 3490, kAnimationModeTalk); //00-3490.AUD	Here’s what I need.
-			Actor_Says(kActorMcCoy, 3330, kAnimationModeTalk); //00-3330.AUD	Single orange. Straight up.
-		}
-		Actor_Change_Animation_Mode(kActorEarlyQBartender, 23);
-		Actor_Change_Animation_Mode(kActorMcCoy, 75);
-		Global_Variable_Increment(kVariableMcCoyDrinks, 1);
-		if (_vm->_cutContent) {
-			if (Query_Difficulty_Level() != kGameDifficultyEasy) {
-				Global_Variable_Decrement(kVariableChinyen, 5);
+			if (!Actor_Clue_Query(kActorMcCoy, kClueFlaskOfAbsinthe)) {
+				Actor_Says(kActorMcCoy, 3480, 19);
+				Delay(1000);
+				Actor_Says(kActorMcCoy, 8990, 14); //00-8990.AUD	What have you got there?
+				Delay(1000);
+				Item_Pickup_Spin_Effect(kModelAnimationFlaskOfAbsinthe, 288, 198);
+				KIA_Play_Actor_Dialogue(kActorMcCoy, 8880); //00-8880.AUD	A flask of absinthe.
+				Delay(1000);
+				Actor_Says(kActorMcCoy, 4940, 13); //00-4940.AUD	Okay, let's have it.
+				if (Query_Difficulty_Level() != kGameDifficultyEasy) {
+					Global_Variable_Decrement(kVariableChinyen, 20);
+				}
+				Actor_Clue_Acquire(kActorMcCoy, kClueFlaskOfAbsinthe, true, kActorEarlyQBartender);
+				Actor_Set_Goal_Number(kActorHawkersBarkeep, 2);
+				Delay(1500);
+			} else {
+				Actor_Says(kActorMcCoy, 3480, 19);
+				Actor_Says(kActorEarlyQBartender, 30, 12);
+				Actor_Says(kActorMcCoy, 3485, kAnimationModeTalk);
+				Actor_Says(kActorEarlyQBartender, 40, 13);
+				Actor_Says(kActorMcCoy, 3490, kAnimationModeTalk); //00-3490.AUD	Here’s what I need.
+				Actor_Says(kActorMcCoy, 3330, kAnimationModeTalk); //00-3330.AUD	Single orange. Straight up.
+				Actor_Change_Animation_Mode(kActorEarlyQBartender, 23);
+				Actor_Change_Animation_Mode(kActorMcCoy, 75);
+				Global_Variable_Increment(kVariableMcCoyDrinks, 1);
+				if (Query_Difficulty_Level() != kGameDifficultyEasy) {
+					Global_Variable_Decrement(kVariableChinyen, 5);
+				}
 			}
+		} else {
+			Actor_Says(kActorMcCoy, 3480, 19);
+			Actor_Says(kActorEarlyQBartender, 30, 12);
+			Actor_Says(kActorMcCoy, 3485, kAnimationModeTalk);
+			Actor_Says(kActorEarlyQBartender, 40, 13);
+			Actor_Change_Animation_Mode(kActorEarlyQBartender, 23);
+			Actor_Change_Animation_Mode(kActorMcCoy, 75);
+			Global_Variable_Increment(kVariableMcCoyDrinks, 1);
 		}
-
 	}
 }
 
@@ -487,8 +514,8 @@ void SceneScriptNR05::talkToEarlyQ() {
 		Actor_Says(kActorEarlyQ, 560, 14); //18-0560.AUD	Nah, she ain’t one of mine.
 		Actor_Says(kActorEarlyQ, 570, 13); //18-0570.AUD	Talk to Taffy. He gets most of the peddy business around here.
 		if (_vm->_cutContent) {
-			if (Player_Query_Agenda() != kPlayerAgendaSurly
-			&& (Player_Query_Agenda() != kPlayerAgendaErratic)) {
+			if (Player_Query_Agenda() != kPlayerAgendaSurly 
+			&& Player_Query_Agenda() != kPlayerAgendaErratic) {
 				Actor_Says(kActorMcCoy, 3555, 12); //00-3555.AUD	It’s men like you that made this country great, Early.
 			}
 		} else {
