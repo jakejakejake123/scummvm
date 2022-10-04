@@ -104,8 +104,7 @@ bool SceneScriptCT06::ClickedOnActor(int actorId) {
 			Actor_Voice_Over(370, kActorVoiceOver);
 			// Made it so McCoy only shows sympathy towards Zuben if he is not surly or erratic.
 			if (_vm->_cutContent) {
-				if (Player_Query_Agenda() != kPlayerAgendaSurly 
-				&& Player_Query_Agenda() != kPlayerAgendaErratic) {
+				if (Player_Query_Agenda() == kPlayerAgendaPolite) {
 					Actor_Voice_Over(380, kActorVoiceOver); //99-0380.AUD	The poor guy kind of reminded me of one of those Buffalo Soldiers...
 					Actor_Voice_Over(390, kActorVoiceOver);
 					Actor_Voice_Over(400, kActorVoiceOver);

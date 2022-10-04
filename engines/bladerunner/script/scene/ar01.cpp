@@ -205,8 +205,7 @@ bool SceneScriptAR01::ClickedOnActor(int actorId) {
 					Actor_Says(kActorFishDealer, 10, 14); //29-0010.AUD	They're no good companion. But fish, fish are good.
 					Actor_Says(kActorFishDealer, 20, 14); //29-0020.AUD	I have every kind of fish for you.
 					Actor_Says(kActorFishDealer, 30, 14); //29-0030.AUD	Blowfish, Dorado, miniature Sailfish. Very friendly.
-					if (Player_Query_Agenda() != kPlayerAgendaSurly 
-					&& Player_Query_Agenda() != kPlayerAgendaErratic) {
+					if (Player_Query_Agenda() == kPlayerAgendaPolite) {
 						Actor_Says(kActorMcCoy, 5, 17); //00-0005.AUD	No thanks. I got a dog at home.
 						Actor_Says(kActorFishDealer, 40, 14); //29-0040.AUD	Fish just as good as dog.
 						Actor_Says(kActorMcCoy, 10, 13); //00-0010.AUD	No, my dog is real.
@@ -257,9 +256,8 @@ bool SceneScriptAR01::ClickedOnActor(int actorId) {
 						} else {
 							Item_Pickup_Spin_Effect_From_Actor(kModelAnimationGoldfish, kActorFishDealer, 0, -40);
 							Game_Flag_Set(kFlagFishDealerBuyFishTalk);
-							if (Player_Query_Agenda() == kPlayerAgendaSurly 
-							|| Player_Query_Agenda() == kPlayerAgendaErratic) {
-								Actor_Says(kActorMcCoy, 7005, 13);
+							if (!Game_Flag_Query(kFlagMcCoyIsHelpingReplicants)) {
+								Actor_Voice_Over(1860, kActorVoiceOver); //99-1860.AUD	No self-respecting human would own one of those frauds.
 								Actor_Modify_Friendliness_To_Other(kActorFishDealer, kActorMcCoy, -2);
 							} else {
 								dialogueWithFishDealerBuyGoldfish();
@@ -462,8 +460,7 @@ bool SceneScriptAR01::ClickedOnExit(int exitId) {
 				Actor_Voice_Over(4340, kActorVoiceOver); //99-4340.AUD	But if the Replicants had done in one Tyrell scientist, maybe they'd go after another.
 				Actor_Voice_Over(4350, kActorVoiceOver);
 				if (_vm->_cutContent) {
-					if (Player_Query_Agenda() != kPlayerAgendaSurly 
-					&& Player_Query_Agenda() != kPlayerAgendaErratic) {
+					if (Player_Query_Agenda() == kPlayerAgendaPolite) {
 						Delay(500);
 						Actor_Says(kActorMcCoy, 170, 14); //00-0170.AUD	Damn.
 						Delay(500);

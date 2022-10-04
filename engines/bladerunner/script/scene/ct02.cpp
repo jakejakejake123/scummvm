@@ -283,8 +283,7 @@ void SceneScriptCT02::dialogueWithZuben() {
 	case 290: // VOIGT-KAMPFF
 		Actor_Says(kActorMcCoy, 395, 9);
 		if (_vm->_cutContent) {
-			if (Player_Query_Agenda() != kPlayerAgendaSurly 
-			&& Player_Query_Agenda() != kPlayerAgendaErratic) {
+			if (Player_Query_Agenda() == kPlayerAgendaPolite) {
 				Actor_Says(kActorMcCoy, 400, 9); //00-0400.AUD	It won't take too long.
 			}
 		} else {
@@ -368,7 +367,7 @@ bool SceneScriptCT02::ClickedOnActor(int actorId) {
 					|| Player_Query_Agenda() == kPlayerAgendaErratic) {
 						Actor_Says(kActorMcCoy, 4810, 11); //00-4810.AUD	Listen up!
 						Delay(1000);
-					} else {
+					} else if (Player_Query_Agenda() == kPlayerAgendaPolite) {
 						Actor_Says(kActorMcCoy, 8225, 14); //00-8225.AUD	Just relax.
 						Actor_Says(kActorMcCoy, 375, 13); //00-0375.AUD	This will only take a minute.
 					}

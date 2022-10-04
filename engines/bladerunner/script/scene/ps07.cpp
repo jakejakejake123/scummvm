@@ -205,12 +205,12 @@ bool SceneScriptPS07::ClickedOnActor(int actorId) {
 						if (Actor_Clue_Query(kActorMcCoy, kClueSightingMcCoyRuncitersShop)) {
 							Actor_Says(kActorMcCoy, 4165, 18);
 							Actor_Says(kActorKlein, 160, 13);
-						}
-						Actor_Says(kActorMcCoy, 4170, 19); // 00-4170.AUD	Nice bunch of Reps I'm tailing.
-						Actor_Says(kActorMcCoy, 4175, 19); // 00-4175.AUD	Hope you're not pulling a meat cleaver out of my back next week.
-						if (Actor_Query_Friendliness_To_Other(kActorKlein, kActorMcCoy) > 49) {
-							Actor_Says(kActorKlein, 210, 12); //30-0210.AUD  	Ha, you're a real funny guy, McCoy.
-							Actor_Modify_Friendliness_To_Other(kActorKlein, kActorMcCoy, 3);
+							Actor_Says(kActorMcCoy, 4170, 19); // 00-4170.AUD	Nice bunch of Reps I'm tailing.
+							Actor_Says(kActorMcCoy, 4175, 18); // 00-4175.AUD	Hope you're not pulling a meat cleaver out of my back next week.
+							if (Actor_Query_Friendliness_To_Other(kActorKlein, kActorMcCoy) > 49) {
+								Actor_Says(kActorKlein, 210, 12); //30-0210.AUD  	Ha, you're a real funny guy, McCoy.
+								Actor_Modify_Friendliness_To_Other(kActorKlein, kActorMcCoy, 3);
+							}
 						}
 						Actor_Set_Goal_Number(kActorKlein, kGoalKleinMovingInLab01);
 					}	
@@ -293,8 +293,7 @@ bool SceneScriptPS07::ClickedOnActor(int actorId) {
 				Game_Flag_Set(kFlagPS07KleinTalkChromeDebris);
 				Actor_Says(kActorKlein, 220, 12);
 				if (_vm->_cutContent) {
-					if (Player_Query_Agenda() != kPlayerAgendaSurly 
-					&& Player_Query_Agenda() != kPlayerAgendaErratic) {
+					if (Player_Query_Agenda() == kPlayerAgendaPolite) {
 						Actor_Says(kActorMcCoy, 4190, 13); //00-4190.AUD	Nice set of wheels.
 						if (Actor_Query_Friendliness_To_Other(kActorKlein, kActorMcCoy) > 49) {
 							Actor_Says(kActorKlein, 230, 14);

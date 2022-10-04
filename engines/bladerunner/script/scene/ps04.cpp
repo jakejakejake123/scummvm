@@ -256,8 +256,7 @@ void SceneScriptPS04::dialogueWithGuzza() {
 		Actor_Says(kActorGuzza, 450, 34); //04-0450.AUD	Yeah, I'll give it a try, kid. And I'll have to pull some strings, so don't go in there half-assed.
 		Actor_Says(kActorGuzza, 460, 33); //04-0460.AUD	Make sure you got some legit questions for the resident genius.
 		if (_vm->_cutContent) {
-			if (Player_Query_Agenda() != kPlayerAgendaSurly
-			&& (Player_Query_Agenda() != kPlayerAgendaErratic)) {
+			if (Player_Query_Agenda() == kPlayerAgendaPolite) {
 				Actor_Says(kActorMcCoy, 4040, 17); //00-4040.AUD	Appreciate it, Lieutenant.
 			}
 		} else {
@@ -276,8 +275,7 @@ void SceneScriptPS04::dialogueWithGuzza() {
 				Actor_Says(kActorGuzza, 520, 33);
 				Actor_Change_Animation_Mode(kActorMcCoy, 23);
 				Delay(2000);
-				if (Player_Query_Agenda() != kPlayerAgendaSurly
-				&& (Player_Query_Agenda() != kPlayerAgendaErratic)) {
+				if (Player_Query_Agenda() == kPlayerAgendaPolite) {
 					Actor_Says(kActorMcCoy, 4055, 13); //00-4055.AUD	Thanks, Lieutenant.
 				}
 				Actor_Says(kActorGuzza, 530, 31); //04-0530.AUD	This goddamn city doesn't know how to manage funds. They've been flush for years.
@@ -289,7 +287,7 @@ void SceneScriptPS04::dialogueWithGuzza() {
 					Actor_Says(kActorMcCoy, 4065, 18);
 					Actor_Says(kActorGuzza, 560, 34);
 					Actor_Modify_Friendliness_To_Other(kActorGuzza, kActorMcCoy, -2);
-				} else {
+				} else if (Player_Query_Agenda() == kPlayerAgendaPolite) {
 					Actor_Says(kActorMcCoy, 2305, 14); //00-2305.AUD	I’m sorry.
 					Actor_Modify_Friendliness_To_Other(kActorGuzza, kActorMcCoy, 2);
 				}
@@ -303,8 +301,7 @@ void SceneScriptPS04::dialogueWithGuzza() {
 					Actor_Says(kActorGuzza, 490, 31); //04-0490.AUD	And one of the old-timers is freelancing a contract job.
 				}
 				Actor_Says(kActorGuzza, 500, 32);
-				if (Player_Query_Agenda() != kPlayerAgendaSurly
-				&& (Player_Query_Agenda() != kPlayerAgendaErratic)) {
+				if (Player_Query_Agenda() == kPlayerAgendaPolite) {
 					Actor_Says(kActorMcCoy, 4045, 16); //00-4045.AUD	Okay, okay. Sorry I asked!
 				} else {
 					Actor_Says(kActorMcCoy, 4880, 13); //00-4880.AUD	Is that right?
@@ -472,15 +469,13 @@ void SceneScriptPS04::dialogueWithGuzza() {
 			&& Actor_Query_Friendliness_To_Other(kActorGuzza, kActorMcCoy) > 50) {
 				Actor_Says(kActorMcCoy, 8514, 18); //00-8514.AUD	Got anything new to tell me?
 				Actor_Says(kActorGuzza, 1510, 30); //04-1510.AUD	You’re the one on the job, kid. My own case looks stacked up on a desk a yard high. 
-				if (Player_Query_Agenda() != kPlayerAgendaSurly
-				&& (Player_Query_Agenda() != kPlayerAgendaErratic)) {
+				if (Player_Query_Agenda() == kPlayerAgendaPolite) {
 					Actor_Says(kActorMcCoy, 2305, 16); //00-2305.AUD	I’m sorry.
 				}
 				Actor_Says(kActorGuzza, 1500, 30); //04-1500.AUD	Anything comes up, kid, you’ll be the first to know.
 			} else if (Game_Flag_Query(kFlagPS04GuzzaTalkDumpToMainframe)
 			&& Actor_Query_Friendliness_To_Other(kActorGuzza, kActorMcCoy) < 51) {
-				if (Player_Query_Agenda() != kPlayerAgendaSurly
-				&& (Player_Query_Agenda() != kPlayerAgendaErratic)) {
+				if (Player_Query_Agenda() == kPlayerAgendaPolite) {
 					Actor_Says(kActorMcCoy, 4020, 13); //00-4020.AUD	Sorry to bother you, Lieutenant. I was just checking in.
 					Actor_Says(kActorGuzza, 580, 34);
 					if (!Game_Flag_Query(kFlagMcCoyIsHelpingReplicants)) {
@@ -571,8 +566,7 @@ void SceneScriptPS04::dialogueWithGuzza() {
 		if (_vm->_cutContent) {
 			Actor_Says(kActorMcCoy, 4010, 12); //00-4010.AUD	Lieutenant, I-- I shot a guy. Down in Chinatown.
 			Actor_Says(kActorGuzza, 600, 31);
-			if (Player_Query_Agenda() != kPlayerAgendaSurly 
-			&& Player_Query_Agenda() != kPlayerAgendaErratic) {
+			if (Player_Query_Agenda() == kPlayerAgendaPolite) {
 				Actor_Says(kActorMcCoy, 4080, 18); //00-4080.AUD	Hey, I'm trying to do the right thing here. I could have left the guy to rot.
 			} else {
 				Actor_Says(kActorMcCoy, 8085, 14); //00-8085.AUD	Me either.
@@ -602,11 +596,10 @@ void SceneScriptPS04::dialogueWithGuzza() {
 				Actor_Says(kActorGuzza, 710, 31); //04-0710.AUD	That doesn't mean your ass is out of the fire with me, McCoy.
 			}
 			Actor_Says(kActorGuzza, 720, 34); //04-0720.AUD	You may have put one over on internal affairs but you and I both know the real skinny.
-			if (Player_Query_Agenda() == kPlayerAgendaSurly 
-			|| Player_Query_Agenda() == kPlayerAgendaErratic) {
-				Actor_Says(kActorMcCoy, 4105, 18); //00-4105.AUD	Is that right?
-			} else {
+			if (Player_Query_Agenda() == kPlayerAgendaPolite) {
 				Actor_Says(kActorMcCoy, 2305, 13); //00-2305.AUD	I’m sorry.
+			} else {
+				Actor_Says(kActorMcCoy, 4105, 18); //00-4105.AUD	Is that right?
 			}
 	#if BLADERUNNER_ORIGINAL_BUGS
 			Loop_Actor_Walk_To_XYZ(kActorMcCoy, -668.0f, -350.85f, 962.0f, 0, false, false, false);

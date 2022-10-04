@@ -191,8 +191,7 @@ bool SceneScriptCT01::ClickedOnActor(int actorId) {
 			Actor_Face_Actor(kActorHowieLee, kActorMcCoy, true);
 			if (!Game_Flag_Query(kFlagCT01McCoyTalkedToHowieLee)) {
 				if (_vm->_cutContent) {
-					if (Player_Query_Agenda() != kPlayerAgendaSurly 
-					&& Player_Query_Agenda() != kPlayerAgendaErratic 
+					if (Player_Query_Agenda() == kPlayerAgendaPolite  
 					&& !Game_Flag_Query(kFlagCT01TalkToHowieAfterZubenMissing)) { 
 						Actor_Says(kActorMcCoy, 260, 18);
 						Actor_Says(kActorHowieLee, 0, 14); //28-0000.AUD	When business thriving, night always beautiful.
@@ -309,8 +308,7 @@ bool SceneScriptCT01::ClickedOnActor(int actorId) {
 				Actor_Says(kActorHowieLee, 150, kAnimationModeTalk);
 				Actor_Face_Actor(kActorMcCoy, kActorHowieLee, true);
 				if (_vm->_cutContent) {
-					if (Player_Query_Agenda() != kPlayerAgendaSurly 
-					&& Player_Query_Agenda() != kPlayerAgendaErratic) {
+					if (Player_Query_Agenda() == kPlayerAgendaPolite) {
 						Actor_Says(kActorMcCoy, 360, 13);
 					}
 				} else {
@@ -381,6 +379,9 @@ bool SceneScriptCT01::ClickedOnActor(int actorId) {
 						Actor_Says(kActorMcCoy, 4940, 13); //00-4940.AUD	Okay, let's have it.
 						Actor_Change_Animation_Mode(kActorMcCoy, 23);
 						Delay(2000);
+						if (Player_Query_Agenda() == kPlayerAgendaPolite) {
+							Actor_Says(kActorMcCoy, 340, 13); //00-0340.AUD	You're a pretty smart looking cat.
+						}
 						Actor_Says(kActorMcCoy, 8920, 14); //00-8920.AUD	I gotta ask you a question.
 						if (Actor_Clue_Query(kActorMcCoy, kClueLucy)) {
 							Actor_Says(kActorMcCoy, 265, 23); //00-0265.AUD	This girl ever eat around here?
@@ -886,8 +887,7 @@ void SceneScriptCT01::dialogueWithHowieLee() {
 					//even knew that McCoy buys food from Howie since the topic is called small talk and an item doesn't flash on screen so this should help alleviate
 					//this confusion.
 					Item_Pickup_Spin_Effect(kModelAnimationKingstonKitchenBox, 454, 297);
-					if (Player_Query_Agenda() != kPlayerAgendaSurly 
-					&& Player_Query_Agenda() != kPlayerAgendaErratic) {
+					if (Player_Query_Agenda() == kPlayerAgendaPolite) {
 						Actor_Says(kActorMcCoy, 325, 13); //00-0325.AUD	You're a prince, Howie.
 					}
 					if (Query_Difficulty_Level() != kGameDifficultyEasy) {

@@ -113,13 +113,15 @@ bool SceneScriptTB02::ClickedOnActor(int actorId) {
 					// Added in some more dialogue for the Tyrell guard. Depending on McCoys agenda he will continue to pester the guard which results in friendliness loss. 
 					Actor_Says(kActorMcCoy, 5150, 18); //00-5150.AUD	One more thing.
 					Actor_Says(kActorTyrellGuard, 60, 12); //17-0060.AUD	I've told you everything I know, detective.
-					if (Player_Query_Agenda() == kPlayerAgendaSurly 
-					|| Player_Query_Agenda() == kPlayerAgendaErratic) {
-						Actor_Says(kActorMcCoy, 3910, 14); //00-3910.AUD	You’re lying.
-						Actor_Says(kActorTyrellGuard, 410, 12);	//17-0410.AUD	What I said is the truth, sir.
-						Actor_Modify_Friendliness_To_Other(kActorTyrellGuard, kActorMcCoy, -2);
-					} else {
-						Actor_Says(kActorMcCoy, 4880, 18); //00-4880.AUD	Is that right?
+					if (_vm->_cutContent) {
+						if (Player_Query_Agenda() == kPlayerAgendaSurly 
+						|| Player_Query_Agenda() == kPlayerAgendaErratic) {
+							Actor_Says(kActorMcCoy, 3910, 14); //00-3910.AUD	You’re lying.
+							Actor_Says(kActorTyrellGuard, 410, 12);	//17-0410.AUD	What I said is the truth, sir.
+							Actor_Modify_Friendliness_To_Other(kActorTyrellGuard, kActorMcCoy, -2);
+						} else {
+							Actor_Says(kActorMcCoy, 4880, 18); //00-4880.AUD	Is that right?
+						}
 					}
 					if (_vm->_cutContent) {
 						if (Actor_Query_Friendliness_To_Other(kActorTyrellGuard, kActorMcCoy) < 50) {
@@ -127,6 +129,9 @@ bool SceneScriptTB02::ClickedOnActor(int actorId) {
 							if (Player_Query_Agenda() == kPlayerAgendaSurly 
 							|| Player_Query_Agenda() == kPlayerAgendaErratic) {
 								Actor_Says(kActorMcCoy, 5155, 13); //00-5155.AUD	Yeah. It's a tough gig.
+							} else if (Player_Query_Agenda() == kPlayerAgendaPolite) {
+								Actor_Says(kActorMcCoy, 2305, 13); //00-2305.AUD	I’m sorry.
+								Actor_Modify_Friendliness_To_Other(kActorTyrellGuard, kActorMcCoy, 1);
 							}
 						}
 					} else {
@@ -712,8 +717,6 @@ void SceneScriptTB02::dialogueWithTyrellGuard() {
 		Actor_Says(kActorTyrellGuard, 130, 14);
 		Actor_Says(kActorMcCoy, 5190, 16);
 		Actor_Says(kActorTyrellGuard, 140, 13); //17-0140.AUD	Grav Test Chief Engineer.
-		Actor_Says(kActorMcCoy, 8320, 13); //	00-8320.AUD	Really?
-		Actor_Says(kActorTyrellGuard, 430, 13);	//17-0430.AUD	Here's what I heard just a little while ago.
 		Actor_Says(kActorTyrellGuard, 150, 14); //17-0150.AUD	The lab runs tests to see how a Replicant would perform in different planetary gravitational fields. That kind of thing.
 		Actor_Says(kActorTyrellGuard, 170, 12);
 		Actor_Clue_Acquire(kActorMcCoy, kClueVictimInformation, true, kActorTyrellGuard);

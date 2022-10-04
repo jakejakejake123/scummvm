@@ -170,17 +170,15 @@ bool SceneScriptRC02::ClickedOn3DObject(const char *objectName, bool a2) {
 			Delay(2000);
 			Loop_Actor_Walk_To_Waypoint(kActorRunciter, 89, 0, false, false);
 			Loop_Actor_Walk_To_Actor(kActorRunciter, kActorMcCoy, 24, 0, false);
-			if (!_vm->_cutContent) {
-				Item_Pickup_Spin_Effect(kModelAnimationVideoDisc, 357, 228);
-			}
+			Item_Pickup_Spin_Effect(kModelAnimationVideoDisc, 357, 228);
 			Actor_Face_Actor(kActorMcCoy, kActorRunciter, true);
 			Actor_Face_Actor(kActorRunciter, kActorMcCoy, true);
+			// McCoys give animation now plays when he receives the disc.
+			if (_vm->_cutContent) {
+				Actor_Change_Animation_Mode(kActorMcCoy, 23);
+			}
 			Actor_Says(kActorRunciter, 30, 23);
 			if (_vm->_cutContent) {
-				Item_Pickup_Spin_Effect(kModelAnimationVideoDisc, 357, 228);
-				Actor_Change_Animation_Mode(kActorMcCoy, 23);
-				Actor_Change_Animation_Mode(kActorRunciter, 23);
-				Delay(2000);
 				if (Player_Query_Agenda() != kPlayerAgendaSurly 
 				&& Player_Query_Agenda() != kPlayerAgendaErratic) {
 					Actor_Says(kActorMcCoy, 4555, 18);
@@ -332,8 +330,10 @@ void SceneScriptRC02::dialogueWithRunciter() {
 				} else {
 					Actor_Says(kActorMcCoy, 4575, kAnimationModeTalk); //00-4575.AUD	I can tell you're crushed.
 					Actor_Says(kActorRunciter, 530, 17); //15-0530.AUD	My precious one. She was my baby.
-					Actor_Says(kActorMcCoy, 2305, 13); //00-2305.AUD	I’m sorry.
-					Actor_Modify_Friendliness_To_Other(kActorRunciter, kActorMcCoy, 2);
+					if (Player_Query_Agenda() == kPlayerAgendaPolite) {
+						Actor_Says(kActorMcCoy, 2305, 13); //00-2305.AUD	I’m sorry.
+						Actor_Modify_Friendliness_To_Other(kActorRunciter, kActorMcCoy, 2);
+					}
 				}	
 			}
 		} else {
@@ -372,11 +372,13 @@ void SceneScriptRC02::dialogueWithRunciter() {
 		Actor_Says(kActorRunciter, 280, 13);
 		Actor_Says(kActorRunciter, 290, 13);
 		if (_vm->_cutContent) {
-			if (Player_Query_Agenda() != kPlayerAgendaSurly 
-			&& Player_Query_Agenda() != kPlayerAgendaErratic) {
+			if (Player_Query_Agenda() == kPlayerAgendaPolite) {
 				Actor_Says(kActorMcCoy, 4650, 18); //00-4650.AUD	You treat her well? 
 				Actor_Says(kActorRunciter, 320, 16); //15-0320.AUD	As well as any young tart should be treated.
 			}
+		} else {
+			Actor_Says(kActorMcCoy, 4650, 18); //00-4650.AUD	You treat her well? 
+			Actor_Says(kActorRunciter, 320, 16); //15-0320.AUD	As well as any young tart should be treated.
 		}
 		if (_vm->_cutContent) {
 			Actor_Says(kActorMcCoy, 4655, 15);
@@ -691,7 +693,17 @@ bool SceneScriptRC02::ClickedOnActor(int actorId) {
 			Actor_Says(kActorRunciter, 50, 15);	
 			Actor_Says(kActorMcCoy, 4565, 13);
 			Actor_Says(kActorRunciter, 60, 14);
-			Actor_Says(kActorMcCoy, 4570, 18);
+			if (_vm->_cutContent) {
+				if (Player_Query_Agenda() != kPlayerAgendaSurly 
+				&& Player_Query_Agenda() != kPlayerAgendaErratic) {
+					Actor_Says(kActorMcCoy, 4570, 18);
+				} else {
+					Actor_Says(kActorMcCoy, 5615, 14); // Describe them...
+					Actor_Modify_Friendliness_To_Other(kActorRunciter, kActorMcCoy, -1);
+				}
+			} else {
+				Actor_Says(kActorMcCoy, 4570, 18);
+			}
 			Actor_Says(kActorRunciter, 70, 13); //15-0070.AUD	Big and scary and absolutely malevolent.
 			// The altered part of the conversation that I mentioned above when you first click on Runciter.
 			if (_vm->_cutContent) {
@@ -945,7 +957,9 @@ void SceneScriptRC02::PlayerWalkedIn() {
 					Actor_Says(kActorRunciter, 20, 13);
 				} else {
 					Actor_Says(kActorMcCoy, 8445, 14); //00-8445.AUD	Cough it up!
-					Delay(1500);
+					Delay(1000);
+					Actor_Says(kActorMcCoy, 1805, 14); //00-1805.AUD	Now!
+					Delay(1000);
 					Actor_Modify_Friendliness_To_Other(kActorRunciter, kActorMcCoy, -2);
 				}
 				Loop_Actor_Walk_To_Waypoint(kActorRunciter, 89, 0, false, false);

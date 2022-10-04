@@ -129,8 +129,7 @@ bool SceneScriptCT04::ClickedOn3DObject(const char *objectName, bool a2) {
 			} else if (Game_Flag_Query(kFlagCT04HomelessBodyFound)) {
 				Actor_Voice_Over(250, kActorVoiceOver); //99-0250.AUD	The body had vanished but the trash was still there.
 				if (_vm->_cutContent) { 
-					if (Player_Query_Agenda() != kPlayerAgendaSurly 
-					&& Player_Query_Agenda() != kPlayerAgendaErratic) {
+					if (Player_Query_Agenda() != kPlayerAgendaPolite) {
 						Actor_Voice_Over(260, kActorVoiceOver); //99-0260.AUD	I'd screwed up and screwed up bad. But maybe there was still a way to make it right.
 					}
 				} else {
@@ -204,14 +203,15 @@ void SceneScriptCT04::dialogueWithHomeless() {
 	Dialogue_Menu_Clear_List();
 	// Made it so McCoy only gives the homeless man money if he is not surly or erratic and he has enough money.
 	if (_vm->_cutContent) { 
-		if (Player_Query_Agenda() != kPlayerAgendaSurly 
-		&& Player_Query_Agenda() != kPlayerAgendaErratic) {
+		if (Player_Query_Agenda() == kPlayerAgendaPolite) {
 			if (Global_Variable_Query(kVariableChinyen) >= 10
 			|| Query_Difficulty_Level() == kGameDifficultyEasy) {
 				DM_Add_To_List_Never_Repeat_Once_Selected(410, 8, 4, -1); // YES
 			} else {
 				DM_Add_To_List_Never_Repeat_Once_Selected(420, 2, 6, 8); // NO
 			}
+		} else {
+			DM_Add_To_List_Never_Repeat_Once_Selected(420, 2, 6, 8); // NO
 		}
 	} else {
 		if (Global_Variable_Query(kVariableChinyen) > 10

@@ -143,6 +143,7 @@ void AIScriptBulletBob::ClickedByPlayer() {
 				Actor_Says(kActorMcCoy, 8920, 16); //00-8920.AUD	I gotta ask you a question.
 				Actor_Says(kActorBulletBob, 1820, 34); //14-1820.AUD	You want to make it as a Blade Runner, you ought to do your own investigations.
 			}
+			// This is the dialogue between Bob and McCoy if you click on him in the moonbus which is now posible since Bob can now be a potential replicant.
 		} else if (Actor_Query_In_Set(kActorBulletBob, kSetKP07)) {
 			Loop_Actor_Walk_To_Actor(kActorMcCoy, kActorBulletBob, 24, false, false);
 			Actor_Face_Actor(kActorMcCoy, kActorBulletBob, true);
@@ -206,32 +207,28 @@ void AIScriptBulletBob::Retired(int byActorId) {
 		if (Actor_Query_In_Set(kActorBulletBob, kSetKP07)) {
 			Global_Variable_Decrement(kVariableReplicantsSurvivorsAtMoonbus, 1);
 			// Made it so the player receives 200 chinyen when retiring Bob or anyother replicant in the moonbus. 
-			if (_vm->_cutContent) {
-				if (Query_Difficulty_Level() != kGameDifficultyEasy) {
-					Global_Variable_Increment (kVariableChinyen, 200);
-				}
-				// Gaffs friendliness will go up whenever a replicant is killed. His friendliness will act as a replicant kill tally. This is because some dialogues will be different based on
-				// how many replicants McCoy retires and this tally will be used determine how these dialogues play out..
-				Actor_Modify_Friendliness_To_Other(kActorGaff, kActorMcCoy, 2);
+			if (Query_Difficulty_Level() != kGameDifficultyEasy) {
+				Global_Variable_Increment (kVariableChinyen, 200);
 			}
+			// Gaffs friendliness will go up whenever a replicant is killed. His friendliness will act as a replicant kill tally. This is because some dialogues will be different based on
+			// how many replicants McCoy retires and this tally will be used determine how these dialogues play out..
+			Actor_Modify_Friendliness_To_Other(kActorGaff, kActorMcCoy, 2);
 
 			if (Global_Variable_Query(kVariableReplicantsSurvivorsAtMoonbus) == 0) {
 				Player_Loses_Control();
-				// Made it so if Crazylegs is in the moonbus, after all the reps are retired he flees and is never seen again.
+				// Made it so if Crazylegs is in the moonbus, after all the reps are retired he flees and is shot offscreen by Crystal or Gaff.
 				// This was done because he has no death animation so this seemed to be a reasonable solution.
-				if (_vm->_cutContent) {
-					if (Game_Flag_Query(kFlagCrazylegsIsReplicant)) {
-						if (!Game_Flag_Query(kFlagCrazylegsDead)) {
-							Loop_Actor_Walk_To_XYZ(kActorCrazylegs, -12.0f, -41.58f, 72.0f, 0, true, false, false);
-							Actor_Put_In_Set(kActorCrazylegs, kSceneKP06);
-							Delay(500);
-							Sound_Play(kSfxSMCAL3, 100, 0, 0, 50);
-						}
+				if (Game_Flag_Query(kFlagCrazylegsIsReplicant)) {
+					if (!Game_Flag_Query(kFlagCrazylegsDead)) {
+						Loop_Actor_Walk_To_XYZ(kActorCrazylegs, -12.0f, -41.58f, 72.0f, 0, true, false, false);
+						Actor_Put_In_Set(kActorCrazylegs, kSceneKP06);
+						Delay(500);
+						Sound_Play(kSfxSMCAL3, 100, 0, 0, 50);
 					}
-					Delay(2000);
-					Player_Set_Combat_Mode(false);
-					Delay(2000);  
 				}
+				Delay(2000);
+				Player_Set_Combat_Mode(false);
+				Delay(2000);  
 				Ambient_Sounds_Remove_All_Non_Looping_Sounds(true);
 				Ambient_Sounds_Remove_All_Looping_Sounds(1u);
 				Game_Flag_Set(kFlagKP07toKP06);
@@ -272,8 +269,8 @@ bool AIScriptBulletBob::GoalChanged(int currentGoalNumber, int newGoalNumber) {
 		// Made it so McCoy can only shoot Bob and says he is going to put something away if he suspects Bob of being a replicant.
 		// This will be if McCoy has the clues Hasan interview or VKBobGorskyReplicant. Also when Bob is a replicant a new cutscene will
 		// play of McCoy pointing his gun at Bob and Bob trying to reason with McCoy. McCoy reveals that he knows that Bob is a replicant which
-		// will lead to Bob trying to kill the player. When Bob says 'I guess I chose the right line of work' the player will briefly gain control and will
-		// have to quickly shoot Bob before he shoots them.
+		// will lead to Bob trying to kill the player. When Bob says 'I guess I chose the right line of work' an extended action scene between Bob and Ray will
+		// play where they get into a firefight with each other and Ray shooting and killing Bob.
 		if (_vm->_cutContent) {
 			if (!Game_Flag_Query(kFlagBulletBobWarned)
 			&& !Game_Flag_Query(kFlagBulletBobReplicantTalk)) {
@@ -372,10 +369,10 @@ bool AIScriptBulletBob::GoalChanged(int currentGoalNumber, int newGoalNumber) {
 						Actor_Modify_Friendliness_To_Other(kActorGuzza, kActorMcCoy, 2);
 						Actor_Modify_Friendliness_To_Other(kActorGaff, kActorMcCoy, 2);
 						Scene_2D_Region_Remove(0);
-						Actor_Clue_Acquire(kActorMcCoy, kClueBobShotInSelfDefense, true, kActorBulletBob);
 						if (Query_Difficulty_Level() != kGameDifficultyEasy) {
 							Global_Variable_Increment (kVariableChinyen, 200);
 						}
+						// If Bob is not a replicant he doesn't attack McCoy and the player will have the option to shoot him.
 					} else {
 						Actor_Says(kActorBulletBob, 1840, 34); //14-1840.AUD	Okay, okay, look.
 						Actor_Says(kActorBulletBob, 1850, 35); //14-1850.AUD	I didn't want to get you riled up for no reason but here's the real skinny.
@@ -408,6 +405,7 @@ bool AIScriptBulletBob::GoalChanged(int currentGoalNumber, int newGoalNumber) {
 		}
 		return true;
 	}
+	// Made it so McCoy will willingly turn himself in for shooting human Bob depening on hs agenda.
 	if (_vm->_cutContent) {
 		if ( newGoalNumber == kGoalBulletBobDead
 		&& !Game_Flag_Query(kFlagBulletBobIsReplicant)
@@ -416,8 +414,8 @@ bool AIScriptBulletBob::GoalChanged(int currentGoalNumber, int newGoalNumber) {
 			if (Player_Query_Agenda() != kPlayerAgendaSurly 
 			&& Player_Query_Agenda() != kPlayerAgendaErratic) {
 				Actor_Voice_Over(2100, kActorVoiceOver);
-				Actor_Voice_Over(2110, kActorVoiceOver);
-				Actor_Voice_Over(2420, kActorVoiceOver);
+				Actor_Voice_Over(2110, kActorVoiceOver); //99-2110.AUD	Bob was a psychopath but I was almost sure he wasn't a Replicant.
+				Actor_Voice_Over(2420, kActorVoiceOver); //99-2420.AUD	I got the cold cut boys down here and they performed a bone-marrow on him.
 				Delay(1000);
 				Outtake_Play(kOuttakeAway1, true, -1);
 				Actor_Set_Goal_Number(kActorMcCoy, kGoalMcCoyArrested);

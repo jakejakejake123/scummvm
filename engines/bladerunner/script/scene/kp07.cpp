@@ -170,18 +170,6 @@ void SceneScriptKP07::InitializeScene() {
 				}
 			}
 		}
-		// Made it so Runciter appears in the moonbus if he is a replicant and is alive.
-		if (_vm->_cutContent) {
-			if (Game_Flag_Query(kFlagRunciterIsReplicant)) {
-				if (Actor_Query_Goal_Number(kActorRunciter) < kGoalRunciterDead) {
-					AI_Movement_Track_Flush(kActorRunciter);
-					Global_Variable_Increment(kVariableReplicantsSurvivorsAtMoonbus, 1);
-					Actor_Set_Targetable(kActorRunciter, true);
-					Actor_Put_In_Set(kActorRunciter, kSetKP07);
-					Actor_Set_At_XYZ(kActorRunciter, 22.81f, -41.29f, 57.89f, 0);
-				}
-			}
-		}
 	}
 #if BLADERUNNER_ORIGINAL_BUGS
 #else

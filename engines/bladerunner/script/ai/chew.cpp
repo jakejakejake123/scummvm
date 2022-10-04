@@ -88,6 +88,7 @@ void AIScriptChew::OtherAgentEnteredCombatMode(int otherActorId, int combatMode)
 			Delay(1000);
 			Actor_Says(kActorMcCoy, 1870, -1); //00-1870.AUD	I’m a cop.
 			Actor_Says(kActorChew, 100, 14); //52-0100.AUD	You leave now, okay? Very busy. Must work. Must work, ah.
+			Actor_Modify_Friendliness_To_Other(kActorChew, kActorMcCoy, -2);
 		}
 	}
 }

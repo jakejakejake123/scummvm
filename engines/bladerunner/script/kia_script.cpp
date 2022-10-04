@@ -55,7 +55,6 @@ void KIAScript::SCRIPT_KIA_DLL_Play_Clue_Asset_Script(int notUsed, int clueId) {
 			KIA_Play_Actor_Dialogue(kActorVoiceOver, 1870); //99-1870.AUD	Whoever did it showed some serious strength. They busted the lock clean off.
 			if (Game_Flag_Query(kFlagLearyForcedDoorTalk)) {
 				KIA_Play_Actor_Dialogue(kActorOfficerLeary, 180); //23-0180.AUD	Gaff said you didn't need to hear this, but I guess you deserve to know.
-				KIA_Play_Actor_Dialogue(kActorMcCoy, 2635); //00-2635.AUD	I’m all ears. 
 				KIA_Play_Actor_Dialogue(kActorOfficerLeary, 0); //23-0000.AUD	I already checked for a crowbar or some kind of tool. No luck but it looks like we've got some latents. 
 				KIA_Play_Actor_Dialogue(kActorMcCoy, 4495); //00-4495.AUD	Make sure the lab boys run them through the mainframe. Human and Rep.
 			}
@@ -219,8 +218,6 @@ void KIAScript::SCRIPT_KIA_DLL_Play_Clue_Asset_Script(int notUsed, int clueId) {
 		KIA_Play_Actor_Dialogue(kActorMcCoy, 4565);
 		KIA_Play_Actor_Dialogue(kActorRunciter, 60); //15-0060.AUD	No, of course not! It was two men acting in concert with her, obviously.
 		if (_vm->_cutContent) {
-			KIA_Play_Actor_Dialogue(kActorMcCoy, 4570); //00-4570.AUD	Obviously. What did they look like?
-			KIA_Play_Actor_Dialogue(kActorRunciter, 70); //15-0070.AUD	Big and scary and absolutely malevolent.
 			KIA_Play_Actor_Dialogue(kActorMcCoy, 4585); //00-4585.AUD	Tell me about this Lucy.
 			KIA_Play_Actor_Dialogue(kActorRunciter, 270); //15-0270.AUD	She's about fourteen years old with pink hair. A very attractive young thing.
 			KIA_Play_Actor_Dialogue(kActorMcCoy, 4665); //00-4665.AUD	She got a desk or some place where she worked?

@@ -87,6 +87,7 @@ bool AIScriptClovis::Update() {
 	) {
 		Actor_Set_Goal_Number(kActorClovis, kGoalClovisKP07ReplicantsAttackMcCoy);
 		Game_Flag_Set(kFlagKP07ReplicantsAttackMcCoy);
+		Music_Play(kMusicMoraji, 71, 0, 0, -1, kMusicLoopPlayOnce, 2);
 		return true;
 	}
 	return false;
@@ -131,7 +132,18 @@ void AIScriptClovis::ReceivedClue(int clueId, int fromActorId) {
 void AIScriptClovis::ClickedByPlayer() {
 	if (Actor_Query_Goal_Number(kActorClovis) == kGoalClovisGone) {
 		Actor_Face_Actor(kActorMcCoy, kActorClovis, true);
-		Actor_Says(kActorMcCoy, 8630, 16);
+		// Made it so McCoys comment is different based on his agenda. It will be dismissive with McCoy saying what disgusting if he is surly or erratic
+		// or it will be sympathetic with him saying what a waste if any other agenda is selected. This will be done for all other replicants. 
+		if (_vm->_cutContent) {
+			if (Player_Query_Agenda() == kPlayerAgendaSurly 
+			|| Player_Query_Agenda() == kPlayerAgendaErratic) {
+				Actor_Says(kActorMcCoy, 8665, 13); //00-8665.AUD	Disgusting.
+			} else {	
+				Actor_Says(kActorMcCoy, 8630, 12);  // What a waste
+			}
+		} else {
+			Actor_Says(kActorMcCoy, 8630, 16);
+		}
 	}
 }
 
@@ -153,9 +165,6 @@ void AIScriptClovis::OtherAgentEnteredCombatMode(int otherActorId, int combatMod
 	) {
 		Game_Flag_Set(kFlagKP07McCoyPulledGun);
 		Game_Flag_Set(kFlagMcCoyAttackedReplicants);
-		if (_vm->_cutContent) {
-			Music_Stop(1u);
-		}
 		// return true;
 	}
 	// return false;
@@ -172,6 +181,7 @@ bool AIScriptClovis::ShotAtAndHit() {
 			Actor_Set_Goal_Number(kActorClovis, kGoalClovisGone);
 			shotAnim();
 			Actor_Set_Targetable(kActorClovis, false);
+			// McCoy will now only say I never did like poetry if he is surly or erratic.
 			if (_vm->_cutContent) {
 				if (Player_Query_Agenda() == kPlayerAgendaSurly 
 				|| (Player_Query_Agenda() == kPlayerAgendaErratic)) {
@@ -221,6 +231,7 @@ void AIScriptClovis::Retired(int byActorId) {
 		if (Actor_Query_In_Set(kActorClovis, kSetKP07)) {
 			Global_Variable_Decrement(kVariableReplicantsSurvivorsAtMoonbus, 1);
 			Actor_Set_Goal_Number(kActorClovis, kGoalClovisGone);
+			// Made it so McCoy receives 200 chinyen and friendliness with Gaff when he retires Clovis.
 			if (_vm->_cutContent) {
 				if (Query_Difficulty_Level() != kGameDifficultyEasy) {
 					Global_Variable_Increment (kVariableChinyen, 200);
@@ -368,6 +379,7 @@ bool AIScriptClovis::GoalChanged(int currentGoalNumber, int newGoalNumber) {
 		return true;
 
 	case kGoalClovisBB11TalkToMcCoy:
+		// Clovis' comment towards McCoy will be different depending on whether or not he has been helping or hunting replicants.
 		if (_vm->_cutContent) {
 			if (Actor_Query_Friendliness_To_Other(kActorClovis, kActorMcCoy) > 50) {
 				Actor_Says(kActorClovis, 60, 30); //05-0060.AUD	You're weak my friend. I expected so much more from you.
@@ -538,29 +550,26 @@ bool AIScriptClovis::GoalChanged(int currentGoalNumber, int newGoalNumber) {
 	case kGoalClovisKP07TalkToMcCoy:
 		// Made it so McCoy only says that all the reps are dead besides Clovis if that is the case.
 		if (_vm->_cutContent) {
-			if (((((((((((Game_Flag_Query(kFlagRunciterIsReplicant) 
-			&& Actor_Query_Goal_Number(kActorRunciter) == kGoalRunciterDead))))))))))) {
-				if ((((((((((Actor_Query_Goal_Number(kActorZuben) == kGoalZubenGone)))))))))) {
-					if (((((((((Game_Flag_Query(kFlagLucyIsReplicant)
-					&& Actor_Query_Goal_Number(kActorLucy) == kGoalLucyGone))))))))) {
-						if ((((((((Game_Flag_Query(kFlagDektoraIsReplicant) 
-						&& Actor_Query_Goal_Number(kActorDektora) == kGoalDektoraGone)))))))) {
-							if (((((((Game_Flag_Query(kFlagIzoIsReplicant) 
-							&& Actor_Query_Goal_Number(kActorIzo) == kGoalIzoGone))))))) {
-								if ((((((Game_Flag_Query(kFlagGordoIsReplicant) 
-								&& Actor_Query_Goal_Number(kActorGordo) == kGoalGordoGone)))))) {
-									if (((((Game_Flag_Query(kFlagLutherLanceIsReplicant) 
-									&& Actor_Query_Goal_Number(kActorLuther) == kGoalLutherGone))))) {
-										if ((((Game_Flag_Query(kFlagBulletBobIsReplicant) 
-										&& Actor_Query_Goal_Number(kActorBulletBob) == kGoalBulletBobGone)))) {
-											if (((Game_Flag_Query(kFlagCrazylegsIsReplicant) 
-											&& Game_Flag_Query(kFlagCrazylegsDead))))  {
-												if ((Game_Flag_Query(kFlagEarlyQIsReplicant) 
-												&& Game_Flag_Query(kFlagEarlyQDead)))  {
-													if (Game_Flag_Query(kFlagHanoiIsReplicant) 
-													&& Game_Flag_Query(kFlagHanoiDead))  {
-														Actor_Says(kActorMcCoy, 2345, 16); //00-2345.AUD	They’re all dead. You’re the last one.
-													}
+			if ((((((((((Actor_Query_Goal_Number(kActorZuben) == kGoalZubenGone)))))))))) {
+				if (((((((((Game_Flag_Query(kFlagLucyIsReplicant)
+				&& Actor_Query_Goal_Number(kActorLucy) == kGoalLucyGone))))))))) {
+					if ((((((((Game_Flag_Query(kFlagDektoraIsReplicant) 
+					&& Actor_Query_Goal_Number(kActorDektora) == kGoalDektoraGone)))))))) {
+						if (((((((Game_Flag_Query(kFlagIzoIsReplicant) 
+						&& Actor_Query_Goal_Number(kActorIzo) == kGoalIzoGone))))))) {
+							if ((((((Game_Flag_Query(kFlagGordoIsReplicant) 
+							&& Actor_Query_Goal_Number(kActorGordo) == kGoalGordoGone)))))) {
+								if (((((Game_Flag_Query(kFlagLutherLanceIsReplicant) 
+								&& Actor_Query_Goal_Number(kActorLuther) == kGoalLutherGone))))) {
+									if ((((Game_Flag_Query(kFlagBulletBobIsReplicant) 
+									&& Actor_Query_Goal_Number(kActorBulletBob) == kGoalBulletBobGone)))) {
+										if (((Game_Flag_Query(kFlagCrazylegsIsReplicant) 
+										&& Game_Flag_Query(kFlagCrazylegsDead))))  {
+											if ((Game_Flag_Query(kFlagEarlyQIsReplicant) 
+											&& Game_Flag_Query(kFlagEarlyQDead)))  {
+												if (Game_Flag_Query(kFlagHanoiIsReplicant) 
+												&& Game_Flag_Query(kFlagHanoiDead))  {
+													Actor_Says(kActorMcCoy, 2345, 16); //00-2345.AUD	They’re all dead. You’re the last one.
 												}
 											}
 										}
@@ -615,7 +624,7 @@ bool AIScriptClovis::GoalChanged(int currentGoalNumber, int newGoalNumber) {
 		return true;
 
 	case kGoalClovisKP07SayFinalWords:	
-	// Made it so Clovis will shoot McCoy if he retired either Lucy or Dektora. If McCoy didn't retire them Clovis will let him live. Also made it so McCoy
+	// Made it so Clovis will shoot McCoy if he was not sympathetic towards him. Also made it so McCoy
 	// walks to the foot of Clovis' bed as he reads the poetry. This is so Clovis will be able to shoot McCoy and since I couldn't get the shooting animation to work
 	// for Clovis he is partially obscured by McCoy making it look like Clovis shot him dead with his final breath during his dying animation.	
 		if (_vm->_cutContent) {
@@ -717,6 +726,7 @@ bool AIScriptClovis::GoalChanged(int currentGoalNumber, int newGoalNumber) {
 		Actor_Says(kActorMcCoy, 8504, kAnimationModeTalk); //00-8504.AUD	I've got questions of my own.
 		Actor_Says(kActorClovis, 1290, kAnimationModeTalk); //05-1290.AUD	No doubt. But answers will take time. And time is precious. To all of us.
 		Actor_Says(kActorMcCoy, 8505, kAnimationModeTalk); //00-8505.AUD	It's true then. You've-- We've only got four years.
+		// Made it so Clovis will only say the DNA information will be enough to make a difference if McCoy has found ALL of the DNA information.
 		if (_vm->_cutContent) {
 			if (Actor_Clue_Query(kActorMcCoy, kClueDNATyrell)
 			&& Actor_Clue_Query(kActorMcCoy, kClueDNASebastian)
@@ -724,8 +734,6 @@ bool AIScriptClovis::GoalChanged(int currentGoalNumber, int newGoalNumber) {
 			&& Actor_Clue_Query(kActorMcCoy, kClueDNAMoraji) 
 			&& Actor_Clue_Query(kActorMcCoy, kClueDNALutherLance)
 			&& Actor_Clue_Query(kActorMcCoy, kClueDNAMarcus)) {
-				Actor_Says(kActorClovis, 1300, kAnimationModeTalk); //05-1300.AUD	Yes. Of course, I could be hit by lightning tomorrow but with the information 
-					Actor_Says(kActorClovis, 1300, kAnimationModeTalk); //05-1300.AUD	Yes. Of course, I could be hit by lightning tomorrow but with the information 
 				Actor_Says(kActorClovis, 1300, kAnimationModeTalk); //05-1300.AUD	Yes. Of course, I could be hit by lightning tomorrow but with the information 
 			} else {
 				Delay(2000);
@@ -740,6 +748,7 @@ bool AIScriptClovis::GoalChanged(int currentGoalNumber, int newGoalNumber) {
 #else
 		Actor_Face_Heading(kActorClovis, 780, true);
 #endif // BLADERUNNER_ORIGINAL_BUGS
+		// Made it so Clovis will only call Ray a friend if he didn't retire Dektora or Lucy and has high friendliness with Clovis.
 		if (_vm->_cutContent) {
 			if (!Actor_Clue_Query(kActorClovis, kClueMcCoyRetiredLucy) 
 			&& !Actor_Clue_Query(kActorClovis, kClueMcCoyRetiredDektora) 
@@ -831,6 +840,14 @@ bool AIScriptClovis::GoalChanged(int currentGoalNumber, int newGoalNumber) {
 		 && Actor_Query_In_Set(kActorClovis, kSetKP07)
 		) {
 			Non_Player_Actor_Combat_Mode_On(kActorClovis, kActorCombatStateIdle, false, kActorMcCoy, 19, kAnimationModeCombatIdle, kAnimationModeCombatWalk, kAnimationModeCombatRun, 0, 0, 100, 10, 300, false);
+		}
+		// Added in combat idle animation for Early Q.
+		if (_vm->_cutContent) {	
+			if (Global_Variable_Query(kVariableChapter) == 5
+			&& Actor_Query_In_Set(kActorEarlyQ, kSetKP07)
+			) {
+				Non_Player_Actor_Combat_Mode_On(kActorEarlyQ, kActorCombatStateIdle, false, kActorMcCoy, 19, kAnimationModeCombatIdle, kAnimationModeCombatWalk, kAnimationModeCombatRun, 0, 0, 100, 10, 300, false);
+			}
 		}
 		return true;
 

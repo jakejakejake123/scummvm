@@ -305,8 +305,7 @@ void SceneScriptPS15::PlayerWalkedIn() {
 		Actor_Face_Actor(kActorSergeantWalls, kActorMcCoy, true);
 		Actor_Says(kActorSergeantWalls, 0, 12);
 		if (_vm->_cutContent) {
-			if (Player_Query_Agenda() != kPlayerAgendaSurly
-			&& Player_Query_Agenda() != kPlayerAgendaErratic) {
+			if (Player_Query_Agenda() == kPlayerAgendaPolite) {
 				Actor_Says(kActorMcCoy, 8610, 18); //00-8610.AUD	What's the word, friend?
 			} else {
 				Actor_Says(kActorMcCoy, 8514, 14); //00-8514.AUD	Got anything new to tell me?
@@ -384,7 +383,7 @@ void SceneScriptPS15::PlayerWalkedIn() {
 			if (Player_Query_Agenda() == kPlayerAgendaSurly 
 			|| Player_Query_Agenda() == kPlayerAgendaErratic) {
 				Actor_Says(kActorMcCoy, 4555, 14); //00-4555.AUD	Peachy.
-			} else {
+			} else if (Player_Query_Agenda() == kPlayerAgendaPolite) {
 				Actor_Says(kActorMcCoy, 4750, 14); //00-4750.AUD	Unbelievable.
 				Actor_Says(kActorMcCoy, 1970, 13); //00-1970.AUD	You should start thinking about the company you keep.
 				Actor_Says(kActorSergeantWalls, 200, 13); //34-0200.AUD	Come back at me when you got something worthwhile, McCoy.

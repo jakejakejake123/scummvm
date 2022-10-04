@@ -166,11 +166,10 @@ bool SceneScriptPS09::ClickedOnActor(int actorId) {
 
 			if (!Game_Flag_Query(kFlagPS09IzoTalk1)) {
 				if (_vm->_cutContent) {
-					if (Player_Query_Agenda() == kPlayerAgendaSurly
-					|| Player_Query_Agenda() == kPlayerAgendaErratic) {
-						Actor_Says(kActorMcCoy, 4200, 14); //00-4200.AUD	You look right at home in there, Izo.
-					} else {
+					if (Player_Query_Agenda() == kPlayerAgendaPolite) {
 						Actor_Says(kActorMcCoy, 2755, 13); //00-2755.AUD	You all right? You look a little pale.
+					} else {
+						Actor_Says(kActorMcCoy, 4200, 14); //00-4200.AUD	You look right at home in there, Izo.
 					}
 				} else {
 					Actor_Says(kActorMcCoy, 4200, 14); //00-4200.AUD	You look right at home in there, Izo.

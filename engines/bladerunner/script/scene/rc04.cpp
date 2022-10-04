@@ -1419,6 +1419,10 @@ void SceneScriptRC04::PlayerWalkedIn() {
 			} else {
 				Actor_Says(kActorDispatcher, 40, 3);
 				Actor_Says(kActorBulletBob, 890, 37);
+				Actor_Change_Animation_Mode(kActorBulletBob, 4);
+				Delay(1500);
+				Sound_Play(kSfxSHOTCOK1, 75, 0, 0, 50);
+				Delay(500);
 				Actor_Set_Goal_Number(kActorBulletBob, kGoalBulletBobShootMcCoy);
 				Delay(200);
 				Actor_Change_Animation_Mode(kActorMcCoy, kAnimationModeDie);

@@ -510,13 +510,13 @@ bool SceneScriptRC01::ClickedOnActor(int actorId) {
 						Actor_Clue_Acquire(kActorMcCoy, kClueOfficersStatement, true, kActorOfficerLeary);
 						if (!Game_Flag_Query(kFlagRC02Entered)) {	
 							I_Sez("MG: It's all fun and games until someone loses a tiger cub.");
-							if (Player_Query_Agenda() != kPlayerAgendaSurly 
-							&& Player_Query_Agenda() != kPlayerAgendaErratic) {
+							if (Player_Query_Agenda() == kPlayerAgendaPolite) { 
 								Actor_Says(kActorMcCoy, 4520, 18);
 								Actor_Says(kActorOfficerLeary, 70, 16);
 								Actor_Says(kActorMcCoy, 4525, 14);
 								Actor_Says(kActorOfficerLeary, 80, 18);
-							} else {
+							} else if (Player_Query_Agenda() == kPlayerAgendaSurly
+							|| Player_Query_Agenda() == kPlayerAgendaErratic) {
 								Actor_Says(kActorMcCoy, 4530, 15);
 							}
 							if (!_vm->_cutContent) {
@@ -579,6 +579,7 @@ bool SceneScriptRC01::ClickedOnItem(int itemId, bool a2) {
 						I_Sez("JM: Chrome...is that what that is?");
 						Actor_Says(kActorMcCoy, 4505, 13);
 						// Jake - Added in a line where Leary is annoyed at McCoy for him being condescending towards him. 
+						Actor_Face_Actor(kActorOfficerLeary, kActorMcCoy, true);
 						Actor_Says(kActorOfficerLeary, 30, 14);
 						Actor_Face_Actor(kActorMcCoy, kActorOfficerLeary, true);
 						if (Player_Query_Agenda() == kPlayerAgendaSurly 
@@ -639,7 +640,8 @@ bool SceneScriptRC01::ClickedOnExit(int exitId) {
 		bool walkToRC02ExitResult = Loop_Actor_Walk_To_XYZ(kActorMcCoy, -170.38f, 5.55f, 35.00f, 12, true, false, false);
 #endif // BLADERUNNER_ORIGINAL_BUGS
 		if (!walkToRC02ExitResult) {
-			if (Game_Flag_Query(kFlagRC02RunciterTalkWithGun)) {
+			if (Game_Flag_Query(kFlagRC02RunciterTalkWithGun)
+			|| Game_Flag_Query(kFlagMcCoyRetiredRunciter)) {
 				Actor_Says(kActorMcCoy, 8522, 14); // Locked
 			} else {
 				switch (Global_Variable_Query(kVariableChapter)) {
