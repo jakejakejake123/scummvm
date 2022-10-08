@@ -795,8 +795,7 @@ void SceneScriptUG18::talkWithGuzza() {
 	Actor_Says(kActorMcCoy, 5900, 15); //00-5900.AUD	I got it all right here. Photos, files, discs, the works. It ain’t a pretty sight.
 	Actor_Says(kActorGuzza, 880, 13); //04-0880.AUD	You can’t blame a guy for trying to better himself.
 	if (_vm->_cutContent) {
-		if (Player_Query_Agenda() != kPlayerAgendaSurly
-		&& Player_Query_Agenda() != kPlayerAgendaErratic) {
+		if (Player_Query_Agenda() == kPlayerAgendaPolite) {
 			Actor_Says(kActorMcCoy, 5905, 9); //
 			Actor_Says(kActorMcCoy, 5910, 12); //
 			// Made it so McCoy only mentions what Guzza did to the pimps if Walls told him about it. It could have been mentioned in the folder but since Walls mentions it so casually

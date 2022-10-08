@@ -217,8 +217,7 @@ bool SceneScriptUG13::ClickedOnActor(int actorId) {
 							if (!Actor_Clue_Query(kActorTransient, kClueFlaskOfAbsinthe)) {
 								Actor_Says(kActorTransient, 130, 53); //12-0130.AUD	You got something so's I can wet my whistle?
 								Actor_Says(kActorMcCoy, 7815, 13); //00-7815.AUD	No.
-								if (Player_Query_Agenda() != kPlayerAgendaSurly 
-								&& Player_Query_Agenda() != kPlayerAgendaErratic) {
+								if (Player_Query_Agenda() == kPlayerAgendaPolite) {
 									Actor_Says(kActorMcCoy, 2305, 18); //00-2305.AUD	I’m sorry.
 								}
 								Delay(1000);
@@ -429,8 +428,7 @@ void SceneScriptUG13::PlayerWalkedIn() {
 				Player_Gains_Control();
 				Actor_Face_Actor(kActorMcCoy, kActorTransient, true);
 				Delay(2000);
-				if (Player_Query_Agenda() != kPlayerAgendaSurly 
-				&& Player_Query_Agenda() != kPlayerAgendaErratic) {
+				if (Player_Query_Agenda() == kPlayerAgendaPolite) {
 					Actor_Says(kActorMcCoy, 2305, 13); //00-2305.AUD	I’m sorry.
 				} else {
 					Actor_Says(kActorMcCoy, 170, -1); //00-0170.AUD	Damn.

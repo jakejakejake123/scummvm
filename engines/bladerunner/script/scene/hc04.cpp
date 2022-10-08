@@ -115,7 +115,11 @@ bool SceneScriptHC04::ClickedOnActor(int actorId) {
 					if (Actor_Clue_Query(kActorMcCoy, kClueKingstonKitchenBox2)
 	 				|| Actor_Clue_Query(kActorMcCoy, kClueKingstonKitchenBox1)
 					|| Actor_Clue_Query(kActorMcCoy, kClueSpecialIngredient)) {
-						Actor_Says(kActorMcCoy, 1280, 23); //00-1280.AUD	McCoy, LPD. Mind if I ask you a couple of questions?
+						if (Player_Query_Agenda() == kPlayerAgendaPolite) {
+							Actor_Says(kActorMcCoy, 1280, 23); //00-1280.AUD	McCoy, LPD. Mind if I ask you a couple of questions?
+						} else {
+							Actor_Says(kActorMcCoy, 8920, 14); //00-8920.AUD	I gotta ask you a question.
+						}
 						Actor_Says(kActorIsabella, 20, kAnimationModeTalk);
 					}
 				} else {
@@ -232,7 +236,7 @@ void SceneScriptHC04::dialogueWithIsabella() {
 	if (_vm->_cutContent) {
 		if (Global_Variable_Query(kVariableChapter) < 4) {
 			if (Actor_Clue_Query(kActorMcCoy, kClueSpecialIngredient)) {
-				DM_Add_To_List_Never_Repeat_Once_Selected(380, -1, 5, 8); // MIA AND MURRAY INFO
+				DM_Add_To_List_Never_Repeat_Once_Selected(380, 1, 5, 8); // MIA AND MURRAY INFO
 			}
 		}
 	} else if (Actor_Clue_Query(kActorMcCoy, kClueSpecialIngredient)) {
@@ -243,7 +247,7 @@ void SceneScriptHC04::dialogueWithIsabella() {
 			if (Actor_Clue_Query(kActorMcCoy, kClueSpecialIngredient)
 			&& !Actor_Clue_Query(kActorMcCoy, kClueStolenCheese)) {
 				if (Player_Query_Agenda() == kPlayerAgendaUserChoice) {
-					DM_Add_To_List_Never_Repeat_Once_Selected(1250, -1, -1, 10); // ARREST
+					DM_Add_To_List_Never_Repeat_Once_Selected(1250, 1, 2, 10); // ARREST
 				}
 			}
 		}
@@ -252,7 +256,7 @@ void SceneScriptHC04::dialogueWithIsabella() {
 	// It would make no sense for McCoy to ask what's in the stew and then buy some of it knowing it contains illegal ingredients.
 	if (_vm->_cutContent) {
 		if (!Actor_Clue_Query(kActorMcCoy, kClueSpecialIngredient)) {
-			DM_Add_To_List_Never_Repeat_Once_Selected(390, 7, 5, -1); // BUY STEW
+			DM_Add_To_List_Never_Repeat_Once_Selected(390, 7, 5, 1); // BUY STEW
 		}
 	} else {
 		DM_Add_To_List_Never_Repeat_Once_Selected(390, 7, 5, -1); // BUY STEW	
@@ -274,7 +278,7 @@ void SceneScriptHC04::dialogueWithIsabella() {
 	case 350: // DELIVERYMEN
 		// Altered deliverymen dialogue to also contain the dialogue for the Sadiks photo option.
 		if (_vm->_cutContent) {
-			if (Actor_Query_Friendliness_To_Other(kActorIzo, kActorMcCoy) > 49) {
+			if (Actor_Query_Friendliness_To_Other(kActorIsabella, kActorMcCoy) > 49) {
 				Actor_Says(kActorMcCoy, 1290, kAnimationModeTalk); //00-1290.AUD	How many delivery men you got working here?
 				Actor_Says(kActorIsabella, 70, kAnimationModeTalk); //59-0070.AUD	Two. Sometimes three on the busy night.
 				Actor_Says(kActorIsabella, 80, kAnimationModeTalk); //59-0080.AUD	Usual two riders. They Chinese. Third guy part timer. He Moroccan I think.
@@ -320,7 +324,7 @@ void SceneScriptHC04::dialogueWithIsabella() {
 
 	case 360: // MARCUS EISENDULLER
 		if (_vm->_cutContent) {
-			if (Actor_Query_Friendliness_To_Other(kActorIzo, kActorMcCoy) > 49) {
+			if (Actor_Query_Friendliness_To_Other(kActorIsabella, kActorMcCoy) > 49) {
 				Actor_Says(kActorMcCoy, 1295, kAnimationModeTalk);
 				Actor_Says(kActorIsabella, 100, kAnimationModeTalk);
 				Actor_Says(kActorMcCoy, 1350, kAnimationModeTalk);
@@ -455,11 +459,11 @@ void SceneScriptHC04::dialogueWithIsabella() {
 			Loop_Actor_Walk_To_XYZ(kActorMcCoy, -154.54, 0.31, -441.12, 0, true, false, false);
 			Actor_Face_Actor(kActorMcCoy, kActorIsabella, true);
 			Actor_Face_Actor(kActorIsabella, kActorMcCoy, true);
-			if (Player_Query_Agenda() == kPlayerAgendaSurly 
-			|| Player_Query_Agenda() == kPlayerAgendaErratic) {
+			if (Player_Query_Agenda() != kPlayerAgendaPolite) {
 				Actor_Says(kActorMcCoy, 2980, 12); //00-2980.AUD	What the hell is that?
 			} else {
 				Actor_Says(kActorMcCoy, 1310, kAnimationModeTalk);
+				Actor_Modify_Friendliness_To_Other(kActorIsabella, kActorMcCoy, 2);
 			}
 		} else {
 			Actor_Says(kActorMcCoy, 1310, kAnimationModeTalk);
@@ -469,8 +473,7 @@ void SceneScriptHC04::dialogueWithIsabella() {
 		// receive a kingston kitchen box when you buy the stew.
 		Actor_Says(kActorIsabella, 340, kAnimationModeTalk); //59-0340.AUD	Fix you right up. Only 30 chinyen. It put a spring in your step, mon. The ladies they be loving you.
 		if (_vm->_cutContent) {
-			if (Player_Query_Agenda() == kPlayerAgendaSurly 
-			|| Player_Query_Agenda() == kPlayerAgendaErratic) {
+			if (Player_Query_Agenda() != kPlayerAgendaPolite) {
 				Delay(1000);
 				Actor_Says(kActorMcCoy, 8650, 14); //00-8650.AUD	What smells in there?
 				Actor_Says(kActorIsabella, 30, kAnimationModeTalk); //59-0030.AUD	All in special recipe. (laughs) But if I be telling you what's in it, you might be thinking twice about eating it.
@@ -508,8 +511,10 @@ void SceneScriptHC04::dialogueWithIsabella() {
 	if (_vm->_cutContent) {
 		if (Actor_Clue_Query(kActorMcCoy, kClueStolenCheese)) {
 			Actor_Says(kActorMcCoy, 8605, kAnimationModeTalk);//00-8605.AUD	You staying out of trouble, buddy?
-		} else {
+		} else if (Player_Query_Agenda() == kPlayerAgendaPolite) {
 			Actor_Says(kActorMcCoy, 1315, kAnimationModeTalk); //00-1315.AUD	Thanks for your time.
+		} else {
+			Actor_Says(kActorMcCoy, 4595, 14); //00-4595.AUD	Stick around. I may not be finished with you.
 		}
 	} else {
 		Actor_Says(kActorMcCoy, 1315, kAnimationModeTalk);

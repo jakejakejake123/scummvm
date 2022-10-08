@@ -387,8 +387,7 @@ void SceneScriptTB07::McCoyTalkWithRachaelAndTyrell() {
 		} else {
 			Actor_Says(kActorMcCoy, 8145, 14); //00-8145.AUD	That'd make a Rep scared.
 		}
-		if (Player_Query_Agenda() != kPlayerAgendaSurly 
-		&& Player_Query_Agenda() != kPlayerAgendaErratic) {
+		if (Player_Query_Agenda() == kPlayerAgendaPolite) {
 			Actor_Says(kActorMcCoy, 5420, 14); //00-5420.AUD	I'd probably get a little crazy too but I don't think I'd start killing people.
 			if (Actor_Query_Friendliness_To_Other(kActorRachael, kActorMcCoy) < 50) {
 				Actor_Says(kActorRachael, 660, 15);
@@ -436,8 +435,7 @@ void SceneScriptTB07::McCoyTalkWithRachaelAndTyrell() {
 	Actor_Says(kActorMcCoy, 5440, 14); //00-5440.AUD	They want more life.
 	Actor_Says(kActorTyrell, 70, 13);
 	if (_vm->_cutContent) {
-		if (Player_Query_Agenda() != kPlayerAgendaSurly 
-		&& Player_Query_Agenda() != kPlayerAgendaErratic) {
+		if (Player_Query_Agenda() == kPlayerAgendaPolite) {
 			Actor_Says(kActorMcCoy, 5445, 15); //00-5445.AUD	They're gonna come for you. Just like they came for Eisenduller.
 			Actor_Says_With_Pause(kActorTyrell, 80, 1.0f, 12);
 		}

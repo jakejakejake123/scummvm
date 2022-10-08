@@ -294,7 +294,12 @@ void SceneScriptUG16::PlayerWalkedIn() {
 		}
 		Actor_Says(kActorMcCoy, 5715, 14); //00-5715.AUD	You’re Luther and Lance?
 		if (_vm->_cutContent) {
-			Actor_Says(kActorLuther, 320, 16); //10-0320.AUD	No question.
+			if (!Game_Flag_Query(kFlagLutherLanceIsReplicant)) {
+				Actor_Says(kActorLuther, 320, 16); //10-0320.AUD	No question.
+			} else {
+				Actor_Says(kActorLance, 30, 16); //13-0030.AUD	Hell of a smart cookie there.
+				Actor_Says(kActorLuther, 70, 6); //10-0070.AUD	Take your guns and your violence elsewhere. We’ve got important work to do.
+			}
 		} else {
 			Actor_Says(kActorLance, 30, 16); //13-0030.AUD	Hell of a smart cookie there.
 			Actor_Says(kActorLuther, 70, 6); //10-0070.AUD	Take your guns and your violence elsewhere. We’ve got important work to do.
@@ -375,16 +380,14 @@ void SceneScriptUG16::dialogueWithLuther() {
 		if (_vm->_cutContent) {
 			if (Game_Flag_Query(kFlagMorajiAlive)) { 
 				Actor_Says(kActorMcCoy, 785, 13);//00-0785.AUD	There could be a group of Nexus-6s tracking down genetic designers.
-				if (Player_Query_Agenda() != kPlayerAgendaSurly 
-				&& Player_Query_Agenda() != kPlayerAgendaErratic) {
+				if (Player_Query_Agenda() == kPlayerAgendaPolite) {
 					Actor_Says(kActorMcCoy, 790, 13);//00-0790.AUD	You might consider knocking off work early.
 				}
 				// Made it so McCoy will not mention the reps killing Eisenduller and Moraji if Moraji survived the explosion.
 				// Also McCoy will only warn Luther and Lance if he is not surly or erratic.
 			} else {
 				Actor_Says(kActorMcCoy, 5730, 13); //00-5730.AUD	The Reps that killed Marcus and Moraji. They’ll be looking for you.
-				if (Player_Query_Agenda() != kPlayerAgendaSurly 
-				&& Player_Query_Agenda() != kPlayerAgendaErratic) {
+				if (Player_Query_Agenda() == kPlayerAgendaPolite) {
 					Actor_Says(kActorMcCoy, 790, 13);//00-0790.AUD	You might consider knocking off work early.
 				}
 			}
@@ -461,8 +464,7 @@ void SceneScriptUG16::dialogueWithLuther() {
 			Actor_Says(kActorLance, 150, 17); //13-0150.AUD	That’s a pretty damn good argument, you gotta admit.
 			if (_vm->_cutContent) {
 				if (!Game_Flag_Query(kFlagMcCoyIsHelpingReplicants)) {
-					if (Player_Query_Agenda() != kPlayerAgendaSurly 
-					&& Player_Query_Agenda() != kPlayerAgendaErratic) {
+					if (Player_Query_Agenda() == kPlayerAgendaPolite) {
 						Actor_Says(kActorMcCoy, 5800, 13); //00-5800.AUD	Photos can be doctored. It’s not proof.
 						Actor_Says(kActorLuther, 190, 15);
 					}
@@ -563,8 +565,7 @@ void SceneScriptUG16::dialogueWithLuther() {
 			Actor_Clue_Acquire(kActorMcCoy, kClueSightingClovis, true, kActorLuther);
 		}
 		if (_vm->_cutContent) {
-			if (Player_Query_Agenda() != kPlayerAgendaSurly 
-			&& Player_Query_Agenda() != kPlayerAgendaErratic) {
+			if (Player_Query_Agenda() == kPlayerAgendaPolite) {
 				Actor_Says(kActorMcCoy, 5815, 13); //00-5815.AUD	He’ll kill Tyrell, if he gets to him.
 				// Made it so if the twins are replicants the have no remorse in regards to Clovis trying to kill Tyrell. If they are human Clovis' lied about his intentions and the twins believe
 				// that Clovis won't kill Tyrell.

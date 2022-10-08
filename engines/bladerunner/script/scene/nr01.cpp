@@ -685,7 +685,11 @@ void SceneScriptNR01::PlayerWalkedIn() {
 					Actor_Says(kActorSteele, 1560, 16); //01-1560.AUD	You should have whacked her when you had the chance.
 					if (_vm->_cutContent) {
 						if (Game_Flag_Query(kFlagMcCoyIsHelpingReplicants)) {
-							Actor_Says(kActorMcCoy, 3180, 15); //00-3180.AUD	Yeah, right in front of all the other children in the arcade. That would have been great publicity.
+							if (Player_Query_Agenda() == kPlayerAgendaPolite) {
+								Actor_Says(kActorMcCoy, 3180, 15); //00-3180.AUD	Yeah, right in front of all the other children in the arcade. That would have been great publicity.
+							} else {
+								Delay(1000);
+							}
 						} else {
 							Actor_Says(kActorMcCoy, 8535, 13); //00-8535.AUD	Yeah.
 						}

@@ -146,8 +146,7 @@ bool SceneScriptHF01::ClickedOnActor(int actorId) {
 				if (!_vm->_cutContent) {
 					Actor_Face_Actor(kActorMia, kActorMcCoy, true);
 					Actor_Says(kActorMia, 60, kAnimationModeTalk); //22-0060.AUD	We got a two for one special today, Ray. How about it?
-					if (Player_Query_Agenda() == kPlayerAgendaSurly 
-					|| Player_Query_Agenda() == kPlayerAgendaErratic) {
+					if (Player_Query_Agenda() != kPlayerAgendaPolite) {
 						Actor_Voice_Over(910, kActorVoiceOver);  //99-0910.AUD	The thought of eating another one of those green-dogs made my stomach roll.
 						Actor_Says(kActorMcCoy, 1475, 18); //00-1475.AUD	No thanks. But I got a question for you guys.
 					} else {
@@ -160,8 +159,7 @@ bool SceneScriptHF01::ClickedOnActor(int actorId) {
 				}
 				Actor_Says(kActorMurray, 60, 12); //31-0060.AUD	You know anything about politics, Ray? Famous quotes, things like that?
 				if (_vm->_cutContent) {
-					if (Player_Query_Agenda() == kPlayerAgendaSurly 
-					|| Player_Query_Agenda() == kPlayerAgendaErratic) {
+					if (Player_Query_Agenda() != kPlayerAgendaPolite) {
 						Actor_Says(kActorMcCoy, 1465, 15);
 					} else {
 						Actor_Says(kActorMcCoy, 1025, 13); //00-1025.AUD	Absolutely.
@@ -172,8 +170,7 @@ bool SceneScriptHF01::ClickedOnActor(int actorId) {
 				Actor_Face_Actor(kActorMurray, kActorMcCoy, true);
 				Actor_Says(kActorMurray, 70, 13);
 				if (_vm->_cutContent) {
-					if (Player_Query_Agenda() == kPlayerAgendaSurly 
-					|| Player_Query_Agenda() == kPlayerAgendaErratic) {
+					if (Player_Query_Agenda() != kPlayerAgendaPolite) {
 						Actor_Says(kActorMcCoy, 1470, 14);
 					} else {
 						Actor_Says(kActorMcCoy, 7980, 19); //00-7980.AUD	Yeah. Maybe.
@@ -990,8 +987,7 @@ void SceneScriptHF01::dialogueWithMiaAndMurray() {
 void SceneScriptHF01::talkWithDektora() {
 	Actor_Says(kActorDektora, 0, kAnimationModeTalk);
 	if (_vm->_cutContent) {
-		if (Player_Query_Agenda() != kPlayerAgendaSurly 
-		&& Player_Query_Agenda() != kPlayerAgendaErratic) {
+		if (Player_Query_Agenda() == kPlayerAgendaPolite) {
 			Actor_Says(kActorMcCoy, 1400, kAnimationModeTalk); //00-1400.AUD	I promised you, didn't I?
 		}
 	} else {
@@ -1025,8 +1021,7 @@ void SceneScriptHF01::talkWithDektora() {
 void SceneScriptHF01::talkWithLucy() {
 	Actor_Says(kActorLucy, 0, kAnimationModeTalk); //06-0000.AUD	I knew you’d come.
 	if (_vm->_cutContent) {
-		if (Player_Query_Agenda() != kPlayerAgendaSurly 
-		&& Player_Query_Agenda() != kPlayerAgendaErratic) {
+		if (Player_Query_Agenda() == kPlayerAgendaPolite) {
 			Actor_Says(kActorMcCoy, 1425, kAnimationModeTalk); //00-1425.AUD	I promised you, didn't I?
 		}
 	} else {

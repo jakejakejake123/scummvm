@@ -605,8 +605,7 @@ void SceneScriptHF05::dialogueWithCrazylegs1() {
 
 	if (!Dialogue_Menu_Query_List_Size()) {
 		if (_vm->_cutContent) {
-			if (Player_Query_Agenda() != kPlayerAgendaSurly 
-			&& Player_Query_Agenda() != kPlayerAgendaErratic) {
+			if (Player_Query_Agenda() == kPlayerAgendaPolite) {
 				Actor_Says(kActorMcCoy, 1730, kAnimationModeTalk); //00-1730.AUD	You’re a stand up guy, Crazy.
 				Actor_Says(kActorCrazylegs, 80, 23); //09-0080.AUD	That I am.
 				Actor_Modify_Friendliness_To_Other(kActorCrazylegs, kActorMcCoy, 2);
@@ -1044,8 +1043,7 @@ void SceneScriptHF05::dialogueWithCrazylegs2() { // Restored feature - Original:
 			Item_Pickup_Spin_Effect(kModelAnimationSpinnerKeys, 315, 327);
 			Delay(2000);
 			Actor_Says(kActorMcCoy, 1980, 23);
-			if (Player_Query_Agenda() != kPlayerAgendaSurly 
-			&& Player_Query_Agenda() != kPlayerAgendaErratic) {
+			if (Player_Query_Agenda() == kPlayerAgendaPolite) {
 				Actor_Says(kActorMcCoy, 1985, kAnimationModeTalk); //00-1985.AUD	I’ll try to clear it so you aren’t stuck in a cell with fifty mutant speed loaders
 			}
 			Actor_Says(kActorCrazylegs, 580, kAnimationModeTalk);
@@ -1509,8 +1507,7 @@ void SceneScriptHF05::talkWithCrazyLegs1() {
 	Actor_Says(kActorCrazylegs, 300, 15);
 	Actor_Says(kActorCrazylegs, 310, 16); //09-0310.AUD	It’s completely legal and everything. Beautiful ain’t it?
 	if (_vm->_cutContent) {
-		if (Player_Query_Agenda() != kPlayerAgendaSurly 
-		&& Player_Query_Agenda() != kPlayerAgendaErratic) {
+		if (Player_Query_Agenda() == kPlayerAgendaPolite) {
 			Actor_Says(kActorMcCoy, 4190, 13); //00-4190.AUD	Nice set of wheels.
 			Actor_Modify_Friendliness_To_Other(kActorCrazylegs, kActorMcCoy, 2);
 		} else {

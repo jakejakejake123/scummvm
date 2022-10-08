@@ -210,6 +210,8 @@ bool SceneScriptAR01::ClickedOnActor(int actorId) {
 						Actor_Says(kActorFishDealer, 40, 14); //29-0040.AUD	Fish just as good as dog.
 						Actor_Says(kActorMcCoy, 10, 13); //00-0010.AUD	No, my dog is real.
 						Actor_Says(kActorFishDealer, 50, 14); //29-0050.AUD	Real?! Oh, you must make lots of money.
+					} else {
+						Actor_Says(kActorMcCoy, 7815, 13); //00-7815.AUD	No.
 					}
 					// If McCoy is surly or erratic their friendliness will lower and this will effect the coversation later on.
 					// It will also result in the fish lady not helping when trying to find the insect dealer and whne you ask her about the strange scale.

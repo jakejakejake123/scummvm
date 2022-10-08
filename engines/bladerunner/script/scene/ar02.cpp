@@ -311,7 +311,15 @@ bool SceneScriptAR02::ClickedOnActor(int actorId) {
 			Actor_Face_Actor(kActorHasan, kActorMcCoy, true);
 			if (!Game_Flag_Query(kFlagAR02HassanTalk)) {
 				Actor_Says(kActorHasan, 0, 14);
-				Actor_Says(kActorMcCoy, 140, 18);
+				if (_vm->_cutContent) {
+					if (Player_Query_Agenda() == kPlayerAgendaPolite) {
+						Actor_Says(kActorMcCoy, 140, 18);
+					} else {
+						Actor_Says(kActorMcCoy, 7815, 13); //00-7815.AUD	No.
+					}
+				} else {
+					Actor_Says(kActorMcCoy, 140, 18);
+				}
 				if (_vm->_cutContent) {
 					Actor_Says(kActorMcCoy, 505, 23); //00-0505.AUD	McCoy, LPD.
 					Actor_Says(kActorHasan, 30, 11);//20-0030.AUD	Oh, you're a policeman.	
@@ -826,7 +834,7 @@ void SceneScriptAR02::dialogueWithHassan() {
 				if (Player_Query_Agenda() == kPlayerAgendaSurly 	
 				|| Player_Query_Agenda() == kPlayerAgendaErratic 
 				|| Player_Query_Agenda() == kPlayerAgendaUserChoice) {
-					DM_Add_To_List_Never_Repeat_Once_Selected(1250, -1, -1, 10); // ARREST
+					DM_Add_To_List_Never_Repeat_Once_Selected(1250, 1, 2, 10); // ARREST
 				}
 			}
 		}

@@ -82,9 +82,8 @@ bool SceneScriptPS15::ClickedOnActor(int actorId) {
 				Actor_Says(kActorMcCoy, 4470, 17); //00-4470.AUD	That weapons' shipment just came in. You got the paperwork handy?
 				if (_vm->_cutContent) {	
 					if (!Game_Flag_Query(kFlagWallsUpset)) {
-						Actor_Says(kActorSergeantWalls, 180, 16); // 34-0180.AUD	Yeah, dig this. It's been doing the circuits around the station
+						Actor_Says(kActorSergeantWalls, 180, 23); // 34-0180.AUD	Yeah, dig this. It's been doing the circuits around the station
 						Actor_Change_Animation_Mode(kActorMcCoy, 23);
-						Actor_Change_Animation_Mode(kActorSergeantWalls, 23);
 						Delay (2000);
 						Item_Pickup_Spin_Effect(kModelAnimationWeaponsOrderForm, 211, 239);
 						Actor_Clue_Acquire(kActorMcCoy, kClueWeaponsOrderForm, true, kActorSergeantWalls);
@@ -164,20 +163,20 @@ bool SceneScriptPS15::ClickedOnActor(int actorId) {
 					Item_Remove_From_World(kItemWeaponsOrderForm);
 				}
 #endif // BLADERUNNER_ORIGINAL_BUGS
-			} else {
-				Actor_Face_Actor(kActorMcCoy, kActorSergeantWalls, true);
-				Actor_Says(kActorMcCoy, 8600, 15);
-				if (_vm->_cutContent) {
-					if (!Game_Flag_Query(kFlagWallsUpset)) {
-						Actor_Face_Actor(kActorSergeantWalls, kActorMcCoy, true);
-						Actor_Says(kActorSergeantWalls, 190, 13); //34-0190.AUD	Nah, the place has been pretty quiet the last couple of days.
-					} else {
-						Actor_Face_Actor(kActorSergeantWalls, kActorMcCoy, true);
-						Actor_Says(kActorSergeantWalls, 200, 13); //34-0200.AUD	Come back at me when you got something worthwhile, McCoy.
-					}
+			}
+		} else {
+			Actor_Face_Actor(kActorMcCoy, kActorSergeantWalls, true);
+			Actor_Says(kActorMcCoy, 8600, 15);
+			if (_vm->_cutContent) {
+				if (!Game_Flag_Query(kFlagWallsUpset)) {
+					Actor_Face_Actor(kActorSergeantWalls, kActorMcCoy, true);
+					Actor_Says(kActorSergeantWalls, 190, 13); //34-0190.AUD	Nah, the place has been pretty quiet the last couple of days.
 				} else {
-					Actor_Says(kActorSergeantWalls, 190, 12);
+					Actor_Face_Actor(kActorSergeantWalls, kActorMcCoy, true);
+					Actor_Says(kActorSergeantWalls, 200, 13); //34-0200.AUD	Come back at me when you got something worthwhile, McCoy.
 				}
+			} else {
+				Actor_Says(kActorSergeantWalls, 190, 12);
 			}
 		}
 		return true;
@@ -304,18 +303,17 @@ void SceneScriptPS15::PlayerWalkedIn() {
 		Actor_Face_Actor(kActorMcCoy, kActorSergeantWalls, true);
 		Actor_Face_Actor(kActorSergeantWalls, kActorMcCoy, true);
 		Actor_Says(kActorSergeantWalls, 0, 12);
+		Loop_Actor_Walk_To_XYZ(kActorMcCoy, -256.0f, -113.43f, 43.51f, 0, true, false, false);
+		Actor_Face_Actor(kActorMcCoy, kActorSergeantWalls, true);
+		Actor_Face_Actor(kActorSergeantWalls, kActorMcCoy, true);
 		if (_vm->_cutContent) {
 			if (Player_Query_Agenda() == kPlayerAgendaPolite) {
 				Actor_Says(kActorMcCoy, 8610, 18); //00-8610.AUD	What's the word, friend?
 			} else {
 				Actor_Says(kActorMcCoy, 8514, 14); //00-8514.AUD	Got anything new to tell me?
 			}
-			Actor_Says(kActorSergeantWalls, 180, 30); //34-0180.AUD	Yeah, dig this. It's been doing the circuits around the station
-			Loop_Actor_Walk_To_XYZ(kActorMcCoy, -256.0f, -113.43f, 43.51f, 0, true, false, false);
-			Actor_Face_Actor(kActorMcCoy, kActorSergeantWalls, true);
-			Actor_Face_Actor(kActorSergeantWalls, kActorMcCoy, true);
+			Actor_Says(kActorSergeantWalls, 180, 23); //34-0180.AUD	Yeah, dig this. It's been doing the circuits around the station
 			Actor_Change_Animation_Mode(kActorMcCoy, 23);
-			Actor_Change_Animation_Mode(kActorSergeantWalls, 23);
 			Delay(2000);
 			Item_Pickup_Spin_Effect(kModelAnimationRequisitionForm, 211, 239);
 			Actor_Says(kActorMcCoy, 8805, -1); //00-8805.AUD	A requisition form.

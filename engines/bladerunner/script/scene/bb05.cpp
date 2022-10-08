@@ -193,8 +193,7 @@ void SceneScriptBB05::PlayerWalkedIn() {
 					Actor_Says(kActorMcCoy, 7050, 17); 
 					Actor_Says(kActorSebastian, 200, 16);
 					Actor_Says_With_Pause(kActorSebastian, 210, 1.5f, 14); //56-0210.AUD	It won't be easy to put him right again. I'm sure there was some permanent damage.
-					if (Player_Query_Agenda() != kPlayerAgendaSurly
-					&& Player_Query_Agenda() != kPlayerAgendaErratic) {
+					if (Player_Query_Agenda() == kPlayerAgendaPolite) {
 						Actor_Says(kActorMcCoy, 7055, 15); //00-7055.AUD	Uh, I'm sorry to hear that.
 					} else {
 						Actor_Says(kActorMcCoy, 7835, 18); //00-7835.AUD	Is that so?
@@ -220,8 +219,7 @@ void SceneScriptBB05::PlayerWalkedIn() {
 			Actor_Says(kActorMcCoy, 7065, 16); //00-7065.AUD	Look, I gotta check the premises again. Maybe they left something behind.
 			Actor_Says(kActorSebastian, 250, 16); //56-0250.AUD	Well, if you want to take a look, go on ahead. I can't stop you. But please be careful in my lab.
 			if (_vm->_cutContent) {
-				if (Player_Query_Agenda() != kPlayerAgendaSurly
-				&& Player_Query_Agenda() != kPlayerAgendaErratic) {
+				if (Player_Query_Agenda() == kPlayerAgendaPolite) {
 					Actor_Says(kActorMcCoy, 7070, 18); //00-7070.AUD	You got it.
 					Actor_Set_Targetable(kActorGeneralDoll, false);
 				} else {

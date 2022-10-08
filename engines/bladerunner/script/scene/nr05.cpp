@@ -514,8 +514,7 @@ void SceneScriptNR05::talkToEarlyQ() {
 		Actor_Says(kActorEarlyQ, 560, 14); //18-0560.AUD	Nah, she ain’t one of mine.
 		Actor_Says(kActorEarlyQ, 570, 13); //18-0570.AUD	Talk to Taffy. He gets most of the peddy business around here.
 		if (_vm->_cutContent) {
-			if (Player_Query_Agenda() != kPlayerAgendaSurly 
-			&& Player_Query_Agenda() != kPlayerAgendaErratic) {
+			if (Player_Query_Agenda() == kPlayerAgendaPolite) {
 				Actor_Says(kActorMcCoy, 3555, 12); //00-3555.AUD	It’s men like you that made this country great, Early.
 			}
 		} else {

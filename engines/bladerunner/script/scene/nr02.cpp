@@ -241,8 +241,7 @@ void SceneScriptNR02::PlayerWalkedIn() {
 						Actor_Says(kActorDektora, 1340, 14); //03-1340.AUD	Of course not. I didn’t come down on the moonbus with him.
 						Actor_Says(kActorDektora, 1350, 12); //03-1350.AUD	And I remember growing up back East. My mother, my father.
 						Actor_Says(kActorDektora, 1360, 13); //03-1360.AUD	I had a spotted pony. She would take carrots right out of my mouth!
-						if (Player_Query_Agenda() == kPlayerAgendaSurly 
-						|| Player_Query_Agenda() == kPlayerAgendaErratic) {
+						if (Game_Flag_Query(kFlagMcCoyIsHelpingReplicants)) {
 							Actor_Says(kActorMcCoy, 6445, 11); //00-6445.AUD	Memories can be implanted.
 							Actor_Says(kActorDektora, 1370, 12); //03-1370.AUD	Not mine. Mine are real!
 							Actor_Says(kActorDektora, 1380, 13); //03-1380.AUD	God damn Tyrell!

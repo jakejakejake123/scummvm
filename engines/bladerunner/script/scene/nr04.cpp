@@ -303,8 +303,7 @@ void SceneScriptNR04::ActorChangedGoal(int actorId, int newGoal, int oldGoal, bo
 			Actor_Face_Actor(kActorMcCoy, kActorEarlyQ, true);
 			Actor_Says(kActorEarlyQ, 90, 73);
 			if (_vm->_cutContent) {
-				if (Player_Query_Agenda() != kPlayerAgendaSurly 
-				&& Player_Query_Agenda() != kPlayerAgendaErratic) {
+				if (Player_Query_Agenda() == kPlayerAgendaPolite) {
 					Actor_Says(kActorMcCoy, 3390, 14); //00-3390.AUD	Not interested.
 				} else {
 					Actor_Says(kActorMcCoy, 2485, 13); //00-2485.AUD	I’ve a hard time believing that.

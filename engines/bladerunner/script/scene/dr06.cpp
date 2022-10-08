@@ -131,8 +131,7 @@ bool SceneScriptDR06::ClickedOn3DObject(const char *objectName, bool a2) {
 				Actor_Says(kActorSebastian, 50, kAnimationModeTalk);
 				Actor_Says(kActorAnsweringMachine, 40, kAnimationModeTalk);
 				if (_vm->_cutContent) {
-					if (Player_Query_Agenda() == kPlayerAgendaSurly 
-					|| Player_Query_Agenda() == kPlayerAgendaErratic) {
+					if (Player_Query_Agenda() != kPlayerAgendaPolite) {
 						Actor_Says(kActorMcCoy, 6420, 14); //00-6420.AUD	Not right now.
 					} else {
 						Actor_Says(kActorMcCoy, 1030, 13); //00-1030.AUD	Not right now, thanks.

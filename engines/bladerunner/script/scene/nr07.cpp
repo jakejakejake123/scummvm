@@ -98,7 +98,7 @@ bool SceneScriptNR07::ClickedOnActor(int actorId) {
 				if (!Game_Flag_Query(kFlagMcCoyIsHelpingReplicants)) {
 					if (Player_Query_Agenda() != kPlayerAgendaSurly 
 					&& Player_Query_Agenda() != kPlayerAgendaErratic) {
-						DM_Add_To_List_Never_Repeat_Once_Selected(1100, -1, 3, 8); // VOIGT-KAMPFF
+						DM_Add_To_List_Never_Repeat_Once_Selected(1100, 1, 3, 8); // VOIGT-KAMPFF
 					} else {
 						DM_Add_To_List_Never_Repeat_Once_Selected(1120, 7, 5, 4); // MOONBUS
 					}

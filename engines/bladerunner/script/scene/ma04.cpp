@@ -333,8 +333,7 @@ void SceneScriptMA04::PlayerWalkedIn() {
 			if (_vm->_cutContent) {
 				if (Actor_Query_Friendliness_To_Other(kActorGuzza, kActorMcCoy) < 51) {
 					Actor_Says(kActorGuzza, 1390, 3); //04-1390.AUD	McCoy! Where the hell have you been? We’ve been looking all over for you.
-					if (Player_Query_Agenda() != kPlayerAgendaSurly 
-					&& Player_Query_Agenda() != kPlayerAgendaErratic) {
+					if (Player_Query_Agenda() == kPlayerAgendaPolite) {
 						Actor_Says(kActorMcCoy, 2545, 13); //00-2545.AUD	Sorry, but I-- I was just… sleeping. What’s going on?
 					} else {
 						Actor_Says(kActorMcCoy, 2690, 17);
@@ -539,8 +538,7 @@ void SceneScriptMA04::phoneCallWithDektora() {
 		Actor_Says(kActorMcCoy, 2515, 12); //00-2515.AUD	We’d need a Spinner to be able to get anywhere.
 		Actor_Says(kActorDektora, 390, 3); //03-0390.AUD	He’s got a couple for sale.
 		if (_vm->_cutContent) {
-			if (Player_Query_Agenda() != kPlayerAgendaSurly 
-			&& Player_Query_Agenda() != kPlayerAgendaErratic) {
+			if (Player_Query_Agenda() == kPlayerAgendaPolite) {
 				Actor_Says(kActorMcCoy, 2520, 13);  //00-2520.AUD	It’s real risky. And illegal.
 				Actor_Says(kActorDektora, 400, 3);
 				Actor_Says(kActorDektora, 410, 3);
@@ -594,8 +592,7 @@ void SceneScriptMA04::phoneCallWithDektora() {
 void SceneScriptMA04::phoneCallWithLucy() {
 	Actor_Says(kActorLucy, 530, 3); 
 	if (_vm->_cutContent) {
-		if (Player_Query_Agenda() != kPlayerAgendaSurly 
-		&& Player_Query_Agenda() != kPlayerAgendaErratic) {
+		if (Player_Query_Agenda() == kPlayerAgendaPolite) {
 			Actor_Says(kActorMcCoy, 2545, 19); //00-2545.AUD	Sorry, but I-- I was just… sleeping. What’s going on?
 		} else {
 			Actor_Says(kActorMcCoy, 8320, 13); //00-8320.AUD	Really?
@@ -786,8 +783,7 @@ void SceneScriptMA04::phoneCallWithClovis() {
 			Actor_Says(kActorClovis, 390, 3); 
 			Actor_Says(kActorClovis, 400, 3); 
 			Actor_Says(kActorClovis, 410, 3); //05-0410.AUD	But he was never to be trusted. Unlike you.
-			if (Player_Query_Agenda() != kPlayerAgendaSurly 
-			|| Player_Query_Agenda() != kPlayerAgendaErratic) {
+			if (Player_Query_Agenda() == kPlayerAgendaPolite) {
 				Actor_Says(kActorMcCoy, 2600, 15); //00-2600.AUD	I appreciate that.
 			} else {
 				Delay(2000);

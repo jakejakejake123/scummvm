@@ -460,8 +460,7 @@ void AIScriptSebastian::dialogue() {
 			Actor_Says(kActorSebastian, 360, 17);
 			Actor_Says_With_Pause(kActorMcCoy, 7130, 1.0f, kAnimationModeTalk);
 			if (_vm->_cutContent) {
-				if (Player_Query_Agenda() != kPlayerAgendaSurly 
-				&& Player_Query_Agenda() != kPlayerAgendaErratic) {
+				if (Player_Query_Agenda() == kPlayerAgendaPolite) {
 					Actor_Says(kActorMcCoy, 7135, 18); //00-7135.AUD	And who do you think they'll start looking for next?
 				} 
 			}
@@ -475,8 +474,7 @@ void AIScriptSebastian::dialogue() {
 				if (Actor_Query_Friendliness_To_Other(kActorSebastian, kActorMcCoy) > 49) {
 					Actor_Says(kActorSebastian, 390, 14); //56-0390.AUD	Dr. Tyrell and I play chess every week. I've only beaten him once.
 					if (Actor_Clue_Query(kActorMcCoy, kClueChessTable)) {
-						if (Player_Query_Agenda() != kPlayerAgendaSurly 
-						&& Player_Query_Agenda() != kPlayerAgendaErratic) {
+						if (Player_Query_Agenda() == kPlayerAgendaPolite) {
 							Actor_Says(kActorMcCoy, 7140, kAnimationModeTalk); //00-7140.AUD	You're in the middle of a game right now?
 							Actor_Says(kActorSebastian, 400, 12);
 							Actor_Says(kActorMcCoy, 7145, 16); //00-7145.AUD	I don't have the patience for chess.
@@ -584,8 +582,7 @@ void AIScriptSebastian::dialogue() {
 				}
 			}
 			if (_vm->_cutContent) {
-				if (Player_Query_Agenda() != kPlayerAgendaSurly 
-				&& Player_Query_Agenda() != kPlayerAgendaErratic) {
+				if (Player_Query_Agenda() == kPlayerAgendaPolite) {
 					Actor_Says(kActorMcCoy, 7195, 18); //00-7195.AUD	Maybe they were looking for you.
 					Actor_Says(kActorSebastian, 720, 12);
 				}
@@ -628,8 +625,7 @@ void AIScriptSebastian::setMcCoyIsABladeRunner() {
 	Actor_Says(kActorMcCoy, 7205, 17); //00-7205.AUD	The guys who broke in might be Replicants.
 	Actor_Says(kActorSebastian, 580, 13);
 	if (_vm->_cutContent) {
-		if (Player_Query_Agenda() != kPlayerAgendaSurly 
-		&& Player_Query_Agenda() != kPlayerAgendaErratic) {
+		if (Player_Query_Agenda() == kPlayerAgendaPolite) {
 			Actor_Says_With_Pause(kActorMcCoy, 7210, 1.0f, 16); //00-7210.AUD	You worked on the Nexus-6 series, didn't you?
 			Actor_Says(kActorSebastian, 590, 12);
 			Actor_Says(kActorMcCoy, 7215, 19); //00-7215.AUD	Would you say that the Sixes are smarter than the old Fours and Fives?

@@ -324,8 +324,7 @@ void SceneScriptKP07::PlayerWalkedIn() {
 					Actor_Face_Actor(kActorDektora, kActorMcCoy, true);
 					Actor_Face_Actor(kActorMcCoy, kActorDektora, true);
 					Actor_Says(kActorDektora, 2650, 3); //03-2650.AUD	I told you he’d come!
-					if (Player_Query_Agenda() != kPlayerAgendaSurly 
-					&& Player_Query_Agenda() != kPlayerAgendaErratic) {
+					if (Player_Query_Agenda() == kPlayerAgendaPolite) {
 						Actor_Says(kActorMcCoy, 1400, kAnimationModeTalk); //00-1400.AUD	I promised you, didn't I?
 					}
 					Delay (1000);
@@ -336,8 +335,7 @@ void SceneScriptKP07::PlayerWalkedIn() {
 					Actor_Face_Actor(kActorLucy, kActorMcCoy, true);
 					Actor_Face_Actor(kActorMcCoy, kActorLucy, true);
 					Actor_Says(kActorLucy, 3040, 3); //06-3040.AUD	I told you he’d come!
-					if (Player_Query_Agenda() != kPlayerAgendaSurly 
-					&& Player_Query_Agenda() != kPlayerAgendaErratic) {
+					if (Player_Query_Agenda() == kPlayerAgendaPolite) {
 						Actor_Says(kActorMcCoy, 1425, kAnimationModeTalk); //00-1425.AUD	I promised you, didn't I?
 					}
 					Delay (1000);

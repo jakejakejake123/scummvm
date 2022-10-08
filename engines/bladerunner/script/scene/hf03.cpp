@@ -133,8 +133,7 @@ void SceneScriptHF03::dialogueWithLucy() {
 					Actor_Says(kActorLucy, 990, 17);
 				}
 				if (_vm->_cutContent) {
-					if (Player_Query_Agenda() != kPlayerAgendaSurly 
-					&& Player_Query_Agenda() != kPlayerAgendaErratic) {
+					if (Player_Query_Agenda() == kPlayerAgendaPolite) {
 						Actor_Says(kActorMcCoy, 6790, 15); //00-6790.AUD	That must be tough on you.
 					} else {
 						Actor_Says(kActorMcCoy, 5065, 18); //00-5065.AUD	Is that right?
@@ -176,7 +175,9 @@ void SceneScriptHF03::dialogueWithLucy() {
 					} else {
 						Actor_Says(kActorLucy, 1050, 17); //06-1050.AUD	Oh, thank you. Thank you for everything.
 					}
-					Actor_Says(kActorMcCoy, 1650, 13); //00-1650.AUD	Take care of yourself, kid.
+					if (Player_Query_Agenda() == kPlayerAgendaPolite) {
+						Actor_Says(kActorMcCoy, 1650, 13); //00-1650.AUD	Take care of yourself, kid.
+					}
 					Actor_Modify_Friendliness_To_Other(kActorSteele, kActorMcCoy, -2);
 					Actor_Modify_Friendliness_To_Other(kActorClovis, kActorMcCoy, 2);
 					Actor_Modify_Friendliness_To_Other(kActorGuzza, kActorMcCoy, -2);
@@ -379,8 +380,7 @@ void SceneScriptHF03::PlayerWalkedIn() {
 		}
 		Actor_Face_Actor(kActorMcCoy, kActorSteele, true);
 		if (_vm->_cutContent) {
-			if (Player_Query_Agenda() != kPlayerAgendaSurly 
-			&& Player_Query_Agenda() != kPlayerAgendaErratic) {
+			if (Player_Query_Agenda() == kPlayerAgendaPolite) {
 				Actor_Says(kActorMcCoy, 1680, 15); //00-1680.AUD	There’s civilians all over the place.
 				Actor_Says(kActorSteele, 220, 14); //01-0220.AUD	Yeah, they move pretty fast, don’t they?
 			}

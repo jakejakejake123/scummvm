@@ -765,7 +765,9 @@ void KIAScript::SCRIPT_KIA_DLL_Play_Clue_Asset_Script(int notUsed, int clueId) {
 		KIA_Play_Actor_Dialogue(kActorVoiceOver, 850);
 		KIA_Play_Actor_Dialogue(kActorVoiceOver, 860);
 		KIA_Play_Actor_Dialogue(kActorVoiceOver, 870);
-		KIA_Play_Actor_Dialogue(kActorVoiceOver, 880);
+		if (!_vm->_cutContent) {
+			KIA_Play_Actor_Dialogue(kActorVoiceOver, 880);
+		}
 		break;
 	case kClueIzosFriend:
 		KIA_Play_Photograph(25);

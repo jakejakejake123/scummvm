@@ -430,8 +430,7 @@ void SceneScriptMA07::PlayerWalkedIn() {
 				Delay(1000);
 				Actor_Says(kActorMcCoy, 6645, 18); //00-6645.AUD	You were raking in the chinyen selling LPD wares to scumbags and Reps.
 				Actor_Says(kActorGuzza, 540, 14); //04-0540.AUD	Trust me. Ain't nobody getting rich unless they're sneaking some on the side.
-				if (Player_Query_Agenda() != kPlayerAgendaSurly 
-				&& Player_Query_Agenda() != kPlayerAgendaErratic) {
+				if (Player_Query_Agenda() == kPlayerAgendaPolite) {
 					Actor_Says(kActorMcCoy, 8345, 18); //00-8345.AUD	I wouldn't know.
 				}
 				Delay(1000);

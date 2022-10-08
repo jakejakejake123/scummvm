@@ -162,8 +162,7 @@ bool SceneScriptDR02::ClickedOnActor(int actorId) {
 				Delay(3000);
 				Actor_Says(kActorMcCoy, 8590, 18);//00-8590.AUD	Not the talkative type.
 				Delay(2000);
-				if (Player_Query_Agenda() != kPlayerAgendaSurly 
-				&& Player_Query_Agenda() != kPlayerAgendaErratic) {
+				if (Player_Query_Agenda() == kPlayerAgendaPolite) {
 					if (Global_Variable_Query(kVariableChinyen) >= 10
 					|| Query_Difficulty_Level() == kGameDifficultyEasy) {
 						Global_Variable_Decrement(kVariableChinyen, 10);

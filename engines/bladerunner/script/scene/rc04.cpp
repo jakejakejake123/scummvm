@@ -85,7 +85,7 @@ void SceneScriptRC04::dialogueWithBulletBob() {
 	if (_vm->_cutContent) {
 		if ( Actor_Clue_Query(kActorMcCoy, kClueLabShellCasings)
 		 && !Actor_Clue_Query(kActorMcCoy, kClueWeaponsCache)) {
-			 DM_Add_To_List_Never_Repeat_Once_Selected(580, -1, 4, 9); // WEAPONS
+			 DM_Add_To_List_Never_Repeat_Once_Selected(580, 1, 4, 9); // WEAPONS
 		 }
 	} else if ( Actor_Clue_Query(kActorMcCoy, kClueLabShellCasings)
 	 && !Actor_Clue_Query(kActorMcCoy, kClueRadiationGoggles)
@@ -108,7 +108,7 @@ void SceneScriptRC04::dialogueWithBulletBob() {
 		DM_Add_To_List_Never_Repeat_Once_Selected(600, -1, 3, 7); // HASAN
 		if (_vm->_cutContent) {
 			if (!Actor_Clue_Query(kActorMcCoy, kClueVKBobGorskyReplicant)) {
-				DM_Add_To_List_Never_Repeat_Once_Selected(1310, -1, 2, 8); // VOIGT-KAMPFF
+				DM_Add_To_List_Never_Repeat_Once_Selected(1310, 1, 2, 8); // VOIGT-KAMPFF
 			}
 		} else {
 			DM_Add_To_List_Never_Repeat_Once_Selected(1310, -1, 2, 8); // VOIGT-KAMPFF
@@ -365,8 +365,7 @@ void SceneScriptRC04::dialogueWithBulletBob() {
 				}
 				Actor_Says(kActorBulletBob, 390, 11); //14-0390.AUD	I went over to introduce myself when he first moved in and he practically ignored me!
 				Actor_Says(kActorBulletBob, 400, 37); //14-0400.AUD	Said he was too busy to talk. Don't think I didn't consider kicking his ass, too.
-				if (Player_Query_Agenda() != kPlayerAgendaSurly 
-				&& Player_Query_Agenda() != kPlayerAgendaErratic) {
+				if (Player_Query_Agenda() == kPlayerAgendaPolite) {
 					Actor_Says(kActorMcCoy, 5040, 16); //00-5040.AUD	Sometimes you just got to be philosophical about these things.
 				} else {
 					Actor_Says(kActorMcCoy, 7835, 16); //00-7835.AUD	Is that so?
@@ -473,8 +472,7 @@ void SceneScriptRC04::dialogueWithBulletBob() {
 					Actor_Says(kActorBulletBob, 820, 31); //14-0820.AUD	Since you didn't shoot me, I must have registered okay.
 				}
 			} else {
-				if (Player_Query_Agenda()!= kPlayerAgendaSurly
-				&& Player_Query_Agenda() != kPlayerAgendaErratic) { 
+				if (Player_Query_Agenda() == kPlayerAgendaPolite) { 
 					Actor_Says(kActorMcCoy, 5040, 16);
 					Actor_Says(kActorBulletBob, 550, 11); //14-0550.AUD	That's exactly what my wife says.
 				}
@@ -646,8 +644,7 @@ void SceneScriptRC04::dialogueWithBulletBob() {
 			Actor_Says(kActorBulletBob, 200, 34); //14-0200.AUD	Nah, it's been quite around here, Ray.
 			Actor_Says(kActorMcCoy, 8320, 18); //00-8320.AUD	Really?
 			Actor_Says(kActorBulletBob, 1810, 34); //14-1810.AUD	Sorry, man. You know if I heard something you guys would be the first call I'd make.
-			if (Player_Query_Agenda() != kPlayerAgendaSurly
-			&& Player_Query_Agenda() != kPlayerAgendaErratic) {
+			if (Player_Query_Agenda() == kPlayerAgendaPolite) {
 				Actor_Says(kActorMcCoy, 1315, 12); //00-1315.AUD	Thanks for your time.
 			} else {
 				Actor_Says(kActorMcCoy, 4595, 14);
@@ -774,8 +771,7 @@ void SceneScriptRC04::dialogueWithBulletBob() {
 				Actor_Says(kActorMcCoy, 5025, 13); //00-5025.AUD	Yeah?
 				Actor_Says(kActorBulletBob, 820, 32); //14-0820.AUD	Since you didn't shoot me, I must have registered okay.
 				if (!Actor_Clue_Query(kActorMcCoy, kClueVKBobGorskyReplicant)) {
-					if (Player_Query_Agenda() == kPlayerAgendaSurly
-					|| Player_Query_Agenda() == kPlayerAgendaErratic) {
+					if (Player_Query_Agenda() == kPlayerAgendaPolite) {
 						Actor_Says(kActorMcCoy, 5100, 11); //00-5100.AUD	Yeah, it was touch-and-go there for a while.
 					} else {
 						Actor_Says(kActorMcCoy, 5705, 18); //00-5705.AUD	Uh-huh.
@@ -900,8 +896,7 @@ bool SceneScriptRC04::ClickedOnActor(int actorId) {
 						Actor_Says(kActorMcCoy, 8965, 16);
 						Actor_Says(kActorBulletBob, 1940, 36); //14-1940.AUD	The department's been infiltrated, right?
 						Actor_Says(kActorBulletBob, 1950, 30); //14-1950.AUD	That's the only way Davy could have been taken out like he was.
-						if (Player_Query_Agenda() != kPlayerAgendaSurly
-						&& Player_Query_Agenda() != kPlayerAgendaErratic) {
+						if (Player_Query_Agenda() == kPlayerAgendaPolite) {
 							Actor_Says(kActorMcCoy, 8970, 13); //00-8970.AUD	Holden is good. No question.
 						} else {
 							Actor_Says(kActorMcCoy, 8320, 18); //00-8320.AUD	Really?
@@ -935,8 +930,7 @@ bool SceneScriptRC04::ClickedOnActor(int actorId) {
 							Item_Pickup_Spin_Effect(kModelAnimationDNADataDisc, 405, 192);
 							Actor_Says(kActorBulletBob, 2030, 30); //14-2030.AUD	There you go better than new.
 							Game_Flag_Set(kFlagKIAPrivacyAddon);
-							if (Player_Query_Agenda() != kPlayerAgendaSurly
-							&& Player_Query_Agenda() != kPlayerAgendaErratic) {
+							if (Player_Query_Agenda() == kPlayerAgendaPolite) {
 								Actor_Says(kActorMcCoy, 3935, 13); //00-3935.AUD	Thanks.
 							}
 						} else {
@@ -953,16 +947,14 @@ bool SceneScriptRC04::ClickedOnActor(int actorId) {
 						Actor_Face_Heading(kActorMcCoy, 240, true);
 						Actor_Face_Heading(kActorBulletBob, 240, true);
 						Delay(1000);
-						if (Player_Query_Agenda() != kPlayerAgendaSurly
-						&& Player_Query_Agenda() != kPlayerAgendaErratic) {
+						if (Player_Query_Agenda() == kPlayerAgendaPolite) {
 							Actor_Says(kActorMcCoy, 4920, 15); //00-4920.AUD	You got some nice pieces here.
 						} else {
 							Actor_Says(kActorMcCoy, 8695, 15); //00-8695.AUD	That's an unusual design.
 						}	
 						Actor_Says(kActorBulletBob, 110, 33); //14-0110.AUD	Take your time, Ray. Enjoy the goods. I got the best in the city right here.
 						Actor_Says(kActorBulletBob, 130, 34); //14-0130.AUD	Anything you want and you don't see, just ask.
-						if (Player_Query_Agenda() != kPlayerAgendaSurly
-						&& Player_Query_Agenda() != kPlayerAgendaErratic) {
+						if (Player_Query_Agenda() == kPlayerAgendaPolite) {
 							Actor_Face_Actor(kActorMcCoy, kActorBulletBob, true);
 							Actor_Face_Actor(kActorBulletBob, kActorMcCoy, true);
 							Actor_Says(kActorMcCoy, 4910, 15); //00-4910.AUD	Thanks.
@@ -1030,8 +1022,7 @@ bool SceneScriptRC04::ClickedOnActor(int actorId) {
 							Item_Pickup_Spin_Effect(kModelAnimationDNADataDisc, 405, 192);
 							Actor_Says(kActorBulletBob, 2030, 30); //14-2030.AUD	There you go better than new.
 							Game_Flag_Set(kFlagKIAPrivacyAddon);
-							if (Player_Query_Agenda() != kPlayerAgendaSurly
-							&& Player_Query_Agenda() != kPlayerAgendaErratic) {
+							if (Player_Query_Agenda() == kPlayerAgendaPolite) {
 								Actor_Says(kActorMcCoy, 3935, 13); //00-3935.AUD	Thanks.
 							}
 						} else {
@@ -1293,8 +1284,7 @@ void SceneScriptRC04::PlayerWalkedIn() {
 		}
 		Actor_Face_Actor(kActorMcCoy, kActorBulletBob, true);
 		if (_vm->_cutContent) {
-			if (Player_Query_Agenda() != kPlayerAgendaSurly
-			&& Player_Query_Agenda() != kPlayerAgendaErratic) {
+			if (Player_Query_Agenda() == kPlayerAgendaPolite) {
 				Actor_Says(kActorMcCoy, 4865, 13);
 				Actor_Says(kActorBulletBob, 10, 32);
 			} 
