@@ -1066,6 +1066,7 @@ void SceneScriptRC02::PlayerWalkedIn() {
 				Actor_Modify_Friendliness_To_Other(kActorClovis, kActorMcCoy, 1);
 				Actor_Modify_Friendliness_To_Other(kActorGuzza, kActorMcCoy, 1);
 				Delay (1000);
+				Game_Flag_Set(kFlagRunciterArrested);
 				Actor_Put_In_Set(kActorRunciter, kSetPS09);
 				Actor_Set_At_XYZ(kActorRunciter, -389.43f, 2.06f, -200.77f, 512);
 				Game_Flag_Reset(kFlagSpinnerAtRC01);
@@ -1088,9 +1089,7 @@ void SceneScriptRC02::PlayerWalkedIn() {
 			Actor_Voice_Over(1980, kActorVoiceOver);
 			Actor_Voice_Over(1990, kActorVoiceOver);
 			Actor_Clue_Acquire(kActorMcCoy, kClueLimpingFootprints, true, -1);
-			if (!_vm->_cutContent) {
-				Actor_Clue_Acquire(kActorMcCoy, kClueGracefulFootprints, true, -1);
-			}
+			Actor_Clue_Acquire(kActorMcCoy, kClueGracefulFootprints, true, -1);
 			Game_Flag_Set(kFlagRC02Entered);
 		}
 		if (Actor_Query_Which_Set_In(kActorRunciter) == kSetRC02_RC51

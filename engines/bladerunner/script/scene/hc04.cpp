@@ -413,7 +413,6 @@ void SceneScriptHC04::dialogueWithIsabella() {
 				Actor_Says(kActorMcCoy, 1395, kAnimationModeTalk); //00-1395.AUD	You're right. But I still think you ought to get yourself a different secret ingredient.
 				Actor_Says(kActorIsabella, 330, kAnimationModeTalk); //59-0330.AUD	You bet, mon. That cheese’s been nothing but trouble for Mama Isabella.
 				Actor_Clue_Acquire(kActorMcCoy, kClueStolenCheese, false, kActorIsabella);
-				CDB_Set_Crime(kClueStolenCheese, kCrimeCheeseTheft);
 			}
 		} else {
 			Actor_Says(kActorMcCoy, 1375, kAnimationModeTalk); //00-1375.AUD	Where did you get it?

@@ -452,7 +452,7 @@ void SceneScriptTB02::PlayerWalkedIn() {
 				Actor_Says(kActorMcCoy, 5130, 13);
 				Actor_Says(kActorTyrellGuard, 10, 15); //17-0010.AUD	Grav Test on the East Wing. 66th floor.
 				Actor_Says(kActorMcCoy, 4130, kAnimationModeTalk); //00-4130.AUD	Anything else?
-				Actor_Says(kActorTyrellGuard, 10, 15); //17-0390.AUD	I've told you everything I know, sir.
+				Actor_Says(kActorTyrellGuard, 390, 15); //17-0390.AUD	I've told you everything I know, sir.
 				if (Player_Query_Agenda() != kPlayerAgendaSurly
 				&& Player_Query_Agenda() != kPlayerAgendaErratic) {
 					Actor_Says(kActorMcCoy, 4180, kAnimationModeTalk); //00-4180.AUD	You sure?
@@ -610,7 +610,7 @@ void SceneScriptTB02::PlayerWalkedIn() {
 					Actor_Says(kActorTyrellGuard, 430, 13);	//17-0430.AUD	Here's what I heard just a little while ago.
 					Actor_Says(kActorTyrellGuard, 150, 14); //17-0150.AUD	The lab runs tests to see how a Replicant would perform in different planetary gravitational fields. That kind of thing.
 					Actor_Says(kActorTyrellGuard, 170, 12);
-					Player_Loses_Control();
+					Player_Gains_Control();
 					Actor_Clue_Acquire(kActorMcCoy, kClueVictimInformation, true, kActorTyrellGuard);
 				} else {
 					Actor_Says(kActorTyrellGuard, 400, 13); //17-0400.AUD	I'm a little busy for this, sir.
@@ -725,18 +725,18 @@ void SceneScriptTB02::dialogueWithTyrellGuard() {
 	case 710: // EARRING
 		Actor_Says(kActorMcCoy, 5170, 12);
 		if (_vm->_cutContent) {
-			Actor_Says(kActorTyrellGuard, 180, 12);
-			Actor_Says(kActorTyrellGuard, 190, 14);
-			Game_Flag_Set(kFlagTyrellGuardEarringTalk);
-			// Made it so McCoy also makes the Eisenduller mumu comment if he just saw the Tyrell security photo.
-			// Also made it so McCoy and the guard won't pleasantly joke about Eisendullers mumu if they have low friendliness. 
-			if (Game_Flag_Query(kFlagTB06Visited) 
-			|| Actor_Clue_Query(kActorMcCoy, kClueTyrellSecurityPhoto)) {
-				Actor_Says(kActorMcCoy, 5195, 13); //00-5195.AUD	How did Eisenduller's muumuu fit in?
-				if (Actor_Query_Friendliness_To_Other(kActorTyrellGuard, kActorMcCoy) > 49) {
+			if (Actor_Query_Friendliness_To_Other(kActorTyrellGuard, kActorMcCoy) < 50) {
+				Actor_Says(kActorTyrellGuard, 400, 12); //17-0400.AUD	I'm a little busy for this, sir.
+			} else {
+				Actor_Says(kActorTyrellGuard, 180, 12);
+				Actor_Says(kActorTyrellGuard, 190, 14);
+				Game_Flag_Set(kFlagTyrellGuardEarringTalk);
+				// Made it so McCoy also makes the Eisenduller mumu comment if he just saw the Tyrell security photo.
+				// Also made it so McCoy and the guard won't pleasantly joke about Eisendullers mumu if they have low friendliness. 
+				if (Game_Flag_Query(kFlagTB06Visited) 
+				|| Actor_Clue_Query(kActorMcCoy, kClueTyrellSecurityPhoto)) {
+					Actor_Says(kActorMcCoy, 5195, 13); //00-5195.AUD	How did Eisenduller's muumuu fit in?
 					Actor_Says(kActorTyrellGuard, 200, 13); //17-0200.AUD	Heh. Hey, you know company rules only apply to the lesser mortals.
-				} else {
-					Actor_Says(kActorTyrellGuard, 400, 12); //17-0400.AUD	I'm a little busy for this, sir.
 				}
 			}
 		} else {

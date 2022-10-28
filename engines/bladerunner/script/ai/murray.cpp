@@ -46,7 +46,9 @@ bool AIScriptMurray::Update() {
 	) {
 		Actor_Set_Goal_Number(kActorMurray, 300);
 	}
-
+	if (Game_Flag_Query(kFlagMiaAndMurrayArrested)) {
+		Actor_Set_Goal_Number(kActorMurray, 300);
+	}
 	if (Player_Query_Current_Set() != kSetHF01) {
 		return true;
 	}

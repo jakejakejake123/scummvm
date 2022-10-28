@@ -99,7 +99,6 @@ bool SceneScriptUG12::ClickedOnExit(int exitId) {
 					if (!Game_Flag_Query(kFlagCarEnding)) {
 						Ambient_Sounds_Remove_All_Non_Looping_Sounds(true);
 						Ambient_Sounds_Remove_All_Looping_Sounds(1u);
-						Game_Flag_Set(kFlagUG12toKP02);
 						Set_Enter(kSetKP02, kSceneKP02);
 					} else {
 						Actor_Says(kActorMcCoy, 7815, 14); //00-7815.AUD	No.
@@ -111,7 +110,6 @@ bool SceneScriptUG12::ClickedOnExit(int exitId) {
 			} else {
 				Ambient_Sounds_Remove_All_Non_Looping_Sounds(true);
 				Ambient_Sounds_Remove_All_Looping_Sounds(1u);
-				Game_Flag_Set(kFlagUG12toKP02);
 				Set_Enter(kSetKP02, kSceneKP02);
 			}
 		}

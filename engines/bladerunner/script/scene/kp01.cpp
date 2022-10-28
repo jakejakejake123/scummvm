@@ -31,7 +31,6 @@ void SceneScriptKP01::InitializeScene() {
 		Setup_Scene_Information(-284.0f, -12.2f, -789.0f, 445);
 	} else {
 		Setup_Scene_Information( 239.0f, -12.2f, -146.0f, 820);
-		Game_Flag_Reset(kFlagKP02toKP01);
 		if (!Game_Flag_Query(kFlagKP01Entered)
 		 && !Game_Flag_Query(kFlagMcCoyIsHelpingReplicants)
 		) {

@@ -962,8 +962,8 @@ void SceneScriptHF01::dialogueWithMiaAndMurray() {
 				Actor_Says(kActorMcCoy, 4360, 16); //00-4360.AUD	Tell it straight or I'm gonna make sure you get the same as he gets. Full conspiracy, payable for 25.
 				Delay(2000);
 				Actor_Says(kActorMcCoy, 3095, 18); //00-3095.AUD	Now we’re gonna take a little ride downtown.	
-				Game_Flag_Set(kFlagMiaAndMurrayArrested);
 				Delay(1000);
+				Game_Flag_Set(kFlagMiaAndMurrayArrested);
 				Actor_Put_In_Set(kActorMurray, kSetPS09);
 				Actor_Set_At_XYZ(kActorMurray, -455.0f, 0.2f, -210.0f, 518);
 				Actor_Put_In_Set(kActorMia, kSetPS09);

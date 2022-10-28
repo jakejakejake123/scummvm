@@ -63,6 +63,42 @@ void SceneScriptPS09::InitializeScene() {
 		Actor_Set_At_XYZ(kActorCrazylegs, -290.0f, 0.33f, -235.0f, 583);
 #endif
 	}
+	if (_vm->_cutContent) {
+		if (Game_Flag_Query(kFlagIsabellaArrested)) {
+			Actor_Put_In_Set(kActorIsabella, kSetPS09);
+			Actor_Set_At_XYZ(kActorIsabella, -450.0f, 0.2f, -195.0f, 518);
+		}
+		if (Game_Flag_Query(kFlagBulletBobArrested)) {
+			Actor_Put_In_Set(kActorBulletBob, kSetPS09);
+			Actor_Set_At_XYZ(kActorBulletBob, -476.0f, 0.2f, -300.0f, 200);
+		}
+		if (Game_Flag_Query(kFlagHasanArrested)) {
+			Actor_Put_In_Set(kActorHasan, kSetPS09);
+			Actor_Set_At_XYZ(kActorHasan, -300.0f, 0.33f, -330.0f, 512);
+		}
+		if (Game_Flag_Query(kFlagInsectDealerArrested)) {
+			Actor_Put_In_Set(kActorInsectDealer, kSetPS09);
+			Actor_Set_At_XYZ(kActorInsectDealer, -300.0f, 0.33f, -280.0f, 512);
+		}
+		if (Game_Flag_Query(kFlagMiaAndMurrayArrested)) {
+			Actor_Put_In_Set(kActorMurray, kSetPS09);
+			Actor_Set_At_XYZ(kActorMurray, -455.0f, 0.2f, -210.0f, 518);
+			Actor_Put_In_Set(kActorMia, kSetPS09);
+			Actor_Set_At_XYZ(kActorMia, -460.0f, 0.2f, -239.0f, 518);
+		}
+		if (Game_Flag_Query(kFlagRunciterArrested)) {
+			Actor_Put_In_Set(kActorRunciter, kSetPS09);
+			Actor_Set_At_XYZ(kActorRunciter, -389.43f, 2.06f, -200.77f, 512);
+		}
+		if (Game_Flag_Query(kFlagEarlyQArrested)) {
+			Actor_Put_In_Set(kActorEarlyQ, kSetPS09);
+			Actor_Set_At_XYZ(kActorEarlyQ, -428.88f, 0.15f, -220.74f, 512);
+		}
+		if (Game_Flag_Query(kFlagDektoraArrested)) {
+			Actor_Put_In_Set(kActorDektora, kSetPS09);
+			Actor_Set_At_XYZ(kActorDektora, -330.0f, 0.33f, -270.0f, 583);
+		}
+	}
 }
 
 void SceneScriptPS09::SceneLoaded() {
@@ -712,9 +748,6 @@ void SceneScriptPS09::dialogueWithGrigorian() {
 				Actor_Says_With_Pause(kActorGrigorian, 340, 0.0f, 14);
 			}
 			Actor_Clue_Acquire(kActorMcCoy, kClueGrigoriansResources, true, kActorGrigorian);
-			if (_vm->_cutContent) {
-				CDB_Set_Crime(kClueGrigoriansResources, kCrimeReplicantHarboring);
-			}
 #endif // BLADERUNNER_ORIGINAL_BUGS
 		//Altered code so McCoy can be nice.
 		if (_vm->_cutContent) {

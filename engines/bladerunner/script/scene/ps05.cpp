@@ -187,7 +187,7 @@ void SceneScriptPS05::PlayerWalkedIn() {
 			Actor_Face_Object(kActorMcCoy, "ASHTRAY", true);
 			Actor_Says(kActorMcCoy, 8525, -1); // 00-8525.AUD	Hmph.
 			Delay(1000);
-			Loop_Actor_Walk_To_XYZ(kActorMcCoy, 662.0f, 0.37f, -180.0f, 0, true, true, false);
+			Loop_Actor_Walk_To_XYZ(kActorMcCoy, 662.0f, 0.37f, -180.0f, 0, true, false, false);
 			Actor_Voice_Over(1770, kActorVoiceOver);
 			Actor_Voice_Over(1780, kActorVoiceOver);
 			Actor_Voice_Over(1790, kActorVoiceOver);

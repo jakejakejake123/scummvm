@@ -29,7 +29,7 @@ void SceneScriptRC04::InitializeScene() {
 
 	Scene_Exit_Add_2D_Exit(0, 225, 47, 359, 248, 0);
 	// Added a 2D region to the left weapons cabinet so when the player clicks on it the dialogue about the bullet proof vest plays.
-	if (_vm->_cutContent && Game_Flag_Query(kFlagRC04BobTalk2)) {
+	if (_vm->_cutContent) {
 		Scene_2D_Region_Add(0, 1, 1, 150, 200); 
 	}
 
@@ -472,25 +472,27 @@ void SceneScriptRC04::dialogueWithBulletBob() {
 					Actor_Says(kActorBulletBob, 820, 31); //14-0820.AUD	Since you didn't shoot me, I must have registered okay.
 				}
 			} else {
-				if (Player_Query_Agenda() == kPlayerAgendaPolite) { 
+				if (Player_Query_Agenda() != kPlayerAgendaSurly 
+				&& Player_Query_Agenda() != kPlayerAgendaErratic) {
 					Actor_Says(kActorMcCoy, 5040, 16);
 					Actor_Says(kActorBulletBob, 550, 11); //14-0550.AUD	That's exactly what my wife says.
+				} else {
+					Actor_Says(kActorMcCoy, 3095, 15); //00-3095.AUD	Now we’re gonna take a little ride downtown.
+					Game_Flag_Set(kFlagBulletBobArrested);
+					Actor_Modify_Friendliness_To_Other(kActorHasan, kActorMcCoy, 10);
+					Delay (1000);
+					Actor_Put_In_Set(kActorBulletBob, kSetPS09);
+					Actor_Set_At_XYZ(kActorBulletBob, -476.0f, 0.2f, -300.0f, 200);
+					Game_Flag_Reset(kFlagSpinnerAtAR01);
+					Game_Flag_Reset(kFlagSpinnerAtRC01);
+					Game_Flag_Set(kFlagSpinnerAtPS01);
+					Scene_Exits_Enable();
+					Game_Flag_Reset(kFlagMcCoyInAnimoidRow);
+					Game_Flag_Set(kFlagMcCoyInPoliceStation);
+					Outtake_Play(kOuttakeAway1, true, -1);
+					Set_Enter(kSetPS09, kScenePS09);
+					Actor_Set_Targetable(kActorBulletBob, false);
 				}
-				Actor_Says(kActorMcCoy, 3095, 15); //00-3095.AUD	Now we’re gonna take a little ride downtown.
-				Game_Flag_Set(kFlagBulletBobArrested);
-				Actor_Modify_Friendliness_To_Other(kActorHasan, kActorMcCoy, 10);
-				Delay (1000);
-				Actor_Put_In_Set(kActorBulletBob, kSetPS09);
-				Actor_Set_At_XYZ(kActorBulletBob, -476.0f, 0.2f, -300.0f, 200);
-				Game_Flag_Reset(kFlagSpinnerAtAR01);
-				Game_Flag_Reset(kFlagSpinnerAtRC01);
-				Game_Flag_Set(kFlagSpinnerAtPS01);
-				Scene_Exits_Enable();
-				Game_Flag_Reset(kFlagMcCoyInAnimoidRow);
-				Game_Flag_Set(kFlagMcCoyInPoliceStation);
-				Outtake_Play(kOuttakeAway1, true, -1);
-				Set_Enter(kSetPS09, kScenePS09);
-				Actor_Set_Targetable(kActorBulletBob, false);
 			}	
 		} else {
 			Actor_Says(kActorMcCoy, 5040, 16);
@@ -960,7 +962,8 @@ bool SceneScriptRC04::ClickedOnActor(int actorId) {
 							Actor_Says(kActorMcCoy, 4910, 15); //00-4910.AUD	Thanks.
 							Actor_Modify_Friendliness_To_Other(kActorBulletBob, kActorMcCoy, 2);
 							Delay(1000);
-						} else {
+						} else if (Player_Query_Agenda() == kPlayerAgendaSurly
+						|| Player_Query_Agenda() == kPlayerAgendaErratic) {
 							Actor_Says(kActorMcCoy, 8575, 14); // More useless junk.
 							Actor_Face_Actor(kActorBulletBob, kActorMcCoy, true);
 							Actor_Says(kActorBulletBob, 1680, 34); //14-1680.AUD	Is that right?
@@ -970,6 +973,8 @@ bool SceneScriptRC04::ClickedOnActor(int actorId) {
 							Delay(1000);
 							Actor_Says(kActorBulletBob, 1400, 34); //14-1400.AUD	Hmm yeah, sure.
 							Delay(2000);
+						} else {
+							Delay(1000);
 						}
 						Actor_Face_Actor(kActorMcCoy, kActorBulletBob, true);
 						Actor_Face_Actor(kActorBulletBob, kActorMcCoy, true);
@@ -987,12 +992,7 @@ bool SceneScriptRC04::ClickedOnActor(int actorId) {
 						}
 						Actor_Says(kActorBulletBob, 1940, 36); //14-1940.AUD	The department's been infiltrated, right?
 						Actor_Says(kActorBulletBob, 1950, 30); //14-1950.AUD	That's the only way Davy could have been taken out like he was.
-						if (Player_Query_Agenda() != kPlayerAgendaSurly
-						&& Player_Query_Agenda() != kPlayerAgendaErratic) {
-							Actor_Says(kActorMcCoy, 8970, 13); //00-8970.AUD	Holden is good. No question.
-						} else {
-							Actor_Says(kActorMcCoy, 8320, 18); //00-8320.AUD	Really?
-						}
+						Actor_Says(kActorMcCoy, 8970, 13); //00-8970.AUD	Holden is good. No question.
 						Actor_Says(kActorBulletBob, 1960, 33); //14-1960.AUD	When you hook into the mainframe you always give them everything.
 						Actor_Says(kActorBulletBob, 1970, 30);
 						Actor_Says(kActorBulletBob, 1980, 36);
@@ -1203,6 +1203,8 @@ bool SceneScriptRC04::ClickedOn2DRegion(int region) {
 				) {
 					Actor_Says(kActorMcCoy, 7000, 13); //00-7000.AUD	Yeah, okay. I'll take it.
 					Loop_Actor_Walk_To_Waypoint(kActorMcCoy, 104, 0, false, false);
+					Actor_Face_Actor(kActorMcCoy, kActorBulletBob, true);
+					Actor_Face_Actor(kActorBulletBob, kActorMcCoy, true);
 					Actor_Change_Animation_Mode(kActorMcCoy, 23);
 					Actor_Change_Animation_Mode(kActorBulletBob, 23);
 					Delay(2000);

@@ -2398,9 +2398,6 @@ void InitScript::Init_SDB() {
 		SDB_Add_Photo_Clue(kSuspectClovis, kClueMoonbus1, 34);
 	}
 	SDB_Add_Photo_Clue(kSuspectClovis, kClueIzosFriend, 25);
-	if (_vm->_cutContent) {
-		SDB_Add_Photo_Clue(kSuspectClovis, kClueChinaBar, 19);
-	}
 
 	SDB_Set_Actor(kSuspectZuben, kActorZuben);
 	SDB_Set_Sex(kSuspectZuben, 1);

@@ -297,8 +297,6 @@ void AIScriptRunciter::OtherAgentEnteredCombatMode(int otherActorId, int combatM
 			Delay(1000);
 		}
 		Actor_Face_Actor(kActorRunciter, kActorMcCoy, true);
-		Actor_Says(kActorRunciter, 730, 13); //15-0730.AUD	Please. Just leave me alone.
-		Delay(1000);
 		Actor_Says(kActorMcCoy, 3690, 14); //00-3690.AUD	Look. I wanna warn you. There’s a woman looking for you and your friends.
 		Actor_Says(kActorRunciter, 590, 15); //15-0590.AUD	What? Who?
 		Actor_Says(kActorMcCoy, 3695, 13); //00-3695.AUD	You know what I’m talking about. It’s real important that you get out of here.

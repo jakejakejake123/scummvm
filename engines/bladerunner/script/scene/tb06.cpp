@@ -130,7 +130,6 @@ bool SceneScriptTB06::ClickedOnItem(int itemId, bool a2) {
 					Actor_Says(kActorMcCoy, 8790, 3); //00-8790.AUD	A dog collar.
 					Actor_Says(kActorMcCoy, 8525, 13); // 00-8525.AUD	Hmph.
 				} else {
-					Actor_Voice_Over(4160, kActorVoiceOver);
 					Item_Pickup_Spin_Effect(kModelAnimationDogCollar, 341, 368);
 					Item_Remove_From_World(kItemDogCollar);
 					Actor_Voice_Over(4160, kActorVoiceOver);
@@ -299,6 +298,7 @@ void SceneScriptTB06::PlayerWalkedIn() {
 					Actor_Face_Actor(kActorPhotographer, kActorMarcus, true);
 					Actor_Says(kActorPhotographer, 10, kAnimationModeTalk); //37-0010.AUD	You could strain him through a sieve.
 					Actor_Face_Actor(kActorMcCoy, kActorPhotographer, true);
+					Actor_Face_Actor(kActorPhotographer, kActorMcCoy, true);
 					Delay(1000);
 					Actor_Face_Actor(kActorMcCoy, kActorMarcus, true);
 					Delay(2000);

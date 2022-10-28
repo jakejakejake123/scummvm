@@ -230,7 +230,8 @@ bool SceneScriptCT01::ClickedOnActor(int actorId) {
 				} else {
 					if (Game_Flag_Query(kFlagZubenRetired) 
 					&& !Game_Flag_Query(kFlagCT01TalkToHowieAboutDeadZuben)) {
-						if (Game_Flag_Query(kFlagMcCoyIsHelpingReplicants)) {
+						if (Player_Query_Agenda() != kPlayerAgendaSurly 
+						&& Player_Query_Agenda() != kPlayerAgendaErratic) {
 							Game_Flag_Set(kFlagCT01TalkToHowieAboutDeadZuben);
 							Actor_Says(kActorMcCoy, 330, 17); //00-0330.AUD	Hey, Howie, what's cooking?
 							Actor_Says(kActorHowieLee, 130, 13); //28-0130.AUD	Nothing now, McCoy.
@@ -243,18 +244,6 @@ bool SceneScriptCT01::ClickedOnActor(int actorId) {
 							Actor_Says(kActorMcCoy, 4420, 17);//00-4420.AUD	Contacting business with Reps is against the Law.
 							Actor_Says(kActorMcCoy, 1970, 13); //00-1970.AUD	You should start thinking about the company you keep.
 							Actor_Says(kActorHowieLee, 220, 14); //28-0220.AUD	Fine. But Howie do you favors no more.	
-							Actor_Says(kActorMcCoy, 3095, 15); //00-3095.AUD	Now we’re gonna take a little ride downtown.
-							Music_Stop(1u);
-							Delay (1000);
-							Game_Flag_Set(kFlagHowieLeeArrested); 
-							AI_Movement_Track_Flush(kActorHowieLee);
-							Actor_Put_In_Set(kActorHowieLee, kSetPS09);
-							Actor_Set_At_XYZ(kActorHowieLee, -399.5f, 0.2f, -255.0f, 210);
-							Game_Flag_Reset(kFlagSpinnerAtCT01);
-							Game_Flag_Set(kFlagSpinnerAtPS01);
-							Game_Flag_Reset(kFlagMcCoyInChinaTown);
-							Game_Flag_Set(kFlagMcCoyInPoliceStation);
-							Set_Enter(kSetPS09, kScenePS09);
 						}	
 					} else if (Game_Flag_Query(kFlagCT01TalkToHowieAboutDeadZuben)
 					&& Actor_Query_Friendliness_To_Other(kActorHowieLee, kActorMcCoy) < 50) {

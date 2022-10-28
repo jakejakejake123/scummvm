@@ -217,16 +217,14 @@ void SceneScriptUG09::PlayerWalkedIn() {
 			Actor_Says(kActorIzo, 790, 16); //07-0790.AUD	I’ll tell him you helped me. That’s as much as I can do.
 		} 
 		Actor_Says(kActorIzo, 870, 17); //07-0870.AUD	I’ve been warned not to waste any more words with you.
-		if (Player_Query_Agenda() != kPlayerAgendaSurly 
-		&& Player_Query_Agenda() != kPlayerAgendaErratic) {
+		if (Player_Query_Agenda() == kPlayerAgendaPolite) {
 			Actor_Says(kActorMcCoy, 6730, 15); //00-6730.AUD	I’ll do you a good turn, if you hook me up with Clovis.
 			Actor_Says(kActorIzo, 880, 14); //07-0880.AUD	Good turns are meaningless to me, if I go against Clovis’ wishes.
 		}
 		Actor_Says(kActorMcCoy, 6750, 18); //00-6750.AUD	You’re afraid of him?
 		Actor_Says(kActorIzo, 890, 13); //07-0890.AUD	People must prove themselves to me before I make any judgments
 		Actor_Says(kActorIzo, 900, 15); //07-0900.AUD	Clovis has done that. A thousand times over. He’s not to be taken lightly.
-		if (Player_Query_Agenda() == kPlayerAgendaSurly 
-		|| Player_Query_Agenda() == kPlayerAgendaErratic) {
+		if (Player_Query_Agenda() != kPlayerAgendaPolite) {
 			Actor_Says(kActorMcCoy, 5470, 15); //00-5470.AUD	Get lost, Izo. Take off.
 		}
 		Loop_Actor_Walk_To_XYZ(kActorIzo, -109.20, 152.67, -676.67, 48, false, true, false);

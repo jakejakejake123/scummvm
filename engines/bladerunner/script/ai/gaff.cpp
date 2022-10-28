@@ -87,7 +87,11 @@ void AIScriptGaff::CompletedMovementTrack() {
 			Actor_Says(kActorMcCoy, 675, kAnimationModeTalk); //00-0675.AUD	I understand it's got a hell of a retirement plan.
 		}
 		if (_vm->_cutContent) {
-			Actor_Says(kActorMcCoy, 8514, 14); //00-8514.AUD	Got anything new to tell me?
+			if (Player_Query_Agenda() == kPlayerAgendaPolite) {
+				Actor_Says(kActorMcCoy, 8610, 18); //00-8610.AUD	What's the word, friend?
+			} else {
+				Actor_Says(kActorMcCoy, 8514, 14);//00-8514.AUD	Got anything new to tell me?
+			}
 		}
 		Actor_Says(kActorGaff, 20, kAnimationModeTalk);
 		Actor_Says(kActorMcCoy, 680, kAnimationModeTalk);
@@ -202,8 +206,7 @@ void AIScriptGaff::ClickedByPlayer() {
 		Actor_Face_Actor(kActorGaff, kActorMcCoy, true);
 		if (_vm->_cutContent) {	
 			if (!Game_Flag_Query(kFlagGaffTalk)) {
-				if (Player_Query_Agenda() != kPlayerAgendaSurly 
-				&& Player_Query_Agenda() != kPlayerAgendaErratic) {
+				if (Player_Query_Agenda() == kPlayerAgendaPolite) {
 					Actor_Says(kActorMcCoy, 8610, 18); //00-8610.AUD	What's the word, friend?
 				} else {
 					Actor_Says(kActorMcCoy, 8514, 14);//00-8514.AUD	Got anything new to tell me?
@@ -227,7 +230,9 @@ void AIScriptGaff::ClickedByPlayer() {
 					Actor_Says(kActorMcCoy, 8320, kAnimationModeTalk); //00-8320.AUD	Really?
 				}
 				Actor_Says(kActorGaff, 190, kAnimationModeTalk); //53-0190.AUD	It's like I said before. You retire a human, your career is over.
-				Actor_Says(kActorGaff, 200, kAnimationModeTalk); //53-0200.AUD	Your life too, maybe.
+				if (Actor_Query_Friendliness_To_Other(kActorGaff, kActorMcCoy) < 50) {
+					Actor_Says(kActorGaff, 200, kAnimationModeTalk); //53-0200.AUD	Your life too, maybe.
+				}
 				Delay (1000);
 				Game_Flag_Set(kFlagGaffTalk);
 				AI_Movement_Track_Unpause(kActorGaff);
@@ -240,6 +245,7 @@ void AIScriptGaff::ClickedByPlayer() {
 				} else if (Actor_Query_Friendliness_To_Other(kActorGaff, kActorMcCoy) == 50) {
 					Actor_Says(kActorGaff, 110, 13); //53-0110.AUD	Tough day, McCoy.
 				}
+				AI_Movement_Track_Unpause(kActorGaff);
 			}
 		} else {
 			if (Random_Query(1, 3) == 1) {

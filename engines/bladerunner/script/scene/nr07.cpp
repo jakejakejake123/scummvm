@@ -847,6 +847,7 @@ void SceneScriptNR07::talkAboutMoonbus() {
 			Ambient_Sounds_Remove_All_Non_Looping_Sounds(true);
 			Ambient_Sounds_Remove_All_Looping_Sounds(1u);
 			Delay (1000);
+			Game_Flag_Set(kFlagDektoraArrested);
 			Actor_Put_In_Set(kActorDektora, kSetPS09);
 			Actor_Set_At_XYZ(kActorDektora, -330.0f, 0.33f, -270.0f, 583);
 			Game_Flag_Reset(kFlagSpinnerAtNR01);

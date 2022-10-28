@@ -46,7 +46,9 @@ bool AIScriptMia::Update() {
 	) {
 		Actor_Set_Goal_Number(kActorMia, 300);
 	}
-
+	if (Game_Flag_Query(kFlagMiaAndMurrayArrested)) {
+		Actor_Set_Goal_Number(kActorMia, 300);
+	}
 	return false;
 }
 

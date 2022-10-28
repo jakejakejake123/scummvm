@@ -159,13 +159,7 @@ void AIScriptMcCoy::ReceivedClue(int clueId, int fromActorId) {
 		break;
 
 	case kClueDragonflyEarring:
-		if (_vm->_cutContent) {
-			if (Game_Flag_Query(kFlagTB06PhotographTalk1)
-			&& Game_Flag_Query(kFlagTyrellGuardEarringTalk)) {
-				Spinner_Set_Selectable_Destination_Flag(kSpinnerDestinationAnimoidRow, true);
-			}
-		}
-		break;
+		// fall through
 	case kClueBombingSuspect:
 		Spinner_Set_Selectable_Destination_Flag(kSpinnerDestinationAnimoidRow, true);
 		break;
@@ -256,9 +250,7 @@ void AIScriptMcCoy::ReceivedClue(int clueId, int fromActorId) {
 
 	case kClueOriginalRequisitionForm:
 		if (_vm->_cutContent) {
-			if (Actor_Clue_Query(kActorMcCoy, kClueRequisitionForm)) {
-				Global_Variable_Increment(kVariableCorruptedGuzzaEvidence, 7);
-			}
+			Global_Variable_Increment(kVariableCorruptedGuzzaEvidence, 7);
 		}
 		break;
 

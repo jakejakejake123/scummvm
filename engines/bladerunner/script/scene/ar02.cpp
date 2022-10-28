@@ -665,15 +665,14 @@ void SceneScriptAR02::dialogueWithInsectDealer1() {
 				Actor_Says(kActorInsectDealer, 160, 13); //16-0160.AUD	then you buy a piece, right? For special lady friend?
 				Actor_Says(kActorInsectDealer, 170, 14); //16-0170.AUD	You come back later.
 				if (_vm->_cutContent) {
-					if (Game_Flag_Query(kFlagMcCoyIsHelpingReplicants)) {
+					if (Player_Query_Agenda() == kPlayerAgendaPolite) {
 						Actor_Says(kActorMcCoy, 100, 16); //00-0100.AUD	I'll do that.
 						Actor_Says(kActorInsectDealer, 180, 13); //16-0180.AUD	Ah, you take care chasing the Dragon.
 					} else {
 						Actor_Says(kActorMcCoy, 7980, 19); //00-7980.AUD	Yeah. Maybe.
-						Actor_Says(kActorInsectDealer, 170, 14); //16-0170.AUD	You come back later.
+						Actor_Says(kActorInsectDealer, 180, 13); //16-0180.AUD	Ah, you take care chasing the Dragon.
 					}
 				} else {
-					Actor_Says(kActorInsectDealer, 170, 14); //16-0170.AUD	You come back later.
 					Actor_Says(kActorMcCoy, 100, 16); //00-0100.AUD	I'll do that.
 					Actor_Says(kActorInsectDealer, 180, 13); //16-0180.AUD	Ah, you take care chasing the Dragon.
 				}

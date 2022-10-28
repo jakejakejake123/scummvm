@@ -353,6 +353,8 @@ bool AIScriptClovis::GoalChanged(int currentGoalNumber, int newGoalNumber) {
 		if (_vm->_cutContent) {
 			if (Actor_Query_Friendliness_To_Other(kActorClovis, kActorMcCoy) > 50) {
 				Actor_Says(kActorClovis, 10, 15); //05-0010.AUD	Enough!
+			} else {
+				Delay(1000);
 			}
 		} else {
 			Actor_Says(kActorClovis, 10, 15);

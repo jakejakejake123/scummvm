@@ -1287,7 +1287,7 @@ void SceneScriptHF05::talkWithCrazylegs3(int affectionTowardsActor) {
 				Delay(1000);
 				Actor_Says(kActorCrazylegs, 1160, 13); //09-1160.AUD	Take a ride, McCoy. I already told you everything.
 				Actor_Change_Animation_Mode(kActorMcCoy, 5);
-				Delay(500);
+				Delay(1000);
 				if (Actor_Query_Is_In_Current_Set(kActorDektora)) {
 					if (!Game_Flag_Query(kFlagDektoraIsReplicant)) {
 						Actor_Says(kActorDektora, 90, kAnimationModeTalk); //03-0090.AUD	Ray!?

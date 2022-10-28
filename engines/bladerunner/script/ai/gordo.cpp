@@ -349,6 +349,7 @@ bool AIScriptGordo::ShotAtAndHit() {
 		Actor_Set_Goal_Number(kActorGordo, kGoalGordoNR01Die);
 		Delay(1500);
 		Actor_Voice_Over(2410, kActorVoiceOver);
+		// Made it so McCoy does the right thing and turns himself in depending on his agenda.
 		if (_vm->_cutContent) {
 			if (Player_Query_Agenda() != kPlayerAgendaSurly 
 			&& Player_Query_Agenda() != kPlayerAgendaErratic) {
@@ -385,9 +386,8 @@ void AIScriptGordo::Retired(int byActorId) {
 		Delay(2000);
 		Player_Set_Combat_Mode(false);
 		if (_vm->_cutContent) {
-			// Made it so McCoy only feels bad about retiring Gordo if he is not surly or erratic.
-			if (Player_Query_Agenda() != kPlayerAgendaSurly 
-			&& Player_Query_Agenda() != kPlayerAgendaErratic) {
+			// Made it so McCoy only feels bad about retiring Gordo if he is Polite.
+			if (Player_Query_Agenda() == kPlayerAgendaPolite) {
 				Actor_Voice_Over(1410, kActorVoiceOver);
 				Actor_Voice_Over(1430, kActorVoiceOver);
 				Actor_Voice_Over(1440, kActorVoiceOver);
@@ -722,6 +722,7 @@ bool AIScriptGordo::GoalChanged(int currentGoalNumber, int newGoalNumber) {
 						Actor_Says(kActorMcCoy, 3910, 16); //00-3910.AUD	You’re lying.
 						Delay(2000);
 						Actor_Says(kActorMcCoy, 6865, 14); //00-6865.AUD	You're a Replicant.
+						// Added in some code for an action scene between McCoy and Gordo.
 						Music_Stop(1u);
 						Player_Loses_Control();
 						Delay(1000);
@@ -818,15 +819,13 @@ bool AIScriptGordo::GoalChanged(int currentGoalNumber, int newGoalNumber) {
 				if (!Actor_Clue_Query(kActorMcCoy, kClueGordoConfession) 
 				&& !Actor_Clue_Query(kActorMcCoy, kClueGordoInterview3)) {
 					Actor_Says(kActorGordo, 790, 12); //02-0790.AUD	Doesn’t, eh? What if I pretended to be a Replicant?
-					if (_vm->_cutContent) {
-						if (Player_Query_Agenda() == kPlayerAgendaSurly
-						|| (Player_Query_Agenda() == kPlayerAgendaErratic)) {
-							Actor_Says(kActorMcCoy, 3890, 15); //00-3890.AUD	That just an excuse for your lousy act, Gordo?
-							Sound_Play(kSfxRIMSHOT3, 50, 0, 0, 50);
-							Sound_Play(kSfxAUDLAFF3, 50, 0, 0, 50);
-						} else {
-							Actor_Says(kActorMcCoy, 7885, 13); //00-7885.AUD	You're saying that makes it okay?
-						}
+					if (Player_Query_Agenda() == kPlayerAgendaSurly
+					|| (Player_Query_Agenda() == kPlayerAgendaErratic)) {
+						Actor_Says(kActorMcCoy, 3890, 15); //00-3890.AUD	That just an excuse for your lousy act, Gordo?
+						Sound_Play(kSfxRIMSHOT3, 50, 0, 0, 50);
+						Sound_Play(kSfxAUDLAFF3, 50, 0, 0, 50);
+					} else {
+						Actor_Says(kActorMcCoy, 7885, 13); //00-7885.AUD	You're saying that makes it okay?
 					}
 				} 
 				Actor_Says(kActorGordo, 800, 15); //02-0800.AUD	(laughs) That snake dancer that worked here. Zhora? She was a Rep.
@@ -1991,8 +1990,7 @@ void AIScriptGordo::talkToMcCoyInCity() {
 		if (_vm->_cutContent) {
 			if (Game_Flag_Query(kFlagGordoIsReplicant)) {
 				Actor_Says(kActorGordo, 980, 15); //02-0980.AUD	Got any chinyen you can part with? Just so I can grab myself a couple of lichen-dogs.
-				if (Player_Query_Agenda() != kPlayerAgendaSurly
-				&&  Player_Query_Agenda() != kPlayerAgendaErratic) {
+				if (Player_Query_Agenda() == kPlayerAgendaPolite) {
 					if (Global_Variable_Query(kVariableChinyen) >= 10) {
 						Actor_Says(kActorMcCoy, 1025, 13); //00-1025.AUD	Absolutely.
 						Actor_Change_Animation_Mode(kActorMcCoy, 23);
@@ -2006,8 +2004,7 @@ void AIScriptGordo::talkToMcCoyInCity() {
 						}
 						Actor_Says(kActorMcCoy, 6485, 12);
 						Actor_Says(kActorGordo, 1010, 12); //02-1010.AUD	Bombing? I've never bombed in my life. My act is always happening. Always now.
-						if (Player_Query_Agenda() != kPlayerAgendaSurly
-						&&  Player_Query_Agenda() != kPlayerAgendaErratic) {
+						if (Player_Query_Agenda() == kPlayerAgendaPolite) {
 							Actor_Says(kActorMcCoy, 6495, 14); //00-6495.AUD	Cut the shit. A man was killed back there.
 							Actor_Says(kActorGordo, 1020, 13); //02-1020.AUD	Gee, that's a drag. There's eight million stories in the naked city, you know.
 						}
@@ -2023,8 +2020,7 @@ void AIScriptGordo::talkToMcCoyInCity() {
 				AI_Movement_Track_Unpause(kActorGordo);
 			} else {
 				Actor_Says(kActorGordo, 980, 15); //02-0980.AUD	Got any chinyen you can part with? Just so I can grab myself a couple of lichen-dogs.
-				if (Player_Query_Agenda() != kPlayerAgendaSurly
-				&&  Player_Query_Agenda() != kPlayerAgendaErratic) {
+				if (Player_Query_Agenda() == kPlayerAgendaPolite) {
 					if (Global_Variable_Query(kVariableChinyen) >= 10) {
 						Actor_Says(kActorMcCoy, 1025, 13); //00-1025.AUD	Absolutely.
 						Actor_Change_Animation_Mode(kActorMcCoy, 23);

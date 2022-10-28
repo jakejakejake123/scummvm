@@ -82,20 +82,9 @@ void KIAScript::SCRIPT_KIA_DLL_Play_Clue_Asset_Script(int notUsed, int clueId) {
 		KIA_Play_Actor_Dialogue(kActorVoiceOver, 1990);
 		break;
 	case kClueGracefulFootprints:
-		if (!_vm->_cutContent) {
-			KIA_Play_Actor_Dialogue(kActorVoiceOver, 1970);
-			KIA_Play_Actor_Dialogue(kActorVoiceOver, 1980);
-			KIA_Play_Actor_Dialogue(kActorVoiceOver, 1990);
-		} else {
-			KIA_Play_Actor_Dialogue(kActorMcCoy, 610); //00-0610.AUD	What do you got back there?
-			KIA_Play_Actor_Dialogue(kActorDeskClerk, 100); //27-0100.AUD	Excuse me?
-			KIA_Play_Actor_Dialogue(kActorMcCoy, 615); //00-0615.AUD	The back room.
-			KIA_Play_Actor_Dialogue(kActorDeskClerk, 120); //27-0120.AUD	Used to store all the booty the tenants left behind in there.
-			KIA_Play_Actor_Dialogue(kActorDeskClerk, 130);  //27-0130.AUD	My boss sold everything to a Mongolian guy last month
-			KIA_Play_Actor_Dialogue(kActorMcCoy, 625); //00-0625.AUD	So, now there's nothing in there.
-			KIA_Play_Actor_Dialogue(kActorDeskClerk, 140); //27-0140.AUD	Rumor has it the boss wants to rent it out. What a dump.
-			KIA_Play_Actor_Dialogue(kActorDeskClerk, 150); //27-0150.AUD	Maybe if we paid you, someone would actually want to stay there. (laughs)
-		}
+		KIA_Play_Actor_Dialogue(kActorVoiceOver, 1970);
+		KIA_Play_Actor_Dialogue(kActorVoiceOver, 1980);
+		KIA_Play_Actor_Dialogue(kActorVoiceOver, 1990);
 		break;
 	case kClueShellCasings:
 		KIA_Play_Slice_Model(kModelAnimationShellCasings);
@@ -561,9 +550,7 @@ void KIAScript::SCRIPT_KIA_DLL_Play_Clue_Asset_Script(int notUsed, int clueId) {
 		if (_vm->_cutContent) {
 			KIA_Play_Actor_Dialogue(kActorBulletBob, 1940); //14-1940.AUD	The department's been infiltrated, right?
 			KIA_Play_Actor_Dialogue(kActorBulletBob, 1950); //14-1950.AUD	That's the only way Davy could have been taken out like he was.
-			KIA_Play_Actor_Dialogue(kActorBulletBob, 1960);	//14-1960.AUD	When you hook into the mainframe you always give them everything.
-			KIA_Play_Actor_Dialogue(kActorBulletBob, 1970);
-			KIA_Play_Actor_Dialogue(kActorBulletBob, 1980);
+			KIA_Play_Actor_Dialogue(kActorMcCoy, 8970); //00-8970.AUD	Holden is good. No question.
 		} else {
 			KIA_Play_Actor_Dialogue(kActorBulletBob, 320); //14-0320.AUD	There's one other guy around here who dips into that stuff.
 			KIA_Play_Actor_Dialogue(kActorBulletBob, 330); //14-0330.AUD	Got a pawn shop down the street. Goes by the name of Izo.
@@ -820,7 +807,7 @@ void KIAScript::SCRIPT_KIA_DLL_Play_Clue_Asset_Script(int notUsed, int clueId) {
 	case kClueRagDoll:
 		KIA_Play_Slice_Model(kModelAnimationRagDoll);
 		if (_vm->_cutContent) {
-			KIA_Play_Actor_Dialogue(kActorVoiceOver, 480); //00-8815.AUD	A creepy looking doll.
+			KIA_Play_Actor_Dialogue(kActorMcCoy, 8815); //00-8815.AUD	A creepy looking doll.
 		}
 		break;
 	case kClueMoonbus1:

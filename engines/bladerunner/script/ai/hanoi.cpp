@@ -225,9 +225,8 @@ void AIScriptHanoi::OtherAgentEnteredCombatMode(int otherActorId, int combatMode
 				Actor_Says(kActorHanoi, 180, 13); //25-0180.AUD	Early Q's is for lovers, not fighters.
 			}
 			if (!Game_Flag_Query(kFlagHanoiIsReplicant)) {
-				Actor_Says(kActorMcCoy, 725, -1); //00-0725.AUD	Relax! I hear ya.
 				Player_Set_Combat_Mode(false);
-				Delay(1500);
+				Actor_Says(kActorMcCoy, 725, -1); //00-0725.AUD	Relax! I hear ya.
 			} else {
 				Loop_Actor_Walk_To_Actor(kActorHanoi, kActorMcCoy, 48, true, false); 
 				Actor_Set_Goal_Number(kActorHanoi, kGoalHanoiThrowOutMcCoy);

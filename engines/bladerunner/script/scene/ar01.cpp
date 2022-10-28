@@ -172,30 +172,29 @@ bool SceneScriptAR01::ClickedOnActor(int actorId) {
 				if (!Actor_Clue_Query(kActorMcCoy, kClueFishLadyInterview)
 				&& !Game_Flag_Query(kFlagWrongInvestigation)
 				&& !Game_Flag_Query(kFlagFishLadyTalkScale)
-				&& Global_Variable_Query(kVariableChapter) < 4) {
-					if (Actor_Clue_Query(kActorMcCoy, kClueStrangeScale1)
-					|| Actor_Clue_Query(kActorMcCoy, kClueStrangeScale2)) {
-						Actor_Says(kActorMcCoy, 40, 11);
-						if (Actor_Query_Friendliness_To_Other(kActorFishDealer, kActorMcCoy) > 49) {		
-							Actor_Says(kActorFishDealer, 120, 14);
-							Actor_Says(kActorMcCoy, 45, 17); //00-0045.AUD	What other one?	
-							// The fish lady will say this extra line if she told you about the Peruvian woman before.
-							if  (Game_Flag_Query(kFlagAR01FishDealerTalkInsects)) {
-								Actor_Says(kActorFishDealer, 210, 14); //29-0210.AUD	What I said before. That yesterdays news. Here real fact of it.
-							}
-							Actor_Says(kActorFishDealer, 130, 14); //29-0130.AUD	Other police show me scale from same snake.
-							Actor_Says(kActorFishDealer, 140, 14);
-							if (!Game_Flag_Query(kFlagAR01FishDealerMcCoyIsPolice)) {
-								Actor_Says(kActorMcCoy, 50, 13);
-								Actor_Says(kActorFishDealer, 150, 14);
-							}
-							Game_Flag_Set(kFlagFishLadyTalkScale);
-							Actor_Clue_Acquire(kActorMcCoy, kClueFishLadyInterview, true, kActorFishDealer);
-						} else {
-							Actor_Says(kActorFishDealer, 180, 14); //29-0180.AUD	I can't stand all day gabbing away. My fish require attention.
-							Game_Flag_Set(kFlagFishLadyTalkScale);
-							Actor_Set_Goal_Number(kActorFishDealer, 1);
+				&& Global_Variable_Query(kVariableChapter) < 4
+				&& (Actor_Clue_Query(kActorMcCoy, kClueStrangeScale1)
+				|| Actor_Clue_Query(kActorMcCoy, kClueStrangeScale2))) {
+					Actor_Says(kActorMcCoy, 40, 11);
+					if (Actor_Query_Friendliness_To_Other(kActorFishDealer, kActorMcCoy) > 49) {		
+						Actor_Says(kActorFishDealer, 120, 14);
+						Actor_Says(kActorMcCoy, 45, 17); //00-0045.AUD	What other one?	
+						// The fish lady will say this extra line if she told you about the Peruvian woman before.
+						if  (Game_Flag_Query(kFlagAR01FishDealerTalkInsects)) {
+							Actor_Says(kActorFishDealer, 210, 14); //29-0210.AUD	What I said before. That yesterdays news. Here real fact of it.
 						}
+						Actor_Says(kActorFishDealer, 130, 14); //29-0130.AUD	Other police show me scale from same snake.
+						Actor_Says(kActorFishDealer, 140, 14);
+						if (!Game_Flag_Query(kFlagAR01FishDealerMcCoyIsPolice)) {
+							Actor_Says(kActorMcCoy, 50, 13);
+							Actor_Says(kActorFishDealer, 150, 14);
+						}
+						Game_Flag_Set(kFlagFishLadyTalkScale);
+						Actor_Clue_Acquire(kActorMcCoy, kClueFishLadyInterview, true, kActorFishDealer);
+					} else {
+						Actor_Says(kActorFishDealer, 180, 14); //29-0180.AUD	I can't stand all day gabbing away. My fish require attention.
+						Game_Flag_Set(kFlagFishLadyTalkScale);
+						Actor_Set_Goal_Number(kActorFishDealer, 1);
 					}
 				} else if (!Game_Flag_Query(kFlagAR01FishDealerTalk) 
 				&& !Game_Flag_Query(kFlagAR02InsectDealerInterviewed)
@@ -615,7 +614,7 @@ void SceneScriptAR01::PlayerWalkedIn() {
 			Actor_Says(kActorMcCoy, 140, 18); //00-0140.AUD	Not today, thanks.
 			Actor_Says(kActorMcCoy, 475, 13);  //00-0475.AUD	There are things I want to know.
 			Actor_Says(kActorFishDealer, 160, -1); //29-0160.AUD	I heard something, yeah. I tell it to you, if you like.
-			Actor_Says(kActorMcCoy, 5060, 13); //00-5060.AUD	Some other time.
+			Actor_Says(kActorMcCoy, 4940, 13); //00-4940.AUD	Okay, let's have it.
 			Actor_Says(kActorFishDealer, 230, -1); // 29-0230.AUD	You buy fish? Highest quality.
 			Delay (1000);
 			Actor_Says(kActorMcCoy, 7815, 16); //00-7815.AUD	No.

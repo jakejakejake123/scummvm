@@ -513,7 +513,14 @@ bool AIScriptLucy::GoalChanged(int currentGoalNumber, int newGoalNumber) {
 
 		if (Global_Variable_Query(kVariableAffectionTowards) == kAffectionTowardsLucy) { // cut feature? if this is set lucy will not run into hf04
 			Actor_Says(kActorLucy, 940, 13);
-			Actor_Says(kActorMcCoy, 6780, 12);
+			if (_vm->_cutContent) {
+				if (Player_Query_Agenda() == kPlayerAgendaSurly 
+				|| Player_Query_Agenda() == kPlayerAgendaErratic) {
+					Actor_Says(kActorMcCoy, 6780, 12); //00-6780.AUD	Don’t jump to any conclusions.
+				}
+			} else {
+				Actor_Says(kActorMcCoy, 6780, 12); //00-6780.AUD	Don’t jump to any conclusions.
+			}
 			Actor_Says(kActorLucy, 950, 12);
 			Actor_Says(kActorLucy, 960, 14);
 			Actor_Says(kActorMcCoy, 6785, 13);
@@ -523,8 +530,7 @@ bool AIScriptLucy::GoalChanged(int currentGoalNumber, int newGoalNumber) {
 				Actor_Says(kActorLucy, 990, 15);
 			}
 			if (_vm->_cutContent) {
-				if (Player_Query_Agenda() != kPlayerAgendaSurly 
-				&& Player_Query_Agenda() != kPlayerAgendaErratic) {
+				if (Player_Query_Agenda() == kPlayerAgendaPolite) {
 					Actor_Says(kActorMcCoy, 6790, 15); //00-6790.AUD	That must be tough on you.
 				}
 			} else {
@@ -538,8 +544,7 @@ bool AIScriptLucy::GoalChanged(int currentGoalNumber, int newGoalNumber) {
 			Actor_Says(kActorLucy, 1010, 17);
 			Actor_Says(kActorLucy, 1020, 18);
 			if (_vm->_cutContent) {
-				if (Player_Query_Agenda() != kPlayerAgendaSurly
-				&& Player_Query_Agenda() != kPlayerAgendaErratic) {
+				if (Player_Query_Agenda() == kPlayerAgendaPolite) {
 					Actor_Says(kActorMcCoy, 6795, 14); //00-6795.AUD	I agree.
 				}
 			} else {

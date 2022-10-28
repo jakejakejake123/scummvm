@@ -126,8 +126,8 @@ bool SceneScriptHC01::ClickedOnActor(int actorId) {
 			if (!Game_Flag_Query(kFlagHC01IzoTalk1)) {
 				Actor_Face_Actor(kActorIzo, kActorMcCoy, true);
 				if (_vm->_cutContent) {
-					Actor_Says_With_Pause(kActorIzo, 0, 0.2f, 13);
 					Actor_Face_Actor(kActorMcCoy, kActorIzo, true);
+					Actor_Says_With_Pause(kActorIzo, 0, 0.2f, 13);
 					Actor_Says_With_Pause(kActorIzo, 10, 0.2f, 13);
 				} else {
 					Actor_Says_With_Pause(kActorIzo, 10, 0.2f, 13);
@@ -377,8 +377,8 @@ void SceneScriptHC01::dialogueWithIzo() {
 		if (Actor_Clue_Query(kActorMcCoy, kClueGrigorianInterviewB1)
 		|| Actor_Clue_Query(kActorMcCoy, kClueGrigorianInterviewB2)
 		|| Actor_Clue_Query(kActorMcCoy, kClueBobInterview1)) {
-			DM_Add_To_List_Never_Repeat_Once_Selected(1100, -1, 3, 8); // VOIGT-KAMPFF
-			DM_Add_To_List_Never_Repeat_Once_Selected(1110, 8, -1, -1); // CRYSTAL
+			DM_Add_To_List_Never_Repeat_Once_Selected(1100, -1, 3, 4); // VOIGT-KAMPFF
+			DM_Add_To_List_Never_Repeat_Once_Selected(1110, 4, -1, -1); // CRYSTAL
 		}
 	}
 #if BLADERUNNER_ORIGINAL_BUGS
@@ -483,25 +483,23 @@ void SceneScriptHC01::dialogueWithIzo() {
 			Actor_Says(kActorMcCoy, 1065, 15); //00-1065.AUD	You move a lot of valuable goods through here? Valuable and exotic?
 			if (_vm->_cutContent) { 
 				if (Game_Flag_Query(kFlagIzoIsReplicant)) {
-					if (Actor_Query_Friendliness_To_Other(kActorIzo, kActorMcCoy) < 50) {
-						// Restored: if Izo is a Replicant, he would probably lie
-						// so this line goes here
-						Actor_Says(kActorIzo, 150, kAnimationModeTalk); //07-0150.AUD	Not for many years. You should try elsewhere.
-						if (Player_Query_Agenda() == kPlayerAgendaSurly
-						|| (Player_Query_Agenda() == kPlayerAgendaErratic)) {
-							Actor_Modify_Friendliness_To_Other(kActorIzo, kActorMcCoy, -2);
-							Actor_Says(kActorMcCoy, 8519, 14);//00-8519.AUD	What do you say we dish each other the straight goods.
-							Delay(2000);
-							Actor_Says(kActorIzo, 160, kAnimationModeTalk); //07-0160.AUD	How exotic?
-							Actor_Says(kActorMcCoy, 1110, 16);
-							Actor_Says(kActorIzo, 210, 12); //07-0210.AUD	That's a white market item.
-							Actor_Says(kActorMcCoy, 1115, 12);
-							Actor_Says(kActorIzo, 220, 16);
-							Actor_Says(kActorIzo, 230, kAnimationModeTalk);
-							Actor_Says(kActorIzo, 240, 15);
-							Actor_Clue_Acquire(kActorMcCoy, kClueIzoInterview, false, kActorIzo);
-						}
-					}
+					// Restored: if Izo is a Replicant, he would probably lie
+					// so this line goes here
+					Actor_Says(kActorIzo, 150, kAnimationModeTalk); //07-0150.AUD	Not for many years. You should try elsewhere.
+					if (Player_Query_Agenda() == kPlayerAgendaSurly
+					|| (Player_Query_Agenda() == kPlayerAgendaErratic)) {
+						Actor_Modify_Friendliness_To_Other(kActorIzo, kActorMcCoy, -2);
+						Actor_Says(kActorMcCoy, 8519, 14);//00-8519.AUD	What do you say we dish each other the straight goods.
+						Delay(2000);
+						Actor_Says(kActorIzo, 160, kAnimationModeTalk); //07-0160.AUD	How exotic?
+						Actor_Says(kActorMcCoy, 1110, 16);
+						Actor_Says(kActorIzo, 210, 12); //07-0210.AUD	That's a white market item.
+						Actor_Says(kActorMcCoy, 1115, 12);
+						Actor_Says(kActorIzo, 220, 16);
+						Actor_Says(kActorIzo, 230, kAnimationModeTalk);
+						Actor_Says(kActorIzo, 240, 15);
+						Actor_Clue_Acquire(kActorMcCoy, kClueIzoInterview, false, kActorIzo);
+					}	
 				} else {
 					Actor_Says(kActorIzo, 160, kAnimationModeTalk); //07-0160.AUD	How exotic?
 					Actor_Says(kActorMcCoy, 1110, 16);

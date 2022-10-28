@@ -855,8 +855,8 @@ enum Flags {
 	kFlagMA01GaffApproachMcCoy                = 409,
 	kFlagBB06AndroidDestroyed                 = 410,
 	kFlagKP02toUG12                           = 411,
-	kFlagUG12toKP02                           = 412, // is never checked
-	kFlagKP02toKP01                           = 413, // is never checked
+	kFlagDektoraArrested                      = 412, // is never checked
+	kFlagEarlyQArrested                       = 413, // is never checked
 	kFlagKP01toKP02                           = 414,
 	kFlagKP01toKP04                           = 415, // is never checked
 	kFlagKP04toKP01                           = 416,

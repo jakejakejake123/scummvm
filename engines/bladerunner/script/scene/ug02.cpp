@@ -214,8 +214,8 @@ bool SceneScriptUG02::ClickedOnItem(int itemId, bool a2) {
 		Item_Remove_From_World(kItemRadiationGoogles);
 		// Code for picking up the goggles and the incept photo.
 		if (_vm->_cutContent) {
-			Actor_Says(kActorMcCoy, 8785, 14); //00-8785.AUD	Radiation goggles.
 			Item_Pickup_Spin_Effect(kModelAnimationRadiationGoggles, 321, 336);
+			Actor_Says(kActorMcCoy, 8785, 14); //00-8785.AUD	Radiation goggles.
 		} else {
 			Item_Pickup_Spin_Effect(kModelAnimationRadiationGoggles, 426, 316);
 		}

@@ -151,6 +151,16 @@ void AIScriptHasan::ReceivedClue(int clueId, int fromActorId) {
 }
 
 void AIScriptHasan::ClickedByPlayer() {
+	if (_vm->_cutContent) {
+		if (Actor_Query_In_Set(kActorHasan, kSetPS09)) {
+			if (!Loop_Actor_Walk_To_XYZ(kActorMcCoy, -295.0f, 0.34f, -193.0f, 12, false, false, false)) {
+				Actor_Face_Actor(kActorMcCoy, kActorHasan, true);
+				Actor_Face_Actor(kActorHasan, kActorMcCoy, true);
+				Actor_Says(kActorMcCoy, 4270, 18); 
+				Actor_Says(kActorHasan, 70, kAnimationModeTalk); //20-0070.AUD	Certainly the LPD must have better things to do than to question a humble merchant over and over again about the same things.
+			}
+		}
+	}
 	//return false;
 }
 

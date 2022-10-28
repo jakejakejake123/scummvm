@@ -139,6 +139,7 @@ void AIScriptGeneralDoll::ReceivedClue(int clueId, int fromActorId) {
 }
 
 void AIScriptGeneralDoll::ClickedByPlayer() {
+	// Made it so if McCoy examines the doll and realizes he won't get any retirement money for it, the option to shoot the doll is no longer available.
 	if (_vm->_cutContent) {
 		if (!Game_Flag_Query(kFlagGeneralDollShot)) {
 			Actor_Face_Actor(kActorMcCoy, kActorGeneralDoll, true);

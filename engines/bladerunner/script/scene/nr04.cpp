@@ -600,7 +600,6 @@ void SceneScriptNR04::ActorChangedGoal(int actorId, int newGoal, int oldGoal, bo
 					}
 					// Added in a clue.
 					Actor_Clue_Acquire(kActorMcCoy, kClueEarlyInterviewB2, true, kActorEarlyQ);
-					CDB_Set_Crime(kClueDektorasDressingRoom, kCrimeReplicantHarboring);
 					Actor_Set_Goal_Number(kActorEarlyQ, kGoalEarlyQNR04AskForDisk);
 				}
 			} else { 
@@ -696,6 +695,7 @@ if (_vm->_cutContent) {
 				Actor_Modify_Friendliness_To_Other(kActorGuzza, kActorMcCoy, 1);
 				Delay (1000);
 				Music_Stop(1u);
+				Game_Flag_Set(kFlagEarlyQArrested);
 				Actor_Put_In_Set(kActorEarlyQ, kSetPS09);
 				Actor_Set_At_XYZ(kActorEarlyQ, -428.88f, 0.15f, -220.74f, 512);
 				Game_Flag_Reset(kFlagSpinnerAtNR01);

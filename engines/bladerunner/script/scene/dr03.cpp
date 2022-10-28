@@ -326,7 +326,6 @@ void SceneScriptDR03::PlayerWalkedIn() {
 				if (Player_Query_Agenda() != kPlayerAgendaSurly 
 				&& Player_Query_Agenda() != kPlayerAgendaErratic) {
 					Actor_Says(kActorMcCoy, 910, 15); //00-0910.AUD	Okay, Chew.
-					Delay(1000);
 				}
 				Actor_Says(kActorMcCoy, 915, 13); //00-0915.AUD	What happened?
 				Actor_Says(kActorChew, 520, 13); //52-0520.AUD	Two Nexus-6 break in here. They harass me.
@@ -364,7 +363,6 @@ void SceneScriptDR03::PlayerWalkedIn() {
 					Actor_Says(kActorChew, 770, 14); //52-0770.AUD	Truth bad! You no like, that's why. I tell you anyway, then you go.
 					Actor_Says(kActorMcCoy, 1825, 15); //00-1825.AUD	Okay.
 				}
-				Actor_Says(kActorMcCoy, 930, 13); //00-0930.AUD	What did they want?
 				Actor_Says(kActorChew, 570, 12); //52-0570.AUD	DNA information. Incept dates. Stuff like that.
 				Actor_Says(kActorChew, 580, 13); // 52-0580.AUD	I give copies. Heh, heh. Still pressure me. Thought they kill me.
 				Actor_Says(kActorMcCoy, 935, 15); //00-0935.AUD	I need a copy too.

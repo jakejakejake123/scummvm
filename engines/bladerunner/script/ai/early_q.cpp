@@ -247,16 +247,6 @@ void AIScriptEarlyQ::OtherAgentEnteredCombatMode(int otherActorId, int combatMod
 		return; //true;
 	}
 
-	if (_vm->_cutContent) {
-		if (Player_Query_Current_Scene() == kSceneKP07
-		&& otherActorId == kActorMcCoy
-		&& combatMode
-		) {
-			Actor_Face_Actor(kActorEarlyQ, kActorMcCoy, true);
-			Ambient_Sounds_Play_Sound(kSfxLGCAL1, 97, 0, 0, 20);
-			Actor_Change_Animation_Mode(kActorEarlyQ, 6);
-		}
-	}
 	return; //false;
 }
 
@@ -542,6 +532,7 @@ bool AIScriptEarlyQ::GoalChanged(int currentGoalNumber, int newGoalNumber) {
 		Actor_Face_Actor(kActorMcCoy, kActorEarlyQ, true);
 		Actor_Face_Actor(kActorEarlyQ, kActorMcCoy, true);
 		Actor_Change_Animation_Mode(kActorEarlyQ, 23);
+		// Made it so if Early Q is a replicant the drink he hands McCoy is poisoned and McCoy dies when he drinks it.
 		if (_vm->_cutContent) {
 			if (!Game_Flag_Query(kFlagEarlyQIsReplicant)) {
 				Scene_Loop_Start_Special(kSceneLoopModeOnce, 2, false);

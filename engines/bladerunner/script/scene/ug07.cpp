@@ -159,16 +159,16 @@ bool SceneScriptUG07::ClickedOnExit(int exitId) {
 						Delay(1000);
 						Actor_Set_Goal_Number(kActorClovis, kGoalClovisUG07ChaseMcCoy);
 					}
-				} else {
-					if (!Loop_Actor_Walk_To_XYZ(kActorMcCoy, -10.0f, -21.47f, -58.0f, 0, true, false, false)
-					&& Actor_Query_Goal_Number(kActorClovis) != kGoalClovisUG07KillMcCoy
-					) {
-						Ambient_Sounds_Remove_All_Non_Looping_Sounds(true);
-						Ambient_Sounds_Remove_All_Looping_Sounds(1u);
-						Game_Flag_Set(kFlagUG07toUG10);
-						Set_Enter(kSetUG10, kSceneUG10);
-						return true;
-					}
+				}
+			} else {
+				if (!Loop_Actor_Walk_To_XYZ(kActorMcCoy, -10.0f, -21.47f, -58.0f, 0, true, false, false)
+				&& Actor_Query_Goal_Number(kActorClovis) != kGoalClovisUG07KillMcCoy
+				) {
+					Ambient_Sounds_Remove_All_Non_Looping_Sounds(true);
+					Ambient_Sounds_Remove_All_Looping_Sounds(1u);
+					Game_Flag_Set(kFlagUG07toUG10);
+					Set_Enter(kSetUG10, kSceneUG10);
+					return true;
 				}
 			}
 		} else if (!Game_Flag_Query(kFlagMcCoyRetiredHuman)

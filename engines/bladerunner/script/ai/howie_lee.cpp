@@ -34,19 +34,10 @@ void AIScriptHowieLee::Initialize() {
 	_animationStateNext = 0;
 	_animationNext = 0;
 	_varIdleStatesToggle = 0;
-	// Made it so Howie Lee only appears in act one since he doesn't serve any purpose after the first act.
-	if (_vm->_cutContent) {
-		if (!Game_Flag_Query(kFlagHowieLeeArrested) 
-		&& Global_Variable_Query(kVariableChapter) < 2) {
-			Actor_Put_In_Set(kActorHowieLee, kSetCT01_CT12);
-			Actor_Set_At_Waypoint(kActorHowieLee, 67, 605); // in kSetCT01_CT12
-			Actor_Set_Goal_Number(kActorHowieLee, kGoalHowieLeeDefault);
-		}
-	} else {
-		Actor_Put_In_Set(kActorHowieLee, kSetCT01_CT12);
-		Actor_Set_At_Waypoint(kActorHowieLee, 67, 605); // in kSetCT01_CT12
-		Actor_Set_Goal_Number(kActorHowieLee, kGoalHowieLeeDefault);
-	}
+
+	Actor_Put_In_Set(kActorHowieLee, kSetCT01_CT12);
+	Actor_Set_At_Waypoint(kActorHowieLee, 67, 605); // in kSetCT01_CT12
+	Actor_Set_Goal_Number(kActorHowieLee, kGoalHowieLeeDefault);
 }
 
 bool AIScriptHowieLee::Update() {
@@ -55,17 +46,14 @@ bool AIScriptHowieLee::Update() {
 		// keep Howie in Acts 2 and 3
 		// Howie in Acts 2 and 3 will have a routine with existing waypoints/goals,
 		// so no need to add new goals (> 100) for those Acts
-		if (!Game_Flag_Query(kFlagHowieLeeArrested)
-		&& Global_Variable_Query(kVariableChapter) < 2) {
-			if (Actor_Query_Goal_Number(kActorHowieLee) < 100
-			&& Global_Variable_Query(kVariableChapter) == 4
-			) {
-				Actor_Set_Goal_Number(kActorHowieLee, kGoalHowieLeeGoesToFreeSlotC);
-			}
+		if (Actor_Query_Goal_Number(kActorHowieLee) < 100
+		&& Global_Variable_Query(kVariableChapter) == 4
+		) {
+			Actor_Set_Goal_Number(kActorHowieLee, kGoalHowieLeeGoesToFreeSlotC);
+		}
 
-			if (Global_Variable_Query(kVariableChapter) > 3) {
-				return true;
-			}
+		if (Global_Variable_Query(kVariableChapter) > 3) {
+			return true;
 		}
 	} else {
 		if (Actor_Query_Goal_Number(kActorHowieLee) < 100
@@ -78,18 +66,9 @@ bool AIScriptHowieLee::Update() {
 			return true;
 		}
 	}
-	// Made it so Howie Lees goals won't trigger after act one or if he is arrested.
-	if (_vm->_cutContent) {
-		if (!Game_Flag_Query(kFlagHowieLeeArrested)
-		&& Global_Variable_Query(kVariableChapter) < 2) {
-			if (Actor_Query_Goal_Number(kActorHowieLee) == kGoalHowieLeeDefault) {
-				Actor_Set_Goal_Number(kActorHowieLee, kGoalHowieLeeMovesInDiner01);
-			}
-		}
-	} else {
-		if (Actor_Query_Goal_Number(kActorHowieLee) == kGoalHowieLeeDefault) {
-			Actor_Set_Goal_Number(kActorHowieLee, kGoalHowieLeeMovesInDiner01);
-		}
+
+	if (Actor_Query_Goal_Number(kActorHowieLee) == kGoalHowieLeeDefault) {
+		Actor_Set_Goal_Number(kActorHowieLee, kGoalHowieLeeMovesInDiner01);
 	}
 
 	// In the original code this is used (in Act 1) to get Howie back to the Diner
@@ -211,17 +190,7 @@ void AIScriptHowieLee::ReceivedClue(int clueId, int fromActorId) {
 }
 
 void AIScriptHowieLee::ClickedByPlayer() {
-	// This is the code for Howie Lee when you click on him in the lock up after you arrest him.
-	if (_vm->_cutContent) {
-		if (Actor_Query_In_Set(kActorHowieLee, kSetPS09)) {
-			if (!Loop_Actor_Walk_To_XYZ(kActorMcCoy, -381.11f, 0.0f, -135.55f, 0, false, false, false)) {
-				Actor_Face_Actor(kActorMcCoy, kActorHowieLee, true);
-				Actor_Says(kActorMcCoy, 310, 18); //00-0310.AUD	Keeping out of trouble, Howie?
-				Actor_Says(kActorHowieLee, 190, kAnimationModeTalk); //28-0190.AUD	I look like I got time for chit-er chat-er?
-			}
-		}
 	//return false;
-	}
 }
 
 void AIScriptHowieLee::EnteredSet(int setId) {
@@ -364,50 +333,20 @@ bool AIScriptHowieLee::UpdateAnimation(int *animation, int *frame) {
 		++_animationFrame;
 		// _varIdleStatesToggle can be 0 or 1.
 		// Determines whether kModelAnimationHowieLeePutsIngredientsCooking or kModelAnimationHowieLeeGathersOfTidiesUp is used.
-		// Made it so Howie Lees food preparing animation will not play when he is arrested and placed in lock up. Instead his calm talk animation will play.
-		if (_vm->_cutContent) {
-			if (!Game_Flag_Query(kFlagHowieLeeArrested)) {
-				if (_varIdleStatesToggle > 0) {
-					*animation = kModelAnimationHowieLeePutsIngredientsCooking;
-					if (_animationFrame >= Slice_Animation_Query_Number_Of_Frames(kModelAnimationHowieLeePutsIngredientsCooking)) {
-						_animationFrame = 0;
-						if (Random_Query(0, 2) > 0) {
-							_varIdleStatesToggle ^= 1;
-						}
-					}
-				} else {
-					*animation = kModelAnimationHowieLeeGathersOfTidiesUp;
-					if (_animationFrame >= Slice_Animation_Query_Number_Of_Frames(kModelAnimationHowieLeeGathersOfTidiesUp)) {
-						_animationFrame = 0;
-						if (Random_Query(0, 1) > 0) {
-							_varIdleStatesToggle ^= 1;
-						}
-					}
-				}
-			} else {
-				*animation = kModelAnimationHowieLeeCalmTalk;
-				if (_animationFrame >= Slice_Animation_Query_Number_Of_Frames(kModelAnimationHowieLeeCalmTalk)) {
-					_animationState = 3;
-					_animationFrame = 0;
-					*animation = kModelAnimationHowieLeeCalmTalk;
+		if (_varIdleStatesToggle > 0) {
+			*animation = kModelAnimationHowieLeePutsIngredientsCooking;
+			if (_animationFrame >= Slice_Animation_Query_Number_Of_Frames(kModelAnimationHowieLeePutsIngredientsCooking)) {
+				_animationFrame = 0;
+				if (Random_Query(0, 2) > 0) {
+					_varIdleStatesToggle ^= 1;
 				}
 			}
 		} else {
-			if (_varIdleStatesToggle > 0) {
-				*animation = kModelAnimationHowieLeePutsIngredientsCooking;
-				if (_animationFrame >= Slice_Animation_Query_Number_Of_Frames(kModelAnimationHowieLeePutsIngredientsCooking)) {
-					_animationFrame = 0;
-					if (Random_Query(0, 2) > 0) {
-						_varIdleStatesToggle ^= 1;
-					}
-				}
-			} else {
-				*animation = kModelAnimationHowieLeeGathersOfTidiesUp;
-				if (_animationFrame >= Slice_Animation_Query_Number_Of_Frames(kModelAnimationHowieLeeGathersOfTidiesUp)) {
-					_animationFrame = 0;
-					if (Random_Query(0, 1) > 0) {
-						_varIdleStatesToggle ^= 1;
-					}
+			*animation = kModelAnimationHowieLeeGathersOfTidiesUp;
+			if (_animationFrame >= Slice_Animation_Query_Number_Of_Frames(kModelAnimationHowieLeeGathersOfTidiesUp)) {
+				_animationFrame = 0;
+				if (Random_Query(0, 1) > 0) {
+					_varIdleStatesToggle ^= 1;
 				}
 			}
 		}

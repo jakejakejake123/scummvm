@@ -248,8 +248,7 @@ void SceneScriptUG01::PlayerWalkedIn() {
 			}
 			Actor_Says(kActorIzo, 830, 17); //07-0830.AUD	I got some… friends who’ll probably want to meet you.
 			Actor_Says(kActorIzo, 840, 17); //07-0840.AUD	You’ll be hearing from them soon enough.
-			if (Player_Query_Agenda() == kPlayerAgendaSurly 
-			|| Player_Query_Agenda() == kPlayerAgendaErratic) {
+			if (Player_Query_Agenda() != kPlayerAgendaPolite) {
 				Actor_Says(kActorMcCoy, 5470, 15); //00-5470.AUD	Get lost, Izo. Take off.
 			} else {
 				Actor_Says(kActorMcCoy, 1660, 15); //00-1660.AUD	Go! Quickly.
