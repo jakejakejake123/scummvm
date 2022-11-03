@@ -168,10 +168,11 @@ bool SceneScriptTB05::ClickedOnItem(int itemId, bool a2) {
 			Item_Pickup_Spin_Effect(kModelAnimationDragonflyEarring, 295, 408);
 			if (_vm->_cutContent) {
 				Actor_Says(kActorMcCoy, 8765, 13); //00-8765.AUD	An earring.
+			} else {
+				Actor_Voice_Over(2140, kActorVoiceOver);
+				Actor_Voice_Over(2150, kActorVoiceOver);
+				Actor_Voice_Over(2160, kActorVoiceOver);
 			}
-			Actor_Voice_Over(2140, kActorVoiceOver);
-			Actor_Voice_Over(2150, kActorVoiceOver);
-			Actor_Voice_Over(2160, kActorVoiceOver);
 			Actor_Clue_Acquire(kActorMcCoy, kClueDragonflyEarring, true, -1);
 			return true;
 		}

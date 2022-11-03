@@ -127,7 +127,7 @@ bool SceneScriptDR04::ClickedOnActor(int actorId) {
 					|| Player_Query_Agenda() == kPlayerAgendaErratic) {
 						Actor_Says(kActorMcCoy, 3970, 15); //00-3970.AUD	Hey.
 					} else {
-						Actor_Says(kActorMcCoy, 2175, 13); //00-2175.AUD	Hold on, I’ll get an ambulance out here.
+						Actor_Says(kActorMcCoy, 945, 13); //00-0945.AUD	Hold on. An ambulance will be coming.
 					}
 				} else {
 					Actor_Says(kActorMcCoy, 945, 13); //00-0945.AUD	Hold on. An ambulance will be coming.

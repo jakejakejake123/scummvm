@@ -282,23 +282,19 @@ void SceneScriptMA07::PlayerWalkedIn() {
 					if (Actor_Clue_Query(kActorSteele, kClueCrystalRetiredBob)) {
 						Actor_Clue_Acquire(kActorMcCoy, kClueCrystalRetiredBob, true, kActorSteele);
 					}
-					if (Actor_Clue_Query(kActorSteele, kClueCrystalTestedBulletBob)) {
+					if (!Game_Flag_Query(kFlagBulletBobIsReplicant)) {
 						Actor_Clue_Acquire(kActorMcCoy, kClueCrystalTestedBulletBob, true, kActorSteele);
-					}
-					if (Actor_Clue_Query(kActorSteele, kClueVKBobGorskyHuman)) {
 						Actor_Clue_Acquire(kActorMcCoy,  kClueVKBobGorskyHuman, true, kActorSteele);
 					}
 					if (Actor_Clue_Query(kActorSteele, kClueVKBobGorskyReplicant)) {
 						Actor_Clue_Acquire(kActorMcCoy, kClueVKBobGorskyReplicant, true, kActorSteele);
 					}
-					if (Actor_Clue_Query(kActorSteele, kClueCrystalTestedCrazylegs)) {
-						Actor_Clue_Acquire(kActorMcCoy,  kClueCrystalTestedCrazylegs, true, kActorSteele);
-					}
 					if (Actor_Clue_Query(kActorSteele, kClueCrystalArrestedCrazylegs)) {
 						Actor_Clue_Acquire(kActorMcCoy,  kClueCrystalArrestedCrazylegs, true, kActorSteele);
 					}
-					if (Actor_Clue_Query(kActorSteele, kClueVKCrazylegsHuman)) {
+					if (!Game_Flag_Query(kFlagCrazylegsIsReplicant)) {
 						Actor_Clue_Acquire(kActorMcCoy,  kClueVKCrazylegsHuman, true, kActorSteele);
+						Actor_Clue_Acquire(kActorMcCoy,  kClueCrystalTestedCrazylegs, true, kActorSteele);
 					}
 					if (Actor_Clue_Query(kActorSteele, kClueVKCrazylegsReplicant)) {
 						Actor_Clue_Acquire(kActorMcCoy,  kClueVKCrazylegsReplicant, true, kActorSteele);
@@ -312,11 +308,9 @@ void SceneScriptMA07::PlayerWalkedIn() {
 					if (Actor_Clue_Query(kActorSteele, kClueCrystalRetiredRunciter2)) {
 						Actor_Clue_Acquire(kActorMcCoy,  kClueCrystalRetiredRunciter2, true, kActorSteele);
 					}
-					if (Actor_Clue_Query(kActorSteele, kClueCrystalTestedRunciter)) {
-						Actor_Clue_Acquire(kActorMcCoy,  kClueCrystalTestedRunciter, true, kActorSteele);
-					}
-					if (Actor_Clue_Query(kActorSteele, kClueVKRunciterHuman)) {
+					if (!Game_Flag_Query(kFlagRunciterIsReplicant)) {
 						Actor_Clue_Acquire(kActorMcCoy,  kClueVKRunciterHuman, true, kActorSteele);
+						Actor_Clue_Acquire(kActorMcCoy,  kClueCrystalTestedRunciter, true, kActorSteele);
 					}
 					if (Actor_Clue_Query(kActorSteele, kClueVKRunciterReplicant)) {
 						Actor_Clue_Acquire(kActorMcCoy,  kClueVKRunciterReplicant, true, kActorSteele);
@@ -327,14 +321,17 @@ void SceneScriptMA07::PlayerWalkedIn() {
 					if (Actor_Clue_Query(kActorSteele, kClueSightingZuben)) {
 						Actor_Clue_Acquire(kActorMcCoy,  kClueSightingZuben, true, kActorSteele);
 					}
-					if (Actor_Clue_Query(kActorSteele, kClueVKIzoHuman)) {
+					if (!Game_Flag_Query(kFlagIzoIsReplicant)) {
 						Actor_Clue_Acquire(kActorMcCoy, kClueVKIzoHuman, true, kActorSteele);
 					}
-					if (Actor_Clue_Query(kActorSteele, kClueVKEarlyQHuman)) {
+					if (!Game_Flag_Query(kFlagEarlyQIsReplicant)) {
 						Actor_Clue_Acquire(kActorMcCoy, kClueVKEarlyQHuman, true, kActorSteele);
 					}
 					if (Actor_Clue_Query(kActorSteele, kClueVKEarlyQReplicant)) {
 						Actor_Clue_Acquire(kActorMcCoy, kClueVKEarlyQReplicant, true, kActorSteele);
+					}
+					if (!Game_Flag_Query(kFlagLutherLanceIsReplicant)) {
+						Actor_Clue_Acquire(kActorMcCoy, kClueVKLutherLanceHuman, true, kActorSteele);
 					}
 				}
 			}

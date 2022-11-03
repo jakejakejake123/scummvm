@@ -183,18 +183,26 @@ void SceneScriptKP06::PlayerWalkedIn() {
 		if (_vm->_cutContent) {
 			Music_Stop(1u);
 			Music_Play(kMusicBRBlues, 52, 0, 2, -1, kMusicLoopPlayOnce, 0);
-			if (Actor_Query_Goal_Number(kActorSteele) !=  kGoalSteeleGone) {
-				if (Game_Flag_Query(kFlagMcCoyAttackedReplicants)) {
-					Actor_Put_In_Set(kActorSteele, kSetKP05_KP06);
-					Actor_Set_At_XYZ(kActorSteele, -782.15f, 8.26f, -263.64f, 52);
-					// If Maggie is alive she will be in the scene.
-					if	(Actor_Query_Goal_Number(kActorMaggie) < kGoalMaggieDead) {
-						Actor_Put_In_Set(kActorMaggie, kSetKP05_KP06);
-						Actor_Set_At_XYZ(kActorMaggie, -802.21, 3.74, -640.55, 659);
-						Actor_Face_Actor(kActorMaggie, kActorMcCoy, true);
+			if (Actor_Query_Goal_Number(kActorSteele) < kGoalSteeleGone) {
+				Actor_Put_In_Set(kActorSteele, kSetKP05_KP06);
+				Actor_Set_At_XYZ(kActorSteele, -782.15f, 8.26f, -263.64f, 52);
+				Actor_Face_Actor(kActorSteele, kActorMcCoy, true);
+				Actor_Face_Actor(kActorMcCoy, kActorSteele, true);
+				if	(Actor_Query_Goal_Number(kActorMaggie) < kGoalMaggieDead) {
+					Actor_Put_In_Set(kActorMaggie, kSetKP05_KP06);
+					Actor_Set_At_XYZ(kActorMaggie, -802.21, 3.74, -640.55, 659);		
+				}	
+				if (!Game_Flag_Query(kFlagMcCoyAttackedReplicants)) {
+					Actor_Says(kActorSteele, 2530, 13);
+					if (Player_Query_Agenda() != kPlayerAgendaSurly 
+					&& Player_Query_Agenda() != kPlayerAgendaErratic) {
+						Actor_Says(kActorMcCoy, 6200, 11); //00-6200.AUD	Do it. You just might be doing me a favor.
+					} else {
+						Delay(500);		
 					}
-					Actor_Face_Actor(kActorSteele, kActorMcCoy, true);
-					Actor_Face_Actor(kActorMcCoy, kActorSteele, true);
+					Actor_Says(kActorSteele, 2540, 15);
+					Delay(1000);
+				} else {
 					Actor_Says(kActorSteele, 2560, 12); //01-2560.AUD	I gotta admit. I had my doubts about you.
 					if (Player_Query_Agenda() == kPlayerAgendaSurly 
 					|| Player_Query_Agenda() == kPlayerAgendaErratic) {
@@ -206,45 +214,24 @@ void SceneScriptKP06::PlayerWalkedIn() {
 					}
 					Actor_Says(kActorSteele, 2580, 15); //01-2580.AUD	I gotta say, McCoy. You had me fooled. I thought for sure you were a Rep.
 					Actor_Says(kActorSteele, 2590, 12); //01-2590.AUD	Don’t get me wrong. I mean, you’re one crazy dude. But I like that.
-					// Made it so Crystal or Gaff only mentions McCoy getting a promotion and having a lot of bonuses if he retires enough reps to earn 1500 chinyen.
-					if (Actor_Query_Friendliness_To_Other(kActorGaff, kActorMcCoy) > 59) {
-						Actor_Says(kActorSteele, 2550, 12); //01-2550.AUD	I think you got a promotion coming. Not to mention all those retirement bonuses.
-						Actor_Says(kActorMcCoy, 6205, 14); //00-6205.AUD	As long as I get something like… twenty hours of sleep in the process.
-					}
-					Async_Actor_Walk_To_Waypoint(kActorMcCoy, 551, 0, false);
-					Async_Actor_Walk_To_Waypoint(kActorMaggie, 551, 0, false);
-					Delay(1000);
-					Actor_Says(kActorMcCoy, 6220, -1); //00-6220.AUD	I’m going home, Steele. I’m finished.
-					Delay(3000);
-					Music_Stop(1u);
-					Ambient_Sounds_Remove_All_Non_Looping_Sounds(true);
-					Ambient_Sounds_Remove_All_Looping_Sounds(1u);
-					Outtake_Play(kOuttakeEnd6, false, -1);
-					Game_Over();
-				} else if (Actor_Query_Goal_Number(kActorSteele) == kGoalSteeleWaitingForEnd) {
-					Actor_Face_Actor(kActorSteele, kActorMcCoy, true);
-					Actor_Says(kActorSteele, 2530, 13);
-					Actor_Face_Actor(kActorMcCoy, kActorSteele, true);
-					if (Player_Query_Agenda() != kPlayerAgendaSurly 
-					&& Player_Query_Agenda() != kPlayerAgendaErratic) {
-						Actor_Says(kActorMcCoy, 6200, 11); //00-6200.AUD	Do it. You just might be doing me a favor.
-					}
-					Actor_Says(kActorSteele, 2540, 15);
-					Delay(1000);
-					if (Actor_Query_Friendliness_To_Other(kActorGaff, kActorMcCoy) > 59) {
-						Actor_Says(kActorSteele, 2550, 12); //01-2550.AUD	I think you got a promotion coming. Not to mention all those retirement bonuses.
-						Actor_Says(kActorMcCoy, 6205, 14); //00-6205.AUD	As long as I get something like… twenty hours of sleep in the process.
-					} 
-					Async_Actor_Walk_To_Waypoint(kActorMcCoy, 551, 0, false);
-					Delay(1000);
-					Actor_Says(kActorMcCoy, 6220, -1);
-					Delay(3000);
-					Music_Stop(1u);
-					Ambient_Sounds_Remove_All_Non_Looping_Sounds(true);
-					Ambient_Sounds_Remove_All_Looping_Sounds(1u);
-					Outtake_Play(kOuttakeEnd6, false, -1);
-					Game_Over();
 				}
+				// Made it so Crystal or Gaff only mentions McCoy getting a promotion and having a lot of bonuses if he retires enough reps to earn 1500 chinyen.
+				if (Actor_Query_Friendliness_To_Other(kActorGaff, kActorMcCoy) > 59) {
+					Actor_Says(kActorSteele, 2550, 12); //01-2550.AUD	I think you got a promotion coming. Not to mention all those retirement bonuses.
+					Actor_Says(kActorMcCoy, 6205, 14); //00-6205.AUD	As long as I get something like… twenty hours of sleep in the process.
+				}
+				Async_Actor_Walk_To_Waypoint(kActorMcCoy, 551, 0, false);
+				if	(Actor_Query_Goal_Number(kActorMaggie) < kGoalMaggieDead) {
+					Async_Actor_Walk_To_Waypoint(kActorMaggie, 551, 0, false);
+				}
+				Delay(1000);
+				Actor_Says(kActorMcCoy, 6220, -1); //00-6220.AUD	I’m going home, Steele. I’m finished.
+				Delay(3000);
+				Music_Stop(1u);
+				Ambient_Sounds_Remove_All_Non_Looping_Sounds(true);
+				Ambient_Sounds_Remove_All_Looping_Sounds(1u);
+				Outtake_Play(kOuttakeEnd6, false, -1);
+				Game_Over();	
 			} else { // Ending - talk with Gaff and leaving alone
 				Actor_Set_Goal_Number(kActorGaff, kGoalGaffGone);
 				Actor_Face_Actor(kActorGaff, kActorMcCoy, true);
@@ -263,8 +250,8 @@ void SceneScriptKP06::PlayerWalkedIn() {
 					Actor_Says(kActorMcCoy, 6245, 11); //00-6245.AUD	I could have used you about ten minutes ago.
 					Actor_Says(kActorGaff, 230, 14);
 				} else {
-					Actor_Says(kActorMcCoy, 7815, 13); //00-7815.AUD	No.
-					Delay(2000);
+					Actor_Says(kActorMcCoy, 5705, 13); //00-5705.AUD	Uh-huh.
+					Delay(1000);
 				}
 				if (Game_Flag_Query(kFlagMcCoyAttackedReplicants)) {
 					Actor_Says(kActorMcCoy, 6250, 15); //00-6250.AUD	I thought it was all over, when Steele showed up.
@@ -296,7 +283,9 @@ void SceneScriptKP06::PlayerWalkedIn() {
 					Delay(1500);				
 					Actor_Says(kActorMcCoy, 8625, 14); //00-8625.AUD	This city is a cesspool.
 					Async_Actor_Walk_To_Waypoint(kActorMcCoy, 551, 0, false);
-					Async_Actor_Walk_To_Waypoint(kActorMaggie, 551, 0, false);
+					if	(Actor_Query_Goal_Number(kActorMaggie) < kGoalMaggieDead) {
+						Async_Actor_Walk_To_Waypoint(kActorMaggie, 551, 0, false);
+					}
 					Async_Actor_Walk_To_Waypoint(kActorGaff, 551, 0, false);
 					Actor_Says(kActorGaff, 310, -1); //53-0310.AUD	Whatever you want to believe, McCoy.
 				} else if (Actor_Query_Goal_Number(kActorMaggie) > kGoalMaggieDead 
@@ -308,9 +297,6 @@ void SceneScriptKP06::PlayerWalkedIn() {
 					Actor_Says(kActorGaff, 310, -1);
 				}
 				Delay(3000);
-				Music_Stop(1u);
-				Ambient_Sounds_Remove_All_Non_Looping_Sounds(true);
-				Ambient_Sounds_Remove_All_Looping_Sounds(1u);
 				Outtake_Play(kOuttakeEnd7, false, -1);
 				Game_Over();
 			}

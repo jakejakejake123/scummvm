@@ -78,7 +78,16 @@ bool SceneScriptNR07::ClickedOnActor(int actorId) {
 		Actor_Face_Actor(kActorMcCoy, kActorDektora, true);
 		Dialogue_Menu_Clear_List();
 		if (Game_Flag_Query(kFlagNR07McCoyIsCop)) {
-			
+			if (_vm->_cutContent) {
+				if (!Game_Flag_Query(kFlagMcCoyIsHelpingReplicants)) {
+					DM_Add_To_List_Never_Repeat_Once_Selected(1100, 1, 3, 4); // VOIGT-KAMPFF
+				} else {
+					DM_Add_To_List_Never_Repeat_Once_Selected(1110, 4, 2, 1); // CRYSTAL
+				}
+			} else {
+				DM_Add_To_List_Never_Repeat_Once_Selected(1100, -1, 3, 8); // VOIGT-KAMPFF
+				DM_Add_To_List_Never_Repeat_Once_Selected(1110, 8, -1, -1); // CRYSTAL
+			}		
 			if (Actor_Clue_Query(kActorMcCoy, kClueCarRegistration1)) {
 				DM_Add_To_List_Never_Repeat_Once_Selected(1130, 3, 5, 7); // BLACK SEDAN
 			}
@@ -95,21 +104,10 @@ bool SceneScriptNR07::ClickedOnActor(int actorId) {
 				}
 			}
 			if (_vm->_cutContent) {
-				if (!Game_Flag_Query(kFlagMcCoyIsHelpingReplicants)) {
-					if (Player_Query_Agenda() != kPlayerAgendaSurly 
-					&& Player_Query_Agenda() != kPlayerAgendaErratic) {
-						DM_Add_To_List_Never_Repeat_Once_Selected(1100, 1, 3, 8); // VOIGT-KAMPFF
-					} else {
-						DM_Add_To_List_Never_Repeat_Once_Selected(1120, 7, 5, 4); // MOONBUS
-					}
-				} else {
-					DM_Add_To_List_Never_Repeat_Once_Selected(1110, 8, -1, -1); // CRYSTAL
+				if (Actor_Clue_Query(kActorMcCoy, kClueEarlyInterviewB2)) {
+					DM_Add_To_List_Never_Repeat_Once_Selected(1120, 1, 3, 8); // MOONBUS
 				}
-			} else {
-				DM_Add_To_List_Never_Repeat_Once_Selected(1100, -1, 3, 8); // VOIGT-KAMPFF
-				DM_Add_To_List_Never_Repeat_Once_Selected(1110, 8, -1, -1); // CRYSTAL
 			}
-			
 		} else {
 			DM_Add_To_List_Never_Repeat_Once_Selected(1090, 7, 5, 4); // EARLY-Q
 			DM_Add_To_List_Never_Repeat_Once_Selected(1080, 3, 5, 7); // BELT
@@ -248,7 +246,6 @@ bool SceneScriptNR07::ClickedOn2DRegion(int region) {
 						Item_Pickup_Spin_Effect(kModelAnimationPhoto, 508, 401);
 						Actor_Clue_Acquire(kActorMcCoy, kClueDektoraIncept, false, kActorDektora);
 						Actor_Says(kActorMcCoy, 6975, 12); // Interesting
-						CDB_Set_Crime(kClueCrazysInvolvement, kCrimeReplicantHarboring);
 						// We don't remove the region after picking the clue
 						// McCoy will just point out that there's nothing more there to find.
 						// (Saves us from using up a flag and having to write extra code)
@@ -275,16 +272,6 @@ void SceneScriptNR07::ActorChangedGoal(int actorId, int newGoal, int oldGoal, bo
 void SceneScriptNR07::PlayerWalkedIn() {
 	// Altered
 	if (_vm->_cutContent) {
-		if (!Game_Flag_Query(kFlagNR07Entered)) {
-			if (Actor_Query_In_Set(kActorDektora, kSetNR07)) {
-				if (Game_Flag_Query(kFlagDektoraIsReplicant)) {
-					Actor_Face_Actor(kActorMcCoy, kActorDektora, true);
-					Delay(1000);
-					Actor_Voice_Over(4090, kActorVoiceOver); //99-4090.AUD	She looks familiar.
-					Delay(1000);
-				}
-			}
-		}
 		Loop_Actor_Walk_To_XYZ(kActorMcCoy, -112.0f, -73.0f, -89.0f, 0, false, false, false);
 	} else {
 		Loop_Actor_Walk_To_XYZ(kActorMcCoy, -110.0f, -73.5f, -169.0f, 0, false, false, false);
@@ -319,7 +306,7 @@ void SceneScriptNR07::PlayerWalkedIn() {
 						Actor_Face_Object(kActorDektora, "VANITY", true);
 					}
 				} else {
-					Actor_Says(kActorMcCoy, 505, 23); //00-1280.AUD	McCoy, LPD. Mind if I ask you a couple of questions?
+					Actor_Says(kActorMcCoy, 1280, 23); //00-1280.AUD	McCoy, LPD. Mind if I ask you a couple of questions?
 					if (Game_Flag_Query(kFlagDektoraIsReplicant)) {
 						Actor_Says(kActorDektora, 1020, kAnimationModeSit); //03-1020.AUD	Yes.
 						Actor_Says(kActorMcCoy, 8225, 14); //00-8225.AUD	Just relax.
@@ -757,6 +744,7 @@ void SceneScriptNR07::talkAboutSteele() {
 		Actor_Modify_Friendliness_To_Other(kActorSteele, kActorMcCoy, -2);
 		Actor_Modify_Friendliness_To_Other(kActorClovis, kActorMcCoy, 2);
 		Actor_Modify_Friendliness_To_Other(kActorGuzza, kActorMcCoy, -2);
+		Game_Flag_Set(kFlagMcCoyIsHelpingReplicants);
 		if (Global_Variable_Query(kVariableAffectionTowards) == kAffectionTowardsNone) {
 			Global_Variable_Set(kVariableAffectionTowards, kAffectionTowardsDektora);
 		}

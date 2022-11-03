@@ -710,7 +710,9 @@ void SceneScriptUG16::dialogueWithLuther() {
 		}
 		Actor_Says(kActorLance, 420, 17); 
 		if (_vm->_cutContent) {
+			Player_Loses_Control();
 			Loop_Actor_Walk_To_Actor(kActorMcCoy, kActorLuther, 24, true, false);
+			Player_Gains_Control();
 			Actor_Change_Animation_Mode(kActorMcCoy, 23);
 			Delay(2000);
 		}

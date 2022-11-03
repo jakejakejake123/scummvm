@@ -106,8 +106,10 @@ void SceneScriptRC02::SceneLoaded() {
 			Unclickable_Object("DRAPE07");
 		}
 		// If Crystal retired Runciter she leaves a cigarette on the floor.
-		if (_vm->_cutContent && (Game_Flag_Query(kFlagCrystalRetiredRunciter))) { 
-			Item_Add_To_World(kItemCigarette, kModelAnimationCrystalsCigarette, kSetRC02_RC51, -88.19, -1238.74, 108483.28, 0, 12, 12, false, true, false, true);
+		if (_vm->_cutContent) { 
+			if (!Actor_Clue_Query(kActorMcCoy, kClueCrystalVisitedRunciters)) { 
+				Item_Add_To_World(kItemCigarette, kModelAnimationCrystalsCigarette, kSetRC02_RC51, -88.19, -1238.74, 108483.28, 0, 12, 12, false, true, false, true);
+			}
 		}
 	} else {
 		// original code
@@ -492,26 +494,18 @@ void SceneScriptRC02::dialogueWithRunciter() {
 					Delay(1000);
 					Actor_Modify_Friendliness_To_Other(kActorRunciter, kActorMcCoy, -2);
 				}
-				Actor_Modify_Friendliness_To_Other(kActorRunciter, kActorMcCoy, -2);
 			} else {
 				Actor_Says(kActorMcCoy, 400, 14); //00-0400.AUD	It won't take too long.
-				Voight_Kampff_Activate(kActorRunciter, 20);
 			}
+			Voight_Kampff_Activate(kActorRunciter, 20);
 			// The dialogue that plays when the VK test confirms that Runciter is a replicant. McCoy pulls out his gun and
 			// the exits are disabled. The player must choose whether or not to shoot Runciter or spare him.
-			if (Game_Flag_Query(kFlagRunciterIsReplicant)) {
-				Actor_Face_Actor(kActorMcCoy, kActorRunciter, true);
-				Actor_Face_Actor(kActorRunciter, kActorMcCoy, true);
+			Actor_Face_Actor(kActorMcCoy, kActorRunciter, true);
+			Actor_Face_Actor(kActorRunciter, kActorMcCoy, true);
+			if (Game_Flag_Query(kFlagRunciterIsReplicant)) {		
 				// Sadly I couldn't get the VK test to work properly so it confirms Runciter as a replicant if he is one, so
 				// I turned it into a simple cutscene instead. This is something that you could change since you understand the code 
 				// better than I do.
-				Actor_Says(kActorAnsweringMachine, 390, kAnimationModeTalk); // 39-0390.AUD	Begin test.
-				Ambient_Sounds_Play_Sound(kSfxDATALOAD, 50, 0, 0, 99);
-				Delay(2000);
-				Ambient_Sounds_Play_Sound(kSfxBEEPNEAT, 80, 0, 0, 99);
-				Actor_Says(kActorAnsweringMachine, 420, 19); //39-0420.AUD	Positive result.
-				Actor_Says(kActorAnsweringMachine, 430, 19); //39-0430.AUD	Subject is Replicant.
-				Actor_Says(kActorAnsweringMachine, 460, 19); //39-0460.AUD	Test terminated.
 				Actor_Says(kActorMcCoy, 6865, 14); //00-6865.AUD	You're a Replicant.
 				Actor_Says(kActorRunciter, 490, 14); //15-0490.AUD	No. You heard it wrong.
 				Actor_Says(kActorRunciter, 1070, 15); //15-1070.AUD	I'm not a Replicant for heaven's sakes.

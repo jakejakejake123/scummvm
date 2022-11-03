@@ -817,20 +817,15 @@ bool AIScriptSteele::GoalChanged(int currentGoalNumber, int newGoalNumber) {
 				}	
 				// Made it so if Zuben escapes Crystal will track him down and retire him if she has enough clues. This will give you the Crystal retired Zuben clue. If she doesn't have enough clues
 				// she just finds Zuben by chance and doesn't have time to come up with a plan of attack so escapes into the sewers. This will give you the Zuben sighting clue.
-				if (Actor_Clue_Query(kActorSteele, kClueMcCoyLetZubenEscape)
-				&& Actor_Clue_Query(kActorSteele, kClueCrowdInterviewA)
-				&& Actor_Clue_Query(kActorSteele, kClueZubenInterview)) {
+				if (Actor_Clue_Query(kActorSteele, kClueMcCoyLetZubenEscape)) {
 					Actor_Clue_Acquire(kActorSteele, kClueSightingZuben, true, kActorSteele);
-				} else if (Actor_Clue_Query(kActorSteele, kClueMcCoyLetZubenEscape) 
-				&& Actor_Clue_Query(kActorSteele, kClueCrowdInterviewA)
-				&& Actor_Clue_Query(kActorSteele, kClueZubenInterview)
+				} else if (Actor_Clue_Query(kActorSteele, kClueMcCoyLetZubenEscape)
 				&& Actor_Clue_Query(kActorSteele, kClueBigManLimping)) {
 					Actor_Set_Goal_Number(kActorZuben, kGoalZubenGone);
 					Actor_Clue_Acquire(kActorSteele, kClueCrystalRetiredZuben, true, kActorSteele);
 				}
 				if (Game_Flag_Query(kFlagGordoIsReplicant)) { 
-					if (Game_Flag_Query(kFlagGordoRanAway)
-					|| Actor_Query_Goal_Number(kActorGordo) < kGoalGordoGone) {
+					if (Game_Flag_Query(kFlagGordoRanAway)) {
 						Actor_Clue_Acquire(kActorSteele, kClueWarRecordsGordoFrizz, true, kActorSteele);
 						Actor_Clue_Acquire(kActorSteele, kClueSightingGordo, true, kActorSteele);
 					}
@@ -862,6 +857,11 @@ bool AIScriptSteele::GoalChanged(int currentGoalNumber, int newGoalNumber) {
 							Actor_Modify_Friendliness_To_Other(kActorSteele, kActorMcCoy, -2);
 							Actor_Modify_Friendliness_To_Other(kActorGuzza, kActorMcCoy, -2);
 						}
+					}
+				}
+				if (Actor_Clue_Query(kActorSteele, kClueEnvelope)) {
+					if (!Game_Flag_Query(kFlagLutherLanceIsReplicant)) {
+						Actor_Clue_Acquire(kActorSteele, kClueVKLutherLanceHuman, true, kActorSteele);
 					}
 				}
 				if (Actor_Clue_Query(kActorSteele, kClueSpecialIngredient)) {
@@ -1991,6 +1991,7 @@ bool AIScriptSteele::GoalChanged(int currentGoalNumber, int newGoalNumber) {
 				// Also the player will now gain control.
 				Actor_Clue_Acquire(kActorSadik, kClueMcCoyBetrayal, true, kActorSteele);
 				Actor_Clue_Acquire(kActorMcCoy, kClueMcCoyBetrayal, true, kActorSteele);
+				Actor_Set_Goal_Number(kActorSteele, kGoalSteeleGone);
 				Player_Gains_Control();
 			} else {
 				Actor_Says(kActorSteele, 440, 3);
@@ -1998,6 +1999,7 @@ bool AIScriptSteele::GoalChanged(int currentGoalNumber, int newGoalNumber) {
 				Actor_Says(kActorSteele, 450, 3);
 				Actor_Says(kActorSteele, 460, 3);
 				Actor_Says(kActorSteele, 470, 3);
+				Actor_Set_Goal_Number(kActorSteele, kGoalSteeleGone);
 			}
 		} else {
 			Actor_Says(kActorSteele, 440, 3);

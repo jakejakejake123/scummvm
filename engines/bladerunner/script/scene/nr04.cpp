@@ -311,6 +311,7 @@ void SceneScriptNR04::ActorChangedGoal(int actorId, int newGoal, int oldGoal, bo
 			} else {
 				Actor_Says(kActorMcCoy, 3390, 3); //00-3390.AUD	Not interested.
 			}
+			Delay(1000);
 			if (_vm->_cutContent) {
 				if (Game_Flag_Query(kFlagEarlyQIsReplicant)) {
 					Player_Loses_Control();
@@ -530,7 +531,9 @@ void SceneScriptNR04::ActorChangedGoal(int actorId, int newGoal, int oldGoal, bo
 					Delay (2000);
 					Actor_Says(kActorEarlyQ, 90, 30);
 					Actor_Set_Goal_Number(kActorEarlyQ, kGoalEarlyQNR04WaitForPulledGun);
-				} 
+				} else {
+					Actor_Set_Goal_Number(kActorEarlyQ, kGoalEarlyQNR04WaitForPulledGun);
+				}
 			} else {
 				Actor_Set_Goal_Number(kActorEarlyQ, kGoalEarlyQNR04WaitForPulledGun);
 			}

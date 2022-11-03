@@ -94,24 +94,9 @@ bool SceneScriptUG12::ClickedOnExit(int exitId) {
 
 	if (exitId == 1) {
 		if (!Loop_Actor_Walk_To_XYZ(kActorMcCoy, 207.0f, -126.21f, -364.0f, 0, true, false, false)) {
-			if (_vm->_cutContent) {
-				if (Global_Variable_Query(kVariableChapter) == 5) {
-					if (!Game_Flag_Query(kFlagCarEnding)) {
-						Ambient_Sounds_Remove_All_Non_Looping_Sounds(true);
-						Ambient_Sounds_Remove_All_Looping_Sounds(1u);
-						Set_Enter(kSetKP02, kSceneKP02);
-					} else {
-						Actor_Says(kActorMcCoy, 7815, 14); //00-7815.AUD	No.
-					}
-				} else {
-					Actor_Voice_Over(2600, kActorVoiceOver);
-					Actor_Voice_Over(2610, kActorVoiceOver);
-				}
-			} else {
-				Ambient_Sounds_Remove_All_Non_Looping_Sounds(true);
-				Ambient_Sounds_Remove_All_Looping_Sounds(1u);
-				Set_Enter(kSetKP02, kSceneKP02);
-			}
+			Ambient_Sounds_Remove_All_Non_Looping_Sounds(true);
+			Ambient_Sounds_Remove_All_Looping_Sounds(1u);
+			Set_Enter(kSetKP02, kSceneKP02);
 		}
 		return true;
 	}

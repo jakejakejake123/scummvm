@@ -56,6 +56,11 @@ void SceneScriptCT10::SceneLoaded() {
 	Clickable_Object("CABINETFRONT");
 	Clickable_Object("CABINETTOP");
 	Clickable_Object("TUB");
+	if (_vm->_cutContent) { 
+		if (!Actor_Clue_Query(kActorMcCoy, kClueCrystalVisitedChinatown)) { 
+			Item_Add_To_World(kItemCigarette, kModelAnimationCrystalsCigarette, kSetCT10, 24.61, 0.12, -54.82, 0, 12, 12, false, true, false, true);
+		}
+	}
 #if BLADERUNNER_ORIGINAL_BUGS
 #else
 	Unclickable_Object("BED");
@@ -137,6 +142,18 @@ bool SceneScriptCT10::ClickedOnActor(int actorId) {
 }
 
 bool SceneScriptCT10::ClickedOnItem(int itemId, bool a2) {
+	if (_vm->_cutContent) {
+		if (itemId == kItemCigarette) { 
+			if (!Loop_Actor_Walk_To_Item(kActorMcCoy, kItemCigarette, 12, true, false)) {
+				Actor_Face_Item(kActorMcCoy, kItemCigarette, true);
+				Item_Pickup_Spin_Effect(kModelAnimationCrystalsCigarette, 415, 416);
+				Item_Remove_From_World(kItemCigarette);
+				Actor_Clue_Acquire(kActorMcCoy, kClueCrystalVisitedChinatown, true, kActorSteele);
+				Actor_Voice_Over(1770, kActorVoiceOver); //99-1770.AUD	Lucky Strikes. Crystal's brand.
+				return true;
+			}
+		}
+	}
 	return false;
 }
 

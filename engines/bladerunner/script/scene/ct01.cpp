@@ -244,6 +244,18 @@ bool SceneScriptCT01::ClickedOnActor(int actorId) {
 							Actor_Says(kActorMcCoy, 4420, 17);//00-4420.AUD	Contacting business with Reps is against the Law.
 							Actor_Says(kActorMcCoy, 1970, 13); //00-1970.AUD	You should start thinking about the company you keep.
 							Actor_Says(kActorHowieLee, 220, 14); //28-0220.AUD	Fine. But Howie do you favors no more.	
+							Actor_Says(kActorMcCoy, 3095, 15); //00-3095.AUD	Now we’re gonna take a little ride downtown.
+							Music_Stop(1u);
+							Delay (1000);
+							Game_Flag_Set(kFlagHowieLeeArrested); 
+							AI_Movement_Track_Flush(kActorHowieLee);
+							Actor_Put_In_Set(kActorHowieLee, kSetPS09);
+							Actor_Set_At_XYZ(kActorHowieLee, -399.5f, 0.2f, -255.0f, 210);
+							Game_Flag_Reset(kFlagSpinnerAtCT01);
+							Game_Flag_Set(kFlagSpinnerAtPS01);
+							Game_Flag_Reset(kFlagMcCoyInChinaTown);
+							Game_Flag_Set(kFlagMcCoyInPoliceStation);
+							Set_Enter(kSetPS09, kScenePS09);
 						}	
 					} else if (Game_Flag_Query(kFlagCT01TalkToHowieAboutDeadZuben)
 					&& Actor_Query_Friendliness_To_Other(kActorHowieLee, kActorMcCoy) < 50) {
@@ -334,6 +346,8 @@ bool SceneScriptCT01::ClickedOnActor(int actorId) {
 				Actor_Says(kActorMcCoy, 4870, 23); //00-4870.AUD	Ray McCoy, Rep Detect.
 				Actor_Says(kActorGordo, 890, 30);//02-0890.AUD	What's shaking baby? Haven't I seen you around these parts before?
 				Actor_Says(kActorMcCoy, 6465, 15); //00-6465.AUD	Could be. I get around.
+				Actor_Says(kActorGordo, 980, 15); //02-0980.AUD	Got any chinyen you can part with? Just so I can grab myself a couple of lichen-dogs.
+				Actor_Says(kActorMcCoy, 5620, 9); // Maybe later
 			}
 			Game_Flag_Set(kFlagCT01GordoTalk);
 			Actor_Clue_Acquire(kActorGordo, kClueMcCoysDescription, true, kActorMcCoy);

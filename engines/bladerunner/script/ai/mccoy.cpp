@@ -159,7 +159,11 @@ void AIScriptMcCoy::ReceivedClue(int clueId, int fromActorId) {
 		break;
 
 	case kClueDragonflyEarring:
-		// fall through
+		if (!_vm->_cutContent) {
+			Spinner_Set_Selectable_Destination_Flag(kSpinnerDestinationAnimoidRow, true);
+		}
+	break;
+
 	case kClueBombingSuspect:
 		Spinner_Set_Selectable_Destination_Flag(kSpinnerDestinationAnimoidRow, true);
 		break;
@@ -318,9 +322,9 @@ void AIScriptMcCoy::ReceivedClue(int clueId, int fromActorId) {
 				Actor_Voice_Over(3390, kActorVoiceOver); //99-3390.AUD	I used to think Guzza was a pretty smart guy…
 				Actor_Voice_Over(3400, kActorVoiceOver); //99-3400.AUD	but letting Baker and Holloway work their bogus interrogation deal with all that LPD equipment was a suicide move.
 				Actor_Voice_Over(3420, kActorVoiceOver);
-				Actor_Clue_Acquire(kActorMcCoy, kCluePoliceIssueWeapons, true, -1);
 			}
 			break;
+
 		case kClueOriginalRequisitionForm:
 			Actor_Voice_Over(3340, kActorVoiceOver); //99-3340.AUD	He set up a Black Market network…
 			if (_vm->_cutContent) {
@@ -343,7 +347,6 @@ void AIScriptMcCoy::ReceivedClue(int clueId, int fromActorId) {
 				Actor_Voice_Over(3390, kActorVoiceOver); //99-3390.AUD	I used to think Guzza was a pretty smart guy…
 				Actor_Voice_Over(3400, kActorVoiceOver); //99-3400.AUD	but letting Baker and Holloway work their bogus interrogation deal with all that LPD equipment was a suicide move.
 				Actor_Voice_Over(3420, kActorVoiceOver);
-				Actor_Clue_Acquire(kActorMcCoy, kCluePoliceIssueWeapons, true, -1);
 			}
 			break;
 

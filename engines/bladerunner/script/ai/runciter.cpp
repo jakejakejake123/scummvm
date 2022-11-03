@@ -359,6 +359,7 @@ bool AIScriptRunciter::ShotAtAndHit() {
 			Game_Flag_Set(kFlagMcCoyRetiredHuman);
 			Actor_Modify_Friendliness_To_Other(kActorSteele, kActorMcCoy, -2);
 			Actor_Modify_Friendliness_To_Other(kActorClovis, kActorMcCoy, 2);
+			Actor_Modify_Friendliness_To_Other(kActorGuzza, kActorMcCoy, -2);
 			Game_Flag_Set(kFlagMcCoyIsHelpingReplicants);
 		}
 	} else {

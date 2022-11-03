@@ -192,6 +192,7 @@ bool SceneScriptHC01::ClickedOnActor(int actorId) {
 			Actor_Says(kActorIzo, 710, 17); //07-0710.AUD	You’re a better man than I imagined.
 			Game_Flag_Set(kFlagIzoPrepared);
 		} else {
+			Loop_Actor_Walk_To_XYZ(kActorMcCoy, 624.43f, 0.14f, 83.0f, 0, true, false, false);
 			Actor_Says(kActorMcCoy, 8605, 18); //00-8605.AUD	You staying out of trouble, buddy?.
 		}
 	}
@@ -377,8 +378,13 @@ void SceneScriptHC01::dialogueWithIzo() {
 		if (Actor_Clue_Query(kActorMcCoy, kClueGrigorianInterviewB1)
 		|| Actor_Clue_Query(kActorMcCoy, kClueGrigorianInterviewB2)
 		|| Actor_Clue_Query(kActorMcCoy, kClueBobInterview1)) {
-			DM_Add_To_List_Never_Repeat_Once_Selected(1100, -1, 3, 4); // VOIGT-KAMPFF
-			DM_Add_To_List_Never_Repeat_Once_Selected(1110, 4, -1, -1); // CRYSTAL
+			if (_vm->_cutContent) {
+				if (!Game_Flag_Query(kFlagMcCoyIsHelpingReplicants)) {
+					DM_Add_To_List(1100, 1, 3, 4); // VOIGT-KAMPFF
+				} else {
+					DM_Add_To_List(1110, 4, 2, 1); // CRYSTAL
+				}
+			}
 		}
 	}
 #if BLADERUNNER_ORIGINAL_BUGS

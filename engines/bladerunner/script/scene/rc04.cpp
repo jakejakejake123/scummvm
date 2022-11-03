@@ -108,7 +108,9 @@ void SceneScriptRC04::dialogueWithBulletBob() {
 		DM_Add_To_List_Never_Repeat_Once_Selected(600, -1, 3, 7); // HASAN
 		if (_vm->_cutContent) {
 			if (!Actor_Clue_Query(kActorMcCoy, kClueVKBobGorskyReplicant)) {
-				DM_Add_To_List_Never_Repeat_Once_Selected(1310, 1, 2, 8); // VOIGT-KAMPFF
+				if (!Game_Flag_Query(kFlagMcCoyIsHelpingReplicants)) {
+					DM_Add_To_List_Never_Repeat_Once_Selected(1310, 1, 2, 8); // VOIGT-KAMPFF
+				}
 			}
 		} else {
 			DM_Add_To_List_Never_Repeat_Once_Selected(1310, -1, 2, 8); // VOIGT-KAMPFF
@@ -457,16 +459,7 @@ void SceneScriptRC04::dialogueWithBulletBob() {
 					Actor_Says_With_Pause(kActorMcCoy, 5090, 0.0f, 16); //00-5090.AUD	Relax, I just wa--
 					Actor_Says(kActorBulletBob, 790, 36); //14-0790.AUD	It's funny. You thinking I'm a Rep.
 					Actor_Says(kActorBulletBob, 800, 35); // 14-0800.AUD	Set up the test. We'll see what's what around here.
-					// Sadly I couldn't get the VK test to work properly so it confirms Bullet Bob as a replicant if he is one, so
-					// I turned it into a simple cutscene instead. This is something that you could change since you understand the code 
-					// better than I do.
-					Actor_Says(kActorAnsweringMachine, 390, kAnimationModeTalk); // 39-0390.AUD	Begin test.
-					Ambient_Sounds_Play_Sound(kSfxDATALOAD, 50, 0, 0, 99);
-					Delay(2000);
-					Ambient_Sounds_Play_Sound(kSfxBEEPNEAT, 80, 0, 0, 99);
-					Actor_Says(kActorAnsweringMachine, 420, 19); //39-0420.AUD	Positive result.
-					Actor_Says(kActorAnsweringMachine, 430, 19); //39-0430.AUD	Subject is Replicant.
-					Actor_Says(kActorAnsweringMachine, 460, 19); //39-0460.AUD	Test terminated.
+					Voight_Kampff_Activate(kActorBulletBob, 50);	
 					Actor_Says(kActorBulletBob, 810, 30); //14-0810.AUD	So that's it?
 					Actor_Says(kActorMcCoy, 5025, 13); //00-5025.AUD	Yeah?
 					Actor_Says(kActorBulletBob, 820, 31); //14-0820.AUD	Since you didn't shoot me, I must have registered okay.
@@ -773,7 +766,8 @@ void SceneScriptRC04::dialogueWithBulletBob() {
 				Actor_Says(kActorMcCoy, 5025, 13); //00-5025.AUD	Yeah?
 				Actor_Says(kActorBulletBob, 820, 32); //14-0820.AUD	Since you didn't shoot me, I must have registered okay.
 				if (!Actor_Clue_Query(kActorMcCoy, kClueVKBobGorskyReplicant)) {
-					if (Player_Query_Agenda() == kPlayerAgendaPolite) {
+					if (Player_Query_Agenda() != kPlayerAgendaSurly
+					&& Player_Query_Agenda() != kPlayerAgendaErratic) {
 						Actor_Says(kActorMcCoy, 5100, 11); //00-5100.AUD	Yeah, it was touch-and-go there for a while.
 					} else {
 						Actor_Says(kActorMcCoy, 5705, 18); //00-5705.AUD	Uh-huh.
@@ -796,16 +790,7 @@ void SceneScriptRC04::dialogueWithBulletBob() {
 				}
 				Actor_Says(kActorBulletBob, 790, 36); //14-0790.AUD	It's funny. You thinking I'm a Rep.
 				Actor_Says(kActorBulletBob, 800, 35); // 14-0800.AUD	Set up the test. We'll see what's what around here.
-				// Sadly I couldn't get the VK test to work properly so it confirms Bullet Bob as a replicant if he is one, so
-				// I turned it into a simple cutscene instead. This is something that you could change since you understand the code 
-				// better than I do.
-				Actor_Says(kActorAnsweringMachine, 390, kAnimationModeTalk); // 39-0390.AUD	Begin test.
-				Ambient_Sounds_Play_Sound(kSfxDATALOAD, 50, 0, 0, 99);
-				Delay(2000);
-				Ambient_Sounds_Play_Sound(kSfxBEEPNEAT, 80, 0, 0, 99);
-				Actor_Says(kActorAnsweringMachine, 420, 19); //39-0420.AUD	Positive result.
-				Actor_Says(kActorAnsweringMachine, 430, 19); //39-0430.AUD	Subject is Replicant.
-				Actor_Says(kActorAnsweringMachine, 460, 19); //39-0460.AUD	Test terminated.
+				Voight_Kampff_Activate(kActorBulletBob, 50);
 				Actor_Says(kActorBulletBob, 810, 30); //14-0810.AUD	So that's it?
 				Actor_Says(kActorMcCoy, 5025, 13); //00-5025.AUD	Yeah?
 				Actor_Says(kActorBulletBob, 820, 31); //14-0820.AUD	Since you didn't shoot me, I must have registered okay.
@@ -1411,14 +1396,7 @@ void SceneScriptRC04::PlayerWalkedIn() {
 			} else {
 				Actor_Says(kActorDispatcher, 40, 3);
 				Actor_Says(kActorBulletBob, 890, 37);
-				Actor_Change_Animation_Mode(kActorBulletBob, 4);
-				Delay(1500);
-				Sound_Play(kSfxSHOTCOK1, 75, 0, 0, 50);
-				Delay(500);
 				Actor_Set_Goal_Number(kActorBulletBob, kGoalBulletBobShootMcCoy);
-				Delay(200);
-				Actor_Change_Animation_Mode(kActorMcCoy, kAnimationModeDie);
-				Actor_Retired_Here(kActorMcCoy, 12, 12, true, -1);
 			}
 		} else {
 			Actor_Says(kActorDispatcher, 40, 3);

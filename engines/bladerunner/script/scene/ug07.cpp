@@ -151,13 +151,23 @@ bool SceneScriptUG07::ClickedOnExit(int exitId) {
 							Delay(2000);
 						}
 						// Added in a line.
-						if (_vm->_cutContent) {
-							Actor_Says(kActorClovis, 580, 0); //05-0580.AUD	And now it’s time to end this game.
-							Actor_Modify_Friendliness_To_Other(kActorClovis, kActorMcCoy, -10);
-						}
+						Actor_Says(kActorClovis, 580, 0); //05-0580.AUD	And now it’s time to end this game.
+						Actor_Clue_Acquire(kActorMcCoy, kClueSadiksGun, true, kActorClovis);
+						Actor_Clue_Acquire(kActorMcCoy, kClueClovisOrdersMcCoysDeath, true, kActorClovis);
+						Actor_Modify_Friendliness_To_Other(kActorClovis, kActorMcCoy, -10);
+						Game_Flag_Reset(kFlagMcCoyIsHelpingReplicants);
 						Actor_Set_Goal_Number(kActorMcCoy, kGoalMcCoyUG07Released);
 						Delay(1000);
 						Actor_Set_Goal_Number(kActorClovis, kGoalClovisUG07ChaseMcCoy);
+					}
+				} else {
+					if (!Loop_Actor_Walk_To_XYZ(kActorMcCoy, -10.0f, -21.47f, -58.0f, 0, true, false, false)
+					&& Actor_Query_Goal_Number(kActorClovis) != kGoalClovisUG07KillMcCoy
+					) {
+						Ambient_Sounds_Remove_All_Non_Looping_Sounds(true);
+						Ambient_Sounds_Remove_All_Looping_Sounds(1u);
+						Game_Flag_Set(kFlagUG07toUG10);
+						Set_Enter(kSetUG10, kSceneUG10);
 					}
 				}
 			} else {

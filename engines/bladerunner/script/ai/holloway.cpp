@@ -161,6 +161,9 @@ bool AIScriptHolloway::GoalChanged(int currentGoalNumber, int newGoalNumber) {
 		Actor_Says(kActorHolloway, 60, kAnimationModeTalk);
 		Actor_Says(kActorMcCoy, 6145, 12);
 		Actor_Says(kActorHolloway, 70, kAnimationModeTalk);
+		if (_vm->_cutContent) {
+			Music_Stop(1u);
+		}
 		Actor_Set_Goal_Number(kActorHolloway, kGoalHollowayKnockOutMcCoy);
 		break;
 

@@ -854,7 +854,7 @@ void KIAScript::SCRIPT_KIA_DLL_Play_Clue_Asset_Script(int notUsed, int clueId) {
 		break;
 	case kClueDragonflyBelt:
 		KIA_Play_Slice_Model(kModelAnimationDragonflyBelt);
-		KIA_Play_Actor_Dialogue(kActorVoiceOver, 8825); // 00-8825.AUD	A dragonfly belt.
+		KIA_Play_Actor_Dialogue(kActorMcCoy, 8825); // 00-8825.AUD	A dragonfly belt.
 		break;
 	case kClueEarlyQInterview:
 		KIA_Play_Actor_Dialogue(kActorEarlyQ, 140);
@@ -1015,9 +1015,6 @@ void KIAScript::SCRIPT_KIA_DLL_Play_Clue_Asset_Script(int notUsed, int clueId) {
 		KIA_Play_Actor_Dialogue(kActorMcCoy, 8990); //00-8990.AUD	What have you got there?
 		KIA_Play_Actor_Dialogue(kActorVoiceOver, 4240); //99-4240.AUD	That can't be me.
 		KIA_Play_Actor_Dialogue(kActorHolloway, 10); //33-0010.AUD	It's all over the place. You don't got a chance. (groans)
-		KIA_Play_Actor_Dialogue(kActorMcCoy, 5530); //00-5530.AUD	Photos can be doctored. Who showed you this piece of art?
-		KIA_Play_Actor_Dialogue(kActorMcCoy, 5525); //00-5525.AUD	Who’s behind this? Who set me up?
-		KIA_Play_Actor_Dialogue(kActorMcCoy, 170); //00-0170.AUD	Damn.
 		break;
 	case kClueBakersBadge:
 		KIA_Play_Slice_Model(kModelAnimationBadge);
@@ -2446,7 +2443,6 @@ void KIAScript::SCRIPT_KIA_DLL_Play_Clue_Asset_Script(int notUsed, int clueId) {
 		// The dialogue for when Sadik blows up Maggie.
 	case kClueMcCoyRetiredSadik: 
 		KIA_Play_Actor_Dialogue(kActorSadik, 60); //08-0060.AUD	You like my present, mon?
-		KIA_Play_Actor_Dialogue(kActorMcCoy, 2240); //00-2240.AUD	You bastard! She was an innocent!
 		KIA_Play_Actor_Dialogue(kActorSadik, 70); //08-0070.AUD	She a fake, mon. A machine. Like you!
 		KIA_Play_Actor_Dialogue(kActorSadik, 80); //08-0080.AUD	Tyrell? He make her more doggy than dog, ya know?
 		KIA_Play_Actor_Dialogue(kActorMcCoy, 2245); //00-2245.AUD	That-- that’s a lie!
@@ -2458,6 +2454,7 @@ void KIAScript::SCRIPT_KIA_DLL_Play_Clue_Asset_Script(int notUsed, int clueId) {
 	case kClueMcCoyRetiredLutherLance:
 		KIA_Play_Actor_Dialogue(kActorMcCoy, 5720); //00-5720.AUD	Just a moment of your time, please.
 		KIA_Play_Actor_Dialogue(kActorLuther, 80); //10-0080.AUD	I am sick and tired of people waving those things around.
+		KIA_Play_Actor_Dialogue(kActorLance, 40); ////13-0040.AUD	Just give it up. You got no jurisdiction down here.
 		KIA_Play_Actor_Dialogue(kActorVoiceOver, 920); //99-0920.AUD	Easy money.
 		KIA_Play_Actor_Dialogue(kActorMcCoy, 8508); //00-8508.AUD	No retirement swag.
 		break;

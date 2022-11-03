@@ -373,7 +373,17 @@ bool ESPERScript::SCRIPT_ESPER_DLL_Special_Region_Selected(int photo, int region
 				Actor_Clue_Acquire(kActorMcCoy, kClueChinaBarSecurityCamera, true, -1);
 			}
 		} else if (region == 15) {
-			Actor_Voice_Over(4220, kActorVoiceOver);
+			if (_vm->_cutContent) {
+				if (Actor_Clue_Query(kActorMcCoy, kClueAnimalMurderSuspect)
+				|| Actor_Clue_Query(kActorMcCoy, kClueMoonbus1)
+				|| Actor_Clue_Query(kActorMcCoy, kClueDektorasDressingRoom)){
+					Actor_Voice_Over(4220, kActorVoiceOver); //99-4220.AUD	That guy sure gets around.
+				} else {
+					Actor_Voice_Over(4080, kActorVoiceOver);
+				}
+			} else {
+				Actor_Voice_Over(4220, kActorVoiceOver); //99-4220.AUD	That guy sure gets around.
+			}
 			if (!Actor_Clue_Query(kActorMcCoy, kClueIzosFriend)) {
 				Actor_Says(kActorMcCoy, 6945, 3);
 				Sound_Play(kSfxBR034_1A, 50, 0, 0, 50);
@@ -476,11 +486,24 @@ bool ESPERScript::SCRIPT_ESPER_DLL_Special_Region_Selected(int photo, int region
 	case 9:
 		switch (region) {
 		case 22:
-			Actor_Says(kActorMcCoy, 8705, 3);
-			if (!Actor_Clue_Query(kActorMcCoy, kClueMoonbusReflection)) {
-				Actor_Says(kActorMcCoy, 6945, 3);
-				Sound_Play(kSfxBR034_1A, 50, 0, 0, 50);
-				Actor_Clue_Acquire(kActorMcCoy, kClueMoonbusReflection, true, -1);
+			if (_vm->_cutContent) {
+				if (Actor_Clue_Query(kActorMcCoy, kClueMcCoyAtMoonbus)) {
+					Actor_Says(kActorMcCoy, 8705, 3);
+					if (!Actor_Clue_Query(kActorMcCoy, kClueMoonbusReflection)) {
+						Actor_Says(kActorMcCoy, 6945, 3);
+						Sound_Play(kSfxBR034_1A, 50, 0, 0, 50);
+						Actor_Clue_Acquire(kActorMcCoy, kClueMoonbusReflection, true, -1);
+					}
+				} else {
+					Actor_Says(kActorMcCoy, 8525, 13); // 00-8525.AUD	Hmph.
+				}
+			} else {
+				Actor_Says(kActorMcCoy, 8705, 3);
+				if (!Actor_Clue_Query(kActorMcCoy, kClueMoonbusReflection)) {
+					Actor_Says(kActorMcCoy, 6945, 3);
+					Sound_Play(kSfxBR034_1A, 50, 0, 0, 50);
+					Actor_Clue_Acquire(kActorMcCoy, kClueMoonbusReflection, true, -1);
+				}
 			}
 			break;
 
@@ -503,7 +526,17 @@ bool ESPERScript::SCRIPT_ESPER_DLL_Special_Region_Selected(int photo, int region
 			break;
 
 		case 24:
-			Actor_Voice_Over(4220, kActorVoiceOver);
+			if (_vm->_cutContent) {
+				if (Actor_Clue_Query(kActorMcCoy, kClueAnimalMurderSuspect)
+				|| Actor_Clue_Query(kActorMcCoy, kClueIzosFriend)
+				|| Actor_Clue_Query(kActorMcCoy, kClueDektorasDressingRoom)){
+					Actor_Voice_Over(4220, kActorVoiceOver);
+				} else {
+					Actor_Voice_Over(4080, kActorVoiceOver);
+				}
+			} else {
+				Actor_Voice_Over(4220, kActorVoiceOver); //99-4220.AUD	That guy sure gets around.
+			}
 			if (!Actor_Clue_Query(kActorMcCoy, kClueClovisAtMoonbus)) {
 				Actor_Says(kActorMcCoy, 6945, 3);
 				Sound_Play(kSfxBR034_1A, 50, 0, 0, 50);

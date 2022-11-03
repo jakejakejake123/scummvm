@@ -529,27 +529,13 @@ void SceneScriptHF01::PlayerWalkedIn() {
 		if (!_vm->_cutContent) {
 			ADQ_Add(kActorOfficerGrayford, 280, kAnimationModeTalk);
 		}
-		// Made it so Leary only appears in this scene if he is not dead.
-		if (_vm->_cutContent) {
-			if (!Game_Flag_Query(kFlagOfficerLearyKilledByBob)) {
-				Actor_Put_In_Set(kActorOfficerLeary, kSetHF01);
-				Actor_Set_At_XYZ(kActorOfficerLeary, 8.2f, 8.0f, -346.67f, 1021);
-			}
-		} else {
-			Actor_Put_In_Set(kActorOfficerLeary, kSetHF01);
-			Actor_Set_At_XYZ(kActorOfficerLeary, 8.2f, 8.0f, -346.67f, 1021);
-		}
+		Actor_Put_In_Set(kActorOfficerLeary, kSetHF01);
+		Actor_Set_At_XYZ(kActorOfficerLeary, 8.2f, 8.0f, -346.67f, 1021);
 		if (!_vm->_cutContent) {
 			Actor_Put_In_Set(kActorOfficerGrayford, kSetHF01);
 			Actor_Set_At_XYZ(kActorOfficerGrayford, 51.21f, 8.0f, -540.78f, 796);
 		}
-		if (_vm->_cutContent) {
-			if (!Game_Flag_Query(kFlagOfficerLearyKilledByBob)) {
-				Non_Player_Actor_Combat_Mode_On(kActorOfficerLeary, kActorCombatStateUncover, true, kActorMcCoy, 4, kAnimationModeCombatIdle, kAnimationModeCombatWalk, kAnimationModeCombatRun, 0, 0, 0, 100, 300, false);
-			}
-		} else {
-			Non_Player_Actor_Combat_Mode_On(kActorOfficerLeary, kActorCombatStateUncover, true, kActorMcCoy, 4, kAnimationModeCombatIdle, kAnimationModeCombatWalk, kAnimationModeCombatRun, 0, 0, 0, 100, 300, false);
-		}
+		Non_Player_Actor_Combat_Mode_On(kActorOfficerLeary, kActorCombatStateUncover, true, kActorMcCoy, 4, kAnimationModeCombatIdle, kAnimationModeCombatWalk, kAnimationModeCombatRun, 0, 0, 0, 100, 300, false);
 		if (!_vm->_cutContent) {
 			Non_Player_Actor_Combat_Mode_On(kActorOfficerGrayford, kActorCombatStateUncover, true, kActorMcCoy, 4, kAnimationModeCombatIdle, kAnimationModeCombatWalk, kAnimationModeCombatRun, 0, 0, 0, 100, 300, false);
 		}
@@ -928,6 +914,8 @@ void SceneScriptHF01::dialogueWithMiaAndMurray() {
 					Actor_Face_Actor(kActorMurray, kActorMia, true);
 					Actor_Face_Heading(kActorMia, 511, false);
 					Game_Flag_Set(kFlagMiaAndMurrayFinishedTalk);
+				} else {
+					Actor_Says(kActorMcCoy, 1500, 16);
 				}
 			} else if (!Game_Flag_Query(kFlagMiaMurrayAnnoyedTalk)
 			&& (Actor_Query_Friendliness_To_Other(kActorMurray, kActorMcCoy) < 50)) {
@@ -974,8 +962,6 @@ void SceneScriptHF01::dialogueWithMiaAndMurray() {
 				Game_Flag_Reset(kFlagMcCoyInHysteriaHall);
 				Game_Flag_Set(kFlagMcCoyInPoliceStation);
 				Set_Enter(kSetPS09, kScenePS09);
-			} else if (Game_Flag_Query(kFlagMiaAndMurrayFinishedTalk)) {
-				Actor_Says(kActorMcCoy, 1500, 16);
 			}
 		} else {
 			Actor_Says(kActorMcCoy, 1500, 16);
@@ -987,20 +973,21 @@ void SceneScriptHF01::dialogueWithMiaAndMurray() {
 void SceneScriptHF01::talkWithDektora() {
 	Actor_Says(kActorDektora, 0, kAnimationModeTalk);
 	if (_vm->_cutContent) {
-		if (Player_Query_Agenda() == kPlayerAgendaPolite) {
+		if (Player_Query_Agenda() != kPlayerAgendaSurly 
+		&& Player_Query_Agenda() != kPlayerAgendaErratic) {
 			Actor_Says(kActorMcCoy, 1400, kAnimationModeTalk); //00-1400.AUD	I promised you, didn't I?
+			Actor_Says(kActorDektora, 10, kAnimationModeTalk); //03-0010.AUD	You’re one of the few people I’ve known who actually keep their promises.
 		}
 	} else {
 		Actor_Says(kActorMcCoy, 1400, kAnimationModeTalk); //00-1400.AUD	I promised you, didn't I?
+		Actor_Says(kActorDektora, 10, kAnimationModeTalk); //03-0010.AUD	You’re one of the few people I’ve known who actually keep their promises.
 	}
-	Actor_Says(kActorDektora, 10, kAnimationModeTalk); //03-0010.AUD	You’re one of the few people I’ve known who actually keep their promises.
-	
 	Actor_Says(kActorMcCoy, 1405, kAnimationModeTalk); //00-1405.AUD	Where's Clovis?
 	Actor_Says(kActorDektora, 20, kAnimationModeTalk); //03-0020.AUD	He’s not coming with us.
 	Actor_Says(kActorMcCoy, 1410, kAnimationModeTalk); //00-1410.AUD	You're gonna miss him?
 	Actor_Says(kActorDektora, 30, kAnimationModeTalk); //03-0030.AUD	I’ve practically forgotten him already.
 	if (_vm->_cutContent) {
-		if (Game_Flag_Query(kFlagMcCoyIsHelpingReplicants)) {
+		if (Actor_Query_Friendliness_To_Other(kActorClovis, kActorMcCoy) > 50) {
 			Actor_Says(kActorMcCoy, 1415, kAnimationModeTalk); //00-1415.AUD	Some ways I wish I'd gotten to know him better.
 			Actor_Says(kActorDektora, 40, kAnimationModeTalk); //03-0040.AUD	Then you know him better than you think.
 			Actor_Says(kActorDektora, 50, kAnimationModeTalk); //03-0050.AUD	There’s a strange bond that exists between the two of you.
@@ -1021,20 +1008,22 @@ void SceneScriptHF01::talkWithDektora() {
 void SceneScriptHF01::talkWithLucy() {
 	Actor_Says(kActorLucy, 0, kAnimationModeTalk); //06-0000.AUD	I knew you’d come.
 	if (_vm->_cutContent) {
-		if (Player_Query_Agenda() == kPlayerAgendaPolite) {
+		if (Player_Query_Agenda() != kPlayerAgendaSurly 
+		&& Player_Query_Agenda() != kPlayerAgendaErratic) {
 			Actor_Says(kActorMcCoy, 1425, kAnimationModeTalk); //00-1425.AUD	I promised you, didn't I?
 		}
 	} else {
 		Actor_Says(kActorMcCoy, 1425, kAnimationModeTalk); //00-1425.AUD	I promised you, didn't I?
 	}
 	Actor_Says(kActorLucy, 10, kAnimationModeTalk); //06-0010.AUD	Father wanted me to stay with him.
-	Actor_Says(kActorLucy, 20, kAnimationModeTalk); //06-0020.AUD	But when I told him I was going with you, he gave us his blessing.
 	if (_vm->_cutContent) {
-		if (Game_Flag_Query(kFlagMcCoyIsHelpingReplicants)) {
+		if (Actor_Query_Friendliness_To_Other(kActorClovis, kActorMcCoy) > 50) {
+			Actor_Says(kActorLucy, 20, kAnimationModeTalk); //06-0020.AUD	But when I told him I was going with you, he gave us his blessing.
 			Actor_Says(kActorMcCoy, 1430, kAnimationModeTalk); //00-1430.AUD	He is an extraordinary guy.
 			Actor_Says(kActorLucy, 30, kAnimationModeTalk); //06-0030.AUD	I know.
 		}
 	} else {
+		Actor_Says(kActorLucy, 20, kAnimationModeTalk); //06-0020.AUD	But when I told him I was going with you, he gave us his blessing.
 		Actor_Says(kActorMcCoy, 1430, kAnimationModeTalk); //00-1430.AUD	He is an extraordinary guy.
 		Actor_Says(kActorLucy, 30, kAnimationModeTalk); //06-0030.AUD	I know.
 	}
@@ -1042,8 +1031,8 @@ void SceneScriptHF01::talkWithLucy() {
 	Actor_Says(kActorLucy, 40, kAnimationModeTalk); //06-0040.AUD	Of course, but now that I have you
 	Actor_Says(kActorLucy, 50, kAnimationModeTalk); //06-0050.AUD	everything will be all right, won’t it?
 	if (_vm->_cutContent) {
-		if (Player_Query_Agenda() != kPlayerAgendaSurly 
-		&& Player_Query_Agenda() != kPlayerAgendaErratic) {
+		if (Player_Query_Agenda() == kPlayerAgendaSurly 
+		|| Player_Query_Agenda() == kPlayerAgendaErratic) {
 			Actor_Says(kActorMcCoy, 1440, kAnimationModeTalk); //00-1440.AUD	Sure it will.
 		} else {
 			Actor_Says(kActorMcCoy, 7330, 16); //00-7330.AUD	Let's hope so.
@@ -1054,8 +1043,8 @@ void SceneScriptHF01::talkWithLucy() {
 	Actor_Says(kActorLucy, 60, kAnimationModeTalk); //06-0060.AUD	Promise me that we’re going to find that special place!
 	Actor_Says(kActorLucy, 70, kAnimationModeTalk); //06-0070.AUD	The one with the trees and the flowers and the beautiful clear lake.
 	if (_vm->_cutContent) {
-		if (Player_Query_Agenda() != kPlayerAgendaSurly 
-		&& Player_Query_Agenda() != kPlayerAgendaErratic) {
+		if (Player_Query_Agenda() == kPlayerAgendaSurly 
+		|| Player_Query_Agenda() == kPlayerAgendaErratic) {
 			Actor_Says(kActorMcCoy, 1445, kAnimationModeTalk); //00-1445.AUD	It exists somewhere.
 			Actor_Says(kActorLucy, 80, kAnimationModeTalk); //06-0080.AUD	It’s so much more than a dream, isn’t it?
 			Actor_Says(kActorLucy, 3030, kAnimationModeTalk);
@@ -1076,8 +1065,6 @@ void SceneScriptHF01::talkWithLucy() {
 		Actor_Says(kActorLucy, 80, kAnimationModeTalk); //06-0080.AUD	It’s so much more than a dream, isn’t it?
 		Actor_Says(kActorLucy, 3030, kAnimationModeTalk);
 	}
-	Actor_Says(kActorLucy, 80, kAnimationModeTalk); //06-0080.AUD	It’s so much more than a dream, isn’t it?
-	Actor_Says(kActorLucy, 3030, kAnimationModeTalk);
 }
 
 } // End of namespace BladeRunner

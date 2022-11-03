@@ -54,12 +54,9 @@ bool AIScriptLuther::Update() {
 		}
 		Actor_Says(kActorMcCoy, 5720, 12);
 		Actor_Says(kActorLuther, 80, 13);
+		Actor_Says(kActorLance, 40, 12); //13-0040.AUD	Just give it up. You got no jurisdiction down here.
 		if (_vm->_cutContent) {
-			if (Actor_Query_Friendliness_To_Other(kActorLuther, kActorMcCoy) < 50) {
-				Actor_Says(kActorLance, 40, 12); //13-0040.AUD	Just give it up. You got no jurisdiction down here.
-			}
-		} else {
-			Actor_Says(kActorLance, 40, 12); //13-0040.AUD	Just give it up. You got no jurisdiction down here.
+			Actor_Modify_Friendliness_To_Other(kActorLuther, kActorMcCoy, -5);
 		}
 		Game_Flag_Set(kFlagUG16PulledGun);
 		return false;
@@ -126,6 +123,7 @@ bool AIScriptLuther::Update() {
 				Game_Flag_Reset(kFlagMcCoyIsHelpingReplicants);
 				Actor_Modify_Friendliness_To_Other(kActorClovis, kActorMcCoy, -4);
 				Actor_Modify_Friendliness_To_Other(kActorSteele, kActorMcCoy, -4);
+				Actor_Modify_Friendliness_To_Other(kActorGuzza, kActorMcCoy, -4);
 			}
 		}
 		
@@ -247,23 +245,46 @@ void AIScriptLuther::Retired(int byActorId) {
 		if (Global_Variable_Query(kVariableReplicantsSurvivorsAtMoonbus) == 0) {
 			Player_Loses_Control();
 			if (_vm->_cutContent) {
-				if (Game_Flag_Query(kFlagCrazylegsIsReplicant)) {
-					if (!Game_Flag_Query(kFlagCrazylegsDead)) {
+				if (Actor_Query_In_Set(kActorRunciter, kSetKP07)) {
+					if (Actor_Query_In_Set(kActorRunciter, kSetKP07)) {
+						Loop_Actor_Walk_To_XYZ(kActorRunciter, -12.0f, -41.58f, 72.0f, 0, true, false, false);
+						Actor_Put_In_Set(kActorRunciter, kSceneKP06);
+					}
+					if (Actor_Query_In_Set(kActorCrazylegs, kSetKP07)) {
 						Loop_Actor_Walk_To_XYZ(kActorCrazylegs, -12.0f, -41.58f, 72.0f, 0, true, false, false);
-						Actor_Put_In_Set(kActorCrazylegs, kSceneKP06);
-						Delay(500);
-						Sound_Play(kSfxSMCAL3, 100, 0, 0, 50);
+						Actor_Put_In_Set(kActorCrazylegs, kSceneKP06);	
+					}
+					if (Game_Flag_Query(kFlagRunciterIsReplicant)) {
+						if (Actor_Query_Goal_Number(kActorRunciter) < kGoalRunciterDead) {
+							Delay(500);
+							Sound_Play(kSfxSMCAL3, 100, 0, 0, 50);
+						}
+					}
+					if (Game_Flag_Query(kFlagCrazylegsIsReplicant)) {
+						if (!Game_Flag_Query(kFlagCrazylegsDead)) {
+							Delay(500);
+							Sound_Play(kSfxSMCAL3, 100, 0, 0, 50);
+						}
 					}
 				}
 				Delay(2000);
 				Player_Set_Combat_Mode(false);
-				Delay(2000); 
+				Delay(2000);  
+				Ambient_Sounds_Remove_All_Non_Looping_Sounds(true);
+				Ambient_Sounds_Remove_All_Looping_Sounds(1u);
+				Game_Flag_Set(kFlagKP07toKP06);
+				Game_Flag_Reset(kFlagMcCoyIsHelpingReplicants);
+				Set_Enter(kSetKP05_KP06, kSceneKP06);
+			} else {
+				Delay(2000);
+				Player_Set_Combat_Mode(false);
+				Loop_Actor_Walk_To_XYZ(kActorMcCoy, -12.0f, -41.58f, 72.0f, 0, true, false, false);
+				Ambient_Sounds_Remove_All_Non_Looping_Sounds(true);
+				Ambient_Sounds_Remove_All_Looping_Sounds(1u);
+				Game_Flag_Set(kFlagKP07toKP06);
+				Game_Flag_Reset(kFlagMcCoyIsHelpingReplicants);
+				Set_Enter(kSetKP05_KP06, kSceneKP06);
 			}
-			Ambient_Sounds_Remove_All_Non_Looping_Sounds(true);
-			Ambient_Sounds_Remove_All_Looping_Sounds(1u);
-			Game_Flag_Set(kFlagKP07toKP06);
-			Game_Flag_Reset(kFlagMcCoyIsHelpingReplicants);
-			Set_Enter(kSetKP05_KP06, kSceneKP06);
 			return; //true;
 		}
 	}

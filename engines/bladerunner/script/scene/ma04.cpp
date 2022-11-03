@@ -495,9 +495,7 @@ void SceneScriptMA04::phoneCallWithDektora() {
 	Actor_Says(kActorDektora, 350, 3);
 	if (_vm->_cutContent) {
 		if (Game_Flag_Query(kFlagCrazylegsArrested)
-		|| Actor_Query_Goal_Number(kActorCrazylegs) == kGoalCrazyLegsLeavesShowroom
-		|| Game_Flag_Query(kFlagMcCoyIsHelpingReplicants)
-		) {
+		|| Actor_Query_Goal_Number(kActorCrazylegs) == kGoalCrazyLegsLeavesShowroom) {
 			answer = 1170; // CLOVIS
 		} else {
 			Dialogue_Menu_Clear_List();
@@ -610,8 +608,7 @@ void SceneScriptMA04::phoneCallWithLucy() {
 	Actor_Says(kActorLucy, 580, 3); // You promise?
 	if (_vm->_cutContent) {
 		if (Game_Flag_Query(kFlagCrazylegsArrested)
-		|| Actor_Query_Goal_Number(kActorCrazylegs) == kGoalCrazyLegsLeavesShowroom
-		|| Game_Flag_Query(kFlagMcCoyIsHelpingReplicants)) {
+		|| Actor_Query_Goal_Number(kActorCrazylegs) == kGoalCrazyLegsLeavesShowroom) {
 			Actor_Says_With_Pause(kActorMcCoy, 2570, 0.0f, 13); // Lucy, there's a good chance--
 			if (!Game_Flag_Query(kFlagDirectorsCut)) {
 				Actor_Says(kActorLucy, 640, 3);

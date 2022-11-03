@@ -67,12 +67,6 @@ void SceneScriptCT06::SceneLoaded() {
 	Unobstacle_Object("INSULPIP01", true);
 	Unobstacle_Object("CB BOX04", true);
 	Unclickable_Object("DOOR");
-	if (_vm->_cutContent) { 
-		if (Actor_Clue_Query(kActorMcCoy, kClueCrystalRetiredZuben)
-		&& !Actor_Clue_Query(kActorMcCoy, kClueCrystalVisitedChinatown)) { 
-			Item_Add_To_World(kItemCigarette, kModelAnimationCrystalsCigarette, kSetCT06, 33.39, -57.87, -7.36, 0, 12, 12, false, true, false, true);
-		}
-	}
 	if (Actor_Query_Goal_Number(kActorZuben) == kGoalZubenCT06HideAtFreeSlotA) {
 		Preload(kModelAnimationMcCoyWithGunWalking);
 		Preload(kModelAnimationMcCoyWithGunRunning);
@@ -126,18 +120,6 @@ bool SceneScriptCT06::ClickedOnActor(int actorId) {
 }
 
 bool SceneScriptCT06::ClickedOnItem(int itemId, bool a2) {
-	if (_vm->_cutContent) {
-		if (itemId == kItemCigarette) { 
-			if (!Loop_Actor_Walk_To_Item(kActorMcCoy, kItemCigarette, 12, true, false)) {
-				Actor_Face_Item(kActorMcCoy, kItemCigarette, true);
-				Item_Pickup_Spin_Effect(kModelAnimationCrystalsCigarette, 360, 436);
-				Item_Remove_From_World(kItemCigarette);
-				Actor_Clue_Acquire(kActorMcCoy, kClueCrystalVisitedChinatown, true, kActorSteele);
-				Actor_Voice_Over(1770, kActorVoiceOver); //99-1770.AUD	Lucky Strikes. Crystal's brand.
-				return true;
-			}
-		}
-	}
 	return false;
 }
 

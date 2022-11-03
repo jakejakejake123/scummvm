@@ -445,8 +445,7 @@ void SceneScriptHF05::talkWithCrazyLegs2() {
 			}
 		} else {
 			Actor_Says(kActorCrazylegs, 380, 14); //09-0380.AUD	You’ve been thinking about the Caddy, haven’t you?
-			if (Player_Query_Agenda() == kPlayerAgendaSurly
-			|| (Player_Query_Agenda() == kPlayerAgendaErratic)) {
+			if (Player_Query_Agenda() != kPlayerAgendaPolite) {
 				Actor_Says(kActorMcCoy, 7815, kAnimationModeTalk); //00-7815.AUD	No.
 			} else {
 				Actor_Says(kActorMcCoy, 7980, 19); //00-7980.AUD	Yeah. Maybe.
@@ -1304,7 +1303,9 @@ void SceneScriptHF05::talkWithCrazylegs3(int affectionTowardsActor) {
 				if (!Game_Flag_Query(kFlagCrazylegsIsReplicant)) {
 					Actor_Says_With_Pause(kActorCrazylegs, 440, 0.0f, 3); //09-0440.AUD	Honest. You can pat me down if you want.
 					Delay(1000);
-					Loop_Actor_Walk_To_Actor(kActorMcCoy, kActorCrazylegs, 24, true, false);
+					Player_Loses_Control();
+					Loop_Actor_Walk_To_Actor(kActorCrazylegs, kActorMcCoy, 28, false, false);
+					Player_Gains_Control();
 					Actor_Change_Animation_Mode(kActorMcCoy, 23);
 					Delay(2000);
 					Item_Pickup_Spin_Effect(kModelAnimationSpinnerKeys, 315, 327);
@@ -1313,8 +1314,10 @@ void SceneScriptHF05::talkWithCrazylegs3(int affectionTowardsActor) {
 					Actor_Says(kActorMcCoy, 8445, -1); //00-8445.AUD	Cough it up!
 					Delay(1500);
 					Actor_Says(kActorMcCoy, 1805, -1); //00-1805.AUD	Now!
-					Delay(1000);
+					Delay(1000); 
+					Player_Loses_Control();
 					Loop_Actor_Walk_To_Actor(kActorCrazylegs, kActorMcCoy, 28, false, false);
+					Player_Gains_Control();
 					Actor_Change_Animation_Mode(kActorMcCoy, 23);
 					Actor_Change_Animation_Mode(kActorCrazylegs, 23);
 					Delay(2000);
@@ -1516,16 +1519,26 @@ void SceneScriptHF05::talkWithCrazyLegs1() {
 	} else {
 		Actor_Says(kActorMcCoy, 1835, 12);
 	}
-	Actor_Says(kActorMcCoy, 1835, 12);
 	Actor_Face_Actor(kActorCrazylegs, kActorMcCoy, true);
 	Actor_Says(kActorCrazylegs, 320, kAnimationModeTalk);
 	Actor_Face_Actor(kActorMcCoy, kActorCrazylegs, true);
 	Actor_Says(kActorCrazylegs, 330, 12);
 	Actor_Says(kActorMcCoy, 1840, kAnimationModeTalk); //00-1840.AUD	McCoy.
 	Actor_Says(kActorCrazylegs, 340, 14);
-	Actor_Says(kActorMcCoy, 1845, kAnimationModeTalk); //00-1845.AUD	I’ll have to think about it.
-	Actor_Says(kActorCrazylegs, 350, 15);
-	Actor_Says(kActorCrazylegs, 360, 16);
+	if (_vm->_cutContent) {
+		if (Player_Query_Agenda() == kPlayerAgendaPolite) {
+			Actor_Says(kActorMcCoy, 1845, kAnimationModeTalk); //00-1845.AUD	I’ll have to think about it.
+			Actor_Says(kActorCrazylegs, 350, 15);
+			Actor_Says(kActorCrazylegs, 360, 16);
+		} else {
+			Actor_Says(kActorMcCoy, 4945, 16); //00-4945.AUD	I think I'll pass.
+		}
+	} else {
+		Actor_Says(kActorMcCoy, 1845, kAnimationModeTalk); //00-1845.AUD	I’ll have to think about it.
+		Actor_Says(kActorCrazylegs, 350, 15);
+		Actor_Says(kActorCrazylegs, 360, 16);
+	}
+	
 	Player_Gains_Control();
 }
 

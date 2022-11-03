@@ -218,10 +218,22 @@ void AIScriptBulletBob::Retired(int byActorId) {
 				Player_Loses_Control();
 				// Made it so if Crazylegs is in the moonbus, after all the reps are retired he flees and is shot offscreen by Crystal or Gaff.
 				// This was done because he has no death animation so this seemed to be a reasonable solution.
+				if (Actor_Query_In_Set(kActorRunciter, kSetKP07)) {
+					Loop_Actor_Walk_To_XYZ(kActorRunciter, -12.0f, -41.58f, 72.0f, 0, true, false, false);
+					Actor_Put_In_Set(kActorRunciter, kSceneKP06);
+				}
+				if (Actor_Query_In_Set(kActorCrazylegs, kSetKP07)) {
+					Loop_Actor_Walk_To_XYZ(kActorCrazylegs, -12.0f, -41.58f, 72.0f, 0, true, false, false);
+					Actor_Put_In_Set(kActorCrazylegs, kSceneKP06);	
+				}
+				if (Game_Flag_Query(kFlagRunciterIsReplicant)) {
+					if (Actor_Query_Goal_Number(kActorRunciter) < kGoalRunciterDead) {
+						Delay(500);
+						Sound_Play(kSfxSMCAL3, 100, 0, 0, 50);
+					}
+				}
 				if (Game_Flag_Query(kFlagCrazylegsIsReplicant)) {
 					if (!Game_Flag_Query(kFlagCrazylegsDead)) {
-						Loop_Actor_Walk_To_XYZ(kActorCrazylegs, -12.0f, -41.58f, 72.0f, 0, true, false, false);
-						Actor_Put_In_Set(kActorCrazylegs, kSceneKP06);
 						Delay(500);
 						Sound_Play(kSfxSMCAL3, 100, 0, 0, 50);
 					}

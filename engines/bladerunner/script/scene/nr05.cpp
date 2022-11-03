@@ -507,8 +507,14 @@ void SceneScriptNR05::talkToEarlyQ() {
 		Actor_Says_With_Pause(kActorEarlyQ, 530, 1.2f, kAnimationModeTalk); //18-0530.AUD	This ain’t no daycare center, General.
 		// Made it so if Early Q is a rep he doesn't make those creepy comments about Lucy. If Early Q is a rep he actually cares about the reps and would never hurt Lucy
 		// who is someone that the reps really care about.
-		if (!_vm->_cutContent) {
-			Actor_Says(kActorEarlyQ, 540, 15); //18-0540.AUD	Of course, she ain’t half bad looking. My pappy always used to say ‘if there’s grass on the field, it’s time to play ball’.
+		if (_vm->_cutContent) {
+			if (!Game_Flag_Query(kFlagEarlyQIsReplicant)) {
+				Actor_Says(kActorEarlyQ, 540, 15); //18-0540.AUD	Of course, she ain’t half bad looking. My pappy always used to say ‘if there’s grass on the field, it’s time to play ball’.
+				Actor_Says(kActorMcCoy, 8665, 13); //00-8665.AUD	Disgusting.
+				Delay(2000);
+			}
+		} else {
+			Actor_Says(kActorEarlyQ, 540, 15); //18-0540.AUD	Of course, she ain’t half bad looking. My pappy always used to say ‘if there’s grass on the field, it’s time to play ball’.			
 		}
 		Actor_Says(kActorMcCoy, 3550, 13); //00-3550.AUD	So, she hasn’t been around here?
 		Actor_Says(kActorEarlyQ, 560, 14); //18-0560.AUD	Nah, she ain’t one of mine.
@@ -516,6 +522,10 @@ void SceneScriptNR05::talkToEarlyQ() {
 		if (_vm->_cutContent) {
 			if (Player_Query_Agenda() == kPlayerAgendaPolite) {
 				Actor_Says(kActorMcCoy, 3555, 12); //00-3555.AUD	It’s men like you that made this country great, Early.
+			} else {
+				if (!Game_Flag_Query(kFlagEarlyQIsReplicant)) {
+					Actor_Says(kActorMcCoy, 2485, 19); //00-2485.AUD	I’ve a hard time believing that.
+				}
 			}
 		} else {
 			Actor_Says(kActorMcCoy, 3555, 12);
@@ -536,8 +546,10 @@ void SceneScriptNR05::talkToEarlyQ() {
 			Actor_Says(kActorEarlyQ, 560, 14); //18-0560.AUD	Nah, she ain’t one of mine.
 			Actor_Says(kActorEarlyQ, 570, 13); //18-0570.AUD	Talk to Taffy. He gets most of the peddy business around here.
 			if (_vm->_cutContent) {
-				if (!Game_Flag_Query(kFlagEarlyQIsReplicant)) {
-					Actor_Says(kActorMcCoy, 2485, 19); //00-2485.AUD	I’ve a hard time believing that.
+				if (Player_Query_Agenda() != kPlayerAgendaPolite) {
+					if (!Game_Flag_Query(kFlagEarlyQIsReplicant)) {
+						Actor_Says(kActorMcCoy, 2485, 19); //00-2485.AUD	I’ve a hard time believing that.
+					}
 				} else {
 					Actor_Says(kActorMcCoy, 3555, 12); //00-3555.AUD	It’s men like you that made this country great, Early.
 				}

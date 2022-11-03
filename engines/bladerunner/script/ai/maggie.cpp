@@ -257,11 +257,6 @@ void AIScriptMaggie::ClickedByPlayer() {
 	float mccoy_x, mccoy_y, mccoy_z;
 	Actor_Query_XYZ(kActorMcCoy, &mccoy_x, &mccoy_y, &mccoy_z);
 	if (distanceToActor(kActorMaggie, mccoy_x, mccoy_y, mccoy_z) > 60.0f) {
-		if (_vm->_cutContent && Random_Query(0, 1)) {
-			Actor_Says(kActorMcCoy, 2395, 18);
-		} else {
-			Actor_Says(kActorMcCoy, 2430, 18);
-		}
 		Actor_Set_Goal_Number(kActorMaggie, kGoalMaggieMA02WalkToMcCoy);
 		return; // true
 	}
@@ -661,9 +656,38 @@ bool AIScriptMaggie::GoalChanged(int currentGoalNumber, int newGoalNumber) {
 			// Altered code so if Sadik is dead Clovis will be the one who kills Maggie. His dialogue with McCoy is already fixed in Clovis ai sheet and this code this will trigger it. 
 			if (_vm->_cutContent) { 
 				if (Actor_Query_Goal_Number(kActorSadik) == kGoalSadikGone) {
-					Actor_Set_Goal_Number(kActorClovis, kGoalClovisKP06TalkToMcCoy);
-				} else if (Actor_Query_Goal_Number(kActorSadik) == 411) {
-					Actor_Set_Goal_Number(kActorSadik, 412);
+					Actor_Says(kActorClovis, 110, kAnimationModeTalk);
+					if (Player_Query_Agenda() == kPlayerAgendaSurly 
+					|| (Player_Query_Agenda() == kPlayerAgendaErratic)) {
+						Actor_Says(kActorMcCoy, 2255, kAnimationModeTalk); //00-2255.AUD	She was innocent, you bastard!
+					} else {
+						Actor_Says(kActorMcCoy, 2240, kAnimationModeTalk); //00-2240.AUD	You bastard! She was an innocent!
+					}
+					Actor_Says(kActorClovis, 120, kAnimationModeTalk); //05-0120.AUD	Can’t see it yet? You came down to Terra with us, McCoy.
+					Actor_Says(kActorClovis, 130, kAnimationModeTalk); //05-0130.AUD	The police got a hold of you and Tyrell created your past.
+					Actor_Says(kActorClovis, 140, kAnimationModeTalk);
+					Actor_Says(kActorMcCoy, 2260, kAnimationModeTalk);
+					Actor_Says(kActorClovis, 150, kAnimationModeTalk); //05-0150.AUD	Come join me. Our final party before returning to the heavens.
+					Actor_Says(kActorClovis, 1330, kAnimationModeTalk); //05-1330.AUD	To the Heavens, brother. Off-World.
+					Actor_Set_Goal_Number(kActorClovis, kGoalClovisKP07Wait);
+					Scene_Exits_Enable();
+				} else {
+					Actor_Says(kActorSadik, 60, 3);
+					if (Player_Query_Agenda() == kPlayerAgendaSurly 
+					|| (Player_Query_Agenda() == kPlayerAgendaErratic)) {
+						Actor_Says(kActorMcCoy, 2255, kAnimationModeTalk); //00-2255.AUD	She was innocent, you bastard!
+					} else {
+						Actor_Says(kActorMcCoy, 2240, kAnimationModeTalk); //00-2240.AUD	You bastard! She was an innocent!
+					}
+					Actor_Says(kActorSadik, 70, 3);
+					Actor_Says(kActorSadik, 80, 3);
+					Actor_Says(kActorMcCoy, 2245, 3);
+					Actor_Says(kActorSadik, 90, 3);
+					Actor_Says(kActorSadik, 100, 3);
+					Actor_Says(kActorMcCoy, 2250, 3);
+					Actor_Clue_Acquire(kActorMcCoy, kClueMcCoyRetiredSadik, true, kActorSadik);
+					Music_Play(kMusicMoraji, 71, 0, 0, -1, kMusicLoopPlayOnce, 2);
+					Actor_Set_Goal_Number(kActorSadik, 413);
 				}
 			} else if (Actor_Query_Goal_Number(kActorSadik) == 411) {
 				Actor_Set_Goal_Number(kActorSadik, 412);

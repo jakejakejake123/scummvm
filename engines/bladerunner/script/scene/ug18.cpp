@@ -514,6 +514,7 @@ void SceneScriptUG18::PlayerWalkedIn() {
 		} else if (Game_Flag_Query(kFlagGuzzaKilledTransient)) {
 			Actor_Change_Animation_Mode(kActorMcCoy, 5);
 			Delay(500);
+			Loop_Actor_Walk_To_XYZ(kActorMcCoy, -488.71f, 0.0f, 123.59f, 0, false, false, false);
 			if (Player_Query_Agenda() != kPlayerAgendaSurly
 			&& Player_Query_Agenda() != kPlayerAgendaErratic) {
 				Actor_Says(kActorMcCoy, 5995, 13); //00-5995.AUD	Come out and show yourselves!
@@ -522,6 +523,7 @@ void SceneScriptUG18::PlayerWalkedIn() {
 			}
 			Delay(1000);
 			Actor_Says(kActorMcCoy, 170, -1); //00-0170.AUD	Damn.
+			Player_Set_Combat_Mode(false);
 			Delay(1000);
 			Player_Loses_Control();
 			Loop_Actor_Walk_To_XYZ(kActorMcCoy, -684.71f, 0.0f, 171.59f, 0, true, false, false);
@@ -564,11 +566,7 @@ void SceneScriptUG18::DialogueQueueFlushed(int a1) {
 		Actor_Change_Animation_Mode(kActorSadik, kAnimationModeCombatAttack);
 		Sound_Play(kSfxLGCAL3, 100, 0, 0, 50);
 		Actor_Change_Animation_Mode(kActorGuzza, kAnimationModeCombatHit);
-		if (_vm->_cutContent) {
-			Actor_Says(kActorClovis, 630, 13); // "Whatever is born of mortal birth, must be consumed with the earth."
-		} else {
-			ADQ_Add(kActorClovis, 630, 13); // "Whatever is born of mortal birth, must be consumed with the earth."
-		}
+		ADQ_Add(kActorClovis, 630, 13); // "Whatever is born of mortal birth, must be consumed with the earth."
 		Actor_Set_Goal_Number(kActorClovis, kGoalClovisUG18SadikWillShootGuzza);
 		break;
 
@@ -656,16 +654,8 @@ void SceneScriptUG18::DialogueQueueFlushed(int a1) {
 		Actor_Change_Animation_Mode(kActorSadik, kAnimationModeCombatAttack);
 		Sound_Play(kSfxLGCAL3, 100, 0, 0, 50);
 		Actor_Change_Animation_Mode(kActorGuzza, kAnimationModeCombatHit);
-		if (_vm->_cutContent) {
-			Actor_Says(kActorClovis, 640, 13); //05-0640.AUD	"To rise from Generation free, then what have I to do with thee?"
-			Actor_Clue_Acquire(kActorMcCoy, kClueSadiksGun, true, kActorClovis);
-			Actor_Clue_Acquire(kActorMcCoy, kClueClovisOrdersMcCoysDeath, true, kActorClovis);
-			Actor_Says(kActorGuzza, 1210, 13);
-			Player_Gains_Control();
-		} else {
-			ADQ_Add(kActorClovis, 640, 13);
-			ADQ_Add(kActorGuzza, 1210, 13);
-		}
+		ADQ_Add(kActorClovis, 640, 13);
+		ADQ_Add(kActorGuzza, 1210, 13);
 		Actor_Set_Goal_Number(kActorClovis, kGoalClovisUG18SadikIsShootingGuzza);
 		break;
 
@@ -992,12 +982,12 @@ void SceneScriptUG18::talkWithClovis() {
 	ADQ_Add(kActorGuzza, 1150, 58);
 	ADQ_Add(kActorClovis, 600, 13);
 	ADQ_Add_Pause(1000);
-	ADQ_Add(kActorGuzza, 1160, 60);
+	ADQ_Add(kActorGuzza, 1160, 58);
 	ADQ_Add_Pause(500);
 	ADQ_Add(kActorGuzza, 1170, 59);
 	ADQ_Add(kActorGuzza, 1180, 58);
 	ADQ_Add(kActorClovis, 610, 13);
-	ADQ_Add(kActorGuzza, 1190, 60);
+	ADQ_Add(kActorGuzza, 1190, 58);
 	ADQ_Add(kActorClovis, 620, 13); // Lieutenant, we have everything we need...
 	ADQ_Add(kActorGuzza, 1200, 59);
 	// Added in a line.

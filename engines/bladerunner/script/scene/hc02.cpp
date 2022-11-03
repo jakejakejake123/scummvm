@@ -111,7 +111,9 @@ bool SceneScriptHC02::ClickedOnActor(int actorId) {
 					Actor_Says(kActorMcCoy, 1225, 13); //00-1225.AUD	I got a couple of questions for you, Captain.
 				}
 				Actor_Says_With_Pause(kActorHawkersBarkeep, 0, 0.0f, 13); //32-0000.AUD	First one's on the house. The rest you pay for.
-				Actor_Says(kActorHawkersBarkeep, 10, 16); //32-0010.AUD	You want chit chat you hire a hooker. This ain't no social club.
+				if (!_vm->_cutContent) {
+					Actor_Says(kActorHawkersBarkeep, 10, 16); //32-0010.AUD	You want chit chat you hire a hooker. This ain't no social club.
+				}
 				if (_vm->_cutContent) {
 					if (Player_Query_Agenda() == kPlayerAgendaSurly 
 					|| Player_Query_Agenda() == kPlayerAgendaErratic) {
@@ -300,6 +302,7 @@ bool SceneScriptHC02::ClickedOnActor(int actorId) {
 							Delay(1500);
 							Actor_Change_Animation_Mode(kActorMcCoy, 75);
 							Delay(1500);
+							Game_Flag_Set(kFlagHC02HawkersBarkeepBraceletTalk);
 						}
 					} else if (!Actor_Clue_Query(kActorMcCoy, kClueMaggieBracelet)
 					&& !Game_Flag_Query(kFlagHC02HawkersBarkeepBraceletTalk)
@@ -363,7 +366,7 @@ bool SceneScriptHC02::ClickedOnActor(int actorId) {
 						if (!Game_Flag_Query(kFlagHawkersBarkeepHappy)) {
 							Actor_Says(kActorHawkersBarkeep, 70, 14);
 						} else {
-							Delay(2000);
+							Delay(1000);
 							Actor_Set_Goal_Number(kActorHawkersBarkeep, 1);
 							Actor_Change_Animation_Mode(kActorMcCoy, 23);
 							Actor_Change_Animation_Mode(kActorHawkersBarkeep, 23);

@@ -133,8 +133,7 @@ bool SceneScriptMA02::ClickedOn3DObject(const char *objectName, bool a2) {
 			} else if (!_vm->_cutContent 
 			&& !Actor_Clue_Query(kActorMcCoy, kClueCrystalsCigarette) 
 			&&  Global_Variable_Query(kVariableChapter) == 5
-			&&  Game_Flag_Query(kFlagMcCoyIsHelpingReplicants)
-			&& !Actor_Clue_Query(kActorMcCoy, kClueCrystalsCigarette)) {
+			&&  Game_Flag_Query(kFlagMcCoyIsHelpingReplicants)) {
 				Overlay_Remove("MA02OVER");
 				Item_Pickup_Spin_Effect(kModelAnimationCrystalsCigarette, 480, 240);
 				Actor_Voice_Over(1150, kActorVoiceOver);
@@ -239,6 +238,7 @@ void SceneScriptMA02::PlayerWalkedIn() {
 				Delay(1000);
 				Overlay_Remove("MA02OVER");
 				Item_Pickup_Spin_Effect(kModelAnimationCrystalsCigarette, 480, 240);
+				Actor_Clue_Acquire(kActorMcCoy, kClueCrystalsCigarette, true, -1);
 				Player_Gains_Control();
 				Actor_Voice_Over(1770, kActorVoiceOver);
 				Actor_Voice_Over(1150, kActorVoiceOver); //99-1150.AUD	It wasn’t any mystery.
@@ -297,6 +297,9 @@ void SceneScriptMA02::PlayerWalkedIn() {
 			} else {
 				Actor_Says(kActorMcCoy, 2385,  kAnimationModeTalk); //00-2385.AUD	Maggie! Come here girl.
 				Music_Play(kMusicBRBlues, 25, 0, 3, -1, kMusicLoopPlayOnce, 0);
+				if (!Game_Flag_Query(kFlagMcCoyIsHelpingReplicants)) {
+					Actor_Set_Goal_Number(kActorMaggie, kGoalMaggieKP05Wait);
+				} 
 			}
 			Scene_Exits_Enable();
 			Game_Flag_Set(kFlagMA02Chapter5Started);

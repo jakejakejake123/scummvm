@@ -242,23 +242,46 @@ void AIScriptClovis::Retired(int byActorId) {
 			if (Global_Variable_Query(kVariableReplicantsSurvivorsAtMoonbus) == 0) {
 				Player_Loses_Control();
 				if (_vm->_cutContent) {
-					if (Game_Flag_Query(kFlagCrazylegsIsReplicant)) {
-						if (!Game_Flag_Query(kFlagCrazylegsDead)) {
+					if (Actor_Query_In_Set(kActorRunciter, kSetKP07)) {
+						if (Actor_Query_In_Set(kActorRunciter, kSetKP07)) {
+							Loop_Actor_Walk_To_XYZ(kActorRunciter, -12.0f, -41.58f, 72.0f, 0, true, false, false);
+							Actor_Put_In_Set(kActorRunciter, kSceneKP06);
+						}
+						if (Actor_Query_In_Set(kActorCrazylegs, kSetKP07)) {
 							Loop_Actor_Walk_To_XYZ(kActorCrazylegs, -12.0f, -41.58f, 72.0f, 0, true, false, false);
-							Actor_Put_In_Set(kActorCrazylegs, kSceneKP06);
-							Delay(500);
-							Sound_Play(kSfxSMCAL3, 100, 0, 0, 50);
+							Actor_Put_In_Set(kActorCrazylegs, kSceneKP06);	
+						}
+						if (Game_Flag_Query(kFlagRunciterIsReplicant)) {
+							if (Actor_Query_Goal_Number(kActorRunciter) < kGoalRunciterDead) {
+								Delay(500);
+								Sound_Play(kSfxSMCAL3, 100, 0, 0, 50);
+							}
+						}
+						if (Game_Flag_Query(kFlagCrazylegsIsReplicant)) {
+							if (!Game_Flag_Query(kFlagCrazylegsDead)) {
+								Delay(500);
+								Sound_Play(kSfxSMCAL3, 100, 0, 0, 50);
+							}
 						}
 					}
 					Delay(2000);
 					Player_Set_Combat_Mode(false);
-					Delay(2000); 
+					Delay(2000);  
+					Ambient_Sounds_Remove_All_Non_Looping_Sounds(true);
+					Ambient_Sounds_Remove_All_Looping_Sounds(1u);
+					Game_Flag_Set(kFlagKP07toKP06);
+					Game_Flag_Reset(kFlagMcCoyIsHelpingReplicants);
+					Set_Enter(kSetKP05_KP06, kSceneKP06);
+				} else {
+					Delay(2000);
+					Player_Set_Combat_Mode(false);
+					Loop_Actor_Walk_To_XYZ(kActorMcCoy, -12.0f, -41.58f, 72.0f, 0, true, false, false);
+					Ambient_Sounds_Remove_All_Non_Looping_Sounds(true);
+					Ambient_Sounds_Remove_All_Looping_Sounds(1u);
+					Game_Flag_Set(kFlagKP07toKP06);
+					Game_Flag_Reset(kFlagMcCoyIsHelpingReplicants);
+					Set_Enter(kSetKP05_KP06, kSceneKP06);
 				}
-				Ambient_Sounds_Remove_All_Non_Looping_Sounds(true);
-				Ambient_Sounds_Remove_All_Looping_Sounds(1u);
-				Game_Flag_Set(kFlagKP07toKP06);
-				Game_Flag_Reset(kFlagMcCoyIsHelpingReplicants);
-				Set_Enter(kSetKP05_KP06, kSceneKP06);
 				return; //true;
 			}
 		}
@@ -494,7 +517,7 @@ bool AIScriptClovis::GoalChanged(int currentGoalNumber, int newGoalNumber) {
 
 	case kGoalClovisKP06Wait:
 		Actor_Put_In_Set(kActorClovis, kSetKP05_KP06);
-		Actor_Set_At_XYZ(kActorClovis, -1072.0f, 8.26f, -708.0f, 530);
+		Actor_Set_At_XYZ(kActorClovis, 50.69f, -41.28f, 62.09f, 530);
 		return true;
 
 	case kGoalClovisKP06TalkToMcCoy:
@@ -602,6 +625,7 @@ bool AIScriptClovis::GoalChanged(int currentGoalNumber, int newGoalNumber) {
 		if (_vm->_cutContent) {
 			Player_Loses_Control();
 			Loop_Actor_Walk_To_XYZ(kActorMcCoy, 54.09, -42.70, -148.65, 0, false, false, false);
+			Actor_Face_Actor(kActorMcCoy, kActorClovis, true);
 			if (Player_Query_Agenda() == kPlayerAgendaSurly 
 			|| (Player_Query_Agenda() == kPlayerAgendaErratic)) {
 				Actor_Says(kActorMcCoy, 2360, 18); //00-2360.AUD	I don’t need to.
@@ -640,6 +664,7 @@ bool AIScriptClovis::GoalChanged(int currentGoalNumber, int newGoalNumber) {
 			Actor_Says(kActorClovis, 280, -1);
 			Actor_Says(kActorClovis, 290, -1);
 			Actor_Says(kActorClovis, 300, -1);
+			Music_Stop(1u);
 			if (Game_Flag_Query(kFlagClovisTalkUnsympathetic)) {
 				Actor_Change_Animation_Mode(kActorClovis, 54);
 				Delay (1000);
@@ -658,6 +683,7 @@ bool AIScriptClovis::GoalChanged(int currentGoalNumber, int newGoalNumber) {
 				Actor_Change_Animation_Mode(kActorClovis, kAnimationModeHit);
 				Actor_Retired_Here(kActorClovis, 12, 48, true, -1);
 				Actor_Set_Goal_Number(kActorClovis, kGoalClovisGone);
+				Music_Stop(1u);
 				Scene_Exits_Enable();
 				Player_Gains_Control();
 			}
@@ -842,14 +868,6 @@ bool AIScriptClovis::GoalChanged(int currentGoalNumber, int newGoalNumber) {
 		 && Actor_Query_In_Set(kActorClovis, kSetKP07)
 		) {
 			Non_Player_Actor_Combat_Mode_On(kActorClovis, kActorCombatStateIdle, false, kActorMcCoy, 19, kAnimationModeCombatIdle, kAnimationModeCombatWalk, kAnimationModeCombatRun, 0, 0, 100, 10, 300, false);
-		}
-		// Added in combat idle animation for Early Q.
-		if (_vm->_cutContent) {	
-			if (Global_Variable_Query(kVariableChapter) == 5
-			&& Actor_Query_In_Set(kActorEarlyQ, kSetKP07)
-			) {
-				Non_Player_Actor_Combat_Mode_On(kActorEarlyQ, kActorCombatStateIdle, false, kActorMcCoy, 19, kAnimationModeCombatIdle, kAnimationModeCombatWalk, kAnimationModeCombatRun, 0, 0, 100, 10, 300, false);
-			}
 		}
 		return true;
 

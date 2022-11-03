@@ -393,7 +393,7 @@ void SceneScriptHF06::steelInterruption() {
 				Actor_Says(kActorSteele, 330, 58); //01-0330.AUD	Nobody gives a damn.
 				Delay (1000);
 				Actor_Says(kActorSteele, 530, 58); //01-0530.AUD	You almost got away with it, Slim.
-				Actor_Says(kActorSteele, 530, 58);	//01-0540.AUD	And I expected so much more from you.
+				Actor_Says(kActorSteele, 540, 58);	//01-0540.AUD	And I expected so much more from you.
 				Actor_Says(kActorMcCoy, 2170, -1); //00-2170.AUD	And my animal? Guzza tell you to get rid of her? Or did you do that on your own?
 				if (Game_Flag_Query(kFlagDektoraIsReplicant)
 				&& !Game_Flag_Query(kFlagMcCoyIsInnocent)) {

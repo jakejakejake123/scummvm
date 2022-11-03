@@ -375,6 +375,12 @@ void SceneScriptUG13::SceneFrameAdvanced(int frame) {
 	if (Game_Flag_Query(kFlagUG08toUG13)
 	 && frame < 25
 	) {
+		if (_vm->_cutContent) {
+			if (!Game_Flag_Query(kFlagCT04HomelessKilledByMcCoy)
+			&& !Game_Flag_Query(kFlagGuzzaKilledTransient)) {
+				Actor_Change_Animation_Mode(kActorTransient, 53);
+			}
+		}
 		Actor_Set_Invisible(kActorMcCoy, true);
 	} else if (Game_Flag_Query(kFlagUG13toUG08)
 	        && frame >= 94
@@ -396,6 +402,12 @@ void SceneScriptUG13::PlayerWalkedIn() {
 #if BLADERUNNER_ORIGINAL_BUGS
 		Loop_Actor_Walk_To_XYZ(kActorMcCoy, -389.0f, 143.0f, -844.0f, 0, false, false, false);
 #else
+		if (_vm->_cutContent) {
+			if (!Game_Flag_Query(kFlagCT04HomelessKilledByMcCoy)
+			&& !Game_Flag_Query(kFlagGuzzaKilledTransient)) {
+				Actor_Change_Animation_Mode(kActorTransient, 53);
+			}
+		}
 		Actor_Set_At_XYZ(kActorMcCoy, -389.0f, 143.0f, -844.0f, 325);
 #endif // BLADERUNNER_ORIGINAL_BUGS
 		Actor_Face_Heading(kActorMcCoy, 325, false);
@@ -435,7 +447,6 @@ void SceneScriptUG13::PlayerWalkedIn() {
 				}
 				Actor_Change_Animation_Mode(kActorMcCoy, 23);
 				Delay(3000);
-				Actor_Clue_Acquire(kActorMcCoy, kClueOriginalRequisitionForm, true, kActorTransient);
 				Item_Pickup_Spin_Effect(kModelAnimationOriginalRequisitionForm, 129, 344);
 				Actor_Says(kActorMcCoy, 8805, 13); //00-8805.AUD	A requisition form.
 				if (Actor_Clue_Query(kActorMcCoy, kClueRequisitionForm)) {
@@ -445,6 +456,7 @@ void SceneScriptUG13::PlayerWalkedIn() {
 					Actor_Voice_Over(3980, kActorVoiceOver);
 					Actor_Voice_Over(3990, kActorVoiceOver);
 					Actor_Voice_Over(4000, kActorVoiceOver);
+					Actor_Clue_Acquire(kActorMcCoy, kClueOriginalRequisitionForm, true, kActorTransient);
 					Actor_Set_Targetable(kActorTransient, false);
 					Game_Flag_Reset(kFlagGuzzaKilledTransient);
 					Player_Gains_Control();
@@ -452,10 +464,22 @@ void SceneScriptUG13::PlayerWalkedIn() {
 			}
 		}
 	} else if (Game_Flag_Query(kFlagUG15toUG13)) {
+		if (_vm->_cutContent) {
+			if (!Game_Flag_Query(kFlagCT04HomelessKilledByMcCoy)
+			&& !Game_Flag_Query(kFlagGuzzaKilledTransient)) {
+				Actor_Change_Animation_Mode(kActorTransient, 53);
+			}
+		}
 		Loop_Actor_Walk_To_XYZ(kActorMcCoy, -12.0f, 44.0f, -528.0f, 0, false, false, false);
 		Game_Flag_Reset(kFlagUG15toUG13);
 	} else {
 		// arrived from elevator (going down)
+		if (_vm->_cutContent) {
+			if (!Game_Flag_Query(kFlagCT04HomelessKilledByMcCoy)
+			&& !Game_Flag_Query(kFlagGuzzaKilledTransient)) {
+				Actor_Change_Animation_Mode(kActorTransient, 53);
+			}
+		}
 		Loop_Actor_Walk_To_XYZ(kActorMcCoy, -60.0f, 55.24f, -816.0f, 0, false, false, false);
 		Game_Flag_Reset(kFlagUG08toUG13);
 		Player_Gains_Control();
@@ -720,9 +744,6 @@ void SceneScriptUG13::dialogueWithHomeless2() {
 				Footstep_Sound_Override_On(3);
 				Loop_Actor_Travel_Stairs(kActorMcCoy, 11, true, kAnimationModeIdle);
 				Footstep_Sound_Override_Off();
-				Actor_Change_Animation_Mode(kActorMcCoy, 6);
-				Sound_Play(kSfxGUNH1A, 100, 0, 0, 50);
-				Delay(500);
 				Loop_Actor_Walk_To_XYZ(kActorMcCoy, -477.0f, 141.9f, -870.0f, 0, false, false, false);
 				Game_Flag_Set(kFlagGuzzaKilledTransient);
 				Game_Flag_Set(kFlagTransientDead);
@@ -813,9 +834,6 @@ void SceneScriptUG13::dialogueWithHomeless2() {
 					Footstep_Sound_Override_On(3);
 					Loop_Actor_Travel_Stairs(kActorMcCoy, 11, true, kAnimationModeIdle);
 					Footstep_Sound_Override_Off();
-					Actor_Change_Animation_Mode(kActorMcCoy, 6);
-					Sound_Play(kSfxGUNH1A, 100, 0, 0, 50);
-					Delay(500);
 					Loop_Actor_Walk_To_XYZ(kActorMcCoy, -477.0f, 141.9f, -870.0f, 0, false, false, false);
 					Game_Flag_Set(kFlagGuzzaKilledTransient);
 					Game_Flag_Set(kFlagTransientDead);
@@ -930,9 +948,6 @@ void SceneScriptUG13::dialogueWithHomeless2() {
 				Footstep_Sound_Override_On(3);
 				Loop_Actor_Travel_Stairs(kActorMcCoy, 11, true, kAnimationModeIdle);
 				Footstep_Sound_Override_Off();
-				Actor_Change_Animation_Mode(kActorMcCoy, 6);
-				Sound_Play(kSfxGUNH1A, 100, 0, 0, 50);
-				Delay(500);
 				Loop_Actor_Walk_To_XYZ(kActorMcCoy, -477.0f, 141.9f, -870.0f, 0, false, false, false);
 				Game_Flag_Set(kFlagGuzzaKilledTransient);
 				Game_Flag_Set(kFlagTransientDead);

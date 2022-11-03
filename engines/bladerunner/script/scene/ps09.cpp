@@ -64,6 +64,10 @@ void SceneScriptPS09::InitializeScene() {
 #endif
 	}
 	if (_vm->_cutContent) {
+		if (Game_Flag_Query(kFlagHowieLeeArrested)) {
+			Actor_Put_In_Set(kActorHowieLee, kSetPS09);
+			Actor_Set_At_XYZ(kActorHowieLee, -399.5f, 0.2f, -255.0f, 210);
+		}
 		if (Game_Flag_Query(kFlagIsabellaArrested)) {
 			Actor_Put_In_Set(kActorIsabella, kSetPS09);
 			Actor_Set_At_XYZ(kActorIsabella, -450.0f, 0.2f, -195.0f, 518);
@@ -474,9 +478,12 @@ void SceneScriptPS09::dialogueWithGrigorian() {
 		    || !_vm->_cutContent
 		) {
 			if (_vm->_cutContent) {
-				Dialogue_Menu_Clear_Never_Repeat_Was_Selected_Flag(200);
+				if (!Game_Flag_Query(kFlagMcCoyIsHelpingReplicants)) {
+					DM_Add_To_List_Never_Repeat_Once_Selected(200, 1, 3, 4); // VOIGT-KAMPFF
+				}
+			} else {
+				DM_Add_To_List_Never_Repeat_Once_Selected(200, -1, 3, 6); // VOIGT-KAMPFF
 			}
-			DM_Add_To_List_Never_Repeat_Once_Selected(200, -1, 3, 6); // VOIGT-KAMPFF
 		}
 	}
 	if (!Game_Flag_Query(kFlagMcCoyIsHelpingReplicants)) {
@@ -667,8 +674,8 @@ void SceneScriptPS09::dialogueWithGrigorian() {
 					Actor_Says(kActorMcCoy, 4320, 14); //00-4320.AUD	Save the pitch for someone who gives a shit.
 					Actor_Modify_Friendliness_To_Other(kActorGrigorian, kActorMcCoy, -2);
 				} else {
-					Actor_Says(kActorMcCoy, 8440, kAnimationModeTalk); //00-8440.AUD	Oh, yeah. I'm shaking now.
-					Actor_Modify_Friendliness_To_Other(kActorGrigorian, kActorMcCoy, -2);
+					Actor_Says(kActorMcCoy, 2750, kAnimationModeTalk); //00-2750.AUD	Okay, I get the picture.
+					Actor_Modify_Friendliness_To_Other(kActorGrigorian, kActorMcCoy, 2);
 				}
 			} else {
 				Actor_Says(kActorMcCoy, 2750, kAnimationModeTalk); //00-2750.AUD	Okay, I get the picture.
@@ -758,7 +765,6 @@ void SceneScriptPS09::dialogueWithGrigorian() {
 					Actor_Modify_Friendliness_To_Other(kActorGrigorian, kActorMcCoy, -2);
 				} else {
 					Actor_Says(kActorMcCoy, 1510, kAnimationModeTalk); //00-1510.AUD	Okay, okay. Just forget it.
-					Actor_Modify_Friendliness_To_Other(kActorGrigorian, kActorMcCoy, -2);
 				}
 			} else {
 				Actor_Says(kActorMcCoy, 700, kAnimationModeTalk); //00-0700.AUD	I'm starting to understand.

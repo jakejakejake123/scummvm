@@ -69,9 +69,9 @@ void SceneScriptHF03::dialogueWithLucy() {
 	DM_Add_To_List_Never_Repeat_Once_Selected(870, 2, 8, 6); // RUNCITER
 	if (_vm->_cutContent) {
 		if (!Game_Flag_Query(kFlagMcCoyIsHelpingReplicants)) {
-			DM_Add_To_List_Never_Repeat_Once_Selected(840, -1, 3, 8); // VOIGT-KAMPFF
+			DM_Add_To_List_Never_Repeat_Once_Selected(840, 1, 3, 4); // VOIGT-KAMPFF
 		} else {
-			DM_Add_To_List_Never_Repeat_Once_Selected(860, 8, -1, -1); // CRYSTAL
+			DM_Add_To_List_Never_Repeat_Once_Selected(860, 4, 2, 1); // CRYSTAL
 		}
 	} else {
 		DM_Add_To_List_Never_Repeat_Once_Selected(840, -1, 3, 8); // VOIGT-KAMPFF
@@ -182,9 +182,7 @@ void SceneScriptHF03::dialogueWithLucy() {
 					Actor_Modify_Friendliness_To_Other(kActorClovis, kActorMcCoy, 2);
 					Actor_Modify_Friendliness_To_Other(kActorGuzza, kActorMcCoy, -2);
 					Actor_Clue_Acquire(kActorLucy, kClueMcCoyHelpedLucy, true, kActorMcCoy);
-					if (Game_Flag_Query(kFlagLucyIsReplicant)) {
-						Game_Flag_Set(kFlagMcCoyIsHelpingReplicants);
-					}
+					Game_Flag_Set(kFlagMcCoyIsHelpingReplicants);
 				} else {
 					Actor_Says(kActorLucy, 230, 14); //06-0230.AUD	Thank you.
 					Actor_Clue_Acquire(kActorLucy, kClueMcCoyHelpedLucy, true, kActorMcCoy);
@@ -279,11 +277,11 @@ bool SceneScriptHF03::ClickedOnActor(int actorId) {
 						if (Actor_Query_Friendliness_To_Other(kActorClovis, kActorMcCoy) < 51) {
 							Actor_Says(kActorLucy, 110, 13); //06-0110.AUD	Please, leave me alone.
 							Actor_Says(kActorLucy, 120, 13); //06-0120.AUD	Father told me to watch out for you.
-						}
-						if (Game_Flag_Query(kFlagMcCoyIsHelpingReplicants)) {
-							Actor_Says(kActorMcCoy, 1620, 13); //00-1620.AUD	I’m not gonna hurt you.
-						} else {
-							Actor_Says(kActorMcCoy, 4880, 13); //00-4880.AUD	Is that right?
+							if (Game_Flag_Query(kFlagMcCoyIsHelpingReplicants)) {
+								Actor_Says(kActorMcCoy, 1620, 13); //00-1620.AUD	I’m not gonna hurt you.
+							} else {
+								Actor_Says(kActorMcCoy, 4880, 13); //00-4880.AUD	Is that right?
+							}
 						}
 					}
 				} else if (Game_Flag_Query(kFlagLucyIsReplicant)) {

@@ -115,11 +115,7 @@ bool SceneScriptHC04::ClickedOnActor(int actorId) {
 					if (Actor_Clue_Query(kActorMcCoy, kClueKingstonKitchenBox2)
 	 				|| Actor_Clue_Query(kActorMcCoy, kClueKingstonKitchenBox1)
 					|| Actor_Clue_Query(kActorMcCoy, kClueSpecialIngredient)) {
-						if (Player_Query_Agenda() == kPlayerAgendaPolite) {
-							Actor_Says(kActorMcCoy, 1280, 23); //00-1280.AUD	McCoy, LPD. Mind if I ask you a couple of questions?
-						} else {
-							Actor_Says(kActorMcCoy, 8920, 14); //00-8920.AUD	I gotta ask you a question.
-						}
+						Actor_Says(kActorMcCoy, 1280, 23); //00-1280.AUD	McCoy, LPD. Mind if I ask you a couple of questions?
 						Actor_Says(kActorIsabella, 20, kAnimationModeTalk);
 					}
 				} else {
@@ -458,7 +454,8 @@ void SceneScriptHC04::dialogueWithIsabella() {
 			Loop_Actor_Walk_To_XYZ(kActorMcCoy, -154.54, 0.31, -441.12, 0, true, false, false);
 			Actor_Face_Actor(kActorMcCoy, kActorIsabella, true);
 			Actor_Face_Actor(kActorIsabella, kActorMcCoy, true);
-			if (Player_Query_Agenda() != kPlayerAgendaPolite) {
+			if (Player_Query_Agenda() == kPlayerAgendaSurly 
+			|| Player_Query_Agenda() == kPlayerAgendaErratic) {
 				Actor_Says(kActorMcCoy, 2980, 12); //00-2980.AUD	What the hell is that?
 			} else {
 				Actor_Says(kActorMcCoy, 1310, kAnimationModeTalk);
@@ -472,7 +469,8 @@ void SceneScriptHC04::dialogueWithIsabella() {
 		// receive a kingston kitchen box when you buy the stew.
 		Actor_Says(kActorIsabella, 340, kAnimationModeTalk); //59-0340.AUD	Fix you right up. Only 30 chinyen. It put a spring in your step, mon. The ladies they be loving you.
 		if (_vm->_cutContent) {
-			if (Player_Query_Agenda() != kPlayerAgendaPolite) {
+			if (Player_Query_Agenda() == kPlayerAgendaSurly 
+			|| Player_Query_Agenda() == kPlayerAgendaErratic) {
 				Delay(1000);
 				Actor_Says(kActorMcCoy, 8650, 14); //00-8650.AUD	What smells in there?
 				Actor_Says(kActorIsabella, 30, kAnimationModeTalk); //59-0030.AUD	All in special recipe. (laughs) But if I be telling you what's in it, you might be thinking twice about eating it.

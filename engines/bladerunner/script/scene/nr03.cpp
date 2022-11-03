@@ -133,12 +133,13 @@ bool SceneScriptNR03::ClickedOnActor(int actorId) {
 						Actor_Face_Actor(kActorHanoi, kActorMcCoy, true);
 						Actor_Says(kActorMcCoy, 3340, kAnimationModeTalk); //00-3340.AUD	Hey, Hanoi. Where’s Early?
 						Actor_Says(kActorHanoi, 30, 13); //25-0030.AUD	Off-World fat farm.
-						Actor_Says(kActorMcCoy, 3345, 14); //00-3345.AUD	(scoffs) You can do better than that.
-						Actor_Says(kActorHanoi, 40, 14); //25-0040.AUD	No, it’s true. Mr. Q sent me a vid just yesterday. Getting a hell of a tan he is.
-						if (Player_Query_Agenda() == kPlayerAgendaSurly 
-						|| Player_Query_Agenda() == kPlayerAgendaErratic) {
+						if (Player_Query_Agenda() != kPlayerAgendaPolite) {
+							Actor_Says(kActorMcCoy, 3345, 14); //00-3345.AUD	(scoffs) You can do better than that.
+							Actor_Says(kActorHanoi, 40, 14); //25-0040.AUD	No, it’s true. Mr. Q sent me a vid just yesterday. Getting a hell of a tan he is.
 							Actor_Says(kActorMcCoy, 3365, 16); //00-3365.AUD	You and I both know he ain’t at any spa, Hanoi.
 							Actor_Says(kActorHanoi, 70, 13); //25-0070.AUD	He ring you from the spa or what?
+						} else {
+							Actor_Says(kActorMcCoy, 8265, 16); //00-8265.AUD	Really?
 						}
 						Delay(1000);
 						Actor_Says(kActorMcCoy, 5150, 18); //00-5150.AUD	One more thing.
