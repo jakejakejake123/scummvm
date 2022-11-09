@@ -133,16 +133,13 @@ bool AIScriptOfficerLeary::Update() {
 		Actor_Set_Goal_Number(kActorOfficerLeary, kGoalOfficerLearyHuntingAroundAct4);
 		return false;
 	}
-	// Made it so Leary doesn't come back to life if he dies. I mean..... that reeeaaaallly makes no sense.
-	if (!_vm->_cutContent) {
-		if (Actor_Query_Goal_Number(kActorOfficerLeary) == kGoalOfficerLearyDead
-		&& Actor_Query_Which_Set_In(kActorOfficerLeary) != Player_Query_Current_Set()
-		) {
-			// dead officer gets revived and re-used
-			Actor_Set_Health(kActorOfficerLeary, 40, 40);
-			Actor_Set_Goal_Number(kActorOfficerLeary, kGoalOfficerLearyHuntingAroundAct4);
-			return false;
-		}
+	if (Actor_Query_Goal_Number(kActorOfficerLeary) == kGoalOfficerLearyDead
+	&& Actor_Query_Which_Set_In(kActorOfficerLeary) != Player_Query_Current_Set()
+	) {
+		// dead officer gets revived and re-used
+		Actor_Set_Health(kActorOfficerLeary, 40, 40);
+		Actor_Set_Goal_Number(kActorOfficerLeary, kGoalOfficerLearyHuntingAroundAct4);
+		return false;
 	}
 
 	if (Actor_Query_Goal_Number(kActorOfficerLeary) == kGoalOfficerLearyHuntingAroundAct4) {
@@ -324,13 +321,8 @@ bool AIScriptOfficerLeary::ShotAtAndHit() {
 }
 
 void AIScriptOfficerLeary::Retired(int byActorId) {
-	if (_vm->_cutContent) {
-		if (byActorId == kActorMcCoy) {
-			Game_Flag_Set(kFlagMcCoyRetiredHuman);
-			Game_Flag_Set(kFlagOfficerLearyShot);
-		}
-	}
 	Actor_Set_Goal_Number(kActorOfficerLeary, kGoalOfficerLearyDead);
+	Game_Flag_Set(kFlagMcCoyRetiredHuman);
 }
 
 int AIScriptOfficerLeary::GetFriendlinessModifierIfGetsClue(int otherActorId, int clueId) {

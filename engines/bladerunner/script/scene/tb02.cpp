@@ -461,6 +461,8 @@ void SceneScriptTB02::PlayerWalkedIn() {
 					Actor_Says(kActorMcCoy, 6995, 18); //00-6995.AUD	That's not what I heard. You wanna set the record straight?
 					Delay(1000);
 					Actor_Says(kActorMcCoy, 8519, 15); //00-8519.AUD	What do you say we dish each other the straight goods.
+					Delay(1000);
+					Actor_Says(kActorTyrellGuard, 380, 10); //17-0380.AUD	Oh, yeah, there-- There is one more thing.
 					Actor_Modify_Friendliness_To_Other(kActorTyrellGuard, kActorMcCoy, -2);
 				}
 			} else {

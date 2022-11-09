@@ -171,8 +171,7 @@ void SceneScriptKP01::PlayerWalkedIn() {
 		if (!Game_Flag_Query(kFlagMcCoyRetiredHuman)
 			&& Global_Variable_Query(kVariableAffectionTowards) != kAffectionTowardsDektora
 			&& Global_Variable_Query(kVariableAffectionTowards) != kAffectionTowardsLucy) {
-				if (Game_Flag_Query(kFlagMcCoyIsInnocent)
-				|| 	Game_Flag_Query(kFlagCrystalTrustsMcCoy)) {
+				if (Game_Flag_Query(kFlagMcCoyIsInnocent)) {
 					Actor_Put_In_Set(kActorSteele, kSetKP01);
 					Actor_Set_At_XYZ(kActorSteele, 20.0f, -12.2f, -97.0f, 907);
 					Actor_Change_Animation_Mode(kActorSteele, 43);

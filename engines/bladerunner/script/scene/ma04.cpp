@@ -190,8 +190,7 @@ bool SceneScriptMA04::ClickedOn2DRegion(int region) {
 					if (Global_Variable_Query(kVariableAffectionTowards) != kAffectionTowardsDektora
 					&& Global_Variable_Query(kVariableAffectionTowards) != kAffectionTowardsLucy) {
 						if (!Game_Flag_Query(kFlagMcCoyRetiredHuman)) {
-							if (Game_Flag_Query(kFlagMcCoyIsInnocent)
-							|| 	Game_Flag_Query(kFlagCrystalTrustsMcCoy)) {
+							if (Game_Flag_Query(kFlagMcCoyIsInnocent)) {
 								phoneCallWithSteele();
 							} else {
 								phoneCallWithClovis();

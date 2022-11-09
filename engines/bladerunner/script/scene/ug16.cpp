@@ -327,7 +327,11 @@ void SceneScriptUG16::DialogueQueueFlushed(int a1) {
 
 void SceneScriptUG16::dialogueWithLuther() {
 	Dialogue_Menu_Clear_List();
-	DM_Add_To_List_Never_Repeat_Once_Selected(1400, 5, 6, 2); // REPLICANTS
+	if (_vm->_cutContent) {
+		DM_Add_To_List_Never_Repeat_Once_Selected(1400, 8, 6, 7); // REPLICANTS
+	} else {
+		DM_Add_To_List_Never_Repeat_Once_Selected(1400, 5, 6, 2); // REPLICANTS
+	}
 	// Made it so the lifespan option is only available when you ask the twins about their work and they mention that they are
 	// trying to extend the replicant lifespan.
 	// Made it so this option is only available if you had the interview with Tyrell. When you pick this option McCoy mentions that Tyrell said the 4 year lifespan for reps can not be extended, 
@@ -432,11 +436,8 @@ void SceneScriptUG16::dialogueWithLuther() {
 			Actor_Says(kActorLance, 140, 16);
 			if (_vm->_cutContent) {
 				if (!Game_Flag_Query(kFlagMcCoyIsHelpingReplicants)) {
-					if (Player_Query_Agenda() != kPlayerAgendaSurly 
-					&& Player_Query_Agenda() != kPlayerAgendaErratic) {
-						Actor_Says(kActorMcCoy, 5790, 13); //00-5790.AUD	Maybe one of you just forgot.
-						Actor_Says(kActorLuther, 170, 14);
-					}
+					Actor_Says(kActorMcCoy, 5790, 13); //00-5790.AUD	Maybe one of you just forgot.
+					Actor_Says(kActorLuther, 170, 14);
 				}
 			} else {
 				Actor_Says(kActorMcCoy, 5790, 13); 
@@ -464,10 +465,8 @@ void SceneScriptUG16::dialogueWithLuther() {
 			Actor_Says(kActorLance, 150, 17); //13-0150.AUD	That’s a pretty damn good argument, you gotta admit.
 			if (_vm->_cutContent) {
 				if (!Game_Flag_Query(kFlagMcCoyIsHelpingReplicants)) {
-					if (Player_Query_Agenda() == kPlayerAgendaPolite) {
-						Actor_Says(kActorMcCoy, 5800, 13); //00-5800.AUD	Photos can be doctored. It’s not proof.
-						Actor_Says(kActorLuther, 190, 15);
-					}
+					Actor_Says(kActorMcCoy, 5800, 13); //00-5800.AUD	Photos can be doctored. It’s not proof.
+					Actor_Says(kActorLuther, 190, 15);
 				}
 			} else {
 				Actor_Says(kActorMcCoy, 5800, 13);  
@@ -787,7 +786,7 @@ void SceneScriptUG16::dialogueWithLuther() {
 			|| Player_Query_Agenda() == kPlayerAgendaErratic) {
 				Actor_Says(kActorMcCoy, 8720, 17); //00-8720.AUD	Freak.
 				Actor_Modify_Friendliness_To_Other(kActorLuther, kActorMcCoy, -1);
-			} else {
+			} else if (Player_Query_Agenda() == kPlayerAgendaPolite) { 
 				Actor_Says(kActorMcCoy, 805, 3); //00-0805.AUD	Sorry to bother you.
 				Actor_Modify_Friendliness_To_Other(kActorLuther, kActorMcCoy, 1);
 			}

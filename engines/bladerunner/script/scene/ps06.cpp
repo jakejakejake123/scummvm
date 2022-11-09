@@ -54,6 +54,166 @@ bool SceneScriptPS06::ClickedOn3DObject(const char *objectName, bool a2) {
 	 || Object_Query_Click("E.MONITOR3", objectName)
 	) {
 		Actor_Says(kActorAnsweringMachine, 330, kAnimationModeTalk); // uploading clues
+		if (_vm->_cutContent) {
+			if (!Game_Flag_Query(kFlagCrazylegsIsReplicant)) {
+				if (Actor_Clue_Query(kActorMcCoy, kClueCrazylegsInterview1)
+				|| Actor_Clue_Query(kActorMcCoy, kClueCrazylegsInterview2)) {
+					Actor_Clue_Acquire(kActorMcCoy, kClueVKCrazylegsHuman,  true, kActorSteele);
+					Actor_Clue_Acquire(kActorMcCoy, kClueCrystalTestedCrazylegs, true, kActorSteele);
+				} else if (Actor_Clue_Query(kActorMcCoy, kClueCrazysInvolvement)) {
+					if (Random_Query(1, 2) == 1) {
+						Actor_Clue_Acquire(kActorMcCoy, kClueVKCrazylegsHuman,  true, kActorSteele);
+						Actor_Clue_Acquire(kActorMcCoy, kClueCrystalTestedCrazylegs, true, kActorSteele);
+						Actor_Clue_Acquire(kActorMcCoy, kClueCrystalArrestedCrazylegs,  true, kActorSteele);
+						Actor_Modify_Friendliness_To_Other(kActorSteele, kActorMcCoy, -1);
+						Actor_Modify_Friendliness_To_Other(kActorGuzza, kActorMcCoy, -1);
+						Game_Flag_Set(kFlagCrazylegsArrested);
+						Actor_Put_In_Set(kActorCrazylegs, kSetPS09);
+						Actor_Set_At_XYZ(kActorCrazylegs, -315.15f, 0.0f, 241.06f, 512);
+						Actor_Set_Goal_Number(kActorCrazylegs, kGoalCrazyLegsIsArrested);
+					}
+				}
+			} else {
+				if (Actor_Clue_Query(kActorMcCoy, kClueCrazysInvolvement) 
+				|| Actor_Clue_Query(kActorMcCoy, kClueCrazylegsInterview1)
+				|| Actor_Clue_Query(kActorMcCoy, kClueCrazylegsInterview2)) {
+					if (!Game_Flag_Query(kFlagCrazylegsDead)) {
+						if (Random_Query(1, 2) == 1) {
+							Actor_Clue_Acquire(kActorMcCoy, kClueVKCrazylegsReplicant, true, kActorSteele);
+							Actor_Clue_Acquire(kActorMcCoy, kClueCrystalRetiredCrazylegs, true, kActorSteele);
+							Actor_Set_Goal_Number(kActorCrazylegs, kGoalCrazyLegsLeavesShowroom);
+							Actor_Modify_Friendliness_To_Other(kActorSteele, kActorMcCoy, -2);
+							Actor_Modify_Friendliness_To_Other(kActorGuzza, kActorMcCoy, -2);
+						}
+					}
+				}
+			}
+			// Added in code so if Steele receives the Runciter is replicant Vk result and Runciter is a replicant and alive she retires him
+			// and receives the Crystal retired Runciter clue. Also did the same for Bob.
+			if (Actor_Clue_Query(kActorMcCoy, kClueVKRunciterReplicant)
+			|| Actor_Clue_Query(kActorMcCoy, kClueLabCorpses)
+			|| Actor_Clue_Query(kActorMcCoy, kClueEnvelope)) {
+				if (Actor_Clue_Query(kActorMcCoy, kClueRuncitersVideo)) {
+					if (Actor_Query_Goal_Number(kActorRunciter) < kGoalRunciterDead) {
+						if (Game_Flag_Query(kFlagRunciterIsReplicant)) {
+							if (Random_Query(1, 3) == 1) {
+								Actor_Clue_Acquire(kActorMcCoy, kClueCrystalRetiredRunciter1, true, kActorSteele);
+								Actor_Clue_Acquire(kActorMcCoy, kClueCrystalRetiredRunciter2, true, kActorSteele);
+								Actor_Clue_Acquire(kActorMcCoy, kClueVKRunciterReplicant, true, kActorSteele);
+								Actor_Set_Goal_Number(kActorRunciter, kGoalRunciterDead);
+								Game_Flag_Set(kFlagCrystalRetiredRunciter);
+								Actor_Modify_Friendliness_To_Other(kActorSteele, kActorMcCoy, -2);
+								Actor_Modify_Friendliness_To_Other(kActorGuzza, kActorMcCoy, -2);
+							}
+						} else {
+							Actor_Clue_Acquire(kActorMcCoy, kClueCrystalTestedRunciter, true, kActorSteele);
+							Actor_Clue_Acquire(kActorMcCoy, kClueVKRunciterHuman, true, kActorSteele);
+							Actor_Modify_Friendliness_To_Other(kActorSteele, kActorMcCoy, -1);
+							Actor_Modify_Friendliness_To_Other(kActorGuzza, kActorMcCoy, -1);
+						}
+					}
+				}
+			}
+			if (Actor_Clue_Query(kActorMcCoy, kClueVKBobGorskyReplicant)
+			|| Actor_Clue_Query(kActorMcCoy, kClueHasanInterview)) {
+				if (Actor_Query_Goal_Number(kActorBulletBob) < kGoalBulletBobDead) {
+					if (Game_Flag_Query(kFlagBulletBobIsReplicant)) {
+						if (Random_Query(1, 3) == 1) {
+							Actor_Clue_Acquire(kActorMcCoy, kClueCrystalRetiredBob, true, kActorSteele);
+							Actor_Clue_Acquire(kActorMcCoy, kClueVKBobGorskyReplicant, true, kActorSteele);
+							Actor_Set_Goal_Number(kActorBulletBob, kGoalBulletBobDead);
+							Game_Flag_Set(kFlagCrystalRetiredBulletBob);
+							Actor_Modify_Friendliness_To_Other(kActorSteele, kActorMcCoy, -2);
+							Actor_Modify_Friendliness_To_Other(kActorGuzza, kActorMcCoy, -2);
+						}
+					} else {
+						Actor_Clue_Acquire(kActorMcCoy, kClueCrystalTestedBulletBob, true, kActorSteele);
+						Actor_Clue_Acquire(kActorMcCoy, kClueVKBobGorskyHuman, true, kActorSteele);
+						if (Actor_Clue_Query(kActorMcCoy, kClueHasanInterview)) {
+							Actor_Modify_Friendliness_To_Other(kActorSteele, kActorMcCoy, -1);
+							Actor_Modify_Friendliness_To_Other(kActorGuzza, kActorMcCoy, -1);
+							Game_Flag_Set(kFlagBulletBobArrested);
+							Actor_Put_In_Set(kActorBulletBob, kSetPS09);
+							Actor_Set_At_XYZ(kActorBulletBob, -476.0f, 0.2f, -300.0f, 200);
+						}
+					}
+				}
+			}	
+			// Made it so if Zuben escapes Crystal will track him down and retire him if she has enough clues. This will give you the Crystal retired Zuben clue. If she doesn't have enough clues
+			// she just finds Zuben by chance and doesn't have time to come up with a plan of attack so escapes into the sewers. This will give you the Zuben sighting clue.
+			if (Actor_Clue_Query(kActorMcCoy, kClueMcCoyLetZubenEscape)) {
+				Actor_Clue_Acquire(kActorMcCoy, kClueSightingZuben, true, kActorSteele);
+				if (Random_Query(1, 3) == 1) {
+					Actor_Set_Goal_Number(kActorZuben, kGoalZubenGone);
+					Actor_Clue_Acquire(kActorMcCoy, kClueCrystalRetiredZuben, true, kActorSteele);
+				}
+			}
+			if (Game_Flag_Query(kFlagGordoIsReplicant)) { 
+				if (Game_Flag_Query(kFlagGordoRanAway)
+				|| Actor_Query_Goal_Number(kActorGordo) > kGoalGordoGone) {
+					Actor_Clue_Acquire(kActorMcCoy, kClueWarRecordsGordoFrizz, true, kActorSteele);
+					Actor_Clue_Acquire(kActorMcCoy, kClueSightingGordo, true, kActorSteele);
+					Actor_Clue_Acquire(kActorMcCoy, kClueGordoIncept, true, kActorSteele);
+				}
+			}
+			if (!Game_Flag_Query(kFlagIzoIsReplicant) 
+			&& Game_Flag_Query(kFlagIzoArrested)) {
+				Actor_Clue_Acquire(kActorMcCoy, kClueVKIzoHuman, true, kActorSteele);
+			}
+			// Added in these clues in regards to replicant Early Q.
+			if (Actor_Clue_Query(kActorMcCoy, kClueEarlyInterviewB1)
+			|| Actor_Clue_Query(kActorMcCoy, kClueEarlyInterviewB2)
+			|| Actor_Clue_Query(kActorMcCoy, kClueEarlyQAndLucy)
+			|| Actor_Clue_Query(kActorMcCoy, kClueDektorasDressingRoom)) {
+				if (!Game_Flag_Query(kFlagEarlyQDead)
+				&& !Game_Flag_Query(kFlagNR04EarlyQStungByScorpions)) {
+					if (Game_Flag_Query(kFlagEarlyQIsReplicant)) {
+						if (Random_Query(1, 2) == 1) {
+							Actor_Clue_Acquire(kActorMcCoy, kClueVKEarlyQReplicant, true, kActorSteele);
+							Game_Flag_Set(kFlagEarlyQDead);
+							Actor_Modify_Friendliness_To_Other(kActorSteele, kActorMcCoy, -2);
+							Actor_Modify_Friendliness_To_Other(kActorGuzza, kActorMcCoy, -2);
+							if (Game_Flag_Query(kFlagHanoiIsReplicant)) {
+								Game_Flag_Set(kFlagHanoiDead);
+								Actor_Modify_Friendliness_To_Other(kActorSteele, kActorMcCoy, -2);
+								Actor_Modify_Friendliness_To_Other(kActorGuzza, kActorMcCoy, -2);
+							}
+						} else {
+							Actor_Clue_Acquire(kActorMcCoy, kClueVKEarlyQHuman, true, kActorSteele);
+							Actor_Put_In_Set(kActorEarlyQ, kSetPS09);
+							Actor_Set_At_XYZ(kActorEarlyQ, -425.88f, 0.15f, -220.74f, 512);
+							Actor_Modify_Friendliness_To_Other(kActorSteele, kActorMcCoy, -1);
+							Actor_Modify_Friendliness_To_Other(kActorGuzza, kActorMcCoy, -1);
+						}
+					}
+				}
+			}
+			if (Actor_Clue_Query(kActorMcCoy, kClueSpecialIngredient)) {
+				if (Random_Query(1, 3) == 1) {
+					Game_Flag_Set(kFlagIsabellaArrested);
+					Actor_Put_In_Set(kActorIsabella, kSetPS09);
+					Actor_Set_At_XYZ(kActorIsabella, -450.0f, 0.2f, -200.0f, 518);
+				}
+			}
+			if (Actor_Clue_Query(kActorMcCoy, kClueBobRobbed)) {
+				if (Random_Query(1, 3) == 1) {
+					Game_Flag_Set(kFlagHasanArrested);
+					Actor_Put_In_Set(kActorHasan, kSetPS09);
+					Actor_Set_At_XYZ(kActorHasan, -300.0f, 0.33f, -330.0f, 512);
+				}
+			}
+			if (Actor_Clue_Query(kActorMcCoy, kClueMcCoyLetZubenEscape)
+			|| Actor_Clue_Query(kActorMcCoy, kClueMcCoyRetiredZuben)) {
+				if (Actor_Clue_Query(kActorSteele, kClueHowieLeeInterview)) {
+					if (Random_Query(1, 3) == 1) {
+						Game_Flag_Set(kFlagHowieLeeArrested); 
+						AI_Movement_Track_Flush(kActorHowieLee);
+						Actor_Put_In_Set(kActorHowieLee, kSetPS09);
+						Actor_Set_At_XYZ(kActorHowieLee, -399.0f, 0.2f, -255.0f, 200);
+					}
+				}
+			}
+		}
 		if (Actor_Clue_Query(kActorMcCoy, kClueCar)
 		 && !Actor_Clue_Query(kActorMcCoy, kClueCarRegistration1)
 		 && !Actor_Clue_Query(kActorMcCoy, kClueCarRegistration2)

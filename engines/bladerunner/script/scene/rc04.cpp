@@ -211,29 +211,21 @@ void SceneScriptRC04::dialogueWithBulletBob() {
 		// Made it so Bobs opinion on Izo will be determined by Bobs replicant status. If Bob is a replicant he will always speak positively about Izo and
 		// if Bob is a human he will always speak negatively about Izo.
 		if (_vm->_cutContent) {
-			if (Game_Flag_Query(kFlagBulletBobIsReplicant)) {
-				Actor_Says(kActorBulletBob, 410, 11); //14-0410.AUD	Izo is okay. He's run the Green Pawn for a while.
-				Actor_Says(kActorBulletBob, 420, 37); //14-0420.AUD	We're friendly competitors, I guess. But I don't appreciate his politics.
-				Actor_Says(kActorMcCoy, 5025, 16); //00-5025.AUD	Yeah?
-				Actor_Says(kActorBulletBob, 430, 30); //14-0430.AUD	Rumors that's all they are.
-				Actor_Clue_Acquire(kActorMcCoy, kClueBobInterview1, true, kActorBulletBob);
-				if (Player_Query_Agenda() == kPlayerAgendaSurly
-				|| Player_Query_Agenda() == kPlayerAgendaErratic) { 
-					Actor_Says(kActorMcCoy, 4950, 16); //00-4950.AUD	Frankly I don't see you as the comforting type.
-					Delay(500);
-					Actor_Says(kActorBulletBob, 1830, 33); //14-1830.AUD	I'm hurt, McCoy. Deeply hurt. After all I've done for you.
-					Actor_Says(kActorMcCoy, 5065, 18); //00-5065.AUD	Is that right?
-				}
-			} else {
+			if (!Game_Flag_Query(kFlagBulletBobIsReplicant)) {
+				Actor_Says(kActorBulletBob, 320, 30);
+				Actor_Says(kActorBulletBob, 330, 33);
+				Actor_Says(kActorBulletBob, 340, 37); //14-0340.AUD	But who knows what the real title is.
+				Actor_Says(kActorMcCoy, 5015, 11);
 				Actor_Says(kActorBulletBob, 350, 32); //14-0350.AUD	I've been around here a long time, Ray.
 				Actor_Says(kActorBulletBob, 360, 33); //14-0360.AUD	It always pisses me off when some dilettante
 				Actor_Says(kActorBulletBob, 370, 30); //14-0370.AUD	sets up shop and tries to horn in on my action.
 				Actor_Says(kActorMcCoy, 5020, 16); //00-5020.AUD	How long has Izo been around?
-				Actor_Says(kActorBulletBob, 380, 37); //14-0380.AUD	He's brand-new. He's a cold son of a bitch, too.
+				if (Game_Flag_Query(kFlagIzoIsReplicant)) {
+					Actor_Says(kActorBulletBob, 380, 37); //14-0380.AUD	He's brand-new. He's a cold son of a bitch, too.
+				}
 				Actor_Says(kActorBulletBob, 390, 11); //14-0390.AUD	I went over to introduce myself when he first moved in and he practically ignored me!
 				Actor_Says(kActorBulletBob, 400, 37); //14-0400.AUD	Said he was too busy to talk. Don't think I didn't consider kicking his ass, too.
-				if (Player_Query_Agenda() != kPlayerAgendaSurly 
-				&& Player_Query_Agenda() != kPlayerAgendaErratic) {
+				if (Player_Query_Agenda() == kPlayerAgendaPolite) {
 					Actor_Says(kActorMcCoy, 5040, 16); //00-5040.AUD	Sometimes you just got to be philosophical about these things.
 				} else {
 					Actor_Says(kActorMcCoy, 7835, 16); //00-7835.AUD	Is that so?
@@ -251,32 +243,65 @@ void SceneScriptRC04::dialogueWithBulletBob() {
 					Actor_Says(kActorBulletBob, 460, 37); //14-0460.AUD	Tell me about it. We got standards to uphold down here.
 					Actor_Modify_Friendliness_To_Other(kActorBulletBob, kActorMcCoy, 2);
 				} else {
-					Actor_Says(kActorMcCoy, 8345, 15); //00-8345.AUD	I wouldn't know.
+					Actor_Says(kActorMcCoy, 4880, 13); //00-4880.AUD	Is that right?
 					Actor_Modify_Friendliness_To_Other(kActorBulletBob, kActorMcCoy, -2);
 				}
-			}
-		} else if (Game_Flag_Query(kFlagIzoIsReplicant)) {
-			Actor_Says(kActorBulletBob, 350, 32);
-			Actor_Says(kActorBulletBob, 360, 33);
-			Actor_Says(kActorBulletBob, 370, 30);
-			Actor_Says(kActorMcCoy, 5020, 16);
-			Actor_Says(kActorBulletBob, 380, 37);
-			Actor_Says(kActorBulletBob, 390, 11);
-			Actor_Says(kActorBulletBob, 400, 37);
-#if BLADERUNNER_ORIGINAL_BUGS
-			Actor_Clue_Acquire(kActorMcCoy, kClueBobInterview1, true, kActorMcCoy);  // A bug? Shouldn't the last argument be -1 or kActorBulletBob here?
-#else
-			Actor_Clue_Acquire(kActorMcCoy, kClueBobInterview1, true, kActorBulletBob);
-#endif // BLADERUNNER_ORIGINAL_BUGS
+			} else {
+				Actor_Says(kActorBulletBob, 1820, 34); //14-1820.AUD	You want to make it as a Blade Runner, you ought to do your own investigations.
+				if (Player_Query_Agenda() == kPlayerAgendaSurly 
+				|| Player_Query_Agenda() == kPlayerAgendaErratic) {
+					Actor_Says(kActorMcCoy, 8519, 14);//00-8519.AUD	What do you say we dish each other the straight goods.
+					Actor_Says(kActorBulletBob, 1840, 34); //14-1840.AUD	Okay, okay, look.
+					Actor_Says(kActorBulletBob, 1850, 35); //14-1850.AUD	I didn't want to get you riled up for no reason but here's the real skinny.
+					Actor_Says(kActorMcCoy, 4940, 13); //00-4940.AUD	Okay, let's have it.
+					Actor_Says(kActorBulletBob, 320, 30);
+					Actor_Says(kActorBulletBob, 330, 33);
+					Actor_Says(kActorBulletBob, 340, 37); //14-0340.AUD	But who knows what the real title is.
+					Actor_Says(kActorMcCoy, 5015, 11);
+					Actor_Says(kActorBulletBob, 410, 11); //14-0410.AUD	Izo is okay. He's run the Green Pawn for a while.
+					Actor_Says(kActorBulletBob, 420, 37); //14-0420.AUD	We're friendly competitors, I guess. But I don't appreciate his politics.
+					Actor_Says(kActorMcCoy, 5025, 16); //00-5025.AUD	Yeah?
+					Actor_Says(kActorBulletBob, 430, 30); //14-0430.AUD	Rumors that's all they are.
+					Actor_Clue_Acquire(kActorMcCoy, kClueBobInterview1, true, kActorBulletBob);
+					Actor_Says(kActorMcCoy, 4950, 16); //00-4950.AUD	Frankly I don't see you as the comforting type.
+					Delay(500);
+					if (Game_Flag_Query(kFlagKIAPrivacyAddon)) {
+						Actor_Says(kActorBulletBob, 1830, 33); //14-1830.AUD	I'm hurt, McCoy. Deeply hurt. After all I've done for you.
+						Actor_Says(kActorMcCoy, 5065, 18); //00-5065.AUD	Is that right?
+					}
+				} else {
+					Actor_Says(kActorMcCoy, 5075, 18); //00-5075.AUD	Hey, pal.
+				}
+			}			
 		} else {
-			Actor_Says(kActorBulletBob, 410, 11);
-			Actor_Says(kActorBulletBob, 420, 37);
-			Actor_Says(kActorMcCoy, 5025, 16);
-			Actor_Says(kActorBulletBob, 430, 30);
-			Actor_Says(kActorBulletBob, 440, 31);
-			Actor_Says(kActorBulletBob, 450, 32);
-			Actor_Says(kActorMcCoy, 5030, 16);
-			Actor_Says(kActorBulletBob, 460, 37);
+			Actor_Says(kActorMcCoy, 5010, 11);
+			Actor_Says(kActorBulletBob, 320, 30);
+			Actor_Says(kActorBulletBob, 330, 33);
+			Actor_Says(kActorBulletBob, 340, 37);
+			Actor_Says(kActorMcCoy, 5015, 11);
+			if (Game_Flag_Query(kFlagIzoIsReplicant)) {
+				Actor_Says(kActorBulletBob, 350, 32);
+				Actor_Says(kActorBulletBob, 360, 33);
+				Actor_Says(kActorBulletBob, 370, 30);
+				Actor_Says(kActorMcCoy, 5020, 16);
+				Actor_Says(kActorBulletBob, 380, 37);
+				Actor_Says(kActorBulletBob, 390, 11);
+				Actor_Says(kActorBulletBob, 400, 37);
+#if BLADERUNNER_ORIGINAL_BUGS
+				Actor_Clue_Acquire(kActorMcCoy, kClueBobInterview1, true, kActorMcCoy);  // A bug? Shouldn't the last argument be -1 or kActorBulletBob here?
+#else
+				Actor_Clue_Acquire(kActorMcCoy, kClueBobInterview1, true, kActorBulletBob);
+#endif // BLADERUNNER_ORIGINAL_BUGS
+			} else {
+				Actor_Says(kActorBulletBob, 410, 11);
+				Actor_Says(kActorBulletBob, 420, 37);
+				Actor_Says(kActorMcCoy, 5025, 16);
+				Actor_Says(kActorBulletBob, 430, 30);
+				Actor_Says(kActorBulletBob, 440, 31);
+				Actor_Says(kActorBulletBob, 450, 32);
+				Actor_Says(kActorMcCoy, 5030, 16);
+				Actor_Says(kActorBulletBob, 460, 37);
+			}
 #if BLADERUNNER_ORIGINAL_BUGS
 			Actor_Clue_Acquire(kActorMcCoy, kClueBobInterview2, true, kActorMcCoy);  // A bug? Shouldn't the last argument be -1 or kActorBulletBob here?
 #else
@@ -332,32 +357,13 @@ void SceneScriptRC04::dialogueWithBulletBob() {
 			Actor_Says(kActorBulletBob, 300, 33);
 			Actor_Says(kActorBulletBob, 310, 31); //14-0310.AUD	it's out of here. Got no place at Bullet Bob's.
 		}
-		Actor_Says(kActorMcCoy, 5010, 11);
-		Actor_Says(kActorBulletBob, 320, 30);
-		Actor_Says(kActorBulletBob, 330, 33);
+		Actor_Says(kActorMcCoy, 5010, 11); //00-5010.AUD	You know anyone who might sell Ender rifles?
 		if (_vm->_cutContent) {
 			if (!Game_Flag_Query(kFlagBulletBobIsReplicant)) {
+				Actor_Says(kActorBulletBob, 320, 30);
+				Actor_Says(kActorBulletBob, 330, 33);
 				Actor_Says(kActorBulletBob, 340, 37); //14-0340.AUD	But who knows what the real title is.
-			}
-		} else {
-			Actor_Says(kActorBulletBob, 340, 37); //14-0340.AUD	But who knows what the real title is.
-		}
-		Actor_Says(kActorMcCoy, 5015, 11);
-		if (_vm->_cutContent) {
-			if (Game_Flag_Query(kFlagBulletBobIsReplicant)) {
-				Actor_Says(kActorBulletBob, 410, 11); //14-0410.AUD	Izo is okay. He's run the Green Pawn for a while.
-				Actor_Says(kActorBulletBob, 420, 37); //14-0420.AUD	We're friendly competitors, I guess. But I don't appreciate his politics.
-				Actor_Says(kActorMcCoy, 5025, 16); //00-5025.AUD	Yeah?
-				Actor_Says(kActorBulletBob, 430, 30); //14-0430.AUD	Rumors that's all they are.
-				Actor_Clue_Acquire(kActorMcCoy, kClueBobInterview1, true, kActorBulletBob);
-				if (Player_Query_Agenda() == kPlayerAgendaSurly
-				|| Player_Query_Agenda() == kPlayerAgendaErratic) { 
-					Actor_Says(kActorMcCoy, 4950, 16); //00-4950.AUD	Frankly I don't see you as the comforting type.
-					Delay(500);
-					Actor_Says(kActorBulletBob, 1830, 33); //14-1830.AUD	I'm hurt, McCoy. Deeply hurt. After all I've done for you.
-					Actor_Says(kActorMcCoy, 5065, 18); //00-5065.AUD	Is that right?
-				}
-			} else {
+				Actor_Says(kActorMcCoy, 5015, 11);
 				Actor_Says(kActorBulletBob, 350, 32); //14-0350.AUD	I've been around here a long time, Ray.
 				Actor_Says(kActorBulletBob, 360, 33); //14-0360.AUD	It always pisses me off when some dilettante
 				Actor_Says(kActorBulletBob, 370, 30); //14-0370.AUD	sets up shop and tries to horn in on my action.
@@ -385,32 +391,65 @@ void SceneScriptRC04::dialogueWithBulletBob() {
 					Actor_Says(kActorBulletBob, 460, 37); //14-0460.AUD	Tell me about it. We got standards to uphold down here.
 					Actor_Modify_Friendliness_To_Other(kActorBulletBob, kActorMcCoy, 2);
 				} else {
-					Actor_Says(kActorMcCoy, 8345, 15); //00-8345.AUD	I wouldn't know.
+					Actor_Says(kActorMcCoy, 4880, 13); //00-4880.AUD	Is that right?
 					Actor_Modify_Friendliness_To_Other(kActorBulletBob, kActorMcCoy, -2);
 				}
-			}
-		} else if (Game_Flag_Query(kFlagIzoIsReplicant)) {
-			Actor_Says(kActorBulletBob, 350, 32);
-			Actor_Says(kActorBulletBob, 360, 30);
-			Actor_Says(kActorBulletBob, 370, 33);
-			Actor_Says(kActorMcCoy, 5020, 15);
-			Actor_Says(kActorBulletBob, 380, 33);
-			Actor_Says(kActorBulletBob, 390, 37);
-			Actor_Says(kActorBulletBob, 400, 32);
-#if BLADERUNNER_ORIGINAL_BUGS
-			Actor_Clue_Acquire(kActorMcCoy, kClueBobInterview1, true, kActorMcCoy);  // A bug? Shouldn't the last argument be -1 or kActorBulletBob here?
-#else
-			Actor_Clue_Acquire(kActorMcCoy, kClueBobInterview1, true, kActorBulletBob);
-#endif // BLADERUNNER_ORIGINAL_BUGS
+			} else {
+				Actor_Says(kActorBulletBob, 1820, 34); //14-1820.AUD	You want to make it as a Blade Runner, you ought to do your own investigations.
+				if (Player_Query_Agenda() == kPlayerAgendaSurly 
+				|| Player_Query_Agenda() == kPlayerAgendaErratic) {
+					Actor_Says(kActorMcCoy, 8519, 14);//00-8519.AUD	What do you say we dish each other the straight goods.
+					Actor_Says(kActorBulletBob, 1840, 34); //14-1840.AUD	Okay, okay, look.
+					Actor_Says(kActorBulletBob, 1850, 35); //14-1850.AUD	I didn't want to get you riled up for no reason but here's the real skinny.
+					Actor_Says(kActorMcCoy, 4940, 13); //00-4940.AUD	Okay, let's have it.
+					Actor_Says(kActorBulletBob, 320, 30);
+					Actor_Says(kActorBulletBob, 330, 33);
+					Actor_Says(kActorBulletBob, 340, 37); //14-0340.AUD	But who knows what the real title is.
+					Actor_Says(kActorMcCoy, 5015, 11);
+					Actor_Says(kActorBulletBob, 410, 11); //14-0410.AUD	Izo is okay. He's run the Green Pawn for a while.
+					Actor_Says(kActorBulletBob, 420, 37); //14-0420.AUD	We're friendly competitors, I guess. But I don't appreciate his politics.
+					Actor_Says(kActorMcCoy, 5025, 16); //00-5025.AUD	Yeah?
+					Actor_Says(kActorBulletBob, 430, 30); //14-0430.AUD	Rumors that's all they are.
+					Actor_Clue_Acquire(kActorMcCoy, kClueBobInterview1, true, kActorBulletBob);
+					Actor_Says(kActorMcCoy, 4950, 16); //00-4950.AUD	Frankly I don't see you as the comforting type.
+					Delay(500);
+					if (Game_Flag_Query(kFlagKIAPrivacyAddon)) {
+						Actor_Says(kActorBulletBob, 1830, 33); //14-1830.AUD	I'm hurt, McCoy. Deeply hurt. After all I've done for you.
+						Actor_Says(kActorMcCoy, 5065, 18); //00-5065.AUD	Is that right?
+					}
+				} else {
+					Actor_Says(kActorMcCoy, 5075, 18); //00-5075.AUD	Hey, pal.
+				}
+			}			
 		} else {
-			Actor_Says(kActorBulletBob, 410, 32);
-			Actor_Says(kActorBulletBob, 420, 30);
-			Actor_Says(kActorMcCoy, 5025, 13);
-			Actor_Says(kActorBulletBob, 430, 33);
-			Actor_Says(kActorBulletBob, 440, 32);
-			Actor_Says(kActorBulletBob, 450, 37);
-			Actor_Says(kActorMcCoy, 5030, 16);
-			Actor_Says(kActorBulletBob, 460, 30);
+			Actor_Says(kActorMcCoy, 5010, 11);
+			Actor_Says(kActorBulletBob, 320, 30);
+			Actor_Says(kActorBulletBob, 330, 33);
+			Actor_Says(kActorBulletBob, 340, 37);
+			Actor_Says(kActorMcCoy, 5015, 11);
+			if (Game_Flag_Query(kFlagIzoIsReplicant)) {
+				Actor_Says(kActorBulletBob, 350, 32);
+				Actor_Says(kActorBulletBob, 360, 33);
+				Actor_Says(kActorBulletBob, 370, 30);
+				Actor_Says(kActorMcCoy, 5020, 16);
+				Actor_Says(kActorBulletBob, 380, 37);
+				Actor_Says(kActorBulletBob, 390, 11);
+				Actor_Says(kActorBulletBob, 400, 37);
+#if BLADERUNNER_ORIGINAL_BUGS
+				Actor_Clue_Acquire(kActorMcCoy, kClueBobInterview1, true, kActorMcCoy);  // A bug? Shouldn't the last argument be -1 or kActorBulletBob here?
+#else
+				Actor_Clue_Acquire(kActorMcCoy, kClueBobInterview1, true, kActorBulletBob);
+#endif // BLADERUNNER_ORIGINAL_BUGS
+			} else {
+				Actor_Says(kActorBulletBob, 410, 11);
+				Actor_Says(kActorBulletBob, 420, 37);
+				Actor_Says(kActorMcCoy, 5025, 16);
+				Actor_Says(kActorBulletBob, 430, 30);
+				Actor_Says(kActorBulletBob, 440, 31);
+				Actor_Says(kActorBulletBob, 450, 32);
+				Actor_Says(kActorMcCoy, 5030, 16);
+				Actor_Says(kActorBulletBob, 460, 37);
+			}
 #if BLADERUNNER_ORIGINAL_BUGS
 			Actor_Clue_Acquire(kActorMcCoy, kClueBobInterview2, true, kActorMcCoy);  // A bug? Shouldn't the last argument be -1 or kActorBulletBob here?
 #else
@@ -661,7 +700,7 @@ void SceneScriptRC04::dialogueWithBulletBob() {
 			if (Player_Query_Agenda()!= kPlayerAgendaSurly
 			&& Player_Query_Agenda() != kPlayerAgendaErratic) {
 				Actor_Says(kActorMcCoy, 8320, 18); //00-8320.AUD	Really?
-				Actor_Says(kActorBulletBob, 1400, 33); //14-1400.AUD	Hmm yeah, sure.
+				Actor_Says(kActorBulletBob, 720, 33); //14-0720.AUD	Ask one of your friends.
 			} else {
 				Actor_Says(kActorMcCoy, 2485, 19); //00-2485.AUD	I’ve a hard time believing that.
 				Actor_Says(kActorBulletBob, 720, 33); //14-0720.AUD	Ask one of your friends.

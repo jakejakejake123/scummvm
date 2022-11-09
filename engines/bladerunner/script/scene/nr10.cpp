@@ -158,13 +158,7 @@ void SceneScriptNR10::SceneFrameAdvanced(int frame) {
 			Player_Set_Combat_Mode(false);
 		}
 		Actor_Set_Invisible(kActorMcCoy, false);
-		if (_vm->_cutContent) {
-			if (!Actor_Clue_Query(kActorDektora, kClueMcCoyHelpedDektora)) {
-				Actor_Set_Goal_Number(kActorDektora, kGoalDektoraNR10AttackMcCoy);
-			}
-		} else {
-			Actor_Set_Goal_Number(kActorDektora, kGoalDektoraNR10AttackMcCoy);
-		}
+		Actor_Set_Goal_Number(kActorDektora, kGoalDektoraNR10AttackMcCoy);
 		//return true;
 		return;
 	}

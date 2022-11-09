@@ -266,8 +266,11 @@ void SceneScriptNR05::talkToBartender() {
 		Global_Variable_Increment(kVariableMcCoyDrinks, 1);
 		// Made it so you lose 5 chinyen when the bartender gives you a drink.
 		if (_vm->_cutContent) {
-			if (Query_Difficulty_Level() != kGameDifficultyEasy) {
-				Global_Variable_Decrement(kVariableChinyen, 5);
+			if (Global_Variable_Query(kVariableChinyen) >= 5
+			|| Query_Difficulty_Level() == kGameDifficultyEasy) {
+				if (Query_Difficulty_Level() != kGameDifficultyEasy) {
+					Global_Variable_Decrement(kVariableChinyen, 5);
+				}
 			}
 		}
 
@@ -278,8 +281,11 @@ void SceneScriptNR05::talkToBartender() {
 		Actor_Change_Animation_Mode(kActorMcCoy, 75);
 		Global_Variable_Increment(kVariableMcCoyDrinks, 1);
 		if (_vm->_cutContent) {
-			if (Query_Difficulty_Level() != kGameDifficultyEasy) {
-				Global_Variable_Decrement(kVariableChinyen, 5);
+			if (Global_Variable_Query(kVariableChinyen) >= 5
+			|| Query_Difficulty_Level() == kGameDifficultyEasy) {
+				if (Query_Difficulty_Level() != kGameDifficultyEasy) {
+					Global_Variable_Decrement(kVariableChinyen, 5);
+				}
 			}
 		}
 
@@ -291,15 +297,20 @@ void SceneScriptNR05::talkToBartender() {
 				Actor_Says(kActorMcCoy, 8990, 14); //00-8990.AUD	What have you got there?
 				Delay(1000);
 				Item_Pickup_Spin_Effect(kModelAnimationFlaskOfAbsinthe, 288, 198);
-				KIA_Play_Actor_Dialogue(kActorMcCoy, 8880); //00-8880.AUD	A flask of absinthe.
+				Actor_Says(kActorMcCoy, 8880, 19); //00-8880.AUD	A flask of absinthe.
 				Delay(1000);
-				Actor_Says(kActorMcCoy, 4940, 13); //00-4940.AUD	Okay, let's have it.
-				if (Query_Difficulty_Level() != kGameDifficultyEasy) {
-					Global_Variable_Decrement(kVariableChinyen, 20);
-				}
-				Actor_Clue_Acquire(kActorMcCoy, kClueFlaskOfAbsinthe, true, kActorEarlyQBartender);
-				Actor_Set_Goal_Number(kActorHawkersBarkeep, 2);
-				Delay(1500);
+				if (Global_Variable_Query(kVariableChinyen) >= 20
+				|| Query_Difficulty_Level() == kGameDifficultyEasy) {
+					Actor_Says(kActorMcCoy, 4940, 13); //00-4940.AUD	Okay, let's have it.
+					Actor_Clue_Acquire(kActorMcCoy, kClueFlaskOfAbsinthe, true, kActorEarlyQBartender);
+					Actor_Set_Goal_Number(kActorHawkersBarkeep, 2);
+					Delay(1500);
+					if (Query_Difficulty_Level() != kGameDifficultyEasy) {
+						Global_Variable_Decrement(kVariableChinyen, 20);
+					}
+				} else {
+					Actor_Says(kActorMcCoy, 125, 13); //00-0125.AUD	I'm a little strapped for cash right now.
+				}	
 			} else {
 				Actor_Says(kActorMcCoy, 3480, 19);
 				Actor_Says(kActorEarlyQBartender, 30, 12);
@@ -310,8 +321,11 @@ void SceneScriptNR05::talkToBartender() {
 				Actor_Change_Animation_Mode(kActorEarlyQBartender, 23);
 				Actor_Change_Animation_Mode(kActorMcCoy, 75);
 				Global_Variable_Increment(kVariableMcCoyDrinks, 1);
-				if (Query_Difficulty_Level() != kGameDifficultyEasy) {
-					Global_Variable_Decrement(kVariableChinyen, 5);
+				if (Global_Variable_Query(kVariableChinyen) >= 5
+				|| Query_Difficulty_Level() == kGameDifficultyEasy) {
+					if (Query_Difficulty_Level() != kGameDifficultyEasy) {
+						Global_Variable_Decrement(kVariableChinyen, 5);
+					}
 				}
 			}
 		} else {
@@ -335,8 +349,17 @@ void SceneScriptNR05::talkToEarlyQ() {
 	Actor_Face_Actor(kActorEarlyQ, kActorMcCoy, true);
 
 	if (!Game_Flag_Query(kFlagNR05EarlyQTalk)) {
-		Actor_Says(kActorMcCoy, 8513, kAnimationModeTalk);
-		Actor_Says(kActorEarlyQ, 360, kAnimationModeTalk);
+		if (_vm->_cutContent) {
+			if (Player_Query_Agenda() == kPlayerAgendaPolite) {
+				Actor_Says(kActorMcCoy, 8513, kAnimationModeTalk);
+				Actor_Says(kActorEarlyQ, 360, kAnimationModeTalk);
+			} else {
+				Actor_Says(kActorMcCoy, 3520, kAnimationModeTalk); //00-3520.AUD	Hey, Early.
+			}
+		} else {
+			Actor_Says(kActorMcCoy, 8513, kAnimationModeTalk);
+			Actor_Says(kActorEarlyQ, 360, kAnimationModeTalk);
+		}
 		// Made it so McCoy only mentions Hanoi giving him a hard time only if he interacted with McCoy.
 		if (_vm->_cutContent) {
 			if (Game_Flag_Query(kFlagHanoiTalk)) {

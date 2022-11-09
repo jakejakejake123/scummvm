@@ -257,7 +257,8 @@ bool SceneScriptNR11::ClickedOn3DObject(const char *objectName, bool combatMode)
 					}
 					if (_vm->_cutContent) {
 						if (Actor_Query_Friendliness_To_Other(kActorDektora, kActorMcCoy) > 50
-						 && Global_Variable_Query(kVariableAffectionTowards) == kAffectionTowardsNone) {
+						 && Global_Variable_Query(kVariableAffectionTowards) == kAffectionTowardsNone
+						 && Actor_Query_Goal_Number(kActorLucy) < kGoalLucyGone) { 
 							Global_Variable_Set(kVariableAffectionTowards, kAffectionTowardsDektora);
 						}
 					} else if (Actor_Query_Friendliness_To_Other(kActorDektora, kActorMcCoy) >= 55

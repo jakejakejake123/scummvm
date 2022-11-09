@@ -109,6 +109,7 @@ void SceneScriptMA06::PlayerWalkedIn() {
 	Loop_Actor_Walk_To_XYZ(kActorMcCoy, 40.0f, 1.35f, 0.0f, 0, false, false, false);
 	Actor_Face_Object(kActorMcCoy, "panel", true);
 	if (_vm->_cutContent) {
+		Game_Flag_Reset(kFlagMcCoyShotRachael);
 		Music_Stop(1u);
 	}
 	Delay(500);
@@ -157,11 +158,7 @@ void SceneScriptMA06::PlayerWalkedIn() {
 			Scene_Loop_Start_Special(kSceneLoopModeChangeSet, kMA06LoopDoorClose, true);
 			Sound_Play(kSfxELDOORO2, 100, 50, 50, 50);
 			Delay(1100);
-			Actor_Set_Goal_Number(kActorRachael, kGoalRachaelIsOutsideMcCoysBuildingAct3);
-			AI_Movement_Track_Unpause(kActorRachael);
-			if (!Game_Flag_Query(kFlagMcCoyIsHelpingReplicants)) {
-				Player_Set_Combat_Mode(true);
-			}
+			Actor_Set_Goal_Number(kActorRachael, kGoalRachaelAtEndOfAct3IfMetWithMcCoy);
 		} else if (Game_Flag_Query(kFlagMA02toMA06)
 			&& Actor_Query_Goal_Number(kActorRachael) == kGoalRachaelIsInsideMcCoysElevatorAct4
 		) {

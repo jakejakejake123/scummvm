@@ -182,7 +182,9 @@ bool SceneScriptDR02::ClickedOnActor(int actorId) {
 					}
 				} else { 
 					Actor_Says_With_Pause(kActorMcCoy, 735, 1.0f, 14);//00-0735.AUD	Beat it.
+					Player_Loses_Control();
 					Loop_Actor_Walk_To_XYZ(kActorMcCoy, -921.11f, 0.44f, -155.89f, 0, true, false, false);
+					Player_Gains_Control();
 					Delay(1000);
 					Actor_Face_Actor(kActorMcCoy, kActorShoeshineMan, true);
 					Actor_Face_Actor(kActorShoeshineMan, kActorMcCoy, true);

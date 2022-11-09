@@ -193,7 +193,7 @@ void SceneScriptPS04::PlayerWalkedIn() {
 			if (Actor_Query_Friendliness_To_Other(kActorGuzza, kActorMcCoy) < 51) {
 				Actor_Says(kActorGuzza, 120, 34); //04-0120.AUD	I don't want to ever see your sorry ass again.
 			}
-			Delay(2000);
+			Delay(1000);
 			Actor_Retired_Here(kActorMcCoy, 6, 6, 1, -1);
 		}
 	}
@@ -333,7 +333,8 @@ void SceneScriptPS04::dialogueWithGuzza() {
 	//angry and not all the other factors that was included in the code originally.
 		if (_vm->_cutContent) { 
 			if (Game_Flag_Query(kFlagZubenSpared)
-			&& !Game_Flag_Query(kFlagPS04GuzzaTalkIsFurious)) {
+			&& !Game_Flag_Query(kFlagPS04GuzzaTalkIsFurious)
+			&& !Game_Flag_Query(kFlagMcCoyRetiredRunciter)) {
 				Actor_Says(kActorMcCoy, 3970, 18);
 				Actor_Says(kActorGuzza, 330, 30); //04-0330.AUD	What the hell you've been doing out there, McCoy? Rustling up toe jam?
 				Actor_Says(kActorGuzza, 340, 32); //04-0340.AUD	I need results and fast.

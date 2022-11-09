@@ -382,6 +382,8 @@ void SceneScriptNR01::PlayerWalkedIn() {
 			Player_Set_Combat_Mode(false);
 			Delay(1000);
 			Actor_Says(kActorMcCoy, 1275, -1); //00-1275.AUD	A real pacifist that guy.
+			Player_Gains_Control();
+			Scene_Exits_Enable();
 			Actor_Modify_Friendliness_To_Other(kActorSteele, kActorMcCoy, 2);
 			Actor_Modify_Friendliness_To_Other(kActorClovis, kActorMcCoy, -2);
 			Actor_Modify_Friendliness_To_Other(kActorGuzza, kActorMcCoy, 2);
@@ -390,11 +392,12 @@ void SceneScriptNR01::PlayerWalkedIn() {
 			Game_Flag_Reset(kFlagHanoiFight);
 			Game_Flag_Reset(kFlagNR03McCoyThrownOut);
 			Game_Flag_Set(kFlagHanoiDead);
+			
 			if (Query_Difficulty_Level() != kGameDifficultyEasy) {
 				Global_Variable_Increment (kVariableChinyen, 200);
 			}
 			Player_Gains_Control();
-			Delay(500);
+			Scene_Exits_Enable();
 		}
 	}
 			
@@ -805,12 +808,24 @@ void SceneScriptNR01::PlayerWalkedOut() {
 }
 
 void SceneScriptNR01::DialogueQueueFlushed(int a1) {
-	if (Actor_Query_Goal_Number(kActorSteele) == kGoalSteeleNR01TalkToGordo
-	 && Actor_Query_Goal_Number(kActorGordo) != kGoalGordoNR01Die
-	 && Actor_Query_Goal_Number(kActorGordo) != kGoalGordoNR01HostageShot
-	 && Actor_Query_Goal_Number(kActorGordo) != kGoalGordoNR01HostageDie
-	) {
-		Actor_Set_Goal_Number(kActorSteele, kGoalSteeleNR01ShootGordo);
+	if (_vm->_cutContent) {
+		if (!Game_Flag_Query(kFlagMcCoyIsHelpingReplicants)) {
+			if (Actor_Query_Goal_Number(kActorSteele) == kGoalSteeleNR01TalkToGordo
+			&& Actor_Query_Goal_Number(kActorGordo) != kGoalGordoNR01Die
+			&& Actor_Query_Goal_Number(kActorGordo) != kGoalGordoNR01HostageShot
+			&& Actor_Query_Goal_Number(kActorGordo) != kGoalGordoNR01HostageDie
+			) {
+				Actor_Set_Goal_Number(kActorSteele, kGoalSteeleNR01ShootGordo);
+			}
+		}
+	} else {
+		if (Actor_Query_Goal_Number(kActorSteele) == kGoalSteeleNR01TalkToGordo
+		&& Actor_Query_Goal_Number(kActorGordo) != kGoalGordoNR01Die
+		&& Actor_Query_Goal_Number(kActorGordo) != kGoalGordoNR01HostageShot
+		&& Actor_Query_Goal_Number(kActorGordo) != kGoalGordoNR01HostageDie
+		) {
+			Actor_Set_Goal_Number(kActorSteele, kGoalSteeleNR01ShootGordo);
+		}
 	}
 }
 

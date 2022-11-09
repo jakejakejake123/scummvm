@@ -164,6 +164,9 @@ void SceneScriptUG08::ActorChangedGoal(int actorId, int newGoal, int oldGoal, bo
 }
 
 void SceneScriptUG08::PlayerWalkedIn() {
+	if (_vm->_cutContent) {
+		Music_Stop(1u);
+	}
 	if (Game_Flag_Query(kFlagUG13toUG08)) {
 		Loop_Actor_Walk_To_XYZ(kActorMcCoy, -167.0f, 93.18f,  71.0f, 0, false, false, false);
 		Loop_Actor_Walk_To_XYZ(kActorMcCoy, -180.0f, 93.18f, 134.0f, 0, false, false, false);

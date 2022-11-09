@@ -103,15 +103,13 @@ bool AIScriptOfficerGrayford::Update() {
 		return false;
 	}
 	// Made it so Grayford doesn't come back to life if he dies. I mean..... that makes no sense.
-	if (!_vm->_cutContent) {
-		if (Actor_Query_Goal_Number(kActorOfficerGrayford) == kGoalOfficerGrayfordDead
-		&& Actor_Query_Which_Set_In(kActorOfficerGrayford) != Player_Query_Current_Set()
-		) {
-			// dead officer gets revived and re-used
-			Actor_Set_Health(kActorOfficerGrayford, 50, 50);
-			Actor_Set_Goal_Number(kActorOfficerGrayford, kGoalOfficerGrayfordHuntingAroundAct4);
-			return false;
-		}
+	if (Actor_Query_Goal_Number(kActorOfficerGrayford) == kGoalOfficerGrayfordDead
+	&& Actor_Query_Which_Set_In(kActorOfficerGrayford) != Player_Query_Current_Set()
+	) {
+		// dead officer gets revived and re-used
+		Actor_Set_Health(kActorOfficerGrayford, 50, 50);
+		Actor_Set_Goal_Number(kActorOfficerGrayford, kGoalOfficerGrayfordHuntingAroundAct4);
+		return false;
 	}
 
 	if (Actor_Query_Goal_Number(kActorOfficerGrayford) == kGoalOfficerGrayfordHuntingAroundAct4) {
@@ -470,9 +468,6 @@ bool AIScriptOfficerGrayford::ShotAtAndHit() {
 void AIScriptOfficerGrayford::Retired(int byActorId) {
 	Actor_Set_Goal_Number(kActorOfficerGrayford, kGoalOfficerGrayfordDead);
 	Game_Flag_Set(kFlagMcCoyRetiredHuman);
-	if (_vm->_cutContent) {
-		Game_Flag_Set(kFlagOfficerGrayfordShot);
-	}
 }
 
 int AIScriptOfficerGrayford::GetFriendlinessModifierIfGetsClue(int otherActorId, int clueId) {
@@ -1217,14 +1212,6 @@ bool AIScriptOfficerGrayford::UpdateAnimation(int *animation, int *frame) {
 		++_animationFrame;
 		if (_animationFrame >= Slice_Animation_Query_Number_Of_Frames(kModelAnimationOfficerGrayfordCombatIdle)) {
 			_animationFrame = 0;
-			// Added in some dialogue for Grayford.
-			if (_vm->_cutContent) {
-				if (Random_Query(1, 2) == 1) {
-					ADQ_Add(kActorOfficerGrayford, 290, 19); //24-0290.AUD	There’s the son of a bitch! Kill it!
-				} else {
-					ADQ_Add(kActorOfficerGrayford, 270, 0); //24-0270.AUD	There it is! Take it out!
-				}
-			}
 		}
 		break;
 
@@ -1234,13 +1221,6 @@ bool AIScriptOfficerGrayford::UpdateAnimation(int *animation, int *frame) {
 		if (_animationFrame >= Slice_Animation_Query_Number_Of_Frames(kModelAnimationOfficerGrayfordCombatUnholsterGun)) {
 			_animationFrame = 0;
 			_animationState = 19;
-			if (_vm->_cutContent) {
-				if (Random_Query(1, 2) == 1) {
-					ADQ_Add(kActorOfficerGrayford, 290, 19); //24-0290.AUD	There’s the son of a bitch! Kill it!
-				} else {
-					ADQ_Add(kActorOfficerGrayford, 270, 0); //24-0270.AUD	There it is! Take it out!
-				}
-			}
 		}
 		break;
 
@@ -1307,9 +1287,6 @@ bool AIScriptOfficerGrayford::UpdateAnimation(int *animation, int *frame) {
 			_animationFrame = 0;
 			_animationState = 19;
 			*animation = kModelAnimationOfficerGrayfordOscillateIdle;
-			if (_vm->_cutContent) {
-				ADQ_Add(kActorOfficerGrayford, 250, -1); //24-0250.AUD	Ah, I’m hit!
-			}	
 			Actor_Change_Animation_Mode(kActorOfficerGrayford, kAnimationModeCombatIdle);
 		}
 		break;
@@ -1321,9 +1298,6 @@ bool AIScriptOfficerGrayford::UpdateAnimation(int *animation, int *frame) {
 			_animationFrame = 0;
 			_animationState = 19;
 			*animation = kModelAnimationOfficerGrayfordOscillateIdle;
-			if (_vm->_cutContent) {
-				ADQ_Add(kActorOfficerGrayford, 250, -1); //24-0250.AUD	Ah, I’m hit!
-			}	
 			Actor_Change_Animation_Mode(kActorOfficerGrayford, kAnimationModeCombatIdle);
 		}
 		break;
@@ -1335,9 +1309,6 @@ bool AIScriptOfficerGrayford::UpdateAnimation(int *animation, int *frame) {
 			*animation = kModelAnimationOfficerGrayfordCombatIdle;
 			_animationFrame = 0;
 			_animationState = 0;
-			if (_vm->_cutContent) {
-				ADQ_Add(kActorOfficerGrayford, 250, -1); //24-0250.AUD	Ah, I’m hit!
-			}	
 			Actor_Change_Animation_Mode(kActorOfficerGrayford, 0);
 		}
 		break;
@@ -1349,9 +1320,6 @@ bool AIScriptOfficerGrayford::UpdateAnimation(int *animation, int *frame) {
 			*animation = kModelAnimationOfficerGrayfordCombatIdle;
 			_animationFrame = 0;
 			_animationState = 0;
-			if (_vm->_cutContent) {
-				ADQ_Add(kActorOfficerGrayford, 250, -1); //24-0250.AUD	Ah, I’m hit!
-			}	
 			Actor_Change_Animation_Mode(kActorOfficerGrayford, 0);
 		}
 		break;

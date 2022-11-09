@@ -151,7 +151,7 @@ void SceneScriptUG09::PlayerWalkedIn() {
 	&& !Game_Flag_Query(kFlagUG18GuzzaScene)
 	&& (Global_Variable_Query(kVariableChapter) == 4)) {
 		Actor_Put_In_Set(kActorIzo, kSetUG09);
-		Actor_Set_At_XYZ(kActorIzo, -79.27, 157.33, 71.15, 0);
+		Actor_Set_At_XYZ(kActorIzo, -81.17, 157.41, 71.37, 0);
 		Actor_Face_Actor(kActorMcCoy, kActorIzo, true);
 		Actor_Face_Actor(kActorIzo, kActorMcCoy, true);
 		Actor_Says(kActorMcCoy, 6745, 18); //00-6745.AUD	Izo, we gotta talk.
@@ -215,6 +215,9 @@ void SceneScriptUG09::PlayerWalkedIn() {
 		Actor_Says(kActorMcCoy, 5505, 13); //00-5505.AUD	I need to talk to Clovis.
 		if (Game_Flag_Query(kFlagIzoWarned)) {
 			Actor_Says(kActorIzo, 790, 16); //07-0790.AUD	I’ll tell him you helped me. That’s as much as I can do.
+			if (Game_Flag_Query(kFlagIzoIsReplicant)) {
+				Actor_Clue_Acquire(kActorMcCoy, kClueMcCoyHelpedIzoIzoIsAReplicant, true, kActorIzo);
+			}
 		} 
 		Actor_Says(kActorIzo, 870, 17); //07-0870.AUD	I’ve been warned not to waste any more words with you.
 		if (Player_Query_Agenda() == kPlayerAgendaPolite) {

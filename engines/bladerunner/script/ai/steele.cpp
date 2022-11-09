@@ -859,11 +859,6 @@ bool AIScriptSteele::GoalChanged(int currentGoalNumber, int newGoalNumber) {
 						}
 					}
 				}
-				if (Actor_Clue_Query(kActorSteele, kClueEnvelope)) {
-					if (!Game_Flag_Query(kFlagLutherLanceIsReplicant)) {
-						Actor_Clue_Acquire(kActorSteele, kClueVKLutherLanceHuman, true, kActorSteele);
-					}
-				}
 				if (Actor_Clue_Query(kActorSteele, kClueSpecialIngredient)) {
 					Game_Flag_Set(kFlagIsabellaArrested);
 					Actor_Put_In_Set(kActorIsabella, kSetPS09);
@@ -1433,7 +1428,12 @@ bool AIScriptSteele::GoalChanged(int currentGoalNumber, int newGoalNumber) {
 			Actor_Set_At_XYZ(kActorSteele, 324.32f, 8.0f, -465.87f, 674);
 			Game_Flag_Reset(kFlagSpinnerAtNR01);
 			Game_Flag_Reset(kFlagSpinnerAtHF01);
-			Set_Enter(kSetHF01, kSceneHF04);
+			if (_vm->_cutContent) {
+				Game_Flag_Set(kFlagHF02toHF01);
+				Set_Enter(kSetHF01, kSceneHF01);
+			} else {
+				Set_Enter(kSetHF01, kSceneHF04);
+			}
 		}
 		return true;
 
@@ -1754,6 +1754,7 @@ bool AIScriptSteele::GoalChanged(int currentGoalNumber, int newGoalNumber) {
 
 	case kGoalSteeleNRxxGoToSpinner:
 		Delay(500);
+		
 		Game_Flag_Set(kFlagSpinnerMissing);
 		Player_Gains_Control();
 		if (Game_Flag_Query(kFlagSpinnerAtNR01)) {

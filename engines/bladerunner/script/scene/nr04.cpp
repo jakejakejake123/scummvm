@@ -645,7 +645,14 @@ void SceneScriptNR04::PlayerWalkedIn() {
 	Game_Flag_Reset(kFlagNR03toNR04);
 #endif // BLADERUNNER_ORIGINAL_BUGS
 if (_vm->_cutContent) {
-	Actor_Set_At_XYZ(kActorMcCoy,  53.0f, 0.0f, -26.0f, 0);
+	if (Actor_Clue_Query(kActorMcCoy, kClueEarlyQAndLucy)
+	&& !Game_Flag_Query(kFlagNR04EarlyQStungByScorpions)
+	&& !Game_Flag_Query(kFlagEarlyQDead)
+	&& !Game_Flag_Query(kFlagEarlyQArrested)) {
+		Actor_Set_At_XYZ(kActorMcCoy,  53.0f, 0.0f, -26.0f, 0);
+	} else {
+		Loop_Actor_Walk_To_XYZ(kActorMcCoy, 53.0f, 0.0f, -26.0f, 0, false, false, false);
+	}
 } else {
 	Loop_Actor_Walk_To_XYZ(kActorMcCoy, 53.0f, 0.0f, -26.0f, 0, false, false, false);
 }
@@ -658,58 +665,59 @@ if (_vm->_cutContent) {
 	// Added in an option to arrest Early Q for what he did to Lucy or if she is a replicant being a rep sympathizier. After you receive the Early Q and Lucy clue you
 	// walk into Early Qs office and this scene plays.
 	if (_vm->_cutContent) {
-		if (Actor_Clue_Query(kActorMcCoy, kClueEarlyQAndLucy)) {
-			if (!Game_Flag_Query(kFlagNR04EarlyQStungByScorpions)) {
-				Actor_Put_In_Set(kActorEarlyQ, kSetNR04);
-				Actor_Set_At_XYZ(kActorEarlyQ,  48.79, 0.32, 34.30, 126);
-				Actor_Face_Actor(kActorMcCoy, kActorEarlyQ, true);
-				Actor_Face_Actor(kActorEarlyQ, kActorMcCoy, true);
-				Actor_Says(kActorEarlyQ, 30, 13); //18-0030.AUD	How’re you doing, General? You got a warrant to show me or you’re just breaking and entering?
-				Actor_Voice_Over(4260, kActorVoiceOver); //99-4260.AUD	Early, you sick bastard.
-				Actor_Says(kActorEarlyQ, 750, 18); //18-0750.AUD	Look, General. No reason to get your panties in a bind. If I’d known you were gonna get so testy, I would have tossed you the straight dope to begin with.
-				Actor_Says(kActorMcCoy, 8519, 13); //00-8519.AUD	What do you say we dish each other the straight goods.
-				Actor_Says(kActorEarlyQ, 700, 15); //18-0700.AUD	I heard some things, yeah. I’m the kind of guy people confide in, you know.
-				Actor_Says(kActorMcCoy, 4760, 12); // 00-4760.AUD	About the girl.
-				Actor_Says(kActorMcCoy, 4765, 15); // 00-4765.AUD	Lucy. I know what you did.
-				// Removed a line for the sake of the clue that I added in.
-				Delay (2000);
-				Actor_Says(kActorMcCoy, 840, 14); //00-0840.AUD	Did you hear me?
-				Delay (2000);
-				Actor_Says(kActorEarlyQ, 540, 19); //18-0540.AUD	Of course, she ain’t half bad looking. My pappy always used to say ‘if there’s grass on the field, it’s time to play ball’.
-				Actor_Says(kActorMcCoy, 4800, 14); //00-4800.AUD	You son of a bitch she couldn't object.
-				Actor_Says(kActorEarlyQ, 50, 16); //18-0050.AUD	Hey, hey, I don’t hassle you about your private life.
-				Actor_Says(kActorMcCoy, 2255, 15); //00-2255.AUD	She was innocent, you bastard!
-				Actor_Says(kActorEarlyQ, 530, 18); //18-0530.AUD	This ain’t no daycare center, General.
-				Actor_Clue_Acquire(kActorMcCoy, kClueEarlyAttemptedToSeduceLucy, true, kActorEarlyQ);
-				Delay (1000);
-				Actor_Says(kActorMcCoy, 3405, 13); //00-3405.AUD	Sit down.
-				Actor_Says(kActorMcCoy, 4680, 15); // 00-4680.AUD	We're gonna have a little chat.
-				Actor_Says(kActorEarlyQ, 410, 12); //18-0410.AUD	Sorry, General. I’ve got a major crisis backstage. One of my girls ran full steam into a pencil and we’re fresh out of tampons.
-				Loop_Actor_Walk_To_XYZ(kActorEarlyQ, 45.02, 0.33, 5.52, 0, false, false, false);
-				Actor_Face_Actor(kActorMcCoy, kActorEarlyQ, true);
-				Actor_Says(kActorMcCoy, 460, 14); //00-0460.AUD	Hold it right there!
-				// If Lucy is a rep McCoy arrests Early for being a rep sympathizier. If not he arrests him for what he did to her.
-				if (Game_Flag_Query(kFlagLucyIsReplicant)) {
-					Actor_Says(kActorMcCoy, 3090, 15); //00-3090.AUD	You may not be a Rep but you’re a damn Rep sympathizer for sure.
-				}
-				Actor_Says(kActorMcCoy, 3095, -15); //00-3095.AUD	Now we’re gonna take a little ride downtown.
-				Actor_Modify_Friendliness_To_Other(kActorClovis, kActorMcCoy, 2);
-				Actor_Modify_Friendliness_To_Other(kActorSteele, kActorMcCoy, 1);
-				Actor_Modify_Friendliness_To_Other(kActorGuzza, kActorMcCoy, 1);
-				Delay (1000);
-				Music_Stop(1u);
-				Game_Flag_Set(kFlagEarlyQArrested);
-				Actor_Put_In_Set(kActorEarlyQ, kSetPS09);
-				Actor_Set_At_XYZ(kActorEarlyQ, -428.88f, 0.15f, -220.74f, 512);
-				Game_Flag_Reset(kFlagSpinnerAtNR01);
-				Game_Flag_Reset(kFlagSpinnerAtHF01);
-				Game_Flag_Set(kFlagSpinnerAtPS01);
-				Scene_Exits_Enable();
-				Game_Flag_Reset(kFlagMcCoyInNightclubRow);
-				Game_Flag_Set(kFlagMcCoyInPoliceStation);
-				Outtake_Play(kOuttakeAway1, true, -1);
-				Set_Enter(kSetPS09, kScenePS09);
+		if (Actor_Clue_Query(kActorMcCoy, kClueEarlyQAndLucy)
+		&& !Game_Flag_Query(kFlagNR04EarlyQStungByScorpions)
+		&& !Game_Flag_Query(kFlagEarlyQDead)
+		&& !Game_Flag_Query(kFlagEarlyQArrested)) {
+			Actor_Put_In_Set(kActorEarlyQ, kSetNR04);
+			Actor_Set_At_XYZ(kActorEarlyQ,  48.79, 0.32, 34.30, 126);
+			Actor_Face_Actor(kActorMcCoy, kActorEarlyQ, true);
+			Actor_Face_Actor(kActorEarlyQ, kActorMcCoy, true);
+			Actor_Says(kActorEarlyQ, 30, 13); //18-0030.AUD	How’re you doing, General? You got a warrant to show me or you’re just breaking and entering?
+			Actor_Voice_Over(4260, kActorVoiceOver); //99-4260.AUD	Early, you sick bastard.
+			Actor_Says(kActorEarlyQ, 750, 18); //18-0750.AUD	Look, General. No reason to get your panties in a bind. If I’d known you were gonna get so testy, I would have tossed you the straight dope to begin with.
+			Actor_Says(kActorMcCoy, 8519, 13); //00-8519.AUD	What do you say we dish each other the straight goods.
+			Actor_Says(kActorEarlyQ, 700, 15); //18-0700.AUD	I heard some things, yeah. I’m the kind of guy people confide in, you know.
+			Actor_Says(kActorMcCoy, 4760, 12); // 00-4760.AUD	About the girl.
+			Actor_Says(kActorMcCoy, 4765, 15); // 00-4765.AUD	Lucy. I know what you did.
+			// Removed a line for the sake of the clue that I added in.
+			Delay (2000);
+			Actor_Says(kActorMcCoy, 840, 14); //00-0840.AUD	Did you hear me?
+			Delay (2000);
+			Actor_Says(kActorEarlyQ, 540, 19); //18-0540.AUD	Of course, she ain’t half bad looking. My pappy always used to say ‘if there’s grass on the field, it’s time to play ball’.
+			Actor_Says(kActorMcCoy, 4800, 14); //00-4800.AUD	You son of a bitch she couldn't object.
+			Actor_Says(kActorEarlyQ, 50, 16); //18-0050.AUD	Hey, hey, I don’t hassle you about your private life.
+			Actor_Says(kActorMcCoy, 2255, 15); //00-2255.AUD	She was innocent, you bastard!
+			Actor_Says(kActorEarlyQ, 530, 18); //18-0530.AUD	This ain’t no daycare center, General.
+			Actor_Clue_Acquire(kActorMcCoy, kClueEarlyAttemptedToSeduceLucy, true, kActorEarlyQ);
+			Delay (1000);
+			Actor_Says(kActorMcCoy, 3405, 13); //00-3405.AUD	Sit down.
+			Actor_Says(kActorMcCoy, 4680, 15); // 00-4680.AUD	We're gonna have a little chat.
+			Actor_Says(kActorEarlyQ, 410, 12); //18-0410.AUD	Sorry, General. I’ve got a major crisis backstage. One of my girls ran full steam into a pencil and we’re fresh out of tampons.
+			Loop_Actor_Walk_To_XYZ(kActorEarlyQ, 45.02, 0.33, 5.52, 0, false, false, false);
+			Actor_Face_Actor(kActorMcCoy, kActorEarlyQ, true);
+			Actor_Says(kActorMcCoy, 460, 14); //00-0460.AUD	Hold it right there!
+			// If Lucy is a rep McCoy arrests Early for being a rep sympathizier. If not he arrests him for what he did to her.
+			if (Game_Flag_Query(kFlagLucyIsReplicant)) {
+				Actor_Says(kActorMcCoy, 3090, 15); //00-3090.AUD	You may not be a Rep but you’re a damn Rep sympathizer for sure.
 			}
+			Actor_Says(kActorMcCoy, 3095, -15); //00-3095.AUD	Now we’re gonna take a little ride downtown.
+			Actor_Modify_Friendliness_To_Other(kActorClovis, kActorMcCoy, 2);
+			Actor_Modify_Friendliness_To_Other(kActorSteele, kActorMcCoy, 1);
+			Actor_Modify_Friendliness_To_Other(kActorGuzza, kActorMcCoy, 1);
+			Delay (1000);
+			Music_Stop(1u);
+			Game_Flag_Set(kFlagEarlyQArrested);
+			Actor_Put_In_Set(kActorEarlyQ, kSetPS09);
+			Actor_Set_At_XYZ(kActorEarlyQ, -428.88f, 0.15f, -220.74f, 512);
+			Game_Flag_Reset(kFlagSpinnerAtNR01);
+			Game_Flag_Reset(kFlagSpinnerAtHF01);
+			Game_Flag_Set(kFlagSpinnerAtPS01);
+			Scene_Exits_Enable();
+			Game_Flag_Reset(kFlagMcCoyInNightclubRow);
+			Game_Flag_Set(kFlagMcCoyInPoliceStation);
+			Outtake_Play(kOuttakeAway1, true, -1);
+			Set_Enter(kSetPS09, kScenePS09);
 		}
 	}
 }

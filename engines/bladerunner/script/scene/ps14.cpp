@@ -118,6 +118,7 @@ void SceneScriptPS14::ActorChangedGoal(int actorId, int newGoal, int oldGoal, bo
 
 void SceneScriptPS14::PlayerWalkedIn() {
 	if (_vm->_cutContent) {
+		Game_Flag_Reset(kFlagMcCoyShotRachael);
 		Music_Stop(1u);
 	}
 	if (Game_Flag_Query(kFlagMA07toPS14)) {
@@ -145,14 +146,11 @@ void SceneScriptPS14::PlayerWalkedIn() {
 		&& (Global_Variable_Query(kVariableChapter) == 4)) {  
 			Actor_Put_In_Set(kActorOfficerGrayford, kSetPS14);
 			Actor_Set_At_XYZ(kActorOfficerGrayford, -879.97, 507.86, -1132.41, 0);
-			Actor_Face_Actor(kActorOfficerGrayford, kActorOfficerLeary, true); 
-			Actor_Says(kActorOfficerLeary, 280, kAnimationModeTalk); //23-0280.AUD	Sounds like another nutcase overdosed on too many lichen-dogs.
-			Actor_Face_Actor(kActorOfficerGrayford, kActorOfficerLeary, true); 
-			Actor_Says(kActorOfficerGrayford, 460, kAnimationModeTalk); //24-0460.AUD	Either that or another street punk that sucked one too many sugar cubes.
+			Actor_Put_In_Set(kActorOfficerLeary, kSetPS14);
+			Actor_Set_At_XYZ(kActorOfficerLeary, -871.09, 507.83, -1034.80, 0);
 			Actor_Face_Actor(kActorMcCoy, kActorOfficerGrayford, true);
 			Actor_Face_Actor(kActorOfficerGrayford, kActorMcCoy, true);
 			Actor_Face_Actor(kActorOfficerLeary, kActorMcCoy, true);
-			Actor_Says(kActorMcCoy, 3970, 15); //00-3970.AUD	Hey.
 			Music_Play(kMusicBatl226M, 50, 0, 2, -1, kMusicLoopPlayOnce, 0);
 			Actor_Change_Animation_Mode(kActorOfficerLeary, kAnimationModeCombatIdle);
 			Actor_Says(kActorOfficerGrayford, 300, kAnimationModeTalk); //24-0300.AUD	Over there!

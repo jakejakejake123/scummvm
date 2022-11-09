@@ -117,27 +117,25 @@ bool SceneScriptPS15::ClickedOnActor(int actorId) {
 					Actor_Says(kActorSergeantWalls, 140, 16); // 34-0140.AUD	Too damn much if you ask me. Especially at the rate the assault teams are losing them.
 				}
 				if (_vm->_cutContent) {
+					// If McCoy is on bad terms with Walls he will aggressively question Walls about why he didn't mention the assault teams losing their weapons before.
 					if (Game_Flag_Query(kFlagWallsUpset)) {
 						if (Player_Query_Agenda() == kPlayerAgendaSurly 
 						|| Player_Query_Agenda() == kPlayerAgendaErratic) {
-							// If McCoy is on bad terms with Walls he will aggressively question Walls about why he didn't mention the assault teams losing their weapons before.
 							Actor_Says(kActorMcCoy, 3725, 18); //00-3725.AUD	Is that right? Any reason you didn’t tell me that right off?
 							Actor_Says(kActorSergeantWalls, 220, 16); // 34-0220.  AUD	I didn't think you needed to hear about this.
-							// If you upset Walls and your agenda is surly or erratic he won't give you the form and the player has to get it from Guzzas desk instead.
 							Actor_Says(kActorMcCoy, 8519, 14); // 00-8519.AUD	What do you say we dish each other the straight goods.
-							Actor_Says(kActorSergeantWalls, 200, 13); //34-0200.AUD	Come back at me when you got something worthwhile, McCoy.
-						} else {	   
-							Actor_Says(kActorMcCoy, 8420, 18); //00-8420.AUD	Must be rough.
 							Delay (1000);
-							Actor_Says(kActorSergeantWalls, 150, 14); //34-0150.AUD	I guess there ain't no harm in it.
+							Actor_Says(kActorSergeantWalls, 150, 23); //34-0150.AUD	I guess there ain't no harm in it.
 							Actor_Change_Animation_Mode(kActorMcCoy, 23);
-							Actor_Change_Animation_Mode(kActorSergeantWalls, 23);
 							Delay (2000);
 							Item_Pickup_Spin_Effect(kModelAnimationWeaponsOrderForm, 211, 239);
 							Actor_Clue_Acquire(kActorMcCoy, kClueWeaponsOrderForm, true, kActorSergeantWalls);
 							if (Game_Flag_Query(kFlagPS04WeaponsOrderForm)) {
-								Item_Remove_From_World(kItemWeaponsOrderForm);
+								Item_Remove_From_World(kItemWeaponsOrderForm);	
 							}
+						} else {
+							Actor_Says(kActorMcCoy, 6985, 18); //00-6985.AUD	Got the straight scoop for me or what?
+							Actor_Says(kActorSergeantWalls, 200, 13); //34-0200.AUD	Come back at me when you got something worthwhile, McCoy.	
 						}
 					}
 				} else {

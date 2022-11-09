@@ -113,6 +113,8 @@ bool SceneScriptHC02::ClickedOnActor(int actorId) {
 				Actor_Says_With_Pause(kActorHawkersBarkeep, 0, 0.0f, 13); //32-0000.AUD	First one's on the house. The rest you pay for.
 				if (!_vm->_cutContent) {
 					Actor_Says(kActorHawkersBarkeep, 10, 16); //32-0010.AUD	You want chit chat you hire a hooker. This ain't no social club.
+				} else {
+					Delay(500);
 				}
 				if (_vm->_cutContent) {
 					if (Player_Query_Agenda() == kPlayerAgendaSurly 
@@ -160,28 +162,24 @@ bool SceneScriptHC02::ClickedOnActor(int actorId) {
 				// Added in some dialogue for the barkeep and McCoy. Made it so McCoys response is different based on his agenda.
 				Actor_Says(kActorMcCoy, 4545, 11); //00-4545.AUD	You got any discs from that camera?
 				Game_Flag_Set(kFlagMcCoyAsksBarkeepForDisk);
-				if (_vm->_cutContent) {
-					if (!Game_Flag_Query(kFlagHawkersBarkeepHappy)) {	
+				if (_vm->_cutContent) {	
+					if (!Game_Flag_Query(kFlagHawkersBarkeepHappy)) {
 						Actor_Says(kActorHawkersBarkeep, 120, 12); //32-0120.AUD	I just serve drinks, pal.
 						Actor_Says(kActorHawkersBarkeep, 130, 16); //32-0130.AUD	I don't pay a whole lot attention to what goes on around here. Nor do I want to.
-						Actor_Says(kActorMcCoy, 6995, 18); //00-6995.AUD	That's not what I heard. You wanna set the record straight?
-						Actor_Says(kActorHawkersBarkeep, 150, 16); //32-0150.AUD	Hey, you can always ask someone who cares what you think.
 						if (Player_Query_Agenda() == kPlayerAgendaSurly 
 						|| Player_Query_Agenda() == kPlayerAgendaErratic) {
+							Actor_Says(kActorMcCoy, 6995, 18); //00-6995.AUD	That's not what I heard. You wanna set the record straight?
+							Actor_Says(kActorHawkersBarkeep, 150, 16); //32-0150.AUD	Hey, you can always ask someone who cares what you think.
 							Actor_Says(kActorMcCoy, 8445, 14); //00-8445.AUD	Cough it up!
 							Delay(1500);
 							Actor_Says(kActorMcCoy, 1805, 14); //00-1805.AUD	Now!
-							Delay(1500);
-							Actor_Says(kActorHawkersBarkeep, 160, 12); //32-0160.AUD	Listen close, cause I'm only gonna say this once. I was trying to protect you, all right?
-							Actor_Says(kActorHawkersBarkeep, 170, 13); //32-0170.AUD	The truth ain't gonna do you no good.
+							Delay(1000);
 							Actor_Says(kActorHawkersBarkeep, 180, 14); //32-0180.AUD	But if you're gonna sit there until I cough it up, well, here it is.
 							Item_Pickup_Spin_Effect(kModelAnimationVideoDisc, 229, 215);
 							Actor_Change_Animation_Mode(kActorMcCoy, 23);
 							Actor_Change_Animation_Mode(kActorHawkersBarkeep, 23);
 							Delay(2000);
 							Actor_Clue_Acquire(kActorMcCoy, kClueChinaBarSecurityDisc, true, kActorHawkersBarkeep);
-						} else {
-							Actor_Says(kActorMcCoy, 4880, 16); //00-4880.AUD	Is that right?
 						}
 					} else {
 						Actor_Says(kActorHawkersBarkeep, 110, 12); // 32-0110.AUD	You've been a good customer, so I'll bent the rules just this once and tell you.
@@ -298,6 +296,7 @@ bool SceneScriptHC02::ClickedOnActor(int actorId) {
 							}
 						} else {
 							Actor_Says(kActorMcCoy, 1250, 13);
+							Actor_Change_Animation_Mode(kActorMcCoy, 23);
 							Actor_Change_Animation_Mode(kActorHawkersBarkeep, 23);
 							Delay(1500);
 							Actor_Change_Animation_Mode(kActorMcCoy, 75);

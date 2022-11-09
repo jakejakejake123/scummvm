@@ -375,12 +375,6 @@ void SceneScriptUG13::SceneFrameAdvanced(int frame) {
 	if (Game_Flag_Query(kFlagUG08toUG13)
 	 && frame < 25
 	) {
-		if (_vm->_cutContent) {
-			if (!Game_Flag_Query(kFlagCT04HomelessKilledByMcCoy)
-			&& !Game_Flag_Query(kFlagGuzzaKilledTransient)) {
-				Actor_Change_Animation_Mode(kActorTransient, 53);
-			}
-		}
 		Actor_Set_Invisible(kActorMcCoy, true);
 	} else if (Game_Flag_Query(kFlagUG13toUG08)
 	        && frame >= 94
@@ -402,12 +396,6 @@ void SceneScriptUG13::PlayerWalkedIn() {
 #if BLADERUNNER_ORIGINAL_BUGS
 		Loop_Actor_Walk_To_XYZ(kActorMcCoy, -389.0f, 143.0f, -844.0f, 0, false, false, false);
 #else
-		if (_vm->_cutContent) {
-			if (!Game_Flag_Query(kFlagCT04HomelessKilledByMcCoy)
-			&& !Game_Flag_Query(kFlagGuzzaKilledTransient)) {
-				Actor_Change_Animation_Mode(kActorTransient, 53);
-			}
-		}
 		Actor_Set_At_XYZ(kActorMcCoy, -389.0f, 143.0f, -844.0f, 325);
 #endif // BLADERUNNER_ORIGINAL_BUGS
 		Actor_Face_Heading(kActorMcCoy, 325, false);
@@ -464,22 +452,10 @@ void SceneScriptUG13::PlayerWalkedIn() {
 			}
 		}
 	} else if (Game_Flag_Query(kFlagUG15toUG13)) {
-		if (_vm->_cutContent) {
-			if (!Game_Flag_Query(kFlagCT04HomelessKilledByMcCoy)
-			&& !Game_Flag_Query(kFlagGuzzaKilledTransient)) {
-				Actor_Change_Animation_Mode(kActorTransient, 53);
-			}
-		}
 		Loop_Actor_Walk_To_XYZ(kActorMcCoy, -12.0f, 44.0f, -528.0f, 0, false, false, false);
 		Game_Flag_Reset(kFlagUG15toUG13);
 	} else {
 		// arrived from elevator (going down)
-		if (_vm->_cutContent) {
-			if (!Game_Flag_Query(kFlagCT04HomelessKilledByMcCoy)
-			&& !Game_Flag_Query(kFlagGuzzaKilledTransient)) {
-				Actor_Change_Animation_Mode(kActorTransient, 53);
-			}
-		}
 		Loop_Actor_Walk_To_XYZ(kActorMcCoy, -60.0f, 55.24f, -816.0f, 0, false, false, false);
 		Game_Flag_Reset(kFlagUG08toUG13);
 		Player_Gains_Control();
@@ -594,8 +570,15 @@ void SceneScriptUG13::dialogueWithHomeless1() {
 		DM_Add_To_List_Never_Repeat_Once_Selected(1330, 5, 8, 5); // FAT MAN
 	}
 	DM_Add_To_List_Never_Repeat_Once_Selected(1340, 2, 4, 6); // SEWERS
-	if (Actor_Clue_Query(kActorMcCoy, kClueFlaskOfAbsinthe)) {
-		DM_Add_To_List_Never_Repeat_Once_Selected(1350, 1, 3, 7); // GIVE FLASK
+	if (_vm->_cutContent) {
+		if (Actor_Clue_Query(kActorMcCoy, kClueFlaskOfAbsinthe)
+		&& Actor_Clue_Query(kActorMcCoy, kClueHomelessManInterview2)) {
+			DM_Add_To_List_Never_Repeat_Once_Selected(1350, 1, 3, 7); // GIVE FLASK
+		}
+	} else {
+		if (Actor_Clue_Query(kActorMcCoy, kClueFlaskOfAbsinthe)) {
+			DM_Add_To_List_Never_Repeat_Once_Selected(1350, 1, 3, 7); // GIVE FLASK
+		}
 	}
 	Dialogue_Menu_Add_DONE_To_List(1360); // DONE
 
@@ -745,6 +728,7 @@ void SceneScriptUG13::dialogueWithHomeless2() {
 				Loop_Actor_Travel_Stairs(kActorMcCoy, 11, true, kAnimationModeIdle);
 				Footstep_Sound_Override_Off();
 				Loop_Actor_Walk_To_XYZ(kActorMcCoy, -477.0f, 141.9f, -870.0f, 0, false, false, false);
+				Actor_Set_Goal_Number(kActorTransient, 599);
 				Game_Flag_Set(kFlagGuzzaKilledTransient);
 				Game_Flag_Set(kFlagTransientDead);
 				Game_Flag_Set(kFlagUG13toUG18);
@@ -835,6 +819,7 @@ void SceneScriptUG13::dialogueWithHomeless2() {
 					Loop_Actor_Travel_Stairs(kActorMcCoy, 11, true, kAnimationModeIdle);
 					Footstep_Sound_Override_Off();
 					Loop_Actor_Walk_To_XYZ(kActorMcCoy, -477.0f, 141.9f, -870.0f, 0, false, false, false);
+					Actor_Set_Goal_Number(kActorTransient, 599);
 					Game_Flag_Set(kFlagGuzzaKilledTransient);
 					Game_Flag_Set(kFlagTransientDead);
 					Game_Flag_Set(kFlagUG13toUG18);
@@ -949,6 +934,7 @@ void SceneScriptUG13::dialogueWithHomeless2() {
 				Loop_Actor_Travel_Stairs(kActorMcCoy, 11, true, kAnimationModeIdle);
 				Footstep_Sound_Override_Off();
 				Loop_Actor_Walk_To_XYZ(kActorMcCoy, -477.0f, 141.9f, -870.0f, 0, false, false, false);
+				Actor_Set_Goal_Number(kActorTransient, 599);
 				Game_Flag_Set(kFlagGuzzaKilledTransient);
 				Game_Flag_Set(kFlagTransientDead);
 				Game_Flag_Set(kFlagUG13toUG18);

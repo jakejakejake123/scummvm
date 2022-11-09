@@ -262,30 +262,30 @@ bool SceneScriptRC01::ClickedOn3DObject(const char *objectName, bool a2) {
 				if (_vm->_cutContent) {
 					if (Game_Flag_Query(kFlagChromeChecked)) {
 						Delay(1000);
+						Player_Loses_Control();
 						Loop_Actor_Walk_To_Item(kActorMcCoy, kItemChromeDebris, 36, true, false);
+						Player_Gains_Control();
 						Actor_Face_Actor(kActorOfficerLeary, kActorMcCoy, true);
 						Actor_Says(kActorMcCoy, 8525, 13); // 00-8525.AUD	Hmph.
-						if (Actor_Query_Friendliness_To_Other(kActorOfficerLeary, kActorMcCoy) > 49) {
-							Loop_Actor_Walk_To_Actor(kActorOfficerLeary, kActorMcCoy, 36, false, false);
-							Actor_Says(kActorOfficerLeary, 20, 12);
-							Game_Flag_Set(kFlagRC01ChromeDebrisTaken);
-							Item_Remove_From_World(kItemChromeDebris);
-							Item_Pickup_Spin_Effect(kModelAnimationChromeDebris, 426, 316);
-							I_Sez("JM: Chrome...is that what that is?");
-							Actor_Says(kActorMcCoy, 4505, 13);
-							// Jake - Added in a line where Leary is annoyed at McCoy for him being condescending towards him. 
-							Actor_Says(kActorOfficerLeary, 30, 14);
-							Actor_Face_Actor(kActorMcCoy, kActorOfficerLeary, true);
-							if (Player_Query_Agenda() == kPlayerAgendaSurly 
-							|| Player_Query_Agenda() == kPlayerAgendaErratic) {
-								Actor_Says(kActorMcCoy, 4510, 14); //00-4510.AUD	No, I think it's horse chrome. Bag it and tag it.
-								Actor_Says(kActorOfficerLeary, 170, 13); //23-0170.AUD	You ain't talking to some flunky, McCoy.
-								Actor_Modify_Friendliness_To_Other(kActorOfficerLeary, kActorMcCoy, -2);
-							} else {
-								Actor_Says(kActorMcCoy, 1025, 13); //00-1025.AUD	Absolutely.
-								Delay (500);
-								Actor_Says(kActorMcCoy, 5310, 11); //00-5310.AUD	You spot anything you think I ought to know about, tell me.
-							}
+						Loop_Actor_Walk_To_Actor(kActorOfficerLeary, kActorMcCoy, 36, false, false);
+						Actor_Says(kActorOfficerLeary, 20, 12);
+						Game_Flag_Set(kFlagRC01ChromeDebrisTaken);
+						Item_Remove_From_World(kItemChromeDebris);
+						Item_Pickup_Spin_Effect(kModelAnimationChromeDebris, 426, 316);
+						I_Sez("JM: Chrome...is that what that is?");
+						Actor_Says(kActorMcCoy, 4505, 13);
+						// Jake - Added in a line where Leary is annoyed at McCoy for him being condescending towards him. 
+						Actor_Says(kActorOfficerLeary, 30, 14);
+						Actor_Face_Actor(kActorMcCoy, kActorOfficerLeary, true);
+						if (Player_Query_Agenda() == kPlayerAgendaSurly 
+						|| Player_Query_Agenda() == kPlayerAgendaErratic) {
+							Actor_Says(kActorMcCoy, 4510, 14); //00-4510.AUD	No, I think it's horse chrome. Bag it and tag it.
+							Actor_Says(kActorOfficerLeary, 170, 13); //23-0170.AUD	You ain't talking to some flunky, McCoy.
+							Actor_Modify_Friendliness_To_Other(kActorOfficerLeary, kActorMcCoy, -2);
+						} else {
+							Actor_Says(kActorMcCoy, 1025, 13); //00-1025.AUD	Absolutely.
+							Delay (500);
+							Actor_Says(kActorMcCoy, 5310, 11); //00-5310.AUD	You spot anything you think I ought to know about, tell me.
 						}
 					}
 				}
@@ -332,9 +332,6 @@ bool SceneScriptRC01::ClickedOn3DObject(const char *objectName, bool a2) {
 						Actor_Says(kActorOfficerLeary, 0, 12); //23-0000.AUD	I already checked for a crowbar or some kind of tool. No luck but it looks like we've got some latents. 
 						Actor_Says(kActorMcCoy, 4495, 13); //00-4495.AUD	Make sure the lab boys run them through the mainframe. Human and Rep.
 						Game_Flag_Set(kFlagLearyForcedDoorTalk);
-						if (Actor_Query_Friendliness_To_Other(kActorOfficerLeary, kActorMcCoy) < 50) {
-						   Actor_Says(kActorOfficerLeary, 170, 13); //23-0170.AUD	You ain't talking to some flunky, McCoy.
-					   }
 					}
 				} else { 
 					Actor_Says(kActorOfficerLeary, 0, 12);
@@ -570,28 +567,26 @@ bool SceneScriptRC01::ClickedOnItem(int itemId, bool a2) {
 					Game_Flag_Set(kFlagChromeChecked);
 				} else {
 					Actor_Says(kActorMcCoy, 8755, 15); //00-8755.AUD	A piece of chrome.
-					if (Actor_Query_Friendliness_To_Other(kActorOfficerLeary, kActorMcCoy) > 49) {
-						Loop_Actor_Walk_To_Actor(kActorOfficerLeary, kActorMcCoy, 36, false, false);
-						Actor_Says(kActorOfficerLeary, 20, 12);
-						Game_Flag_Set(kFlagRC01ChromeDebrisTaken);
-						Item_Remove_From_World(kItemChromeDebris);
-						Item_Pickup_Spin_Effect(kModelAnimationChromeDebris, 426, 316);
-						I_Sez("JM: Chrome...is that what that is?");
-						Actor_Says(kActorMcCoy, 4505, 13);
-						// Jake - Added in a line where Leary is annoyed at McCoy for him being condescending towards him. 
-						Actor_Face_Actor(kActorOfficerLeary, kActorMcCoy, true);
-						Actor_Says(kActorOfficerLeary, 30, 14);
-						Actor_Face_Actor(kActorMcCoy, kActorOfficerLeary, true);
-						if (Player_Query_Agenda() == kPlayerAgendaSurly 
-						|| Player_Query_Agenda() == kPlayerAgendaErratic) {
-							Actor_Says(kActorMcCoy, 4510, 14); //00-4510.AUD	No, I think it's horse chrome. Bag it and tag it.
-							Actor_Says(kActorOfficerLeary, 170, 13); //23-0170.AUD	You ain't talking to some flunky, McCoy.
-							Actor_Modify_Friendliness_To_Other(kActorOfficerLeary, kActorMcCoy, -2);
-						} else {
-							Actor_Says(kActorMcCoy, 1025, 13);
-							Delay (500);
-							Actor_Says(kActorMcCoy, 5310, 11); //00-5310.AUD	You spot anything you think I ought to know about, tell me.
-						}
+					Loop_Actor_Walk_To_Actor(kActorOfficerLeary, kActorMcCoy, 36, false, false);
+					Actor_Says(kActorOfficerLeary, 20, 12);
+					Game_Flag_Set(kFlagRC01ChromeDebrisTaken);
+					Item_Remove_From_World(kItemChromeDebris);
+					Item_Pickup_Spin_Effect(kModelAnimationChromeDebris, 426, 316);
+					I_Sez("JM: Chrome...is that what that is?");
+					Actor_Says(kActorMcCoy, 4505, 13);
+					// Jake - Added in a line where Leary is annoyed at McCoy for him being condescending towards him. 
+					Actor_Face_Actor(kActorOfficerLeary, kActorMcCoy, true);
+					Actor_Says(kActorOfficerLeary, 30, 14);
+					Actor_Face_Actor(kActorMcCoy, kActorOfficerLeary, true);
+					if (Player_Query_Agenda() == kPlayerAgendaSurly 
+					|| Player_Query_Agenda() == kPlayerAgendaErratic) {
+						Actor_Says(kActorMcCoy, 4510, 14); //00-4510.AUD	No, I think it's horse chrome. Bag it and tag it.
+						Actor_Says(kActorOfficerLeary, 170, 13); //23-0170.AUD	You ain't talking to some flunky, McCoy.
+						Actor_Modify_Friendliness_To_Other(kActorOfficerLeary, kActorMcCoy, -2);
+					} else {
+						Actor_Says(kActorMcCoy, 1025, 13);
+						Delay (500);
+						Actor_Says(kActorMcCoy, 5310, 11); //00-5310.AUD	You spot anything you think I ought to know about, tell me.
 					}
 				}
 			} else {
@@ -641,8 +636,14 @@ bool SceneScriptRC01::ClickedOnExit(int exitId) {
 #endif // BLADERUNNER_ORIGINAL_BUGS
 		if (!walkToRC02ExitResult) {
 			if (Game_Flag_Query(kFlagRC02RunciterTalkWithGun)
-			|| Game_Flag_Query(kFlagMcCoyRetiredRunciter)) {
-				Actor_Says(kActorMcCoy, 8522, 14); // Locked
+			|| Game_Flag_Query(kFlagMcCoyRetiredRunciter)
+			|| Actor_Query_Goal_Number(kActorRunciter) > kGoalRunciterDead
+			|| Actor_Clue_Query(kActorMcCoy, kClueCrystalRetiredRunciter1)) {
+				if (!_vm->_cutContent) {	
+					Actor_Says(kActorMcCoy, 8522, 14); // Locked
+				} else {
+					Actor_Says(kActorMcCoy, 7815, 13); //00-7815.AUD	No.
+				}
 			} else {
 				switch (Global_Variable_Query(kVariableChapter)) {
 				case 1:

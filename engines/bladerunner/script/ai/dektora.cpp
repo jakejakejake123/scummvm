@@ -165,7 +165,7 @@ void AIScriptDektora::CompletedMovementTrack() {
 	// this is the case he is actually helping the replicants and he never harms Lucy. Also I made it so only replicant Dektora is willing to murder Early Q since I wanted
 	// to create further differences between the replicant and human versions of each character.
 	if (_vm->_cutContent) {
-		if (Random_Query(1, 2) == 1
+		if (Random_Query(1, 3) == 1
 		&& !Game_Flag_Query(kFlagEarlyQIsReplicant)  
 		&& Actor_Query_Goal_Number(kActorEarlyQ) != 1
 		&& Actor_Query_Goal_Number(kActorEarlyQ) != 101

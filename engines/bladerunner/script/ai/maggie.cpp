@@ -687,6 +687,7 @@ bool AIScriptMaggie::GoalChanged(int currentGoalNumber, int newGoalNumber) {
 					Actor_Says(kActorMcCoy, 2250, 3);
 					Actor_Clue_Acquire(kActorMcCoy, kClueMcCoyRetiredSadik, true, kActorSadik);
 					Music_Play(kMusicMoraji, 71, 0, 0, -1, kMusicLoopPlayOnce, 2);
+
 					Actor_Set_Goal_Number(kActorSadik, 413);
 				}
 			} else if (Actor_Query_Goal_Number(kActorSadik) == 411) {

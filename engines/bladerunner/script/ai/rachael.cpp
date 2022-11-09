@@ -152,6 +152,7 @@ bool AIScriptRachael::GoalChanged(int currentGoalNumber, int newGoalNumber) {
 		// This puts Rachael outside McCoy's building
 		Actor_Put_In_Set(kActorRachael, kSetMA07);
 		Actor_Set_At_XYZ(kActorRachael, -8.09f, -162.8f, 135.33f, 544);
+		Actor_Set_Goal_Number(kActorRachael, kGoalRachaelAtEndOfAct3IfMetWithMcCoy);
 		break;
 
 	case kGoalRachaelIsInsideElevatorStartTalkAct3:
@@ -586,6 +587,7 @@ void AIScriptRachael::dialogue_agenda2() {
 			Actor_Says(kActorRachael, 130, 14);                  // ButReplicantsHowHumain
 		}
 		Actor_Says_With_Pause(kActorRachael, 300, 1.0f, 3); // GoodbyeMcCoy
+		Game_Flag_Set(kFlagMcCoyShotRachael);
 	} else {
 		// original code - missing some quotes or removing some quotes to make it fit better
 		Actor_Says(kActorRachael, 50, 15);                  // I don't think he'd appreciate being called that

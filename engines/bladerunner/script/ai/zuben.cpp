@@ -454,7 +454,6 @@ bool AIScriptZuben::GoalChanged(int currentGoalNumber, int newGoalNumber) {
 				Actor_Says(kActorMcCoy, 480, 16);
 				Actor_Says(kActorZuben, 130, 17);
 				Actor_Says(kActorMcCoy, 485, 14);
-				Actor_Set_Goal_Number(kActorZuben, kGoalZubenCT07RunToFreeSlotA);
 				if (Player_Query_Agenda() != kPlayerAgendaSurly 
 				&& Player_Query_Agenda() != kPlayerAgendaErratic) {
 					Delay(1000);
@@ -462,6 +461,7 @@ bool AIScriptZuben::GoalChanged(int currentGoalNumber, int newGoalNumber) {
 					Actor_Says(kActorMcCoy, 3700, 15); //00-3700.AUD	If I found you, so will she.
 					Delay(1000);
 					Actor_Says(kActorMcCoy, 1660, 14); //00-1660.AUD	Go! Quickly.
+					Actor_Set_Goal_Number(kActorZuben, kGoalZubenCT07RunToFreeSlotA);
 					Game_Flag_Set(kFlagZubenSpared);
 					Game_Flag_Set(kFlagMcCoyIsHelpingReplicants);
 					Game_Flag_Set(kFlagZubenEncounter);
@@ -472,6 +472,7 @@ bool AIScriptZuben::GoalChanged(int currentGoalNumber, int newGoalNumber) {
 					Actor_Modify_Friendliness_To_Other(kActorGuzza, kActorMcCoy, -2);
 					Actor_Modify_Friendliness_To_Other(kActorClovis, kActorMcCoy, 2);
 				} else {
+					Actor_Set_Goal_Number(kActorZuben, kGoalZubenCT07RunToFreeSlotA);
 					Player_Set_Combat_Mode(true);
 					Delay(1500);
 					Actor_Face_Actor(kActorMcCoy, kActorZuben, true);

@@ -199,7 +199,7 @@ bool SceneScriptCT01::ClickedOnActor(int actorId) {
 					} else {
 						Actor_Says(kActorMcCoy, 3970, 14); //00-3970.AUD	Hey.
 					}
-					if (Actor_Query_Friendliness_To_Other(kActorHowieLee, kActorMcCoy) < 50) {
+					if (Actor_Query_Friendliness_To_Other(kActorHowieLee, kActorMcCoy) < 60) {
 						Actor_Says(kActorMcCoy, 8514, 13);//00-8514.AUD	Got anything new to tell me?
 						Actor_Says(kActorHowieLee, 180, 13); //28-0180.AUD	Nothing, nothing. Customer here to eat.
 						Game_Flag_Set(kFlagCT01McCoyTalkedToHowieLee);
@@ -258,11 +258,11 @@ bool SceneScriptCT01::ClickedOnActor(int actorId) {
 							Set_Enter(kSetPS09, kScenePS09);
 						}	
 					} else if (Game_Flag_Query(kFlagCT01TalkToHowieAboutDeadZuben)
-					&& Actor_Query_Friendliness_To_Other(kActorHowieLee, kActorMcCoy) < 50) {
+					&& Actor_Query_Friendliness_To_Other(kActorHowieLee, kActorMcCoy) < 60) {
 						Actor_Says(kActorMcCoy, 310, 11);    // keeping out of trouble...?
 						Actor_Says(kActorHowieLee, 190, 13); // I look like I got time for chit-er chat-er?
 					} else if (Game_Flag_Query(kFlagCT01TalkToHowieAboutDeadZuben)
-					&& Actor_Query_Friendliness_To_Other(kActorHowieLee, kActorMcCoy) > 49) {
+					&& Actor_Query_Friendliness_To_Other(kActorHowieLee, kActorMcCoy) > 59) {
 						Actor_Says(kActorMcCoy, 330, 13);
 						Actor_Says(kActorHowieLee, 160, 15);  // real busy tonight
 					} else if (Game_Flag_Query(kFlagCT01ZubenGone)) {
@@ -286,7 +286,7 @@ bool SceneScriptCT01::ClickedOnActor(int actorId) {
 					Actor_Says(kActorMcCoy, 330, 17);
 					Actor_Says(kActorHowieLee, 130, 13);
 					Actor_Says(kActorHowieLee, 140, 14);
-				} else if (Actor_Query_Friendliness_To_Other(kActorHowieLee, kActorMcCoy) < 50) {
+				} else if (Actor_Query_Friendliness_To_Other(kActorHowieLee, kActorMcCoy) < 60) {
 					Actor_Says(kActorMcCoy, 330, 13);
 					Actor_Says(kActorHowieLee, 160, 15);
 				} else { // friendly >= 50
@@ -346,7 +346,7 @@ bool SceneScriptCT01::ClickedOnActor(int actorId) {
 				Actor_Says(kActorMcCoy, 4870, 23); //00-4870.AUD	Ray McCoy, Rep Detect.
 				Actor_Says(kActorGordo, 890, 30);//02-0890.AUD	What's shaking baby? Haven't I seen you around these parts before?
 				Actor_Says(kActorMcCoy, 6465, 15); //00-6465.AUD	Could be. I get around.
-				Actor_Says(kActorGordo, 980, 15); //02-0980.AUD	Got any chinyen you can part with? Just so I can grab myself a couple of lichen-dogs.
+				Actor_Says(kActorGordo, 980, 30); //02-0980.AUD	Got any chinyen you can part with? Just so I can grab myself a couple of lichen-dogs.
 				Actor_Says(kActorMcCoy, 5620, 9); // Maybe later
 			}
 			Game_Flag_Set(kFlagCT01GordoTalk);
@@ -830,6 +830,7 @@ void SceneScriptCT01::dialogueWithHowieLee() {
 				if (Player_Query_Agenda() == kPlayerAgendaSurly 
 				|| Player_Query_Agenda() == kPlayerAgendaErratic) { 
 					Actor_Says(kActorMcCoy, 7815, 18); //00-7815.AUD	No.	
+					Actor_Modify_Friendliness_To_Other(kActorHowieLee, kActorMcCoy, -2);
 				} else {
 					Actor_Says(kActorMcCoy, 1025, kAnimationModeTalk); //00-1025.AUD	Absolutely.
 					Actor_Modify_Friendliness_To_Other(kActorHowieLee, kActorMcCoy, 2);
@@ -855,7 +856,8 @@ void SceneScriptCT01::dialogueWithHowieLee() {
 			if (_vm->_cutContent) {
 				if (Player_Query_Agenda() == kPlayerAgendaSurly 
 				|| Player_Query_Agenda() == kPlayerAgendaErratic) { 
-					Actor_Says(kActorMcCoy, 7815, 18); //00-7815.AUD	No.	
+					Actor_Says(kActorMcCoy, 7815, 18); //00-7815.AUD	No.
+					Actor_Modify_Friendliness_To_Other(kActorHowieLee, kActorMcCoy, -2);
 				} else {
 					Actor_Says(kActorMcCoy, 1025, kAnimationModeTalk); //00-1025.AUD	Absolutely.
 					Actor_Modify_Friendliness_To_Other(kActorHowieLee, kActorMcCoy, 2);
@@ -878,7 +880,7 @@ void SceneScriptCT01::dialogueWithHowieLee() {
 		// Made it so Howie prioritises McCoy over everyone else if McCoy agreed to distibute his menus throughout the police station.
 		// This is only achieveable if you don't click on Zuben and act mean towards Howie and agree to his equest.
 		if (_vm->_cutContent) { 
-			if (Actor_Query_Friendliness_To_Other(kActorHowieLee, kActorMcCoy) > 50) {
+			if (Actor_Query_Friendliness_To_Other(kActorHowieLee, kActorMcCoy) > 60) {
 				if (Global_Variable_Query(kVariableChinyen) >= 10
 				|| Query_Difficulty_Level() == kGameDifficultyEasy) {
 					Actor_Says(kActorHowieLee, 50, kAnimationModeTalk); //28-0050.AUD	Special shipment of Toro just arrived.
@@ -915,7 +917,7 @@ void SceneScriptCT01::dialogueWithHowieLee() {
 		Actor_Says(kActorMcCoy, 295, 11);
 		// Made it so if your friendliness is low with Howie Lee he will not tell you about Zuben.
 		if (_vm->_cutContent) {
-			if (Actor_Query_Friendliness_To_Other(kActorHowieLee, kActorMcCoy) < 50) {
+			if (Actor_Query_Friendliness_To_Other(kActorHowieLee, kActorMcCoy) < 60) {
 				Actor_Says(kActorHowieLee, 190, 14);	//28-0190.AUD	I look like I got time for chit-er chat-er?
 			} else {
 				Actor_Says(kActorHowieLee, 90, 14);
@@ -948,7 +950,7 @@ void SceneScriptCT01::dialogueWithHowieLee() {
 		//Added in some more dialogue.
 		if (_vm->_cutContent) {
 			Actor_Says(kActorMcCoy, 8514, 13); //00-8514.AUD	Got anything new to tell me?
-			if (Actor_Query_Friendliness_To_Other(kActorHowieLee, kActorMcCoy) < 50) {  
+			if (Actor_Query_Friendliness_To_Other(kActorHowieLee, kActorMcCoy) < 60) {  
 				Actor_Says(kActorHowieLee, 190, 13); // I look like I got time for chit-er chat-er?
 			} else {
 				Actor_Says(kActorHowieLee, 180, kAnimationModeTalk); //28-0180.AUD	Nothing, nothing. Customer here to eat.

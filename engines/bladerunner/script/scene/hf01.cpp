@@ -370,7 +370,7 @@ bool SceneScriptHF01::ClickedOnExit(int exitId) {
 				break;
 			default:
 				Game_Flag_Set(kFlagMcCoyInHysteriaHall);
-				Loop_Actor_Walk_To_XYZ(kActorMcCoy, 100.0f, 0.0f, -300.0f, 0, true, false, false);
+				Loop_Actor_Walk_To_XYZ(kActorMcCoy, 100.0f, 0.0f, -300.0f, 0, true, false, false);				
 				break;
 			}
 		}
@@ -444,8 +444,7 @@ void SceneScriptHF01::PlayerWalkedIn() {
 			}
 			Actor_Says(kActorZuben, 160, 13); //19-0160.AUD	You following me?
 			Actor_Says(kActorMcCoy, 7305, 15); //00-7305.AUD	No, it's just a coincidence.
-			Delay(2000);
-			Actor_Says(kActorMcCoy, 4270, 18); //00-4270.AUD	I got some more questions for you.
+			Delay(1000);
 			if (Actor_Query_Goal_Number(kActorLucy) < kGoalLucyGone) {
 				Actor_Says(kActorMcCoy, 7295, 11); //00-7295.AUD	The girl. I need to know where's the girl.
 				Actor_Says(kActorZuben, 200, 12); //19-0200.AUD	Girl?
@@ -522,22 +521,16 @@ void SceneScriptHF01::PlayerWalkedIn() {
 			Game_Flag_Set(kFlagZubenTalkAct4);
 		}
 	}
-
-	if (Game_Flag_Query(kFlagHF05PoliceArrived)) {
-		ADQ_Flush();
-		// Made it so Grayford doesn't appear outside of Crazlegs place and only Leary will appear. Grayford is already waiting for McCoy in the sewers so it wouldn't make sense for Grayford to be in two places at once. 
-		if (!_vm->_cutContent) {
+	if (!_vm->_cutContent) {
+		if (Game_Flag_Query(kFlagHF05PoliceArrived)) {
+			ADQ_Flush();
 			ADQ_Add(kActorOfficerGrayford, 280, kAnimationModeTalk);
-		}
-		Actor_Put_In_Set(kActorOfficerLeary, kSetHF01);
-		Actor_Set_At_XYZ(kActorOfficerLeary, 8.2f, 8.0f, -346.67f, 1021);
-		if (!_vm->_cutContent) {
+			Actor_Put_In_Set(kActorOfficerLeary, kSetHF01);
+			Actor_Set_At_XYZ(kActorOfficerLeary, 8.2f, 8.0f, -346.67f, 1021);
 			Actor_Put_In_Set(kActorOfficerGrayford, kSetHF01);
 			Actor_Set_At_XYZ(kActorOfficerGrayford, 51.21f, 8.0f, -540.78f, 796);
-		}
-		Non_Player_Actor_Combat_Mode_On(kActorOfficerLeary, kActorCombatStateUncover, true, kActorMcCoy, 4, kAnimationModeCombatIdle, kAnimationModeCombatWalk, kAnimationModeCombatRun, 0, 0, 0, 100, 300, false);
-		if (!_vm->_cutContent) {
-			Non_Player_Actor_Combat_Mode_On(kActorOfficerGrayford, kActorCombatStateUncover, true, kActorMcCoy, 4, kAnimationModeCombatIdle, kAnimationModeCombatWalk, kAnimationModeCombatRun, 0, 0, 0, 100, 300, false);
+			Non_Player_Actor_Combat_Mode_On(kActorOfficerLeary, kActorCombatStateUncover, true, kActorMcCoy, 4, kAnimationModeCombatIdle, kAnimationModeCombatWalk, kAnimationModeCombatRun, 0, 0, 0, 100, 300, false);
+			Non_Player_Actor_Combat_Mode_On(kActorOfficerGrayford, kActorCombatStateUncover, true, kActorMcCoy, 4, kAnimationModeCombatIdle, kAnimationModeCombatWalk, kAnimationModeCombatRun, 0, 0, 0, 100, 300, false);	
 		}
 	}
 
@@ -612,6 +605,15 @@ void SceneScriptHF01::PlayerWalkedIn() {
 			}
 		}
 	}
+
+	if (Game_Flag_Query(kFlagHF03toHF01)) {
+		Loop_Actor_Walk_To_XYZ(kActorMcCoy, 124.0f, 8.0f, -724.0f, 0, true, false, false);
+	} else if (Game_Flag_Query(kFlagHF02toHF01)) {
+		Loop_Actor_Walk_To_XYZ(kActorMcCoy, 406.0f, 8.0f, -717.0f, 0, true, false, false);
+	} else if (!Game_Flag_Query(kFlagHF05toHF01)) {
+		Loop_Actor_Walk_To_XYZ(kActorMcCoy, 100.0f, 0.0f, -300.0f, 0, true, false, false);
+	}
+
 	if (Game_Flag_Query(kFlagCrazylegsArrestedTalk)) {
 		Game_Flag_Reset(kFlagCrazylegsArrestedTalk);
 		Actor_Voice_Over(950, kActorVoiceOver);
@@ -621,26 +623,45 @@ void SceneScriptHF01::PlayerWalkedIn() {
 	} else if (!Game_Flag_Query(kFlagHF01MurrayMiaIntro)
 	        &&  Global_Variable_Query(kVariableChapter) < 4
 	) {
-		ADQ_Flush();
-		ADQ_Add(kActorMurray, 0, 14);
-		ADQ_Add(kActorMurray, 10, kAnimationModeTalk);
-		ADQ_Add(kActorMia, 0, kAnimationModeTalk);
-		Actor_Face_Actor(kActorMurray, kActorMia, true);
-		ADQ_Add(kActorMurray, 20, 13);
-		ADQ_Add(kActorMia, 10, kAnimationModeTalk);
-		ADQ_Add(kActorMurray, 30, kAnimationModeTalk);
-		ADQ_Add(kActorMia, 20, kAnimationModeTalk);
-		Actor_Face_Heading(kActorMurray, 271, false);
-		Game_Flag_Set(kFlagHF01MurrayMiaIntro);
+		if (_vm->_cutContent) {
+			Actor_Face_Actor(kActorMcCoy, kActorMurray, true);
+			Actor_Says(kActorMurray, 0, 14);
+			Actor_Says(kActorMurray, 10, kAnimationModeTalk);
+			Actor_Says(kActorMia, 0, kAnimationModeTalk);
+			Actor_Face_Actor(kActorMurray, kActorMia, true);
+			Actor_Says(kActorMurray, 20, 13);
+			Actor_Face_Actor(kActorMia, kActorMurray, true);
+			Actor_Says(kActorMia, 10, kAnimationModeTalk);
+			Actor_Says(kActorMurray, 30, kAnimationModeTalk);
+			Actor_Says(kActorMia, 20, kAnimationModeTalk);
+			Actor_Face_Heading(kActorMurray, 271, false);
+			Actor_Face_Heading(kActorMia, 511, false);
+			Game_Flag_Set(kFlagHF01MurrayMiaIntro);
+			Delay(1000);
+			Actor_Says(kActorMcCoy, 8525, 13); // 00-8525.AUD	Hmph.
+			Delay(1000);
+			Player_Loses_Control();
+			Loop_Actor_Walk_To_XYZ(kActorMcCoy, -202.0f, 8.0f, -619.0f, 0, true, false, false);
+			Player_Gains_Control();
+			Game_Flag_Set(kFlagHF01toHF05);
+			Set_Enter(kSetHF05, kSceneHF05);
+			Game_Flag_Set(kFlagHF01MurrayMiaIntro);
+		} else {
+			ADQ_Flush();
+			ADQ_Add(kActorMurray, 0, 14);
+			ADQ_Add(kActorMurray, 10, kAnimationModeTalk);
+			ADQ_Add(kActorMia, 0, kAnimationModeTalk);
+			Actor_Face_Actor(kActorMurray, kActorMia, true);
+			ADQ_Add(kActorMurray, 20, 13);
+			ADQ_Add(kActorMia, 10, kAnimationModeTalk);
+			ADQ_Add(kActorMurray, 30, kAnimationModeTalk);
+			ADQ_Add(kActorMia, 20, kAnimationModeTalk);
+			Actor_Face_Heading(kActorMurray, 271, false);
+			Game_Flag_Set(kFlagHF01MurrayMiaIntro);	
+		}
 	}
 
-	if (Game_Flag_Query(kFlagHF03toHF01)) {
-		Loop_Actor_Walk_To_XYZ(kActorMcCoy, 124.0f, 8.0f, -724.0f, 0, true, false, false);
-	} else if (Game_Flag_Query(kFlagHF02toHF01)) {
-		Loop_Actor_Walk_To_XYZ(kActorMcCoy, 406.0f, 8.0f, -717.0f, 0, true, false, false);
-	} else if (!Game_Flag_Query(kFlagHF05toHF01)) {
-		Loop_Actor_Walk_To_XYZ(kActorMcCoy, 100.0f, 0.0f, -300.0f, 0, true, false, false);
-	}
+	
 
 	Game_Flag_Reset(kFlagHF03toHF01);
 	Game_Flag_Reset(kFlagHF02toHF01);

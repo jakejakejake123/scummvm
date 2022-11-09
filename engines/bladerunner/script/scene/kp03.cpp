@@ -64,8 +64,7 @@ if (_vm->_cutContent) {
  		if (!Game_Flag_Query(kFlagMcCoyRetiredHuman)
 			&& Global_Variable_Query(kVariableAffectionTowards) != kAffectionTowardsDektora
 			&& Global_Variable_Query(kVariableAffectionTowards) != kAffectionTowardsLucy) {
-				if (Game_Flag_Query(kFlagMcCoyIsInnocent)
-				|| 	Game_Flag_Query(kFlagCrystalTrustsMcCoy)) {
+				if (Game_Flag_Query(kFlagMcCoyIsInnocent)) {
 					Actor_Put_In_Set(kActorSteele, kSetKP03);
 					Actor_Set_At_XYZ(kActorSteele, -300.0f, -36.55f, 26.0f, 350);
 				}

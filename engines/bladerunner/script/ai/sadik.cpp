@@ -468,15 +468,17 @@ bool AIScriptSadik::GoalChanged(int currentGoalNumber, int newGoalNumber) {
 		return true;
 
 	case 412:
-		Actor_Says(kActorSadik, 60, 3);
-		Actor_Says(kActorMcCoy, 2240, 3);
-		Actor_Says(kActorSadik, 70, 3);
-		Actor_Says(kActorSadik, 80, 3);
-		Actor_Says(kActorMcCoy, 2245, 3);
-		Actor_Says(kActorSadik, 90, 3);
-		Actor_Says(kActorSadik, 100, 3);
-		Actor_Says(kActorMcCoy, 2250, 3);
-		Actor_Set_Goal_Number(kActorSadik, 413);
+		if (!_vm->_cutContent) {
+			Actor_Says(kActorSadik, 60, 3);
+			Actor_Says(kActorMcCoy, 2240, 3);
+			Actor_Says(kActorSadik, 70, 3);
+			Actor_Says(kActorSadik, 80, 3);
+			Actor_Says(kActorMcCoy, 2245, 3);
+			Actor_Says(kActorSadik, 90, 3);
+			Actor_Says(kActorSadik, 100, 3);
+			Actor_Says(kActorMcCoy, 2250, 3);
+			Actor_Set_Goal_Number(kActorSadik, 413);
+		}
 	return true;
 
 	case 413:

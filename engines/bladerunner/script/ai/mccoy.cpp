@@ -210,7 +210,7 @@ void AIScriptMcCoy::ReceivedClue(int clueId, int fromActorId) {
 
 	case kClueWeaponsCache:
 		if (_vm->_cutContent) {
-			Global_Variable_Increment(kVariableCorruptedGuzzaEvidence, 1);
+			Global_Variable_Increment(kVariableCorruptedGuzzaEvidence, 2);
 		}
 		break;
 
@@ -255,6 +255,8 @@ void AIScriptMcCoy::ReceivedClue(int clueId, int fromActorId) {
 	case kClueOriginalRequisitionForm:
 		if (_vm->_cutContent) {
 			Global_Variable_Increment(kVariableCorruptedGuzzaEvidence, 7);
+		} else {
+			Global_Variable_Increment(kVariableCorruptedGuzzaEvidence, 3);
 		}
 		break;
 

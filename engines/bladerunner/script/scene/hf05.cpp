@@ -367,6 +367,35 @@ void SceneScriptHF05::PlayerWalkedIn() {
 				Music_Play(kMusicBatl226M, 40, 0, 2, -1, kMusicLoopPlayOnce, 0);
 				Actor_Says(kActorOfficerGrayford, 200, kAnimationModeTalk);
 				Actor_Says(kActorOfficerGrayford, 210, kAnimationModeTalk);
+				if (_vm->_cutContent) {
+					if (Player_Query_Agenda() == kPlayerAgendaSurly 
+					|| Player_Query_Agenda() == kPlayerAgendaErratic) {
+						Actor_Face_Heading(kActorMcCoy, 100, true);
+						Actor_Says(kActorMcCoy, 2250, -1); //00-2250.AUD	Come out and show yourself, you coward!
+						if (Game_Flag_Query(kFlagMcCoyIsInnocent)) {
+							Actor_Says(kActorOfficerGrayford, 290, kAnimationModeTalk); //24-0290.AUD	There’s the son of a bitch! Kill it!
+						} else {
+							Actor_Says(kActorOfficerGrayford, 270, kAnimationModeTalk); //24-0270.AUD	There it is! Take it out!
+						}
+						Player_Set_Combat_Mode(true);
+						Delay(1000);
+						Sound_Play(kSfxGUNH1A, 100, 0, 0, 50);
+						Actor_Change_Animation_Mode(kActorMcCoy, 6);
+						Delay(1000);
+						Sound_Play(kSfxGUNH1A, 100, 0, 0, 50);
+						Actor_Change_Animation_Mode(kActorMcCoy, 6);
+						Delay(1000);
+						Sound_Play(kSfxSMCAL3, 100, 0, 0, 50);
+						Actor_Change_Animation_Mode(kActorMcCoy, 22);
+						Delay(1000);
+						Sound_Play(kSfxGUNH1A, 100, 0, 0, 50);
+						Actor_Change_Animation_Mode(kActorMcCoy, 6);
+						Delay(1000);
+						Actor_Says(kActorOfficerGrayford, 250, -1); //24-0250.AUD	Ah, I’m hit!
+						Player_Set_Combat_Mode(false);
+						Delay(1000);
+					}
+				}
 				Actor_Set_Goal_Number(kActorOfficerLeary, kGoalOfficerLearyPoliceWait120SecondsToAttackHF05);
 				if (getCompanionActor() ==  kActorDektora) {
 					talkWithDektora();
@@ -1005,7 +1034,7 @@ void SceneScriptHF05::dialogueWithCrazylegs1() {
 void SceneScriptHF05::dialogueWithCrazylegs2() { // Restored feature - Original: it is impossible to obtain this clue
 	Dialogue_Menu_Clear_List();
 	if (!Game_Flag_Query(kFlagMcCoyIsHelpingReplicants))  {
-		DM_Add_To_List_Never_Repeat_Once_Selected(1250, -1, -1, 10); // ARREST
+		DM_Add_To_List(1250, -1, -1, 10); // ARREST
 	} else {
 		DM_Add_To_List_Never_Repeat_Once_Selected(1260, 10,  5, -1); // WARNING
 	}
@@ -1167,6 +1196,9 @@ void SceneScriptHF05::talkWithDektora() {
 	}	
 	Actor_Says_With_Pause(kActorMcCoy, 9000, 1.0f, 16); //00-9000.AUD	No!
 	if (_vm->_cutContent) {
+		Actor_Says(kActorMcCoy, 1755, 16); //00-1755.AUD	I refuse to go out that way!
+	}
+	if (_vm->_cutContent) {
 		if (!Game_Flag_Query(kFlagDektoraIsReplicant)) {
 			Actor_Says(kActorDektora, 150, 12); //03-0150.AUD	We have no other choice.
 		}
@@ -1209,16 +1241,19 @@ void SceneScriptHF05::talkWithLucy() {
 		if (Game_Flag_Query(kFlagLucyIsReplicant)) {
 			Actor_Says(kActorLucy, 420, 14); //06-0420.AUD	We can die together! The only thing we’ll feel is the love we have for each other.
 			Actor_Says(kActorMcCoy, 1755, 16); //00-1755.AUD	I refuse to go out that way!
+			Actor_Says(kActorLucy, 430, 18); //06-0430.AUD	We have no other choice!
+			Actor_Says_With_Pause(kActorMcCoy, 1760, 1.0f, 15); //00-1760.AUD	We’ve got to!
 		} else {
 			Delay(2000);
 			Actor_Says(kActorMcCoy, 8995, 14); //00-8995.AUD	No.
+			Actor_Says(kActorMcCoy, 1755, 16); //00-1755.AUD	I refuse to go out that way!
 		}
 	} else {
 		Actor_Says(kActorLucy, 420, 14); //06-0420.AUD	We can die together! The only thing we’ll feel is the love we have for each other.
 		Actor_Says(kActorMcCoy, 1755, 16); //00-1755.AUD	I refuse to go out that way!
+		Actor_Says(kActorLucy, 430, 18); //06-0430.AUD	We have no other choice!
+		Actor_Says_With_Pause(kActorMcCoy, 1760, 1.0f, 15); //00-1760.AUD	We’ve got to!
 	}
-	Actor_Says(kActorLucy, 430, 18); //06-0430.AUD	We have no other choice!
-	Actor_Says_With_Pause(kActorMcCoy, 1760, 1.0f, 15); //00-1760.AUD	We’ve got to!
 	Actor_Says(kActorMcCoy, 1765, 17);
 	Actor_Says(kActorLucy, 440, kAnimationModeTalk);
 	Actor_Says(kActorMcCoy, 1770, 15);

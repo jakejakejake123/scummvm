@@ -172,13 +172,7 @@ void SceneScriptDR05::PlayerWalkedIn() {
 				Actor_Voice_Over(730, kActorVoiceOver);
 				Actor_Voice_Over(740, kActorVoiceOver);
 				Actor_Voice_Over(750, kActorVoiceOver);
-				if (_vm->_cutContent) {
-					if (Actor_Clue_Query(kActorMcCoy, kClueCrystalsCase)) {
-						Actor_Voice_Over(760, kActorVoiceOver); //99-0760.AUD	And that expertise could only come with extensive on-the-job Off-World training.
-					}
-				} else {
-					Actor_Voice_Over(760, kActorVoiceOver); //99-0760.AUD	And that expertise could only come with extensive on-the-job Off-World training.
-				}
+				Actor_Voice_Over(760, kActorVoiceOver); //99-0760.AUD	And that expertise could only come with extensive on-the-job Off-World training.
 				Actor_Clue_Acquire(kActorMcCoy, kClueExpertBomber, true, -1);
 			} else {
 				Actor_Voice_Over(670, kActorVoiceOver);

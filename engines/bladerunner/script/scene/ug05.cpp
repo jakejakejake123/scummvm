@@ -99,11 +99,20 @@ bool SceneScriptUG05::ClickedOnActor(int actorId) {
 		 &&  Game_Flag_Query(kFlagHF07Hole)
 		 && !Game_Flag_Query(kFlagUG05TalkToPolice)
 		) {
-			Actor_Says(kActorOfficerGrayford, 220, -1);
-			Actor_Says(kActorMcCoy, 5540, 14);
-			Actor_Says(kActorOfficerGrayford, 230, -1);
-			Actor_Says(kActorMcCoy, 5545, 17);
-			Actor_Says(kActorOfficerGrayford, 240, -1);
+			Actor_Says(kActorOfficerGrayford, 220, -1); //24-0220.AUD	You’re gonna pay, skin-job. You’re going down.
+			if (_vm->_cutContent) {
+				if (Player_Query_Agenda() == kPlayerAgendaPolite) {
+					Actor_Says(kActorMcCoy, 5540, 14); 
+					Actor_Says(kActorOfficerGrayford, 230, -1); //24-0230.AUD	What do you care?
+					Actor_Says(kActorMcCoy, 5545, 17);
+					Actor_Says(kActorOfficerGrayford, 240, -1);
+				}
+			} else {
+				Actor_Says(kActorMcCoy, 5540, 14); 
+				Actor_Says(kActorOfficerGrayford, 230, -1); //24-0230.AUD	What do you care?
+				Actor_Says(kActorMcCoy, 5545, 17);
+				Actor_Says(kActorOfficerGrayford, 240, -1);
+			}
 			Actor_Says(kActorMcCoy, 5550, 3);
 			Game_Flag_Set(kFlagUG05TalkToPolice);
 			return false;
@@ -272,7 +281,9 @@ void SceneScriptUG05::endGame() {
 			Actor_Says(kActorLucy, 670, 17);
 		}
 	}
-
+	if (_vm->_cutContent) {
+		Music_Stop(2u);
+	}
 	Ambient_Sounds_Remove_All_Non_Looping_Sounds(true);
 	Ambient_Sounds_Remove_All_Looping_Sounds(1u);
 	if (_vm->_cutContent) {
@@ -295,7 +306,6 @@ void SceneScriptUG05::endGame() {
 		} else {
 			Outtake_Play(kOuttakeEnd3, false, -1);
 		}
-		Outtake_Play(kOuttakeEnd2, false, -1);
 
 		Game_Over();
 	} else if (affectionTowardsActor == kActorLucy) {

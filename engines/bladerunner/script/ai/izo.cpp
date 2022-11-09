@@ -73,7 +73,14 @@ bool AIScriptIzo::Update() {
 	) {
 		Actor_Set_Goal_Number(kActorIzo, kGoalIzoGoToHC03);
 	}
-	if (Global_Variable_Query(kVariableChapter) == 4
+	if (_vm->_cutContent) {
+		if	(!Game_Flag_Query(kFlagUG09Visited) 
+		// Added code so Izo will only appear in UG09 if he got away in act 2.
+		&& Game_Flag_Query(kFlagIzoGotAway)
+		&& (Global_Variable_Query(kVariableChapter) == 4)) {
+			Actor_Set_Goal_Number(kActorIzo, kGoalIzoWaitAtUG09);
+		}
+	} else if (Global_Variable_Query(kVariableChapter) == 4
 	 && Actor_Query_Goal_Number(kActorIzo) < kGoalIzoGone
 	 && Actor_Query_Goal_Number(kActorIzo) < 300
 	 && Actor_Query_Goal_Number(kActorIzo) != kGoalIzoGotArrested

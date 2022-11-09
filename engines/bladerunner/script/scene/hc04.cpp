@@ -115,7 +115,11 @@ bool SceneScriptHC04::ClickedOnActor(int actorId) {
 					if (Actor_Clue_Query(kActorMcCoy, kClueKingstonKitchenBox2)
 	 				|| Actor_Clue_Query(kActorMcCoy, kClueKingstonKitchenBox1)
 					|| Actor_Clue_Query(kActorMcCoy, kClueSpecialIngredient)) {
-						Actor_Says(kActorMcCoy, 1280, 23); //00-1280.AUD	McCoy, LPD. Mind if I ask you a couple of questions?
+						if (Player_Query_Agenda() == kPlayerAgendaPolite) {
+							Actor_Says(kActorMcCoy, 1280, 23); //00-1280.AUD	McCoy, LPD. Mind if I ask you a couple of questions?
+						} else {
+							Actor_Says(kActorMcCoy, 8920, 14); //00-8920.AUD	I gotta ask you a question.
+						}
 						Actor_Says(kActorIsabella, 20, kAnimationModeTalk);
 					}
 				} else {
@@ -242,8 +246,9 @@ void SceneScriptHC04::dialogueWithIsabella() {
 		if (Global_Variable_Query(kVariableChapter) < 4) {
 			if (Actor_Clue_Query(kActorMcCoy, kClueSpecialIngredient)
 			&& !Actor_Clue_Query(kActorMcCoy, kClueStolenCheese)) {
-				if (Player_Query_Agenda() == kPlayerAgendaUserChoice) {
-					DM_Add_To_List_Never_Repeat_Once_Selected(1250, 1, 2, 10); // ARREST
+				if (Player_Query_Agenda() == kPlayerAgendaSurly 	
+				|| Player_Query_Agenda() == kPlayerAgendaErratic) { 
+					DM_Add_To_List(1250, -1, -1, 10); // ARREST
 				}
 			}
 		}
@@ -252,7 +257,7 @@ void SceneScriptHC04::dialogueWithIsabella() {
 	// It would make no sense for McCoy to ask what's in the stew and then buy some of it knowing it contains illegal ingredients.
 	if (_vm->_cutContent) {
 		if (!Actor_Clue_Query(kActorMcCoy, kClueSpecialIngredient)) {
-			DM_Add_To_List_Never_Repeat_Once_Selected(390, 7, 5, 1); // BUY STEW
+			DM_Add_To_List_Never_Repeat_Once_Selected(390, 7, 8, 9); // BUY STEW
 		}
 	} else {
 		DM_Add_To_List_Never_Repeat_Once_Selected(390, 7, 5, -1); // BUY STEW	
@@ -457,9 +462,11 @@ void SceneScriptHC04::dialogueWithIsabella() {
 			if (Player_Query_Agenda() == kPlayerAgendaSurly 
 			|| Player_Query_Agenda() == kPlayerAgendaErratic) {
 				Actor_Says(kActorMcCoy, 2980, 12); //00-2980.AUD	What the hell is that?
-			} else {
+			} else if (Player_Query_Agenda() == kPlayerAgendaPolite) {
 				Actor_Says(kActorMcCoy, 1310, kAnimationModeTalk);
 				Actor_Modify_Friendliness_To_Other(kActorIsabella, kActorMcCoy, 2);
+			} else {
+				Actor_Says(kActorMcCoy, 8990, 14); //00-8990.AUD	What have you got there?
 			}
 		} else {
 			Actor_Says(kActorMcCoy, 1310, kAnimationModeTalk);
@@ -474,8 +481,6 @@ void SceneScriptHC04::dialogueWithIsabella() {
 				Delay(1000);
 				Actor_Says(kActorMcCoy, 8650, 14); //00-8650.AUD	What smells in there?
 				Actor_Says(kActorIsabella, 30, kAnimationModeTalk); //59-0030.AUD	All in special recipe. (laughs) But if I be telling you what's in it, you might be thinking twice about eating it.
-				Delay(1000);
-				Actor_Says(kActorMcCoy, 3575, 19); //00-3575.AUD	Oh, god forbid.
 				Delay(2000);
 				Actor_Says(kActorMcCoy, 1325, 13); //00-1325.AUD	Uh... I'm not that hungry anyway.
 				Delay(1000);
@@ -483,7 +488,7 @@ void SceneScriptHC04::dialogueWithIsabella() {
 				Actor_Says(kActorIsabella, 170, kAnimationModeTalk); //59-0170.AUD	Why you pick on Mama Isabella? I never do you no harm.
 				Actor_Modify_Friendliness_To_Other(kActorIsabella, kActorMcCoy, -2);
 				Delay(1000);
-			} else {
+			} else if (Player_Query_Agenda() == kPlayerAgendaPolite) {
 				Actor_Says(kActorMcCoy, 1320, kAnimationModeTalk); // 00-1320.AUD	Smells good. What is it?
 				Actor_Says(kActorIsabella, 30, kAnimationModeTalk); //59-0030.AUD	All in special recipe. (laughs) But if I be telling you what's in it, you might be thinking twice about eating it.
 				if (Global_Variable_Query(kVariableChinyen) >= 30
@@ -498,6 +503,12 @@ void SceneScriptHC04::dialogueWithIsabella() {
 				} else {
 					Actor_Says(kActorMcCoy, 1325, 13); //00-1325.AUD/Uh... I'm not that hungry anyway.
 				}
+			} else {
+				Delay(1000);
+				Actor_Says(kActorMcCoy, 8650, 14); //00-8650.AUD	What smells in there?
+				Actor_Says(kActorIsabella, 30, kAnimationModeTalk); //59-0030.AUD	All in special recipe. (laughs) But if I be telling you what's in it, you might be thinking twice about eating it.
+				Delay(2000);
+				Actor_Says(kActorMcCoy, 1325, 13); //00-1325.AUD	Uh... I'm not that hungry anyway.
 			}
 		}
 

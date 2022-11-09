@@ -113,6 +113,8 @@ bool SceneScriptCT09::ClickedOnActor(int actorId) {
 				if (_vm->_cutContent && !Game_Flag_Query (kFlagCT09DeskClerkTalk2)) {
 					Actor_Face_Heading(kActorMcCoy, 240, true);
 					Delay(1500);
+					Actor_Voice_Over(4200, kActorVoiceOver); //99-4200.AUD	Where have I seen those before?
+					Delay(1000);
 					Actor_Face_Actor(kActorMcCoy, kActorDeskClerk, true);
 					Delay(1000);
 					Actor_Says(kActorMcCoy, 610, 15); //00-0610.AUD	What do you got back there?
@@ -141,6 +143,7 @@ bool SceneScriptCT09::ClickedOnActor(int actorId) {
 							Actor_Says(kActorMcCoy, 625, 13); //00-0625.AUD	So, now there's nothing in there.
 							Actor_Says(kActorDeskClerk, 140, 13); //27-0140.AUD	Rumor has it the boss wants to rent it out. What a dump.
 							Actor_Says(kActorDeskClerk, 150, 15); //27-0150.AUD	Maybe if we paid you, someone would actually want to stay there. (laughs)
+							Actor_Clue_Acquire(kActorMcCoy, kClueGracefulFootprints, false, kActorDeskClerk);
 							Game_Flag_Set(kFlagCT09DeskClerkTalk2);
 						}
 					} else { 	
@@ -149,6 +152,7 @@ bool SceneScriptCT09::ClickedOnActor(int actorId) {
 						Actor_Says(kActorMcCoy, 625, 13); //00-0625.AUD	So, now there's nothing in there.
 						Actor_Says(kActorDeskClerk, 140, 13); //27-0140.AUD	Rumor has it the boss wants to rent it out. What a dump.
 						Actor_Says(kActorDeskClerk, 150, 15); //27-0150.AUD	Maybe if we paid you, someone would actually want to stay there. (laughs)
+						Actor_Clue_Acquire(kActorMcCoy, kClueGracefulFootprints, false, kActorDeskClerk);
 						Game_Flag_Set(kFlagCT09DeskClerkTalk2);
 					}
 					// Made it so the desk clerk treats you differently depending on your actions. If you helped the clerk out with Leon he will be nice to you.

@@ -322,13 +322,7 @@ void SceneScriptTB07::McCoyTalkWithRachaelAndTyrell() {
 	}
 	Actor_Says(kActorMcCoy, 5355, 16); //00-5355.AUD	Fair enough. I wanted to ask about Marcus Eisenduller.
 	Actor_Says(kActorRachael, 590, 17); //57-0590.AUD	I can't tell you who killed him, if that's what you're asking.
-	if (_vm->_cutContent) {
-		if (Actor_Clue_Query(kActorMcCoy, kClueBombingSuspect)) {
-			Actor_Says(kActorMcCoy, 5360, 17); //00-5360.AUD	We've already got a suspect.
-		}
-	} else {
-		Actor_Says(kActorMcCoy, 5360, 17); //00-5360.AUD	We've already got a suspect.
-	}
+	Actor_Says(kActorMcCoy, 5360, 17); //00-5360.AUD	We've already got a suspect.
 	Actor_Says(kActorMcCoy, 5365, 13);  //00-5365.AUD	What I want to know is why the killer would be interested in Replicant DNA information.
 	if (_vm->_cutContent) {
 		if (Actor_Query_Friendliness_To_Other(kActorRachael, kActorMcCoy) < 50) {
@@ -383,7 +377,7 @@ void SceneScriptTB07::McCoyTalkWithRachaelAndTyrell() {
 	if (_vm->_cutContent) {
 		if (Game_Flag_Query(kFlagMcCoyIsHelpingReplicants)) {
 			Delay(1000);
-			Actor_Says(kActorMcCoy, 8420, 19); //00-8420.AUD	Must be rough.
+			Actor_Says(kActorMcCoy, 8395, 18); //00-8395.AUD	You don't have anything to say?
 		} else {
 			Actor_Says(kActorMcCoy, 8145, 14); //00-8145.AUD	That'd make a Rep scared.
 		}
@@ -392,8 +386,6 @@ void SceneScriptTB07::McCoyTalkWithRachaelAndTyrell() {
 			if (Actor_Query_Friendliness_To_Other(kActorRachael, kActorMcCoy) < 50) {
 				Actor_Says(kActorRachael, 660, 15);
 			}
-		} else {
-			Actor_Says(kActorRachael, 140, 12); //57-0140.AUD	How observant.
 		}
 	} else {
 		Actor_Says(kActorMcCoy, 5420, 14);
@@ -423,8 +415,8 @@ void SceneScriptTB07::McCoyTalkWithRachaelAndTyrell() {
 		if (!Game_Flag_Query(kFlagMcCoyIsHelpingReplicants)) {
 			Actor_Says(kActorMcCoy, 5430, 17); //00-5430.AUD	Not really, no.
 		} else {
-			Actor_Says(kActorMcCoy, 7980, 19); //00-7980.AUD	Yeah. Maybe.
-			Delay(500);
+			Actor_Says(kActorMcCoy, 1025, 13); //00-1025.AUD	Absolutely.
+			Delay(1000);
 		}
 	} else {
 		Actor_Says(kActorMcCoy, 5430, 17); //00-5430.AUD	Not really, no.
@@ -444,13 +436,7 @@ void SceneScriptTB07::McCoyTalkWithRachaelAndTyrell() {
 		Actor_Says_With_Pause(kActorTyrell, 80, 1.0f, 12);
 	}
 	Actor_Says(kActorTyrell, 90, 15);
-	if (_vm->_cutContent) {
-		if (!Game_Flag_Query(kFlagMcCoyIsHelpingReplicants)) {
-			Actor_Says_With_Pause(kActorMcCoy, 5450, 1.0f, 15);
-		}
-	} else {
-		Actor_Says_With_Pause(kActorMcCoy, 5450, 1.0f, 15);
-	}
+	Actor_Says_With_Pause(kActorMcCoy, 5450, 1.0f, 15);
 	Actor_Says(kActorMcCoy, 5455, 12);
 	Actor_Says(kActorTyrell, 100, 14);
 	// Added in the moonbus 2 clue. Essentially it is the dialogue where Rachael and McCoy talk about the moonbus hijacking.

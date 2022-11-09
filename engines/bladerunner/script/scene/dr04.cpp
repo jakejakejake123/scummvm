@@ -127,7 +127,7 @@ bool SceneScriptDR04::ClickedOnActor(int actorId) {
 					|| Player_Query_Agenda() == kPlayerAgendaErratic) {
 						Actor_Says(kActorMcCoy, 3970, 15); //00-3970.AUD	Hey.
 					} else {
-						Actor_Says(kActorMcCoy, 945, 13); //00-0945.AUD	Hold on. An ambulance will be coming.
+						Actor_Says(kActorMcCoy, 2175, 14); //00-2175.AUD	Hold on, I’ll get an ambulance out here.
 					}
 				} else {
 					Actor_Says(kActorMcCoy, 945, 13); //00-0945.AUD	Hold on. An ambulance will be coming.
@@ -140,14 +140,7 @@ bool SceneScriptDR04::ClickedOnActor(int actorId) {
 				Actor_Says(kActorMcCoy, 955, 13);
 				Actor_Says_With_Pause(kActorMoraji, 40, 0.0f, kAnimationModeTalk);
 				Actor_Says(kActorMoraji, 50, kAnimationModeTalk);
-				if (_vm->_cutContent) {
-					Actor_Clue_Acquire(kActorOfficerGrayford, kClueMorajiInterview, true, kActorMoraji);
-					if (Actor_Clue_Query(kActorMcCoy, kClueChewInterview)) {
-						Actor_Clue_Acquire(kActorMcCoy, kClueMorajiInterview, true, kActorMoraji);
-					}
-				} else {
-					Actor_Clue_Acquire(kActorMcCoy, kClueMorajiInterview, true, kActorMoraji);
-				}
+				Actor_Clue_Acquire(kActorMcCoy, kClueMorajiInterview, true, kActorMoraji);
 				// Code which determines whether or not Moraji survives depending on whether you talked to Chew.
 				if (_vm->_cutContent) {
 					if (Game_Flag_Query(kFlagDR03ChewTalk1)) {

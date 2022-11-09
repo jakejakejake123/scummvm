@@ -65,19 +65,15 @@ bool SceneScriptHF03::ClickedOn3DObject(const char *objectName, bool a2) {
 
 void SceneScriptHF03::dialogueWithLucy() {
 	Dialogue_Menu_Clear_List();
-	DM_Add_To_List_Never_Repeat_Once_Selected(850, 6, 5, 2); // FATHER
-	DM_Add_To_List_Never_Repeat_Once_Selected(870, 2, 8, 6); // RUNCITER
 	if (_vm->_cutContent) {
-		if (!Game_Flag_Query(kFlagMcCoyIsHelpingReplicants)) {
-			DM_Add_To_List_Never_Repeat_Once_Selected(840, 1, 3, 4); // VOIGT-KAMPFF
-		} else {
-			DM_Add_To_List_Never_Repeat_Once_Selected(860, 4, 2, 1); // CRYSTAL
-		}
+		DM_Add_To_List_Never_Repeat_Once_Selected(850, 6, 5, 9); // FATHER
+		DM_Add_To_List_Never_Repeat_Once_Selected(870, 7, 8, 10); // RUNCITER
 	} else {
-		DM_Add_To_List_Never_Repeat_Once_Selected(840, -1, 3, 8); // VOIGT-KAMPFF
-		DM_Add_To_List_Never_Repeat_Once_Selected(860, 8, -1, -1); // CRYSTAL
+		DM_Add_To_List_Never_Repeat_Once_Selected(850, 6, 5, 2); // FATHER
+		DM_Add_To_List_Never_Repeat_Once_Selected(870, 2, 8, 6); // RUNCITER
 	}
-	
+	DM_Add_To_List_Never_Repeat_Once_Selected(840, -1, 3, 8); // VOIGT-KAMPFF
+	DM_Add_To_List_Never_Repeat_Once_Selected(860, 8, -1, -1); // CRYSTAL
 	Dialogue_Menu_Add_DONE_To_List(880); // DONE
 
 	Dialogue_Menu_Appear(320, 240);
@@ -142,8 +138,7 @@ void SceneScriptHF03::dialogueWithLucy() {
 					Actor_Says(kActorMcCoy, 6790, 15); //00-6790.AUD	That must be tough on you.
 				}
 				if (_vm->_cutContent) {
-					if (Game_Flag_Query(kFlagDektoraIsReplicant)
-					&& Game_Flag_Query(kFlagLucyIsReplicant)
+					if (Game_Flag_Query(kFlagLucyIsReplicant)
 					) {
 						Actor_Says(kActorLucy, 1000, 12); //06-1000.AUD	I’ve seen death before. But the other day…
 					}
@@ -167,35 +162,29 @@ void SceneScriptHF03::dialogueWithLucy() {
 					Actor_Says(kActorMcCoy, 6805, 13); //00-6805.AUD	I-- I promise you. But for now we gotta be careful. You should stay hidden for a while.
 					Actor_Says(kActorMcCoy, 6810, 14); //00-6810.AUD	Go. I’ll find you when it’s safe.
 				}
-				Actor_Says(kActorLucy, 220, 13);
-				Actor_Says(kActorMcCoy, 1660, 15); //00-1660.AUD	Go! Quickly.
-				if (_vm->_cutContent) {
-					if (Game_Flag_Query(kFlagLucyIsReplicant)) {
-						Actor_Says(kActorLucy, 230, 14); //06-0230.AUD	Thank you.
-					} else {
-						Actor_Says(kActorLucy, 1050, 17); //06-1050.AUD	Oh, thank you. Thank you for everything.
-					}
-					if (Player_Query_Agenda() == kPlayerAgendaPolite) {
-						Actor_Says(kActorMcCoy, 1650, 13); //00-1650.AUD	Take care of yourself, kid.
-					}
-					Actor_Modify_Friendliness_To_Other(kActorSteele, kActorMcCoy, -2);
-					Actor_Modify_Friendliness_To_Other(kActorClovis, kActorMcCoy, 2);
-					Actor_Modify_Friendliness_To_Other(kActorGuzza, kActorMcCoy, -2);
-					Actor_Clue_Acquire(kActorLucy, kClueMcCoyHelpedLucy, true, kActorMcCoy);
-					Game_Flag_Set(kFlagMcCoyIsHelpingReplicants);
-				} else {
-					Actor_Says(kActorLucy, 230, 14); //06-0230.AUD	Thank you.
-					Actor_Clue_Acquire(kActorLucy, kClueMcCoyHelpedLucy, true, kActorMcCoy);
-				}
-			} else if (_vm->_cutContent) { 
-				if (Global_Variable_Query(kVariableAffectionTowards) == kAffectionTowardsDektora) {
-					Actor_Says(kActorLucy, 220, 13);
-					Actor_Says(kActorMcCoy, 1660, 15); //00-1660.AUD	Go! Quickly.
-					Actor_Says(kActorLucy, 230, 14); //06-0230.AUD	Thank you.
-					Actor_Says(kActorMcCoy, 1650, 13); //00-1650.AUD	Take care of yourself, kid.
-					Actor_Clue_Acquire(kActorLucy, kClueMcCoyHelpedLucy, true, kActorMcCoy);
-				}
 			}
+			Actor_Says(kActorLucy, 220, 13);
+			Actor_Says(kActorMcCoy, 1660, 15); //00-1660.AUD	Go! Quickly.
+			if (_vm->_cutContent) {
+				if (Game_Flag_Query(kFlagLucyIsReplicant)) {
+					Actor_Says(kActorLucy, 230, 14); //06-0230.AUD	Thank you.
+				} else {
+					Actor_Says(kActorLucy, 1050, 17); //06-1050.AUD	Oh, thank you. Thank you for everything.
+				}
+				if (Player_Query_Agenda() == kPlayerAgendaPolite) {
+					Actor_Says(kActorMcCoy, 1650, 13); //00-1650.AUD	Take care of yourself, kid.
+				}
+				Actor_Modify_Friendliness_To_Other(kActorSteele, kActorMcCoy, -2);
+				Actor_Modify_Friendliness_To_Other(kActorClovis, kActorMcCoy, 2);
+				Actor_Modify_Friendliness_To_Other(kActorGuzza, kActorMcCoy, -2);
+				Actor_Clue_Acquire(kActorLucy, kClueMcCoyHelpedLucy, true, kActorMcCoy);
+				Actor_Clue_Acquire(kActorMcCoy, kClueMcCoyIsKind, true, -1);
+				Game_Flag_Set(kFlagMcCoyIsHelpingReplicants);
+			} else {
+				Actor_Says(kActorLucy, 230, 14); //06-0230.AUD	Thank you.
+				Actor_Clue_Acquire(kActorLucy, kClueMcCoyHelpedLucy, true, kActorMcCoy);
+			}
+			
 			if (Game_Flag_Query(kFlagLucyIsReplicant)) {
 				Actor_Set_Goal_Number(kActorLucy, kGoalLucyHF03RunToHF041);
 			} else {
@@ -370,6 +359,7 @@ void SceneScriptHF03::PlayerWalkedIn() {
 				Actor_Says(kActorSteele, 200, 13);  //01-0200.AUD	Don’t even ask me who’d be doing the leading, Rookie.
 				Actor_Face_Actor(kActorMcCoy, kActorSteele, true);
 				Actor_Says(kActorMcCoy, 6290, 15); //00-6290.AUD	Who made you the jello police?
+				Delay(1000);
 			} else {	
 				Actor_Says(kActorSteele, 210, 13); // 01-0210.AUD	Just follow my lead, Slim.
 			}

@@ -57,11 +57,6 @@ void SceneScriptTB06::SceneLoaded() {
 	if (!Game_Flag_Query(kFlagTB06KitchenBoxTaken)) {
 		Item_Add_To_World(kItemKitchenBox, kModelAnimationKingstonKitchenBox, kSetTB06, 18.0f, 149.65f, -599.0f, 0, 6, 6, false, true, false, true);
 	}
-	if (_vm->_cutContent) {
-		if (!Actor_Clue_Query(kActorMcCoy, kCluePoliceWeaponUsed)) {
-			Item_Add_To_World(kItemCigarette, kModelAnimationCrystalsCigarette, kSetTB06, 58.28f, 149.60f, -653.94f, 0, 6, 6, false, true, false, true);
-		}
-	}
 
 	if (Actor_Query_Goal_Number(kActorPhotographer) != 199) {
 		Item_Add_To_World(kItemDeadDogA, kModelAnimationDeadDogA, kSetTB06, -46.82f, 149.6f, -666.88f, 0, 12, 12, false, true, false, true);
@@ -170,22 +165,6 @@ bool SceneScriptTB06::ClickedOnItem(int itemId, bool a2) {
 			return true;
 		}
 	}
-	if (itemId == kItemCigarette) { 
-		if (!Loop_Actor_Walk_To_Item(kActorMcCoy, kItemCigarette, 12, true, false)) {
-			Actor_Face_Item(kActorMcCoy, kItemCigarette, true);
-			Item_Pickup_Spin_Effect(kModelAnimationAmmoType00, 287, 412);
-			Item_Remove_From_World(kItemCigarette);
-			Delay(1000);
-			Actor_Voice_Over(4190, kActorVoiceOver); //99-4190.AUD	Where have I seen that before?
-			Actor_Change_Animation_Mode(kActorMcCoy, 23);
-			Delay(1200);
-			Actor_Says(kActorMcCoy, 5690, -1); //00-5690.AUD	Huh?
-			Delay(1000);
-			Actor_Says(kActorMcCoy, 8705, 19); //00-8705.AUD	That's damn strange.
-			Actor_Clue_Acquire(kActorMcCoy, kCluePoliceWeaponUsed, true, -1);			
-			return true;
-		}
-	}
 
 	if (itemId == kItemDeadDogA
 	 || itemId == kItemDeadDogB
@@ -203,10 +182,8 @@ bool SceneScriptTB06::ClickedOnItem(int itemId, bool a2) {
 					if (Actor_Query_Is_In_Current_Set(kActorPhotographer)) {
 						Actor_Face_Actor(kActorMcCoy, kActorPhotographer, true);
 						Actor_Face_Actor(kActorPhotographer, kActorMcCoy, true);
-						if (!Game_Flag_Query(kFlagMcCoyIsHelpingReplicants)) {
-							Actor_Says(kActorMcCoy, 8516, kAnimationModeTalk); //00-8516.AUD	Any idea if they were real dogs?
-							Actor_Says(kActorPhotographer, 60, kAnimationModeTalk); //37-0060.AUD	I've hit a brick, McCoy. You're running this investigation, right?
-						}
+						Actor_Says(kActorMcCoy, 8516, kAnimationModeTalk); //00-8516.AUD	Any idea if they were real dogs?
+						Actor_Says(kActorPhotographer, 60, kAnimationModeTalk); //37-0060.AUD	I've hit a brick, McCoy. You're running this investigation, right?
 					}
 				}
 			} else {
@@ -310,6 +287,25 @@ void SceneScriptTB06::PlayerWalkedIn() {
 					AI_Movement_Track_Unpause(kActorPhotographer);
 				} else {
 					Actor_Says(kActorMcCoy, 5295, kAnimationModeTalk); //00-5295.AUD	Learn anything?
+					Actor_Says(kActorPhotographer, 50, kAnimationModeTalk); //37-0050.AUD	Yeah, I dug up a couple of leads, let me clue you in.
+					Actor_Says(kActorMcCoy, 4940, 13); //00-4940.AUD	Okay, let's have it.
+					Delay(1000);
+					Actor_Says(kActorMcCoy, 8990, 14); //00-8990.AUD	What have you got there?
+					Player_Loses_Control();
+					Loop_Actor_Walk_To_Actor(kActorMcCoy, kActorPhotographer, 24, true, false);
+					Player_Gains_Control();
+					Actor_Change_Animation_Mode(kActorMcCoy, 23);
+					Delay(1200);
+					Item_Pickup_Spin_Effect(kModelAnimationAmmoType00, 310, 262);
+					Delay(1000);
+					Actor_Voice_Over(4190, kActorVoiceOver); //99-4190.AUD	Where have I seen that before?
+					Delay(1200);
+					Actor_Says(kActorMcCoy, 5690, -1); //00-5690.AUD	Huh?
+					Delay(1000);
+					Actor_Says(kActorMcCoy, 8705, 19); //00-8705.AUD	That's damn strange.
+					Actor_Clue_Acquire(kActorMcCoy, kCluePoliceWeaponUsed, true, kActorPhotographer);	
+					Delay(1000);
+					Actor_Says(kActorMcCoy, 4130, 18); //00-4130.AUD	Anything else?
 					Actor_Says(kActorPhotographer, 70, kAnimationModeTalk); //37-0070.AUD	Zero that would interest you, detective.
 					AI_Movement_Track_Unpause(kActorPhotographer);
 				}

@@ -685,20 +685,21 @@ bool SceneScriptRC02::ClickedOnActor(int actorId) {
 			Actor_Face_Actor(kActorRunciter, kActorMcCoy, true);
 			Actor_Says(kActorRunciter, 40, 16);
 			Actor_Says(kActorRunciter, 50, 15);	
-			Actor_Says(kActorMcCoy, 4565, 13);
-			Actor_Says(kActorRunciter, 60, 14);
 			if (_vm->_cutContent) {
-				if (Player_Query_Agenda() != kPlayerAgendaSurly 
-				&& Player_Query_Agenda() != kPlayerAgendaErratic) {
-					Actor_Says(kActorMcCoy, 4570, 18);
-				} else {
-					Actor_Says(kActorMcCoy, 5615, 14); // Describe them...
-					Actor_Modify_Friendliness_To_Other(kActorRunciter, kActorMcCoy, -1);
+				if (Player_Query_Agenda() == kPlayerAgendaSurly 
+				|| Player_Query_Agenda() == kPlayerAgendaErratic) {
+					Actor_Says(kActorMcCoy, 4565, 13);
+					Actor_Says(kActorRunciter, 60, 14);
+					Actor_Says(kActorMcCoy, 4570, 18);				
+					Actor_Says(kActorRunciter, 70, 13); //15-0070.AUD	Big and scary and absolutely malevolent.
+					Actor_Modify_Friendliness_To_Other(kActorRunciter, kActorMcCoy, -2);
 				}
 			} else {
-				Actor_Says(kActorMcCoy, 4570, 18);
+				Actor_Says(kActorMcCoy, 4565, 13);
+				Actor_Says(kActorRunciter, 60, 14);
+				Actor_Says(kActorMcCoy, 4570, 18);				
+				Actor_Says(kActorRunciter, 70, 13); //15-0070.AUD	Big and scary and absolutely malevolent.
 			}
-			Actor_Says(kActorRunciter, 70, 13); //15-0070.AUD	Big and scary and absolutely malevolent.
 			// The altered part of the conversation that I mentioned above when you first click on Runciter.
 			if (_vm->_cutContent) {
 				Actor_Says(kActorMcCoy, 4585, 13); //00-4585.AUD	Tell me about this Lucy.
@@ -771,49 +772,31 @@ bool SceneScriptRC02::ClickedOnActor(int actorId) {
 				|| Player_Query_Agenda() == kPlayerAgendaErratic) {
 					Actor_Says(kActorMcCoy, 4620, 19); //00-4620.AUD	So if we do the bone marrow on these animals, there won't be any surprises.
 					Actor_Says(kActorRunciter, 190, 14);
-					Actor_Modify_Friendliness_To_Other(kActorRunciter, kActorMcCoy, -2);
 				}
 				Actor_Says(kActorMcCoy, 4625, 13); // 00-4625.AUD	Do you know anybody who works at Tyrell Corporation? 
 				// Made it so Runciter will tell you immediately about his friends if you have high friendliness with him. If not he will deny it and will only tell McCoy
 				// if he is surly or erratic.
-				if (Actor_Query_Friendliness_To_Other(kActorRunciter, kActorMcCoy) < 50) {
-					Actor_Says(kActorRunciter, 9000, 14); //15-9000.AUD	No! 
-					Delay (1000);
-					if (Player_Query_Agenda() == kPlayerAgendaSurly 
-					|| Player_Query_Agenda() == kPlayerAgendaErratic) {
-						Actor_Says(kActorMcCoy, 4685, 15); //00-4685.AUD	You're sure there's nothing else you wanna tell me?
-						Actor_Says(kActorRunciter, 1630, 17); //15-1630.AUD	What? Do you really think I'd lie to you? Preposterous,
-						Actor_Says(kActorMcCoy, 8519, 14);//00-8519.AUD	What do you say we dish each other the straight goods.
-						Actor_Modify_Friendliness_To_Other(kActorRunciter, kActorMcCoy, -2);
-						Actor_Says(kActorRunciter, 1640, 14); //15-1640.AUD	Ah...well, yes. I suppose that isn't the whole truth but...
-						Actor_Says(kActorRunciter, 1650, 16); //15-1650.AUD	All right, all right. Here's the real truth.
-						Actor_Says(kActorRunciter, 210, 13);
-						Actor_Says(kActorMcCoy, 4630, 18);
-						Actor_Says(kActorRunciter, 220, 14);
-						Actor_Says(kActorRunciter, 230, 13);
-						Actor_Says(kActorMcCoy, 4635, 19); // 00-4635.AUD	I assume you're talking about some of those fruitcakes on DNA Row.
-						Actor_Says(kActorRunciter, 240, 16); // 15-0240.AUD	That's a horrible thing to say about people, detective.
-						Actor_Says(kActorMcCoy, 4640, 17); // 00-4640.AUD	Sorry.
-						Actor_Clue_Acquire(kActorMcCoy, kClueRunciterConfession2, true, kActorRunciter);
-					} else {
-						Actor_Says(kActorMcCoy, 1510, kAnimationModeTalk); //00-1510.AUD	Okay, okay. Just forget it.
-					}
-				} else {
+				Actor_Says(kActorRunciter, 9000, 14); //15-9000.AUD	No! 
+				Delay (1000);
+				if (Player_Query_Agenda() == kPlayerAgendaSurly 
+				|| Player_Query_Agenda() == kPlayerAgendaErratic) {
+					Actor_Says(kActorMcCoy, 4685, 15); //00-4685.AUD	You're sure there's nothing else you wanna tell me?
+					Actor_Says(kActorRunciter, 1630, 17); //15-1630.AUD	What? Do you really think I'd lie to you? Preposterous,
+					Actor_Says(kActorMcCoy, 8519, 14);//00-8519.AUD	What do you say we dish each other the straight goods.
+					Actor_Modify_Friendliness_To_Other(kActorRunciter, kActorMcCoy, -2);
+					Actor_Says(kActorRunciter, 1640, 14); //15-1640.AUD	Ah...well, yes. I suppose that isn't the whole truth but...
+					Actor_Says(kActorRunciter, 1650, 16); //15-1650.AUD	All right, all right. Here's the real truth.
 					Actor_Says(kActorRunciter, 210, 13);
 					Actor_Says(kActorMcCoy, 4630, 18);
 					Actor_Says(kActorRunciter, 220, 14);
-					Actor_Says(kActorRunciter, 230, 18);
+					Actor_Says(kActorRunciter, 230, 13);
+					Actor_Says(kActorMcCoy, 4635, 19); // 00-4635.AUD	I assume you're talking about some of those fruitcakes on DNA Row.
+					Actor_Says(kActorRunciter, 240, 16); // 15-0240.AUD	That's a horrible thing to say about people, detective.
+					Actor_Says(kActorMcCoy, 4640, 17); // 00-4640.AUD	Sorry.
 					Actor_Clue_Acquire(kActorMcCoy, kClueRunciterConfession2, true, kActorRunciter);
-					// These last few lines where McCoy calls the DNA row subcons freaks and sarcastically says sorry will only play if he is surly or erratic. It also results in
-					// a friendliness loss.
-					if (Player_Query_Agenda() == kPlayerAgendaSurly 
-					|| Player_Query_Agenda() == kPlayerAgendaErratic) {
-						Actor_Says(kActorMcCoy, 4635, 15); // 00-4635.AUD	I assume you're talking about some of those fruitcakes on DNA Row.
-						Actor_Says(kActorRunciter, 240, 16); // 15-0240.AUD	That's a horrible thing to say about people, detective.
-						Actor_Says(kActorMcCoy, 4640, 17); // 00-4640.AUD	Sorry.
-						Actor_Modify_Friendliness_To_Other(kActorRunciter, kActorMcCoy, -2);
-					} 
-				} 		
+				} else {
+					Actor_Says(kActorMcCoy, 1510, kAnimationModeTalk); //00-1510.AUD	Okay, okay. Just forget it.
+				}
 				// Original behaviour without cut content.
 			} else if (Player_Query_Agenda() == kPlayerAgendaSurly) {
 				Actor_Says(kActorMcCoy, 4620, 19);
@@ -1083,7 +1066,9 @@ void SceneScriptRC02::PlayerWalkedIn() {
 			Actor_Voice_Over(1980, kActorVoiceOver);
 			Actor_Voice_Over(1990, kActorVoiceOver);
 			Actor_Clue_Acquire(kActorMcCoy, kClueLimpingFootprints, true, -1);
-			Actor_Clue_Acquire(kActorMcCoy, kClueGracefulFootprints, true, -1);
+			if (!_vm->_cutContent) {
+				Actor_Clue_Acquire(kActorMcCoy, kClueGracefulFootprints, true, -1);
+			}
 			Game_Flag_Set(kFlagRC02Entered);
 		}
 		if (Actor_Query_Which_Set_In(kActorRunciter) == kSetRC02_RC51

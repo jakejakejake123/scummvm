@@ -90,12 +90,9 @@ bool SceneScriptTB05::ClickedOn3DObject(const char *objectName, bool a2) {
 				Game_Flag_Set(kFlagTB05MonitorIntro);
 				// Made it McCoy only makes his distasteful comment about the 'wallpapered engineer' if he has seen Eisendullers body and if he is surly or erratic.
 				if (_vm->_cutContent && Game_Flag_Query(kFlagTB05toTB06)) {
-					if (Player_Query_Agenda() == kPlayerAgendaSurly
-		   				|| Player_Query_Agenda() == kPlayerAgendaErratic) {
-						// in order not to confuse the player (much) with a red herring region,
-						// we enable this region *after* the player has accessed the correct pc / panel
-						Scene_2D_Region_Add(0, 382, 255, 634, 325); // monitors and panels other than the "main monitor"
-					}
+					// in order not to confuse the player (much) with a red herring region,
+					// we enable this region *after* the player has accessed the correct pc / panel
+					Scene_2D_Region_Add(0, 382, 255, 634, 325); // monitors and panels other than the "main monitor"
 				}
 				return true;
 			}
@@ -236,7 +233,10 @@ bool SceneScriptTB05::ClickedOn2DRegion(int region) {
 			Actor_Force_Stop_Walking(kActorMcCoy);
 			Actor_Face_Heading(kActorMcCoy, 64, false);
 			Actor_Voice_Over(2210, kActorVoiceOver);
-			Actor_Voice_Over(2220, kActorVoiceOver);
+			if (Player_Query_Agenda() == kPlayerAgendaSurly
+			|| Player_Query_Agenda() == kPlayerAgendaErratic) {
+				Actor_Voice_Over(2220, kActorVoiceOver);
+			}
 			Scene_2D_Region_Remove(0);
 			return true;
 		}

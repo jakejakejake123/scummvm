@@ -330,7 +330,7 @@ bool SceneScriptAR02::ClickedOnActor(int actorId) {
 					|| Player_Query_Agenda() == kPlayerAgendaErratic) {
 						Actor_Says(kActorMcCoy, 3910, 16); //00-3910.AUD	You’re lying.
 						Actor_Says(kActorHasan, 270, 11); //20-0270.AUD	You sully my good name with such accusations. I speak only the truth, I swear!
-						Actor_Says(kActorMcCoy, 940, 13);
+						Actor_Says(kActorMcCoy, 8519, 14);//00-8519.AUD	What do you say we dish each other the straight goods.
 						// Quote 80 is *boop* in ENG and DEU versions
 						// In FRA, ITA versions it is identical to the second half of quote 70, and thus redundant
 						// In ESP version it is the missing second half of quote 70, and is required!
@@ -362,7 +362,6 @@ bool SceneScriptAR02::ClickedOnActor(int actorId) {
 						}
 						Actor_Modify_Friendliness_To_Other(kActorHasan, kActorMcCoy, -2);
 						Actor_Clue_Acquire(kActorMcCoy, kClueHasanInterview, false, kActorHasan);
-						Actor_Modify_Friendliness_To_Other(kActorHasan, kActorMcCoy, -2);
 					} else {
 						Actor_Says(kActorMcCoy, 8525, 13);
 					}			
@@ -617,9 +616,12 @@ void SceneScriptAR02::dialogueWithInsectDealer1() {
 	case 490: // EARRING
 		if (_vm->_cutContent) {
 			if (Game_Flag_Query(kFlagMcCoyIsHelpingReplicants)) {
-				Actor_Says(kActorMcCoy, 8475, 12); //00-8475.AUD	Nice looking creatures you have around here.
-				Actor_Says(kActorInsectDealer, 10, 12); // 16-0010.AUD	Sí. Finest quality. Perhaps you purchase one?
-				Actor_Says(kActorMcCoy, 35, 15); //00-0035.AUD	I'll pass.
+				if (Player_Query_Agenda() != kPlayerAgendaSurly
+				&& Player_Query_Agenda() != kPlayerAgendaErratic) { 
+					Actor_Says(kActorMcCoy, 8475, 12); //00-8475.AUD	Nice looking creatures you have around here.
+					Actor_Says(kActorInsectDealer, 10, 12); // 16-0010.AUD	Sí. Finest quality. Perhaps you purchase one?
+					Actor_Says(kActorMcCoy, 35, 15); //00-0035.AUD	I'll pass.
+				}
 			}
 			Actor_Says(kActorMcCoy, 335, 23);
 			Delay (1000);
@@ -831,9 +833,8 @@ void SceneScriptAR02::dialogueWithHassan() {
 		if (Global_Variable_Query(kVariableChapter) < 4) {
 			if (Actor_Clue_Query(kActorMcCoy, kClueBobRobbed)) {
 				if (Player_Query_Agenda() == kPlayerAgendaSurly 	
-				|| Player_Query_Agenda() == kPlayerAgendaErratic 
-				|| Player_Query_Agenda() == kPlayerAgendaUserChoice) {
-					DM_Add_To_List_Never_Repeat_Once_Selected(1250, 1, 2, 10); // ARREST
+				|| Player_Query_Agenda() == kPlayerAgendaErratic) { 
+					DM_Add_To_List(1250, -1, -1, 10); // ARREST
 				}
 			}
 		}
@@ -965,48 +966,7 @@ void SceneScriptAR02::dialogueWithHassan() {
 		break;
 
 	case 570: // DONE
-		if (_vm->_cutContent) {
-			if (!Actor_Clue_Query(kActorMcCoy, kClueHasanInterview)) {
-				Actor_Says(kActorMcCoy, 940, 13);
-				// Quote 80 is *boop* in ENG and DEU versions
-				// In FRA, ITA versions it is identical to the second half of quote 70, and thus redundant
-				// In ESP version it is the missing second half of quote 70, and is required!
-				if (_vm->_cutContent
-					&& _vm->_language == Common::ES_ESP
-				) {
-					Actor_Says_With_Pause(kActorHasan, 70, 0.0f, 12);
-					Actor_Says(kActorHasan, 80, kAnimationModeTalk);
-				} else {
-					Actor_Says(kActorHasan, 70, 12);//20-0070.AUD	Certainly the LPD must have better things to do than to question a humble merchant over and over again about the same things.
-				}
-				Actor_Says(kActorHasan, 90, 12);//20-0090.AUD	Why aren't you out arresting criminals like that disreputable Bob fellow.
-				// Made it so McCoy only questions who Bob is and is directed to Bobs shop only if McCoy hasn't Met Bob.
-				if (!Game_Flag_Query(kFlagRC04Entered)) {
-					Actor_Says(kActorMcCoy, 180, 15); //00-0180.AUD	Bob?
-				}
-				Actor_Says(kActorHasan, 100, 14); //20-0100.AUD	He owns the armament shop up the street. He is insane, noble one. Insane.
-				Actor_Says(kActorHasan, 110, 12);
-				// Quote 130 is *boop* in ENG and DEU versions
-				// In FRA, ITA versions it is identical to the second half of quote 120, and thus redundant
-				// In ESP version it is the missing second half of quote 120, and is required!
-				if (_vm->_cutContent
-					&& _vm->_language == Common::ES_ESP
-				) {
-					Actor_Says_With_Pause(kActorHasan, 120, 0.0f, 13);
-					Actor_Says(kActorHasan, 130, kAnimationModeTalk);
-				} else {
-					Actor_Says(kActorHasan, 120, 13);
-				}
-				Actor_Modify_Friendliness_To_Other(kActorHasan, kActorMcCoy, -2);
-				Actor_Clue_Acquire(kActorMcCoy, kClueHasanInterview, false, kActorHasan);
-			} else {					
-				if (Actor_Query_Friendliness_To_Other(kActorHasan, kActorMcCoy) > 49) {
-					Actor_Says(kActorMcCoy, 1315, 11); // Thanks for your time
-				} else {
-					Actor_Says(kActorMcCoy, 8595, 13); //00-8595.AUD	Hmm. He's damn unfriendly.
-				}
-			}
-		} else {
+		if (!_vm->_cutContent) {
 			if (!Actor_Clue_Query(kActorMcCoy, kClueHasanInterview)) {
 				Actor_Says(kActorMcCoy, 940, 13);
 				Actor_Says(kActorHasan, 70, 12);//20-0070.AUD	Certainly the LPD must have better things to do than to question a humble merchant over and over again about the same things.
@@ -1019,6 +979,19 @@ void SceneScriptAR02::dialogueWithHassan() {
 				Actor_Modify_Friendliness_To_Other(kActorHasan, kActorMcCoy, -1);
 			} else {
 				Actor_Says(kActorMcCoy, 1315, 11); // Thanks for your time
+			}
+		} else if (Actor_Query_Friendliness_To_Other(kActorInsectDealer, kActorMcCoy) < 50) { 
+			if (Player_Query_Agenda() == kPlayerAgendaSurly 	
+			|| Player_Query_Agenda() == kPlayerAgendaErratic) {
+				Actor_Says(kActorMcCoy, 8595, 13); //00-8595.AUD	Hmm. He's damn unfriendly.
+			} else {
+				Actor_Says(kActorMcCoy, 4595, 14); //00-4595.AUD	Stick around. I may not be finished with you.
+			}
+		} else {
+			if (Player_Query_Agenda() == kPlayerAgendaPolite) { 
+				Actor_Says(kActorMcCoy, 1315, 11); // Thanks for your time
+			} else {
+				Actor_Says(kActorMcCoy, 4595, 14);
 			}
 		}
 		break;
