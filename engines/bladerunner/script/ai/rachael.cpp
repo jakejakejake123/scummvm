@@ -421,15 +421,13 @@ void AIScriptRachael::dialogue_start() {
 		Music_Play(kMusicBRBlues, 52, 0, 2, -1, kMusicLoopPlayOnce, 1);
 		if (Actor_Query_Friendliness_To_Other(kActorRachael, kActorMcCoy) < 50) {
 			Actor_Says(kActorRachael, 20, 12);                  // NoneOfYourBusiness
-			if (Player_Query_Agenda() != kPlayerAgendaSurly 
-			&& Player_Query_Agenda() != kPlayerAgendaErratic) {
+			if (Player_Query_Agenda() == kPlayerAgendaPolite) {
 				Actor_Says_With_Pause(kActorMcCoy, 2750, 1.5f, 3); // OkGetThePicture
 			}
 		} else {
 			Delay(2000);
 		}
-		if (Player_Query_Agenda() != kPlayerAgendaSurly 
-		&& Player_Query_Agenda() != kPlayerAgendaErratic) {
+		if (Player_Query_Agenda() == kPlayerAgendaPolite) {
 			Actor_Says(kActorMcCoy, 2755, 3);                  // AreYouAlrightALittlePale
 			Actor_Says(kActorRachael, 30, 13);                  // CertainlyHadBetterDaysInMyLifeButImFine
 			if (Actor_Query_Friendliness_To_Other(kActorRachael, kActorMcCoy) > 49) {
@@ -456,11 +454,13 @@ void AIScriptRachael::dialogue_agenda1() {
 	if (_vm->_cutContent) {
 		Actor_Says(kActorMcCoy, 2795, 13);                      // YouAreUpset
 		Actor_Says(kActorRachael, 140, 15);                     //57-0140.AUD	How observant.
-		Actor_Says(kActorMcCoy, 2800, 12);                      // WhatTheMatterGoodListener
-		if (Actor_Query_Friendliness_To_Other(kActorRachael, kActorMcCoy) < 50) {
-			Actor_Says(kActorRachael, 150, 16);                     // 57-0150.AUD	I'm sure you are Mr. McCoy. I just don't much feel like talking at the moment.
-		} else {
-			Delay(2000);
+		if (Player_Query_Agenda() == kPlayerAgendaPolite) {
+			Actor_Says(kActorMcCoy, 2800, 12);                      // WhatTheMatterGoodListener
+			if (Actor_Query_Friendliness_To_Other(kActorRachael, kActorMcCoy) < 50) {
+				Actor_Says(kActorRachael, 150, 16);                     // 57-0150.AUD	I'm sure you are Mr. McCoy. I just don't much feel like talking at the moment.
+			} else {
+				Delay(2000);
+			}
 		}
 		Actor_Says(kActorMcCoy, 2805, 18);                      // DidYourUncleSaySomethingToYou
 		Actor_Says(kActorRachael, 160, 14);                     // HeCanBeSoCruel
@@ -511,7 +511,9 @@ void AIScriptRachael::dialogue_agenda1() {
 		}
 		Actor_Says_With_Pause(kActorRachael, 300, 1.0f, 14);  // GoodbyeMcCoy
 		Actor_Says(kActorRachael, 310, 14);                   // Isnt ThisYourFloor --
-		Actor_Says(kActorMcCoy, 2860, 14);                    // YouTakeCareOfYourself
+		if (Player_Query_Agenda() == kPlayerAgendaPolite) {
+			Actor_Says(kActorMcCoy, 2860, 14);                    // YouTakeCareOfYourself
+		}
 	} else {
 		// original code
 		Actor_Says(kActorMcCoy, 2795, 13);                  // You are upset
@@ -636,8 +638,8 @@ void AIScriptRachael::dialogue_act4() {
 			Actor_Says(kActorRachael, 360, 3);   //  ImSorry
 			Actor_Says(kActorRachael, 370, 3);   //  IKnowTheFeeling
 			Actor_Says(kActorMcCoy, 2890, 18);   //  You do?
-		} else { 
-			Delay(1000);
+		} else {
+			Delay(2000);
 		}
 	}
 	Actor_Says(kActorRachael, 380, 18);  //  EverythingWeBelieve
@@ -661,9 +663,12 @@ void AIScriptRachael::dialogue_act4() {
 			} else {
 				Actor_Says(kActorMcCoy, 2925, 15);   //  NotAReplicantGoddamnit
 			}
-			Actor_Says(kActorMcCoy, 2930, 14);   //  MaybeYouCanHelpMeYouAreTyrellsNiece
-			Actor_Says(kActorRachael, 460, 13);  //  Why not take that V-K test
-			Actor_Says(kActorMcCoy, 2935, 19);   //  YeahGoodIdeaMaybeIllDoThat
+			Delay(1000);
+			if (Actor_Query_Friendliness_To_Other(kActorRachael, kActorMcCoy) > 49) {
+				Actor_Says(kActorMcCoy, 2930, 14);   //  MaybeYouCanHelpMeYouAreTyrellsNiece
+				Actor_Says(kActorRachael, 460, 13);  //  Why not take that V-K test
+				Actor_Says(kActorMcCoy, 2935, 19);   //  YeahGoodIdeaMaybeIllDoThat
+			}
 		} else {
 			Delay(2000);
 		} 

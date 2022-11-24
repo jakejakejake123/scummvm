@@ -224,11 +224,12 @@ void SceneScriptMA02::PlayerWalkedIn() {
 	 && !Game_Flag_Query(kFlagMA02Chapter5Started)
 	) {
 		if (_vm->_cutContent) {
-			if (Game_Flag_Query(kFlagMcCoyRetiredHuman)
+			if (!Game_Flag_Query(kFlagMcCoyIsInnocent)
 			|| Global_Variable_Query(kVariableAffectionTowards) == kAffectionTowardsDektora
 			|| Global_Variable_Query(kVariableAffectionTowards) == kAffectionTowardsLucy) {
 				Actor_Face_Actor(kActorMcCoy, kActorMaggie, true);
 				Actor_Says(kActorMcCoy, 2390, kAnimationModeIdle); //00-2390.AUD	Oh, God. No.
+				Actor_Set_Goal_Number(kActorMaggie, kGoalMaggieDead);
 				Music_Play(kMusicBRBlues, 25, 0, 3, -1, kMusicLoopPlayOnce, 0);
 				Delay(1000);
 				Actor_Face_Object(kActorMcCoy, "BAR-MAIN", true);
@@ -297,9 +298,6 @@ void SceneScriptMA02::PlayerWalkedIn() {
 			} else {
 				Actor_Says(kActorMcCoy, 2385,  kAnimationModeTalk); //00-2385.AUD	Maggie! Come here girl.
 				Music_Play(kMusicBRBlues, 25, 0, 3, -1, kMusicLoopPlayOnce, 0);
-				if (!Game_Flag_Query(kFlagMcCoyIsHelpingReplicants)) {
-					Actor_Set_Goal_Number(kActorMaggie, kGoalMaggieKP05Wait);
-				} 
 			}
 			Scene_Exits_Enable();
 			Game_Flag_Set(kFlagMA02Chapter5Started);
@@ -341,6 +339,8 @@ void SceneScriptMA02::PlayerWalkedIn() {
 			if (!Game_Flag_Query(kFlagPhoneRung)) {
 				if (Actor_Clue_Query(kActorMcCoy, kClueMcCoyRetiredZuben)
 				|| Actor_Clue_Query(kActorMcCoy, kClueMcCoyLetZubenEscape)) {
+					Sound_Play(kSfxVIDFONE1, 100, 0, 0, 50);
+					Delay(2000);
 					Sound_Play(kSfxVIDFONE1, 100, 0, 0, 50);
 					Delay(2000);
 					Sound_Play(kSfxVIDFONE1, 100, 0, 0, 50);

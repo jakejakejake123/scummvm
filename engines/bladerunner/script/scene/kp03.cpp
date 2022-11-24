@@ -304,18 +304,16 @@ void SceneScriptKP03::PlayerWalkedIn() {
 	) {
 		// Made it so the scene where Crystal starts walking into the bomb trap only commences under the new parameters.
 		if (_vm->_cutContent) {
- 			if (!Game_Flag_Query(kFlagMcCoyRetiredHuman)
+ 			if (Game_Flag_Query(kFlagMcCoyIsInnocent)
 			&& Global_Variable_Query(kVariableAffectionTowards) != kAffectionTowardsDektora
 			&& Global_Variable_Query(kVariableAffectionTowards) != kAffectionTowardsLucy
 			&& !Game_Flag_Query(kFlagKP03BombExploded)
 			&& !Game_Flag_Query(kFlagKP03BombDisarmed)
-			&&  Game_Flag_Query(kFlagKP01toKP03)) {
-				if (Game_Flag_Query(kFlagMcCoyIsInnocent)
-				|| 	Game_Flag_Query(kFlagCrystalTrustsMcCoy)) {
-					Scene_Exits_Disable();
-					Delay(1000);
-					Actor_Set_Goal_Number(kActorSteele, kGoalSteeleKP03Walk);
-				}
+			&&  Game_Flag_Query(kFlagKP01toKP03)
+			&& !Game_Flag_Query(kFlagMcCoyRetiredHuman)) {
+				Scene_Exits_Disable();
+				Delay(1000);
+				Actor_Set_Goal_Number(kActorSteele, kGoalSteeleKP03Walk);
 			}
 		} else if (Game_Flag_Query(kFlagMcCoyIsHelpingReplicants)) {
 			if (Game_Flag_Query(kFlagKP05toKP03)) {
@@ -360,7 +358,13 @@ void SceneScriptKP03::saveSteele() {
 	Scene_Loop_Set_Default(kKP03MainLoopBombNoWire);
 	Scene_Loop_Start_Special(kSceneLoopModeOnce, kKP03MainLoopBombNoWire, false);
 	Actor_Set_Goal_Number(kActorSteele, kGoalSteeleKP03Leave);
-	Actor_Says(kActorMcCoy, 2195, 14);
+	if (_vm->_cutContent) {
+		if (Player_Query_Agenda() == kPlayerAgendaPolite) {
+			Actor_Says(kActorMcCoy, 2195, 14);
+		}
+	} else {
+			Actor_Says(kActorMcCoy, 2195, 14);
+	}
 	Ambient_Sounds_Play_Sound(kSfxLABMISC6, 40, -60, -60, 0);
 	Loop_Actor_Walk_To_XYZ(kActorMcCoy, 1.0f, -36.55f, 111.0f, 0, false, false, false);
 	Actor_Set_Goal_Number(kActorSteele, kGoalSteeleKP05Enter);

@@ -320,7 +320,7 @@ void SceneScriptHF06::steelInterruption() {
 		// This section of code is for when Lucy is with you.	
 		} else if (Actor_Query_Is_In_Current_Set(kActorLucy)) {
 			if (!Game_Flag_Query(kFlagLucyIsReplicant)
-			&& Game_Flag_Query(kFlagMcCoyFreedOfAccusations)) {
+			&& Game_Flag_Query(kFlagMcCoyIsInnocent)) {
 				Delay(2000);
 				Scene_Loop_Set_Default(3);
 				Scene_Loop_Start_Special(kSceneLoopModeOnce, 2, true);
@@ -358,7 +358,7 @@ void SceneScriptHF06::steelInterruption() {
 						Actor_Says(kActorMcCoy, 6230, 0);
 					} else {
 						Delay (1000);
-						Actor_Says(kActorMcCoy, 2755, 13);
+						Actor_Says(kActorMcCoy, 2755, 13); //00-2755.AUD	You all right? You look a little pale.
 					}
 				}
 				Actor_Says(kActorSteele, 280, 58);
@@ -375,7 +375,7 @@ void SceneScriptHF06::steelInterruption() {
 					// This line will only be said if your companion is a replicant.
 					Actor_Says(kActorSteele, 290, 58); //01-0290.AUD	Thanks for bringing her here. Makes my end a hell of a lot easier.
 				}
-				if (Game_Flag_Query(kFlagMcCoyIsHelpingReplicants)) {
+				if (Player_Query_Agenda() == kPlayerAgendaPolite) { 
 					Actor_Says(kActorMcCoy, 2130, -1); //00-2130.AUD	You’re the coldest person I’ve ever seen when it comes to killing.
 					Actor_Says(kActorSteele, 300, 59); //01-0300.AUD	I’ll take that as a compliment.
 				}
@@ -383,10 +383,7 @@ void SceneScriptHF06::steelInterruption() {
 				if (!Game_Flag_Query(kFlagMcCoyIsInnocent)) {
 					// If McCoy proved his innocence therefore showing he is not a rep Crystal won't accuse him of being a rep.
 					Actor_Says(kActorSteele, 310, 60); //01-0310.AUD	Wake up, Slim. The mutt was a Replicant. Just like its master.
-					if (Player_Query_Agenda() == kPlayerAgendaSurly 
-					|| Player_Query_Agenda() == kPlayerAgendaErratic) {
-						Actor_Says(kActorMcCoy, 2140, -1); //00-2140.AUD	Bullshit.
-					}
+					Actor_Says(kActorMcCoy, 2140, -1); //00-2140.AUD	Bullshit.
 					Actor_Says(kActorSteele, 320, 59); //01-0320.AUD	You’re more confused than the damn dog was when I pulled the plug.
 					Actor_Says(kActorMcCoy, 2145, -1); //00-2145.AUD	She was real, Steele. No two ways about it.
 				}
@@ -439,7 +436,7 @@ void SceneScriptHF06::steelInterruption() {
 				if (Game_Flag_Query(kFlagLucyIsReplicant)) {
 					Actor_Says(kActorSteele, 290, 58); ////01-0290.AUD	Thanks for bringing her here. Makes my end a hell of a lot easier.
 				}
-				if (Game_Flag_Query(kFlagMcCoyIsHelpingReplicants)) {
+				if (Player_Query_Agenda() == kPlayerAgendaPolite) {
 					Actor_Says(kActorMcCoy, 2130, -1); //00-2130.AUD	You’re the coldest person I’ve ever seen when it comes to killing.
 					Actor_Says(kActorSteele, 300, 59); //01-0300.AUD	I’ll take that as a compliment.
 				}
@@ -447,10 +444,7 @@ void SceneScriptHF06::steelInterruption() {
 				if (!Game_Flag_Query(kFlagMcCoyIsInnocent)) {
 					// If McCoy proved his innocence therefore showing he is not a rep Crystal won't accuse him of being a rep.
 					Actor_Says(kActorSteele, 310, 60); //01-0310.AUD	Wake up, Slim. The mutt was a Replicant. Just like its master.
-					if (Player_Query_Agenda() == kPlayerAgendaSurly 
-					|| Player_Query_Agenda() == kPlayerAgendaErratic) {
-						Actor_Says(kActorMcCoy, 2140, -1); //00-2140.AUD	Bullshit.
-					}
+					Actor_Says(kActorMcCoy, 2140, -1); //00-2140.AUD	Bullshit.
 					Actor_Says(kActorSteele, 320, 59); //01-0320.AUD	You’re more confused than the damn dog was when I pulled the plug.
 					Actor_Says(kActorMcCoy, 2145, -1); //00-2145.AUD	She was real, Steele. No two ways about it.
 				}

@@ -477,11 +477,16 @@ void SceneScriptNR11::PlayerWalkedIn() {
 					Actor_Says_With_Pause(kActorSteele, 1720, 0.3f, 16); //01-1720.AUD	Putz employs Replicants, you gotta expect the worst.
 				}
 				if (_vm->_cutContent) {
-					if (!Game_Flag_Query(kFlagMcCoyIsHelpingReplicants)) {
+					if (Player_Query_Agenda() == kPlayerAgendaSurly 
+					|| Player_Query_Agenda() == kPlayerAgendaErratic) {
 						Actor_Says(kActorMcCoy, 1570, 13); //00-1570.AUD	You sure aired that sucker out.
 					} else {
 						Actor_Says(kActorMcCoy, 3810, 16); //00-3810.AUD	You could have taken her out in a more discrete way.
-						Actor_Says_With_Pause(kActorSteele, 1730, 0.2f, 14); //01-1730.AUD	What’s this "her" crap? It’s an "it", remember? A goddamn machine.
+						if (Actor_Query_Friendliness_To_Other(kActorSteele, kActorMcCoy) < 51) {
+							Actor_Says_With_Pause(kActorSteele, 1730, 0.2f, 14); //01-1730.AUD	What’s this "her" crap? It’s an "it", remember? A goddamn machine.
+						} else {
+							Delay(1000);
+						}
 					}
 				} else {
 					Actor_Says(kActorMcCoy, 3810, 16); //00-3810.AUD	You could have taken her out in a more discrete way.

@@ -218,9 +218,17 @@ void AIScriptRunciter::OtherAgentEnteredCombatMode(int otherActorId, int combatM
 					Actor_Says(kActorMcCoy, 4800, -1); //00-4800.AUD	You son of a bitch she couldn't object.
 				}
 				// Runciter is interrupted here
-				Actor_Says_With_Pause(kActorRunciter, 670, 0.0f, 18); //15-0670.AUD	She...
+				if (_vm->_cutContent) {
+					if (Player_Query_Agenda() == kPlayerAgendaSurly 
+					|| Player_Query_Agenda() == kPlayerAgendaErratic) {
+						Actor_Says_With_Pause(kActorRunciter, 670, 0.0f, 18); //15-0670.AUD	She...
 #endif // BLADERUNNER_ORIGINAL_BUGS
-				Actor_Says(kActorMcCoy, 4795, -1); //00-4795.AUD	If you say she asked for it, you're dead.
+						Actor_Says(kActorMcCoy, 4795, -1); //00-4795.AUD	If you say she asked for it, you're dead.
+					}
+				} else {
+					Actor_Says_With_Pause(kActorRunciter, 670, 0.0f, 18); //15-0670.AUD	She...
+					Actor_Says(kActorMcCoy, 4795, -1); //00-4795.AUD	If you say she asked for it, you're dead.
+				}
 				Actor_Says(kActorRunciter, 730, 17); //15-0730.AUD	Please. Just leave me alone.
 				if (_vm->_cutContent) {					
 					Actor_Clue_Acquire(kActorMcCoy, kClueRuncitersConfession2, true, kActorRunciter);
@@ -243,7 +251,7 @@ void AIScriptRunciter::OtherAgentEnteredCombatMode(int otherActorId, int combatM
 					Actor_Says(kActorMcCoy, 4740, -1); //00-4740.AUD	Lie to me. Go ahead. You'll only do it once.
 				} else {
 					Sound_Play(kSfxSHOTCOK1, 100, 0, 100, 50);
-					Actor_Says(kActorMcCoy, 4740, -1); //00-4740.AUD	Lie to me. Go ahead. You'll only do it once.
+					Actor_Says(kActorMcCoy, 4780, -1); //00-4780.AUD	Go ahead little man, lie to me. You'll only do it once.
 				}
 			} else {
 				Sound_Play(kSfxSHOTCOK1, 100, 0, 100, 50);
@@ -291,8 +299,7 @@ void AIScriptRunciter::OtherAgentEnteredCombatMode(int otherActorId, int combatM
 		Delay(1000);
 		Actor_Says(kActorRunciter, 410, 13); //15-0410.AUD	My precious ones are gone. I cared for them. All of them.
 		Delay(2000);
-		if (Player_Query_Agenda() != kPlayerAgendaSurly
-		&&  Player_Query_Agenda() != kPlayerAgendaErratic) {
+		if (Player_Query_Agenda() == kPlayerAgendaPolite) {
 			Actor_Says(kActorMcCoy, 2305, 13); //00-2305.AUD	I’m sorry.
 			Delay(1000);
 		}
@@ -309,6 +316,8 @@ void AIScriptRunciter::OtherAgentEnteredCombatMode(int otherActorId, int combatM
 		Game_Flag_Reset(kFlagRunciterConfronted);
 		Game_Flag_Set(kFlagMcCoyIsHelpingReplicants);
 		Actor_Modify_Friendliness_To_Other(kActorRunciter, kActorMcCoy, 20);
+		Actor_Modify_Friendliness_To_Other(kActorSteele, kActorMcCoy, -2);
+		Actor_Modify_Friendliness_To_Other(kActorGuzza, kActorMcCoy, -2);
 		Actor_Modify_Friendliness_To_Other(kActorClovis, kActorMcCoy, -2);
 		Scene_Exits_Enable();
 	}
@@ -370,6 +379,7 @@ bool AIScriptRunciter::ShotAtAndHit() {
 			Actor_Clue_Acquire(kActorMcCoy, kClueMcCoyKilledRunciter2, true, -1);
 			Game_Flag_Set(kFlagMcCoyRetiredHuman);
 			Actor_Modify_Friendliness_To_Other(kActorSteele, kActorMcCoy, -2);
+			Actor_Modify_Friendliness_To_Other(kActorGuzza, kActorMcCoy, -2);
 			Actor_Modify_Friendliness_To_Other(kActorClovis, kActorMcCoy, 2);
 			Game_Flag_Set(kFlagMcCoyIsHelpingReplicants);
 		}

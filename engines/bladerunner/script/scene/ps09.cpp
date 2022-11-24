@@ -309,7 +309,7 @@ bool SceneScriptPS09::ClickedOnActor(int actorId) {
 					//not happen it only seems fair to include it here.
 					if (_vm->_cutContent) {
 						Actor_Says(kActorMcCoy, 5065, 18); //00-5065.AUD	Is that right?
-							Actor_Says(kActorCrazylegs, 1100, kAnimationModeTalk); //09-1100.AUD	Whatever happened I was ignorant, McCoy.
+						Actor_Says(kActorCrazylegs, 1100, kAnimationModeTalk); //09-1100.AUD	Whatever happened I was ignorant, McCoy.
 						if (Player_Query_Agenda() == kPlayerAgendaSurly
 						|| Player_Query_Agenda() == kPlayerAgendaErratic) {	
 							Actor_Says(kActorMcCoy, 4430, 17); //00-4430.AUD	I figured you for a lot of things but ignorant wasn't one of them.
@@ -356,10 +356,10 @@ bool SceneScriptPS09::ClickedOnActor(int actorId) {
 							Delay (1000);
 							Actor_Says(kActorMcCoy, 8370, 14); //00-8370.AUD	It's okay. I got what I need.
 						}
-						Game_Flag_Set(kFlagPS09CrazylegsGrigorianTalk);
 					}
+					Game_Flag_Set(kFlagPS09CrazylegsGrigorianTalk);
 #if !BLADERUNNER_ORIGINAL_BUGS
-				Actor_Face_Actor(kActorCrazylegs, kActorMcCoy, true);
+					Actor_Face_Actor(kActorCrazylegs, kActorMcCoy, true);
 #endif
 					return true;
 				}
@@ -466,24 +466,22 @@ void SceneScriptPS09::dialogueWithGrigorian() {
 		// treatment of him before that even happens, so this change feels necessary.
 		if (_vm->_cutContent) {
 			if (Actor_Clue_Query(kActorMcCoy, kClueGrigoriansResources)) {
-				DM_Add_To_List_Never_Repeat_Once_Selected(170,  5, 5, 3); // PROTEST
+				DM_Add_To_List_Never_Repeat_Once_Selected(170,  5, 5, 7); // PROTEST
 			}
 		} else {
 			 DM_Add_To_List_Never_Repeat_Once_Selected(170,  5, 5, 3); // PROTEST
 		}
-		DM_Add_To_List_Never_Repeat_Once_Selected(180, -1, 5, 5); // CARS
+		if (_vm->_cutContent) {
+			DM_Add_To_List_Never_Repeat_Once_Selected(180, 7, 6, 8); // CARS
+		} else {
+			DM_Add_To_List_Never_Repeat_Once_Selected(180, -1, 5, 5); // CARS
+		}
 		if ((_vm->_cutContent
 		     && (!Game_Flag_Query(kFlagPS09GrigorianVKChosen)
 		     && (!Actor_Clue_Query(kActorMcCoy, kClueVKGrigorianHuman) && !Actor_Clue_Query(kActorMcCoy, kClueVKGrigorianReplicant))))
 		    || !_vm->_cutContent
 		) {
-			if (_vm->_cutContent) {
-				if (!Game_Flag_Query(kFlagMcCoyIsHelpingReplicants)) {
-					DM_Add_To_List_Never_Repeat_Once_Selected(200, 1, 3, 4); // VOIGT-KAMPFF
-				}
-			} else {
-				DM_Add_To_List_Never_Repeat_Once_Selected(200, -1, 3, 6); // VOIGT-KAMPFF
-			}
+			DM_Add_To_List_Never_Repeat_Once_Selected(200, -1, 3, 6); // VOIGT-KAMPFF
 		}
 	}
 	if (!Game_Flag_Query(kFlagMcCoyIsHelpingReplicants)) {
@@ -491,7 +489,7 @@ void SceneScriptPS09::dialogueWithGrigorian() {
 			if (Actor_Clue_Query(kActorMcCoy, kClueGrigorianInterviewA)
 			|| Actor_Clue_Query(kActorMcCoy, kClueGrigorianInterviewB1)
 			|| Actor_Clue_Query(kActorMcCoy, kClueGrigorianInterviewB2)) {
-				DM_Add_To_List_Never_Repeat_Once_Selected(190, 5, 6, -1); // NOTE
+				DM_Add_To_List_Never_Repeat_Once_Selected(190, 5, 6, 7); // NOTE
 			}
 		}
 	}
@@ -686,16 +684,25 @@ void SceneScriptPS09::dialogueWithGrigorian() {
 		}
 		if (_vm->_cutContent) {
 			// "What else do you guys do besides wave signs"
-			if (Player_Query_Agenda() == kPlayerAgendaSurly 
-			|| Player_Query_Agenda() == kPlayerAgendaErratic) {
-				Actor_Says(kActorMcCoy, 4325, kAnimationModeTalk);
+			if (!Game_Flag_Query(kFlagMcCoyIsHelpingReplicants)) {
+				if (Player_Query_Agenda() == kPlayerAgendaSurly 
+				|| Player_Query_Agenda() == kPlayerAgendaErratic) {
+					Actor_Says(kActorMcCoy, 4325, kAnimationModeTalk);
+				}
 			}
 		} else {
 			Actor_Says(kActorMcCoy, 4325, kAnimationModeTalk);
 		}
 		Actor_Says(kActorGrigorian, 240, 16);
-		Actor_Says(kActorGrigorian, 250, 15);
-		Actor_Says(kActorMcCoy, 4330, 13);
+		if (_vm->_cutContent) {
+			if (Actor_Query_Friendliness_To_Other(kActorGrigorian, kActorMcCoy) < 51) {
+				Actor_Says(kActorGrigorian, 250, 15); //11-0250.AUD	We live by a code that men like you could never understand.
+				Actor_Says(kActorMcCoy, 4330, 13);
+			}
+		} else {
+			Actor_Says(kActorGrigorian, 250, 15); //11-0250.AUD	We live by a code that men like you could never understand.
+			Actor_Says(kActorMcCoy, 4330, 13);
+		}
 		Actor_Says(kActorGrigorian, 260, 13);
 		Actor_Says(kActorGrigorian, 270, 12); //11-0270.AUD	Brave souls formed an Underground Railroad.
 		if (_vm->_cutContent) {
@@ -810,7 +817,6 @@ void SceneScriptPS09::dialogueWithGrigorian() {
 					Actor_Says(kActorCrazylegs, 1080, kAnimationModeTalk);
 					Actor_Clue_Acquire(kActorMcCoy, kClueCrazylegsInterview3, true, kActorCrazylegs);
 				} else {
-					Actor_Says(kActorMcCoy, 6985, 16); //00-4360.AUD	Got the straight scoop for me or what?
 					Actor_Says(kActorCrazylegs, 1160, kAnimationModeTalk); //09-1160.AUD	Take a ride, McCoy. I already told you everything.
 				}
 			} else {
@@ -822,13 +828,7 @@ void SceneScriptPS09::dialogueWithGrigorian() {
 	case 190: // NOTE
 		Actor_Says(kActorMcCoy, 4260, kAnimationModeTalk); //00-4260.AUD	You've been helping Reps, pal?
 		Actor_Says(kActorGrigorian, 360, 16); //11-0360.AUD	Through peaceful protest only.
-		if (!Game_Flag_Query(kFlagDektoraIsReplicant)
-		&& Game_Flag_Query(kFlagGordoIsReplicant)) {
-			Actor_Says(kActorMcCoy, 1890, 23); //00-1890.AUD	You recognize this?
-			Delay(1000);		
-		} else {
-			Actor_Says(kActorMcCoy, 4380, 14); //00-4380.AUD	So talk to me about the Reps with the black Sedan. I found your note in their car.
-		}
+		Actor_Says(kActorMcCoy, 4380, 14); //00-4380.AUD	So talk to me about the Reps with the black Sedan. I found your note in their car.
 		Actor_Says(kActorMcCoy, 4385, 15);
 		Actor_Says(kActorGrigorian, 370, 13);
 		if (Player_Query_Agenda() == kPlayerAgendaSurly
@@ -894,9 +894,15 @@ void SceneScriptPS09::dialogueWithGrigorian() {
 					Actor_Says(kActorGrigorian, 20, 15); //11-0020.AUD	Please leave me alone. My migraine's acting up.
 				}
 				//Nice McCoy, the test starts immediately.
-			} else {
+			} else if (Player_Query_Agenda() == kPlayerAgendaPolite) {
 				Actor_Says(kActorMcCoy, 8225, 14); //00-8225.AUD	Just relax.
 				Actor_Says(kActorMcCoy, 400, 14); // 	00-0400.AUD	It won't take too long.
+				Voight_Kampff_Activate(kActorGrigorian, 20);
+				if (!Actor_Clue_Query(kActorMcCoy, kClueVKGrigorianReplicant)) {
+					Actor_Says(kActorMcCoy, 6880, 14); //00-6880.AUD	The test says you're human.
+				}
+			} else {
+				Actor_Says(kActorMcCoy, 3405, 14); //00-3405.AUD	Sit down.
 				Voight_Kampff_Activate(kActorGrigorian, 20);
 				if (!Actor_Clue_Query(kActorMcCoy, kClueVKGrigorianReplicant)) {
 					Actor_Says(kActorMcCoy, 6880, 14); //00-6880.AUD	The test says you're human.
@@ -922,10 +928,18 @@ void SceneScriptPS09::dialogueWithGrigorian() {
 			if (Player_Query_Agenda() == kPlayerAgendaSurly 
 			|| Player_Query_Agenda() == kPlayerAgendaErratic) {
 				Actor_Says(kActorMcCoy, 8600, 18);
-				Actor_Says(kActorGrigorian, 20, 15);
+				if (Actor_Query_Friendliness_To_Other(kActorGrigorian, kActorMcCoy) < 51) {
+					Actor_Says(kActorGrigorian, 550, 14); //11-0550.AUD	No.
+				} else {
+					Actor_Says(kActorGrigorian, 20, 15);
+				}
 			} else {
 				Actor_Says(kActorMcCoy, 8514, 14);	//00-8514.AUD	Got anything new to tell me?
-				Actor_Says(kActorGrigorian, 20, 15);
+				if (Actor_Query_Friendliness_To_Other(kActorGrigorian, kActorMcCoy) < 51) {
+					Actor_Says(kActorGrigorian, 550, 14); //11-0550.AUD	No.
+				} else {
+					Actor_Says(kActorGrigorian, 20, 15);
+				}
 			}
 		} else {
 			Actor_Says(kActorMcCoy, 8600, 18);

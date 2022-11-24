@@ -140,17 +140,20 @@ void SceneScriptPS14::PlayerWalkedIn() {
 	// a game over.
 	if (_vm->_cutContent) {
 		if (Game_Flag_Query(kFlagUG18GuzzaScene)
-		&& Actor_Query_Goal_Number(kActorOfficerGrayford) != kGoalOfficerGrayfordDead
-		&& Actor_Query_Goal_Number(kActorOfficerLeary) != kGoalOfficerLearyDead
 		&& !Game_Flag_Query(kFlagOfficerLearyKilledByBob)
 		&& (Global_Variable_Query(kVariableChapter) == 4)) {  
 			Actor_Put_In_Set(kActorOfficerGrayford, kSetPS14);
 			Actor_Set_At_XYZ(kActorOfficerGrayford, -879.97, 507.86, -1132.41, 0);
 			Actor_Put_In_Set(kActorOfficerLeary, kSetPS14);
 			Actor_Set_At_XYZ(kActorOfficerLeary, -871.09, 507.83, -1034.80, 0);
+			Actor_Face_Actor(kActorOfficerLeary, kActorOfficerGrayford, true); 
+			Actor_Face_Actor(kActorOfficerGrayford, kActorOfficerLeary, true);
+			Actor_Says(kActorOfficerLeary, 280, kAnimationModeTalk); //23-0280.AUD	Sounds like another nutcase overdosed on too many lichen-dogs.	 
+			Actor_Says(kActorOfficerGrayford, 460, kAnimationModeTalk); //24-0460.AUD	Either that or another street punk that sucked one too many sugar cubes.;
 			Actor_Face_Actor(kActorMcCoy, kActorOfficerGrayford, true);
 			Actor_Face_Actor(kActorOfficerGrayford, kActorMcCoy, true);
 			Actor_Face_Actor(kActorOfficerLeary, kActorMcCoy, true);
+			Actor_Says(kActorMcCoy, 3970, 15); //00-3970.AUD	Hey.
 			Music_Play(kMusicBatl226M, 50, 0, 2, -1, kMusicLoopPlayOnce, 0);
 			Actor_Change_Animation_Mode(kActorOfficerLeary, kAnimationModeCombatIdle);
 			Actor_Says(kActorOfficerGrayford, 300, kAnimationModeTalk); //24-0300.AUD	Over there!
@@ -160,7 +163,13 @@ void SceneScriptPS14::PlayerWalkedIn() {
 			// If McCoy doesn't have the evidence or retired a human he is arrested and it is game over.
 			if (!Actor_Clue_Query(kActorMcCoy, kClueBriefcase)
 			|| Game_Flag_Query(kFlagMcCoyRetiredHuman)) {
-				Actor_Set_Goal_Number(kActorMcCoy, kGoalMcCoyArrested);
+				Actor_Change_Animation_Mode(kActorOfficerGrayford, kAnimationModeCombatAttack);
+				if (Actor_Query_Friendliness_To_Other(kActorOfficerLeary, kActorMcCoy) < 50) {
+					Actor_Change_Animation_Mode(kActorOfficerLeary, kAnimationModeCombatAttack);
+				}
+				Sound_Play(kSfxSMCAL3, 100, 0, 0, 50);
+				Actor_Change_Animation_Mode(kActorMcCoy, kAnimationModeDie);
+				Actor_Retired_Here(kActorMcCoy, 12, 12, true, -1);
 			} else {
 				Actor_Says(kActorMcCoy, 710, 23); //00-0710.AUD	Hold it! I'm not a Replicant, I got proof!		 
 				Actor_Says(kActorOfficerGrayford, 20, kAnimationModeTalk); //24-0020.AUD	Don’t bullshit, McCoy!

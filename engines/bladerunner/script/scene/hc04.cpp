@@ -115,12 +115,14 @@ bool SceneScriptHC04::ClickedOnActor(int actorId) {
 					if (Actor_Clue_Query(kActorMcCoy, kClueKingstonKitchenBox2)
 	 				|| Actor_Clue_Query(kActorMcCoy, kClueKingstonKitchenBox1)
 					|| Actor_Clue_Query(kActorMcCoy, kClueSpecialIngredient)) {
-						if (Player_Query_Agenda() == kPlayerAgendaPolite) {
-							Actor_Says(kActorMcCoy, 1280, 23); //00-1280.AUD	McCoy, LPD. Mind if I ask you a couple of questions?
-						} else {
-							Actor_Says(kActorMcCoy, 8920, 14); //00-8920.AUD	I gotta ask you a question.
+						if (Global_Variable_Query(kVariableChapter) < 4) {
+							if (Player_Query_Agenda() == kPlayerAgendaPolite) {
+								Actor_Says(kActorMcCoy, 1280, 23); //00-1280.AUD	McCoy, LPD. Mind if I ask you a couple of questions?
+							} else {
+								Actor_Says(kActorMcCoy, 8920, 14); //00-8920.AUD	I gotta ask you a question.
+							}
+							Actor_Says(kActorIsabella, 20, kAnimationModeTalk);
 						}
-						Actor_Says(kActorIsabella, 20, kAnimationModeTalk);
 					}
 				} else {
 					Actor_Says(kActorMcCoy, 1280, kAnimationModeTalk);
@@ -242,17 +244,6 @@ void SceneScriptHC04::dialogueWithIsabella() {
 	} else if (Actor_Clue_Query(kActorMcCoy, kClueSpecialIngredient)) {
 		DM_Add_To_List_Never_Repeat_Once_Selected(380, -1, 5, 8); // MIA AND MURRAY INFO
 	}
-	if (_vm->_cutContent) {
-		if (Global_Variable_Query(kVariableChapter) < 4) {
-			if (Actor_Clue_Query(kActorMcCoy, kClueSpecialIngredient)
-			&& !Actor_Clue_Query(kActorMcCoy, kClueStolenCheese)) {
-				if (Player_Query_Agenda() == kPlayerAgendaSurly 	
-				|| Player_Query_Agenda() == kPlayerAgendaErratic) { 
-					DM_Add_To_List(1250, -1, -1, 10); // ARREST
-				}
-			}
-		}
-	}
 	// Made it so McCoy doesn't have the option to buy the stew if he found out about the special ingredient.
 	// It would make no sense for McCoy to ask what's in the stew and then buy some of it knowing it contains illegal ingredients.
 	if (_vm->_cutContent) {
@@ -298,7 +289,7 @@ void SceneScriptHC04::dialogueWithIsabella() {
 				if (Player_Query_Agenda() == kPlayerAgendaSurly
 				|| (Player_Query_Agenda() == kPlayerAgendaErratic)) {
 					Actor_Says(kActorMcCoy, 6985, 16); //00-6985.AUD	Got the straight scoop for me or what?
-					Delay(2000);
+					Delay(1000);
 					Actor_Says(kActorIsabella, 70, kAnimationModeTalk); //59-0070.AUD	Two. Sometimes three on the busy night.
 					Actor_Says(kActorIsabella, 80, kAnimationModeTalk); //59-0080.AUD	Usual two riders. They Chinese. Third guy part timer. He Moroccan I think.
 					Actor_Says(kActorMcCoy, 1340, kAnimationModeTalk); //00-1340.AUD	A big guy with dreadlocks?
@@ -332,10 +323,7 @@ void SceneScriptHC04::dialogueWithIsabella() {
 				Actor_Says(kActorIsabella, 110, kAnimationModeTalk);
 				Actor_Says(kActorMcCoy, 1355, kAnimationModeTalk);
 				Actor_Says(kActorIsabella, 130, kAnimationModeTalk);
-				if (Player_Query_Agenda() != kPlayerAgendaSurly
-				&& (Player_Query_Agenda() != kPlayerAgendaErratic)) {
-					Actor_Says(kActorMcCoy, 1360, kAnimationModeTalk); //00-1360.AUD	You may have a little trouble collecting. He's dead.
-				}
+				Actor_Says(kActorMcCoy, 1360, kAnimationModeTalk); //00-1360.AUD	You may have a little trouble collecting. He's dead.
 			} else {
 				Actor_Says(kActorMcCoy, 1295, kAnimationModeTalk);
 				Actor_Says(kActorIsabella, 170, kAnimationModeTalk); //59-0170.AUD	Why you pick on Mama Isabella? I never do you no harm.
@@ -345,9 +333,10 @@ void SceneScriptHC04::dialogueWithIsabella() {
 					Delay(1000);
 					Actor_Says(kActorIsabella, 100, kAnimationModeTalk);
 					Actor_Says(kActorMcCoy, 1350, kAnimationModeTalk);
-					Actor_Says(kActorIsabella, 110, kAnimationModeTalk);
-					Actor_Says(kActorMcCoy, 1355, kAnimationModeTalk);
-					Actor_Says(kActorIsabella, 130, kAnimationModeTalk);
+					Delay(2000);
+					Actor_Says(kActorMcCoy, 7995, kAnimationModeTalk); //00-7995.AUD	No?
+					Delay(2000);
+					Actor_Says(kActorMcCoy, 4595, 14); //00-4595.AUD	Stick around. I may not be finished with you.
 				}
 			}
 		} else {
@@ -364,8 +353,19 @@ void SceneScriptHC04::dialogueWithIsabella() {
 	case 370: // CHEESE
 		Actor_Says(kActorMcCoy, 1300, kAnimationModeTalk);
 		Actor_Says(kActorIsabella, 140, kAnimationModeTalk);
-		Actor_Says(kActorMcCoy, 1365, kAnimationModeTalk);
-		Actor_Says(kActorIsabella, 150, kAnimationModeTalk);
+		if (_vm->_cutContent) {
+			if (Player_Query_Agenda() == kPlayerAgendaPolite) {
+				Actor_Says(kActorMcCoy, 1365, kAnimationModeTalk);
+				Actor_Says(kActorIsabella, 150, kAnimationModeTalk);
+			} else if (Player_Query_Agenda() == kPlayerAgendaSurly
+			|| (Player_Query_Agenda() == kPlayerAgendaErratic)) {
+				Actor_Says(kActorMcCoy, 6995, 18); //00-6995.AUD	That's not what I heard. You wanna set the record straight?
+				Actor_Says(kActorIsabella, 150, kAnimationModeTalk);
+			}
+		} else {
+			Actor_Says(kActorMcCoy, 1365, kAnimationModeTalk);
+			Actor_Says(kActorIsabella, 150, kAnimationModeTalk);
+		}
 		break;
 
 	case 380: // MIA AND MURRAY INFO
@@ -374,8 +374,16 @@ void SceneScriptHC04::dialogueWithIsabella() {
 			Actor_Modify_Friendliness_To_Other(kActorIsabella, kActorMcCoy, -2);
 		}
 		Actor_Says(kActorIsabella, 160, kAnimationModeTalk);
-		Actor_Says(kActorMcCoy, 1370, kAnimationModeTalk);
-		Actor_Says(kActorIsabella, 170, kAnimationModeTalk); //59-0170.AUD	Why you pick on Mama Isabella? I never do you no harm.
+		if (_vm->_cutContent) {
+			if (Player_Query_Agenda() == kPlayerAgendaSurly
+			|| (Player_Query_Agenda() == kPlayerAgendaErratic)) {
+				Actor_Says(kActorMcCoy, 1370, kAnimationModeTalk);
+				Actor_Says(kActorIsabella, 170, kAnimationModeTalk); //59-0170.AUD	Why you pick on Mama Isabella? I never do you no harm.
+			}
+		} else {
+			Actor_Says(kActorMcCoy, 1370, kAnimationModeTalk);
+			Actor_Says(kActorIsabella, 170, kAnimationModeTalk); //59-0170.AUD	Why you pick on Mama Isabella? I never do you no harm.
+		}
 		// Added in some dialogue and made the conversation play out differently based on whether McCoy is surly or erratic.
 		// If McCoy is mean Mama Isabella denies all involvement but if McCoy is nice to her she reluctantly tells him the truth.
 		if (_vm->_cutContent) {
@@ -432,26 +440,6 @@ void SceneScriptHC04::dialogueWithIsabella() {
 			Actor_Says(kActorIsabella, 330, kAnimationModeTalk); //59-0330.AUD	You bet, mon. That cheese’s been nothing but trouble for Mama Isabella.
 			Actor_Clue_Acquire(kActorMcCoy, kClueStolenCheese, false, kActorIsabella);
 		}
-		break;
-
-	case 1250:
-		Actor_Face_Actor(kActorMcCoy, kActorIsabella, true);
-		Actor_Face_Actor(kActorIsabella, kActorMcCoy, true);
-		Actor_Says(kActorMcCoy, 7860, 14); //00-7860.AUD	Stay right where you are.
-		Actor_Says(kActorMcCoy, 1955, 15); //00-1955.AUD	We’re taking a little drive downtown.
-		Actor_Says(kActorIsabella, 150, kAnimationModeTalk); //59-0150.AUD	This is a clean place man. Mama Isabella law-abiding soul.
-		Actor_Says(kActorMcCoy, 2485, 14); //00-2485.AUD	I’ve a hard time believing that.
-		Game_Flag_Set(kFlagIsabellaArrested);
-		Music_Stop(3u);
-		Delay (1000);
-		Actor_Put_In_Set(kActorIsabella, kSetPS09);
-		Actor_Set_At_XYZ(kActorIsabella, -450.0f, 0.2f, -195.0f, 518);
-		Game_Flag_Reset(kFlagSpinnerAtAR01);
-		Game_Flag_Set(kFlagSpinnerAtPS01);
-		Game_Flag_Reset(kFlagMcCoyInHawkersCircle);
-		Game_Flag_Set(kFlagMcCoyInPoliceStation);
-		Outtake_Play(kOuttakeAway1, true, -1);
-		Set_Enter(kSetPS09, kScenePS09);
 		break;
 
 	case 390: // BUY STEW

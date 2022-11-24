@@ -105,26 +105,32 @@ bool SceneScriptHC02::ClickedOnActor(int actorId) {
 					|| Actor_Clue_Query(kActorMcCoy, kClueHomelessManInterview2)) {
 						Actor_Says(kActorMcCoy, 1225, 13); //00-1225.AUD	I got a couple of questions for you, Captain.
 					} else {
-						Actor_Says(kActorMcCoy, 3970, 14);
+						Actor_Says(kActorMcCoy, 3970, 14); //00-3970.AUD	Hey.
 					}
 				} else {
 					Actor_Says(kActorMcCoy, 1225, 13); //00-1225.AUD	I got a couple of questions for you, Captain.
 				}
 				Actor_Says_With_Pause(kActorHawkersBarkeep, 0, 0.0f, 13); //32-0000.AUD	First one's on the house. The rest you pay for.
-				if (!_vm->_cutContent) {
-					Actor_Says(kActorHawkersBarkeep, 10, 16); //32-0010.AUD	You want chit chat you hire a hooker. This ain't no social club.
+				if (_vm->_cutContent) {
+					if (Actor_Clue_Query(kActorMcCoy, kClueChinaBarSecurityCamera)
+					|| Actor_Clue_Query(kActorMcCoy, kClueHomelessManInterview2)) {
+						Actor_Says(kActorHawkersBarkeep, 10, 16); //32-0010.AUD	You want chit chat you hire a hooker. This ain't no social club.
+						if (Player_Query_Agenda() == kPlayerAgendaSurly 
+						|| Player_Query_Agenda() == kPlayerAgendaErratic) {
+							Actor_Says(kActorMcCoy, 4320, 14); //00-4320.AUD	Save the pitch for someone who gives a shit.
+							Delay(2000);
+						} else {
+							Actor_Says(kActorMcCoy, 4880, 13); //00-4880.AUD	Is that right?
+							Delay(1000);
+						}
+					} else {
+						Delay(1000);
+					}
 				} else {
-					Delay(500);
+					Actor_Says(kActorHawkersBarkeep, 10, 16); //32-0010.AUD	You want chit chat you hire a hooker. This ain't no social club.
 				}
 				if (_vm->_cutContent) {
-					if (Player_Query_Agenda() == kPlayerAgendaSurly 
-					|| Player_Query_Agenda() == kPlayerAgendaErratic) {
-						Actor_Says(kActorMcCoy, 4320, 14); //00-4320.AUD	Save the pitch for someone who gives a shit.
-						Delay(2000);
-						Actor_Says(kActorMcCoy, 1250, 13); //00-1250.AUD	Pour me one. 
-						Actor_Says_With_Pause(kActorHawkersBarkeep, 60, 0.8f, 14);
-						Actor_Says(kActorMcCoy, 1255, 13);
-					} else if (Player_Query_Agenda() == kPlayerAgendaPolite) { 
+					if (Player_Query_Agenda() == kPlayerAgendaPolite) { 
 						if (Global_Variable_Query(kVariableChinyen) >= 10
 						|| Query_Difficulty_Level() == kGameDifficultyEasy) {	
 							Actor_Says(kActorMcCoy, 345, 16); //00-0345.AUD	Wanna make some money?
@@ -132,13 +138,14 @@ bool SceneScriptHC02::ClickedOnActor(int actorId) {
 							Actor_Change_Animation_Mode(kActorMcCoy, 23);
 							Delay(2000);
 							Actor_Says(kActorMcCoy, 8170, 13); //00-8170.AUD	There you go.
-							Delay(1000);
-							Actor_Says(kActorMcCoy, 1250, 13); //00-1250.AUD	Pour me one. 
+							Delay(1000);							 
 							Game_Flag_Set(kFlagHawkersBarkeepHappy);
-							Delay(2000);
 							if (Query_Difficulty_Level() != kGameDifficultyEasy) {
 								Global_Variable_Decrement(kVariableChinyen, 10);
-							}
+							}		
+							Actor_Says(kActorMcCoy, 1250, 13); //00-1250.AUD	Pour me one.				
+						} else {
+							Actor_Says(kActorMcCoy, 1250, 13); //00-1250.AUD	Pour me one.
 						}
 					} else {
 						Actor_Says(kActorMcCoy, 1250, 13); //00-1250.AUD	Pour me one.
@@ -170,16 +177,6 @@ bool SceneScriptHC02::ClickedOnActor(int actorId) {
 						|| Player_Query_Agenda() == kPlayerAgendaErratic) {
 							Actor_Says(kActorMcCoy, 6995, 18); //00-6995.AUD	That's not what I heard. You wanna set the record straight?
 							Actor_Says(kActorHawkersBarkeep, 150, 16); //32-0150.AUD	Hey, you can always ask someone who cares what you think.
-							Actor_Says(kActorMcCoy, 8445, 14); //00-8445.AUD	Cough it up!
-							Delay(1500);
-							Actor_Says(kActorMcCoy, 1805, 14); //00-1805.AUD	Now!
-							Delay(1000);
-							Actor_Says(kActorHawkersBarkeep, 180, 14); //32-0180.AUD	But if you're gonna sit there until I cough it up, well, here it is.
-							Item_Pickup_Spin_Effect(kModelAnimationVideoDisc, 229, 215);
-							Actor_Change_Animation_Mode(kActorMcCoy, 23);
-							Actor_Change_Animation_Mode(kActorHawkersBarkeep, 23);
-							Delay(2000);
-							Actor_Clue_Acquire(kActorMcCoy, kClueChinaBarSecurityDisc, true, kActorHawkersBarkeep);
 						}
 					} else {
 						Actor_Says(kActorHawkersBarkeep, 110, 12); // 32-0110.AUD	You've been a good customer, so I'll bent the rules just this once and tell you.
@@ -223,7 +220,9 @@ bool SceneScriptHC02::ClickedOnActor(int actorId) {
 							if (Query_Difficulty_Level() != kGameDifficultyEasy) {
 								Global_Variable_Decrement(kVariableChinyen, 20);
 							}
-							Actor_Says(kActorMcCoy, 1245, 13);
+							if (Player_Query_Agenda() == kPlayerAgendaPolite) {
+								Actor_Says(kActorMcCoy, 1245, 13); //00-1245.AUD	It's for a friend.
+							}
 							Actor_Clue_Acquire(kActorMcCoy, kClueFlaskOfAbsinthe, true, kActorHawkersBarkeep);
 						} else {
 							Actor_Says(kActorMcCoy, 125, 13); //00-0125.AUD	I'm a little strapped for cash right now.
@@ -239,29 +238,13 @@ bool SceneScriptHC02::ClickedOnActor(int actorId) {
 							Actor_Clue_Acquire(kActorMcCoy, kClueFlaskOfAbsinthe, true, kActorHawkersBarkeep);
 						}
 					} else {
-						if (Global_Variable_Query(kVariableChinyen) >= 5
-						|| Query_Difficulty_Level() == kGameDifficultyEasy) {
-							Delay(2000);
-							Item_Pickup_Spin_Effect(kModelAnimationFlaskOfAbsinthe, 229, 215);
-							Actor_Set_Goal_Number(kActorHawkersBarkeep, 2);
-							Actor_Change_Animation_Mode(kActorMcCoy, 23);
-							Delay(1500);
-							if (Query_Difficulty_Level() != kGameDifficultyEasy) {
-								Global_Variable_Decrement(kVariableChinyen, 5);
-							}
-							Actor_Says(kActorMcCoy, 3935, 14); // 00-3935.AUD	Thanks.
-							Actor_Clue_Acquire(kActorMcCoy, kClueFlaskOfAbsinthe, true, kActorHawkersBarkeep);
-						} else {	
-							Actor_Says(kActorMcCoy, 125, 13); //00-0125.AUD	I'm a little strapped for cash right now.
-							Actor_Says(kActorMcCoy, 1260, 13); // 00-1260.AUD	How about you run a tab?
-							Delay(2000);
-							Item_Pickup_Spin_Effect(kModelAnimationFlaskOfAbsinthe, 229, 215);
-							Actor_Set_Goal_Number(kActorHawkersBarkeep, 2);
-							Actor_Change_Animation_Mode(kActorMcCoy, 23);
-							Delay(1500);
-							Actor_Says(kActorMcCoy, 3935, 14); // 00-3935.AUD	Thanks.
-							Actor_Clue_Acquire(kActorMcCoy, kClueFlaskOfAbsinthe, true, kActorHawkersBarkeep);
-						}
+						Delay(2000);
+						Item_Pickup_Spin_Effect(kModelAnimationFlaskOfAbsinthe, 229, 215);
+						Actor_Set_Goal_Number(kActorHawkersBarkeep, 2);
+						Actor_Change_Animation_Mode(kActorMcCoy, 23);
+						Delay(1500);
+						Actor_Says(kActorMcCoy, 3935, 14); // 00-3935.AUD	Thanks.
+						Actor_Clue_Acquire(kActorMcCoy, kClueFlaskOfAbsinthe, true, kActorHawkersBarkeep);
 					}
 				} else {
 					Actor_Says(kActorHawkersBarkeep, 40, 14);

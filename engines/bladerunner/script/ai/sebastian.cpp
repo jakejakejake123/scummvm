@@ -397,22 +397,38 @@ void AIScriptSebastian::dialogue() {
 
 	if (Actor_Query_Friendliness_To_Other(kActorSebastian, kActorMcCoy) >= 45) {
 		DM_Add_To_List_Never_Repeat_Once_Selected(930, 5, 5, 5); // MORAJI AND CHEW
-		DM_Add_To_List_Never_Repeat_Once_Selected(940, -1, 5, 6); // EISENDULLER
+		if (_vm->_cutContent) {
+			DM_Add_To_List_Never_Repeat_Once_Selected(940, 4, 5, 6); // EISENDULLER
+		} else {
+			DM_Add_To_List_Never_Repeat_Once_Selected(940, -1, 5, 6); // EISENDULLER
+		}
 		DM_Add_To_List_Never_Repeat_Once_Selected(950, 5, 5, 5); // TYRELL
 	}
 
 	if (Actor_Clue_Query(kActorMcCoy, kClueAnsweringMachineMessage)) {
-		DM_Add_To_List_Never_Repeat_Once_Selected(960, 3, -1, 5); // TWINS
+		if (_vm->_cutContent) {
+			DM_Add_To_List_Never_Repeat_Once_Selected(960, 3, 1, 4); // TWINS
+		} else {
+			DM_Add_To_List_Never_Repeat_Once_Selected(960, 3, -1, 5); // TWINS
+		}
 	}
 
 	if (Actor_Clue_Query(kActorMcCoy, kClueAnsweringMachineMessage)
 	 && Actor_Clue_Query(kActorMcCoy, kClueEnvelope)
 	) {
-		DM_Add_To_List_Never_Repeat_Once_Selected(970, -1, 4, -1); // RUNCITER
+		if (_vm->_cutContent) {
+			DM_Add_To_List_Never_Repeat_Once_Selected(970, 2, 3, 4); // RUNCITER
+		} else {
+			DM_Add_To_List_Never_Repeat_Once_Selected(970, -1, 4, -1); // RUNCITER
+		}
 	}
-
-	DM_Add_To_List_Never_Repeat_Once_Selected(980, -1, -1, 7); // ROBBERS
-	DM_Add_To_List_Never_Repeat_Once_Selected(990, 7, 3, -1); // NEXUS-6
+	if (_vm->_cutContent) {
+		DM_Add_To_List_Never_Repeat_Once_Selected(980, 6, 5, 7); // ROBBERS
+		DM_Add_To_List_Never_Repeat_Once_Selected(990, 1, 2, 3); // NEXUS-6
+	} else {
+		DM_Add_To_List_Never_Repeat_Once_Selected(980, -1, -1, 7); // ROBBERS
+		DM_Add_To_List_Never_Repeat_Once_Selected(990, 7, 3, -1); // NEXUS-6
+	}
 
 	if (Dialogue_Menu_Query_List_Size()) {
 		// This condition clause for non-empty dialogue menu options before adding the DONE option
@@ -474,15 +490,13 @@ void AIScriptSebastian::dialogue() {
 				if (Actor_Query_Friendliness_To_Other(kActorSebastian, kActorMcCoy) > 49) {
 					Actor_Says(kActorSebastian, 390, 14); //56-0390.AUD	Dr. Tyrell and I play chess every week. I've only beaten him once.
 					if (Actor_Clue_Query(kActorMcCoy, kClueChessTable)) {
-						if (Player_Query_Agenda() == kPlayerAgendaPolite) {
-							Actor_Says(kActorMcCoy, 7140, kAnimationModeTalk); //00-7140.AUD	You're in the middle of a game right now?
-							Actor_Says(kActorSebastian, 400, 12);
-							Actor_Says(kActorMcCoy, 7145, 16); //00-7145.AUD	I don't have the patience for chess.
-							Actor_Says(kActorSebastian, 410, 13);
-							Actor_Says(kActorMcCoy, 7150, 17);
-							Actor_Says(kActorSebastian, 420, 13);
-							Actor_Says(kActorSebastian, 430, 14);
-						}
+						Actor_Says(kActorMcCoy, 7140, kAnimationModeTalk); //00-7140.AUD	You're in the middle of a game right now?
+						Actor_Says(kActorSebastian, 400, 12);
+						Actor_Says(kActorMcCoy, 7145, 16); //00-7145.AUD	I don't have the patience for chess.
+						Actor_Says(kActorSebastian, 410, 13);
+						Actor_Says(kActorMcCoy, 7150, 17);
+						Actor_Says(kActorSebastian, 420, 13);
+						Actor_Says(kActorSebastian, 430, 14);
 					}
 				}
 			} else {
@@ -501,14 +515,8 @@ void AIScriptSebastian::dialogue() {
 
 		case 960: // TWINS
 			Actor_Says(kActorMcCoy, 7090, 17);
-			Actor_Says(kActorSebastian, 440, 14);
-			if (_vm->_cutContent) {
-				if (Actor_Query_Friendliness_To_Other(kActorSebastian, kActorMcCoy) > 49) {
-					Actor_Says(kActorSebastian, 450, 13); //56-0450.AUD	Nobody really knows why either.
-				}
-			} else {
-				Actor_Says(kActorSebastian, 450, 13);	
-			}
+			Actor_Says(kActorSebastian, 440, 14);	
+			Actor_Says(kActorSebastian, 450, 13);	
 			Actor_Says(kActorMcCoy, 7155, 13); //00-7155.AUD	You think they'd hold a grudge against Tyrell?
 			// What Sebastian says about the twins now changes based on their replicant status.
 			if (_vm->_cutContent) {
@@ -521,20 +529,15 @@ void AIScriptSebastian::dialogue() {
 				Actor_Says(kActorSebastian, 460, 17); //56-0460.AUD	Maybe. But they're decent fellows Mr. McCoy.
 				Actor_Says(kActorSebastian, 470, 12); //56-0470.AUD	I don't think they'd ever do a mean thing to anybody.
 			}
+			Actor_Says(kActorSebastian, 480, 13); 
+			Actor_Says(kActorMcCoy, 7160, 18); //00-7160.AUD	Maybe they're too smart to keep around. Too much competition for the old man.
+			Actor_Says(kActorSebastian, 490, 14);
 			if (_vm->_cutContent) {
-				if (Actor_Query_Friendliness_To_Other(kActorSebastian, kActorMcCoy) > 49) {
-					Actor_Says(kActorSebastian, 480, 13); 
-					Actor_Says(kActorMcCoy, 7160, 18); //00-7160.AUD	Maybe they're too smart to keep around. Too much competition for the old man.
-					Actor_Says(kActorSebastian, 490, 14);
-					if (!Game_Flag_Query(kFlagMcCoyIsHelpingReplicants)) {
-						Actor_Says(kActorMcCoy, 7165, 14); //00-7165.AUD	How about this. Do you think they're the type who might help out renegade Replicants?
-						setMcCoyIsABladeRunner();
-					}
+				if (!Game_Flag_Query(kFlagMcCoyIsHelpingReplicants)) {
+					Actor_Says(kActorMcCoy, 7165, 14); //00-7165.AUD	How about this. Do you think they're the type who might help out renegade Replicants?
+					setMcCoyIsABladeRunner();
 				}
 			} else {
-				Actor_Says(kActorSebastian, 480, 13); 
-				Actor_Says(kActorMcCoy, 7160, 18); //00-7160.AUD	Maybe they're too smart to keep around. Too much competition for the old man.
-				Actor_Says(kActorSebastian, 490, 14);
 				Actor_Says(kActorMcCoy, 7165, 14);
 				setMcCoyIsABladeRunner();
 			}
@@ -570,24 +573,23 @@ void AIScriptSebastian::dialogue() {
 		case 980: // ROBBERS
 			if (_vm->_cutContent) {
 				Actor_Says(kActorMcCoy, 7110, 15); //00-7110.AUD	Maybe you can clear something up for me...
-			}
-			Actor_Says(kActorMcCoy, 7100, 12); //00-7100.AUD	You're sure you don't have much valuable stuff around here?
-			Actor_Says(kActorSebastian, 540, 16);
-			Actor_Says(kActorMcCoy, 7115, 13); //00-7115.AUD	You're sure there isn't anything missing?
-			if (_vm->_cutContent) {
-				if (Actor_Query_Friendliness_To_Other(kActorSebastian, kActorMcCoy) > 49) {
+				Actor_Says(kActorMcCoy, 7100, 12); //00-7100.AUD	You're sure you don't have much valuable stuff around here?
+				Actor_Says(kActorSebastian, 540, 16); //56-0540.AUD	Anything worthwhile I probably would have sold a long time ago. All this is personal stuff. Wouldn't mean a whole lot to anyone but me.
+				if (Player_Query_Agenda() == kPlayerAgendaSurly 
+				|| Player_Query_Agenda() == kPlayerAgendaErratic) {
+					Actor_Says(kActorMcCoy, 7115, 13); //00-7115.AUD	You're sure there isn't anything missing?
 					Actor_Says(kActorSebastian, 280, 14); //56-0280.AUD	Yes. I mean… No, sir. All my things are here.
-				} else {
+					Actor_Says(kActorMcCoy, 4180, 13); //00-4180.AUD	You sure?
 					Actor_Says(kActorSebastian, 270, 16); //56-0270.AUD	You saw for yourself nothing's here. I wish you'd leave me alone.
-				}
-			}
-			if (_vm->_cutContent) {
-				if (Player_Query_Agenda() == kPlayerAgendaPolite) {
+					Actor_Modify_Friendliness_To_Other(kActorSebastian, kActorMcCoy, -2);
+				} else {
 					Actor_Says(kActorMcCoy, 7195, 18); //00-7195.AUD	Maybe they were looking for you.
 					Actor_Says(kActorSebastian, 720, 12);
 				}
 			} else {
-				Actor_Says(kActorMcCoy, 7195, 18); //00-7195.AUD	Maybe they were looking for you.
+				Actor_Says(kActorMcCoy, 7100, 12);
+				Actor_Says(kActorSebastian, 540, 16);
+				Actor_Says(kActorMcCoy, 7195, 18);
 				Actor_Says(kActorSebastian, 720, 12);
 			}
 			break;
@@ -620,34 +622,35 @@ void AIScriptSebastian::setMcCoyIsABladeRunner() {
 	} else {
 		Actor_Says(kActorSebastian, 560, 15);
 	}
-	Actor_Says(kActorMcCoy, 7200, 14);
-	Actor_Says(kActorSebastian, 570, 16);
-	Actor_Says(kActorMcCoy, 7205, 17); //00-7205.AUD	The guys who broke in might be Replicants.
-	Actor_Says(kActorSebastian, 580, 13);
 	if (_vm->_cutContent) {
-		if (Player_Query_Agenda() == kPlayerAgendaPolite) {
-			Actor_Says_With_Pause(kActorMcCoy, 7210, 1.0f, 16); //00-7210.AUD	You worked on the Nexus-6 series, didn't you?
-			Actor_Says(kActorSebastian, 590, 12);
-			Actor_Says(kActorMcCoy, 7215, 19); //00-7215.AUD	Would you say that the Sixes are smarter than the old Fours and Fives?
-			Actor_Says(kActorSebastian, 600, 14);
-			Actor_Says(kActorMcCoy, 7220, 13); //00-7220.AUD	So, maybe they want to learn more about themselves.
-			Delay(1000);
-			if (Game_Flag_Query(kFlagMcCoyIsHelpingReplicants)) {
-				Actor_Says_With_Pause(kActorMcCoy, 7225, 0.80f, 14); //00-7225.AUD	Maybe they want to pick your brain about their brains.
-			}
-		} else {
-			Actor_Says(kActorMcCoy, 8330, 14); //00-8330.AUD	You tell me.
-			Delay(2000);
+		if (!Game_Flag_Query(kFlagMcCoyIsHelpingReplicants)) {
+			Actor_Says(kActorMcCoy, 7200, 14); //00-7200.AUD	Bingo.
+			Actor_Says(kActorSebastian, 570, 16);
 		}
 	} else {
-		Actor_Says_With_Pause(kActorMcCoy, 7210, 1.0f, 16); //00-7210.AUD	You worked on the Nexus-6 series, didn't you?
-		Actor_Says(kActorSebastian, 590, 12);
-		Actor_Says(kActorMcCoy, 7215, 19); //00-7215.AUD	Would you say that the Sixes are smarter than the old Fours and Fives?
-		Actor_Says(kActorSebastian, 600, 14);
-		Actor_Says(kActorMcCoy, 7220, 13); //00-7220.AUD	So, maybe they want to learn more about themselves.
-		Actor_Says_With_Pause(kActorMcCoy, 7225, 0.80f, 14); //00-7225.AUD	Maybe they want to pick your brain about their brains.
+		Actor_Says(kActorMcCoy, 7200, 14);
+		Actor_Says(kActorSebastian, 570, 16);
 	}
+	Actor_Says(kActorMcCoy, 7205, 17); //00-7205.AUD	The guys who broke in might be Replicants.
+	Actor_Says(kActorSebastian, 580, 13);
+	Actor_Says_With_Pause(kActorMcCoy, 7210, 1.0f, 16); //00-7210.AUD	You worked on the Nexus-6 series, didn't you?
+	Actor_Says(kActorSebastian, 590, 12);
+	Actor_Says(kActorMcCoy, 7215, 19); //00-7215.AUD	Would you say that the Sixes are smarter than the old Fours and Fives?
+	Actor_Says(kActorSebastian, 600, 14);
+	Actor_Says(kActorMcCoy, 7220, 13); //00-7220.AUD	So, maybe they want to learn more about themselves.
+	Actor_Says_With_Pause(kActorMcCoy, 7225, 0.80f, 14); //00-7225.AUD	Maybe they want to pick your brain about their brains.
 	Actor_Says(kActorSebastian, 610, 15);
+	if (_vm->_cutContent) {
+		Delay(1000);
+		Actor_Says(kActorMcCoy, 5145, 13);
+		Player_Loses_Control();
+		Loop_Actor_Walk_To_XYZ(kActorMcCoy, -212.0f, -60.31f, 131.0f, 0, true, false, false);
+		Player_Gains_Control();
+		Ambient_Sounds_Remove_All_Non_Looping_Sounds(true);
+		Ambient_Sounds_Remove_All_Looping_Sounds(1u);
+		Game_Flag_Set(kFlagBB05toBB03);
+		Set_Enter(kSetBB03, kSceneBB03);
+	}
 }
 
 } // End of namespace BladeRunner

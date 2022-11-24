@@ -168,13 +168,17 @@ bool SceneScriptCT02::ClickedOn3DObject(const char *objectName, bool a2) {
 void SceneScriptCT02::dialogueWithZuben() {
 	Dialogue_Menu_Clear_List();
 	if (Actor_Clue_Query(kActorMcCoy, kClueLucy)) {
-		DM_Add_To_List_Never_Repeat_Once_Selected(270, 8, 5, 3); // LUCY PHOTO
+		if (_vm->_cutContent) {
+			DM_Add_To_List_Never_Repeat_Once_Selected(270, 8, 5, 4); // LUCY PHOTO
+		} else {
+			DM_Add_To_List_Never_Repeat_Once_Selected(270, 8, 5, 3); // LUCY PHOTO
+		}
 	}
 	// Made it so McCoy always asks Zuben about Lucy since he always receives Lucys description by default.
 	if (!_vm->_cutContent) {
 		 if (Actor_Clue_Query(kActorMcCoy, kClueRunciterInterviewA)
 		 && !Actor_Clue_Query(kActorMcCoy, kClueLucy)) {
-			DM_Add_To_List_Never_Repeat_Once_Selected(280, 8, 5, 3); // LUCY
+			DM_Add_To_List_Never_Repeat_Once_Selected(280, 8, 5, 4); // LUCY
 		}
 	}
 	int evidenceCount = 0;
@@ -183,8 +187,10 @@ void SceneScriptCT02::dialogueWithZuben() {
 		evidenceCount = 1;
 	}
 #else
-	if (Actor_Clue_Query(kActorMcCoy, kClueDoorForced2) || Actor_Clue_Query(kActorMcCoy, kClueDoorForced1)) {
-		++evidenceCount;
+	if (!_vm->_cutContent) {
+		if (Actor_Clue_Query(kActorMcCoy, kClueDoorForced2) || Actor_Clue_Query(kActorMcCoy, kClueDoorForced1)) {
+			++evidenceCount;
+		}
 	}
 #endif // BLADERUNNER_ORIGINAL_BUGS
 	if (Actor_Clue_Query(kActorMcCoy, kClueLabCorpses)) {
@@ -227,10 +233,11 @@ void SceneScriptCT02::dialogueWithZuben() {
 	// -. Make McCoy able to VK Zuben even in Polite mode
 	//
 	if (_vm->_cutContent) {
-		if (evidenceCount > 2
+		if (evidenceCount > 1
 		&& (Actor_Clue_Query(kActorMcCoy, kClueSushiMenu))) { 
-			DM_Add_To_List_Never_Repeat_Once_Selected(290, 0, 4, 8); // VOIGT-KAMPFF
-		}
+			DM_Add_To_List_Never_Repeat_Once_Selected(290, 1, 2, 3); // VOIGT-KAMPFF
+			DM_Add_To_List(1110, 3, 2, 1); // CRYSTAL
+		}			
 	} else {
 		if (evidenceCount > 3) {
 			DM_Add_To_List_Never_Repeat_Once_Selected(290, 0, 4, 8); // VOIGT-KAMPFF
@@ -260,10 +267,6 @@ void SceneScriptCT02::dialogueWithZuben() {
 				Actor_Says(kActorZuben, 50, 18);
 				Actor_Says(kActorMcCoy, 415, 10);
 				Actor_Clue_Acquire(kActorMcCoy, kClueZubenInterview, false, kActorZuben);
-				Actor_Modify_Friendliness_To_Other(kActorZuben, kActorMcCoy, -5);
-			} else {
-				Actor_Says(kActorMcCoy, 4270, 18); //00-4270.AUD	I got some more questions for you.
-				Actor_Modify_Friendliness_To_Other(kActorZuben, kActorMcCoy, -5);
 			}
 		} else {
 			Actor_Says(kActorMcCoy, 410, 9);
@@ -308,6 +311,12 @@ void SceneScriptCT02::dialogueWithZuben() {
 		if (_vm->_cutContent) {
 			Actor_Set_Goal_Number(kActorMcCoy, kGoalMcCoyDodge);
 		}
+		Actor_Modify_Friendliness_To_Other(kActorZuben, kActorMcCoy, -10);
+		break;
+
+	case 1110:  // CRYSTAL
+		Actor_Says(kActorMcCoy, 3690, 14); //00-3690.AUD	Look. I wanna warn you. There’s a woman looking for you and your friends.
+		Actor_Set_Goal_Number(kActorMcCoy, kGoalMcCoyDodge);
 		Actor_Modify_Friendliness_To_Other(kActorZuben, kActorMcCoy, -10);
 		break;
 
@@ -356,7 +365,11 @@ bool SceneScriptCT02::ClickedOnActor(int actorId) {
 					if (Actor_Clue_Query(kActorMcCoy, kClueHowieLeeInterview)) { 
 						Actor_Says(kActorMcCoy, 370, 10); //00-0370.AUD	 Howie says you're a master chef.
 					} else {
-						Actor_Says(kActorMcCoy, 355, 10); //00-0355.AUD	Hey, big guy.
+						if (Player_Query_Agenda() == kPlayerAgendaPolite) {
+							Actor_Says(kActorMcCoy, 3970, 13); //00-3970.AUD	Hey.
+						} else {
+							Actor_Says(kActorMcCoy, 355, 10); //00-0355.AUD	Hey, big guy.
+						}
 					}
 					// Made it Zuben mentions his name when McCoy firsts talks to him. In the original game it was possible for McCoy to mis the Howie Lee interview clue
 					// where he mentions Zuben by name yet somehow McCoy would still know Zubens name anyway. This change fixes that.

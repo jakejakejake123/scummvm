@@ -194,7 +194,13 @@ void AIScriptEarlyQ::ClickedByPlayer() {
 			if (!Loop_Actor_Walk_To_XYZ(kActorMcCoy, -381.11f, 0.0f, -135.55f, 0, false, false, false)) {
 				Actor_Face_Actor(kActorMcCoy, kActorEarlyQ, true);
 				Actor_Face_Actor(kActorEarlyQ, kActorMcCoy, true);
-				Actor_Says(kActorMcCoy, 8513, 18); //00-8513.AUD	Early, how's it hanging?
+				if (_vm->_cutContent) {
+					if (Player_Query_Agenda() == kPlayerAgendaPolite) {
+						Actor_Says(kActorMcCoy, 8513, 18); //00-8513.AUD	Early, how's it hanging?
+					} else {
+						Actor_Says(kActorMcCoy, 3520, kAnimationModeTalk); //00-3520.AUD	Hey, Early.
+					}
+				}
 				Actor_Says(kActorEarlyQ, 340, kAnimationModeTalk); //18-0340.AUD	No more free drinks for you, buddy boy.
 			}
 		} else if (Actor_Query_In_Set(kActorEarlyQ, kSetKP07)) {

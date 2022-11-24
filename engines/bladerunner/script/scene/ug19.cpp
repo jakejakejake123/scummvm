@@ -177,6 +177,8 @@ void SceneScriptUG19::PlayerWalkedIn() {
 						}
 					} else {
 						Actor_Says(kActorMcCoy, 3250, kAnimationModeTalk);
+						Actor_Says(kActorGordo, 530, 18);
+						Actor_Says(kActorMcCoy, 3300, 15);
 					}
 					Actor_Clue_Acquire(kActorMcCoy, kClueGordoInterview2, true, kActorGordo);	
 					Actor_Says(kActorMcCoy, 6600, 13); //00-6600.AUD	Why the big deal over food?
@@ -229,10 +231,14 @@ void SceneScriptUG19::PlayerWalkedIn() {
 					}
 				}
 				Actor_Says(kActorMcCoy, 6535, 15); //00-6535.AUD	I need to see Clovis ASAP.
-				Actor_Says(kActorGordo, 1140, 14); //02-1140.AUD	You know what Clovis would do, if he found out I was even talking to you? 
-				Actor_Says(kActorGordo, 1150, 13); //02-1150.AUD	Eleven to one I’d never rumba again!
-				Actor_Says(kActorMcCoy, 6570, 15); //00-6570.AUD	You know he wants to meet with me.	
-				Actor_Says(kActorGordo, 1210, 15); //02-1210.AUD	Sure. But he wants to pick the venue. And he doesn’t like to be hurried into anything.
+				if (Actor_Clue_Query(kActorGordo, kClueMcCoyHelpedGordo)) {
+					Actor_Says(kActorGordo, 1210, 15); //02-1210.AUD	Sure. But he wants to pick the venue. And he doesn’t like to be hurried into anything.
+				} else {
+					Actor_Says(kActorGordo, 1140, 14); //02-1140.AUD	You know what Clovis would do, if he found out I was even talking to you? 
+					Actor_Says(kActorMcCoy, 6545, 13); //00-6545.AUD	Take a flying leap at the moon.
+					Actor_Says(kActorGordo, 1150, 13); //02-1150.AUD	Eleven to one I’d never rumba again!
+					Actor_Says(kActorMcCoy, 6570, 15); //00-6570.AUD	You know he wants to meet with me.
+				}			
 				Actor_Says(kActorGordo, 1220, 12); //02-1220.AUD	Hell, I don’t know why you’re so gung-ho to see the man anyway.
 				Actor_Says(kActorMcCoy, 6575, 15); //00-6575.AUD	I need some answers, that’s why. I’m running out of time.
 				if (Game_Flag_Query(kFlagGordoIsReplicant)) {

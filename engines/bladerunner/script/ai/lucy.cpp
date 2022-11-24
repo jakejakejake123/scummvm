@@ -499,7 +499,12 @@ bool AIScriptLucy::GoalChanged(int currentGoalNumber, int newGoalNumber) {
 		Player_Loses_Control();
 		// Added in a line and made it so Lucy approaches McCoy when he talks to her in the maze.
 		if (_vm->_cutContent) {
-			Actor_Says(kActorMcCoy, 1695, 16); //00-1695.AUD	Lucy? Come on out. I’m not the hunter anymore.
+			if (Game_Flag_Query(kFlagMcCoyIsHelpingReplicants)) {
+				Actor_Says(kActorMcCoy, 1695, 16); //00-1695.AUD	Lucy? Come on out. I’m not the hunter anymore.
+			}
+		}
+		Actor_Says(kActorMcCoy, 1700, 16); //00-1700.AUD	I put my gun away.
+		if (_vm->_cutContent) {
 			Actor_Modify_Friendliness_To_Other(kActorClovis, kActorMcCoy, 2);
 			Actor_Modify_Friendliness_To_Other(kActorSteele, kActorMcCoy, -2);
 			Actor_Modify_Friendliness_To_Other(kActorGuzza, kActorMcCoy, -2);
@@ -510,7 +515,6 @@ bool AIScriptLucy::GoalChanged(int currentGoalNumber, int newGoalNumber) {
 				Global_Variable_Set(kVariableAffectionTowards, kAffectionTowardsLucy);
 			}
 		}
-		Actor_Says(kActorMcCoy, 1700, 16); //00-1700.AUD	I put my gun away.
 		AI_Movement_Track_Flush(kActorLucy);
 		if (_vm->_cutContent) {
 			Loop_Actor_Walk_To_Actor(kActorLucy, kActorMcCoy, 24, true, false);
@@ -518,8 +522,15 @@ bool AIScriptLucy::GoalChanged(int currentGoalNumber, int newGoalNumber) {
 		Actor_Face_Actor(kActorLucy, kActorMcCoy, true);
 		Actor_Face_Actor(kActorMcCoy, kActorLucy, true);
 		Actor_Says(kActorLucy, 350, 13);
-		Actor_Says(kActorMcCoy, 1705, 13);
-		Actor_Says(kActorLucy, 360, 13);
+		if (_vm->_cutContent) {
+			if (Game_Flag_Query(kFlagMcCoyIsHelpingReplicants)) {
+				Actor_Says(kActorMcCoy, 1705, 13); //00-1705.AUD	I have to deal with her just to keep up appearances. I can be more effective that way. 
+				Actor_Says(kActorLucy, 360, 13);
+			}
+		} else {
+			Actor_Says(kActorMcCoy, 1705, 13);
+			Actor_Says(kActorLucy, 360, 13);
+		}
 		Actor_Says(kActorMcCoy, 1710, 13);
 
 		if (Global_Variable_Query(kVariableAffectionTowards) == kAffectionTowardsLucy) { // cut feature? if this is set lucy will not run into hf04
@@ -1071,7 +1082,7 @@ void AIScriptLucy::voightKampffTest() {
 				Actor_Says(kActorMcCoy, 6880, 13);
 				Actor_Says(kActorLucy, 1170, 13); //06-1170.AUD	Really?
 				Actor_Says(kActorLucy, 1180, 16); //06-1180.AUD	Why didn’t father tell me?
-				if (Game_Flag_Query(kFlagMcCoyIsHelpingReplicants)) {
+				if (Actor_Query_Friendliness_To_Other(kActorClovis, kActorMcCoy) > 50) {
 					Actor_Says(kActorMcCoy, 6890, 15); //00-6890.AUD	Maybe he wanted to keep his... family together.
 					Actor_Says(kActorLucy, 1190, 15); //06-1190.AUD	I’m not a little girl anymore.
 					Actor_Says(kActorLucy, 1200, 17); //06-1200.AUD	It’s not fair!

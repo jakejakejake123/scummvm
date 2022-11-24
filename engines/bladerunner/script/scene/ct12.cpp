@@ -298,8 +298,7 @@ void SceneScriptCT12::PlayerWalkedIn() {
 			if (!Game_Flag_Query(kFlagMcCoyIsHelpingReplicants)) {
 				Actor_Says(kActorMcCoy, 675, kAnimationModeTalk); //00-0675.AUD	I understand it's got a hell of a retirement plan.
 			} else {
-				if (Player_Query_Agenda() != kPlayerAgendaSurly
-				&& Player_Query_Agenda() != kPlayerAgendaErratic) {
+				if (Player_Query_Agenda() == kPlayerAgendaPolite) {
 					Actor_Says(kActorMcCoy, 8610, 18); //00-8610.AUD	What's the word, friend?
 				} else {
 					Actor_Says(kActorMcCoy, 8514, 14); //00-8514.AUD	Got anything new to tell me?

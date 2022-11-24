@@ -858,7 +858,7 @@ enum Flags {
 	kFlagDektoraArrested                      = 412, 
 	kFlagEarlyQArrested                       = 413, 
 	kFlagKP01toKP02                           = 414,
-	kFlagKP01toKP04                           = 415, // is never checked
+	kFlagHydrantChecked                       = 415, 
 	kFlagKP04toKP01                           = 416,
 	kFlagKP01toKP03                           = 417,
 	kFlagKP03toKP01                           = 418,

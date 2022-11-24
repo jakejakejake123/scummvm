@@ -254,11 +254,11 @@ void SceneScriptNR02::PlayerWalkedIn() {
 					Delay(1000);
 					Music_Play(kMusicLoveSong, 35, 0, 3, -1, kMusicLoopPlayOnce, 1);
 					Actor_Says(kActorDektora, 1130, 13); //03-1130.AUD	He is very jealous. You don’t understand
-					if (!Game_Flag_Query(kFlagMcCoyIsHelpingReplicants)) {
+					if (Actor_Query_Friendliness_To_Other(kActorClovis, kActorMcCoy) < 51) {
 						Actor_Says(kActorMcCoy, 6365, 13); //00-6365.AUD	Jealous, huh? On top of everything else?
 					}
 					Actor_Says(kActorDektora, 1140, 13); //03-1140.AUD	He is a very complicated man. He wants so much. Things he just can’t have.
-					if (!Game_Flag_Query(kFlagMcCoyIsHelpingReplicants)) {
+					if (Actor_Query_Friendliness_To_Other(kActorClovis, kActorMcCoy) < 51) { 
 						Actor_Says(kActorMcCoy, 6370, 12); //00-6370.AUD	Then he’s no different from anybody else.
 						Actor_Says(kActorDektora, 1150, 15); //03-1150.AUD	God forbid you ever have to find out how different he is.
 						Actor_Says(kActorDektora, 1160, 13); //03-1160.AUD	How dangerous he can be. And if he thinks that you and I… It can only bring trouble.
@@ -277,6 +277,7 @@ void SceneScriptNR02::PlayerWalkedIn() {
 					Actor_Says(kActorMcCoy, 6390, 16); //00-6390.AUD	They think I’m a Replicant.
 					if (Game_Flag_Query(kFlagDektoraIsReplicant)) {
 						Actor_Says(kActorDektora, 1200, 13); //03-1200.AUD	Do they now?
+						Delay(1000);
 						if (Player_Query_Agenda() == kPlayerAgendaSurly 
 						|| Player_Query_Agenda() == kPlayerAgendaErratic) { 
 							Actor_Says(kActorMcCoy, 6395, 13); //00-6395.AUD	Glad I amuse you.
@@ -284,13 +285,16 @@ void SceneScriptNR02::PlayerWalkedIn() {
 						}
 					} else {
 						Actor_Says(kActorDektora, 1220, 13); //03-1220.AUD	Their thinking it doesn’t make you one. It’s what you feel that’s important.
+						Delay(1000);
 					}
-					Actor_Says(kActorMcCoy, 6400, 11); //00-6400.AUD	I’m a human being.
-					if (Game_Flag_Query(kFlagDektoraIsReplicant)) {
-						Actor_Says(kActorDektora, 1230, 13); //03-1230.AUD	But do you ever have doubts?
-					} else {
-						Actor_Says(kActorDektora, 1240, 16); //03-1240.AUD	Do you ever wonder if your memories actually belong to you?
+					if (!Game_Flag_Query(kFlagMcCoyIsHelpingReplicants)) {
+						Actor_Says(kActorMcCoy, 6400, 11); //00-6400.AUD	I’m a human being.
+						Delay(1000);
+						if (Game_Flag_Query(kFlagDektoraIsReplicant)) {
+							Actor_Says(kActorDektora, 1230, 13); //03-1230.AUD	But do you ever have doubts?
+						}
 					}
+					Actor_Says(kActorDektora, 1240, 16); //03-1240.AUD	Do you ever wonder if your memories actually belong to you?
 					Delay(1500);
 					Actor_Says(kActorMcCoy, 6405, 13); //00-6405.AUD	I dream about a place. More mine than anywhere else. Full of sun and light. And warmth.
 					Actor_Says(kActorDektora, 1250, 13); //03-1250.AUD	I’ve seen that place. I’ve dreamed about it too.

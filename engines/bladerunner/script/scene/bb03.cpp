@@ -108,33 +108,50 @@ bool SceneScriptBB03::ClickedOnExit(int exitId) {
 	if (exitId == 2) {
 		// Added in dialogue where McCoy makes a comment on Sebastians door which has been busted open.
 		if (!Loop_Actor_Walk_To_XYZ(kActorMcCoy, 204.0f, 60.16f, -164.0f, 0, true, false, false)) {
-			if (_vm->_cutContent &&	!Game_Flag_Query(kFlagBB05Visited)) {
-				Actor_Voice_Over(0, kActorVoiceOver); // 99-0000.AUD	The lock had been forced.
-				Actor_Voice_Over(10, kActorVoiceOver); // 99-0010.AUD	Tyrell sub-cons might have been a little dingy...
-				Actor_Voice_Over(20, kActorVoiceOver); // 99-0020.AUD	But I didn't think they'd bust down their own doors, if they forgot their keys.
-				Actor_Clue_Acquire(kActorMcCoy, kClueDoorForced1, true, -1);
-				Game_Flag_Set(kFlagBB05Visited);
-				Set_Enter(kSetBB05, kSceneBB05);
-			}
-		}
-		if (!Loop_Actor_Walk_To_XYZ(kActorMcCoy, 204.0f, 60.16f, -164.0f, 0, true, false, false)) {
-			if (Global_Variable_Query(kVariableChapter) < 4) {
-				if (Actor_Query_Goal_Number(kActorSebastian) == 200) {
-					Actor_Says(kActorSebastian, 70, kAnimationModeTalk);
-					Actor_Says(kActorMcCoy, 7010, 13);
-					Actor_Says(kActorSebastian, 80, kAnimationModeTalk);
-					Actor_Says(kActorMcCoy, 7015, 12);
-					Actor_Says(kActorSebastian, 90, kAnimationModeTalk);
-					Actor_Says(kActorMcCoy, 7020, 14);
-					Actor_Says(kActorSebastian, 100, kAnimationModeTalk);
-					Actor_Says(kActorMcCoy, 7025, 15);
-					Actor_Says(kActorSebastian, 110, kAnimationModeTalk);
-					Actor_Set_Targetable(kActorBryant, false);
-					Actor_Set_Targetable(kActorGeneralDoll, false);
+			if (_vm->_cutContent) {	
+				if (!Game_Flag_Query(kFlagBB05Visited)) {
+					Actor_Voice_Over(0, kActorVoiceOver); // 99-0000.AUD	The lock had been forced.
+					Actor_Voice_Over(10, kActorVoiceOver); // 99-0010.AUD	Tyrell sub-cons might have been a little dingy...
+					Actor_Voice_Over(20, kActorVoiceOver); // 99-0020.AUD	But I didn't think they'd bust down their own doors, if they forgot their keys.
+					Actor_Clue_Acquire(kActorMcCoy, kClueDoorForced1, true, -1);
+					Game_Flag_Set(kFlagBB05Visited);
+					Ambient_Sounds_Remove_All_Non_Looping_Sounds(true);
+					Ambient_Sounds_Remove_All_Looping_Sounds(1u);
+					Set_Enter(kSetBB05, kSceneBB05);;
+				} else if (Actor_Clue_Query(kActorSebastian, kClueMcCoyIsABladeRunner)) {
+					Actor_Says(kActorMcCoy, 6985, 16);
+					Actor_Says(kActorSebastian, 610, 14);
+				} else {
+					Ambient_Sounds_Remove_All_Non_Looping_Sounds(true);
+					Ambient_Sounds_Remove_All_Looping_Sounds(1u);
+					Set_Enter(kSetBB05, kSceneBB05);
 				}
+			} else {
 				Ambient_Sounds_Remove_All_Non_Looping_Sounds(true);
 				Ambient_Sounds_Remove_All_Looping_Sounds(1u);
 				Set_Enter(kSetBB05, kSceneBB05);
+			}
+		}
+		if (Global_Variable_Query(kVariableChapter) < 4) {
+			if (Actor_Query_Goal_Number(kActorSebastian) == 200) {
+				Actor_Says(kActorSebastian, 70, kAnimationModeTalk);
+				Actor_Says(kActorMcCoy, 7010, 13);
+				Actor_Says(kActorSebastian, 80, kAnimationModeTalk);
+				Actor_Says(kActorMcCoy, 7015, 12);
+				Actor_Says(kActorSebastian, 90, kAnimationModeTalk);
+				Actor_Says(kActorMcCoy, 7020, 14);
+				Actor_Says(kActorSebastian, 100, kAnimationModeTalk);
+				Actor_Says(kActorMcCoy, 7025, 15);
+				Actor_Says(kActorSebastian, 110, kAnimationModeTalk);
+				Actor_Set_Targetable(kActorBryant, false);
+				Actor_Set_Targetable(kActorGeneralDoll, false);
+				Ambient_Sounds_Remove_All_Non_Looping_Sounds(true);
+				Ambient_Sounds_Remove_All_Looping_Sounds(1u);
+				Set_Enter(kSetBB05, kSceneBB05);
+			}
+		} else {
+			if (_vm->_cutContent) {	
+				Actor_Says(kActorMcCoy, 7815, 13); //00-7815.AUD	No.
 			} else {
 				Actor_Says(kActorMcCoy, 8522, kAnimationModeTalk);
 			}

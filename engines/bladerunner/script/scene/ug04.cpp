@@ -167,21 +167,17 @@ void SceneScriptUG04::PlayerWalkedIn() {
 				Game_Flag_Set(kFlagUG04DispatchOnHoodooRats);
 				ADQ_Add(kActorDispatcher, 340, kAnimationModeTalk); // Southern Kipple Unit 2 LA.
 				if (Random_Query(0, 1) == 0) {
-					if (Actor_Query_Goal_Number(kActorOfficerLeary) != kGoalOfficerLearyDead) {
-						// Leary responds
-						ADQ_Add(kActorOfficerLeary, 240, kAnimationModeTalk); // LA, South Kipple Unit 2. Go ahead.
-						ADQ_Add(kActorDispatcher, 350, kAnimationModeTalk);
-						ADQ_Add(kActorDispatcher, 360, kAnimationModeTalk);
-						ADQ_Add(kActorOfficerLeary, 250, kAnimationModeTalk);
-					}
+					// Leary responds
+					ADQ_Add(kActorOfficerLeary, 240, kAnimationModeTalk); // LA, South Kipple Unit 2. Go ahead.
+					ADQ_Add(kActorDispatcher, 350, kAnimationModeTalk);
+					ADQ_Add(kActorDispatcher, 360, kAnimationModeTalk);
+					ADQ_Add(kActorOfficerLeary, 250, kAnimationModeTalk);
 				} else { 
-					if (Actor_Query_Goal_Number(kActorOfficerLeary) != kGoalOfficerGrayfordDead) {
-						// Grayford responds
-						ADQ_Add(kActorOfficerGrayford, 520, kAnimationModeTalk); // LA, South Kipple Unit 2. Go ahead.
-						ADQ_Add(kActorDispatcher, 350, kAnimationModeTalk);
-						ADQ_Add(kActorDispatcher, 360, kAnimationModeTalk);
-						ADQ_Add(kActorOfficerGrayford, 530, kAnimationModeTalk);
-					}
+					// Grayford responds
+					ADQ_Add(kActorOfficerGrayford, 520, kAnimationModeTalk); // LA, South Kipple Unit 2. Go ahead.
+					ADQ_Add(kActorDispatcher, 350, kAnimationModeTalk);
+					ADQ_Add(kActorDispatcher, 360, kAnimationModeTalk);
+					ADQ_Add(kActorOfficerGrayford, 530, kAnimationModeTalk);
 				}
 			}
 		}

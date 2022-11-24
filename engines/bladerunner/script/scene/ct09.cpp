@@ -103,20 +103,25 @@ bool SceneScriptCT09::ClickedOnActor(int actorId) {
 					Actor_Says(kActorMcCoy, 630, 12);
 					Actor_Says(kActorDeskClerk, 180, 14);
 					Actor_Says(kActorMcCoy, 635, kAnimationModeTalk);
-					Actor_Says(kActorDeskClerk, 190, 15);
-					Actor_Says(kActorMcCoy, 640, 12);
-					Actor_Says(kActorMcCoy, 645, kAnimationModeTalk);
-					Actor_Says(kActorDeskClerk, 200, 13);
-					Actor_Says(kActorDeskClerk, 210, 14);
+					Actor_Says(kActorDeskClerk, 190, 15); //27-0190.AUD	I don't ask a lot of questions when a badge is shoved in my face.
+					if (_vm->_cutContent) {
+						if (Actor_Query_Goal_Number(kActorZuben) < kGoalZubenGone) { 
+							Actor_Says(kActorMcCoy, 640, 12); //00-0640.AUD	You have a big guy with a strange-looking mustache staying here?
+							Actor_Says(kActorMcCoy, 645, kAnimationModeTalk); //00-0645.AUD	He worked at Howie Lee's around the corner.
+							Actor_Says(kActorDeskClerk, 200, 13); //27-0200.AUD	I don't break a lot of bread with the class of people that pass through here.
+						}
+					} else {
+						Actor_Says(kActorMcCoy, 640, 12); //00-0640.AUD	You have a big guy with a strange-looking mustache staying here?
+						Actor_Says(kActorMcCoy, 645, kAnimationModeTalk); //00-0645.AUD	He worked at Howie Lee's around the corner.
+						Actor_Says(kActorDeskClerk, 200, 13); //27-0200.AUD	I don't break a lot of bread with the class of people that pass through here.
+					}
+					Actor_Says(kActorDeskClerk, 210, 14); //27-0210.AUD	But if you want to look around, check out some rooms, be my guest.
 				}
 				// Restored some dialogue for the desk clerk where McCoy asks him about the back room. If McCoy didn't help the desk clerk he will be more resistant to answering McCoys question.
 				if (_vm->_cutContent && !Game_Flag_Query (kFlagCT09DeskClerkTalk2)) {
 					Actor_Face_Heading(kActorMcCoy, 240, true);
-					Delay(1500);
-					Actor_Voice_Over(4200, kActorVoiceOver); //99-4200.AUD	Where have I seen those before?
 					Delay(1000);
 					Actor_Face_Actor(kActorMcCoy, kActorDeskClerk, true);
-					Delay(1000);
 					Actor_Says(kActorMcCoy, 610, 15); //00-0610.AUD	What do you got back there?
 					Actor_Says(kActorDeskClerk, 100, 13); //27-0100.AUD	Excuse me?
 					Actor_Says(kActorMcCoy, 615, 18); //00-0615.AUD	The back room.
@@ -143,7 +148,6 @@ bool SceneScriptCT09::ClickedOnActor(int actorId) {
 							Actor_Says(kActorMcCoy, 625, 13); //00-0625.AUD	So, now there's nothing in there.
 							Actor_Says(kActorDeskClerk, 140, 13); //27-0140.AUD	Rumor has it the boss wants to rent it out. What a dump.
 							Actor_Says(kActorDeskClerk, 150, 15); //27-0150.AUD	Maybe if we paid you, someone would actually want to stay there. (laughs)
-							Actor_Clue_Acquire(kActorMcCoy, kClueGracefulFootprints, false, kActorDeskClerk);
 							Game_Flag_Set(kFlagCT09DeskClerkTalk2);
 						}
 					} else { 	
@@ -152,7 +156,6 @@ bool SceneScriptCT09::ClickedOnActor(int actorId) {
 						Actor_Says(kActorMcCoy, 625, 13); //00-0625.AUD	So, now there's nothing in there.
 						Actor_Says(kActorDeskClerk, 140, 13); //27-0140.AUD	Rumor has it the boss wants to rent it out. What a dump.
 						Actor_Says(kActorDeskClerk, 150, 15); //27-0150.AUD	Maybe if we paid you, someone would actually want to stay there. (laughs)
-						Actor_Clue_Acquire(kActorMcCoy, kClueGracefulFootprints, false, kActorDeskClerk);
 						Game_Flag_Set(kFlagCT09DeskClerkTalk2);
 					}
 					// Made it so the desk clerk treats you differently depending on your actions. If you helped the clerk out with Leon he will be nice to you.
@@ -170,6 +173,8 @@ bool SceneScriptCT09::ClickedOnActor(int actorId) {
 						&& Game_Flag_Query(kFlagCT09LeonInterrupted)) {
 							Actor_Says(kActorMcCoy, 650, 18); //00-0650.AUD	You seen any suspicious types around here lately?
 							Actor_Says(kActorDeskClerk, 220, 15); //27-0220.AUD	Howley, that's all I do see. You think this is a Club Med or something?	
+							Actor_Says(kActorMcCoy, 655, 13); //00-0655.AUD	But no one you could put your finger on.
+							Actor_Says(kActorDeskClerk, 270, 15); //27-0270.AUD	I mind my own business, pal. I don't see who goes in and I don't see who goes out.
 						} else if (!Game_Flag_Query(kFlagCT09LeonInterrupted)) {
 							Actor_Says(kActorMcCoy, 660, 14); //00-0660.AUD	You seen any suspicious types around here lately?
 							Actor_Says(kActorDeskClerk, 250, 13); //27-0250.AUD	You're pretty suspicious.
@@ -179,7 +184,6 @@ bool SceneScriptCT09::ClickedOnActor(int actorId) {
 							} else {
 								Actor_Says(kActorMcCoy, 665, 16); //00-0665.AUD	Real funny, pal.
 							}
-							Actor_Says(kActorDeskClerk, 270, 15); //27-0270.AUD	I mind my own business, pal. I don't see who goes in and I don't see who goes out.
 						}	
 					}	
 				} else {
@@ -288,8 +292,7 @@ void SceneScriptCT09::PlayerWalkedIn() {
 			Actor_Says(kActorMcCoy, 600, 17); //00-0600.AUD	He looked familiar.
 			Actor_Says(kActorDeskClerk, 80, 14);
 			if (_vm->_cutContent) {
-				if (Player_Query_Agenda() != kPlayerAgendaSurly 
-				&& Player_Query_Agenda() != kPlayerAgendaErratic) {
+				if (Player_Query_Agenda() != kPlayerAgendaPolite) {
 					Actor_Says(kActorMcCoy, 605, 13); //00-0605.AUD	“To Protect and to Serve.”
 				} else {
 					Delay(2000);

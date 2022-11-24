@@ -106,8 +106,6 @@ void SceneScriptKP04::PlayerWalkedIn() {
 	if (Game_Flag_Query(kFlagKP05toKP04)) {
 		Loop_Actor_Walk_To_XYZ(kActorMcCoy, -584.0f, 94.89f, 288.0f, 0, false, false, false);
 		Game_Flag_Reset(kFlagKP05toKP04);
-	} else {
-		Game_Flag_Reset(kFlagKP01toKP04);
 	}
 }
 

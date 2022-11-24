@@ -588,7 +588,9 @@ bool AIScriptOfficerGrayford::GoalChanged(int currentGoalNumber, int newGoalNumb
 			Actor_Says_With_Pause(kActorOfficerGrayford, 150, 0.0f, 17);
 			Actor_Says(kActorOfficerGrayford, 160, 15);
 			if (!Game_Flag_Query(kFlagMcCoyIsHelpingReplicants)) {
-				Actor_Says_With_Pause(kActorMcCoy, 995, 0.3f, 14); //00-0995.AUD	Appreciate it.
+				if (Player_Query_Agenda() == kPlayerAgendaPolite) { 
+					Actor_Says_With_Pause(kActorMcCoy, 995, 0.3f, 14); //00-0995.AUD	Appreciate it.
+				}
 			}
 			// If Moraji survives McCoy depending on his agenda, comforts Moraji or tries to question him. If he comforts him Moraji gives McCoy the DNA data and if
 			// McCoy questions him Moraji doesn't give him the data. Also made it so the scene eits enable.
@@ -664,8 +666,7 @@ bool AIScriptOfficerGrayford::GoalChanged(int currentGoalNumber, int newGoalNumb
 		Actor_Face_Actor(kActorMcCoy, kActorOfficerGrayford, true);
 		if (_vm->_cutContent) {
 			if (!Game_Flag_Query(kFlagMorajiAlive)) {
-				if (Player_Query_Agenda() != kPlayerAgendaSurly 
-				&& Player_Query_Agenda() != kPlayerAgendaErratic) {
+				if (Player_Query_Agenda() == kPlayerAgendaPolite) {
 					Actor_Says(kActorMcCoy, 1000, 14); // You got a sheet or something...?
 					AI_Movement_Track_Flush(kActorOfficerGrayford);
 					AI_Countdown_Timer_Reset(kActorOfficerGrayford, kActorTimerAIScriptCustomTask2);
@@ -694,8 +695,11 @@ bool AIScriptOfficerGrayford::GoalChanged(int currentGoalNumber, int newGoalNumb
 
 					Actor_Face_Actor(kActorOfficerGrayford, kActorMcCoy, true);
 					Actor_Says(kActorOfficerGrayford, 320, 19); //24-0320.AUD	Nah, I’ve hit a brick, McCoy. You running this investigation, right?
-					Actor_Says(kActorMcCoy, 8519, 14); //00-8519.AUD	What do you say we dish each other the straight goods.
-					Actor_Says(kActorOfficerGrayford, 340, 19); //24-0340.AUD	Hey, you ain’t talking to some flunky, McCoy.
+					if (Player_Query_Agenda() == kPlayerAgendaSurly 
+					|| Player_Query_Agenda() == kPlayerAgendaErratic) {
+						Actor_Says(kActorMcCoy, 8519, 14); //00-8519.AUD	What do you say we dish each other the straight goods.
+						Actor_Says(kActorOfficerGrayford, 340, 19); //24-0340.AUD	Hey, you ain’t talking to some flunky, McCoy.
+					}
 					Actor_Set_Goal_Number(kActorOfficerGrayford, currentGoalNumber);
 				}
 			} else {

@@ -85,7 +85,6 @@ bool SceneScriptKP01::ClickedOnExit(int exitId) {
 		if (!Loop_Actor_Walk_To_XYZ(kActorMcCoy, -125.0f, -12.2f, -61.0f, 0, true, false, false)) {
 			Ambient_Sounds_Remove_All_Non_Looping_Sounds(true);
 			Ambient_Sounds_Remove_All_Looping_Sounds(1u);
-			Game_Flag_Set(kFlagKP01toKP04);
 			Set_Enter(kSetKP04, kSceneKP04);
 		}
 		return true;
@@ -168,18 +167,17 @@ void SceneScriptKP01::PlayerWalkedIn() {
 	}
 	// Altered the conditions for Crystal meeting McCoy in the Kipple.
 	if (_vm->_cutContent) {
-		if (!Game_Flag_Query(kFlagMcCoyRetiredHuman)
-			&& Global_Variable_Query(kVariableAffectionTowards) != kAffectionTowardsDektora
-			&& Global_Variable_Query(kVariableAffectionTowards) != kAffectionTowardsLucy) {
-				if (Game_Flag_Query(kFlagMcCoyIsInnocent)) {
-					Actor_Put_In_Set(kActorSteele, kSetKP01);
-					Actor_Set_At_XYZ(kActorSteele, 20.0f, -12.2f, -97.0f, 907);
-					Actor_Change_Animation_Mode(kActorSteele, 43);
-					Player_Loses_Control();
-					Actor_Set_Goal_Number(kActorSteele, kGoalSteeleKP01TalkToMcCoy);
-				}
-			}
-		} else if (!Game_Flag_Query(kFlagMcCoyIsHelpingReplicants)
+		if (Game_Flag_Query(kFlagMcCoyIsInnocent) 
+		&& Global_Variable_Query(kVariableAffectionTowards) != kAffectionTowardsDektora
+		&& Global_Variable_Query(kVariableAffectionTowards) != kAffectionTowardsLucy 
+		&& !Game_Flag_Query(kFlagMcCoyRetiredHuman)) {
+			Actor_Put_In_Set(kActorSteele, kSetKP01);
+			Actor_Set_At_XYZ(kActorSteele, 20.0f, -12.2f, -97.0f, 907);
+			Actor_Change_Animation_Mode(kActorSteele, 43);
+			Player_Loses_Control();
+			Actor_Set_Goal_Number(kActorSteele, kGoalSteeleKP01TalkToMcCoy);
+		}
+	} else if (!Game_Flag_Query(kFlagMcCoyIsHelpingReplicants)
 	 && !Game_Flag_Query(kFlagMcCoyAttackedReplicants)
 	 &&  Actor_Query_Goal_Number(kActorSteele) == kGoalSteeleKP01Wait
 	 &&  Actor_Query_Goal_Number(kActorSteele) != kGoalSteeleGone

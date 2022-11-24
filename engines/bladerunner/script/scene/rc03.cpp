@@ -354,19 +354,40 @@ void SceneScriptRC03::PlayerWalkedIn() {
 								Actor_Face_Actor(kActorSteele, kActorMcCoy, true);
 								Actor_Face_Actor(kActorMcCoy, kActorSteele, true);
 								Actor_Says(kActorSteele, 1950, kAnimationModeTalk); //01-1950.AUD	I've been tracking Izo for a week and you ruined my whole plan in two seconds.
-								Actor_Says(kActorMcCoy, 4835, 14); //00-4835.AUD	Sorry, I bet you can still catch him if you want.
-								if (Actor_Query_Friendliness_To_Other(kActorSteele, kActorMcCoy) < 51) {
-									Actor_Says(kActorSteele, 1980, kAnimationModeTalk); //01-1980.AUD	If I didn't know any better, I'd think you wanted him to get away.
-									Actor_Says(kActorMcCoy, 4840, 15);
-									Actor_Says(kActorSteele, 1990, kAnimationModeTalk); //01-1990.AUD	A little word of advice, Slim. Stay out of my way.
-									Actor_Says(kActorSteele, 2000, kAnimationModeTalk); //01-2000.AUD	Next time I'm not gonna worry about who's in my line of fire, understand?
-									Actor_Modify_Friendliness_To_Other(kActorSteele, kActorMcCoy, -2);
+								if (_vm->_cutContent) {
+									if (!Game_Flag_Query(kFlagMcCoyIsHelpingReplicants)) {
+										if (Player_Query_Agenda() == kPlayerAgendaPolite) { 
+											Actor_Says(kActorMcCoy, 4835, 14); //00-4835.AUD	Sorry, I bet you can still catch him if you want.
+										}
+									}
 								} else {
-									Delay(2000);
-									Actor_Says(kActorSteele, 2110, 15); //01-2110.AUD	That's okay.
-									Actor_Modify_Friendliness_To_Other(kActorSteele, kActorMcCoy, -1);
+									Actor_Says(kActorMcCoy, 4835, 14); //00-4835.AUD	Sorry, I bet you can still catch him if you want.
+								}
+								if (_vm->_cutContent) {
+									if (Actor_Query_Friendliness_To_Other(kActorSteele, kActorMcCoy) < 51) {
+										Actor_Says(kActorSteele, 1980, kAnimationModeTalk); //01-1980.AUD	If I didn't know any better, I'd think you wanted him to get away.
+										if (!Game_Flag_Query(kFlagMcCoyIsHelpingReplicants)) {
+											if (Player_Query_Agenda() == kPlayerAgendaSurly 
+											|| Player_Query_Agenda() == kPlayerAgendaErratic) { 
+												Actor_Says(kActorMcCoy, 4840, 15); //00-4840.AUD	You crazy? I've been tailing him myself.
+											} else {
+												Actor_Says(kActorMcCoy, 7815, 13); //00-7815.AUD	No.
+											}
+										} else {
+											Actor_Says(kActorMcCoy, 7835, 16); //00-7835.AUD	Is that so?
+										}
+									} 
+								}
+								Actor_Says(kActorSteele, 1990, kAnimationModeTalk); //01-1990.AUD	A little word of advice, Slim. Stay out of my way.
+								if (_vm->_cutContent) {
+									if (Actor_Query_Friendliness_To_Other(kActorSteele, kActorMcCoy) < 51) {
+										Actor_Says(kActorSteele, 2000, kAnimationModeTalk); //01-2000.AUD	Next time I'm not gonna worry about who's in my line of fire, understand?
+									}
+								} else {
+									Actor_Says(kActorSteele, 2000, kAnimationModeTalk); //01-2000.AUD	Next time I'm not gonna worry about who's in my line of fire, understand?
 								}
 								Game_Flag_Set(kFlagIzoGotAway);
+								Actor_Modify_Friendliness_To_Other(kActorSteele, kActorMcCoy, -2);
 								Actor_Modify_Friendliness_To_Other(kActorGuzza, kActorMcCoy, -2);
 								Actor_Modify_Friendliness_To_Other(kActorClovis, kActorMcCoy, 2);
 								Actor_Set_Goal_Number(kActorSteele, kGoalSteeleLeaveRC03);
@@ -505,8 +526,7 @@ void SceneScriptRC03::PlayerWalkedIn() {
 			Game_Flag_Reset(kFlagIzoWarnedAboutCrystal);
 			Actor_Set_Goal_Number(kActorIzo, kGoalIzoRC03RunAway);
 			if (!Game_Flag_Query(kFlagIzoWarned)) {
-				if (Player_Query_Agenda() != kPlayerAgendaSurly 
-				&& Player_Query_Agenda() != kPlayerAgendaErratic) {
+				if (Player_Query_Agenda() == kPlayerAgendaPolite) {
 					Actor_Says(kActorMcCoy, 4835, 13); //00-4835.AUD	Sorry, I bet you can still catch him if you want.
 					Actor_Says(kActorSteele, 1960, 60); //01-1960.AUD	Crawl down that hole and ruin a twenty thousand chinyen Yamamoto suit? I don't think so.
 					Actor_Says(kActorMcCoy, 2305, 13); //00-2305.AUD	I’m sorry.
@@ -515,15 +535,27 @@ void SceneScriptRC03::PlayerWalkedIn() {
 						Actor_Says(kActorSteele, 2110, 15); //01-2110.AUD	That's okay.
 					} else {
 						Actor_Says(kActorSteele, 1980, 60); //01-1980.AUD	If I didn't know any better, I'd think you wanted him to get away.
-						Actor_Says(kActorMcCoy, 4840, 16); //00-4840.AUD	You crazy? I've been tailing him myself.
+						if (Player_Query_Agenda() == kPlayerAgendaSurly 
+						|| Player_Query_Agenda() == kPlayerAgendaErratic) { 
+							Actor_Says(kActorMcCoy, 4840, 15); //00-4840.AUD	You crazy? I've been tailing him myself.
+						} else {
+							Actor_Says(kActorMcCoy, 7815, 13); //00-7815.AUD	No.
+						}
 						Actor_Says(kActorSteele, 1990, 60); //01-1990.AUD	A little word of advice, Slim. Stay out of my way.
 						Actor_Modify_Friendliness_To_Other(kActorSteele, kActorMcCoy, -2);
 						Actor_Modify_Friendliness_To_Other(kActorGuzza, kActorMcCoy, -2);
 					}
 				} else {
 					Actor_Says(kActorMcCoy, 7835, 18); //00-7835.AUD	Is that so?
-					Actor_Says(kActorSteele, 1980, 60); //01-1980.AUD	If I didn't know any better, I'd think you wanted him to get away.
-					Actor_Says(kActorMcCoy, 4840, 16); //00-4840.AUD	You crazy? I've been tailing him myself.
+					if (Actor_Query_Friendliness_To_Other(kActorSteele, kActorMcCoy) < 51) {
+						Actor_Says(kActorSteele, 1980, 60); //01-1980.AUD	If I didn't know any better, I'd think you wanted him to get away.
+						if (Player_Query_Agenda() == kPlayerAgendaSurly 
+						|| Player_Query_Agenda() == kPlayerAgendaErratic) { 
+							Actor_Says(kActorMcCoy, 4840, 15); //00-4840.AUD	You crazy? I've been tailing him myself.
+						} else {
+							Actor_Says(kActorMcCoy, 7815, 13); //00-7815.AUD	No.
+						}
+					}
 					Actor_Says(kActorSteele, 1990, 60); //01-1990.AUD	A little word of advice, Slim. Stay out of my way.
 					Actor_Modify_Friendliness_To_Other(kActorSteele, kActorMcCoy, -2);
 					Actor_Modify_Friendliness_To_Other(kActorGuzza, kActorMcCoy, -2);
@@ -532,11 +564,16 @@ void SceneScriptRC03::PlayerWalkedIn() {
 				Actor_Set_Goal_Number(kActorSteele, kGoalSteeleLeaveRC03);
 			} else {
 				Actor_Says(kActorMcCoy, 8565, 15); //00-8565.AUD	Really?
+				if (Actor_Query_Friendliness_To_Other(kActorSteele, kActorMcCoy) < 51) {
+					Actor_Says(kActorSteele, 1980, 60); //01-1980.AUD	If I didn't know any better, I'd think you wanted him to get away.
+					Actor_Says(kActorMcCoy, 4840, 16); //00-4840.AUD	You crazy? I've been tailing him myself.
+				}
 				Actor_Says(kActorSteele, 1990, 60); //01-1990.AUD	A little word of advice, Slim. Stay out of my way.
+				Actor_Modify_Friendliness_To_Other(kActorSteele, kActorMcCoy, -2);
+				Actor_Modify_Friendliness_To_Other(kActorGuzza, kActorMcCoy, -2);
 				if (Actor_Clue_Query(kActorMcCoy, kClueWeaponsCache)) {
 					Actor_Says(kActorMcCoy, 5150, 15); //00-5150.AUD	One more thing.
 					Actor_Says(kActorSteele, 670, 60); //01-0670.AUD	Look. I’ll give you two minutes. That’s all.
-					Actor_Modify_Friendliness_To_Other(kActorClovis, kActorMcCoy, 2);
 					Actor_Set_Goal_Number(kActorSteele, kGoalSteeleRC03GoToAR02);
 				}
 			}

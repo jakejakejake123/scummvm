@@ -162,6 +162,7 @@ void SceneScriptUG09::PlayerWalkedIn() {
 			Actor_Says(kActorIzo, 850, 12); //07-0850.AUD	Non existent. You and Steele made sure of that. Scavengers took the rest.
 			Actor_Says(kActorMcCoy, 6740, 16); //00-6740.AUD	What exactly did the scavengers take?
 			Actor_Says(kActorIzo, 970, 17); //07-0970.AUD	Some of the police-issue weapons and electronics. They took them down into the sewers.
+			Delay(1000);
 		}
 		//Made it so Izo only shares what he knows with McCoy in regards to who framed him if McCoy helped Izo in covering up his weapon smuggling operation.
 		if (!Actor_Clue_Query(kActorMcCoy, kClueGuzzaFramedMcCoy)) {
@@ -206,7 +207,7 @@ void SceneScriptUG09::PlayerWalkedIn() {
 			if (Game_Flag_Query(kFlagZubenRetired)) {
 				Actor_Says(kActorIzo, 760, 14); //07-0760.AUD	He knows all about you. Knows what happened with Zuben.
 			}
-			if (Actor_Clue_Query(kActorMcCoy, kClueCrimeSceneNotes)) {
+			if (!Actor_Clue_Query(kActorMcCoy, kClueAmateurBomber)) {
 				Actor_Says(kActorMcCoy, 5500, 18); //00-5500.AUD	Is Clovis the Tyrell bomber?
 				Actor_Says(kActorIzo, 770, 12); //07-0770.AUD	You really are groping in the dark.
 				Actor_Says(kActorIzo, 780, 17); //07-0780.AUD	No. The bomb belonged to Sadik. It was his signature.
@@ -215,6 +216,7 @@ void SceneScriptUG09::PlayerWalkedIn() {
 		Actor_Says(kActorMcCoy, 5505, 13); //00-5505.AUD	I need to talk to Clovis.
 		if (Game_Flag_Query(kFlagIzoWarned)) {
 			Actor_Says(kActorIzo, 790, 16); //07-0790.AUD	I’ll tell him you helped me. That’s as much as I can do.
+			Actor_Says(kActorMcCoy, 4880, 13); //00-4880.AUD	Is that right?
 			if (Game_Flag_Query(kFlagIzoIsReplicant)) {
 				Actor_Clue_Acquire(kActorMcCoy, kClueMcCoyHelpedIzoIzoIsAReplicant, true, kActorIzo);
 			}

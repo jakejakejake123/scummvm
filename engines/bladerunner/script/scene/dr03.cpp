@@ -480,7 +480,14 @@ void SceneScriptDR03::DialogueQueueFlushed(int a1) {
 
 void SceneScriptDR03::dialogueWithChew() {
 	Dialogue_Menu_Clear_List();
-	if (!_vm->_cutContent) {
+	if (_vm->_cutContent) {
+		if (Actor_Clue_Query(kActorMcCoy, kClueChewInterview)) {
+			DM_Add_To_List_Never_Repeat_Once_Selected(650, 5, 5, 5); // TWINS
+		}
+	} else if (Actor_Clue_Query(kActorMcCoy, kClueChewInterview)
+	 || Actor_Clue_Query(kActorMcCoy, kClueAnsweringMachineMessage)
+	 || Actor_Clue_Query(kActorMcCoy, kClueMorajiInterview)
+	) {
 		DM_Add_To_List_Never_Repeat_Once_Selected(650, 5, 5, 5); // TWINS
 	}
 	if (Actor_Clue_Query(kActorMcCoy, kClueChewInterview)) {
@@ -498,7 +505,12 @@ void SceneScriptDR03::dialogueWithChew() {
 		if (Actor_Clue_Query(kActorMcCoy, kClueAnsweringMachineMessage)) {
 			DM_Add_To_List_Never_Repeat_Once_Selected(680, 8, 8, 8); // SEBASTIAN
 		}
-		if (Actor_Clue_Query(kActorMcCoy, kClueEnvelope)) {
+		if (_vm->_cutContent) {
+			if (Actor_Clue_Query(kActorMcCoy, kClueEnvelope)
+			&& Actor_Clue_Query(kActorMcCoy, kClueChewInterview)) {
+				DM_Add_To_List_Never_Repeat_Once_Selected(1270, 2, 5, 7); // LANCE'S ENVELOPE
+			}
+		} else if (Actor_Clue_Query(kActorMcCoy, kClueEnvelope)) {
 			DM_Add_To_List_Never_Repeat_Once_Selected(1270, 2, 5, 7); // LANCE'S ENVELOPE
 		}
 	}
@@ -547,13 +559,32 @@ void SceneScriptDR03::dialogueWithChew() {
 
 	case 650: // TWINS
 		Actor_Says(kActorMcCoy, 775, 11);
-		Actor_Says(kActorChew, 220, 14);
-		Actor_Says(kActorChew, 220, 14);
-		Actor_Says(kActorMcCoy, 860, 11);
-		Actor_Says(kActorChew, 230, 14);
-		Actor_Says(kActorMcCoy, 865, 11);
-		Actor_Says(kActorChew, 240, 14);
-		Actor_Says(kActorChew, 250, 14);
+		if (_vm->_cutContent) {
+			Actor_Says(kActorChew, 220, 14);
+			if (Actor_Clue_Query(kActorMcCoy, kClueEnvelope)
+			&& Actor_Clue_Query(kActorMcCoy, kClueLabCorpses)
+			&& Actor_Clue_Query(kActorMcCoy, kClueAnsweringMachineMessage))  {
+				Actor_Says(kActorMcCoy, 6975, 13); //00-6975.AUD	Interesting.
+			} else {
+				Actor_Says(kActorMcCoy, 860, 11); //00-0860.AUD	They're genetic designers?
+				if (Actor_Query_Friendliness_To_Other(kActorChew, kActorMcCoy) > 49) {
+					Actor_Says(kActorChew, 230, 14);
+					Actor_Says(kActorMcCoy, 865, 11);
+					Actor_Says(kActorChew, 240, 14);
+				} else {
+					Actor_Says(kActorChew, 40, 14); //52-0040.AUD	Hey, LPD, you deaf or something, huh, LPD?
+					Actor_Says(kActorChew, 50, 14); //52-0050.AUD	I very busy. Eyes will wait for nothing.
+				}
+			}
+		} else {
+			Actor_Says(kActorChew, 220, 14);
+			Actor_Says(kActorChew, 220, 14);
+			Actor_Says(kActorMcCoy, 860, 11);
+			Actor_Says(kActorChew, 230, 14);
+			Actor_Says(kActorMcCoy, 865, 11);
+			Actor_Says(kActorChew, 240, 14);
+			Actor_Says(kActorChew, 250, 14);
+		}
 		break;
 
 	case 660: // MORAJI
@@ -599,25 +630,6 @@ void SceneScriptDR03::dialogueWithChew() {
 			Actor_Says(kActorMcCoy, 875, 16);
 			Actor_Says(kActorChew, 350, 12);
 			Actor_Says(kActorChew, 360, 15);
-			if (_vm->_cutContent) {
-				Actor_Says(kActorMcCoy, 775, 11);
-				Actor_Says(kActorChew, 220, 14);
-				if (Actor_Clue_Query(kActorMcCoy, kClueEnvelope)
-				&& Actor_Clue_Query(kActorMcCoy, kClueLabCorpses)
-				&& Actor_Clue_Query(kActorMcCoy, kClueAnsweringMachineMessage))  {
-					Actor_Says(kActorMcCoy, 6975, 13); //00-6975.AUD	Interesting.
-				} else {
-					Actor_Says(kActorMcCoy, 860, 11); //00-0860.AUD	They're genetic designers?
-					if (Actor_Query_Friendliness_To_Other(kActorChew, kActorMcCoy) > 49) {
-						Actor_Says(kActorChew, 230, 14);
-						Actor_Says(kActorMcCoy, 865, 11);
-						Actor_Says(kActorChew, 240, 14);
-					} else {
-						Actor_Says(kActorChew, 40, 14); //52-0040.AUD	Hey, LPD, you deaf or something, huh, LPD?
-						Actor_Says(kActorChew, 50, 14); //52-0050.AUD	I very busy. Eyes will wait for nothing.
-					}
-				}
-			}
 			Game_Flag_Set(kFlagBB01Available);
 		} else {
 			Actor_Says(kActorChew, 320, 13);
@@ -628,13 +640,15 @@ void SceneScriptDR03::dialogueWithChew() {
 
 	case 690: // DONE
 		if (_vm->_cutContent) {
-			if (Player_Query_Agenda() != kPlayerAgendaSurly 
-			&& Player_Query_Agenda() != kPlayerAgendaErratic) {
+			if (Player_Query_Agenda() == kPlayerAgendaPolite) {
 				Actor_Says(kActorMcCoy, 805, 3); //00-0805.AUD	Sorry to bother you.
 				Actor_Modify_Friendliness_To_Other(kActorChew, kActorMcCoy, 1);
-			} else {
+			} else if (Player_Query_Agenda() == kPlayerAgendaSurly 
+			|| Player_Query_Agenda() == kPlayerAgendaErratic) {
 				Actor_Says(kActorMcCoy, 8720, 17); //00-8720.AUD	Freak.
 				Actor_Modify_Friendliness_To_Other(kActorChew, kActorMcCoy, -1);
+			} else {
+				Actor_Says(kActorMcCoy, 4595, 14); //00-4595.AUD	Stick around. I may not be finished with you.
 			}	
 		} else {
 			Actor_Says(kActorMcCoy, 4595, 14);

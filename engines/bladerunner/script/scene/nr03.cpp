@@ -138,16 +138,13 @@ bool SceneScriptNR03::ClickedOnActor(int actorId) {
 							Actor_Says(kActorHanoi, 40, 14); //25-0040.AUD	No, it’s true. Mr. Q sent me a vid just yesterday. Getting a hell of a tan he is.
 							Actor_Says(kActorMcCoy, 3365, 16); //00-3365.AUD	You and I both know he ain’t at any spa, Hanoi.
 							Actor_Says(kActorHanoi, 70, 13); //25-0070.AUD	He ring you from the spa or what?
+							Delay(1000);
+							Actor_Says(kActorMcCoy, 1535, 16); //00-1535.AUD	Ah, never mind.
 						} else {
 							Actor_Says(kActorMcCoy, 8265, 16); //00-8265.AUD	Really?
+							Delay(1000);
+							Actor_Says(kActorMcCoy, 5145, 18); //00-5145.AUD	I may have more questions for you later on.
 						}
-						Delay(1000);
-						Actor_Says(kActorMcCoy, 5150, 18); //00-5150.AUD	One more thing.
-						Actor_Says(kActorMcCoy, 8615, 13); //00-8615.AUD	Heard anything on the street?
-						Actor_Says(kActorHanoi, 190, 14); //25-0190.AUD	I heard something, yeah. Maybe I’ll even tell it to you, mate.
-						Actor_Says(kActorMcCoy, 5065, 18); //00-5065.AUD	Is that right?
-						Delay(1000);
-						Actor_Says(kActorMcCoy, 5145, 18); //00-5145.AUD	I may have more questions for you later on.
 					} else {
 						Game_Flag_Set(kFlagHanoiTalk);
 						Game_Flag_Set(kFlagNR03HanoiTalk);
@@ -155,6 +152,7 @@ bool SceneScriptNR03::ClickedOnActor(int actorId) {
 						// certainly doesn't help the situation.
 						Actor_Says(kActorMcCoy, 4870, 23); //00-4870.AUD	Ray McCoy, Rep Detect.
 						Actor_Says(kActorMcCoy, 3350, 14); //00-3350.AUD	Early’s waiting on me.
+						Actor_Says(kActorHanoi, 50, 17); //25-0050.AUD	Sod off. You got no appointment and you got no warrant.
 						Actor_Says(kActorMcCoy, 3360, 15); //00-3360.AUD	It’s a social visit.
 						Actor_Says(kActorHanoi, 60, 13); //25-0060.AUD	Dirty old geezer blow me. There’s nothing social about the cops.
 						Actor_Says(kActorMcCoy, 7835, 13); //00-7835.AUD	Is that so?
@@ -198,12 +196,6 @@ bool SceneScriptNR03::ClickedOnActor(int actorId) {
 						Actor_Says(kActorMcCoy, 3355, 15); //00-3355.AUD	Early told me the real party is in the back room.
 						Actor_Says(kActorHanoi, 220, 13); //25-0220.AUD	You got nothing, McCoy. Nothing!
 						Actor_Says(kActorHanoi, 230, 14); //25-0230.AUD	Bent the truth a little is all. Look, Mr. Q don’t want no trouble of you lads.
-						if (Player_Query_Agenda() != kPlayerAgendaSurly 
-						&& Player_Query_Agenda() != kPlayerAgendaErratic) {
-							Actor_Says(kActorMcCoy, 1535, 16); //00-1535.AUD	Ah, never mind.
-						} else {
-							Actor_Says(kActorMcCoy, 745, 14); //00-0745.AUD	I'm watching you, pal.
-						}
 					} else { 
 						// Hanoi is a replicant, he tells McCoy to get lost. 
 						Actor_Says(kActorMcCoy, 3350, 16); //00-3350.AUD	Early’s waiting on me.

@@ -543,12 +543,12 @@ void SceneScriptNR05::talkToEarlyQ() {
 		Actor_Says(kActorEarlyQ, 560, 14); //18-0560.AUD	Nah, she ain’t one of mine.
 		Actor_Says(kActorEarlyQ, 570, 13); //18-0570.AUD	Talk to Taffy. He gets most of the peddy business around here.
 		if (_vm->_cutContent) {
-			if (Player_Query_Agenda() == kPlayerAgendaPolite) {
-				Actor_Says(kActorMcCoy, 3555, 12); //00-3555.AUD	It’s men like you that made this country great, Early.
-			} else {
-				if (!Game_Flag_Query(kFlagEarlyQIsReplicant)) {
-					Actor_Says(kActorMcCoy, 2485, 19); //00-2485.AUD	I’ve a hard time believing that.
+			if (Game_Flag_Query(kFlagEarlyQIsReplicant)) {
+				if (Player_Query_Agenda() == kPlayerAgendaPolite) {
+					Actor_Says(kActorMcCoy, 3555, 12); //00-3555.AUD	It’s men like you that made this country great, Early.
 				}
+			} else {
+				Actor_Says(kActorMcCoy, 2485, 19); //00-2485.AUD	I’ve a hard time believing that.
 			}
 		} else {
 			Actor_Says(kActorMcCoy, 3555, 12);
@@ -569,12 +569,12 @@ void SceneScriptNR05::talkToEarlyQ() {
 			Actor_Says(kActorEarlyQ, 560, 14); //18-0560.AUD	Nah, she ain’t one of mine.
 			Actor_Says(kActorEarlyQ, 570, 13); //18-0570.AUD	Talk to Taffy. He gets most of the peddy business around here.
 			if (_vm->_cutContent) {
-				if (Player_Query_Agenda() != kPlayerAgendaPolite) {
-					if (!Game_Flag_Query(kFlagEarlyQIsReplicant)) {
-						Actor_Says(kActorMcCoy, 2485, 19); //00-2485.AUD	I’ve a hard time believing that.
+				if (Game_Flag_Query(kFlagEarlyQIsReplicant)) {
+					if (Player_Query_Agenda() == kPlayerAgendaPolite) {
+						Actor_Says(kActorMcCoy, 3555, 12); //00-3555.AUD	It’s men like you that made this country great, Early.
 					}
 				} else {
-					Actor_Says(kActorMcCoy, 3555, 12); //00-3555.AUD	It’s men like you that made this country great, Early.
+					Actor_Says(kActorMcCoy, 2485, 19); //00-2485.AUD	I’ve a hard time believing that.
 				}
 			} else {
 				Actor_Says(kActorMcCoy, 3555, 12);
@@ -628,7 +628,14 @@ void SceneScriptNR05::talkToEarlyQ() {
 		} else {
 			// Early Q denies recongnizing Dektora
 			Actor_Says(kActorEarlyQ, 640, 13); //18-0640.AUD	Gee, I don’t know. She looks kind of familiar but I got so many broads working here, they all get kinda jumbled in my brain.
-			Actor_Says(kActorMcCoy, 3580, 15); 
+			if (_vm->_cutContent) {
+				if (Player_Query_Agenda() == kPlayerAgendaSurly
+				|| (Player_Query_Agenda() == kPlayerAgendaErratic)) {
+					Actor_Says(kActorMcCoy, 3580, 15);  //00-3580.AUD	Sure they do.
+				}
+			} else {
+				Actor_Says(kActorMcCoy, 3580, 15);  //00-3580.AUD	Sure they do.
+			}
 			Actor_Says(kActorEarlyQ, 660, 12); //18-0660.AUD	Relax, have a drink, loosen up. You see her, you let me know.
 			if (Player_Query_Agenda() == kPlayerAgendaSurly
 			|| (Player_Query_Agenda() == kPlayerAgendaErratic)) {

@@ -94,7 +94,15 @@ void AIScriptPhotographer::ClickedByPlayer() {
 		Actor_Says(kActorMcCoy, 5300, 14);
 		Actor_Face_Actor(kActorPhotographer, kActorMcCoy, true);
 		Actor_Says(kActorPhotographer, 20, kAnimationModeTalk);
-		Actor_Says(kActorMcCoy, 5305, 15);
+		if (_vm->_cutContent) {
+			if (Player_Query_Agenda() != kPlayerAgendaPolite) { 
+				Actor_Says(kActorMcCoy, 7815, 18); //00-7815.AUD	No.
+			} else {
+				Actor_Says(kActorMcCoy, 5305, 15);
+			}
+		} else {
+			Actor_Says(kActorMcCoy, 5305, 15);
+		}
 		Game_Flag_Set(kFlagTB06PhotographTalk1);
 		AI_Movement_Track_Unpause(kActorPhotographer);
 	} else {

@@ -237,9 +237,12 @@ bool SceneScriptAR01::ClickedOnActor(int actorId) {
 							Actor_Set_Goal_Number(kActorFishDealer, 1);
 							Actor_Modify_Friendliness_To_Other(kActorFishDealer, kActorMcCoy, -2);
 						} else {
-							Actor_Says(kActorFishDealer, 80, 14);
-							Actor_Says(kActorFishDealer, 90, 14);
-							Actor_Says(kActorMcCoy, 25, 13);
+							if (Player_Query_Agenda() == kPlayerAgendaPolite) {
+								Actor_Says(kActorFishDealer, 80, 14);
+								Actor_Says(kActorFishDealer, 90, 14);
+								Actor_Says(kActorMcCoy, 25, 13);
+								Actor_Modify_Friendliness_To_Other(kActorFishDealer, kActorMcCoy, 2);
+							}
 						}
 					}
 				} else if (!Game_Flag_Query(kFlagFishLadyTalkFinsished)) {	
@@ -412,7 +415,9 @@ bool SceneScriptAR01::ClickedOnExit(int exitId) {
 					Player_Gains_Control();
 					Actor_Retired_Here(kActorMcCoy, 12, 48, 1, kActorIzo);
 				} else {
-					Actor_Says(kActorMcCoy, 3545, 15); //00-3545.AUD	Not yet.
+					if (Game_Flag_Query(kFlagIzoGotAway)) {
+						Actor_Says(kActorMcCoy, 3545, 15); //00-3545.AUD	Not yet.
+					}
 				}
 			} else {
 				Player_Loses_Control();
@@ -640,7 +645,7 @@ void SceneScriptAR01::PlayerWalkedIn() {
 			Actor_Says(kActorFishDealer, 230, 0); // 29-0230.AUD	You buy fish? Highest quality.
 			Delay (2000);							
 			Actor_Says(kActorMcCoy, 1535, 16); //00-1535.AUD	Ah, never mind.
-			Delay (4000);
+			Delay (1000);
 			Actor_Says(kActorFishDealer, 230, 0); // 29-0230.AUD	You buy fish? Highest quality.
 			Delay (3000);	
 			Game_Flag_Set(kFlagAR01Entered);

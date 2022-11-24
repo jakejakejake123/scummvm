@@ -194,14 +194,34 @@ void SceneScriptKP06::PlayerWalkedIn() {
 				}	
 				if (!Game_Flag_Query(kFlagMcCoyAttackedReplicants)) {
 					Actor_Says(kActorSteele, 2530, 13);
-					if (Player_Query_Agenda() != kPlayerAgendaSurly 
-					&& Player_Query_Agenda() != kPlayerAgendaErratic) {
-						Actor_Says(kActorMcCoy, 6200, 11); //00-6200.AUD	Do it. You just might be doing me a favor.
+					Actor_Says(kActorMcCoy, 6200, 11); //00-6200.AUD	Do it. You just might be doing me a favor.
+					if (Game_Flag_Query(kFlagMcCoyRetiredHuman)) {
+						Actor_Says(kActorSteele, 1330, 12); //01-1330.AUD	We got a problem, though. There’s an APB out for you.
+						Actor_Says(kActorSteele, 1380, 12); //01-1380.AUD	Is it true, Slim? Did you kill somebody?
+						if (Player_Query_Agenda() == kPlayerAgendaPolite) {
+							Delay(1500);
+							Actor_Says(kActorMcCoy, 7980, 19); //00-7980.AUD	Yeah. Maybe.
+						} else {
+							Actor_Says(kActorMcCoy, 3130, 15); //00-3130.AUD	What do you think?
+						}
+						Actor_Change_Animation_Mode(kActorSteele, 4);
+						Delay(1500);
+						Actor_Says(kActorSteele, 2210, 12); //01-2210.AUD	I guess I gotta take you in. They'll probably have to run a couple of tests, too.
+						Delay(2000);
+						Outtake_Play(kOuttakeAway1, true, -1);
+						Music_Stop(3u);
+						Player_Set_Combat_Mode(false);
+						Actor_Change_Animation_Mode(kActorMcCoy, kAnimationModeIdle);
+						Game_Flag_Set(kFlagMcCoyArrested);
+						Set_Enter(kSetPS09, kScenePS09);
+						Player_Loses_Control();
+						Delay(2000);
+						Outtake_Play(kOuttakeEnd2, false, -1);
+						Game_Over();
 					} else {
-						Delay(500);		
+						Actor_Says(kActorSteele, 2540, 15);
+						Delay(1000);
 					}
-					Actor_Says(kActorSteele, 2540, 15);
-					Delay(1000);
 				} else {
 					Actor_Says(kActorSteele, 2560, 12); //01-2560.AUD	I gotta admit. I had my doubts about you.
 					if (Player_Query_Agenda() == kPlayerAgendaSurly 
@@ -211,6 +231,30 @@ void SceneScriptKP06::PlayerWalkedIn() {
 						Actor_Says(kActorMcCoy, 6215, 14); //00-6215.AUD	I plan to. I’m going home.
 					} else {
 						Actor_Says(kActorMcCoy, 5065, 18); //00-5065.AUD	Is that right?
+					}
+					if (Game_Flag_Query(kFlagMcCoyRetiredHuman)) {
+						Actor_Says(kActorSteele, 1330, 12); //01-1330.AUD	We got a problem, though. There’s an APB out for you.
+						Actor_Says(kActorSteele, 1380, 12); //01-1380.AUD	Is it true, Slim? Did you kill somebody?
+						if (Player_Query_Agenda() == kPlayerAgendaPolite) {
+							Delay(1500);
+							Actor_Says(kActorMcCoy, 7980, 19); //00-7980.AUD	Yeah. Maybe.
+						} else {
+							Actor_Says(kActorMcCoy, 3130, 15); //00-3130.AUD	What do you think?
+						}
+						Actor_Change_Animation_Mode(kActorSteele, 4);
+						Delay(1500);
+						Actor_Says(kActorSteele, 2210, 12); //01-2210.AUD	I guess I gotta take you in. They'll probably have to run a couple of tests, too.
+						Delay(2000);
+						Outtake_Play(kOuttakeAway1, true, -1);
+						Music_Stop(3u);
+						Player_Set_Combat_Mode(false);
+						Actor_Change_Animation_Mode(kActorMcCoy, kAnimationModeIdle);
+						Game_Flag_Set(kFlagMcCoyArrested);
+						Set_Enter(kSetPS09, kScenePS09);
+						Player_Loses_Control();
+						Delay(2000);
+						Outtake_Play(kOuttakeEnd2, false, -1);
+						Game_Over();
 					}
 					Actor_Says(kActorSteele, 2580, 15); //01-2580.AUD	I gotta say, McCoy. You had me fooled. I thought for sure you were a Rep.
 					Actor_Says(kActorSteele, 2590, 12); //01-2590.AUD	Don’t get me wrong. I mean, you’re one crazy dude. But I like that.
@@ -241,8 +285,29 @@ void SceneScriptKP06::PlayerWalkedIn() {
 					if	(Actor_Query_Goal_Number(kActorMaggie) < kGoalMaggieDead) {
 						Actor_Put_In_Set(kActorMaggie, kSetKP05_KP06);
 						Actor_Set_At_XYZ(kActorMaggie, -802.21, 3.74, -640.55, 659);
-						Actor_Face_Actor(kActorMaggie, kActorMcCoy, true);
 					}
+				}
+				if (Game_Flag_Query(kFlagMcCoyRetiredHuman)) {
+					Actor_Face_Actor(kActorGaff, kActorMcCoy, true);
+					Actor_Face_Actor(kActorMcCoy, kActorGaff, true);
+					Actor_Says(kActorGaff, 110, 12);
+					Actor_Says(kActorMcCoy, 2945, 14); //00-2945.AUD	You could say that.
+					Delay(2000);
+					Actor_Says(kActorGaff, 190, 14); //53-0190.AUD	It's like I said before. You retire a human, your career is over.
+					if (Actor_Query_Friendliness_To_Other(kActorGaff, kActorMcCoy) < 50) {
+						Actor_Says(kActorGaff, 200, 15); //53-0200.AUD	Your life too, maybe.
+					}
+					Delay(2000);
+					Outtake_Play(kOuttakeAway1, true, -1);
+					Music_Stop(3u);
+					Player_Set_Combat_Mode(false);
+					Actor_Change_Animation_Mode(kActorMcCoy, kAnimationModeIdle);
+					Game_Flag_Set(kFlagMcCoyArrested);
+					Set_Enter(kSetPS09, kScenePS09);
+					Player_Loses_Control();
+					Delay(2000);
+					Outtake_Play(kOuttakeEnd2, false, -1);
+					Game_Over();
 				}
 				Actor_Says(kActorGaff, 220, 13);
 				if (Player_Query_Agenda() == kPlayerAgendaSurly 
@@ -272,12 +337,10 @@ void SceneScriptKP06::PlayerWalkedIn() {
 					Actor_Says(kActorMcCoy, 6265, 18); //00-6265.AUD	How come I don’t feel good about it?
 					Actor_Says(kActorGaff, 290, 14); //53-0290.AUD	Who knows?
 				} else {
-					Actor_Says(kActorMcCoy, 5705, 14); //00-5705.AUD	Uh-huh.
+					Actor_Says(kActorMcCoy, 2215, 3); //00-2215.AUD	That’s right.
 				}
 				// If Maggie is alive Gaffs lines about getting a new animal will not play and instead McCoy will say the city is a cess pool instead.
-				if (Actor_Query_Goal_Number(kActorMaggie) < kGoalMaggieDead 
-				// Made it so Gaff only mentions McCoy buying another dog if he has at least 1500 chinyen.
-				|| Global_Variable_Query(kVariableChinyen) < 1000) {
+				if (Actor_Query_Goal_Number(kActorMaggie) < kGoalMaggieDead) {
 					Delay(1000);
 					Actor_Says(kActorGaff, 100, 14); //53-0100.AUD	Go home and get some rest. I'm sure you need it.
 					Delay(1500);				
@@ -288,13 +351,22 @@ void SceneScriptKP06::PlayerWalkedIn() {
 					}
 					Async_Actor_Walk_To_Waypoint(kActorGaff, 551, 0, false);
 					Actor_Says(kActorGaff, 310, -1); //53-0310.AUD	Whatever you want to believe, McCoy.
-				} else if (Actor_Query_Goal_Number(kActorMaggie) > kGoalMaggieDead 
-				&& Global_Variable_Query(kVariableChinyen) >= 1000) { 
-					Actor_Says(kActorGaff, 300, 15); //53-0300.AUD	Buy yourself another animal maybe. A real one, not a Tyrell fake.
-					Actor_Says(kActorMcCoy, 6270, 11);
-					Async_Actor_Walk_To_Waypoint(kActorMcCoy, 550, 0, false);
-					Async_Actor_Walk_To_Waypoint(kActorGaff, 551, 0, false);
-					Actor_Says(kActorGaff, 310, -1);
+				} else { 
+					if (Global_Variable_Query(kVariableChinyen) >= 1000) { 
+						Actor_Says(kActorGaff, 300, 15); //53-0300.AUD	Buy yourself another animal maybe. A real one, not a Tyrell fake.
+						Actor_Says(kActorMcCoy, 6270, 11);
+						Async_Actor_Walk_To_Waypoint(kActorMcCoy, 550, 0, false);
+						Async_Actor_Walk_To_Waypoint(kActorGaff, 551, 0, false);
+						Actor_Says(kActorGaff, 310, -1);
+					} else {
+						Delay(1000);
+						Actor_Says(kActorGaff, 100, 14); //53-0100.AUD	Go home and get some rest. I'm sure you need it.
+						Delay(1500);				
+						Actor_Says(kActorMcCoy, 8625, 14); //00-8625.AUD	This city is a cesspool.
+						Async_Actor_Walk_To_Waypoint(kActorMcCoy, 551, 0, false);
+						Async_Actor_Walk_To_Waypoint(kActorGaff, 551, 0, false);
+						Actor_Says(kActorGaff, 310, -1);
+					}
 				}
 				Delay(3000);
 				Outtake_Play(kOuttakeEnd7, false, -1);
@@ -327,7 +399,6 @@ void SceneScriptKP06::PlayerWalkedIn() {
 		} else { // Ending - talk with Gaff and leaving alone
 			Actor_Set_Goal_Number(kActorGaff, kGoalGaffGone);
 			Actor_Face_Actor(kActorGaff, kActorMcCoy, true);
-			// If Maggie is alive she will be in the set.
 			Actor_Says(kActorGaff, 220, 13);
 			Actor_Face_Actor(kActorMcCoy, kActorGaff, true);
 			Actor_Says(kActorMcCoy, 6245, 11);

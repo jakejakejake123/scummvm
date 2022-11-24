@@ -162,7 +162,7 @@ bool SceneScriptPS07::ClickedOnActor(int actorId) {
 						Actor_Says(kActorMcCoy, 620, 18); //-	00-0620.AUD	Try me.
 					} else {
 						Actor_Says(kActorMcCoy, 8455, 14); //00-8455.AUD	Let me judge what's gonna make me upset.
-						Delay(1000);
+						Delay(2000);
 						Actor_Says(kActorMcCoy, 6985, 16); //00-6985.AUD	Got the straight scoop for me or what?
 						Actor_Modify_Friendliness_To_Other(kActorKlein, kActorMcCoy, -3);
 					}
@@ -205,12 +205,16 @@ bool SceneScriptPS07::ClickedOnActor(int actorId) {
 						if (Actor_Clue_Query(kActorMcCoy, kClueSightingMcCoyRuncitersShop)) {
 							Actor_Says(kActorMcCoy, 4165, 18);
 							Actor_Says(kActorKlein, 160, 13);
-							Actor_Says(kActorMcCoy, 4170, 19); // 00-4170.AUD	Nice bunch of Reps I'm tailing.
-							Actor_Says(kActorMcCoy, 4175, 18); // 00-4175.AUD	Hope you're not pulling a meat cleaver out of my back next week.
-							if (Actor_Query_Friendliness_To_Other(kActorKlein, kActorMcCoy) > 49) {
-								Actor_Says(kActorKlein, 210, 12); //30-0210.AUD  	Ha, you're a real funny guy, McCoy.
-								Actor_Modify_Friendliness_To_Other(kActorKlein, kActorMcCoy, 3);
+							if (!Game_Flag_Query(kFlagMcCoyIsHelpingReplicants)) {
+								Actor_Says(kActorMcCoy, 4170, 19); // 00-4170.AUD	Nice bunch of Reps I'm tailing.
+								Actor_Says(kActorMcCoy, 4175, 18); // 00-4175.AUD	Hope you're not pulling a meat cleaver out of my back next week.
+								if (Actor_Query_Friendliness_To_Other(kActorKlein, kActorMcCoy) > 49) {
+									Actor_Says(kActorKlein, 210, 12); //30-0210.AUD  	Ha, you're a real funny guy, McCoy.
+									Actor_Modify_Friendliness_To_Other(kActorKlein, kActorMcCoy, 3);
+								}
 							}
+						} else {
+							Actor_Says(kActorMcCoy, 7835, 18); //00-7835.AUD	Is that so?
 						}
 						Actor_Set_Goal_Number(kActorKlein, kGoalKleinMovingInLab01);
 					}	
@@ -267,12 +271,8 @@ bool SceneScriptPS07::ClickedOnActor(int actorId) {
 			  	    } else {
 						if (!Game_Flag_Query(kFlagKleinCarIdentityTalk)) {
 							Actor_Says(kActorMcCoy, 4195, 13);
-							if (Actor_Query_Friendliness_To_Other(kActorKlein, kActorMcCoy) > 46) {
-								Actor_Says(kActorKlein, 240, 16); 
-								Game_Flag_Set(kFlagKleinCarIdentityTalk);
-							} else {
-								Actor_Says(kActorKlein, 0, 16); //30-0000.AUD	Zip, man. Try me later.
-							}
+							Actor_Says(kActorKlein, 240, 16); 
+							Game_Flag_Set(kFlagKleinCarIdentityTalk);
 							Actor_Set_Goal_Number(kActorKlein, kGoalKleinMovingInLab01);
 						}
 				    }
@@ -308,12 +308,8 @@ bool SceneScriptPS07::ClickedOnActor(int actorId) {
 				if (_vm->_cutContent) {
 					if (!Game_Flag_Query(kFlagKleinCarIdentityTalk)) {
 						Actor_Says(kActorMcCoy, 4195, 13); //00-4195.AUD	Any way to find the car's owner?
-						if (Actor_Query_Friendliness_To_Other(kActorKlein, kActorMcCoy) > 46) {
-							Actor_Says(kActorKlein, 240, 16); 
-							Game_Flag_Set(kFlagKleinCarIdentityTalk);
-						} else {
-							Actor_Says(kActorKlein, 0, 16); //30-0000.AUD	Zip, man. Try me later.
-						}
+						Actor_Says(kActorKlein, 240, 16); 
+						Game_Flag_Set(kFlagKleinCarIdentityTalk);
 						Actor_Set_Goal_Number(kActorKlein, kGoalKleinMovingInLab01);
 					}
 				}

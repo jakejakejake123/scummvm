@@ -302,7 +302,15 @@ bool SceneScriptCT01::ClickedOnActor(int actorId) {
 	if (actorId == kActorZuben) {
 		if (!Loop_Actor_Walk_To_XYZ(kActorMcCoy, -335.23f, -6.5f, 578.97f, 12, true, false, false)) {
 			Actor_Face_Actor(kActorMcCoy, kActorZuben, true);
-			Actor_Says(kActorMcCoy, 355, 18);
+			if (_vm->_cutContent) {
+				if (Player_Query_Agenda() == kPlayerAgendaPolite) {
+					Actor_Says(kActorMcCoy, 3970, 13); //00-3970.AUD	Hey.
+				} else {
+					Actor_Says(kActorMcCoy, 355, 18);
+				}
+			} else {
+				Actor_Says(kActorMcCoy, 3970, 13); //00-3970.AUD	Hey.
+			}
 			if (Actor_Query_Goal_Number(kActorZuben) == kGoalZubenDefault) {
 				Actor_Says(kActorZuben, 10, 16);
 				Actor_Face_Actor(kActorHowieLee, kActorMcCoy, true);
@@ -385,7 +393,7 @@ bool SceneScriptCT01::ClickedOnActor(int actorId) {
 						if (Player_Query_Agenda() == kPlayerAgendaPolite) {
 							Actor_Says(kActorMcCoy, 340, 13); //00-0340.AUD	You're a pretty smart looking cat.
 						}
-						Actor_Says(kActorMcCoy, 8920, 14); //00-8920.AUD	I gotta ask you a question.
+						Actor_Says(kActorMcCoy, 5600, 14);               // Let me ask you.
 						if (Actor_Clue_Query(kActorMcCoy, kClueLucy)) {
 							Actor_Says(kActorMcCoy, 265, 23); //00-0265.AUD	This girl ever eat around here?
 						} else {
@@ -766,8 +774,11 @@ void SceneScriptCT01::dialogueWithHowieLee() {
 			}
 		}
 	}
-
-	DM_Add_To_List_Never_Repeat_Once_Selected(70, 7, 3, -1); // SMALL TALK
+	if (_vm->_cutContent) {
+		DM_Add_To_List_Never_Repeat_Once_Selected(70, 2, 3, 1); // SMALL TALK
+	} else {
+		DM_Add_To_List_Never_Repeat_Once_Selected(70, 7, 3, -1); // SMALL TALK
+	}
 	Dialogue_Menu_Add_DONE_To_List(100); // DONE
 
 	Dialogue_Menu_Appear(320, 240);
@@ -827,8 +838,7 @@ void SceneScriptCT01::dialogueWithHowieLee() {
 			Actor_Says(kActorMcCoy, 280, 11);
 			Actor_Says(kActorHowieLee, 40, 14); //28-0040.AUD	Yes sir. You do Howie a favor? Distribute all throughout police station?
 			if (_vm->_cutContent) {
-				if (Player_Query_Agenda() == kPlayerAgendaSurly 
-				|| Player_Query_Agenda() == kPlayerAgendaErratic) { 
+				if (Player_Query_Agenda() != kPlayerAgendaPolite) { 
 					Actor_Says(kActorMcCoy, 7815, 18); //00-7815.AUD	No.	
 					Actor_Modify_Friendliness_To_Other(kActorHowieLee, kActorMcCoy, -2);
 				} else {
@@ -854,8 +864,7 @@ void SceneScriptCT01::dialogueWithHowieLee() {
 			//Altered code so depending on McCoys agenda he will either do Howie the favour or not and 
 			//their friendliness rating will be adjusted accordingly.
 			if (_vm->_cutContent) {
-				if (Player_Query_Agenda() == kPlayerAgendaSurly 
-				|| Player_Query_Agenda() == kPlayerAgendaErratic) { 
+				if (Player_Query_Agenda() != kPlayerAgendaPolite) { 
 					Actor_Says(kActorMcCoy, 7815, 18); //00-7815.AUD	No.
 					Actor_Modify_Friendliness_To_Other(kActorHowieLee, kActorMcCoy, -2);
 				} else {
@@ -953,7 +962,7 @@ void SceneScriptCT01::dialogueWithHowieLee() {
 			if (Actor_Query_Friendliness_To_Other(kActorHowieLee, kActorMcCoy) < 60) {  
 				Actor_Says(kActorHowieLee, 190, 13); // I look like I got time for chit-er chat-er?
 			} else {
-				Actor_Says(kActorHowieLee, 180, kAnimationModeTalk); //28-0180.AUD	Nothing, nothing. Customer here to eat.
+				Actor_Says(kActorHowieLee, 80, kAnimationModeTalk); //28-0080.AUD	No, sir. Any luck, something interesting arrive tomorrow.
 				Actor_Says(kActorMcCoy, 305, 18);
 			}
 		} else {

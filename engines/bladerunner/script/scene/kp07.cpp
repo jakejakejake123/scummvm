@@ -323,7 +323,7 @@ void SceneScriptKP07::PlayerWalkedIn() {
 				if (Actor_Query_Is_In_Current_Set(kActorMaggie)) {
 					Actor_Face_Actor(kActorMcCoy, kActorMaggie, true);
 					Actor_Face_Actor(kActorMaggie, kActorMcCoy, true);
-					Actor_Says(kActorMcCoy, 2385, 14); //00-2385.AUD	Maggie! Come here girl.
+					Actor_Says(kActorMcCoy, 2395, 14); //00-2395.AUD	Hey, Maggie!
 				}
 			}
 			// Added in some dialogue for McCoy, Lucy and Dektora. If McCoy enters the moonbus and is helping the replicants and has an affection rating
@@ -377,11 +377,38 @@ void SceneScriptKP07::PlayerWalkedIn() {
 		} else {
 			Actor_Face_Actor(kActorMcCoy, kActorClovis, true);
 			Actor_Says(kActorClovis, 160, 3);
-			//I disabled the exits when McCoy first enters the moonbus because it didn't feel right
-			// for McCoy to be able to leave before finishing his final encounter with Clovis.
 			if (_vm->_cutContent) {
 				Actor_Set_Goal_Number(kActorMaggie, kGoalMaggieDead);
 				Scene_Exits_Disable();
+			}
+			if (_vm->_cutContent) {
+				if (Game_Flag_Query(kFlagMcCoyRetiredHuman)) {
+					Player_Set_Combat_Mode(true);
+					Delay(1500);
+					Actor_Change_Animation_Mode(kActorMcCoy, kAnimationModeCombatAim);
+					Delay(1000);
+					Actor_Says(kActorClovis, 170, -1);
+					Actor_Says(kActorClovis, 180, kAnimationModeTalk);
+					Actor_Says(kActorMcCoy, 2350, -1); //00-2350.AUD	You want me to feel sorry for you.
+					Delay(1000);
+					Actor_Says(kActorMcCoy, 2135, -1); //00-2135.AUD	How did it feel to kill an innocent animal.
+					Delay(2000);
+					Actor_Says(kActorMcCoy, 8395, -1); //00-8395.AUD	You don't have anything to say?
+					Delay(1000);
+					Actor_Says(kActorClovis, 210, kAnimationModeTalk); //05-0210.AUD	(coughs) I thought I could cheat my destiny.
+					Actor_Says(kActorClovis, 220, -1); //05-0220.AUD	I should have cherished what little time I had instead of wasting it in one precious minute... on revenge. (coughs)
+					Delay(2000);
+					Actor_Says(kActorMcCoy, 170, -1); //00-0170.AUD	Damn.
+					Delay(1000);
+					Player_Set_Combat_Mode(false);
+					Delay(1500);
+					Player_Loses_Control();
+					Loop_Actor_Walk_To_XYZ(kActorMcCoy, -12.0f, -41.58f, 72.0f, 0, true, false, false);
+					Ambient_Sounds_Remove_All_Non_Looping_Sounds(true);
+					Ambient_Sounds_Remove_All_Looping_Sounds(1u);
+					Game_Flag_Set(kFlagKP07toKP06);
+					Set_Enter(kSetKP05_KP06, kSceneKP06);
+				}
 			}
 			Actor_Retired_Here(kActorClovis, 72, 60, 0, -1);
 		}

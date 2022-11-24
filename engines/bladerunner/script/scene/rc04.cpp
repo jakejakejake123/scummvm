@@ -85,7 +85,7 @@ void SceneScriptRC04::dialogueWithBulletBob() {
 	if (_vm->_cutContent) {
 		if ( Actor_Clue_Query(kActorMcCoy, kClueLabShellCasings)
 		 && !Actor_Clue_Query(kActorMcCoy, kClueWeaponsCache)) {
-			 DM_Add_To_List_Never_Repeat_Once_Selected(580, 1, 4, 9); // WEAPONS
+			 DM_Add_To_List_Never_Repeat_Once_Selected(580, 3, 4, 9); // WEAPONS
 		 }
 	} else if ( Actor_Clue_Query(kActorMcCoy, kClueLabShellCasings)
 	 && !Actor_Clue_Query(kActorMcCoy, kClueRadiationGoggles)
@@ -104,17 +104,27 @@ void SceneScriptRC04::dialogueWithBulletBob() {
 	) {
 		DM_Add_To_List_Never_Repeat_Once_Selected(590, 6, 5, 3); // SHELL CASINGS
 	}
-	if (Actor_Clue_Query(kActorMcCoy, kClueHasanInterview)) {
+	if (_vm->_cutContent) {
+		if (Actor_Clue_Query(kActorMcCoy, kClueHasanInterview)) {
+			DM_Add_To_List_Never_Repeat_Once_Selected(600, 4, 3, 7); // HASAN
+		}
+	} else {
 		DM_Add_To_List_Never_Repeat_Once_Selected(600, -1, 3, 7); // HASAN
-		if (_vm->_cutContent) {
-			if (!Actor_Clue_Query(kActorMcCoy, kClueVKBobGorskyReplicant)) {
-				if (!Game_Flag_Query(kFlagMcCoyIsHelpingReplicants)) {
-					DM_Add_To_List_Never_Repeat_Once_Selected(1310, 1, 2, 8); // VOIGT-KAMPFF
-				}
-			}
-		} else {
-			DM_Add_To_List_Never_Repeat_Once_Selected(1310, -1, 2, 8); // VOIGT-KAMPFF
-		} 
+	}
+	if (_vm->_cutContent) {
+		if (!Actor_Clue_Query(kActorMcCoy, kClueVKBobGorskyReplicant)
+		&& Actor_Clue_Query(kActorMcCoy, kClueHasanInterview)) {
+			DM_Add_To_List_Never_Repeat_Once_Selected(1310, 1, 2, 3); // VOIGT-KAMPFF
+		}
+	} else {
+		DM_Add_To_List_Never_Repeat_Once_Selected(1310, -1, 2, 8); // VOIGT-KAMPFF
+	} 
+	if (_vm->_cutContent) {
+		if (Game_Flag_Query(kFlagBulletBobIsReplicant)
+		&& !Game_Flag_Query(kFlagBulletBobWarned)
+		&& Actor_Clue_Query(kActorMcCoy, kClueHasanInterview)) {
+			DM_Add_To_List(1110, 3, 2, 1); // CRYSTAL
+		}
 	}
 	if ( Actor_Clue_Query(kActorMcCoy, kClueRadiationGoggles)
 	 && !Actor_Clue_Query(kActorMcCoy, kClueGogglesReplicantIssue)
@@ -132,7 +142,7 @@ void SceneScriptRC04::dialogueWithBulletBob() {
 			if (!Game_Flag_Query(kFlagBulletBobIsReplicant)) {
 				if (Player_Query_Agenda() == kPlayerAgendaSurly
 				|| Player_Query_Agenda() == kPlayerAgendaErratic) { 
-					DM_Add_To_List_Never_Repeat_Once_Selected(620, 1, -1, -1); // HOLDEN'S BADGE
+					DM_Add_To_List_Never_Repeat_Once_Selected(620, 1, 2, 3); // HOLDEN'S BADGE
 				}
 			}
 		} else {
@@ -198,16 +208,6 @@ void SceneScriptRC04::dialogueWithBulletBob() {
 			Actor_Says(kActorBulletBob, 310, 31); //14-0310.AUD	it's out of here. Got no place at Bullet Bob's.
 		}
 		Actor_Says(kActorMcCoy, 5010, 11);
-		Actor_Says(kActorBulletBob, 320, 30);
-		Actor_Says(kActorBulletBob, 330, 33);
-		if (_vm->_cutContent) {
-			if (!Game_Flag_Query(kFlagBulletBobIsReplicant)) {
-				Actor_Says(kActorBulletBob, 340, 37); //14-0340.AUD	But who knows what the real title is.
-			}
-		} else {
-			Actor_Says(kActorBulletBob, 340, 37); //14-0340.AUD	But who knows what the real title is.
-		}
-		Actor_Says(kActorMcCoy, 5015, 11);
 		// Made it so Bobs opinion on Izo will be determined by Bobs replicant status. If Bob is a replicant he will always speak positively about Izo and
 		// if Bob is a human he will always speak negatively about Izo.
 		if (_vm->_cutContent) {
@@ -234,17 +234,22 @@ void SceneScriptRC04::dialogueWithBulletBob() {
 				if (Game_Flag_Query(kFlagMcCoyIsHelpingReplicants)) {
 					Actor_Says(kActorMcCoy, 5055, 11); // 00-5055.AUD	Don't jump to conclusions.
 				}
-				Actor_Says(kActorBulletBob, 440, 31); // 14-0440.AUD	I was out there, Ray. I did my time. Three and a half years worth.
-				Actor_Says(kActorBulletBob, 450, 32); //14-0450.AUD	And I can tell you: Reps got no business being down here on Earth, okay?
-				Actor_Clue_Acquire(kActorMcCoy, kClueBobInterview1, true, kActorBulletBob);
-				// Made it so McCoy only says Earth doesn't deserve replicants if he is surly or erratic.
-				if (!Game_Flag_Query(kFlagMcCoyIsHelpingReplicants)) {
-					Actor_Says(kActorMcCoy, 5030, 16); //00-5030.AUD	Yeah. Earth don't deserve them.
-					Actor_Says(kActorBulletBob, 460, 37); //14-0460.AUD	Tell me about it. We got standards to uphold down here.
-					Actor_Modify_Friendliness_To_Other(kActorBulletBob, kActorMcCoy, 2);
-				} else {
-					Actor_Says(kActorMcCoy, 4880, 13); //00-4880.AUD	Is that right?
-					Actor_Modify_Friendliness_To_Other(kActorBulletBob, kActorMcCoy, -2);
+				if (Actor_Query_Friendliness_To_Other(kActorBulletBob, kActorMcCoy) > 49) {
+					Actor_Says(kActorBulletBob, 440, 31); // 14-0440.AUD	I was out there, Ray. I did my time. Three and a half years worth.
+					Actor_Says(kActorBulletBob, 450, 32); //14-0450.AUD	And I can tell you: Reps got no business being down here on Earth, okay?
+					Actor_Clue_Acquire(kActorMcCoy, kClueBobInterview1, true, kActorBulletBob);
+					// Made it so McCoy only says Earth doesn't deserve replicants if he is surly or erratic.
+					if (!Game_Flag_Query(kFlagMcCoyIsHelpingReplicants)) {
+						if (Player_Query_Agenda() == kPlayerAgendaSurly
+						|| Player_Query_Agenda() == kPlayerAgendaErratic) { 
+							Actor_Says(kActorMcCoy, 5030, 16); //00-5030.AUD	Yeah. Earth don't deserve them.
+							Actor_Says(kActorBulletBob, 460, 37); //14-0460.AUD	Tell me about it. We got standards to uphold down here.
+							Actor_Modify_Friendliness_To_Other(kActorBulletBob, kActorMcCoy, 2);
+						}
+					} else {
+						Actor_Says(kActorMcCoy, 4880, 13); //00-4880.AUD	Is that right?
+						Actor_Modify_Friendliness_To_Other(kActorBulletBob, kActorMcCoy, -2);
+					}
 				}
 			} else {
 				Actor_Says(kActorBulletBob, 1820, 34); //14-1820.AUD	You want to make it as a Blade Runner, you ought to do your own investigations.
@@ -274,7 +279,6 @@ void SceneScriptRC04::dialogueWithBulletBob() {
 				}
 			}			
 		} else {
-			Actor_Says(kActorMcCoy, 5010, 11);
 			Actor_Says(kActorBulletBob, 320, 30);
 			Actor_Says(kActorBulletBob, 330, 33);
 			Actor_Says(kActorBulletBob, 340, 37);
@@ -382,17 +386,22 @@ void SceneScriptRC04::dialogueWithBulletBob() {
 				if (Game_Flag_Query(kFlagMcCoyIsHelpingReplicants)) {
 					Actor_Says(kActorMcCoy, 5055, 11); // 00-5055.AUD	Don't jump to conclusions.
 				}
-				Actor_Says(kActorBulletBob, 440, 31); // 14-0440.AUD	I was out there, Ray. I did my time. Three and a half years worth.
-				Actor_Says(kActorBulletBob, 450, 32); //14-0450.AUD	And I can tell you: Reps got no business being down here on Earth, okay?
-				Actor_Clue_Acquire(kActorMcCoy, kClueBobInterview1, true, kActorBulletBob);
-				// Made it so McCoy only says Earth doesn't deserve replicants if he is surly or erratic.
-				if (!Game_Flag_Query(kFlagMcCoyIsHelpingReplicants)) {
-					Actor_Says(kActorMcCoy, 5030, 16); //00-5030.AUD	Yeah. Earth don't deserve them.
-					Actor_Says(kActorBulletBob, 460, 37); //14-0460.AUD	Tell me about it. We got standards to uphold down here.
-					Actor_Modify_Friendliness_To_Other(kActorBulletBob, kActorMcCoy, 2);
-				} else {
-					Actor_Says(kActorMcCoy, 4880, 13); //00-4880.AUD	Is that right?
-					Actor_Modify_Friendliness_To_Other(kActorBulletBob, kActorMcCoy, -2);
+				if (Actor_Query_Friendliness_To_Other(kActorBulletBob, kActorMcCoy) > 49) {
+					Actor_Says(kActorBulletBob, 440, 31); // 14-0440.AUD	I was out there, Ray. I did my time. Three and a half years worth.
+					Actor_Says(kActorBulletBob, 450, 32); //14-0450.AUD	And I can tell you: Reps got no business being down here on Earth, okay?
+					Actor_Clue_Acquire(kActorMcCoy, kClueBobInterview1, true, kActorBulletBob);
+					// Made it so McCoy only says Earth doesn't deserve replicants if he is surly or erratic.
+					if (!Game_Flag_Query(kFlagMcCoyIsHelpingReplicants)) {
+						if (Player_Query_Agenda() == kPlayerAgendaSurly
+						|| Player_Query_Agenda() == kPlayerAgendaErratic) {
+							Actor_Says(kActorMcCoy, 5030, 16); //00-5030.AUD	Yeah. Earth don't deserve them.
+							Actor_Says(kActorBulletBob, 460, 37); //14-0460.AUD	Tell me about it. We got standards to uphold down here.
+							Actor_Modify_Friendliness_To_Other(kActorBulletBob, kActorMcCoy, 2);
+						}
+					} else {
+						Actor_Says(kActorMcCoy, 4880, 13); //00-4880.AUD	Is that right?
+						Actor_Modify_Friendliness_To_Other(kActorBulletBob, kActorMcCoy, -2);
+					}
 				}
 			} else {
 				Actor_Says(kActorBulletBob, 1820, 34); //14-1820.AUD	You want to make it as a Blade Runner, you ought to do your own investigations.
@@ -492,16 +501,18 @@ void SceneScriptRC04::dialogueWithBulletBob() {
 			Delay(2000);
 			if (Game_Flag_Query(kFlagBulletBobIsReplicant)) {
 				if (!Actor_Clue_Query(kActorMcCoy, kClueVKBobGorskyReplicant)) {
-					Actor_Says(kActorMcCoy, 4980, 11);
-					Actor_Says(kActorBulletBob, 770, 36); //14-0770.AUD	You mean the Voigt-Kampff?
-					Actor_Says(kActorBulletBob, 780, 36); //14-0780.AUD	You come into my shop and you want to V-K me?
-					Actor_Says_With_Pause(kActorMcCoy, 5090, 0.0f, 16); //00-5090.AUD	Relax, I just wa--
-					Actor_Says(kActorBulletBob, 790, 36); //14-0790.AUD	It's funny. You thinking I'm a Rep.
-					Actor_Says(kActorBulletBob, 800, 35); // 14-0800.AUD	Set up the test. We'll see what's what around here.
-					Voight_Kampff_Activate(kActorBulletBob, 50);	
-					Actor_Says(kActorBulletBob, 810, 30); //14-0810.AUD	So that's it?
-					Actor_Says(kActorMcCoy, 5025, 13); //00-5025.AUD	Yeah?
-					Actor_Says(kActorBulletBob, 820, 31); //14-0820.AUD	Since you didn't shoot me, I must have registered okay.
+					if (!Game_Flag_Query(kFlagBulletBobWarned)) {
+						Actor_Says(kActorMcCoy, 4980, 11);
+						Actor_Says(kActorBulletBob, 770, 36); //14-0770.AUD	You mean the Voigt-Kampff?
+						Actor_Says(kActorBulletBob, 780, 36); //14-0780.AUD	You come into my shop and you want to V-K me?
+						Actor_Says_With_Pause(kActorMcCoy, 5090, 0.0f, 16); //00-5090.AUD	Relax, I just wa--
+						Actor_Says(kActorBulletBob, 790, 36); //14-0790.AUD	It's funny. You thinking I'm a Rep.
+						Actor_Says(kActorBulletBob, 800, 35); // 14-0800.AUD	Set up the test. We'll see what's what around here.
+						Voight_Kampff_Activate(kActorBulletBob, 50);	
+						Actor_Says(kActorBulletBob, 810, 30); //14-0810.AUD	So that's it?
+						Actor_Says(kActorMcCoy, 5025, 13); //00-5025.AUD	Yeah?
+						Actor_Says(kActorBulletBob, 820, 31); //14-0820.AUD	Since you didn't shoot me, I must have registered okay.
+					}
 				}
 			} else {
 				if (Player_Query_Agenda() != kPlayerAgendaSurly 
@@ -543,8 +554,8 @@ void SceneScriptRC04::dialogueWithBulletBob() {
 		Actor_Says(kActorBulletBob, 700, 11); //14-0700.AUD	Looks like goggles.
 		Actor_Says(kActorMcCoy, 5070, 11); //00-5070.AUD	Would a Replicant need something like this?
 		if (Actor_Query_Friendliness_To_Other(kActorBulletBob, kActorMcCoy) < 50) {
-		// Made it so Bob doesn't make certain comments if he is a replicant. Also it is now impossible for Bob to like you enough
-		// to tell you about the goggles if he is a replicant, and why would he since he already doesn't like you for being a blade runner.
+			// Made it so Bob doesn't make certain comments if he is a replicant. Also it is now impossible for Bob to like you enough
+			// to tell you about the goggles if he is a replicant, and why would he since he already doesn't like you for being a blade runner.
 			if (_vm->_cutContent) {
 				if (!Game_Flag_Query(kFlagBulletBobIsReplicant)) {
 					Actor_Says(kActorBulletBob, 710, 11); //14-0710.AUD	You're asking me about what a skin-job would need?
@@ -555,7 +566,11 @@ void SceneScriptRC04::dialogueWithBulletBob() {
 				Actor_Says(kActorMcCoy, 5075, 15); //00-5075.AUD	Hey, pal.
 			}
 			Actor_Says(kActorBulletBob, 720, 30); //14-0720.AUD	Ask one of your friends.
-			Actor_Says(kActorMcCoy, 5080, 11); //00-5080.AUD	Just answer the question.
+			if (Player_Query_Agenda() == kPlayerAgendaPolite) {
+				Actor_Says(kActorMcCoy, 7380, 14);
+			} else {
+				Actor_Says(kActorMcCoy, 5080, 11); //00-5080.AUD	Just answer the question.
+			}
 			if (_vm->_cutContent) {
 				if (!Game_Flag_Query(kFlagBulletBobIsReplicant)) {
 					Actor_Says(kActorBulletBob, 730, 37); //14-0730.AUD	I hear they give out retirement bonuses to civilians that bag Reps.
@@ -573,50 +588,67 @@ void SceneScriptRC04::dialogueWithBulletBob() {
 			Actor_Clue_Acquire(kActorMcCoy, kClueBobInterview1, true, kActorMcCoy);
 #endif // BLADERUNNER_ORIGINAL_BUGS
 		} else {
-			Actor_Says(kActorBulletBob, 560, 37);
-			Actor_Says(kActorMcCoy, 5070, 13);
-			Actor_Says(kActorBulletBob, 570, 36);
-			Actor_Says(kActorBulletBob, 580, 37); // //14-0580.AUD	The humans weren't allowed to get that close to the flash point. 
-			// Restored a line.
 			if (_vm->_cutContent) {
-				Actor_Says(kActorMcCoy, 8190, 0);	// 00-8190.AUD	Why?
-				Actor_Says(kActorBulletBob, 1800, 36); //14-1800.AUD	You're gonna love this, McCoy. I couldn't believe it when I heard.
-			}
-			Actor_Says(kActorBulletBob, 590, 31); //14-0590.AUD	U.N. Command figured it out, because the Rep skin held up...
-			Actor_Says(kActorBulletBob, 600, 32); //14-0600.AUD	but their eyes melted inside two kilometers from Ground Zero.
-			if (_vm->_cutContent) {
-				if (!Game_Flag_Query(kFlagMcCoyIsHelpingReplicants)) {
-					Actor_Says(kActorMcCoy, 3525, 13); //00-3525.AUD	Ouch.
-				}
-			}
-			Actor_Says(kActorBulletBob, 610, 30);
-			Actor_Says(kActorMcCoy, 5050, 16); //00-5050.AUD	Izo.
-			Actor_Says(kActorBulletBob, 620, 35);
-			Actor_Says(kActorBulletBob, 630, 35);
-			if (_vm->_cutContent) {
-				if (Game_Flag_Query(kFlagMcCoyIsHelpingReplicants)) {
-					Actor_Says(kActorMcCoy, 5055, 11); // 00-5055.AUD	Don't jump to conclusions.
-				}
-			} else {
-				Actor_Says(kActorMcCoy, 5055, 11); // 00-5055.AUD	Don't jump to conclusions.
-			}
-			Actor_Says(kActorBulletBob, 640, 36);
-			Actor_Says(kActorBulletBob, 650, 35);
-			Actor_Says(kActorBulletBob, 660, 30);
-			if (_vm->_cutContent) {
-				if (Game_Flag_Query(kFlagMcCoyIsHelpingReplicants)) {
-					Actor_Says(kActorMcCoy, 5060, 13); //00-5060.AUD	Some other time.
+				if (!Game_Flag_Query(kFlagBulletBobIsReplicant)) {
+					Actor_Says(kActorBulletBob, 560, 37);
+					Actor_Says(kActorMcCoy, 5070, 13);
+					Actor_Says(kActorBulletBob, 570, 36);
+					Actor_Says(kActorBulletBob, 580, 37); // //14-0580.AUD	The humans weren't allowed to get that close to the flash point. 
+					Actor_Says(kActorMcCoy, 8190, 0);	// 00-8190.AUD	Why?
+					Actor_Says(kActorBulletBob, 1800, 36); //14-1800.AUD	You're gonna love this, McCoy. I couldn't believe it when I heard.
+					Actor_Says(kActorBulletBob, 590, 31); //14-0590.AUD	U.N. Command figured it out, because the Rep skin held up...
+					Actor_Says(kActorBulletBob, 600, 32); //14-0600.AUD	but their eyes melted inside two kilometers from Ground Zero.
+					Actor_Clue_Acquire(kActorMcCoy, kClueGogglesReplicantIssue, true, kActorBulletBob);
+					if (!Game_Flag_Query(kFlagMcCoyIsHelpingReplicants)) {
+						Actor_Says(kActorMcCoy, 3525, 13); //00-3525.AUD	Ouch.
+					}
+					Actor_Says(kActorBulletBob, 610, 30);
+					Actor_Says(kActorMcCoy, 5050, 16); //00-5050.AUD	Izo.
+					Actor_Says(kActorBulletBob, 620, 35);
+					Actor_Says(kActorBulletBob, 630, 35);
+					if (Game_Flag_Query(kFlagMcCoyIsHelpingReplicants)) {
+						Actor_Says(kActorMcCoy, 5055, 11); // 00-5055.AUD	Don't jump to conclusions.
+					}
+					Actor_Says(kActorBulletBob, 640, 36);
+					Actor_Says(kActorBulletBob, 650, 35);
+					Actor_Says(kActorBulletBob, 660, 30);
+					if (Game_Flag_Query(kFlagMcCoyIsHelpingReplicants)) {
+						Actor_Says(kActorMcCoy, 5060, 13); //00-5060.AUD	Some other time.
+					} else {
+						Actor_Says(kActorMcCoy, 2160, 14); //00-2160.AUD	Hell, yeah.
+					}
 				} else {
-					Actor_Says(kActorMcCoy, 2160, 14); //00-2160.AUD	Hell, yeah.
+					Actor_Says(kActorBulletBob, 720, 30); //14-0720.AUD	Ask one of your friends.
+					if (Player_Query_Agenda() == kPlayerAgendaPolite) {
+						Actor_Says(kActorMcCoy, 7380, 14);
+					} else {
+						Actor_Says(kActorMcCoy, 5080, 11); //00-5080.AUD	Just answer the question.
+					}
+					Delay(2000);
+					Actor_Says(kActorMcCoy, 440, 16); //00-0440.AUD	Forget it.
 				}
 			} else {
+				Actor_Says(kActorBulletBob, 560, 37);
+				Actor_Says(kActorMcCoy, 5070, 13);
+				Actor_Says(kActorBulletBob, 570, 36);
+				Actor_Says(kActorBulletBob, 580, 37); // //14-0580.AUD	The humans weren't allowed to get that close to the flash point. 
+				Actor_Says(kActorBulletBob, 590, 31); //14-0590.AUD	U.N. Command figured it out, because the Rep skin held up...
+				Actor_Says(kActorBulletBob, 600, 32); //14-0600.AUD	but their eyes melted inside two kilometers from Ground Zero.
+				Actor_Says(kActorBulletBob, 610, 30);
+				Actor_Says(kActorMcCoy, 5050, 16); //00-5050.AUD	Izo.
+				Actor_Says(kActorBulletBob, 620, 35);
+				Actor_Says(kActorBulletBob, 630, 35);
+				Actor_Says(kActorMcCoy, 5055, 11); // 00-5055.AUD	Don't jump to conclusions.
+				Actor_Says(kActorBulletBob, 640, 36);
+				Actor_Says(kActorBulletBob, 650, 35);
+				Actor_Says(kActorBulletBob, 660, 30);
 				Actor_Says(kActorMcCoy, 5060, 13); //00-5060.AUD	Some other time.
-			}
 #if BLADERUNNER_ORIGINAL_BUGS
 			Actor_Clue_Acquire(kActorMcCoy, kClueGogglesReplicantIssue, true, kActorMcCoy);  // A bug? Shouldn't the last argument be -1 or kActorBulletBob here?
 #else
 			Actor_Clue_Acquire(kActorMcCoy, kClueGogglesReplicantIssue, true, kActorBulletBob);
-#endif // BLADERUNNER_ORIGINAL_BUGS
+#endif // BLADERUNNER_ORIGINAL_BUGS						
+			}
 		}
 		break;
 
@@ -629,30 +661,11 @@ void SceneScriptRC04::dialogueWithBulletBob() {
 		Actor_Says(kActorBulletBob, 850, 35);
 		Actor_Says(kActorMcCoy, 5105, 13);
 		Actor_Says(kActorMcCoy, 5110, 11); //00-5110.AUD	You turn it in, the department would owe you a favor.
-		if (_vm->_cutContent) {
-			if (Actor_Query_Friendliness_To_Other(kActorBulletBob, kActorMcCoy) < 50) {
-				Actor_Says(kActorBulletBob, 860, 30); //14-0860.AUD	And what's in it for you?
-				Actor_Says(kActorMcCoy, 5115, 16); //00-5115.AUD	You're a smart guy, Bob. You'll think of something.
-			} else {
-				Actor_Says(kActorBulletBob, 880, 34);
-				Actor_Says(kActorMcCoy, 5705, 18); //00-5705.AUD	Uh-huh.
-			}
-		} else {
-			Actor_Says(kActorBulletBob, 860, 30); 
-			Actor_Says(kActorMcCoy, 5115, 16); 
-		}
+		Actor_Says(kActorBulletBob, 860, 30); //14-0860.AUD	And what's in it for you?
+		Actor_Says(kActorMcCoy, 5115, 16); //00-5115.AUD	You're a smart guy, Bob. You'll think of something.
 		Actor_Says(kActorBulletBob, 870, 31); //14-0870.AUD	I could throw a few chinyen your way…
-		if (_vm->_cutContent) {
-			if (Actor_Query_Friendliness_To_Other(kActorBulletBob, kActorMcCoy) < 50) {
-				Actor_Says(kActorMcCoy, 5120, 15); //00-5120.AUD	That'll work.
-				Actor_Says(kActorBulletBob, 880, 34);
-			} else {
-				Actor_Says(kActorMcCoy, 5120, 15); //00-3935.AUD	Thanks.
-			}
-		} else {
-			Actor_Says(kActorMcCoy, 5120, 15); //00-5120.AUD	That'll work.
-			Actor_Says(kActorBulletBob, 880, 34);
-		}
+		Actor_Says(kActorMcCoy, 5120, 15); //00-5120.AUD	That'll work.
+		Actor_Says(kActorBulletBob, 880, 34);
 		Actor_Clue_Acquire(kActorBulletBob, kClueHoldensBadge, true, kActorMcCoy);
 		// Made it so you actually lose Holdens badge when you give it to Bob.
 		Actor_Clue_Lose(kActorMcCoy, kClueHoldensBadge);
@@ -781,6 +794,24 @@ void SceneScriptRC04::dialogueWithBulletBob() {
 	}
 	break;
 
+	case 1110:  // CRYSTAL
+		Actor_Face_Actor(kActorMcCoy, kActorBulletBob, true);
+		Actor_Face_Actor(kActorBulletBob, kActorMcCoy, true);
+		Actor_Says(kActorMcCoy, 3690, 14); //00-3690.AUD	Look. I wanna warn you. There’s a woman looking for you and your friends.
+		Actor_Says(kActorBulletBob, 1680, 34); //14-1680.AUD	Is that right?
+		Actor_Says(kActorMcCoy, 3700, kAnimationModeTalk); // If I found you, so will she.
+		Actor_Says(kActorMcCoy, 6450, 13); //00-6450.AUD	It’s too dangerous for you around here. You gotta hide. Go underground.
+		Delay(1000);
+		Actor_Says(kActorBulletBob, 880, 34); //14-0880.AUD	They really ought to pay you guys better.
+		Actor_Says(kActorMcCoy, 2860, 14); // YouTakeCareOfYourself
+		Actor_Modify_Friendliness_To_Other(kActorClovis, kActorMcCoy, 2);
+		Actor_Modify_Friendliness_To_Other(kActorGuzza, kActorMcCoy, -2);
+		Actor_Modify_Friendliness_To_Other(kActorSteele, kActorMcCoy, -2);
+		Actor_Set_Targetable(kActorBulletBob, false);
+		Game_Flag_Set(kFlagBulletBobWarned);
+		Game_Flag_Set(kFlagMcCoyIsHelpingReplicants);
+		break;
+
 	case 1310: // VOIGT-KAMPFF
 		if (_vm->_cutContent) {
 			Actor_Face_Actor(kActorBulletBob, kActorMcCoy, true);
@@ -791,8 +822,7 @@ void SceneScriptRC04::dialogueWithBulletBob() {
 		if (_vm->_cutContent) {
 			if (!Game_Flag_Query(kFlagBulletBobIsReplicant)) {
 				Actor_Says(kActorBulletBob, 740, 37); //14-0740.AUD	Test? You mean the Voigt-Kampff?
-				if (Player_Query_Agenda() == kPlayerAgendaSurly
-				|| Player_Query_Agenda() == kPlayerAgendaErratic) {
+				if (!Player_Query_Agenda() == kPlayerAgendaPolite) {
 					Actor_Says_With_Pause(kActorMcCoy, 8110, 0.0f, 16); //00-8110.AUD	I'm not gonna ask you anything incriminating.
 				} else {
 					Actor_Says_With_Pause(kActorMcCoy, 5085, 0.0f, 16); //00-5085.AUD	Yeah, I don't think you're a Rep, but I want to--
@@ -805,12 +835,7 @@ void SceneScriptRC04::dialogueWithBulletBob() {
 				Actor_Says(kActorMcCoy, 5025, 13); //00-5025.AUD	Yeah?
 				Actor_Says(kActorBulletBob, 820, 32); //14-0820.AUD	Since you didn't shoot me, I must have registered okay.
 				if (!Actor_Clue_Query(kActorMcCoy, kClueVKBobGorskyReplicant)) {
-					if (Player_Query_Agenda() != kPlayerAgendaSurly
-					&& Player_Query_Agenda() != kPlayerAgendaErratic) {
-						Actor_Says(kActorMcCoy, 5100, 11); //00-5100.AUD	Yeah, it was touch-and-go there for a while.
-					} else {
-						Actor_Says(kActorMcCoy, 5705, 18); //00-5705.AUD	Uh-huh.
-					}
+					Actor_Says(kActorMcCoy, 5100, 11); //00-5100.AUD	Yeah, it was touch-and-go there for a while.
 				} else {
 					Delay(1000);
 				}
@@ -922,11 +947,7 @@ bool SceneScriptRC04::ClickedOnActor(int actorId) {
 						Actor_Says(kActorMcCoy, 8965, 16);
 						Actor_Says(kActorBulletBob, 1940, 36); //14-1940.AUD	The department's been infiltrated, right?
 						Actor_Says(kActorBulletBob, 1950, 30); //14-1950.AUD	That's the only way Davy could have been taken out like he was.
-						if (Player_Query_Agenda() == kPlayerAgendaPolite) {
-							Actor_Says(kActorMcCoy, 8970, 13); //00-8970.AUD	Holden is good. No question.
-						} else {
-							Actor_Says(kActorMcCoy, 8320, 18); //00-8320.AUD	Really?
-						}
+						Actor_Says(kActorMcCoy, 8970, 13); //00-8970.AUD	Holden is good. No question.
 						Actor_Says(kActorBulletBob, 1960, 33); //14-1960.AUD	When you hook into the mainframe you always give them everything.
 						Actor_Says(kActorBulletBob, 1970, 30);
 						Actor_Says(kActorBulletBob, 1980, 36);
@@ -940,8 +961,8 @@ bool SceneScriptRC04::ClickedOnActor(int actorId) {
 						if (Global_Variable_Query(kVariableChinyen) >= 100
 						|| Query_Difficulty_Level() == kGameDifficultyEasy
 						) {
-							if (Player_Query_Agenda() != kPlayerAgendaSurly
-							&& Player_Query_Agenda() != kPlayerAgendaErratic) {
+							if (Player_Query_Agenda() == kPlayerAgendaSurly
+							|| Player_Query_Agenda() == kPlayerAgendaErratic) {
 								Actor_Says(kActorMcCoy, 8975, 16); //00-8975.AUD	Sounds like a plan. Set it up.
 							} else {
 								Actor_Says(kActorMcCoy, 4940, 16); //00-4940.AUD	Okay, let's have it.
@@ -1030,8 +1051,8 @@ bool SceneScriptRC04::ClickedOnActor(int actorId) {
 						if (Global_Variable_Query(kVariableChinyen) >= 100
 						|| Query_Difficulty_Level() == kGameDifficultyEasy
 						) {
-							if (Player_Query_Agenda() != kPlayerAgendaSurly
-							&& Player_Query_Agenda() != kPlayerAgendaErratic) {
+							if (Player_Query_Agenda() == kPlayerAgendaSurly
+							|| Player_Query_Agenda() == kPlayerAgendaErratic) {
 								Actor_Says(kActorMcCoy, 8975, 16); //00-8975.AUD	Sounds like a plan. Set it up.
 							} else {
 								Actor_Says(kActorMcCoy, 4940, 16); //00-4940.AUD	Okay, let's have it.
@@ -1411,16 +1432,14 @@ void SceneScriptRC04::PlayerWalkedIn() {
 					Player_Set_Combat_Mode(false);
 					Actor_Face_Actor(kActorMcCoy, kActorOfficerLeary, true);
 					Delay(1000);
-					if (Player_Query_Agenda() != kPlayerAgendaSurly
-					&& Player_Query_Agenda() != kPlayerAgendaErratic) {
+					if (Player_Query_Agenda() == kPlayerAgendaPolite) {
 						Music_Play(kMusicBRBlues, 52, 0, 2, -1, kMusicLoopPlayOnce, 1);
 						Actor_Says(kActorMcCoy, 2235, 11); //00-2235.AUD	How could they?
 					} else {
 						Actor_Says(kActorMcCoy, 170, -1); //00-0170.AUD	Damn.
 					}
 					Delay(1000);
-					if (Player_Query_Agenda() != kPlayerAgendaSurly
-					&& Player_Query_Agenda() != kPlayerAgendaErratic) {
+					if (Player_Query_Agenda() == kPlayerAgendaPolite) {
 						Loop_Actor_Walk_To_XYZ(kActorMcCoy, 27.12, 0.29, -47.35, 0, false, false, true);
 						Actor_Face_Actor(kActorMcCoy, kActorOfficerLeary, true);
 						Delay(1000);

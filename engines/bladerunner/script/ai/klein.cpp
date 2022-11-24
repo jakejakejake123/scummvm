@@ -174,8 +174,11 @@ void AIScriptKlein::TimerExpired(int timer) {
 			Actor_Face_Actor(kActorKlein, kActorMcCoy, true);
 			Actor_Says(kActorKlein, 10, kAnimationModeTalk);
 			Actor_Says(kActorMcCoy, 4120, kAnimationModeTalk);
-			Actor_Says(kActorKlein, 20, kAnimationModeTalk);
-			Actor_Says(kActorMcCoy, 4125, kAnimationModeTalk);
+			Actor_Says(kActorKlein, 20, kAnimationModeTalk); //30-0020.AUD	You don't like it? Take your business elsewhere.
+			if (Player_Query_Agenda() == kPlayerAgendaSurly
+			|| (Player_Query_Agenda() == kPlayerAgendaErratic)) {
+				Actor_Says(kActorMcCoy, 4125, kAnimationModeTalk); //00-4125.AUD	I just might do that.
+			}
 			Game_Flag_Set(kFlagPS07KleinInsultedTalk);
 #if BLADERUNNER_ORIGINAL_BUGS
 			Actor_Set_Goal_Number(kActorKlein, kGoalKleinIsAnnoyedByMcCoyInit);

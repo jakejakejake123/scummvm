@@ -234,10 +234,10 @@ void SceneScriptUG01::PlayerWalkedIn() {
 			Actor_Says(kActorMcCoy, 5465, 15); //00-5465.AUD	Okay, just cool out a second!
 			Actor_Says(kActorMcCoy, 5475, 13); //00-5475.AUD	Listen, there’s another Blade Runner after you and she won’t stop to talk.
 			Actor_Says(kActorIzo, 720, 17); //07-0720.AUD	I know. She came into the store once.
-			Actor_Says(kActorMcCoy, 4880, 13); //00-4880.AUD	Is that right?
-			Delay (500);
 			if (!Game_Flag_Query(kFlagIzoIsReplicant)) {
 				Actor_Says(kActorIzo, 800, 17); //07-0800.AUD	I’m no Replicant. She can run tests on me all day long. It won’t make a difference!
+				Actor_Says(kActorMcCoy, 4880, 13); //00-4880.AUD	Is that right?
+				Delay (500);
 			} 
 			if (Actor_Clue_Query(kActorMcCoy, kClueWeaponsCache)) {
 				Actor_Says(kActorMcCoy, 5485, 14); //00-5485.AUD	Where did you get the hardware, Izo?

@@ -525,26 +525,27 @@ bool AIScriptSadik::GoalChanged(int currentGoalNumber, int newGoalNumber) {
 				} 
 				Actor_Says(kActorMcCoy, 2300, kAnimationModeTalk); 
 				if (Game_Flag_Query(kFlagSadikIsReplicant)) {
-					if (Actor_Query_Friendliness_To_Other(kActorSadik, kActorMcCoy) > 50) {
+					if (Actor_Query_Friendliness_To_Other(kActorSadik, kActorMcCoy) > 50
+					|| Actor_Clue_Query(kActorMcCoy, kClueMcCoyShotGuzza)) { 
 						Actor_Says(kActorSadik, 180, kAnimationModeTalk); //08-0180.AUD	My woman? She be killed by a Blade Runner. Revenge all I got left.
 						Actor_Says(kActorSadik, 190, kAnimationModeTalk);
 						if (Player_Query_Agenda() == kPlayerAgendaSurly 
 						|| Player_Query_Agenda() == kPlayerAgendaErratic) {
-							Actor_Says(kActorMcCoy, 4880, 13); //00-4880.AUD	Is that right?
-						} else {
 							Actor_Says(kActorMcCoy, 2310, kAnimationModeTalk); //00-2310.AUD	I understand.
+						} else {
+							Actor_Says(kActorMcCoy, 4880, 13); //00-4880.AUD	Is that right?
 						}
 					}
 					Actor_Says(kActorSadik, 200, kAnimationModeTalk); //08-0200.AUD	Truth be told killing don’t help much.
 				} else {
-					if (Actor_Query_Friendliness_To_Other(kActorSadik, kActorMcCoy) > 50) {
+					if (Actor_Query_Friendliness_To_Other(kActorSadik, kActorMcCoy) > 50
+					|| Actor_Clue_Query(kActorMcCoy, kClueMcCoyShotGuzza)) { 
 						Actor_Says(kActorSadik, 140, kAnimationModeTalk); //08-0140.AUD	You bet, mon. Human too. My woman, she be Replicant.
 						Actor_Says(kActorSadik, 150, kAnimationModeTalk);
-						if (Player_Query_Agenda() == kPlayerAgendaSurly 
-						|| Player_Query_Agenda() == kPlayerAgendaErratic) {
-							Actor_Says(kActorMcCoy, 4880, 13); //00-4880.AUD	Is that right?
-						} else {
+						if (Player_Query_Agenda() == kPlayerAgendaPolite) {
 							Actor_Says(kActorMcCoy, 2305, kAnimationModeTalk); //00-2305.AUD	I’m sorry.
+						} else {
+							Actor_Says(kActorMcCoy, 4880, 13); //00-4880.AUD	Is that right?
 						}
 						Actor_Says(kActorSadik, 160, kAnimationModeTalk);
 						Actor_Says(kActorSadik, 170, kAnimationModeTalk);

@@ -676,8 +676,24 @@ bool AIScriptClovis::GoalChanged(int currentGoalNumber, int newGoalNumber) {
 				Actor_Change_Animation_Mode(kActorMcCoy, kAnimationModeDie);
 				Actor_Change_Animation_Mode(kActorClovis, 21);
 				Player_Loses_Control();
-				Actor_Retired_Here(kActorMcCoy, 6, 6, true, kActorClovis);
+				Delay(500);
+				Actor_Change_Animation_Mode(kActorClovis, 54);
+				Delay(1000);
+				Actor_Put_In_Set(kActorGaff, kSetKP07);
+				Actor_Set_At_XYZ(kActorGaff, -8.83f, -41.28f, 64.63f, 0);
+				Delay(1000);
+				Loop_Actor_Walk_To_XYZ(kActorGaff, 25.50f, -42.94f, -138.72f, 0, false, false, false);
+				Actor_Face_Actor(kActorGaff, kActorMcCoy, true);
+				Delay (2000);
+				Actor_Face_Actor(kActorGaff, kActorClovis, true);
+				Delay (2000);
+				Sound_Play(kSfxLGCAL3, 100, 0, 0, 50);
+				Actor_Change_Animation_Mode(kActorClovis, 21);
 				Actor_Set_Goal_Number(kActorClovis, kGoalClovisGone);
+				Delay (2000);
+				Outtake_Play(kOuttakeEnd2, false, -1);
+
+				Game_Over();
 			} else {
 				Actor_Set_Targetable(kActorClovis, false);
 				Actor_Change_Animation_Mode(kActorClovis, kAnimationModeHit);

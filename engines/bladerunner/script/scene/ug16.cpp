@@ -350,7 +350,11 @@ void SceneScriptUG16::dialogueWithLuther() {
 	 || Game_Flag_Query(kFlagUG16LutherLanceTalkHumans)
 	) {
 		DM_Add_To_List_Never_Repeat_Once_Selected(1430, 6, 4, 5); // CLOVIS
-		DM_Add_To_List_Never_Repeat_Once_Selected(1440, 6, 4, 5); // VOIGT-KAMPFF
+		if (_vm->_cutContent) {
+			DM_Add_To_List_Never_Repeat_Once_Selected(1440, -1, 4, 5); // VOIGT-KAMPFF
+		} else {
+			DM_Add_To_List_Never_Repeat_Once_Selected(1440, 6, 4, 5); // VOIGT-KAMPFF
+		}
 	}
 	if (_vm->_cutContent) {
 		if (Actor_Clue_Query(kActorMcCoy, kClueGuzzaFramedMcCoy)
@@ -659,8 +663,7 @@ void SceneScriptUG16::dialogueWithLuther() {
 			Actor_Says(kActorLance, 360, 14); //13-0360.AUD	He was going to pawn them off as real.
 		}
 		if (_vm->_cutContent) {
-			if (Player_Query_Agenda() != kPlayerAgendaSurly 
-			&& Player_Query_Agenda() != kPlayerAgendaErratic) {
+			if (Player_Query_Agenda() == kPlayerAgendaPolite) {
 				Actor_Says(kActorMcCoy, 5835, 13); //00-5835.AUD	That probably had something to do with you guys getting fired.
 				if (Game_Flag_Query(kFlagLutherLanceIsReplicant)) {
 					Actor_Says(kActorLance, 370, 6); //13-0370.AUD	Since Eldon is such a pain in the ass control freak…
@@ -685,6 +688,8 @@ void SceneScriptUG16::dialogueWithLuther() {
 		if (_vm->_cutContent) {
 			if (Actor_Query_Friendliness_To_Other(kActorLuther, kActorMcCoy) < 50) {
 				Actor_Says(kActorLance, 400, 15); //13-0400.AUD	Check it out, bro. The little man with the big gun did good.
+			} else {
+				Actor_Says(kActorLance, 290, 17); //13-0290.AUD	He’s sharp this one.
 			}
 		} else {
 			Actor_Says(kActorLance, 400, 15); //13-0400.AUD	Check it out, bro. The little man with the big gun did good.

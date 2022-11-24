@@ -274,8 +274,12 @@ void SceneScriptNR04::ActorChangedGoal(int actorId, int newGoal, int oldGoal, bo
 			Actor_Says(kActorEarlyQ, 60, kAnimationModeTalk); //18-0060.AUD	Put it down, McCoy.
 			// Made it so McCoy only mentions Early Q spying on the women if he has seen the security monitors.
 			if (_vm->_cutContent) {
-				if (Game_Flag_Query(kFlagDiscoveredEarlyQsMonitors)) {
-					Actor_Says_With_Pause(kActorMcCoy, 3380, 1.0f, kAnimationModeTalk); //00-3380.AUD	Must be something pretty juicy. Your girls know about the cameras?
+				if (!Game_Flag_Query(kFlagEarlyQIsReplicant)) {
+					if (Game_Flag_Query(kFlagDiscoveredEarlyQsMonitors)) {
+						Actor_Says_With_Pause(kActorMcCoy, 3380, 1.0f, kAnimationModeTalk); //00-3380.AUD	Must be something pretty juicy. Your girls know about the cameras?
+					} else {
+						Actor_Says(kActorMcCoy, 5855, kAnimationModeTalk); //00-5855.AUD	Not a chance.
+					}
 				} else { 
 					Actor_Says(kActorMcCoy, 5855, kAnimationModeTalk); //00-5855.AUD	Not a chance.
 				}
@@ -305,6 +309,8 @@ void SceneScriptNR04::ActorChangedGoal(int actorId, int newGoal, int oldGoal, bo
 			if (_vm->_cutContent) {
 				if (Player_Query_Agenda() == kPlayerAgendaPolite) {
 					Actor_Says(kActorMcCoy, 3390, 14); //00-3390.AUD	Not interested.
+					Actor_Says(kActorEarlyQ, 110, 74);
+					Actor_Says(kActorMcCoy, 2485, 13); //00-2485.AUD	I’ve a hard time believing that.
 				} else {
 					Actor_Says(kActorMcCoy, 2485, 13); //00-2485.AUD	I’ve a hard time believing that.
 				}
@@ -390,8 +396,7 @@ void SceneScriptNR04::ActorChangedGoal(int actorId, int newGoal, int oldGoal, bo
 							Player_Gains_Control();
 						}
 					} else {
-						if (Player_Query_Agenda() != kPlayerAgendaSurly 
-						&& Player_Query_Agenda() != kPlayerAgendaErratic) {
+						if (Player_Query_Agenda() == kPlayerAgendaPolite) {
 							Actor_Says(kActorMcCoy, 8512, 15); // 00-8512.AUD	The disc? I'm keeping it for now.
 							Music_Stop(1u);
 							Delay(1000);
@@ -443,6 +448,8 @@ void SceneScriptNR04::ActorChangedGoal(int actorId, int newGoal, int oldGoal, bo
 							Actor_Retired_Here(kActorEarlyQ, 6, 6, true, kActorMcCoy);
 							Actor_Face_Heading(kActorEarlyQ, 760, false);
 							Actor_Set_At_XYZ(kActorEarlyQ, 122.09f, 0.14f, 370.11f, 760);
+							Loop_Actor_Walk_To_Actor(kActorMcCoy, kActorEarlyQ, 24, true, false);
+							Actor_Face_Actor(kActorMcCoy, kActorEarlyQ, true);
 							Delay(2000);
 							Actor_Says(kActorMcCoy, 6865, 14); //00-6865.AUD	You're a Replicant.
 							Delay(2000);
@@ -470,10 +477,8 @@ void SceneScriptNR04::ActorChangedGoal(int actorId, int newGoal, int oldGoal, bo
 					}
 				} else {
 					Actor_Face_Actor(kActorEarlyQ, kActorMcCoy, true);
-					if (Player_Query_Agenda() != kPlayerAgendaSurly 
-					&& Player_Query_Agenda() != kPlayerAgendaErratic) {
-						Actor_Says(kActorEarlyQ, 110, 74);
-						Actor_Says(kActorMcCoy, 7815, 15); //00-7815.AUD	No.
+					if (Player_Query_Agenda() == kPlayerAgendaPolite) {
+						Delay(1000);
 						Actor_Says(kActorMcCoy, 8512, 15); 
 						Delay(2000);
 						Actor_Says(kActorEarlyQ, 340, 12); //18-0340.AUD	No more free drinks for you, buddy boy.
@@ -755,8 +760,7 @@ void SceneScriptNR04::dialogueWithEarlyQ() {
 		Actor_Change_Animation_Mode(kActorEarlyQ, kAnimationModeIdle);
 		Actor_Says(kActorEarlyQ, 310, kAnimationModeTalk); 
 		if (_vm->_cutContent) {
-			if (Player_Query_Agenda() != kPlayerAgendaSurly 
-			&& Player_Query_Agenda() != kPlayerAgendaErratic) {
+			if (Player_Query_Agenda() == kPlayerAgendaPolite) {
 				Actor_Says(kActorMcCoy, 3450, kAnimationModeTalk);	
 			} 
 			Actor_Says(kActorMcCoy, 5150, 18); //00-5150.AUD	One more thing.

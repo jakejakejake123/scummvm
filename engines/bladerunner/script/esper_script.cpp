@@ -220,9 +220,19 @@ bool ESPERScript::SCRIPT_ESPER_DLL_Special_Region_Selected(int photo, int region
 		if (region == 0) {
 			Actor_Voice_Over(4050, kActorVoiceOver);
 			if (!Actor_Clue_Query(kActorMcCoy, kClueDragonflyAnklet)) {
-				Actor_Says(kActorMcCoy, 6945, 3);
-				Sound_Play(kSfxBR034_1A, 50, 0, 0, 50);
-				Actor_Clue_Acquire(kActorMcCoy, kClueDragonflyAnklet, true, -1);
+				if (_vm->_cutContent) {
+					if (Actor_Clue_Query(kActorMcCoy, kClueLucy)) {
+						Actor_Says(kActorMcCoy, 6945, 3);
+						Sound_Play(kSfxBR034_1A, 50, 0, 0, 50);
+						Actor_Clue_Acquire(kActorMcCoy, kClueDragonflyAnklet, true, -1);
+					} else {
+						Actor_Says(kActorMcCoy, 8525, 13); // 00-8525.AUD	Hmph.
+					}
+				} else {
+					Actor_Says(kActorMcCoy, 6945, 3);
+					Sound_Play(kSfxBR034_1A, 50, 0, 0, 50);
+					Actor_Clue_Acquire(kActorMcCoy, kClueDragonflyAnklet, true, -1);			
+				}
 			}
 		} else if (region == 1) {
 			Actor_Voice_Over(4040, kActorVoiceOver);
@@ -265,17 +275,43 @@ bool ESPERScript::SCRIPT_ESPER_DLL_Special_Region_Selected(int photo, int region
 			}
 		} else if (region == 5) {
 			Actor_Voice_Over(4120, kActorVoiceOver);
-			if (!Actor_Clue_Query(kActorMcCoy, kCluePartialLicenseNumber)) {
-				Actor_Says(kActorMcCoy, 6945, 3);
-				Sound_Play(kSfxBR034_1A, 50, 0, 0, 50);
-				Actor_Clue_Acquire(kActorMcCoy, kCluePartialLicenseNumber, true, -1);
+			if (_vm->_cutContent) {
+				Actor_Says(kActorMcCoy, 6935, 3); //00-6935.AUD	Enhance.
+				Actor_Says(kActorAnsweringMachine, 210, kAnimationModeTalk); //39-0210.AUD	Unable to enhance further.
+				Actor_Says(kActorMcCoy, 170, 3); //00-0170.AUD	Damn.
+				Delay(1000);
+				if (!Actor_Clue_Query(kActorMcCoy, kCluePartialLicenseNumber)) {
+					if (_vm->_cutContent) {
+						if (Actor_Clue_Query(kActorMcCoy, kClueCarColorAndMake)) {
+							Actor_Says(kActorMcCoy, 6945, 3);
+							Sound_Play(kSfxBR034_1A, 50, 0, 0, 50);
+							Actor_Clue_Acquire(kActorMcCoy, kCluePartialLicenseNumber, true, -1);
+						} else {
+							Actor_Says(kActorMcCoy, 8525, 13); // 00-8525.AUD	Hmph.
+						}
+					} else {
+						Actor_Says(kActorMcCoy, 6945, 3);
+						Sound_Play(kSfxBR034_1A, 50, 0, 0, 50);
+						Actor_Clue_Acquire(kActorMcCoy, kCluePartialLicenseNumber, true, -1);
+					}
+				}
 			}
 		} else if (region == 6) {
 			Actor_Voice_Over(4070, kActorVoiceOver);
 			if (!Actor_Clue_Query(kActorMcCoy, kClueCarColorAndMake)) {
-				Actor_Says(kActorMcCoy, 6945, 3);
-				Sound_Play(kSfxBR034_1A, 50, 0, 0, 50);
-				Actor_Clue_Acquire(kActorMcCoy, kClueCarColorAndMake, true, -1);
+				if (_vm->_cutContent) {
+					if (Actor_Clue_Query(kActorMcCoy, kClueCrowdInterviewB)) {
+						Actor_Says(kActorMcCoy, 6945, 3);
+						Sound_Play(kSfxBR034_1A, 50, 0, 0, 50);
+						Actor_Clue_Acquire(kActorMcCoy, kClueCarColorAndMake, true, -1);
+					} else {
+						Actor_Says(kActorMcCoy, 8525, 13); // 00-8525.AUD	Hmph.
+					}
+				} else {
+					Actor_Says(kActorMcCoy, 6945, 3);
+					Sound_Play(kSfxBR034_1A, 50, 0, 0, 50);
+					Actor_Clue_Acquire(kActorMcCoy, kClueCarColorAndMake, true, -1);
+				}
 			}
 		}
 		retValue = true;
@@ -345,10 +381,22 @@ bool ESPERScript::SCRIPT_ESPER_DLL_Special_Region_Selected(int photo, int region
 					Actor_Voice_Over(4200, kActorVoiceOver); //99-4200.AUD	Where have I seen those before?
 				}
 			}
-			if (!Actor_Clue_Query(kActorMcCoy, kClueScorpions)) {
-				Actor_Says(kActorMcCoy, 6945, 3);			
-				Sound_Play(kSfxBR034_1A, 50, 0, 0, 50);
-				Actor_Clue_Acquire(kActorMcCoy, kClueScorpions, true, -1);
+			if (_vm->_cutContent) {
+				if (!Actor_Clue_Query(kActorMcCoy, kClueScorpions)) {
+					if (Actor_Clue_Query(kActorMcCoy, kClueWomanInAnimoidRow)) {
+						Actor_Says(kActorMcCoy, 6945, 3);			
+						Sound_Play(kSfxBR034_1A, 50, 0, 0, 50);
+						Actor_Clue_Acquire(kActorMcCoy, kClueScorpions, true, -1);	
+					} else {
+						Actor_Says(kActorMcCoy, 8525, 13); // 00-8525.AUD	Hmph.
+					}
+				}
+			} else {
+				if (!Actor_Clue_Query(kActorMcCoy, kClueScorpions)) {
+					Actor_Says(kActorMcCoy, 6945, 3);			
+					Sound_Play(kSfxBR034_1A, 50, 0, 0, 50);
+					Actor_Clue_Acquire(kActorMcCoy, kClueScorpions, true, -1);
+				}
 			}
 		}
 		break;

@@ -72,8 +72,13 @@ void SceneScriptHF03::dialogueWithLucy() {
 		DM_Add_To_List_Never_Repeat_Once_Selected(850, 6, 5, 2); // FATHER
 		DM_Add_To_List_Never_Repeat_Once_Selected(870, 2, 8, 6); // RUNCITER
 	}
-	DM_Add_To_List_Never_Repeat_Once_Selected(840, -1, 3, 8); // VOIGT-KAMPFF
-	DM_Add_To_List_Never_Repeat_Once_Selected(860, 8, -1, -1); // CRYSTAL
+	if (_vm->_cutContent) {
+		DM_Add_To_List_Never_Repeat_Once_Selected(840, 1, 2, 3); // VOIGT-KAMPFF
+		DM_Add_To_List_Never_Repeat_Once_Selected(860, 3, 2, 1); // CRYSTAL
+	} else {
+		DM_Add_To_List_Never_Repeat_Once_Selected(840, -1, 3, 8); // VOIGT-KAMPFF
+		DM_Add_To_List_Never_Repeat_Once_Selected(860, 8, -1, -1); // CRYSTAL
+	}
 	Dialogue_Menu_Add_DONE_To_List(880); // DONE
 
 	Dialogue_Menu_Appear(320, 240);
@@ -95,8 +100,17 @@ void SceneScriptHF03::dialogueWithLucy() {
 
 	case 850: // FATHER
 		Actor_Says(kActorMcCoy, 1635, 15);
-		Actor_Says(kActorLucy, 200, 13);
-		Actor_Modify_Friendliness_To_Other(kActorLucy, kActorMcCoy, 3);
+		if (_vm->_cutContent) {
+			if (Actor_Query_Friendliness_To_Other(kActorClovis, kActorMcCoy) < 51) {
+				Actor_Says(kActorLucy, 2060, 13); //06-2060.AUD	No!
+			} else {	
+				Actor_Says(kActorLucy, 200, 13);
+				Actor_Modify_Friendliness_To_Other(kActorLucy, kActorMcCoy, 3);
+			}
+		} else {
+			Actor_Says(kActorLucy, 200, 13);
+			Actor_Modify_Friendliness_To_Other(kActorLucy, kActorMcCoy, 3);
+		}
 		break;
 
 	case 860: // CRYSTAL
@@ -111,13 +125,19 @@ void SceneScriptHF03::dialogueWithLucy() {
 			 && Global_Variable_Query(kVariableAffectionTowards) == kAffectionTowardsNone
 			) {
 				Global_Variable_Set(kVariableAffectionTowards, kAffectionTowardsLucy);
-				Actor_Says(kActorLucy, 940, 14); //06-0940.AUD	You’re a good man.
 				if (_vm->_cutContent) {
+					if (Actor_Query_Friendliness_To_Other(kActorClovis, kActorMcCoy) < 51) {
+						Delay(2000);
+						Actor_Says(kActorLucy, 940, 14); //06-0940.AUD	You’re a good man.
+					} else {
+						Actor_Says(kActorLucy, 940, 14); //06-0940.AUD	You’re a good man.
+					}
 					if (Player_Query_Agenda() == kPlayerAgendaSurly 
 					|| Player_Query_Agenda() == kPlayerAgendaErratic) {
 						Actor_Says(kActorMcCoy, 6780, 11); //00-6780.AUD	Don’t jump to any conclusions.
 					}
 				} else {
+					Actor_Says(kActorLucy, 940, 14); //06-0940.AUD	You’re a good man.
 					Actor_Says(kActorMcCoy, 6780, 11); //00-6780.AUD	Don’t jump to any conclusions.
 				}
 				Actor_Says(kActorLucy, 950, 12); //06-0950.AUD	You’re gentle. Father used to be like that too.
@@ -178,7 +198,7 @@ void SceneScriptHF03::dialogueWithLucy() {
 				Actor_Modify_Friendliness_To_Other(kActorClovis, kActorMcCoy, 2);
 				Actor_Modify_Friendliness_To_Other(kActorGuzza, kActorMcCoy, -2);
 				Actor_Clue_Acquire(kActorLucy, kClueMcCoyHelpedLucy, true, kActorMcCoy);
-				Actor_Clue_Acquire(kActorMcCoy, kClueMcCoyIsKind, true, -1);
+				Actor_Clue_Acquire(kActorMcCoy, kClueMcCoyIsKind, true, kActorLucy);
 				Game_Flag_Set(kFlagMcCoyIsHelpingReplicants);
 			} else {
 				Actor_Says(kActorLucy, 230, 14); //06-0230.AUD	Thank you.
@@ -195,29 +215,43 @@ void SceneScriptHF03::dialogueWithLucy() {
 
 	case 870: // RUNCITER
 		Actor_Says(kActorMcCoy, 1645, 18);
-		Actor_Says(kActorLucy, 240, 14);
-		Actor_Says(kActorLucy, 250, 12);
-		Actor_Says(kActorLucy, 260, 13);
-		Actor_Says(kActorLucy, 270, 19);
-		// Made it so McCoy only asks Lucy if all the animals were real if he hasn't received the lab results which confirms that some of the animals were fake.
 		if (_vm->_cutContent) {
-			if (!Actor_Clue_Query(kActorMcCoy, kClueLabCorpses)) {
-				Actor_Says(kActorMcCoy, 1665, 18); //00-1665.AUD	So, all the animals were real?
-				Actor_Says(kActorLucy, 280, 13); //06-0280.AUD	Mr. Runciter also used to buy some of the… others.
-				Actor_Says(kActorMcCoy, 1670, 12); //00-1670.AUD	Artificial?
-				Actor_Says(kActorLucy, 290, 14); //06-0290.AUD	He used to tell me that he was protected.
-				Actor_Says(kActorLucy, 300, 16); //06-0300.AUD	That they came from somebody close to the source.
+			if (Actor_Query_Friendliness_To_Other(kActorClovis, kActorMcCoy) < 51) {
+				if (Game_Flag_Query(kFlagLucyIsReplicant)) {
+					Actor_Says(kActorLucy, 90, 13); //06-0090.AUD	Leave me alone.
+				} else {
+					Actor_Says(kActorLucy, 110, 13); //06-0110.AUD	Please, leave me alone.
+				}
+			} else {
+				Actor_Says(kActorLucy, 240, 14);
+				Actor_Says(kActorLucy, 250, 12);
+				Actor_Says(kActorLucy, 260, 13);
+				Actor_Says(kActorLucy, 270, 19);
+				if (!Actor_Clue_Query(kActorMcCoy, kClueLabCorpses)) {
+					Actor_Says(kActorMcCoy, 1665, 18); //00-1665.AUD	So, all the animals were real?
+					Actor_Says(kActorLucy, 280, 13); //06-0280.AUD	Mr. Runciter also used to buy some of the… others.
+					Actor_Says(kActorMcCoy, 1670, 12); //00-1670.AUD	Artificial?
+					Actor_Says(kActorLucy, 290, 14); //06-0290.AUD	He used to tell me that he was protected.
+					Actor_Says(kActorLucy, 300, 16); //06-0300.AUD	That they came from somebody close to the source.
+				}
+				Actor_Says(kActorMcCoy, 1675, 12); 
+				Actor_Says(kActorLucy, 310, 13);//06-0310.AUD	Father and uncle Zuben.
+				Actor_Clue_Acquire(kActorMcCoy, kClueLucyInterview, false, kActorLucy);
 			}
 		} else {
+			Actor_Says(kActorLucy, 240, 14);
+			Actor_Says(kActorLucy, 250, 12);
+			Actor_Says(kActorLucy, 260, 13);
+			Actor_Says(kActorLucy, 270, 19);
 			Actor_Says(kActorMcCoy, 1665, 18); //00-1665.AUD	So, all the animals were real?
 			Actor_Says(kActorLucy, 280, 13); //06-0280.AUD	Mr. Runciter also used to buy some of the… others.
 			Actor_Says(kActorMcCoy, 1670, 12); //00-1670.AUD	Artificial?
 			Actor_Says(kActorLucy, 290, 14); //06-0290.AUD	He used to tell me that he was protected.
 			Actor_Says(kActorLucy, 300, 16); //06-0300.AUD	That they came from somebody close to the source.
-		}
-		Actor_Says(kActorMcCoy, 1675, 12); 
-		Actor_Says(kActorLucy, 310, 13);//06-0310.AUD	Father and uncle Zuben.
-		Actor_Clue_Acquire(kActorMcCoy, kClueLucyInterview, false, kActorLucy);
+			Actor_Says(kActorMcCoy, 1675, 12); 
+			Actor_Says(kActorLucy, 310, 13);//06-0310.AUD	Father and uncle Zuben.
+			Actor_Clue_Acquire(kActorMcCoy, kClueLucyInterview, false, kActorLucy);
+		}	
 		break;
 
 	case 880: // DONE
@@ -357,9 +391,12 @@ void SceneScriptHF03::PlayerWalkedIn() {
 		if (_vm->_cutContent) {
 			if (Actor_Query_Friendliness_To_Other(kActorSteele, kActorMcCoy) < 51) {
 				Actor_Says(kActorSteele, 200, 13);  //01-0200.AUD	Don’t even ask me who’d be doing the leading, Rookie.
-				Actor_Face_Actor(kActorMcCoy, kActorSteele, true);
-				Actor_Says(kActorMcCoy, 6290, 15); //00-6290.AUD	Who made you the jello police?
-				Delay(1000);
+				if (Player_Query_Agenda() == kPlayerAgendaSurly 
+				|| Player_Query_Agenda() == kPlayerAgendaErratic) {
+					Actor_Face_Actor(kActorMcCoy, kActorSteele, true);
+					Actor_Says(kActorMcCoy, 6290, 15); //00-6290.AUD	Who made you the jello police?
+					Delay(1000);
+				}
 			} else {	
 				Actor_Says(kActorSteele, 210, 13); // 01-0210.AUD	Just follow my lead, Slim.
 			}

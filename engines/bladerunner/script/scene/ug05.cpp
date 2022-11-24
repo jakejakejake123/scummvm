@@ -277,8 +277,12 @@ void SceneScriptUG05::endGame() {
 		Actor_Says(kActorMcCoy, 5535, 13);
 		if (affectionTowardsActor == kActorDektora) {
 			Actor_Says(kActorDektora, 1110, 15);
+			if (_vm->_cutContent) {
+				Actor_Says(kActorDektora, 1120, 15); //03-1120.AUD	And this time the memories we create will be our own.
+			}
 		} else {
 			Actor_Says(kActorLucy, 670, 17);
+			Actor_Says(kActorLucy, 930, 17); //06-0930.AUD	And this time the memories we create will be our own.
 		}
 	}
 	if (_vm->_cutContent) {
@@ -306,8 +310,6 @@ void SceneScriptUG05::endGame() {
 		} else {
 			Outtake_Play(kOuttakeEnd3, false, -1);
 		}
-
-		Game_Over();
 	} else if (affectionTowardsActor == kActorLucy) {
 		if (!Game_Flag_Query(kFlagLucyIsReplicant)) {
 			Outtake_Play(kOuttakeEnd1A, false, -1);

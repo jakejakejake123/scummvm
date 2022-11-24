@@ -167,7 +167,10 @@ bool SceneScriptDR06::ClickedOn3DObject(const char *objectName, bool a2) {
 					Actor_Voice_Over(770, kActorVoiceOver);
 					Actor_Voice_Over(780, kActorVoiceOver);
 					Actor_Voice_Over(790, kActorVoiceOver);
-					Actor_Voice_Over(800, kActorVoiceOver);
+					if (Player_Query_Agenda() == kPlayerAgendaSurly 
+					|| Player_Query_Agenda() == kPlayerAgendaErratic) {
+						Actor_Voice_Over(800, kActorVoiceOver); //99-0800.AUD	No wonder this sucker was on the blink.
+					}
 					Game_Flag_Set(kFlagDR06VidphoneChecked);
 				} else {
 					Actor_Says(kActorMcCoy, 8570, 13);

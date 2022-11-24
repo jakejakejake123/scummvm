@@ -239,16 +239,6 @@ bool SceneScriptDR02::ClickedOnActor(int actorId) {
 						Delay(2000);
 						Actor_Says(kActorMcCoy, 2750, kAnimationModeTalk); //00-2750.AUD	Okay, I get the picture.
 						Actor_Face_Heading(kActorShoeshineMan, 524, false);
-					} else if (!Actor_Clue_Query(kActorMcCoy, kClueGrigoriansNote)
-					&& Global_Variable_Query(kVariableChapter) > 2)  {
-						Actor_Says(kActorMcCoy, 8990, 17);//00-8990.AUD	What have you got there?
-						Delay(2000);
-						Item_Pickup_Spin_Effect(kModelAnimationGrigoriansNote, 123, 291);
-						Actor_Clue_Acquire(kActorMcCoy, kClueGrigoriansNote, true, kActorShoeshineMan);
-						Actor_Says(kActorMcCoy, 8840, kAnimationModeTalk); //00-8840.AUD	A note.
-						Delay(1000);
-						Actor_Says(kActorMcCoy, 3935, kAnimationModeTalk); //00-3935.AUD	Thanks.
-						Actor_Face_Heading(kActorShoeshineMan, 524, false);
 					} else if (Actor_Clue_Query(kActorMcCoy, kCluePartialLicenseNumber)
 					&& !Actor_Clue_Query(kActorMcCoy, kClueLicensePlate)) {
 						Actor_Says(kActorMcCoy, 8990, 17);//00-8990.AUD	What have you got there?

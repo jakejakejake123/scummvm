@@ -180,9 +180,21 @@ void SceneScriptNR10::PlayerWalkedIn() {
 		Actor_Says(kActorSteele, 150, 13);
 		Actor_Face_Actor(kActorMcCoy, kActorSteele, true);
 		Actor_Says(kActorMcCoy, 1580, 14);
-		Actor_Says(kActorSteele, 160, 15);
-		Actor_Says(kActorMcCoy, 1585, 16);
-		Actor_Says(kActorSteele, 1160, 16);
+		if (_vm->_cutContent) {
+			if (Actor_Query_Friendliness_To_Other(kActorSteele, kActorMcCoy) < 51) {
+				Actor_Says(kActorSteele, 160, 15); //01-0160.AUD	How the hell did it get away? We had it cornered.
+				Actor_Says(kActorMcCoy, 1585, 16);
+				Actor_Says(kActorSteele, 1160, 16); //01-1160.AUD	Dah! What the hell?! Now we’ll never catch it.
+			} else {
+				Delay(1000);
+				Actor_Says(kActorSteele, 2110, 14); //01-2110.AUD	That's okay.
+				Actor_Voice_Over(190, kActorVoiceOver); //99-0190.AUD	If only we had a target range worth a damn back at the station.
+			}
+		} else {
+			Actor_Says(kActorSteele, 160, 15); //01-0160.AUD	How the hell did it get away? We had it cornered.
+			Actor_Says(kActorMcCoy, 1585, 16);
+			Actor_Says(kActorSteele, 1160, 16); //01-1160.AUD	Dah! What the hell?! Now we’ll never catch it.
+		}
 		Delay(1000);
 		Actor_Says(kActorSteele, 1290, 14);
 		Actor_Set_Goal_Number(kActorSteele, kGoalSteeleNRxxGoToSpinner);

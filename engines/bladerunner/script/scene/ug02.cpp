@@ -132,26 +132,17 @@ bool SceneScriptUG02::ClickedOn3DObject(const char *objectName, bool a2) {
 			if (Global_Variable_Query(kVariableChapter) > 3) {
 				if (Actor_Clue_Query(kActorMcCoy, kClueWeaponsCache)
 				&& !Actor_Clue_Query(kActorMcCoy, kClueIzosStashRaided)) {
-					if (!Game_Flag_Query(kFlagIzoWarned)) {
-						Actor_Voice_Over(2510, kActorVoiceOver); //99-2510.AUD	Someone had really torn the place up.
-						Delay(500);
-						Actor_Says(kActorMcCoy, 8580, 14); //00-8580.AUD	Nothing else there.
-					} else {
-						Actor_Voice_Over(2470, kActorVoiceOver);
-						Actor_Voice_Over(2480, kActorVoiceOver);
-						Actor_Voice_Over(2490, kActorVoiceOver);
-						Actor_Voice_Over(2500, kActorVoiceOver);
-						Actor_Clue_Acquire(kActorMcCoy, kClueIzosStashRaided, true, -1);
-					}
+					Actor_Voice_Over(2470, kActorVoiceOver);
+					Actor_Voice_Over(2480, kActorVoiceOver);
+					Actor_Voice_Over(2490, kActorVoiceOver);
+					Actor_Voice_Over(2500, kActorVoiceOver);
+					Actor_Clue_Acquire(kActorMcCoy, kClueIzosStashRaided, true, -1);
 				} else if (!Actor_Clue_Query(kActorMcCoy, kClueWeaponsCache)) {
 					Actor_Voice_Over(2510, kActorVoiceOver); //99-2510.AUD	Someone had really torn the place up.
-					Actor_Voice_Over(2510, kActorVoiceOver);
+					Actor_Voice_Over(2520, kActorVoiceOver);
 					if (Game_Flag_Query(kFlagUG02toHC03)
 					|| Game_Flag_Query(kFlagHC03toUG02)) {	
 						Actor_Voice_Over(2530, kActorVoiceOver);				
-					} else {
-						Delay(500);
-						Actor_Says(kActorMcCoy, 8580, 14); //00-8580.AUD	Nothing else there.
 					}
 				} else if (!Game_Flag_Query(kFlagUG02AmmoTaken)) {
 					Item_Pickup_Spin_Effect(kModelAnimationAmmoType02, 360, 440);

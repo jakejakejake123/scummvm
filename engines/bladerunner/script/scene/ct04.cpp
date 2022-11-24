@@ -99,8 +99,7 @@ bool SceneScriptCT04::ClickedOn3DObject(const char *objectName, bool a2) {
 				Actor_Set_At_XYZ(kActorTransient, 0, 0, 0, 0);
 				Actor_Change_Animation_Mode(kActorMcCoy, 40);
 				if (_vm->_cutContent) { 
-					if (Player_Query_Agenda() != kPlayerAgendaSurly 
-					&& Player_Query_Agenda() != kPlayerAgendaErratic) {
+					if (Player_Query_Agenda() == kPlayerAgendaPolite) {
 						Actor_Voice_Over(320, kActorVoiceOver);
 						Actor_Voice_Over(330, kActorVoiceOver);
 					}
@@ -129,7 +128,7 @@ bool SceneScriptCT04::ClickedOn3DObject(const char *objectName, bool a2) {
 			} else if (Game_Flag_Query(kFlagCT04HomelessBodyFound)) {
 				Actor_Voice_Over(250, kActorVoiceOver); //99-0250.AUD	The body had vanished but the trash was still there.
 				if (_vm->_cutContent) { 
-					if (Player_Query_Agenda() != kPlayerAgendaPolite) {
+					if (Player_Query_Agenda() == kPlayerAgendaPolite) {
 						Actor_Voice_Over(260, kActorVoiceOver); //99-0260.AUD	I'd screwed up and screwed up bad. But maybe there was still a way to make it right.
 					}
 				} else {
@@ -253,6 +252,7 @@ void SceneScriptCT04::dialogueWithHomeless() {
 		Actor_Says(kActorMcCoy, 430, 3);
 		if (_vm->_cutContent) {
 			Actor_Says(kActorTransient, 30, 13); // Hey, that'd work.
+			Actor_Says(kActorMcCoy, 440, 16); //00-0440.AUD	Forget it.
 		} else {
 			Actor_Says(kActorTransient, 30, 14); // Hey, that'd work.
 		}
@@ -266,17 +266,8 @@ bool SceneScriptCT04::ClickedOnActor(int actorId) {
 		if (Game_Flag_Query(kFlagCT04HomelessKilledByMcCoy)) {
 			if (!Loop_Actor_Walk_To_Actor(kActorMcCoy, kActorTransient, 36, true, false)) {
 				Actor_Voice_Over(290, kActorVoiceOver); //99-0290.AUD	He was just an old bum. Not Howie's cook and certainly not a Replicant.
-				if (_vm->_cutContent) { 
-					if (Player_Query_Agenda() == kPlayerAgendaSurly 
-					|| Player_Query_Agenda() == kPlayerAgendaErratic) {
-						Actor_Voice_Over(310, kActorVoiceOver); //99-0310.AUD	If I was gonna get clear of this, I needed to tell Guzza. And the sooner the better.
-					} else {
-						Actor_Voice_Over(300, kActorVoiceOver); //99-0300.AUD	I'd screwed up. Plain and simple.
-					}
-				} else {
-					Actor_Voice_Over(300, kActorVoiceOver); //99-0300.AUD	I'd screwed up. Plain and simple.
-					Actor_Voice_Over(310, kActorVoiceOver);
-				}
+				Actor_Voice_Over(300, kActorVoiceOver); //99-0300.AUD	I'd screwed up. Plain and simple.
+				Actor_Voice_Over(310, kActorVoiceOver);
 			}
 		} else {
 			Actor_Set_Targetable(kActorTransient, false);

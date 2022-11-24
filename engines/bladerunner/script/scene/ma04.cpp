@@ -189,8 +189,8 @@ bool SceneScriptMA04::ClickedOn2DRegion(int region) {
 				if (_vm->_cutContent) {
 					if (Global_Variable_Query(kVariableAffectionTowards) != kAffectionTowardsDektora
 					&& Global_Variable_Query(kVariableAffectionTowards) != kAffectionTowardsLucy) {
-						if (!Game_Flag_Query(kFlagMcCoyRetiredHuman)) {
-							if (Game_Flag_Query(kFlagMcCoyIsInnocent)) {
+						if (Game_Flag_Query(kFlagMcCoyIsInnocent)) {
+							if (!Game_Flag_Query(kFlagMcCoyRetiredHuman)) {	
 								phoneCallWithSteele();
 							} else {
 								phoneCallWithClovis();
@@ -448,7 +448,7 @@ void SceneScriptMA04::phoneCallWithDektora() {
 	Actor_Says(kActorDektora, 220, 3);
 	Actor_Says(kActorMcCoy, 2460, 0); 
 	if (_vm->_cutContent) {
-		if (Game_Flag_Query(kFlagMcCoyIsHelpingReplicants)) {
+		if (Actor_Query_Friendliness_To_Other(kActorClovis, kActorMcCoy) > 50) {
 			Actor_Says(kActorDektora, 230, 3); //03-0230.AUD	Look, I think I got Clovis and Sadik to let you alone.
 			Actor_Says(kActorDektora, 240, 3);
 			Actor_Says(kActorMcCoy, 2465, 0);
@@ -488,13 +488,21 @@ void SceneScriptMA04::phoneCallWithDektora() {
 	Actor_Says(kActorDektora, 300, 3); //03-0300.AUD	He’s been very philosophical. He’s aware that his time is running out.
 	Actor_Says(kActorDektora, 310, 3); //03-0310.AUD	That’s why he wants to help us.
 	Actor_Says(kActorMcCoy, 2490, 0); //00-2490.AUD	No hard feelings, huh?
-	Actor_Says(kActorDektora, 330, 3); 
-	Actor_Says(kActorMcCoy, 2495, 0); //00-2495.AUD	Okay.
+	if (_vm->_cutContent) {
+		if (Actor_Query_Friendliness_To_Other(kActorClovis, kActorMcCoy) > 50) {
+			Actor_Says(kActorDektora, 330, 3); 
+			Actor_Says(kActorMcCoy, 2495, 0); //00-2495.AUD	Okay.
+		} else {
+			Delay(2000);
+			Actor_Says(kActorMcCoy, 2750, kAnimationModeTalk); //00-2750.AUD	Okay, I get the picture.
+		}
+	} 
 	Actor_Says(kActorDektora, 340, 3);
 	Actor_Says(kActorDektora, 350, 3);
 	if (_vm->_cutContent) {
 		if (Game_Flag_Query(kFlagCrazylegsArrested)
-		|| Actor_Query_Goal_Number(kActorCrazylegs) == kGoalCrazyLegsLeavesShowroom) {
+		|| Actor_Query_Goal_Number(kActorCrazylegs) == kGoalCrazyLegsLeavesShowroom
+		|| Player_Query_Agenda() == kPlayerAgendaPolite) {
 			answer = 1170; // CLOVIS
 		} else {
 			Dialogue_Menu_Clear_List();
@@ -534,21 +542,10 @@ void SceneScriptMA04::phoneCallWithDektora() {
 		}
 		Actor_Says(kActorMcCoy, 2515, 12); //00-2515.AUD	We’d need a Spinner to be able to get anywhere.
 		Actor_Says(kActorDektora, 390, 3); //03-0390.AUD	He’s got a couple for sale.
-		if (_vm->_cutContent) {
-			if (Player_Query_Agenda() == kPlayerAgendaPolite) {
-				Actor_Says(kActorMcCoy, 2520, 13);  //00-2520.AUD	It’s real risky. And illegal.
-				Actor_Says(kActorDektora, 400, 3);
-				Actor_Says(kActorDektora, 410, 3);
-				Actor_Says(kActorMcCoy, 2525, 15);  //00-2525.AUD	I didn’t say I wasn’t gonna do it.
-			} else {
-				Actor_Says(kActorMcCoy, 3780, 13); //00-3780.AUD	Okay, uh--
-			}
-		} else {
-			Actor_Says(kActorMcCoy, 2520, 13);  //00-2520.AUD	It’s real risky. And illegal.
-			Actor_Says(kActorDektora, 400, 3);
-			Actor_Says(kActorDektora, 410, 3);
-			Actor_Says(kActorMcCoy, 2525, 15);  //00-2525.AUD	I didn’t say I wasn’t gonna do it.
-		}
+		Actor_Says(kActorMcCoy, 2520, 13);  //00-2520.AUD	It’s real risky. And illegal.
+		Actor_Says(kActorDektora, 400, 3);
+		Actor_Says(kActorDektora, 410, 3);
+		Actor_Says(kActorMcCoy, 2525, 15);  //00-2525.AUD	I didn’t say I wasn’t gonna do it.
 		Actor_Says(kActorDektora, 420, 3); //03-0420.AUD	Then meet me there. I’ll be there within the hour.
 		Sound_Play(kSfxSPNBEEP9, 100, 0, 0, 50);
 		if (_vm->_cutContent) {
@@ -607,7 +604,8 @@ void SceneScriptMA04::phoneCallWithLucy() {
 	Actor_Says(kActorLucy, 580, 3); // You promise?
 	if (_vm->_cutContent) {
 		if (Game_Flag_Query(kFlagCrazylegsArrested)
-		|| Actor_Query_Goal_Number(kActorCrazylegs) == kGoalCrazyLegsLeavesShowroom) {
+		|| Actor_Query_Goal_Number(kActorCrazylegs) == kGoalCrazyLegsLeavesShowroom 
+		|| Player_Query_Agenda() == kPlayerAgendaPolite) {
 			Actor_Says_With_Pause(kActorMcCoy, 2570, 0.0f, 13); // Lucy, there's a good chance--
 			if (!Game_Flag_Query(kFlagDirectorsCut)) {
 				Actor_Says(kActorLucy, 640, 3);
@@ -703,7 +701,9 @@ void SceneScriptMA04::phoneCallWithSteele() {
 	if (_vm->_cutContent) {
 		if (!Game_Flag_Query(kFlagMcCoyIsHelpingReplicants)) {
 			Actor_Says(kActorMcCoy, 2645, 13); //00-2645.AUD	Excellent. Where do we go?
-			Actor_Says(kActorSteele, 740, 3); //01-0740.AUD	We? How about moi? Here’s a hint, Slim.
+			if (Actor_Query_Friendliness_To_Other(kActorSteele, kActorMcCoy) < 51) {
+				Actor_Says(kActorSteele, 740, 3); //01-0740.AUD	We? How about moi? Here’s a hint, Slim.
+			}
 		}
 	} else {
 		Actor_Says(kActorMcCoy, 2645, 13); //00-2645.AUD	Excellent. Where do we go?
@@ -715,10 +715,10 @@ void SceneScriptMA04::phoneCallWithSteele() {
 	// Restored some of the dialogue for the phone conversation with Crystal.
 	if (_vm->_cutContent) {
 		Actor_Says(kActorSteele, 770, 3); //01-0770.AUD	That son of a bitch, Clovis, was climbing in and out of a manhole right next to the police station and nobody ever noticed.
-		Actor_Says(kActorMcCoy, 2655, 16); //00-2655.AUD	Figures. With incompetents like Guzza at the helm.
-		// Made it so Crystal only says Guzza is going to be fed to the barracudas if McCoy saved Guzza and arrested him.
 		if (Game_Flag_Query(kFlagGuzzaSaved)) {
 			if (Actor_Clue_Query(kActorMcCoy, kClueFolder)) {
+				Actor_Says(kActorMcCoy, 2655, 16); //00-2655.AUD	Figures. With incompetents like Guzza at the helm.
+				// Made it so Crystal only says Guzza is going to be fed to the barracudas if McCoy saved Guzza and arrested him.
 				Actor_Says(kActorSteele, 790, 3); //01-0790.AUD	I think we can forget about Guzza. That guy’s gonna be fed to the barracudas.
 				if (Player_Query_Agenda() == kPlayerAgendaSurly 
 				|| Player_Query_Agenda() == kPlayerAgendaErratic) {
@@ -744,6 +744,9 @@ void SceneScriptMA04::phoneCallWithSteele() {
 	}
 	Sound_Play(kSfxSPNBEEP9, 100, 0, 0, 50);
 	if (_vm->_cutContent) {
+		if (!Game_Flag_Query(kFlagMcCoyIsHelpingReplicants)) {
+			Actor_Set_Goal_Number(kActorMaggie, kGoalMaggieKP05Wait);
+		}
 		Actor_Clue_Acquire(kActorMcCoy, kCluePhoneCallCrystal, true, kActorSteele);
 	} else {
 		Actor_Clue_Acquire(kActorMcCoy, kCluePhoneCallCrystal, true, -1);
@@ -849,7 +852,18 @@ void SceneScriptMA04::phoneCallWithClovis() {
 	Sound_Play(kSfxSPNBEEP9, 100, 0, 0, 50);
 	if (_vm->_cutContent) {
 		Actor_Clue_Acquire(kActorMcCoy, kCluePhoneCallClovis, true, kActorClovis);
-		Game_Flag_Set(kFlagMcCoyIsHelpingReplicants);
+		if (!Actor_Clue_Query(kActorClovis, kClueMcCoyRetiredLucy) 
+		&& !Actor_Clue_Query(kActorClovis, kClueMcCoyRetiredDektora)
+		&& Actor_Query_Friendliness_To_Other(kActorClovis, kActorMcCoy) > 50) {
+			Game_Flag_Set(kFlagMcCoyIsHelpingReplicants);
+		} else {
+			if (Actor_Query_Goal_Number(kActorMaggie) < kGoalMaggieDead) {
+				Game_Flag_Reset(kFlagMcCoyIsHelpingReplicants);
+				Actor_Set_Goal_Number(kActorMaggie, kGoalMaggieKP05Wait);
+			} else {
+				Game_Flag_Set(kFlagMcCoyIsHelpingReplicants);
+			}
+		}
 	} else {
 		Actor_Clue_Acquire(kActorMcCoy, kCluePhoneCallClovis, true, -1);
 	}

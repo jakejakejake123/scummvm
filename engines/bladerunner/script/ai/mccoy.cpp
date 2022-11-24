@@ -266,7 +266,11 @@ void AIScriptMcCoy::ReceivedClue(int clueId, int fromActorId) {
 		}
 		break;
 	case kClueIzosStashRaided:
-		Global_Variable_Increment(kVariableCorruptedGuzzaEvidence, 2);
+		if (_vm->_cutContent) {
+			Global_Variable_Increment(kVariableCorruptedGuzzaEvidence, 3);
+		} else {
+			Global_Variable_Increment(kVariableCorruptedGuzzaEvidence, 2);
+		}
 		break;
 
 	case kClueDNATyrell:
@@ -618,28 +622,24 @@ bool AIScriptMcCoy::GoalChanged(int currentGoalNumber, int newGoalNumber) {
 			if (Actor_Query_Friendliness_To_Other(kActorGuzza, kActorMcCoy) > 50) {
 				Actor_Says(kActorGuzza, 1400, kAnimationModeTalk); //04-1400.AUD	I know there’s been some confusion, kid.
 				Actor_Says(kActorGuzza, 1410, kAnimationModeTalk); //04-1410.AUD	Come on downtown and we’ll sit down like gentlemen and figure this out.
-				Actor_Says(kActorMcCoy, 6620, 15); //00-6620.AUD	If you’re a gentleman, I’m a St. Bernard.
+				if (Player_Query_Agenda() == kPlayerAgendaSurly 
+				|| Player_Query_Agenda() == kPlayerAgendaErratic) {
+					Actor_Says(kActorMcCoy, 6620, 15); //00-6620.AUD	If you’re a gentleman, I’m a St. Bernard.
+				}
 				Delay(1000);
 			} else {
 				Actor_Says(kActorGuzza, 1420, kAnimationModeTalk); //04-1420.AUD	You don’t know what you are, kid.
-				Actor_Says(kActorMcCoy, 6625, 11); //00-6625.AUD	You can sell that Replicant shit to everybody else but I ain’t buying.
-				Actor_Says(kActorGuzza, 1430, kAnimationModeTalk); //04-1430.AUD	If you’re so clean, let’s put you on the Machine. That will decide once and for all.
+				if (!Game_Flag_Query(kFlagMcCoyIsHelpingReplicants)) {
+					Actor_Says(kActorMcCoy, 6625, 11); //00-6625.AUD	You can sell that Replicant shit to everybody else but I ain’t buying.
+					Actor_Says(kActorGuzza, 1430, kAnimationModeTalk); //04-1430.AUD	If you’re so clean, let’s put you on the Machine. That will decide once and for all.
+				}
 			}
 		} else {
 			Actor_Says(kActorGuzza, 1420, kAnimationModeTalk); //04-1420.AUD	You don’t know what you are, kid.
-			if (!Game_Flag_Query(kFlagMcCoyIsHelpingReplicants)) {
-				Actor_Says(kActorMcCoy, 6625, 11); //00-6625.AUD	You can sell that Replicant shit to everybody else but I ain’t buying.
-				Actor_Says(kActorGuzza, 1430, kAnimationModeTalk); //04-1430.AUD	If you’re so clean, let’s put you on the Machine. That will decide once and for all.
-			}
+			Actor_Says(kActorMcCoy, 6625, 11); //00-6625.AUD	You can sell that Replicant shit to everybody else but I ain’t buying.
+			Actor_Says(kActorGuzza, 1430, kAnimationModeTalk); //04-1430.AUD	If you’re so clean, let’s put you on the Machine. That will decide once and for all.
 		}
-		if (_vm->_cutContent) {
-			if (Player_Query_Agenda() == kPlayerAgendaSurly 
-			|| Player_Query_Agenda() == kPlayerAgendaErratic) {
-				Actor_Says(kActorMcCoy, 6630, 12); //00-6630.AUD	I’m through listening, Guzza. Now it’s your turn.
-			}
-		} else {
-			Actor_Says(kActorMcCoy, 6630, 12); //00-6630.AUD	I’m through listening, Guzza. Now it’s your turn.
-		}
+		Actor_Says(kActorMcCoy, 6630, 12); //00-6630.AUD	I’m through listening, Guzza. Now it’s your turn.
 		Actor_Says(kActorMcCoy, 6635, 17); //00-6635.AUD	I’ve been doing some investigating on my own. Came across some prime sources.
 		Actor_Says(kActorMcCoy, 6640, 13); //00-6640.AUD	You know what I’m talking about. Those little illegal weapons deals with Izo.
 		Actor_Says(kActorMcCoy, 6645, 19); //00-6645.AUD	You were raking in the chinyen selling LPD wares to scumbags and Reps.
@@ -653,26 +653,13 @@ bool AIScriptMcCoy::GoalChanged(int currentGoalNumber, int newGoalNumber) {
 			Actor_Says(kActorMcCoy, 6650, 18);
 			Actor_Says(kActorMcCoy, 6655, 11); //00-6655.AUD	The department is gonna eat it up when they hear just how deep that corruption goes.
 		}
-		if (_vm->_cutContent) {
-			if (Actor_Query_Friendliness_To_Other(kActorGuzza, kActorMcCoy) < 51) {
-				Actor_Says(kActorGuzza, 1440, kAnimationModeTalk); //04-1440.AUD	That’s a load of crap.
-				Actor_Says(kActorMcCoy, 6660, 17); //00-6660.AUD	Let’s hope for your sake Bryant and the brass feel that way, when I lay this file on ‘em.
-				if (_vm->_cutContent) {
-					if (Player_Query_Agenda() == kPlayerAgendaSurly 
-					|| Player_Query_Agenda() == kPlayerAgendaErratic) {
-						Actor_Says(kActorMcCoy, 6665, 13); //00-6665.AUD	Otherwise, it’s a one-way ticket to the Off-World penal colony, fat man.
-					}
-				}
-				Delay(1000);
-			} else {
-				Delay(2000);
-			}
-		} else {
-			Actor_Says(kActorGuzza, 1440, kAnimationModeTalk); //04-1440.AUD	That’s a load of crap.
-			Actor_Says(kActorMcCoy, 6660, 17); //00-6660.AUD	Let’s hope for your sake Bryant and the brass feel that way, when I lay this file on ‘em.
+		Actor_Says(kActorGuzza, 1440, kAnimationModeTalk); //04-1440.AUD	That’s a load of crap.
+		Actor_Says(kActorMcCoy, 6660, 17); //00-6660.AUD	Let’s hope for your sake Bryant and the brass feel that way, when I lay this file on ‘em.
+		if (Player_Query_Agenda() == kPlayerAgendaSurly 
+		|| Player_Query_Agenda() == kPlayerAgendaErratic) {
 			Actor_Says(kActorMcCoy, 6665, 13); //00-6665.AUD	Otherwise, it’s a one-way ticket to the Off-World penal colony, fat man.
-			Delay(1000);
 		}
+		Delay(1000);
 		Actor_Says(kActorGuzza, 1450, kAnimationModeTalk); //04-1450.AUD	What do you want, McCoy?
 		Actor_Says(kActorMcCoy, 6670, 14);
 		Actor_Says(kActorMcCoy, 6675, 11);

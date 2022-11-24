@@ -148,6 +148,7 @@ bool SceneScriptDR04::ClickedOnActor(int actorId) {
 					} else {
 						Game_Flag_Set(kFlagMorajiAlive);
 						Actor_Set_Goal_Number(kActorMoraji, kGoalMorajiLives);
+						Game_Flag_Set(kFlagMorajiAlive);
 					}
 				} else {
 					Actor_Set_Goal_Number(kActorMoraji, kGoalMorajiDie);

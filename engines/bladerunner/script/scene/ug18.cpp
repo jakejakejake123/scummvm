@@ -268,21 +268,22 @@ void SceneScriptUG18::ActorChangedGoal(int actorId, int newGoal, int oldGoal, bo
 			if (!_vm->_cutContent) {
 				Actor_Modify_Friendliness_To_Other(kActorClovis, kActorMcCoy, 7);
 				Actor_Modify_Friendliness_To_Other(kActorSadik, kActorMcCoy, 10);
+			} else {
+				Actor_Modify_Friendliness_To_Other(kActorClovis, kActorMcCoy, 2);
 			}
 			Player_Loses_Control();
 			Actor_Face_Actor(kActorGuzza, kActorMcCoy, true);
-			if (_vm->_cutContent) {
-				Actor_Says(kActorGuzza, 1220, 58);
-			} else {
-				ADQ_Add(kActorGuzza, 1220, 58);
-			}
+			ADQ_Add(kActorGuzza, 1220, 58);
 			Scene_Exits_Enable();
 			Actor_Set_Goal_Number(kActorGuzza, kGoalGuzzaUG18ShotByMcCoy);
 			if (_vm->_cutContent) {
-				if (Actor_Query_Friendliness_To_Other(kActorClovis, kActorMcCoy) > 50) {
+				if (Actor_Query_Friendliness_To_Other(kActorClovis, kActorMcCoy) > 50 
+				&& !Actor_Clue_Query(kActorClovis, kClueMcCoyRetiredDektora)
+				&& !Actor_Clue_Query(kActorClovis, kClueMcCoyRetiredLucy)) {
 					Delay(2000);
 					Actor_Says(kActorSadik, 360, 14); // The Hunter, he do us a favor...
 					Actor_Says(kActorSadik, 380, 14); //08-0380.AUD	You better than I thought, mon. 
+					Actor_Modify_Friendliness_To_Other(kActorSadik, kActorMcCoy, 2);
 					Actor_Says(kActorClovis, 660, 13); // Brother, you killed a human...
 					if (!Game_Flag_Query(kFlagMcCoyIsHelpingReplicants)) {
 						Actor_Says(kActorMcCoy, 6000, 13); //00-6000.AUD	Stop calling me that!
@@ -296,9 +297,7 @@ void SceneScriptUG18::ActorChangedGoal(int actorId, int newGoal, int oldGoal, bo
 					Actor_Set_Targetable(kActorClovis, false);
 					Actor_Set_Goal_Number(kActorSadik, kGoalSadikUG18Leave);
 					Actor_Set_Goal_Number(kActorClovis, kGoalClovisUG18Leave);
-					Actor_Modify_Friendliness_To_Other(kActorClovis, kActorMcCoy, 2);
 					Actor_Modify_Friendliness_To_Other(kActorSteele, kActorMcCoy, -2);
-					Actor_Modify_Friendliness_To_Other(kActorSadik, kActorMcCoy, 2);
 					Actor_Clue_Acquire(kActorMcCoy, kClueMcCoyShotGuzza, true, kActorClovis);
 					Player_Loses_Control();
 					Loop_Actor_Walk_To_XYZ(kActorMcCoy, -684.71f, 0.0f, 171.59f, 0, false, true, false);
@@ -615,7 +614,9 @@ void SceneScriptUG18::DialogueQueueFlushed(int a1) {
 		Player_Gains_Control();
 		ADQ_Add_Pause(2000);
 		if (_vm->_cutContent) {
-			if (Actor_Query_Friendliness_To_Other(kActorClovis, kActorMcCoy) < 51) {
+			if (Actor_Query_Friendliness_To_Other(kActorClovis, kActorMcCoy) < 51 
+			|| Actor_Clue_Query(kActorClovis, kClueMcCoyRetiredDektora)
+			|| Actor_Clue_Query(kActorClovis, kClueMcCoyRetiredLucy)) {
 				ADQ_Add(kActorClovis, 650, 14); // So, what should we do with this detective.
 				ADQ_Add(kActorSadik, 370, 14);
 				ADQ_Add(kActorClovis, 1320, 14); // Perhaps you're right
@@ -817,13 +818,14 @@ void SceneScriptUG18::talkWithGuzza() {
 	if (_vm->_cutContent) {
 		Actor_Says(kActorGuzza, 930, 15);
 	}
-	Actor_Says(kActorMcCoy, 5925, 14); //00-5925.AUD	Helping Reps also part of the job?
 	if (_vm->_cutContent) {
-		if (Actor_Query_Friendliness_To_Other(kActorGuzza, kActorMcCoy) > 50) {
+		if (!Game_Flag_Query(kFlagMcCoyIsHelpingReplicants)) {
+			Actor_Says(kActorMcCoy, 5925, 14); //00-5925.AUD	Helping Reps also part of the job?
 			Actor_Says(kActorGuzza, 940, 14); //04-0940.AUD	I was gonna whack them myself once the heat was off. Tie up those loose ends.
 			Actor_Says(kActorMcCoy, 5930, 18); //00-5930.AUD	Once I was out of the way.
 		}
 	} else {
+		Actor_Says(kActorMcCoy, 5925, 14); //00-5925.AUD	Helping Reps also part of the job?
 		Actor_Says(kActorGuzza, 940, 14); //04-0940.AUD	I was gonna whack them myself once the heat was off. Tie up those loose ends.
 		Actor_Says(kActorMcCoy, 5930, 18); //00-5930.AUD	Once I was out of the way.
 	}

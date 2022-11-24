@@ -445,8 +445,10 @@ void SceneScriptNR01::PlayerWalkedIn() {
 				Actor_Says(kActorMcCoy, 3035, 14); //00-3035.AUD	You were gonna shoot!
 				if (Actor_Query_Friendliness_To_Other(kActorSteele, kActorMcCoy) < 51) {
 					Actor_Says(kActorSteele, 1170, 16); //01-1170.AUD	Damn straight!
-					Actor_Says(kActorMcCoy, 3040, 15); //00-3040.AUD	What about the hostage?
-					Actor_Says(kActorSteele, 1180, 16); //01-1180.AUD	A small price to pay to juice that skin-job.
+					if (Player_Query_Agenda() == kPlayerAgendaPolite) {
+						Actor_Says(kActorMcCoy, 3040, 15); //00-3040.AUD	What about the hostage?
+						Actor_Says(kActorSteele, 1180, 16); //01-1180.AUD	A small price to pay to juice that skin-job.
+					}
 				} else {
 					Delay(1000);
 				}
@@ -589,8 +591,7 @@ void SceneScriptNR01::PlayerWalkedIn() {
 				Actor_Says(kActorMcCoy, 3125, 15); //00-3125.AUD	I was wondering where it went.
 				Actor_Says(kActorSteele, 1380, 12); //01-1380.AUD	Is it true, Slim? Did you kill somebody?
 				if (_vm->_cutContent) {
-					if (Player_Query_Agenda() != kPlayerAgendaSurly 
-					&& Player_Query_Agenda() != kPlayerAgendaErratic) {
+					if (Player_Query_Agenda() == kPlayerAgendaPolite) {
 						Delay(1500);
 						Actor_Says(kActorMcCoy, 7980, 19); //00-7980.AUD	Yeah. Maybe.
 					} else {

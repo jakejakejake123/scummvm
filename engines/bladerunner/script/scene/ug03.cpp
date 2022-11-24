@@ -88,10 +88,6 @@ void SceneScriptUG03::SceneLoaded() {
 		Unclickable_Object("CHAIR_STRAPLEGRIGHT");
 	}
 #endif // BLADERUNNER_ORIGINAL_BUGS
-	//Added in the Bakers badge clue to the set.
-	if (_vm->_cutContent && !Actor_Clue_Query(kActorMcCoy, kClueBakersBadge)) {
-		Item_Add_To_World(kItemBakersBadge, kModelAnimationBadge, kSetUG03, -158.78, 0.25, -39.55, 0, 12, 12, false, true, false, true);
-	}
 }
 
 bool SceneScriptUG03::MouseClick(int x, int y) {
@@ -136,17 +132,7 @@ bool SceneScriptUG03::ClickedOnActor(int actorId) {
 }
 
 bool SceneScriptUG03::ClickedOnItem(int itemId, bool a2) {
-	//Code for picking up Bakers badge.
-	if (itemId == kItemBakersBadge) {
-		if (!Loop_Actor_Walk_To_Item(kActorMcCoy, kItemBakersBadge, 12, true, false)) {
-			Actor_Face_Item(kActorMcCoy, kItemBakersBadge, true);
-			Actor_Clue_Acquire(kActorMcCoy, kClueBakersBadge, true, kActorBaker);
-			Item_Pickup_Spin_Effect(kModelAnimationBadge, 13, 298);
-			Item_Remove_From_World(kItemBakersBadge);
-			Actor_Says(kActorMcCoy, 8855, 12); //00-8855.AUD	Baker's badge.
-		}
-	}			
-	return true;
+	return false;
 }
 
 bool SceneScriptUG03::ClickedOnExit(int exitId) {

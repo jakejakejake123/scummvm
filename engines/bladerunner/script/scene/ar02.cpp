@@ -181,11 +181,10 @@ bool SceneScriptAR02::ClickedOnActor(int actorId) {
 							Actor_Says(kActorMcCoy, 230, 19);
 							Actor_Says(kActorInsectDealer, 340, 13);
 							Actor_Says(kActorInsectDealer, 350, 12);
-							if (Player_Query_Agenda() != kPlayerAgendaSurly 
-							&& Player_Query_Agenda() != kPlayerAgendaErratic) {
-								Actor_Says(kActorMcCoy, 235, 16); //00-0235.AUD	Gotcha.
-							} else {
+							if (Player_Query_Agenda() == kPlayerAgendaPolite) {
 								Actor_Says(kActorMcCoy, 215, 13); // Thanks for your help
+							} else {
+								Actor_Says(kActorMcCoy, 235, 16); //00-0235.AUD	Gotcha.
 							}
 							Actor_Clue_Acquire(kActorMcCoy, kCluePurchasedScorpions, false, kActorInsectDealer);	
 						}
@@ -390,7 +389,7 @@ bool SceneScriptAR02::ClickedOnActor(int actorId) {
 				) {
 					dialogueWithHassan();
 				} else if (!Game_Flag_Query(kFlagHasanTalkFinished)) {
-					if (Actor_Query_Friendliness_To_Other(kActorHasan, kActorMcCoy) > 50) {
+					if (Actor_Query_Friendliness_To_Other(kActorHasan, kActorMcCoy) > 49) {
 						Actor_Says(kActorMcCoy, 155, 13); // How's business?
 						Actor_Says(kActorHasan, 10, 13); //20-0010.AUD	Well enough, noble one, to keep a humble merchant in bread and water.
 						Actor_Says(kActorHasan, 20, 14); //20-0020.AUD	So few people realize what a bargain these lovely serpents are.
@@ -413,7 +412,7 @@ bool SceneScriptAR02::ClickedOnActor(int actorId) {
 						Game_Flag_Set(kFlagHasanTalkFinished);
 					}
 				} else { 
-					if (Actor_Query_Friendliness_To_Other(kActorHasan, kActorMcCoy) > 50) {
+					if (Actor_Query_Friendliness_To_Other(kActorHasan, kActorMcCoy) > 49) {
 						Actor_Says(kActorMcCoy, 1315, 13);		
 					} else {
 						Actor_Says(kActorMcCoy, 8595, 13); //00-8595.AUD	Hmm. He's damn unfriendly.				
@@ -467,11 +466,15 @@ bool SceneScriptAR02::ClickedOnItem(int itemId, bool a2) {
 						Actor_Says(kActorInsectDealer, 0, 14); 
 						Actor_Says(kActorMcCoy, 55, 18);
 						Actor_Says(kActorInsectDealer, 10, 14);
-						if (Game_Flag_Query(kFlagMcCoyIsHelpingReplicants)) {
-							Actor_Says(kActorMcCoy, 60, 18); //00-0060.AUD	I don't think so. They are beautiful, though. I never seen one before.
-							Actor_Says(kActorInsectDealer, 20, 14);
+						if (Player_Query_Agenda() == kPlayerAgendaPolite) {
+							if (Game_Flag_Query(kFlagMcCoyIsHelpingReplicants)) {
+								Actor_Says(kActorMcCoy, 60, 18); //00-0060.AUD	I don't think so. They are beautiful, though. I never seen one before.
+								Actor_Says(kActorInsectDealer, 20, 14);
+							} else {
+								Actor_Says(kActorMcCoy, 8980, 16); //00-8980.AUD	No, thanks, I'm saving for a rainy day.
+							}
 						} else {
-							Actor_Says(kActorMcCoy, 8980, 16); //00-8980.AUD	No, thanks, I'm saving for a rainy day.
+							Actor_Says(kActorMcCoy, 7815, 13); //00-7815.AUD	No.
 						}
 						Game_Flag_Set(kFlagAR02ScorpionsChecked);
 					}
@@ -554,8 +557,10 @@ void SceneScriptAR02::PlayerWalkedIn() {
 		if (Actor_Query_Friendliness_To_Other(kActorSteele, kActorMcCoy) > 50) {
 			Actor_Says(kActorSteele, 1780, 14); //01-1780.AUD	(sigh) Sorry I missed all the laughs.
 			Actor_Says(kActorMcCoy, 3825, 15); //00-3825.AUD	Next time.
-			Actor_Says(kActorMcCoy, 5260, 18); //00-5260.AUD	Happy trails, Steele.
-			Actor_Says(kActorSteele, 2350, 16);  //01-2350.AUD	Ditto.
+			if (Player_Query_Agenda() == kPlayerAgendaPolite) {
+				Actor_Says(kActorMcCoy, 5260, 18); //00-5260.AUD	Happy trails, Steele.
+				Actor_Says(kActorSteele, 2350, 16);  //01-2350.AUD	Ditto.
+			}
 		} else {
 			Actor_Says(kActorSteele, 1800, 16); //01-1800.AUD	You should have waited for me, Slim.
 			Actor_Says(kActorMcCoy, 2305, 15); //00-2305.AUD	I’m sorry.
@@ -616,8 +621,7 @@ void SceneScriptAR02::dialogueWithInsectDealer1() {
 	case 490: // EARRING
 		if (_vm->_cutContent) {
 			if (Game_Flag_Query(kFlagMcCoyIsHelpingReplicants)) {
-				if (Player_Query_Agenda() != kPlayerAgendaSurly
-				&& Player_Query_Agenda() != kPlayerAgendaErratic) { 
+				if (Player_Query_Agenda() == kPlayerAgendaPolite) { 
 					Actor_Says(kActorMcCoy, 8475, 12); //00-8475.AUD	Nice looking creatures you have around here.
 					Actor_Says(kActorInsectDealer, 10, 12); // 16-0010.AUD	Sí. Finest quality. Perhaps you purchase one?
 					Actor_Says(kActorMcCoy, 35, 15); //00-0035.AUD	I'll pass.
@@ -639,15 +643,16 @@ void SceneScriptAR02::dialogueWithInsectDealer1() {
 				Actor_Says(kActorMcCoy, 745, 14); //00-0745.AUD	I'm watching you, pal.
 				Actor_Modify_Friendliness_To_Other(kActorInsectDealer, kActorMcCoy, -2);
 			} else {
-				if (Actor_Clue_Query(kActorMcCoy, kClueDragonflyAnklet)
-				||  Actor_Clue_Query(kActorMcCoy, kClueBombingSuspect)) {
+				if (Actor_Clue_Query(kActorMcCoy, kClueDragonflyEarring)) {
 					Actor_Says(kActorMcCoy, 7940, 13); //00-7940.AUD	Right.
 					Delay (1000);
-					Actor_Says(kActorMcCoy, 8470, 23); //00-8470.AUD	You recognize the insect in this photo?
+					Actor_Says(kActorMcCoy, 5600, 14);               // Let me ask you
+					Actor_Says(kActorMcCoy, 8465, 23); //00-8465.AUD	What kind of insect is this?	
 				} else {
 					Actor_Says(kActorMcCoy, 7940, 13); //00-7940.AUD	Right.
 					Delay (1000);
-					Actor_Says(kActorMcCoy, 8465, 23); //00-8465.AUD	What kind of insect is this?
+					Actor_Says(kActorMcCoy, 5600, 14);               // Let me ask you
+					Actor_Says(kActorMcCoy, 8470, 23); //00-8470.AUD	You recognize the insect in this photo?
 				}
 				Actor_Says(kActorInsectDealer, 80, 14);
 				Actor_Says(kActorMcCoy, 80, 16);
@@ -750,7 +755,15 @@ void SceneScriptAR02::dialogueWithInsectDealerBuyBracelet() {
 	Dialogue_Menu_Disappear();
 
 	if (answerValue == 530) { // BUY
-		Actor_Says(kActorMcCoy, 120, 12);
+		if (_vm->_cutContent) {
+			if (Player_Query_Agenda() == kPlayerAgendaPolite) {
+				Actor_Says(kActorMcCoy, 7000, 13); //00-7000.AUD	Yeah, okay. I'll take it.
+			} else {
+				Actor_Says(kActorMcCoy, 120, 12);
+			}
+		} else {
+			Actor_Says(kActorMcCoy, 120, 12);
+		}
 		if (Query_Difficulty_Level() != kGameDifficultyEasy) {
 			Global_Variable_Decrement(kVariableChinyen, 15);
 		}
@@ -863,7 +876,7 @@ void SceneScriptAR02::dialogueWithHassan() {
 		// Firstly if you have low friendliness towards Hasan he lies to you and says he knows nothing.
 		if (_vm->_cutContent) {
 			if (Game_Flag_Query(kFlagAR02HassanTalk)) {
-				if (Actor_Query_Friendliness_To_Other(kActorHasan, kActorMcCoy) > 50) {
+				if (Actor_Query_Friendliness_To_Other(kActorHasan, kActorMcCoy) > 49) {
 					Actor_Says(kActorHasan, 40, 12); //20-0040.AUD	I told the last detective I sold the snake to Taffy Lewis.
 					Actor_Says(kActorMcCoy, 165, 13); //00-0165.AUD	The last detective?
 					Delay(1000);

@@ -98,8 +98,7 @@ bool SceneScriptBB12::ClickedOnActor(int actorId) {
 		&& !Loop_Actor_Walk_To_XYZ(kActorMcCoy, -45.93, 0.28, -13.71, 0, true, false, false)) {
 			Actor_Face_Actor(kActorMcCoy, kActorDektora, true);
 			Actor_Face_Actor(kActorSebastian, kActorDektora, true);
-			if (Player_Query_Agenda() != kPlayerAgendaSurly 
-			&& Player_Query_Agenda() != kPlayerAgendaErratic) {
+			if (Player_Query_Agenda() == kPlayerAgendaPolite) {
 				Actor_Says(kActorMcCoy, 7230, 13); //00-7230.AUD	That's a real pretty design. I don't remember seeing it before.
 			} else {
 				Actor_Says(kActorMcCoy, 8695, 13); //00-8695.AUD	That's an unusual design.
@@ -122,8 +121,7 @@ bool SceneScriptBB12::ClickedOnActor(int actorId) {
 				}
 			}
 			Actor_Face_Actor(kActorMcCoy, kActorDektora, true);
-			if (Player_Query_Agenda() != kPlayerAgendaSurly 
-			&& Player_Query_Agenda() != kPlayerAgendaErratic) {
+			if (Player_Query_Agenda() == kPlayerAgendaPolite) {
 				Actor_Says(kActorMcCoy, 7245, 15); //00-7245.AUD	The detail! She's a real beauty, ain't she?
 			} else {
 				Actor_Says(kActorMcCoy, 8700, 18); //00-8700.AUD	Never seen anything like that before.

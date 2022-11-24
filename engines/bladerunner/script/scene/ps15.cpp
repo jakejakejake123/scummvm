@@ -124,17 +124,6 @@ bool SceneScriptPS15::ClickedOnActor(int actorId) {
 							Actor_Says(kActorMcCoy, 3725, 18); //00-3725.AUD	Is that right? Any reason you didn’t tell me that right off?
 							Actor_Says(kActorSergeantWalls, 220, 16); // 34-0220.  AUD	I didn't think you needed to hear about this.
 							Actor_Says(kActorMcCoy, 8519, 14); // 00-8519.AUD	What do you say we dish each other the straight goods.
-							Delay (1000);
-							Actor_Says(kActorSergeantWalls, 150, 23); //34-0150.AUD	I guess there ain't no harm in it.
-							Actor_Change_Animation_Mode(kActorMcCoy, 23);
-							Delay (2000);
-							Item_Pickup_Spin_Effect(kModelAnimationWeaponsOrderForm, 211, 239);
-							Actor_Clue_Acquire(kActorMcCoy, kClueWeaponsOrderForm, true, kActorSergeantWalls);
-							if (Game_Flag_Query(kFlagPS04WeaponsOrderForm)) {
-								Item_Remove_From_World(kItemWeaponsOrderForm);	
-							}
-						} else {
-							Actor_Says(kActorMcCoy, 6985, 18); //00-6985.AUD	Got the straight scoop for me or what?
 							Actor_Says(kActorSergeantWalls, 200, 13); //34-0200.AUD	Come back at me when you got something worthwhile, McCoy.	
 						}
 					}
@@ -220,8 +209,7 @@ bool SceneScriptPS15::ClickedOnItem(int itemId, bool a2) {
 			Actor_Says(kActorMcCoy, 4485, 17);
 			Actor_Says(kActorSergeantWalls, 160, 14);
 			if (_vm->_cutContent) {
-				if (Player_Query_Agenda() != kPlayerAgendaSurly 
-				&& Player_Query_Agenda() != kPlayerAgendaErratic) {
+				if (Player_Query_Agenda() == kPlayerAgendaPolite) {
 					Actor_Says(kActorMcCoy, 4490, 12); //00-4490.AUD	Let me guess. He's planning on taking out a small city.
 					//Jake - Added in some lines that Walls will only say to McCoy if he showed disgust to Guzzas behaviour towards the pimps.
 					if (Game_Flag_Query(kFlagWallsUpset)) {
