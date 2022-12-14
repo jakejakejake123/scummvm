@@ -208,8 +208,7 @@ bool SceneScriptCT11::ClickedOn2DRegion(int region) {
 			// Made it so McCoy will only pick up the lichen dog wrapper from within the car if he has found enough clues to deem the car suspicious.
 			if (_vm->_cutContent) {
 				if (Actor_Clue_Query(kActorMcCoy, kClueCar)
-				|| Game_Flag_Query(kFlagCarFound)
-				|| Actor_Clue_Query(kActorMcCoy, kClueGrigoriansNote)) {
+				|| Game_Flag_Query(kFlagCarFound)) {
 					Item_Remove_From_World(kItemDogWrapper);		
 					Actor_Clue_Acquire(kActorMcCoy, kClueLichenDogWrapper, false, kActorMurray);
 					Item_Pickup_Spin_Effect(kModelAnimationLichenDogWrapper, 510, 319);
@@ -255,11 +254,16 @@ bool SceneScriptCT11::ClickedOn2DRegion(int region) {
 	) {
 		if (!Loop_Actor_Walk_To_XYZ(kActorMcCoy, 686.0f, 0.0f, 658.0f, 12, true, false, false)) {
 			Actor_Face_Heading(kActorMcCoy, 47, false);
-			Item_Remove_From_World(kItemNote);
-			Actor_Clue_Acquire(kActorMcCoy, kClueGrigoriansNote, false, -1);
-			Item_Pickup_Spin_Effect(kModelAnimationGrigoriansNote, 512, 326);
-			Actor_Says(kActorMcCoy, 8840, 13); //00-8840.AUD	A note.
-			Scene_2D_Region_Remove(2);
+			if (Actor_Clue_Query(kActorMcCoy, kClueCar)
+			|| Game_Flag_Query(kFlagCarFound)) {
+				Item_Remove_From_World(kItemNote);
+				Actor_Clue_Acquire(kActorMcCoy, kClueGrigoriansNote, false, -1);
+				Item_Pickup_Spin_Effect(kModelAnimationGrigoriansNote, 512, 326);
+				Actor_Says(kActorMcCoy, 8840, 13); //00-8840.AUD	A note.
+				Scene_2D_Region_Remove(2);
+			} else {
+				Actor_Says(kActorMcCoy, 8525, 13); // 00-8525.AUD	Hmph.
+			}
 		}
 		return true;
 	}
@@ -273,54 +277,51 @@ bool SceneScriptCT11::ClickedOn2DRegion(int region) {
 		if (!Loop_Actor_Walk_To_XYZ(kActorMcCoy, 686.0f, 0.0f, 658.0f, 12, true, false, false)) {
 			Actor_Face_Heading(kActorMcCoy, 47, false);
 			if (_vm->_cutContent) {
-				if (Game_Flag_Query(kFlagKleinCarIdentityTalk) 
-				&& Actor_Clue_Query(kActorMcCoy, kClueGrigoriansNote)) {
-					Actor_Voice_Over(520, kActorVoiceOver);
-					Actor_Voice_Over(530, kActorVoiceOver);
-					Actor_Voice_Over(540, kActorVoiceOver);
+				int cluesFound = 0;
+				if (Actor_Clue_Query(kActorMcCoy, kClueCrowdInterviewB)) {
+					++cluesFound;
+				}
+				if (Actor_Clue_Query(kActorMcCoy, kCluePaintTransfer)) {
+					++cluesFound;
+				}
+				if (Actor_Clue_Query(kActorMcCoy, kClueLabPaintTransfer)) {
+					++cluesFound;
+				}
+				if (Actor_Clue_Query(kActorMcCoy, kClueChromeDebris)) {
+					++cluesFound;
+				}
+				if (Actor_Clue_Query(kActorMcCoy, kClueLicensePlate)) {
+					cluesFound += 2;
+				}
+				if (Actor_Clue_Query(kActorMcCoy, kClueCarColorAndMake)) {
+					cluesFound += 2;
+				}
+				if (Actor_Clue_Query(kActorMcCoy, kCluePartialLicenseNumber)) {
+					cluesFound += 2;
+				}
+				if (Actor_Clue_Query(kActorMcCoy, kClueLabPaintTransfer)) {
+					cluesFound += 2;
+				}
+				if ( cluesFound > 3
+				&& !Actor_Clue_Query(kActorMcCoy, kClueCar)
+				) {
+					Actor_Voice_Over(510, kActorVoiceOver);
 					Actor_Clue_Acquire(kActorMcCoy, kClueCar, false, -1);
-					Scene_2D_Region_Remove(1);
-				} else {
-					int cluesFound = 0;
-					if (Actor_Clue_Query(kActorMcCoy, kClueCrowdInterviewB)) {
-						++cluesFound;
+					Game_Flag_Set(kFlagCarFound);
+					// Made it so McCoy only gets the car identity clue if he was told by Dino how to identify the car by using the vehicle identification number.
+					if (Game_Flag_Query(kFlagKleinCarIdentityTalk)) {
+						Actor_Voice_Over(520, kActorVoiceOver);
+						Actor_Voice_Over(530, kActorVoiceOver);
+						Actor_Voice_Over(540, kActorVoiceOver);
+						Scene_2D_Region_Remove(1);
 					}
-					if (Actor_Clue_Query(kActorMcCoy, kCluePaintTransfer)) {
-						++cluesFound;
-					}
-					if (Actor_Clue_Query(kActorMcCoy, kClueLabPaintTransfer)) {
-						++cluesFound;
-					}
-					if (Actor_Clue_Query(kActorMcCoy, kClueLicensePlate)) {
-						cluesFound += 2;
-					}
-					if (Actor_Clue_Query(kActorMcCoy, kClueCarColorAndMake)) {
-						cluesFound += 2;
-					}
-					if (Actor_Clue_Query(kActorMcCoy, kCluePartialLicenseNumber)) {
-						cluesFound += 2;
-					}
-					if ( cluesFound > 2
-					&& !Actor_Clue_Query(kActorMcCoy, kClueCar)
-					) {
-						Actor_Voice_Over(510, kActorVoiceOver);
-						Actor_Clue_Acquire(kActorMcCoy, kClueCar, false, -1);
-						Game_Flag_Set(kFlagCarFound);
-						// Made it so McCoy only gets the car identity clue if he was told by Dino how to identify the car by using the vehicle identification number.
-						if (Game_Flag_Query(kFlagKleinCarIdentityTalk)) {
-							Actor_Voice_Over(520, kActorVoiceOver);
-							Actor_Voice_Over(530, kActorVoiceOver);
-							Actor_Voice_Over(540, kActorVoiceOver);
-							Scene_2D_Region_Remove(1);
-						}
 #if !BLADERUNNER_ORIGINAL_BUGS
-						Scene_2D_Region_Remove(3);
-						Scene_2D_Region_Remove(4);
+					Scene_2D_Region_Remove(3);
+					Scene_2D_Region_Remove(4);
 #endif // !BLADERUNNER_ORIGINAL_BUGS
-					} else {
-						Actor_Says(kActorMcCoy, 8525, 12); //00-8525.AUD	Hmph.
-						Actor_Says(kActorMcCoy, 8524, 13); //00-8524.AUD	That's a washout.
-					}
+				} else {
+					Actor_Says(kActorMcCoy, 8525, 12); //00-8525.AUD	Hmph.
+					Actor_Says(kActorMcCoy, 8524, 13); //00-8524.AUD	That's a washout.
 				}
 			} else {
 				int cluesFound = 0;

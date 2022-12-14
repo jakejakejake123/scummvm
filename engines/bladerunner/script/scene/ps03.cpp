@@ -98,7 +98,6 @@ bool SceneScriptPS03::ClickedOnExit(int exitId) {
 			Ambient_Sounds_Remove_All_Non_Looping_Sounds(true);
 			Ambient_Sounds_Remove_All_Looping_Sounds(1u);
 			Set_Enter(kSetPS02, kScenePS02);
-			Game_Flag_Reset(kFlagMcCoyAtPS03);
 			if (Global_Variable_Query(kVariableChapter) < 4) {
 				Actor_Set_Goal_Number(kActorGuzza, kGoalGuzzaLeftOffice);
 			}
@@ -138,10 +137,6 @@ void SceneScriptPS03::ActorChangedGoal(int actorId, int newGoal, int oldGoal, bo
 }
 
 void SceneScriptPS03::PlayerWalkedIn() {
-	if (!Game_Flag_Query(kFlagMcCoyAtPS03)) {
-		Game_Flag_Set(kFlagMcCoyAtPS03);
-		//return true;
-	}
 	//return false;
 }
 

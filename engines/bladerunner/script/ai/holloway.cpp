@@ -139,7 +139,15 @@ bool AIScriptHolloway::GoalChanged(int currentGoalNumber, int newGoalNumber) {
 
 	case kGoalHollowayApproachMcCoy:
 		Scene_Exits_Disable();
+		if (_vm->_cutContent) {
+			Actor_Face_Actor(kActorHolloway, kActorDektora, true);
+			Actor_Face_Actor(kActorDektora, kActorMcCoy, true);
+			Actor_Face_Actor(kActorMcCoy, kActorHolloway, true);
+		}
 		Actor_Says(kActorHolloway, 20, kAnimationModeTalk);
+		if (_vm->_cutContent) {
+			Actor_Says(kActorDektora, 1480, -1); //03-1480.AUD	Yes.
+		}
 		Actor_Face_Actor(kActorHolloway, kActorMcCoy, true);
 		if (Player_Query_Combat_Mode()) {
 			Actor_Set_Goal_Number(kActorHolloway, kGoalHollowayKnockOutMcCoy);

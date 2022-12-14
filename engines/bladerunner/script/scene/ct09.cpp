@@ -128,26 +128,32 @@ bool SceneScriptCT09::ClickedOnActor(int actorId) {
 					if (!Game_Flag_Query(kFlagCT09LeonInterrupted)
 					|| Game_Flag_Query(kFlagBellRung)) {
 						Actor_Says(kActorDeskClerk, 110, 15); //27-0110.AUD	Mister, you don't want to know. It'd take a Level Four suit just to put a key in the door. 
-						Actor_Says(kActorMcCoy, 3910, 14); //00-3910.AUD	You’re lying. 
-						if (Player_Query_Agenda() != kPlayerAgendaSurly 
-						&& Player_Query_Agenda() != kPlayerAgendaErratic) {
-							Actor_Says(kActorMcCoy, 6985, 16); //00-6985.AUD	Got the straight scoop for me or what?			
-							Actor_Says(kActorDeskClerk, 280, 14); //27-0280.AUD	You seem to think I care.
-							Actor_Says(kActorMcCoy, 5075, 13); //00-5075.AUD	Hey, pal.
-							Game_Flag_Set(kFlagCT09DeskClerkTalk2);
-						} else {
-							Actor_Says(kActorMcCoy, 8519, 14);//00-8519.AUD	What do you say we dish each other the straight goods.
-							Actor_Says(kActorDeskClerk, 300, 13); //27-0300.AUD	Okay, okay! 
-							Actor_Says(kActorDeskClerk, 290, 15); //27-0290.AUD	So I lied. Cause you won't like what I heard, that's why—
-							Actor_Says(kActorMcCoy, 6985, 16); //00-6985.AUD	Got the straight scoop for me or what?
-							Actor_Says(kActorDeskClerk, 260, 14); //27-0260.AUD	If I tell you this, will you promise to go our separate ways?
-							Actor_Says(kActorMcCoy, 1025, 13); //00-1025.AUD	Absolutely.
+						if (Player_Query_Agenda() != kPlayerAgendaPolite) {
+							Actor_Says(kActorMcCoy, 3910, 14); //00-3910.AUD	You’re lying. 
 							Delay(1000);
-							Actor_Says(kActorDeskClerk, 120, 13); //27-0120.AUD	Used to store all the booty the tenants left behind in there.
-							Actor_Says(kActorDeskClerk, 130, 14);  //27-0130.AUD	My boss sold everything to a Mongolian guy last month
-							Actor_Says(kActorMcCoy, 625, 13); //00-0625.AUD	So, now there's nothing in there.
-							Actor_Says(kActorDeskClerk, 140, 13); //27-0140.AUD	Rumor has it the boss wants to rent it out. What a dump.
-							Actor_Says(kActorDeskClerk, 150, 15); //27-0150.AUD	Maybe if we paid you, someone would actually want to stay there. (laughs)
+							if (Player_Query_Agenda() != kPlayerAgendaSurly 
+							&& Player_Query_Agenda() != kPlayerAgendaErratic) {
+								Actor_Says(kActorMcCoy, 6985, 16); //00-6985.AUD	Got the straight scoop for me or what?			
+								Actor_Says(kActorDeskClerk, 280, 14); //27-0280.AUD	You seem to think I care.
+								Actor_Says(kActorMcCoy, 5075, 13); //00-5075.AUD	Hey, pal.
+								Game_Flag_Set(kFlagCT09DeskClerkTalk2);
+							} else {
+								Actor_Says(kActorMcCoy, 8519, 14);//00-8519.AUD	What do you say we dish each other the straight goods.
+								Actor_Says(kActorDeskClerk, 300, 13); //27-0300.AUD	Okay, okay! 
+								Actor_Says(kActorDeskClerk, 290, 15); //27-0290.AUD	So I lied. Cause you won't like what I heard, that's why—
+								Actor_Says(kActorMcCoy, 6985, 16); //00-6985.AUD	Got the straight scoop for me or what?
+								Actor_Says(kActorDeskClerk, 260, 14); //27-0260.AUD	If I tell you this, will you promise to go our separate ways?
+								Actor_Says(kActorMcCoy, 1025, 13); //00-1025.AUD	Absolutely.
+								Delay(1000);
+								Actor_Says(kActorDeskClerk, 120, 13); //27-0120.AUD	Used to store all the booty the tenants left behind in there.
+								Actor_Says(kActorDeskClerk, 130, 14);  //27-0130.AUD	My boss sold everything to a Mongolian guy last month
+								Actor_Says(kActorMcCoy, 625, 13); //00-0625.AUD	So, now there's nothing in there.
+								Actor_Says(kActorDeskClerk, 140, 13); //27-0140.AUD	Rumor has it the boss wants to rent it out. What a dump.
+								Actor_Says(kActorDeskClerk, 150, 15); //27-0150.AUD	Maybe if we paid you, someone would actually want to stay there. (laughs)
+								Game_Flag_Set(kFlagCT09DeskClerkTalk2);
+							}
+						} else {
+							Actor_Says(kActorMcCoy, 7835, 13); //00-7835.AUD	Is that so?
 							Game_Flag_Set(kFlagCT09DeskClerkTalk2);
 						}
 					} else { 	
@@ -167,7 +173,10 @@ bool SceneScriptCT09::ClickedOnActor(int actorId) {
 							Actor_Says(kActorMcCoy, 660, 14); //00-0660.AUD	You seen any suspicious types around here lately?
 							Actor_Says(kActorDeskClerk, 230, 13); //27-0230.AUD	Hey, rest up them dogs right down in the lobby here.
 							Actor_Says(kActorDeskClerk, 240, 15); //27-0240.AUD	I assure you. You'll see a lot of fine people strolling through
-							Actor_Says(kActorMcCoy, 3140, 16); //00-3140.AUD	Thanks.
+							if (Player_Query_Agenda() != kPlayerAgendaSurly 
+							&& Player_Query_Agenda() != kPlayerAgendaErratic) {
+								Actor_Says(kActorMcCoy, 3140, 16); //00-3140.AUD	Thanks.
+							}
 							Player_Gains_Control();
 						} else if (Game_Flag_Query(kFlagBellRung)
 						&& Game_Flag_Query(kFlagCT09LeonInterrupted)) {
@@ -292,10 +301,10 @@ void SceneScriptCT09::PlayerWalkedIn() {
 			Actor_Says(kActorMcCoy, 600, 17); //00-0600.AUD	He looked familiar.
 			Actor_Says(kActorDeskClerk, 80, 14);
 			if (_vm->_cutContent) {
-				if (Player_Query_Agenda() != kPlayerAgendaPolite) {
+				if (Player_Query_Agenda() == kPlayerAgendaPolite) {
 					Actor_Says(kActorMcCoy, 605, 13); //00-0605.AUD	“To Protect and to Serve.”
 				} else {
-					Delay(2000);
+					Delay(1000);
 				}
 			} else {
 				Actor_Says(kActorMcCoy, 605, 13); //00-0605.AUD	“To Protect and to Serve.”
@@ -328,9 +337,12 @@ void SceneScriptCT09::PlayerWalkedIn() {
 					Actor_Says(kActorMcCoy, 595, 14);
 					Actor_Says(kActorDeskClerk, 60, 13);
 					Actor_Modify_Friendliness_To_Other(kActorDeskClerk, kActorMcCoy, -1);
+				} else if (Player_Query_Agenda() == kPlayerAgendaPolite) { 
+					Delay(1000);
+					Actor_Says(kActorMcCoy, 2305, 13); //00-2305.AUD	I’m sorry.
 				} else {
 					Delay(2000);
-					Actor_Says(kActorMcCoy, 2305, 13); //00-2305.AUD	I’m sorry.
+					Actor_Says(kActorDeskClerk, 60, 13);
 				}
 			} else {
 				Actor_Face_Actor(kActorMcCoy, kActorDeskClerk, true);

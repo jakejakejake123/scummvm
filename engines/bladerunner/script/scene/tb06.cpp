@@ -267,7 +267,7 @@ void SceneScriptTB06::PlayerWalkedIn() {
 				if (Player_Query_Agenda() == kPlayerAgendaSurly 
 				|| Player_Query_Agenda() == kPlayerAgendaErratic) {
 					Actor_Says(kActorMcCoy, 6985, 16); //00-6985.AUD	Got the straight scoop for me or what?
-					Delay(2000);
+					Delay(1500);
 					Actor_Says(kActorPhotographer, 50, kAnimationModeTalk); //37-0050.AUD	Yeah, I dug up a couple of leads, let me clue you in.
 					Actor_Says(kActorMcCoy, 6990, 18); //00-6990.AUD	Enlighten me.
 					Actor_Says(kActorPhotographer, 90, kAnimationModeTalk); //37-0090.AUD	Gaff said you didn't need to hear this but I guess you deserve to know.
@@ -298,13 +298,17 @@ void SceneScriptTB06::PlayerWalkedIn() {
 					Delay(1200);
 					Item_Pickup_Spin_Effect(kModelAnimationAmmoType00, 310, 262);
 					Delay(1000);
+					Actor_Face_Heading(kActorMcCoy, 240, true);
 					Actor_Voice_Over(4190, kActorVoiceOver); //99-4190.AUD	Where have I seen that before?
+					Actor_Change_Animation_Mode(kActorMcCoy, 23);
 					Delay(1200);
 					Actor_Says(kActorMcCoy, 5690, -1); //00-5690.AUD	Huh?
 					Delay(1000);
 					Actor_Says(kActorMcCoy, 8705, 19); //00-8705.AUD	That's damn strange.
 					Actor_Clue_Acquire(kActorMcCoy, kCluePoliceWeaponUsed, true, kActorPhotographer);	
 					Delay(1000);
+					Actor_Face_Actor(kActorMcCoy, kActorPhotographer, true);
+					Actor_Face_Actor(kActorPhotographer, kActorMcCoy, true);
 					Actor_Says(kActorMcCoy, 4130, 18); //00-4130.AUD	Anything else?
 					Actor_Says(kActorPhotographer, 70, kAnimationModeTalk); //37-0070.AUD	Zero that would interest you, detective.
 					AI_Movement_Track_Unpause(kActorPhotographer);

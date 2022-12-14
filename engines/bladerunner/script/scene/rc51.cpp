@@ -67,7 +67,11 @@ void SceneScriptRC51::SceneLoaded() {
 		Item_Add_To_World(kItemCandy, kModelAnimationCandy, kSetRC02_RC51, 67.28f, -1193.38f, 108011.27f, 0, 6, 6, false, true, false, true);
 	}
 	if (!Game_Flag_Query(kFlagRC51ToyDogTaken)) {
-		Item_Add_To_World(kItemToyDog, kModelAnimationToyDog, kSetRC02_RC51, -69.65f, -1238.89f, 107995.24f, 256, 18, 18, false, true, false, true);
+		if (_vm->_cutContent) {
+			Item_Add_To_World(kItemToyDog, kModelAnimationToyDog, kSetRC02_RC51, 17.43f, -1238.71f, 108002.29f, 256, 18, 18, false, true, false, true);
+		} else {
+			Item_Add_To_World(kItemToyDog, kModelAnimationToyDog, kSetRC02_RC51, -69.65f, -1238.89f, 107995.24f, 256, 18, 18, false, true, false, true);
+		}
 	}
 }
 
@@ -141,7 +145,11 @@ bool SceneScriptRC51::ClickedOnItem(int itemId, bool a2) {
 				Actor_Clue_Acquire(kActorMcCoy, kClueToyDog, true, -1);
 			}
 			Item_Remove_From_World(kItemToyDog);
-			Item_Pickup_Spin_Effect(kModelAnimationToyDog, 55, 376);
+			if (_vm->_cutContent) {
+				Item_Pickup_Spin_Effect(kModelAnimationToyDog, 306, 357);
+			} else {
+				Item_Pickup_Spin_Effect(kModelAnimationToyDog, 55, 376);
+			}
 			Actor_Says(kActorMcCoy, 8740, 3);
 			Game_Flag_Set(kFlagRC51ToyDogTaken);
 			return true;

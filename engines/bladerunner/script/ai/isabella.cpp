@@ -95,9 +95,10 @@ void AIScriptIsabella::ClickedByPlayer() {
 						Actor_Face_Actor(kActorIsabella, kActorMurray, true);
 						Actor_Face_Actor(kActorMurray, kActorIsabella, true);
 						Actor_Says(kActorMurray, 260, kAnimationModeTalk); //31-0260.AUD	Spit it out, woman! McCoy doesn't have all day!
-						Delay (1000);
 						Actor_Face_Actor(kActorIsabella, kActorMcCoy, true);
 						Actor_Face_Actor(kActorMcCoy, kActorIsabella, true);
+						Delay (2000);
+						Actor_Says(kActorMcCoy, 8590, 13);  // Not the talkative type
 					}					
 					if (Player_Query_Agenda() == kPlayerAgendaSurly 
 					|| Player_Query_Agenda() == kPlayerAgendaErratic) {
@@ -116,7 +117,6 @@ void AIScriptIsabella::ClickedByPlayer() {
 						}
 						Actor_Says(kActorIsabella, 300, kAnimationModeTalk); //59-0300.AUD	Short, real short. Bad clothes, colors way too bright. Funny bow tie.
 						Actor_Clue_Acquire(kActorMcCoy, kClueStolenCheese, false, kActorIsabella);
-						CDB_Set_Crime(kClueStolenCheese, kCrimeCheeseTheft);
 						if (Actor_Query_Is_In_Current_Set(kActorGordo)) {
 							Actor_Face_Actor(kActorMcCoy, kActorGordo, true);
 							Delay(1500);
@@ -146,7 +146,7 @@ void AIScriptIsabella::ClickedByPlayer() {
 								Actor_Face_Actor(kActorIsabella, kActorGordo, true);
 								Actor_Says(kActorGordo, 1360, 11); //02-1360.AUD	Clovis… well, he’s been getting sick. He can’t keep anything down.
 								Actor_Says(kActorGordo, 1370, 13); //02-1370.AUD	I thought… maybe something a little different to eat.
-								if (Game_Flag_Query(kFlagMcCoyIsHelpingReplicants)) {
+								if (Actor_Query_Friendliness_To_Other(kActorClovis, kActorMcCoy) > 50) {
 									Actor_Says(kActorGordo, 6605, 15); //00-6605.AUD	He’s dying, isn’t he?
 									Actor_Says(kActorGordo, 1380, 16); //02-1380.AUD	It’s the way of all flesh, baby. Just the issue of when that’s got us concerned.
 								}

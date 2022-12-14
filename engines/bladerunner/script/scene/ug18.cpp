@@ -53,7 +53,6 @@ enum kUG18StateOfGuzzaCorpse {
 
 void SceneScriptUG18::InitializeScene() {
 	Setup_Scene_Information(-684.71f, 0.0f, 171.59f, 0);
-	Game_Flag_Reset(kFlagUG13toUG18);
 
 	Scene_Exit_Add_2D_Exit(0, 0, 158, 100, 340, 3);
 	if (_vm->_cutContent) {

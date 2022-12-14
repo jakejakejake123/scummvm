@@ -205,7 +205,7 @@ void SceneScriptKP05::PlayerWalkedIn() {
 						Actor_Says(kActorSteele, 560, 15); //01-0560.AUD	Well, I guess that’s why you’re there and I’m here.
 					}
 				} else {
-					Actor_Says(kActorSteele, 330, 58); //01-0330.AUD	Nobody gives a damn.
+					Actor_Says(kActorSteele, 330, 15); //01-0330.AUD	Nobody gives a damn.
 				}
 				Actor_Says(kActorSteele, 570, 16); //01-0570.AUD	Now, why don’t you explain to me what you’re doing out here, Slim.
 				Actor_Says(kActorSteele, 580, 13); //01-0580.AUD	Maybe you can ease my suspicious mind.

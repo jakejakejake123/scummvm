@@ -295,25 +295,23 @@ void AIScriptLucy::Retired(int byActorId) {
 			// This was done because he has no death animation so this seemed to be a reasonable solution.
 			if (_vm->_cutContent) {
 				if (Actor_Query_In_Set(kActorRunciter, kSetKP07)) {
-					if (Actor_Query_In_Set(kActorRunciter, kSetKP07)) {
-						Loop_Actor_Walk_To_XYZ(kActorRunciter, -12.0f, -41.58f, 72.0f, 0, true, false, false);
-						Actor_Put_In_Set(kActorRunciter, kSceneKP06);
+					Loop_Actor_Walk_To_XYZ(kActorRunciter, -12.0f, -41.58f, 72.0f, 0, true, false, false);
+					Actor_Put_In_Set(kActorRunciter, kSceneKP06);
+				}
+				if (Actor_Query_In_Set(kActorCrazylegs, kSetKP07)) {
+					Loop_Actor_Walk_To_XYZ(kActorCrazylegs, -12.0f, -41.58f, 72.0f, 0, true, false, false);
+					Actor_Put_In_Set(kActorCrazylegs, kSceneKP06);	
+				}
+				if (Game_Flag_Query(kFlagRunciterIsReplicant)) {
+					if (Actor_Query_Goal_Number(kActorRunciter) < kGoalRunciterDead) {
+						Delay(500);
+						Sound_Play(kSfxSMCAL3, 100, 0, 0, 50);
 					}
-					if (Actor_Query_In_Set(kActorCrazylegs, kSetKP07)) {
-						Loop_Actor_Walk_To_XYZ(kActorCrazylegs, -12.0f, -41.58f, 72.0f, 0, true, false, false);
-						Actor_Put_In_Set(kActorCrazylegs, kSceneKP06);	
-					}
-					if (Game_Flag_Query(kFlagRunciterIsReplicant)) {
-						if (Actor_Query_Goal_Number(kActorRunciter) < kGoalRunciterDead) {
-							Delay(500);
-							Sound_Play(kSfxSMCAL3, 100, 0, 0, 50);
-						}
-					}
-					if (Game_Flag_Query(kFlagCrazylegsIsReplicant)) {
-						if (!Game_Flag_Query(kFlagCrazylegsDead)) {
-							Delay(500);
-							Sound_Play(kSfxSMCAL3, 100, 0, 0, 50);
-						}
+				}
+				if (Game_Flag_Query(kFlagCrazylegsIsReplicant)) {
+					if (!Game_Flag_Query(kFlagCrazylegsDead)) {
+						Delay(500);
+						Sound_Play(kSfxSMCAL3, 100, 0, 0, 50);
 					}
 				}
 				Delay(2000);
@@ -403,16 +401,20 @@ bool AIScriptLucy::GoalChanged(int currentGoalNumber, int newGoalNumber) {
 				}
 			}
 		} else {
-			int rnd = Random_Query(0, 3);
-
-			if (rnd == 0) {
-				Actor_Set_Goal_Number(kActorLucy, kGoalLucyGoToFreeSlotGAG);
-			} else if (rnd == 1) {
-				Actor_Set_Goal_Number(kActorLucy, kGoalLucyGoToFreeSlotGAHJ);
-			} else if (Player_Query_Current_Scene() == kSceneHF03) {
-				Actor_Set_Goal_Number(kActorLucy, kGoalLucyGoToFreeSlotGAG);
-			} else {
+			if (_vm->_cutContent) {
 				Actor_Set_Goal_Number(kActorLucy, kGoalLucyGoToHF03);
+			} else {
+				int rnd = Random_Query(0, 3);
+
+				if (rnd == 0) {
+					Actor_Set_Goal_Number(kActorLucy, kGoalLucyGoToFreeSlotGAG);
+				} else if (rnd == 1) {
+					Actor_Set_Goal_Number(kActorLucy, kGoalLucyGoToFreeSlotGAHJ);
+				} else if (Player_Query_Current_Scene() == kSceneHF03) {
+					Actor_Set_Goal_Number(kActorLucy, kGoalLucyGoToFreeSlotGAG);
+				} else {
+					Actor_Set_Goal_Number(kActorLucy, kGoalLucyGoToHF03);
+				}
 			}
 		}
 		break;
@@ -499,17 +501,25 @@ bool AIScriptLucy::GoalChanged(int currentGoalNumber, int newGoalNumber) {
 		Player_Loses_Control();
 		// Added in a line and made it so Lucy approaches McCoy when he talks to her in the maze.
 		if (_vm->_cutContent) {
-			if (Game_Flag_Query(kFlagMcCoyIsHelpingReplicants)) {
-				Actor_Says(kActorMcCoy, 1695, 16); //00-1695.AUD	Lucy? Come on out. I’m not the hunter anymore.
-			}
+			Actor_Says(kActorMcCoy, 1695, 16); //00-1695.AUD	Lucy? Come on out. I’m not the hunter anymore.
 		}
-		Actor_Says(kActorMcCoy, 1700, 16); //00-1700.AUD	I put my gun away.
+		if (_vm->_cutContent) {
+			if (Player_Query_Agenda() != kPlayerAgendaPolite
+			&& !Game_Flag_Query(kFlagMcCoyIsHelpingReplicants)
+			&& Global_Variable_Query(kVariableAffectionTowards) != kAffectionTowardsLucy) {
+				Actor_Says(kActorMcCoy, 1700, 16); //00-1700.AUD	I put my gun away.
+			}
+		} else {
+			Actor_Says(kActorMcCoy, 1700, 16); //00-1700.AUD	I put my gun away.
+		}
 		if (_vm->_cutContent) {
 			Actor_Modify_Friendliness_To_Other(kActorClovis, kActorMcCoy, 2);
 			Actor_Modify_Friendliness_To_Other(kActorSteele, kActorMcCoy, -2);
 			Actor_Modify_Friendliness_To_Other(kActorGuzza, kActorMcCoy, -2);
 			Game_Flag_Set(kFlagMcCoyIsHelpingReplicants);
-			Actor_Clue_Acquire(kActorMcCoy, kClueMcCoyHelpedLucy, true, kActorLucy);
+			if (Global_Variable_Query(kVariableHollowayArrest) == 3) {
+				Actor_Clue_Acquire(kActorMcCoy, kClueMcCoyHelpedLucy, true, kActorLucy);
+			}
 			if (Global_Variable_Query(kVariableAffectionTowards) == kAffectionTowardsNone
 			) {
 				Global_Variable_Set(kVariableAffectionTowards, kAffectionTowardsLucy);
@@ -521,18 +531,19 @@ bool AIScriptLucy::GoalChanged(int currentGoalNumber, int newGoalNumber) {
 		}
 		Actor_Face_Actor(kActorLucy, kActorMcCoy, true);
 		Actor_Face_Actor(kActorMcCoy, kActorLucy, true);
-		Actor_Says(kActorLucy, 350, 13);
 		if (_vm->_cutContent) {
-			if (Game_Flag_Query(kFlagMcCoyIsHelpingReplicants)) {
+			if (Global_Variable_Query(kVariableHollowayArrest) == 3) {
+				Actor_Says(kActorLucy, 350, 13);
 				Actor_Says(kActorMcCoy, 1705, 13); //00-1705.AUD	I have to deal with her just to keep up appearances. I can be more effective that way. 
 				Actor_Says(kActorLucy, 360, 13);
+				Actor_Says(kActorMcCoy, 1710, 13);
 			}
 		} else {
+			Actor_Says(kActorLucy, 350, 13);
 			Actor_Says(kActorMcCoy, 1705, 13);
 			Actor_Says(kActorLucy, 360, 13);
+			Actor_Says(kActorMcCoy, 1710, 13);
 		}
-		Actor_Says(kActorMcCoy, 1710, 13);
-
 		if (Global_Variable_Query(kVariableAffectionTowards) == kAffectionTowardsLucy) { // cut feature? if this is set lucy will not run into hf04
 			Actor_Says(kActorLucy, 940, 13);
 			if (_vm->_cutContent) {

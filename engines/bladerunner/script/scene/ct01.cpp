@@ -236,14 +236,13 @@ bool SceneScriptCT01::ClickedOnActor(int actorId) {
 							Actor_Says(kActorMcCoy, 330, 17); //00-0330.AUD	Hey, Howie, what's cooking?
 							Actor_Says(kActorHowieLee, 130, 13); //28-0130.AUD	Nothing now, McCoy.
 							Actor_Says(kActorHowieLee, 140, 14); //28-0140.AUD	Got to find a new chef thanks to you.
-							Actor_Says(kActorMcCoy, 315, 16); //00-0315.AUD	Can't help you there, Howie.
+							Actor_Says(kActorMcCoy, 1970, 13); //00-1970.AUD	You should start thinking about the company you keep.
+							Actor_Says(kActorHowieLee, 220, 14); //28-0220.AUD	Fine. But Howie do you favors no more.	
 						} else {
 							Game_Flag_Set(kFlagCT01TalkToHowieAboutDeadZuben);
 							Actor_Says(kActorMcCoy, 4260, 17);//00-4260.AUD	You've been helping Reps, pal?
 							Actor_Says(kActorHowieLee, 210, 13);//28-0210.AUD	You sharp one, McCoy. I try protect you, but you want truth.
 							Actor_Says(kActorMcCoy, 4420, 17);//00-4420.AUD	Contacting business with Reps is against the Law.
-							Actor_Says(kActorMcCoy, 1970, 13); //00-1970.AUD	You should start thinking about the company you keep.
-							Actor_Says(kActorHowieLee, 220, 14); //28-0220.AUD	Fine. But Howie do you favors no more.	
 							Actor_Says(kActorMcCoy, 3095, 15); //00-3095.AUD	Now we’re gonna take a little ride downtown.
 							Music_Stop(1u);
 							Delay (1000);
@@ -265,7 +264,14 @@ bool SceneScriptCT01::ClickedOnActor(int actorId) {
 					&& Actor_Query_Friendliness_To_Other(kActorHowieLee, kActorMcCoy) > 59) {
 						Actor_Says(kActorMcCoy, 330, 13);
 						Actor_Says(kActorHowieLee, 160, 15);  // real busy tonight
-					} else if (Game_Flag_Query(kFlagCT01ZubenGone)) {
+					} else if (Game_Flag_Query(kFlagCT01ZubenGone)
+					&& Actor_Query_Friendliness_To_Other(kActorHowieLee, kActorMcCoy) < 60) {
+						Actor_Says(kActorMcCoy, 330, 17); //00-0330.AUD	Hey, Howie, what's cooking?
+						Actor_Says(kActorHowieLee, 130, 13); //28-0130.AUD	Nothing now, McCoy.
+						Actor_Says(kActorHowieLee, 140, 14); //28-0140.AUD	Got to find a new chef thanks to you.
+						Actor_Says(kActorMcCoy, 315, 16); //00-0315.AUD	Can't help you there, Howie.
+					} else if (Game_Flag_Query(kFlagCT01ZubenGone)
+					&& Actor_Query_Friendliness_To_Other(kActorHowieLee, kActorMcCoy) > 59) {
 						Actor_Says(kActorMcCoy, 310, 11);
 						Actor_Says(kActorHowieLee, 10, 16);
 					}
@@ -375,8 +381,7 @@ bool SceneScriptCT01::ClickedOnActor(int actorId) {
 					Actor_Says(kActorGordo, 300, 30);//02-0300.AUD	You want an autograph?
 					Actor_Says(kActorGordo, 310, 30);//02-0310.AUD	I know you ain’t heard me yet
 					Actor_Says(kActorGordo, 320, 30);//02-0320.AUD	but Gordo Frizz’s autograph’s gonna be worth a pile of chinyen some day.
-					if (Player_Query_Agenda() == kPlayerAgendaSurly 
-					|| Player_Query_Agenda() == kPlayerAgendaErratic) {
+					if (Player_Query_Agenda() != kPlayerAgendaPolite) {
 						Actor_Says(kActorMcCoy, 3215, 18); //00-3215.AUD	I’ll hold my breath.
 						Actor_Says(kActorMcCoy, 8920, 14); //00-8920.AUD	I gotta ask you a question.
 						Actor_Says(kActorGordo, 20, 30); //02-0020.AUD	Sorry, my man. I just don't got the time.
@@ -388,6 +393,7 @@ bool SceneScriptCT01::ClickedOnActor(int actorId) {
 						Player_Loses_Control();
 					} else {
 						Actor_Says(kActorMcCoy, 4940, 13); //00-4940.AUD	Okay, let's have it.
+						Game_Flag_Set(kFlagGordoReceivedAutograph);
 						Actor_Change_Animation_Mode(kActorMcCoy, 23);
 						Delay(2000);
 						if (Player_Query_Agenda() == kPlayerAgendaPolite) {
@@ -469,6 +475,15 @@ bool SceneScriptCT01::ClickedOnExit(int exitId) {
 		if (!Loop_Actor_Walk_To_XYZ(kActorMcCoy, -314.0f, -6.5f, 326.0f, 0, true, false, false)) {
 			Loop_Actor_Walk_To_XYZ(kActorMcCoy, -330.0f, -6.5f, 221.0f, 0, false, true, false);
 			Loop_Actor_Walk_To_XYZ(kActorMcCoy, -530.0f, -6.5f, 241.0f, 0, false, true, false);
+			if (_vm->_cutContent) {
+				if (Global_Variable_Query(kVariableChapter) == 1 
+				&& Game_Flag_Query(kFlagCT01TalkToHowieAfterZubenMissing) 
+				&& !Actor_Clue_Query(kActorMcCoy, kClueMcCoyLetZubenEscape)
+				&& !Actor_Clue_Query(kActorMcCoy, kClueMcCoyRetiredZuben)
+				&& Actor_Query_Goal_Number(kActorZuben) < kGoalZubenGone) {
+					Actor_Set_Goal_Number(kActorZuben, kGoalZubenFled);
+				}
+			}
 			Game_Flag_Reset(kFlagMcCoyInChinaTown);
 			Game_Flag_Reset(kFlagMcCoyInRunciters);
 			Game_Flag_Reset(kFlagMcCoyInMcCoyApartment);
@@ -792,8 +807,53 @@ void SceneScriptCT01::dialogueWithHowieLee() {
 		} else {
 			Actor_Says(kActorMcCoy, 265, 11);
 		}
-		Actor_Says(kActorHowieLee, 20, 14); //28-0020.AUD	Nah. All gaijin look alike to old man.
-		if (!_vm->_cutContent) {
+		if (_vm->_cutContent) {
+			if (Actor_Query_Friendliness_To_Other(kActorHowieLee, kActorMcCoy) < 60) {
+				Actor_Says(kActorHowieLee, 160, 14); //28-0160.AUD	I take care of you soon, McCoy. Real busy tonight.
+			} else {
+				Actor_Says(kActorHowieLee, 20, 14); //28-0020.AUD	Nah. All gaijin look alike to old man.
+				if (Actor_Query_Is_In_Current_Set(kActorZuben)) {
+					if (Actor_Query_Goal_Number(kActorZuben) == kGoalZubenDefault) {
+						Actor_Face_Actor(kActorHowieLee, kActorZuben, true);
+						Actor_Says(kActorHowieLee, 120, 14);
+						Actor_Face_Actor(kActorZuben, kActorHowieLee, true);
+						Actor_Says(kActorZuben, 40, 18);
+						Actor_Face_Heading(kActorZuben, 103, false);
+						Actor_Face_Actor(kActorHowieLee, kActorMcCoy, true);
+						if (Actor_Query_Is_In_Current_Set(kActorGordo)) {
+							//Removed friendliness decrement for Zuben and Gordo for same reasons that I mentioned above.
+							Actor_Clue_Acquire(kActorGordo, kClueMcCoysDescription, true, kActorMcCoy);
+						}
+					}
+				}
+			}
+		}
+		break;
+
+	case 450: // Lucy	
+		Actor_Says(kActorMcCoy, 385, 13); //00-0385.AUD	I'm looking for a girl about 14 years old with pink hair. You seen her?
+		if (_vm->_cutContent) {
+			if (Actor_Query_Friendliness_To_Other(kActorHowieLee, kActorMcCoy) < 60) {
+				Actor_Says(kActorHowieLee, 160, 14); //28-0160.AUD	I take care of you soon, McCoy. Real busy tonight.
+			} else {
+				Actor_Says(kActorHowieLee, 20, 14); //28-0020.AUD	Nah. All gaijin look alike to old man.
+				if (Actor_Query_Is_In_Current_Set(kActorZuben)) {
+					if (Actor_Query_Goal_Number(kActorZuben) == kGoalZubenDefault) {
+						Actor_Face_Actor(kActorHowieLee, kActorZuben, true);
+						Actor_Says(kActorHowieLee, 120, 14);
+						Actor_Face_Actor(kActorZuben, kActorHowieLee, true);
+						Actor_Says(kActorZuben, 40, 18);
+						Actor_Face_Heading(kActorZuben, 103, false);
+						Actor_Face_Actor(kActorHowieLee, kActorMcCoy, true);
+						if (Actor_Query_Is_In_Current_Set(kActorGordo)) {
+							//Removed friendliness decrement for Zuben and Gordo for same reasons that I mentioned above.
+							Actor_Clue_Acquire(kActorGordo, kClueMcCoysDescription, true, kActorMcCoy);
+						}
+					}
+				}
+			}
+		} else {
+			Actor_Says(kActorHowieLee, 20, 14); //28-0020.AUD	Nah. All gaijin look alike to old man.
 			if (Actor_Query_Is_In_Current_Set(kActorZuben)) {
 				if (Actor_Query_Goal_Number(kActorZuben) == kGoalZubenDefault) {
 					Actor_Face_Actor(kActorHowieLee, kActorZuben, true);
@@ -811,40 +871,43 @@ void SceneScriptCT01::dialogueWithHowieLee() {
 		}
 		break;
 
-	case 450: // Lucy	
-		Actor_Says(kActorMcCoy, 385, 13); //00-0385.AUD	I'm looking for a girl about 14 years old with pink hair. You seen her?
-		Actor_Says(kActorHowieLee, 20, 14); //28-0020.AUD	Nah. All gaijin look alike to old man.
-		if (Actor_Query_Is_In_Current_Set(kActorZuben)) {
-			if (Actor_Query_Goal_Number(kActorZuben) == kGoalZubenDefault) {
-				Actor_Face_Actor(kActorHowieLee, kActorZuben, true);
-				Actor_Says(kActorHowieLee, 120, 14);
-				Actor_Face_Actor(kActorZuben, kActorHowieLee, true);
-				Actor_Says(kActorZuben, 40, 18);
-				Actor_Face_Heading(kActorZuben, 103, false);
-				Actor_Face_Actor(kActorHowieLee, kActorMcCoy, true);
-				if (Actor_Query_Is_In_Current_Set(kActorGordo)) {
-					//Removed friendliness decrement for Zuben and Gordo for same reasons that I mentioned above.
-					Actor_Clue_Acquire(kActorGordo, kClueMcCoysDescription, true, kActorMcCoy);
-				}
-			}
-		}
-		break;
-
 	case 50: // RUNCITER CLUES
 		if (Actor_Clue_Query(kActorMcCoy, kClueChopstickWrapper)) {
-			Actor_Says(kActorMcCoy, 270, 11);
-			Actor_Says(kActorHowieLee, 30, 16); //28-0030.AUD	Could be. Chopstick come from Yoshi's restaurant supply.
-		} else {
-			Actor_Says(kActorMcCoy, 280, 11);
-			Actor_Says(kActorHowieLee, 40, 14); //28-0040.AUD	Yes sir. You do Howie a favor? Distribute all throughout police station?
 			if (_vm->_cutContent) {
-				if (Player_Query_Agenda() != kPlayerAgendaPolite) { 
-					Actor_Says(kActorMcCoy, 7815, 18); //00-7815.AUD	No.	
-					Actor_Modify_Friendliness_To_Other(kActorHowieLee, kActorMcCoy, -2);
+				Actor_Says(kActorMcCoy, 270, 23);
+			} else {
+				Actor_Says(kActorMcCoy, 270, 11);
+			}
+			if (_vm->_cutContent) {
+				if (Actor_Query_Friendliness_To_Other(kActorHowieLee, kActorMcCoy) < 60) {
+					Actor_Says(kActorHowieLee, 160, 14); //28-0160.AUD	I take care of you soon, McCoy. Real busy tonight.
 				} else {
-					Actor_Says(kActorMcCoy, 1025, kAnimationModeTalk); //00-1025.AUD	Absolutely.
-					Actor_Modify_Friendliness_To_Other(kActorHowieLee, kActorMcCoy, 2);
+					Actor_Says(kActorHowieLee, 30, 16); //28-0030.AUD	Could be. Chopstick come from Yoshi's restaurant supply.
 				}
+			} else {
+				Actor_Says(kActorHowieLee, 30, 16); //28-0030.AUD	Could be. Chopstick come from Yoshi's restaurant supply.
+			}
+		} else {
+			if (_vm->_cutContent) {
+				Actor_Says(kActorMcCoy, 280, 23);
+			} else {
+				Actor_Says(kActorMcCoy, 280, 11);
+			}
+			if (_vm->_cutContent) {
+				if (Actor_Query_Friendliness_To_Other(kActorHowieLee, kActorMcCoy) < 60) {
+					Actor_Says(kActorHowieLee, 160, 14); //28-0160.AUD	I take care of you soon, McCoy. Real busy tonight.
+				} else {
+					Actor_Says(kActorHowieLee, 40, 14); //28-0040.AUD	Yes sir. You do Howie a favor? Distribute all throughout police station?
+					if (Player_Query_Agenda() != kPlayerAgendaPolite) { 
+						Actor_Says(kActorMcCoy, 7815, 18); //00-7815.AUD	No.	
+						Actor_Modify_Friendliness_To_Other(kActorHowieLee, kActorMcCoy, -2);
+					} else {
+						Actor_Says(kActorMcCoy, 1025, kAnimationModeTalk); //00-1025.AUD	Absolutely.
+						Actor_Modify_Friendliness_To_Other(kActorHowieLee, kActorMcCoy, 2);
+					}
+				}
+			} else {
+				Actor_Says(kActorHowieLee, 40, 14); //28-0040.AUD	Yes sir. You do Howie a favor? Distribute all throughout police station?
 			}
 		}
 		Game_Flag_Set(kFlagCT01Evidence1Linked);
@@ -858,29 +921,41 @@ void SceneScriptCT01::dialogueWithHowieLee() {
 			} else {
 				Actor_Says(kActorMcCoy, 270, 11);
 			}
-			Actor_Says(kActorHowieLee, 40, 15); // You do Howie a favor? Distribute...
-			// TODO Possible YES/NO option for McCoy? -> and friendliness adjustment accordingly.
-			
-			//Altered code so depending on McCoys agenda he will either do Howie the favour or not and 
-			//their friendliness rating will be adjusted accordingly.
 			if (_vm->_cutContent) {
-				if (Player_Query_Agenda() != kPlayerAgendaPolite) { 
-					Actor_Says(kActorMcCoy, 7815, 18); //00-7815.AUD	No.
-					Actor_Modify_Friendliness_To_Other(kActorHowieLee, kActorMcCoy, -2);
+				if (Actor_Query_Friendliness_To_Other(kActorHowieLee, kActorMcCoy) < 60) {
+					Actor_Says(kActorHowieLee, 190, 14);	//28-0190.AUD	I look like I got time for chit-er chat-er?
 				} else {
-					Actor_Says(kActorMcCoy, 1025, kAnimationModeTalk); //00-1025.AUD	Absolutely.
-					Actor_Modify_Friendliness_To_Other(kActorHowieLee, kActorMcCoy, 2);
+					Actor_Says(kActorHowieLee, 40, 15); // You do Howie a favor? Distribute...
+					//Altered code so depending on McCoys agenda he will either do Howie the favour or not and 
+					//their friendliness rating will be adjusted accordingly.
+					if (Player_Query_Agenda() != kPlayerAgendaPolite) { 
+						Actor_Says(kActorMcCoy, 7815, 18); //00-7815.AUD	No.
+						Actor_Modify_Friendliness_To_Other(kActorHowieLee, kActorMcCoy, -2);
+					} else {
+						Actor_Says(kActorMcCoy, 1025, kAnimationModeTalk); //00-1025.AUD	Absolutely.
+						Actor_Modify_Friendliness_To_Other(kActorHowieLee, kActorMcCoy, 2);
+					}
 				}
 			} else {
+				Actor_Says(kActorHowieLee, 40, 15); // You do Howie a favor? Distribute...
+			}
+		} else {
 #if BLADERUNNER_ORIGINAL_BUGS
 			Actor_Says(kActorMcCoy, 270, 11);
 #else
 			Actor_Says(kActorMcCoy, 280, 11);
 #endif // BLADERUNNER_ORIGINAL_BUGS
-			Actor_Says(kActorHowieLee, 30, 14);
+			if (_vm->_cutContent) {
+				if (Actor_Query_Friendliness_To_Other(kActorHowieLee, kActorMcCoy) < 60) {
+					Actor_Says(kActorHowieLee, 190, 14);	//28-0190.AUD	I look like I got time for chit-er chat-er?
+				} else {
+					Actor_Says(kActorHowieLee, 30, 14);
+				}
+			} else {
+				Actor_Says(kActorHowieLee, 30, 14);
+				Actor_Modify_Friendliness_To_Other(kActorHowieLee, kActorMcCoy, 5);
+			}
 		}
-	}
-		Actor_Modify_Friendliness_To_Other(kActorHowieLee, kActorMcCoy, 5);
 		Game_Flag_Set(kFlagCT01Evidence2Linked);
 		break;
 
@@ -946,9 +1021,8 @@ void SceneScriptCT01::dialogueWithHowieLee() {
 		Actor_Says(kActorHowieLee, 110, 16);
 		//Added dialogue that plays if McCoys agenda is surly or erratic.
 		if (_vm->_cutContent) {
-			if  (Player_Query_Agenda() == kPlayerAgendaSurly 
-		    || Player_Query_Agenda() == kPlayerAgendaErratic) {  
-				Actor_Says(kActorMcCoy, 8519, 14);//00-8519.AUD	What do you say we dish each other the straight goods.
+			if (Player_Query_Agenda() != kPlayerAgendaPolite) {  
+				Actor_Says(kActorMcCoy, 2485, 19); //00-2485.AUD	I’ve a hard time believing that.
 				Actor_Says(kActorHowieLee, 200, 16); //28-0200.AUD	You call Howie liar? You find another place to eat lunch now [speaks Japanese]
 				Actor_Modify_Friendliness_To_Other(kActorHowieLee, kActorMcCoy, -2);
 			}

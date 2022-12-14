@@ -116,12 +116,14 @@ bool SceneScriptHC04::ClickedOnActor(int actorId) {
 	 				|| Actor_Clue_Query(kActorMcCoy, kClueKingstonKitchenBox1)
 					|| Actor_Clue_Query(kActorMcCoy, kClueSpecialIngredient)) {
 						if (Global_Variable_Query(kVariableChapter) < 4) {
-							if (Player_Query_Agenda() == kPlayerAgendaPolite) {
-								Actor_Says(kActorMcCoy, 1280, 23); //00-1280.AUD	McCoy, LPD. Mind if I ask you a couple of questions?
-							} else {
+							if (Player_Query_Agenda() != kPlayerAgendaPolite) {	
+								Actor_Says(kActorMcCoy, 4560, 23); //00-4560.AUD	McCoy, LPD.
 								Actor_Says(kActorMcCoy, 8920, 14); //00-8920.AUD	I gotta ask you a question.
+							} else {
+								Actor_Says(kActorMcCoy, 1280, 23); //00-1280.AUD	McCoy, LPD. Mind if I ask you a couple of questions?
+								Actor_Says(kActorIsabella, 20, kAnimationModeTalk);
 							}
-							Actor_Says(kActorIsabella, 20, kAnimationModeTalk);
+							
 						}
 					}
 				} else {
@@ -419,8 +421,12 @@ void SceneScriptHC04::dialogueWithIsabella() {
 				Actor_Says(kActorIsabella, 300, kAnimationModeTalk);
 				Actor_Says(kActorIsabella, 310, kAnimationModeTalk);
 				Actor_Says(kActorIsabella, 320, kAnimationModeTalk); 
-				Actor_Says(kActorMcCoy, 1395, kAnimationModeTalk); //00-1395.AUD	You're right. But I still think you ought to get yourself a different secret ingredient.
-				Actor_Says(kActorIsabella, 330, kAnimationModeTalk); //59-0330.AUD	You bet, mon. That cheese’s been nothing but trouble for Mama Isabella.
+				if (Player_Query_Agenda() == kPlayerAgendaPolite) {
+					Actor_Says(kActorMcCoy, 1395, kAnimationModeTalk); //00-1395.AUD	You're right. But I still think you ought to get yourself a different secret ingredient.
+					Actor_Says(kActorIsabella, 330, kAnimationModeTalk); //59-0330.AUD	You bet, mon. That cheese’s been nothing but trouble for Mama Isabella.
+				} else {
+					Actor_Says(kActorMcCoy, 7815, 13); //00-7815.AUD	No.
+				}
 				Actor_Clue_Acquire(kActorMcCoy, kClueStolenCheese, false, kActorIsabella);
 			}
 		} else {
@@ -447,14 +453,11 @@ void SceneScriptHC04::dialogueWithIsabella() {
 			Loop_Actor_Walk_To_XYZ(kActorMcCoy, -154.54, 0.31, -441.12, 0, true, false, false);
 			Actor_Face_Actor(kActorMcCoy, kActorIsabella, true);
 			Actor_Face_Actor(kActorIsabella, kActorMcCoy, true);
-			if (Player_Query_Agenda() == kPlayerAgendaSurly 
-			|| Player_Query_Agenda() == kPlayerAgendaErratic) {
-				Actor_Says(kActorMcCoy, 2980, 12); //00-2980.AUD	What the hell is that?
-			} else if (Player_Query_Agenda() == kPlayerAgendaPolite) {
+			if (Player_Query_Agenda() == kPlayerAgendaPolite) {
 				Actor_Says(kActorMcCoy, 1310, kAnimationModeTalk);
 				Actor_Modify_Friendliness_To_Other(kActorIsabella, kActorMcCoy, 2);
 			} else {
-				Actor_Says(kActorMcCoy, 8990, 14); //00-8990.AUD	What have you got there?
+				Actor_Says(kActorMcCoy, 8990, 12); //00-8990.AUD	What have you got there?
 			}
 		} else {
 			Actor_Says(kActorMcCoy, 1310, kAnimationModeTalk);
@@ -464,19 +467,21 @@ void SceneScriptHC04::dialogueWithIsabella() {
 		// receive a kingston kitchen box when you buy the stew.
 		Actor_Says(kActorIsabella, 340, kAnimationModeTalk); //59-0340.AUD	Fix you right up. Only 30 chinyen. It put a spring in your step, mon. The ladies they be loving you.
 		if (_vm->_cutContent) {
-			if (Player_Query_Agenda() == kPlayerAgendaSurly 
-			|| Player_Query_Agenda() == kPlayerAgendaErratic) {
+			if (Player_Query_Agenda() != kPlayerAgendaPolite) {
 				Delay(1000);
 				Actor_Says(kActorMcCoy, 8650, 14); //00-8650.AUD	What smells in there?
 				Actor_Says(kActorIsabella, 30, kAnimationModeTalk); //59-0030.AUD	All in special recipe. (laughs) But if I be telling you what's in it, you might be thinking twice about eating it.
 				Delay(2000);
 				Actor_Says(kActorMcCoy, 1325, 13); //00-1325.AUD	Uh... I'm not that hungry anyway.
 				Delay(1000);
-				Actor_Says(kActorMcCoy, 5685, 15); //00-5685.AUD	Triple-A you ain’t.
-				Actor_Says(kActorIsabella, 170, kAnimationModeTalk); //59-0170.AUD	Why you pick on Mama Isabella? I never do you no harm.
-				Actor_Modify_Friendliness_To_Other(kActorIsabella, kActorMcCoy, -2);
-				Delay(1000);
-			} else if (Player_Query_Agenda() == kPlayerAgendaPolite) {
+				if (Player_Query_Agenda() == kPlayerAgendaSurly 
+				|| Player_Query_Agenda() == kPlayerAgendaErratic) {
+					Actor_Says(kActorMcCoy, 5685, 15); //00-5685.AUD	Triple-A you ain’t.
+					Actor_Says(kActorIsabella, 170, kAnimationModeTalk); //59-0170.AUD	Why you pick on Mama Isabella? I never do you no harm.
+					Actor_Modify_Friendliness_To_Other(kActorIsabella, kActorMcCoy, -2);
+					Delay(1000);
+				}
+			} else {
 				Actor_Says(kActorMcCoy, 1320, kAnimationModeTalk); // 00-1320.AUD	Smells good. What is it?
 				Actor_Says(kActorIsabella, 30, kAnimationModeTalk); //59-0030.AUD	All in special recipe. (laughs) But if I be telling you what's in it, you might be thinking twice about eating it.
 				if (Global_Variable_Query(kVariableChinyen) >= 30
@@ -491,12 +496,6 @@ void SceneScriptHC04::dialogueWithIsabella() {
 				} else {
 					Actor_Says(kActorMcCoy, 1325, 13); //00-1325.AUD/Uh... I'm not that hungry anyway.
 				}
-			} else {
-				Delay(1000);
-				Actor_Says(kActorMcCoy, 8650, 14); //00-8650.AUD	What smells in there?
-				Actor_Says(kActorIsabella, 30, kAnimationModeTalk); //59-0030.AUD	All in special recipe. (laughs) But if I be telling you what's in it, you might be thinking twice about eating it.
-				Delay(2000);
-				Actor_Says(kActorMcCoy, 1325, 13); //00-1325.AUD	Uh... I'm not that hungry anyway.
 			}
 		}
 

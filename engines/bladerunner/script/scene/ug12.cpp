@@ -112,9 +112,6 @@ bool SceneScriptUG12::ClickedOnExit(int exitId) {
 				Ambient_Sounds_Remove_All_Looping_Sounds(1u);
 				Set_Enter(kSetKP02, kSceneKP02);
 			}
-			Ambient_Sounds_Remove_All_Non_Looping_Sounds(true);
-			Ambient_Sounds_Remove_All_Looping_Sounds(1u);
-			Set_Enter(kSetKP02, kSceneKP02);
 		}
 		return true;
 	}

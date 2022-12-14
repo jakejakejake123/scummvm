@@ -100,37 +100,16 @@ bool SceneScriptHC02::ClickedOnActor(int actorId) {
 		if (!Loop_Actor_Walk_To_XYZ(kActorMcCoy, -150.51f, 0.14f, 62.74f, 0, true, false, false)) {
 			Actor_Face_Actor(kActorMcCoy, kActorHawkersBarkeep, true);
 			if (!Game_Flag_Query(kFlagHC02HawkersBarkeepIntroduction)) {
-				if (_vm->_cutContent) {
-					if (Actor_Clue_Query(kActorMcCoy, kClueChinaBarSecurityCamera)
-					|| Actor_Clue_Query(kActorMcCoy, kClueHomelessManInterview2)) {
-						Actor_Says(kActorMcCoy, 1225, 13); //00-1225.AUD	I got a couple of questions for you, Captain.
-					} else {
-						Actor_Says(kActorMcCoy, 3970, 14); //00-3970.AUD	Hey.
-					}
-				} else {
-					Actor_Says(kActorMcCoy, 1225, 13); //00-1225.AUD	I got a couple of questions for you, Captain.
-				}
+				Actor_Says(kActorMcCoy, 1225, 13); //00-1225.AUD	I got a couple of questions for you, Captain.
 				Actor_Says_With_Pause(kActorHawkersBarkeep, 0, 0.0f, 13); //32-0000.AUD	First one's on the house. The rest you pay for.
+				Actor_Says(kActorHawkersBarkeep, 10, 16); //32-0010.AUD	You want chit chat you hire a hooker. This ain't no social club.
 				if (_vm->_cutContent) {
-					if (Actor_Clue_Query(kActorMcCoy, kClueChinaBarSecurityCamera)
-					|| Actor_Clue_Query(kActorMcCoy, kClueHomelessManInterview2)) {
-						Actor_Says(kActorHawkersBarkeep, 10, 16); //32-0010.AUD	You want chit chat you hire a hooker. This ain't no social club.
-						if (Player_Query_Agenda() == kPlayerAgendaSurly 
-						|| Player_Query_Agenda() == kPlayerAgendaErratic) {
-							Actor_Says(kActorMcCoy, 4320, 14); //00-4320.AUD	Save the pitch for someone who gives a shit.
-							Delay(2000);
-						} else {
-							Actor_Says(kActorMcCoy, 4880, 13); //00-4880.AUD	Is that right?
-							Delay(1000);
-						}
-					} else {
-						Delay(1000);
-					}
-				} else {
-					Actor_Says(kActorHawkersBarkeep, 10, 16); //32-0010.AUD	You want chit chat you hire a hooker. This ain't no social club.
-				}
-				if (_vm->_cutContent) {
-					if (Player_Query_Agenda() == kPlayerAgendaPolite) { 
+					if (Player_Query_Agenda() == kPlayerAgendaSurly 
+					|| Player_Query_Agenda() == kPlayerAgendaErratic) {
+						Actor_Says(kActorMcCoy, 4320, 14); //00-4320.AUD	Save the pitch for someone who gives a shit.
+						Delay(2000);
+						Actor_Says(kActorMcCoy, 1250, 13); //00-1250.AUD	Pour me one.
+					} else if (Player_Query_Agenda() == kPlayerAgendaPolite) { 
 						if (Global_Variable_Query(kVariableChinyen) >= 10
 						|| Query_Difficulty_Level() == kGameDifficultyEasy) {	
 							Actor_Says(kActorMcCoy, 345, 16); //00-0345.AUD	Wanna make some money?
@@ -148,6 +127,8 @@ bool SceneScriptHC02::ClickedOnActor(int actorId) {
 							Actor_Says(kActorMcCoy, 1250, 13); //00-1250.AUD	Pour me one.
 						}
 					} else {
+						Actor_Says(kActorMcCoy, 4880, 18); //00-4880.AUD	Is that right?
+						Delay(1000);
 						Actor_Says(kActorMcCoy, 1250, 13); //00-1250.AUD	Pour me one.
 					}
 				}
@@ -173,8 +154,7 @@ bool SceneScriptHC02::ClickedOnActor(int actorId) {
 					if (!Game_Flag_Query(kFlagHawkersBarkeepHappy)) {
 						Actor_Says(kActorHawkersBarkeep, 120, 12); //32-0120.AUD	I just serve drinks, pal.
 						Actor_Says(kActorHawkersBarkeep, 130, 16); //32-0130.AUD	I don't pay a whole lot attention to what goes on around here. Nor do I want to.
-						if (Player_Query_Agenda() == kPlayerAgendaSurly 
-						|| Player_Query_Agenda() == kPlayerAgendaErratic) {
+						if (Player_Query_Agenda() != kPlayerAgendaPolite) {
 							Actor_Says(kActorMcCoy, 6995, 18); //00-6995.AUD	That's not what I heard. You wanna set the record straight?
 							Actor_Says(kActorHawkersBarkeep, 150, 16); //32-0150.AUD	Hey, you can always ask someone who cares what you think.
 						}
@@ -268,14 +248,10 @@ bool SceneScriptHC02::ClickedOnActor(int actorId) {
 							Actor_Says(kActorMcCoy, 1265, 13);
 							Actor_Says(kActorHawkersBarkeep, 90, 13);
 							Game_Flag_Set(kFlagHC02HawkersBarkeepBraceletTalk);
-							if (Player_Query_Agenda() == kPlayerAgendaSurly 
-							|| Player_Query_Agenda() == kPlayerAgendaErratic) {
+							if (Player_Query_Agenda() != kPlayerAgendaPolite) {
 								Actor_Says(kActorMcCoy, 700, 14); //00-0700.AUD	I'm starting to understand.
 								Delay (3000);
 								Actor_Says(kActorHawkersBarkeep, 150, 13); //32-0150.AUD	Hey, you can always ask someone who cares what you think.
-								Actor_Says(kActorMcCoy, 1205, 14); //00-1205.AUD	I can make you give a damn.
-								Delay (2000);
-								Actor_Says(kActorMcCoy, 8075, 14); //00-8075.AUD	 Let's move on.
 							}
 						} else {
 							Actor_Says(kActorMcCoy, 1250, 13);
@@ -300,8 +276,6 @@ bool SceneScriptHC02::ClickedOnActor(int actorId) {
 							Actor_Says(kActorHawkersBarkeep, 100, 12); //32-0100.AUD	Yeah, I heard something.
 							Actor_Says(kActorMcCoy, 2635, 18); //00-2635.AUD	I’m all ears.
 							Actor_Says(kActorHawkersBarkeep, 140, 13); //32-0140.AUD	I ain't a cheap date, pal. I don't put out. Especially not for chumps like you.
-							Actor_Says(kActorMcCoy, 8320, 18); //00-8320.AUD	Really?
-							Actor_Says(kActorHawkersBarkeep, 10, 16); //32-0010.AUD	You want chit chat you hire a hooker. This ain't no social club.
 							Delay(1000);
 							Game_Flag_Set(kFlagHC02HawkersBarkeepBraceletTalk);
 						}

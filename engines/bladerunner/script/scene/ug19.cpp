@@ -127,7 +127,10 @@ void SceneScriptUG19::PlayerWalkedIn() {
 	if (Game_Flag_Query(kFlagUG14toUG19)) {
 		Game_Flag_Reset(kFlagUG14toUG19);
 		if (_vm->_cutContent) {
-			if (Game_Flag_Query(kFlagGordoRanAway)
+			Game_Flag_Reset(kFlagRachaelWalks);
+		}
+		if (_vm->_cutContent) {
+			if (Game_Flag_Query(kFlagGordoEscaped)
 			&& !Game_Flag_Query(kFlagGordoTalkAct4)) {
 				Actor_Set_At_XYZ(kActorMcCoy, 129.0f, 11.52f, -18.0f, 0);
 			} else {
@@ -195,7 +198,7 @@ void SceneScriptUG19::PlayerWalkedIn() {
 					} else {
 						Actor_Says(kActorGordo, 1360, 11); //02-1360.AUD	Clovis… well, he’s been getting sick. He can’t keep anything down.
 						Actor_Says(kActorGordo, 1370, 13); //02-1370.AUD	I thought… maybe something a little different to eat.
-						if (Game_Flag_Query(kFlagMcCoyIsHelpingReplicants)) {
+						if (Actor_Query_Friendliness_To_Other(kActorClovis, kActorMcCoy) > 50) {
 							Actor_Says(kActorGordo, 6605, 15); //00-6605.AUD	He’s dying, isn’t he?
 							Actor_Says(kActorGordo, 1380, 16); //02-1380.AUD	It’s the way of all flesh, baby. Just the issue of when that’s got us concerned.
 						}

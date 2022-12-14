@@ -142,12 +142,15 @@ void AIScriptGordo::CompletedMovementTrack() {
 					Actor_Says(kActorMcCoy, 465, kAnimationModeCombatAim);
 					Actor_Says(kActorGordo, 60, 14);
 					Actor_Modify_Friendliness_To_Other(kActorGordo, kActorMcCoy, -2);
+					Player_Set_Combat_Mode(false);
+					Scene_Exits_Enable();
 				} else {
 					Actor_Face_Actor(kActorMcCoy, kActorGordo, true);
 					Actor_Face_Actor(kActorGordo, kActorMcCoy, true);
 					Actor_Says(kActorMcCoy, 4825, 18); //00-4825.AUD	What are you doing here?
 					Delay(1000);
 					Actor_Says(kActorGordo, 620, 16); //02-0620.AUD		Look I’d love to stay and jawbone but the show must go on, you dig?
+					Scene_Exits_Enable();
 				}
 			} else {
 				Player_Set_Combat_Mode(true);
@@ -301,7 +304,7 @@ void AIScriptGordo::ClickedByPlayer() {
 			if (!Actor_Clue_Query(kActorMcCoy, kClueCrazysInvolvement)) {
 				if (Game_Flag_Query(kFlagDektoraIsReplicant)) {
 					Actor_Clue_Acquire(kActorMcCoy, kClueCrazysInvolvement, false, kActorGordo);
-					Item_Pickup_Spin_Effect_From_Actor(kModelAnimationTyrellSalesPamphlet, kActorMcCoy, 0, 0);
+					Item_Pickup_Spin_Effect_From_Actor(kModelAnimationTyrellSalesPamphlet, kActorGordo, 0, 0);
 					Delay(1000);
 					Actor_Says(kActorMcCoy, 6975, 12); // Interesting
 				}
@@ -401,7 +404,8 @@ void AIScriptGordo::Retired(int byActorId) {
 		Player_Set_Combat_Mode(false);
 		if (_vm->_cutContent) {
 			// Made it so McCoy only feels bad about retiring Gordo if he is Polite.
-			if (Player_Query_Agenda() == kPlayerAgendaPolite) {
+			if (Player_Query_Agenda() != kPlayerAgendaSurly 
+			&& Player_Query_Agenda() != kPlayerAgendaErratic) {
 				Actor_Voice_Over(1410, kActorVoiceOver);
 				Actor_Voice_Over(1430, kActorVoiceOver);
 				Actor_Voice_Over(1440, kActorVoiceOver);
@@ -445,25 +449,23 @@ void AIScriptGordo::Retired(int byActorId) {
 			Player_Loses_Control();
 			if (_vm->_cutContent) {
 				if (Actor_Query_In_Set(kActorRunciter, kSetKP07)) {
-					if (Actor_Query_In_Set(kActorRunciter, kSetKP07)) {
-						Loop_Actor_Walk_To_XYZ(kActorRunciter, -12.0f, -41.58f, 72.0f, 0, true, false, false);
-						Actor_Put_In_Set(kActorRunciter, kSceneKP06);
+					Loop_Actor_Walk_To_XYZ(kActorRunciter, -12.0f, -41.58f, 72.0f, 0, true, false, false);
+					Actor_Put_In_Set(kActorRunciter, kSceneKP06);
+				}
+				if (Actor_Query_In_Set(kActorCrazylegs, kSetKP07)) {
+					Loop_Actor_Walk_To_XYZ(kActorCrazylegs, -12.0f, -41.58f, 72.0f, 0, true, false, false);
+					Actor_Put_In_Set(kActorCrazylegs, kSceneKP06);	
+				}
+				if (Game_Flag_Query(kFlagRunciterIsReplicant)) {
+					if (Actor_Query_Goal_Number(kActorRunciter) < kGoalRunciterDead) {
+						Delay(500);
+						Sound_Play(kSfxSMCAL3, 100, 0, 0, 50);
 					}
-					if (Actor_Query_In_Set(kActorCrazylegs, kSetKP07)) {
-						Loop_Actor_Walk_To_XYZ(kActorCrazylegs, -12.0f, -41.58f, 72.0f, 0, true, false, false);
-						Actor_Put_In_Set(kActorCrazylegs, kSceneKP06);	
-					}
-					if (Game_Flag_Query(kFlagRunciterIsReplicant)) {
-						if (Actor_Query_Goal_Number(kActorRunciter) < kGoalRunciterDead) {
-							Delay(500);
-							Sound_Play(kSfxSMCAL3, 100, 0, 0, 50);
-						}
-					}
-					if (Game_Flag_Query(kFlagCrazylegsIsReplicant)) {
-						if (!Game_Flag_Query(kFlagCrazylegsDead)) {
-							Delay(500);
-							Sound_Play(kSfxSMCAL3, 100, 0, 0, 50);
-						}
+				}
+				if (Game_Flag_Query(kFlagCrazylegsIsReplicant)) {
+					if (!Game_Flag_Query(kFlagCrazylegsDead)) {
+						Delay(500);
+						Sound_Play(kSfxSMCAL3, 100, 0, 0, 50);
 					}
 				}
 				Delay(2000);
@@ -747,6 +749,7 @@ bool AIScriptGordo::GoalChanged(int currentGoalNumber, int newGoalNumber) {
 				Actor_Says(kActorMcCoy, 3885, 16); //00-3885.AUD	It doesn’t quite work that way.
 			} else {
 				Actor_Says(kActorGordo, 740, 17); //02-0740.AUD	One of the LPD's finest. Ray McCoy!
+				Actor_Says(kActorGordo, 750, 16); //02-0750.AUD	Let’s give a big hand for Rep detect McCoy.
 				Actor_Says(kActorGordo, 770, 14); //02-0770.AUD	He even thinks you’re a Replicant, he can waste you right where you stand.
 				Actor_Says(kActorMcCoy, 3885, 16); //00-3885.AUD	It doesn’t quite work that way.
 			}
@@ -769,10 +772,13 @@ bool AIScriptGordo::GoalChanged(int currentGoalNumber, int newGoalNumber) {
 			if (_vm->_cutContent) {
 				if (!Game_Flag_Query(kFlagMcCoyIsHelpingReplicants)) {
 					if (Actor_Clue_Query(kActorMcCoy, kClueGordoConfession)  
-					|| Actor_Clue_Query(kActorMcCoy, kClueGordoInterview3)) {
+					|| Actor_Clue_Query(kActorMcCoy, kClueGordoInterview3)
+					|| Actor_Clue_Query(kActorMcCoy, kClueGordosLighterReplicant)) {
 						Actor_Says(kActorGordo, 850, 12); //02-0850.AUD	How about yourself? You’re sure about yourself?
 						Actor_Says(kActorGordo, 860, 15); //02-0860.AUD	'Cause I’ve got some friends they say they know you.
-						Actor_Says(kActorMcCoy, 3910, 16); //00-3910.AUD	You’re lying.
+						if (Player_Query_Agenda() != kPlayerAgendaPolite) {
+							Actor_Says(kActorMcCoy, 3910, 16); //00-3910.AUD	You’re lying.
+						}
 						Delay(2000);
 						Actor_Says(kActorMcCoy, 6865, 14); //00-6865.AUD	You're a Replicant.
 						// Added in some code for an action scene between McCoy and Gordo.
@@ -845,8 +851,7 @@ bool AIScriptGordo::GoalChanged(int currentGoalNumber, int newGoalNumber) {
 					} else {
 						Actor_Says(kActorGordo, 850, 12); //02-0850.AUD	How about yourself? You’re sure about yourself?
 						Actor_Says(kActorGordo, 860, 15); //02-0860.AUD	'Cause I’ve got some friends they say they know you.
-						if (Player_Query_Agenda() == kPlayerAgendaSurly
-						|| (Player_Query_Agenda() == kPlayerAgendaErratic)) {
+						if (Player_Query_Agenda() != kPlayerAgendaPolite) {
 							Actor_Says(kActorMcCoy, 3910, 16); //00-3910.AUD	You’re lying.
 						} else {
 							Actor_Says(kActorMcCoy, 4880, 13); //00-4880.AUD	Is that right?
@@ -889,8 +894,10 @@ bool AIScriptGordo::GoalChanged(int currentGoalNumber, int newGoalNumber) {
 				Actor_Says(kActorGordo, 800, 15); //02-0800.AUD	(laughs) That snake dancer that worked here. Zhora? She was a Rep.
 				Actor_Says(kActorGordo, 810, 17);
 				if (_vm->_cutContent) {
-					if (Game_Flag_Query(kFlagMcCoyIsHelpingReplicants)) {
-						Actor_Says(kActorMcCoy, 3895, 16); //00-3895.AUD	Too bad she’ll never read it.
+					if (Game_Flag_Query(kFlagZhoraNewsReport)) {
+						if (Game_Flag_Query(kFlagMcCoyIsHelpingReplicants)) {
+							Actor_Says(kActorMcCoy, 3895, 16); //00-3895.AUD	Too bad she’ll never read it.
+						}
 					}
 				} else {
 					Actor_Says(kActorMcCoy, 3895, 16); //00-3895.AUD	Too bad she’ll never read it.
@@ -982,6 +989,24 @@ bool AIScriptGordo::GoalChanged(int currentGoalNumber, int newGoalNumber) {
 				if (!Game_Flag_Query(kFlagGordoIsReplicant)) {
 					ADQ_Add(kActorGordo, 170, 18);
 					AI_Countdown_Timer_Start(kActorGordo, kActorTimerAIScriptCustomTask0, 10);
+				} else {
+					Actor_Face_Actor(kActorGordo, kActorMcCoy, true);
+					Actor_Face_Actor(kActorMcCoy, kActorGordo, true);
+					Actor_Says(kActorMcCoy, 3970, 14); //00-3970.AUD	Hey.
+					Loop_Actor_Walk_To_Actor(kActorGordo, kActorMcCoy, 60, false, true);
+					Actor_Face_Actor(kActorGordo, kActorMcCoy, true);
+					Actor_Face_Actor(kActorMcCoy, kActorGordo, true);
+					Actor_Says(kActorMcCoy, 4270, 14); //00-4270.AUD	I got some more questions for you.
+					Actor_Says(kActorGordo, 330, 15); //02-0330.AUD	Man, don’t you got anything better to do than hassle innocent people at their place of work?
+					Actor_Says(kActorMcCoy, 7815, 13); //00-7815.AUD	No.
+					Delay(1000);
+					Actor_Says(kActorGordo, 40, 13);//02-0040.AUD	Unfortunately, my man, I got to book.
+					Actor_Says(kActorMcCoy, 7915, 14);	//00-7915.AUD	We're not finished yet.
+					Actor_Says(kActorGordo, 570, 14); //02-0570.AUD	Gotta go, daddy-o.
+					Actor_Set_Targetable(kActorGordo, false);
+					Game_Flag_Set(kFlagGordoEscaped);
+					Scene_Exits_Enable();
+					Actor_Set_Goal_Number(kActorGordo, kGoalGordoNR01RunAway);
 				}
 			} else {
 				Actor_Face_Actor(kActorGordo, kActorMcCoy, true);
@@ -2029,7 +2054,7 @@ void AIScriptGordo::talkToMcCoyInCity() {
 			Actor_Says(kActorMcCoy, 6465, 15);
 		}
 		if (_vm->_cutContent) {
-			if (Actor_Query_Friendliness_To_Other(kActorGordo, kActorMcCoy) > 50) {
+			if (Game_Flag_Query(kFlagGordoReceivedAutograph)) {
 				Actor_Says(kActorGordo, 900, 13); //02-0900.AUD	You ever get down to Nightclub Row, you ought to check out my act.
 				Actor_Says(kActorGordo, 910, 13);
 				Actor_Says(kActorMcCoy, 6470, 12);
@@ -2097,7 +2122,7 @@ void AIScriptGordo::talkToMcCoyInCity() {
 						Delay(2000);
 						Actor_Says(kActorMcCoy, 8170, 15); //00-8170.AUD	There you go.
 						Delay(1000);
-						Actor_Modify_Friendliness_To_Other(kActorGordo, kActorMcCoy, 2);
+						Actor_Modify_Friendliness_To_Other(kActorGordo, kActorMcCoy, 5);
 						if (Query_Difficulty_Level() != kGameDifficultyEasy) {
 							Global_Variable_Decrement(kVariableChinyen, 10);
 						}
@@ -2111,7 +2136,9 @@ void AIScriptGordo::talkToMcCoyInCity() {
 						Actor_Says(kActorGordo, 1020, 13); //02-1020.AUD	Gee, that's a drag. There's eight million stories in the naked city, you know.
 						Actor_Says(kActorMcCoy, 6500, 14); //00-6500.AUD	And you know nothing about it.
 						Actor_Says(kActorGordo, 1030, 15);
-						Actor_Clue_Acquire(kActorMcCoy, kClueGordoInterview1, false, kActorGordo);
+						if (Actor_Clue_Query(kActorMcCoy, kClueGordoInterview3)) {
+							Actor_Clue_Acquire(kActorMcCoy, kClueGordoInterview1, false, kActorGordo);
+						}
 					} else {
 						Actor_Says(kActorMcCoy, 430, 14); //00-0430.AUD	Sorry, pal. All I got are hundreds.
 						Actor_Says(kActorGordo, 570, 15); //02-0570.AUD	Gotta go, daddy-o.
@@ -2129,7 +2156,7 @@ void AIScriptGordo::talkToMcCoyInCity() {
 						Delay(2000);
 						Actor_Says(kActorMcCoy, 8170, 15); //00-8170.AUD	There you go.
 						Delay(1000);
-						Actor_Modify_Friendliness_To_Other(kActorGordo, kActorMcCoy, 2);
+						Actor_Modify_Friendliness_To_Other(kActorGordo, kActorMcCoy, 5);
 						if (Query_Difficulty_Level() != kGameDifficultyEasy) {
 							Global_Variable_Decrement(kVariableChinyen, 10);
 						}
@@ -2148,7 +2175,9 @@ void AIScriptGordo::talkToMcCoyInCity() {
 							Actor_Says(kActorMcCoy, 6510, 16); //00-6510.AUD	I wouldn't use that one in your act, if I were you.
 							Actor_Says(kActorGordo, 1080, 15); //02-1080.AUD	Some work. Some don't.
 						}
-						Actor_Clue_Acquire(kActorMcCoy, kClueGordoInterview1, false, kActorGordo);
+						if (Actor_Clue_Query(kActorMcCoy, kClueGordoInterview3)) {
+							Actor_Clue_Acquire(kActorMcCoy, kClueGordoInterview1, false, kActorGordo);
+						}
 					} else {
 						Actor_Says(kActorMcCoy, 430, 14); //00-0430.AUD	Sorry, pal. All I got are hundreds.
 						Actor_Says(kActorGordo, 570, 15); //02-0570.AUD	Gotta go, daddy-o.
@@ -2257,9 +2286,13 @@ void AIScriptGordo::talkToMcCoyAtNR02() {
 void AIScriptGordo::dialogue2() {
 	Music_Stop(5u);
 	Dialogue_Menu_Clear_List();
-	DM_Add_To_List_Never_Repeat_Once_Selected(820, -1, 5,  7); // ARREST
-	DM_Add_To_List_Never_Repeat_Once_Selected(830,  7, 5, -1); // LET GO
-
+	if (_vm->_cutContent) {
+		DM_Add_To_List_Never_Repeat_Once_Selected(820, -1, 6,  7); // ARREST
+		DM_Add_To_List_Never_Repeat_Once_Selected(830,  7, 4, -1); // LET GO
+	} else {
+		DM_Add_To_List_Never_Repeat_Once_Selected(820, -1, 5,  7); // ARREST
+		DM_Add_To_List_Never_Repeat_Once_Selected(830,  7, 5, -1); // LET GO
+	}
 	Dialogue_Menu_Appear(320, 240);
 	int answer = Dialogue_Menu_Query_Input();
 	Dialogue_Menu_Disappear();
@@ -2293,6 +2326,12 @@ void AIScriptGordo::dialogue2() {
 		Actor_Says(kActorMcCoy, 3100, 16);
 		Actor_Says(kActorGordo, 240, 14);
 		Actor_Clue_Acquire(kActorGordo, kClueMcCoyHelpedGordo, true, -1);
+		if (_vm->_cutContent) {
+			Game_Flag_Set(kFlagGordoEscaped);
+			Actor_Modify_Friendliness_To_Other(kActorSteele, kActorMcCoy, -2);
+			Actor_Modify_Friendliness_To_Other(kActorClovis, kActorMcCoy, 2);
+			Actor_Modify_Friendliness_To_Other(kActorGuzza, kActorMcCoy, -2);
+		}
 		if (Actor_Clue_Query(kActorMcCoy, kClueStolenCheese)) {
 			Actor_Says(kActorMcCoy, 3105, 15);
 			Actor_Says(kActorMcCoy, 3110, 17); //00-3110.AUD	You’re gonna go tell your pal, Clovis, that I’m looking for him.
@@ -2302,11 +2341,7 @@ void AIScriptGordo::dialogue2() {
 			Actor_Says(kActorGordo, 270, 15); //02-0270.AUD	Very funny.
 			if (_vm->_cutContent) {
 				Actor_Says(kActorMcCoy, 3255, 18); //00-3255.AUD	Maybe I’ll see you again.
-				Actor_Says(kActorGordo, 10, 15); //02-0010.AUD	Catch you later.
-				Game_Flag_Set(kFlagGordoEscaped);
-				Actor_Modify_Friendliness_To_Other(kActorSteele, kActorMcCoy, -2);
-				Actor_Modify_Friendliness_To_Other(kActorClovis, kActorMcCoy, 2);
-				Actor_Modify_Friendliness_To_Other(kActorGuzza, kActorMcCoy, -2);
+				Actor_Says(kActorGordo, 10, 15); //02-0010.AUD	Catch you later.				
 			}
 		} else {
 			Delay(1000);
@@ -2324,7 +2359,8 @@ void AIScriptGordo::dialogue1() {
 	DM_Add_To_List_Never_Repeat_Once_Selected(770, 6, 3, 1); // JOB
 	// Made it so the topics for Lucy and blonde woman activate when you have certain photo clues.
 	if (_vm->_cutContent) {
-		if (Actor_Clue_Query(kActorMcCoy, kClueChinaBar)) {
+		if (Actor_Clue_Query(kActorMcCoy, kClueChinaBar)
+		&& Game_Flag_Query(kFlagDektoraIdentified)) {
 			DM_Add_To_List_Never_Repeat_Once_Selected(780, 5, 5, 5); // BLOND WOMAN
 		}
 	} else if (Actor_Clue_Query(kActorMcCoy, kClueDektorasDressingRoom)
@@ -2337,7 +2373,8 @@ void AIScriptGordo::dialogue1() {
 		if (!Actor_Clue_Query(kActorMcCoy, kClueLucy)
 		&& !Actor_Clue_Query(kActorMcCoy, kClueLucyWithDektora)) {
 			if (Actor_Query_Goal_Number(kActorLucy) != kGoalLucyGone
-			&& !Actor_Clue_Query(kActorMcCoy, kClueGordoInterview3)) {
+			&& !Actor_Clue_Query(kActorMcCoy, kClueGordoInterview3)
+			&& Global_Variable_Query(kVariableAffectionTowards) != kAffectionTowardsLucy) {
 				DM_Add_To_List_Never_Repeat_Once_Selected(790, 5, 5, 5); // LUCY
 			}
 		}
@@ -2349,12 +2386,17 @@ void AIScriptGordo::dialogue1() {
 		|| Actor_Clue_Query(kActorMcCoy, kClueLucyWithDektora)) {
 			if (Actor_Query_Goal_Number(kActorLucy) != kGoalLucyGone
 			&& !Actor_Clue_Query(kActorMcCoy, kClueGordoInterview3)
+			&& Global_Variable_Query(kVariableAffectionTowards) != kAffectionTowardsLucy
 			) {
-				DM_Add_To_List_Never_Repeat_Once_Selected(1210, 4, 6, 2); // LUCY'S PHOTO
+				DM_Add_To_List(1210, 4, 6, 2); // LUCY'S PHOTO
 			}
 		}
 	}
-	if (Actor_Clue_Query(kActorMcCoy, kClueStolenCheese)) {
+	if (_vm->_cutContent) {
+		if (Actor_Clue_Query(kActorMcCoy, kClueStolenCheese)) {
+			DM_Add_To_List_Never_Repeat_Once_Selected(800, 9, 7, 8); // CHEESE
+		}
+	} else {
 		DM_Add_To_List_Never_Repeat_Once_Selected(800, -1, 4, 8); // CHEESE
 	}
 	Dialogue_Menu_Add_DONE_To_List(810); // DONE
@@ -2381,6 +2423,30 @@ void AIScriptGordo::dialogue1() {
 				}
 			} else {
 				Actor_Says(kActorGordo, 620, 16); //02-0620.AUD		Look I’d love to stay and jawbone but the show must go on, you dig?
+			}
+			if (Actor_Clue_Query(kActorMcCoy, kClueGordoInterview3)
+			|| Actor_Clue_Query(kActorMcCoy, kClueStolenCheese)) {
+				if (Player_Query_Agenda() != kPlayerAgendaPolite) {
+					Actor_Says(kActorMcCoy, 5480, 15); //00-5480.AUD	Look, just come along with me. You’re gonna have to take a little personality test.
+					Actor_Says(kActorGordo, 570, 13);
+					Actor_Modify_Friendliness_To_Other(kActorSteele, kActorMcCoy, 1);
+					Actor_Modify_Friendliness_To_Other(kActorGuzza, kActorMcCoy, 1);
+					Actor_Modify_Friendliness_To_Other(kActorClovis, kActorMcCoy, -1);	
+					Game_Flag_Reset(kFlagMcCoyIsHelpingReplicants);
+					Actor_Modify_Friendliness_To_Other(kActorGordo, kActorMcCoy, -5);
+				} else {
+					Delay(1000);
+					Actor_Says(kActorMcCoy, 3690, 14); //00-3690.AUD	Look. I wanna warn you. There’s a woman looking for you and your friends.
+					Actor_Says(kActorGordo, 560, 13);
+					Actor_Modify_Friendliness_To_Other(kActorSteele, kActorMcCoy, -1);
+					Actor_Modify_Friendliness_To_Other(kActorGuzza, kActorMcCoy, -1);
+					Actor_Modify_Friendliness_To_Other(kActorClovis, kActorMcCoy, 1);	
+					Game_Flag_Set(kFlagMcCoyIsHelpingReplicants);
+					Actor_Modify_Friendliness_To_Other(kActorGordo, kActorMcCoy, 5);
+				}
+			} else {
+				Actor_Says(kActorMcCoy, 5150, 18); //00-5150.AUD	One more thing.
+				Actor_Says(kActorGordo, 560, 13);
 			}
 		} else {
 			Actor_Says(kActorGordo, 380, 12);
@@ -2422,11 +2488,42 @@ void AIScriptGordo::dialogue1() {
 				Actor_Clue_Acquire(kActorMcCoy, kClueGordoInterview3, false, kActorGordo);
 			}
 		}
-		Actor_Says(kActorGordo, 460, 15);
+		if (_vm->_cutContent) {
+			if (Actor_Clue_Query(kActorMcCoy, kClueGordoInterview3)
+			|| Actor_Clue_Query(kActorMcCoy, kClueStolenCheese)) {
+				if (Player_Query_Agenda() != kPlayerAgendaPolite) {
+					Actor_Says(kActorMcCoy, 5480, 15); //00-5480.AUD	Look, just come along with me. You’re gonna have to take a little personality test.
+					Actor_Says(kActorGordo, 570, 13);
+					Actor_Modify_Friendliness_To_Other(kActorSteele, kActorMcCoy, 1);
+					Actor_Modify_Friendliness_To_Other(kActorGuzza, kActorMcCoy, 1);
+					Actor_Modify_Friendliness_To_Other(kActorClovis, kActorMcCoy, -1);	
+					Game_Flag_Reset(kFlagMcCoyIsHelpingReplicants);
+					Actor_Modify_Friendliness_To_Other(kActorGordo, kActorMcCoy, -5);
+				} else {
+					Delay(1000);
+					Actor_Says(kActorMcCoy, 3690, 14); //00-3690.AUD	Look. I wanna warn you. There’s a woman looking for you and your friends.
+					Actor_Says(kActorGordo, 560, 13);
+					Actor_Modify_Friendliness_To_Other(kActorSteele, kActorMcCoy, -1);
+					Actor_Modify_Friendliness_To_Other(kActorGuzza, kActorMcCoy, -1);
+					Actor_Modify_Friendliness_To_Other(kActorClovis, kActorMcCoy, 1);	
+					Game_Flag_Set(kFlagMcCoyIsHelpingReplicants);
+					Actor_Modify_Friendliness_To_Other(kActorGordo, kActorMcCoy, 5);
+				}
+			} else {
+				Actor_Says(kActorMcCoy, 5150, 18); //00-5150.AUD	One more thing.
+				Actor_Says(kActorGordo, 560, 13);
+			}
+		} else {
+			Actor_Says(kActorGordo, 460, 15);
+		}
 		break;
 
 	case 780: // BLOND WOMAN
-		Actor_Says(kActorMcCoy, 3240, kAnimationModeTalk);
+		if (_vm->_cutContent) {
+			Actor_Says(kActorMcCoy, 3240, 23);
+		} else {
+			Actor_Says(kActorMcCoy, 3240, kAnimationModeTalk);
+		}
 		Actor_Says(kActorGordo, 470, 17);
 		Actor_Says(kActorMcCoy, 3285, 16);
 		Actor_Says(kActorGordo, 480, 13);
@@ -2459,8 +2556,32 @@ void AIScriptGordo::dialogue1() {
 #endif // BLADERUNNER_ORIGINAL_BUGS
 		Actor_Says(kActorGordo, 520, 12);
 		if (_vm->_cutContent) {
-			Actor_Modify_Friendliness_To_Other(kActorGordo, kActorMcCoy, -2);
-		} else {
+			if (Actor_Clue_Query(kActorMcCoy, kClueGordoInterview3)
+			|| Actor_Clue_Query(kActorMcCoy, kClueStolenCheese)) {
+				if (Player_Query_Agenda() != kPlayerAgendaPolite) {
+					Actor_Says(kActorMcCoy, 5480, 15); //00-5480.AUD	Look, just come along with me. You’re gonna have to take a little personality test.
+					Actor_Says(kActorGordo, 570, 13);
+					Actor_Modify_Friendliness_To_Other(kActorSteele, kActorMcCoy, 1);
+					Actor_Modify_Friendliness_To_Other(kActorGuzza, kActorMcCoy, 1);
+					Actor_Modify_Friendliness_To_Other(kActorClovis, kActorMcCoy, -1);	
+					Game_Flag_Reset(kFlagMcCoyIsHelpingReplicants);
+					Actor_Modify_Friendliness_To_Other(kActorGordo, kActorMcCoy, -5);
+				} else {
+					Delay(1000);
+					Actor_Says(kActorMcCoy, 3690, 14); //00-3690.AUD	Look. I wanna warn you. There’s a woman looking for you and your friends.
+					Actor_Says(kActorGordo, 560, 13);
+					Actor_Modify_Friendliness_To_Other(kActorSteele, kActorMcCoy, -1);
+					Actor_Modify_Friendliness_To_Other(kActorGuzza, kActorMcCoy, -1);
+					Actor_Modify_Friendliness_To_Other(kActorClovis, kActorMcCoy, 1);	
+					Game_Flag_Set(kFlagMcCoyIsHelpingReplicants);
+					Actor_Modify_Friendliness_To_Other(kActorGordo, kActorMcCoy, 5);
+				}
+			} else {
+				Actor_Says(kActorMcCoy, 5150, 18); //00-5150.AUD	One more thing.
+				Actor_Says(kActorGordo, 560, 13);
+			}
+		}
+		if (!_vm->_cutContent) {
 			Actor_Modify_Friendliness_To_Other(kActorGordo, kActorMcCoy, -4);
 		}
 		break;
@@ -2478,6 +2599,30 @@ void AIScriptGordo::dialogue1() {
 			Actor_Says(kActorMcCoy, 3285, 16);
 			Actor_Says(kActorGordo, 480, 13); //02-0480.AUD	Just kidding, baby. Tell you the truth
 			Actor_Says(kActorGordo, 380, 16); //02-0380.AUD	You are one hell of a suspicious cat, McCoy.
+			if (Actor_Clue_Query(kActorMcCoy, kClueGordoInterview3)
+			|| Actor_Clue_Query(kActorMcCoy, kClueStolenCheese)) {
+				if (Player_Query_Agenda() != kPlayerAgendaPolite) {
+					Actor_Says(kActorMcCoy, 5480, 15); //00-5480.AUD	Look, just come along with me. You’re gonna have to take a little personality test.
+					Actor_Says(kActorGordo, 570, 13);
+					Actor_Modify_Friendliness_To_Other(kActorSteele, kActorMcCoy, 1);
+					Actor_Modify_Friendliness_To_Other(kActorGuzza, kActorMcCoy, 1);
+					Actor_Modify_Friendliness_To_Other(kActorClovis, kActorMcCoy, -1);	
+					Game_Flag_Reset(kFlagMcCoyIsHelpingReplicants);
+					Actor_Modify_Friendliness_To_Other(kActorGordo, kActorMcCoy, -5);
+				} else {
+					Delay(1000);
+					Actor_Says(kActorMcCoy, 3690, 14); //00-3690.AUD	Look. I wanna warn you. There’s a woman looking for you and your friends.
+					Actor_Says(kActorGordo, 560, 13);
+					Actor_Modify_Friendliness_To_Other(kActorSteele, kActorMcCoy, -1);
+					Actor_Modify_Friendliness_To_Other(kActorGuzza, kActorMcCoy, -1);
+					Actor_Modify_Friendliness_To_Other(kActorClovis, kActorMcCoy, 1);	
+					Game_Flag_Set(kFlagMcCoyIsHelpingReplicants);
+					Actor_Modify_Friendliness_To_Other(kActorGordo, kActorMcCoy, 5);
+				}
+			} else {
+				Actor_Says(kActorMcCoy, 5150, 18); //00-5150.AUD	One more thing.
+				Actor_Says(kActorGordo, 560, 13);	
+			}
 		} else {
 			Actor_Says(kActorGordo, 470, 17);
 			Actor_Says(kActorMcCoy, 3285, 16);
@@ -2503,7 +2648,34 @@ void AIScriptGordo::dialogue1() {
 		Actor_Says(kActorMcCoy, 3285, 16);
 		Actor_Says(kActorGordo, 480, 13); //02-0480.AUD	Just kidding, baby. Tell you the truth
 		Actor_Says(kActorGordo, 380, 16); //02-0380.AUD	You are one hell of a suspicious cat, McCoy.
-		Actor_Modify_Friendliness_To_Other(kActorGordo, kActorMcCoy, -1);
+		if (_vm->_cutContent) {
+			if (Actor_Clue_Query(kActorMcCoy, kClueGordoInterview3)
+			|| Actor_Clue_Query(kActorMcCoy, kClueStolenCheese)) {
+				if (Player_Query_Agenda() != kPlayerAgendaPolite) {
+					Actor_Says(kActorMcCoy, 5480, 15); //00-5480.AUD	Look, just come along with me. You’re gonna have to take a little personality test.
+					Actor_Says(kActorGordo, 570, 13);
+					Actor_Modify_Friendliness_To_Other(kActorSteele, kActorMcCoy, 1);
+					Actor_Modify_Friendliness_To_Other(kActorGuzza, kActorMcCoy, 1);
+					Actor_Modify_Friendliness_To_Other(kActorClovis, kActorMcCoy, -1);	
+					Game_Flag_Reset(kFlagMcCoyIsHelpingReplicants);
+					Actor_Modify_Friendliness_To_Other(kActorGordo, kActorMcCoy, -5);
+				} else {
+					Delay(1000);
+					Actor_Says(kActorMcCoy, 3690, 14); //00-3690.AUD	Look. I wanna warn you. There’s a woman looking for you and your friends.
+					Actor_Says(kActorGordo, 560, 13);
+					Actor_Modify_Friendliness_To_Other(kActorSteele, kActorMcCoy, -1);
+					Actor_Modify_Friendliness_To_Other(kActorGuzza, kActorMcCoy, -1);
+					Actor_Modify_Friendliness_To_Other(kActorClovis, kActorMcCoy, 1);	
+					Game_Flag_Set(kFlagMcCoyIsHelpingReplicants);
+					Actor_Modify_Friendliness_To_Other(kActorGordo, kActorMcCoy, 5);
+				}
+			} else {
+				Actor_Says(kActorMcCoy, 5150, 18); //00-5150.AUD	One more thing.
+				Actor_Says(kActorGordo, 560, 13); //02-0560.AUD	My man, it’s show time.
+			}
+		} else {
+			Actor_Modify_Friendliness_To_Other(kActorGordo, kActorMcCoy, -1);
+		}
 		break;
 
 	case 800: // CHEESE
@@ -2512,23 +2684,33 @@ void AIScriptGordo::dialogue1() {
 		Actor_Says(kActorMcCoy, 3300, 15);
 		Actor_Says(kActorGordo, 540, 13);
 		Actor_Says(kActorMcCoy, 3305, kAnimationModeTalk);
-		Actor_Says(kActorGordo, 550, 16);
+		Actor_Says(kActorGordo, 550, 16); //02-0550.AUD	For crying out loud. Can’t a guy make a living in this fakakta place without being hassled?
 		if (_vm->_cutContent) {
-			if (!Game_Flag_Query(kFlagMcCoyIsHelpingReplicants)) {
+			if (Player_Query_Agenda() != kPlayerAgendaPolite) {
 				Actor_Says(kActorMcCoy, 3310, kAnimationModeTalk);
 				Actor_Says(kActorGordo, 560, 13);
 				Actor_Says(kActorMcCoy, 3315, 15);
+				Actor_Says(kActorGordo, 570, 14);
+				Actor_Modify_Friendliness_To_Other(kActorSteele, kActorMcCoy, 1);
+				Actor_Modify_Friendliness_To_Other(kActorGuzza, kActorMcCoy, 1);
+				Actor_Modify_Friendliness_To_Other(kActorClovis, kActorMcCoy, -1);	
+				Game_Flag_Reset(kFlagMcCoyIsHelpingReplicants);
+				Actor_Modify_Friendliness_To_Other(kActorGordo, kActorMcCoy, -5);
 			} else {
-				Delay(1000);
 				Actor_Says(kActorMcCoy, 3690, 14); //00-3690.AUD	Look. I wanna warn you. There’s a woman looking for you and your friends.
 				Actor_Says(kActorGordo, 560, 13);
+				Actor_Modify_Friendliness_To_Other(kActorSteele, kActorMcCoy, -1);
+				Actor_Modify_Friendliness_To_Other(kActorGuzza, kActorMcCoy, -1);
+				Actor_Modify_Friendliness_To_Other(kActorClovis, kActorMcCoy, 1);	
+				Game_Flag_Set(kFlagMcCoyIsHelpingReplicants);
+				Actor_Modify_Friendliness_To_Other(kActorGordo, kActorMcCoy, 5);
 			}
 		} else {
 			Actor_Says(kActorMcCoy, 3310, kAnimationModeTalk);
 			Actor_Says(kActorGordo, 560, 13);
 			Actor_Says(kActorMcCoy, 3315, 15);
+			Actor_Says(kActorGordo, 570, 14);
 		}
-		Actor_Says(kActorGordo, 570, 14);
 		Actor_Clue_Acquire(kActorMcCoy, kClueGordoConfession, false, kActorGordo);
 		break;
 

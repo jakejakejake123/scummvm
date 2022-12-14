@@ -132,9 +132,21 @@ bool SceneScriptTB05::ClickedOn3DObject(const char *objectName, bool a2) {
 					Actor_Clue_Acquire(kActorMcCoy, kClueDNAMarcus, true, -1);
 					Actor_Voice_Over(2230, kActorVoiceOver);
 					Item_Pickup_Spin_Effect(kModelAnimationDNADataDisc, 352, 333);
-					Actor_Voice_Over(2240, kActorVoiceOver);
-					Actor_Voice_Over(2250, kActorVoiceOver);
-					Actor_Voice_Over(2260, kActorVoiceOver);
+					if (_vm->_cutContent) {
+						if (Player_Query_Agenda() != kPlayerAgendaSurly 
+						&& Player_Query_Agenda() != kPlayerAgendaErratic) {
+							Actor_Voice_Over(2240, kActorVoiceOver);
+							Actor_Voice_Over(2250, kActorVoiceOver);
+							Actor_Voice_Over(2260, kActorVoiceOver);
+						} else {
+							Delay(1000);
+							Actor_Voice_Over(130, kActorVoiceOver); //99-0130.AUD	DNA research, incept dates.
+						}
+					} else {
+						Actor_Voice_Over(2240, kActorVoiceOver);
+						Actor_Voice_Over(2250, kActorVoiceOver);
+						Actor_Voice_Over(2260, kActorVoiceOver);
+					}
 					Game_Flag_Set(kFlagTB05MonitorDone);
 				} else {
 					Actor_Voice_Over(2280, kActorVoiceOver);

@@ -73,7 +73,7 @@ void SceneScriptHF03::dialogueWithLucy() {
 		DM_Add_To_List_Never_Repeat_Once_Selected(870, 2, 8, 6); // RUNCITER
 	}
 	if (_vm->_cutContent) {
-		DM_Add_To_List_Never_Repeat_Once_Selected(840, 1, 2, 3); // VOIGT-KAMPFF
+		DM_Add_To_List_Never_Repeat_Once_Selected(840, 1, 3, 4); // VOIGT-KAMPFF
 		DM_Add_To_List_Never_Repeat_Once_Selected(860, 3, 2, 1); // CRYSTAL
 	} else {
 		DM_Add_To_List_Never_Repeat_Once_Selected(840, -1, 3, 8); // VOIGT-KAMPFF
@@ -95,6 +95,12 @@ void SceneScriptHF03::dialogueWithLucy() {
 		} else {
 			Actor_Set_Goal_Number(kActorLucy, kGoalLucyHF03RunOutPhase1);
 			Game_Flag_Set(kFlagLucyRanAway);
+		}
+		if (_vm->_cutContent) {
+			Actor_Modify_Friendliness_To_Other(kActorSteele, kActorMcCoy, 1);
+			Actor_Modify_Friendliness_To_Other(kActorGuzza, kActorMcCoy, 1);
+			Actor_Modify_Friendliness_To_Other(kActorClovis, kActorMcCoy, -1);	
+			Game_Flag_Reset(kFlagMcCoyIsHelpingReplicants);
 		}
 		break;
 
@@ -132,10 +138,7 @@ void SceneScriptHF03::dialogueWithLucy() {
 					} else {
 						Actor_Says(kActorLucy, 940, 14); //06-0940.AUD	You’re a good man.
 					}
-					if (Player_Query_Agenda() == kPlayerAgendaSurly 
-					|| Player_Query_Agenda() == kPlayerAgendaErratic) {
-						Actor_Says(kActorMcCoy, 6780, 11); //00-6780.AUD	Don’t jump to any conclusions.
-					}
+					Actor_Says(kActorMcCoy, 6780, 11); //00-6780.AUD	Don’t jump to any conclusions.
 				} else {
 					Actor_Says(kActorLucy, 940, 14); //06-0940.AUD	You’re a good man.
 					Actor_Says(kActorMcCoy, 6780, 11); //00-6780.AUD	Don’t jump to any conclusions.
@@ -183,7 +186,16 @@ void SceneScriptHF03::dialogueWithLucy() {
 					Actor_Says(kActorMcCoy, 6810, 14); //00-6810.AUD	Go. I’ll find you when it’s safe.
 				}
 			}
-			Actor_Says(kActorLucy, 220, 13);
+			if (_vm->_cutContent) {
+				if (Actor_Query_Friendliness_To_Other(kActorClovis, kActorMcCoy) < 51) { 
+					Delay(1000);
+					Actor_Says(kActorLucy, 220, 13);
+				} else {
+					Actor_Says(kActorLucy, 220, 13);
+				}
+			} else {
+				Actor_Says(kActorLucy, 220, 13);
+			}
 			Actor_Says(kActorMcCoy, 1660, 15); //00-1660.AUD	Go! Quickly.
 			if (_vm->_cutContent) {
 				if (Game_Flag_Query(kFlagLucyIsReplicant)) {

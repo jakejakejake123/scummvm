@@ -211,12 +211,13 @@ bool SceneScriptAR01::ClickedOnActor(int actorId) {
 						Actor_Says(kActorFishDealer, 50, 14); //29-0050.AUD	Real?! Oh, you must make lots of money.
 					} else {
 						Actor_Says(kActorMcCoy, 7815, 13); //00-7815.AUD	No.
+						Delay(1000);
 					}
 					// If McCoy is surly or erratic their friendliness will lower and this will effect the coversation later on.
 					// It will also result in the fish lady not helping when trying to find the insect dealer and whne you ask her about the strange scale.
 					if (Player_Query_Agenda() == kPlayerAgendaSurly 
 					|| Player_Query_Agenda() == kPlayerAgendaErratic) {
-						Actor_Says(kActorMcCoy, 8519, 14); //00-8519.AUD	What do you say we dish each other the straight goods.
+						Actor_Says(kActorMcCoy, 6985, 16); //00-6985.AUD	Got the straight scoop for me or what?
 						Delay(1000);
 						Actor_Modify_Friendliness_To_Other(kActorFishDealer, kActorMcCoy, -2);
 						Actor_Says(kActorFishDealer, 180, 14); //29-0180.AUD	I can't stand all day gabbing away. My fish require attention.
@@ -415,9 +416,7 @@ bool SceneScriptAR01::ClickedOnExit(int exitId) {
 					Player_Gains_Control();
 					Actor_Retired_Here(kActorMcCoy, 12, 48, 1, kActorIzo);
 				} else {
-					if (Game_Flag_Query(kFlagIzoGotAway)) {
-						Actor_Says(kActorMcCoy, 3545, 15); //00-3545.AUD	Not yet.
-					}
+					Actor_Says(kActorMcCoy, 3545, 15); //00-3545.AUD	Not yet.
 				}
 			} else {
 				Player_Loses_Control();
@@ -475,6 +474,7 @@ bool SceneScriptAR01::ClickedOnExit(int exitId) {
 				}		
 				Game_Flag_Set(kFlagDNARowAvailableTalk);
 				Game_Flag_Reset(kFlagIzoGotAway);
+				Game_Flag_Reset(kFlagIzoOnTheRun);
 				Game_Flag_Reset(kFlagIzoWarnedAboutCrystal);
 			}
 			Game_Flag_Reset(kFlagMcCoyInChinaTown);
@@ -616,7 +616,11 @@ void SceneScriptAR01::PlayerWalkedIn() {
 			Player_Gains_Control();
 			Actor_Says(kActorMcCoy, 8910, 14); //00-8910.AUD	Hey you.
 			Actor_Says(kActorFishDealer, 230, -1); // 29-0230.AUD	You buy fish? Highest quality.
-			Actor_Says(kActorMcCoy, 140, 18); //00-0140.AUD	Not today, thanks.
+			if (Player_Query_Agenda() == kPlayerAgendaPolite) {
+				Actor_Says(kActorMcCoy, 140, 18); //00-0140.AUD	Not today, thanks.
+			} else {
+				Actor_Says(kActorMcCoy, 35, 13); //00-0035.AUD	I'll pass.
+			}
 			Actor_Says(kActorMcCoy, 475, 13);  //00-0475.AUD	There are things I want to know.
 			Actor_Says(kActorFishDealer, 160, -1); //29-0160.AUD	I heard something, yeah. I tell it to you, if you like.
 			Actor_Says(kActorMcCoy, 4940, 13); //00-4940.AUD	Okay, let's have it.
@@ -631,22 +635,22 @@ void SceneScriptAR01::PlayerWalkedIn() {
 			Delay (1000);
 			Actor_Face_Actor(kActorMcCoy, kActorHasan, true);
 			Actor_Face_Actor(kActorFishDealer, kActorHasan, true);
-			Actor_Says(kActorFishDealer, 140, 14);//29-0140.AUD	I sent him to Abdul Hasan.
-			Actor_Says(kActorFishDealer, 70, 14);// 29-0070.AUD	You try there.
+			Actor_Says(kActorFishDealer, 140, -1);//29-0140.AUD	I sent him to Abdul Hasan.
+			Actor_Says(kActorFishDealer, 70, -1);// 29-0070.AUD	You try there.
 			Actor_Face_Actor(kActorMcCoy, kActorFishDealer, true);
 			Actor_Face_Actor(kActorFishDealer, kActorMcCoy, true);
 			Actor_Says(kActorMcCoy, 100, 18);//00-0100.AUD	I'll do that.
 			Delay (500);
 			Actor_Says(kActorMcCoy, 5150, 14); //00-5150.AUD	One more thing.
-			Actor_Says(kActorFishDealer, 230, 14); // 29-0230.AUD	You buy fish? Highest quality.
+			Actor_Says(kActorFishDealer, 230, -1); // 29-0230.AUD	You buy fish? Highest quality.
 			Actor_Says(kActorMcCoy, 940, 13); //00-0940.AUD	I need to ask you--
-			Actor_Says(kActorFishDealer, 230, 0); // 29-0230.AUD	You buy fish? Highest quality.
+			Actor_Says(kActorFishDealer, 230, -1); // 29-0230.AUD	You buy fish? Highest quality.
 			Delay (3000);	
-			Actor_Says(kActorFishDealer, 230, 0); // 29-0230.AUD	You buy fish? Highest quality.
+			Actor_Says(kActorFishDealer, 230, -1); // 29-0230.AUD	You buy fish? Highest quality.
 			Delay (2000);							
 			Actor_Says(kActorMcCoy, 1535, 16); //00-1535.AUD	Ah, never mind.
 			Delay (1000);
-			Actor_Says(kActorFishDealer, 230, 0); // 29-0230.AUD	You buy fish? Highest quality.
+			Actor_Says(kActorFishDealer, 230, -1); // 29-0230.AUD	You buy fish? Highest quality.
 			Delay (3000);	
 			Game_Flag_Set(kFlagAR01Entered);
 			ADQ_Add(kActorOfficerLeary, 300, kAnimationModeTalk); //23-0300.AUD	LA, 38 Metro 3. Subject check.

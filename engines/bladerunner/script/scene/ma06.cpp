@@ -63,8 +63,8 @@ void SceneScriptMA06::SceneLoaded() {
 			Actor_Put_In_Set(kActorRachael, kSetMA06);
 			Actor_Set_At_XYZ(kActorRachael, 30.15f, 0.0f, 45.16f, 350);
 			Actor_Set_Goal_Number(kActorRachael, kGoalRachaelIsInsideMcCoysElevatorAct3);
-		} else if (Actor_Query_Goal_Number(kActorRachael) == kGoalRachaelAtEndOfAct3IfMetWithMcCoy
-			&& Game_Flag_Query(kFlagMA02RajifTalk)) {
+		} else if (Game_Flag_Query(kFlagRachaelThirdMeeting)
+		&& Game_Flag_Query(kFlagMA02RajifTalk)) {
 			// Put Rachael in set for her second cut scene (Act 4)
 			AI_Movement_Track_Pause(kActorRachael); // don't allow her to "travel" anywhere
 			Actor_Put_In_Set(kActorRachael, kSetMA06);
@@ -109,7 +109,7 @@ void SceneScriptMA06::PlayerWalkedIn() {
 	Loop_Actor_Walk_To_XYZ(kActorMcCoy, 40.0f, 1.35f, 0.0f, 0, false, false, false);
 	Actor_Face_Object(kActorMcCoy, "panel", true);
 	if (_vm->_cutContent) {
-		Game_Flag_Reset(kFlagMcCoyShotRachael);
+		Game_Flag_Reset(kFlagRachaelWalks);
 		Music_Stop(1u);
 	}
 	Delay(500);

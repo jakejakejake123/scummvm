@@ -210,29 +210,10 @@ bool SceneScriptRC02::ClickedOn3DObject(const char *objectName, bool a2) {
 	        || Object_Query_Click("DRAPE05", objectName)
 	        || Object_Query_Click("DRAPE06", objectName)
 	        || Object_Query_Click("DRAPE07", objectName))
-	) {
-		if (Player_Query_Agenda() == kPlayerAgendaSurly
-		    || (Player_Query_Agenda() == kPlayerAgendaErratic && Random_Query(0, 1) == 1)
-		) {
-			Actor_Voice_Over(1940, kActorVoiceOver);
-			// Note: Quote 1950 is *boop* in ENG version
-			//       However it is voiced in FRA, DEU, ESP and ITA versions
-			//       In ESP and FRA this quote roughly translates to:
-			//       "Seeing them slaughtered was worse than any of my nightmares."
-			//       In DEU and ITA it seems to be the second (missing) half of the previous quote (1940)
-			//       and it is required for those.
-			if (_vm->_language == Common::FR_FRA
-			    || _vm->_language == Common::DE_DEU
-			    || _vm->_language == Common::ES_ESP
-			    || _vm->_language == Common::IT_ITA
-			) {
-				Actor_Voice_Over(1950, kActorVoiceOver);
-			}
-		} else {
-			Actor_Voice_Over(9010, kActorMcCoy);
-			Actor_Voice_Over(9015, kActorMcCoy);
-			Actor_Voice_Over(9020, kActorMcCoy);
-		}
+	) {	
+		Actor_Voice_Over(9010, kActorMcCoy);
+		Actor_Voice_Over(9015, kActorMcCoy);
+		Actor_Voice_Over(9020, kActorMcCoy);
 		Game_Flag_Set(kFlagMcCoyCommentsOnMurderedAnimals);
 		Unclickable_Object("DRAPE01");
 		Unclickable_Object("DRAPE02");
@@ -327,7 +308,7 @@ void SceneScriptRC02::dialogueWithRunciter() {
 				if (Player_Query_Agenda() == kPlayerAgendaSurly 
 				|| Player_Query_Agenda() == kPlayerAgendaErratic) {
 					Actor_Says(kActorRunciter, 530, 17); //15-0530.AUD	My precious one. She was my baby.   
-					Actor_Says(kActorMcCoy, 2660, 18); // 00-2660.AUD	That breaks my heart. (Sarcastically.)
+					Actor_Says(kActorMcCoy, 8420, 18); //00-8420.AUD	Must be rough.
 					Actor_Modify_Friendliness_To_Other(kActorRunciter, kActorMcCoy, -2);
 				} else {
 					Actor_Says(kActorMcCoy, 4575, kAnimationModeTalk); //00-4575.AUD	I can tell you're crushed.
@@ -753,17 +734,15 @@ bool SceneScriptRC02::ClickedOnActor(int actorId) {
 				if (Game_Flag_Query(kFlagRunciterIsReplicant)) {
 					if (Actor_Query_Friendliness_To_Other(kActorRunciter, kActorMcCoy) < 50) {
 						Actor_Says(kActorRunciter, 9000, 15); 
+						if (Player_Query_Agenda() == kPlayerAgendaPolite) {
+							Actor_Says(kActorMcCoy, 4615, 13); //00-4615.AUD	Just wondering.
+						}
+						Actor_Says(kActorRunciter, 180, 13); //15-0180.AUD	Do I look like I need to carry artificial product?
 					} else {
 						Actor_Says(kActorRunciter, 960, 15); //15-0960.AUD	No.
 					}
-					Delay(1000);
-					if (Player_Query_Agenda() == kPlayerAgendaPolite) {
-						Actor_Says(kActorMcCoy, 4615, 13); //00-4615.AUD	Just wondering.
-					}
-					Actor_Says(kActorRunciter, 180, 13); //15-0180.AUD	Do I look like I need to carry artificial product?
 				} else {
 					Actor_Says(kActorRunciter, 150, 15); //15-0150.AUD	I resent that accusation. 
-					Delay(1000);
 					if (Player_Query_Agenda() == kPlayerAgendaPolite) {
 						Actor_Says(kActorMcCoy, 4615, 13);
 					}
@@ -795,22 +774,25 @@ bool SceneScriptRC02::ClickedOnActor(int actorId) {
 					Actor_Says(kActorRunciter, 960, 15); //15-0960.AUD	No.
 				}
 				Delay (1000);
-				if (Player_Query_Agenda() == kPlayerAgendaSurly 
-				|| Player_Query_Agenda() == kPlayerAgendaErratic) {
+				if (Player_Query_Agenda() != kPlayerAgendaPolite) {
 					Actor_Says(kActorMcCoy, 4685, 15); //00-4685.AUD	You're sure there's nothing else you wanna tell me?
 					Actor_Says(kActorRunciter, 1630, 17); //15-1630.AUD	What? Do you really think I'd lie to you? Preposterous,
-					Actor_Says(kActorMcCoy, 8519, 14);//00-8519.AUD	What do you say we dish each other the straight goods.
 					Actor_Modify_Friendliness_To_Other(kActorRunciter, kActorMcCoy, -2);
-					Actor_Says(kActorRunciter, 1640, 14); //15-1640.AUD	Ah...well, yes. I suppose that isn't the whole truth but...
-					Actor_Says(kActorRunciter, 1650, 16); //15-1650.AUD	All right, all right. Here's the real truth.
-					Actor_Says(kActorRunciter, 210, 13);
-					Actor_Says(kActorMcCoy, 4630, 18);
-					Actor_Says(kActorRunciter, 220, 14);
-					Actor_Says(kActorRunciter, 230, 13);
-					Actor_Says(kActorMcCoy, 4635, 19); // 00-4635.AUD	I assume you're talking about some of those fruitcakes on DNA Row.
-					Actor_Says(kActorRunciter, 240, 16); // 15-0240.AUD	That's a horrible thing to say about people, detective.
-					Actor_Says(kActorMcCoy, 4640, 17); // 00-4640.AUD	Sorry.
-					Actor_Clue_Acquire(kActorMcCoy, kClueRunciterConfession2, true, kActorRunciter);
+					if (Player_Query_Agenda() == kPlayerAgendaSurly 
+					|| Player_Query_Agenda() == kPlayerAgendaErratic) {
+						Actor_Says(kActorMcCoy, 8519, 14);//00-8519.AUD	What do you say we dish each other the straight goods.
+						Actor_Modify_Friendliness_To_Other(kActorRunciter, kActorMcCoy, -2);
+						Actor_Says(kActorRunciter, 1640, 14); //15-1640.AUD	Ah...well, yes. I suppose that isn't the whole truth but...
+						Actor_Says(kActorRunciter, 1650, 16); //15-1650.AUD	All right, all right. Here's the real truth.
+						Actor_Says(kActorRunciter, 210, 13);
+						Actor_Says(kActorMcCoy, 4630, 18);
+						Actor_Says(kActorRunciter, 220, 14);
+						Actor_Says(kActorRunciter, 230, 13);
+						Actor_Says(kActorMcCoy, 4635, 19); // 00-4635.AUD	I assume you're talking about some of those fruitcakes on DNA Row.
+						Actor_Says(kActorRunciter, 240, 16); // 15-0240.AUD	That's a horrible thing to say about people, detective.
+						Actor_Says(kActorMcCoy, 4640, 17); // 00-4640.AUD	Sorry.
+						Actor_Clue_Acquire(kActorMcCoy, kClueRunciterConfession2, true, kActorRunciter);
+					}
 				}
 				// Original behaviour without cut content.
 			} else if (Player_Query_Agenda() == kPlayerAgendaSurly) {
@@ -996,7 +978,7 @@ void SceneScriptRC02::PlayerWalkedIn() {
 				Actor_Says(kActorRunciter, 1620, 12); //15-1620.AUD	Hmph! I don't think I want to talk to you anymore Mr. McCoy.
 				Actor_Says(kActorMcCoy, 4720, 16); //00-4720.AUD	Bone marrow tests are getting cheaper every day.
 				Actor_Says(kActorRunciter, 430, 16); //15-0430.AUD	Go away!
-				Actor_Says(kActorMcCoy, 8519, 14);//00-8519.AUD	What do you say we dish each other the straight goods.
+				Actor_Says(kActorMcCoy, 6985, 16); //00-6985.AUD	Got the straight scoop for me or what?
 				Actor_Says(kActorRunciter, 1630, 17); //15-1630.AUD	What? Do you really think I'd lie to you? Preposterous,
 				Actor_Says(kActorMcCoy, 4740, 14); //00-4740.AUD	Lie to me. Go ahead. You'll only do it once.
 				Actor_Says(kActorRunciter, 500, 18); //15-0500.AUD	Animals. It was my animals. Some of them were...
@@ -1050,7 +1032,6 @@ void SceneScriptRC02::PlayerWalkedIn() {
 				Actor_Modify_Friendliness_To_Other(kActorSteele, kActorMcCoy, 1);
 				Actor_Modify_Friendliness_To_Other(kActorClovis, kActorMcCoy, 1);
 				Actor_Modify_Friendliness_To_Other(kActorGuzza, kActorMcCoy, 1);
-				Delay (1000);
 				Game_Flag_Set(kFlagRunciterArrested);
 				Actor_Put_In_Set(kActorRunciter, kSetPS09);
 				Actor_Set_At_XYZ(kActorRunciter, -389.43f, 2.06f, -200.77f, 512);
@@ -1059,7 +1040,6 @@ void SceneScriptRC02::PlayerWalkedIn() {
 				Scene_Exits_Enable();
 				Game_Flag_Reset(kFlagMcCoyInRunciters);
 				Game_Flag_Set(kFlagMcCoyInPoliceStation);
-				Outtake_Play(kOuttakeAway1, true, -1);
 				Set_Enter(kSetPS09, kScenePS09);
 			}
 		}

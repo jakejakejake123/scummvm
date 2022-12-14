@@ -253,7 +253,6 @@ void SceneScriptKP06::PlayerWalkedIn() {
 						Set_Enter(kSetPS09, kScenePS09);
 						Player_Loses_Control();
 						Delay(2000);
-						Outtake_Play(kOuttakeEnd2, false, -1);
 						Game_Over();
 					}
 					Actor_Says(kActorSteele, 2580, 15); //01-2580.AUD	I gotta say, McCoy. You had me fooled. I thought for sure you were a Rep.
@@ -291,7 +290,7 @@ void SceneScriptKP06::PlayerWalkedIn() {
 					Actor_Face_Actor(kActorGaff, kActorMcCoy, true);
 					Actor_Face_Actor(kActorMcCoy, kActorGaff, true);
 					Actor_Says(kActorGaff, 110, 12);
-					Actor_Says(kActorMcCoy, 2945, 14); //00-2945.AUD	You could say that.
+					Actor_Says(kActorMcCoy, 5705, 18); //00-5705.AUD	Uh-huh.
 					Delay(2000);
 					Actor_Says(kActorGaff, 190, 14); //53-0190.AUD	It's like I said before. You retire a human, your career is over.
 					if (Actor_Query_Friendliness_To_Other(kActorGaff, kActorMcCoy) < 50) {
@@ -306,7 +305,6 @@ void SceneScriptKP06::PlayerWalkedIn() {
 					Set_Enter(kSetPS09, kScenePS09);
 					Player_Loses_Control();
 					Delay(2000);
-					Outtake_Play(kOuttakeEnd2, false, -1);
 					Game_Over();
 				}
 				Actor_Says(kActorGaff, 220, 13);

@@ -166,7 +166,9 @@ void AIScriptDektora::CompletedMovementTrack() {
 	// to create further differences between the replicant and human versions of each character.
 	if (_vm->_cutContent) {
 		if (Random_Query(1, 3) == 1
-		&& !Game_Flag_Query(kFlagEarlyQIsReplicant)  
+		&& !Game_Flag_Query(kFlagEarlyQIsReplicant)
+		&& Game_Flag_Query(kFlagDektoraIsReplicant)
+		&& !Game_Flag_Query(kFlagInsectDealerArrested)
 		&& Actor_Query_Goal_Number(kActorEarlyQ) != 1
 		&& Actor_Query_Goal_Number(kActorEarlyQ) != 101
 		) {
@@ -187,7 +189,20 @@ void AIScriptDektora::CompletedMovementTrack() {
 		break;
 
 	case kGoalDektoraWalkAroundAsHuman:
-	if (!_vm->_cutContent) {
+	if (_vm->_cutContent) {
+		if (Random_Query(1, 3) == 1
+		&& !Game_Flag_Query(kFlagEarlyQIsReplicant)
+		&& Game_Flag_Query(kFlagDektoraIsReplicant)
+		&& !Game_Flag_Query(kFlagInsectDealerArrested)
+		&& Actor_Query_Goal_Number(kActorEarlyQ) != 1
+		&& Actor_Query_Goal_Number(kActorEarlyQ) != 101
+		) {
+			Game_Flag_Set(kFlagAR02DektoraWillBuyScorpions);
+			Actor_Set_Goal_Number(kActorDektora, kGoalDektoraStartWalkingAround);
+		} else {
+			Actor_Set_Goal_Number(kActorDektora, kGoalDektoraStartWalkingAround);
+		}
+	} else {
 		if (Random_Query(1, 5) == 1
 		 && Actor_Query_Goal_Number(kActorEarlyQ) != 1
 		 && Actor_Query_Goal_Number(kActorEarlyQ) != 101
@@ -390,25 +405,23 @@ void AIScriptDektora::Retired(int byActorId) {
 			Player_Loses_Control();
 			if (_vm->_cutContent) {
 				if (Actor_Query_In_Set(kActorRunciter, kSetKP07)) {
-					if (Actor_Query_In_Set(kActorRunciter, kSetKP07)) {
-						Loop_Actor_Walk_To_XYZ(kActorRunciter, -12.0f, -41.58f, 72.0f, 0, true, false, false);
-						Actor_Put_In_Set(kActorRunciter, kSceneKP06);
+					Loop_Actor_Walk_To_XYZ(kActorRunciter, -12.0f, -41.58f, 72.0f, 0, true, false, false);
+					Actor_Put_In_Set(kActorRunciter, kSceneKP06);
+				}
+				if (Actor_Query_In_Set(kActorCrazylegs, kSetKP07)) {
+					Loop_Actor_Walk_To_XYZ(kActorCrazylegs, -12.0f, -41.58f, 72.0f, 0, true, false, false);
+					Actor_Put_In_Set(kActorCrazylegs, kSceneKP06);	
+				}
+				if (Game_Flag_Query(kFlagRunciterIsReplicant)) {
+					if (Actor_Query_Goal_Number(kActorRunciter) < kGoalRunciterDead) {
+						Delay(500);
+						Sound_Play(kSfxSMCAL3, 100, 0, 0, 50);
 					}
-					if (Actor_Query_In_Set(kActorCrazylegs, kSetKP07)) {
-						Loop_Actor_Walk_To_XYZ(kActorCrazylegs, -12.0f, -41.58f, 72.0f, 0, true, false, false);
-						Actor_Put_In_Set(kActorCrazylegs, kSceneKP06);	
-					}
-					if (Game_Flag_Query(kFlagRunciterIsReplicant)) {
-						if (Actor_Query_Goal_Number(kActorRunciter) < kGoalRunciterDead) {
-							Delay(500);
-							Sound_Play(kSfxSMCAL3, 100, 0, 0, 50);
-						}
-					}
-					if (Game_Flag_Query(kFlagCrazylegsIsReplicant)) {
-						if (!Game_Flag_Query(kFlagCrazylegsDead)) {
-							Delay(500);
-							Sound_Play(kSfxSMCAL3, 100, 0, 0, 50);
-						}
+				}
+				if (Game_Flag_Query(kFlagCrazylegsIsReplicant)) {
+					if (!Game_Flag_Query(kFlagCrazylegsDead)) {
+						Delay(500);
+						Sound_Play(kSfxSMCAL3, 100, 0, 0, 50);
 					}
 				}
 				Delay(2000);
@@ -470,7 +483,9 @@ bool AIScriptDektora::GoalChanged(int currentGoalNumber, int newGoalNumber) {
 		// therefore Dektora never buys the scorpions since she has no reason to kill Early Q.
 		if (_vm->_cutContent) {
 			if (Random_Query(1, 2) == 1) {
-				if (!Game_Flag_Query(kFlagEarlyQIsReplicant)) { 
+				if (!Game_Flag_Query(kFlagEarlyQIsReplicant)
+				&& Game_Flag_Query(kFlagDektoraIsReplicant)
+				&& !Game_Flag_Query(kFlagInsectDealerArrested)) { 
 					if (Game_Flag_Query(kFlagAR02DektoraWillBuyScorpions)) {
 						AI_Movement_Track_Append(kActorDektora, 289, 0);
 						AI_Movement_Track_Append_With_Facing(kActorDektora, 290, 2, 979);

@@ -379,13 +379,15 @@ void SceneScriptNR05::talkToEarlyQ() {
 	Dialogue_Menu_Clear_List();
 	if (Actor_Query_Friendliness_To_Other(kActorEarlyQ, kActorMcCoy) >= 48) {
 		if (Actor_Clue_Query(kActorMcCoy, kClueDragonflyCollection)
-		 || Actor_Clue_Query(kActorMcCoy, kClueCollectionReceipt)
-		) {
-			DM_Add_To_List_Never_Repeat_Once_Selected(890, -1, 4, 8); // JEWELRY
+		|| Actor_Clue_Query(kActorMcCoy, kClueCollectionReceipt)) {
+			if (!Actor_Clue_Query(kActorMcCoy, kClueEarlyInterviewB1)) {
+				DM_Add_To_List_Never_Repeat_Once_Selected(890, -1, 4, 8); // JEWELRY
+			}
 		}
 		// Made it you can now ask Early Q about Lucy even if you don't have her photo.
 		if (_vm->_cutContent) {
-			if (Actor_Query_Goal_Number(kActorLucy) != kGoalLucyGone) {
+			if (Actor_Query_Goal_Number(kActorLucy) != kGoalLucyGone
+			&& Global_Variable_Query(kVariableAffectionTowards) != kAffectionTowardsLucy)  {
 				DM_Add_To_List_Never_Repeat_Once_Selected(900, 5, 6, 5); // LUCY
 			}
 		} else if (Actor_Clue_Query(kActorMcCoy, kClueLucy)
@@ -394,7 +396,8 @@ void SceneScriptNR05::talkToEarlyQ() {
 		}
 		if (_vm->_cutContent) {
 			if (Actor_Clue_Query(kActorMcCoy, kClueLucy)) {
-				if (Actor_Query_Goal_Number(kActorLucy) != kGoalLucyGone) {
+				if (Actor_Query_Goal_Number(kActorLucy) != kGoalLucyGone
+				&& Global_Variable_Query(kVariableAffectionTowards) != kAffectionTowardsLucy)  {
 					DM_Add_To_List_Never_Repeat_Once_Selected(1210, 4, 6, 2); // LUCY'S PHOTO
 				}
 			}
@@ -403,19 +406,18 @@ void SceneScriptNR05::talkToEarlyQ() {
 		// Also made it so this option is only available if you also talked to Early Q about the jewelry. This is because Early Q mentions giving the jewelry to 'Hecuba'
 		// in this conversation which is a follow up of the previous conversation where he mentions giving the jewelry to one of his dancers.
 		if (_vm->_cutContent) {
-			if (Game_Flag_Query(kFlagEarlyQTalkJewelry)) {
-				if (Actor_Clue_Query(kActorMcCoy, kClueChinaBar)) {
-					// TODO A bug? kClueDektorasDressingRoom is acquired from EarlyQ
-					// at his office (nr04) while being threatened by McCoy.
-					// At which point EarlyQ already tells McCoy who the people on the photograph are.
-					// It makes no sense that McCoy will next find EarlyQ at the VIP area (this area, nr05)
-					// and casually ask him about who the woman is in this photo.
-					// (McCoy won't be able to even find EarlyQ there again).
-					// Maybe it's another photo of Dektora needed here
-					// --- Animoid Row? Why would McCoy suspect that woman?
-					// --- Hawker's Bar? Can we find a Dektora pic in SHP resources?
-					DM_Add_To_List_Never_Repeat_Once_Selected(910, 5, 5, 5); // BLOND WOMAN
-				}
+			if (Actor_Clue_Query(kActorMcCoy, kClueChinaBar)
+			&& Game_Flag_Query(kFlagDektoraIdentified)) {
+				// TODO A bug? kClueDektorasDressingRoom is acquired from EarlyQ
+				// at his office (nr04) while being threatened by McCoy.
+				// At which point EarlyQ already tells McCoy who the people on the photograph are.
+				// It makes no sense that McCoy will next find EarlyQ at the VIP area (this area, nr05)
+				// and casually ask him about who the woman is in this photo.
+				// (McCoy won't be able to even find EarlyQ there again).
+				// Maybe it's another photo of Dektora needed here
+				// --- Animoid Row? Why would McCoy suspect that woman?
+				// --- Hawker's Bar? Can we find a Dektora pic in SHP resources?
+				DM_Add_To_List_Never_Repeat_Once_Selected(910, 5, 5, 5); // BLOND WOMAN
 			}
 		}
 	}
@@ -426,8 +428,7 @@ void SceneScriptNR05::talkToEarlyQ() {
 		if (_vm->_cutContent) {
 			Actor_Says(kActorMcCoy, 8514, kAnimationModeTalk); //00-8514.AUD	Got anything new to tell me?
 			Actor_Says(kActorEarlyQ, 710, kAnimationModeTalk); //18-0710.AUD	The only thing I’ve heard lately is that ol’ moan of pleasure from an ultra-vixen, if you know what I mean.
-			if (Player_Query_Agenda() == kPlayerAgendaSurly
-			|| (Player_Query_Agenda() == kPlayerAgendaErratic)) {
+			if (Player_Query_Agenda() != kPlayerAgendaPolite) {
 				Actor_Says(kActorMcCoy, 3910, kAnimationModeTalk); //00-3910.AUD	You’re lying.
 				Actor_Says(kActorEarlyQ, 740, kAnimationModeTalk); //18-0740.AUD	Hey, would this face lie to you?
 			}
@@ -530,13 +531,7 @@ void SceneScriptNR05::talkToEarlyQ() {
 		Actor_Says_With_Pause(kActorEarlyQ, 530, 1.2f, kAnimationModeTalk); //18-0530.AUD	This ain’t no daycare center, General.
 		// Made it so if Early Q is a rep he doesn't make those creepy comments about Lucy. If Early Q is a rep he actually cares about the reps and would never hurt Lucy
 		// who is someone that the reps really care about.
-		if (_vm->_cutContent) {
-			if (!Game_Flag_Query(kFlagEarlyQIsReplicant)) {
-				Actor_Says(kActorEarlyQ, 540, 15); //18-0540.AUD	Of course, she ain’t half bad looking. My pappy always used to say ‘if there’s grass on the field, it’s time to play ball’.
-				Actor_Says(kActorMcCoy, 8665, 13); //00-8665.AUD	Disgusting.
-				Delay(2000);
-			}
-		} else {
+		if (!_vm->_cutContent) {
 			Actor_Says(kActorEarlyQ, 540, 15); //18-0540.AUD	Of course, she ain’t half bad looking. My pappy always used to say ‘if there’s grass on the field, it’s time to play ball’.			
 		}
 		Actor_Says(kActorMcCoy, 3550, 13); //00-3550.AUD	So, she hasn’t been around here?
@@ -584,10 +579,14 @@ void SceneScriptNR05::talkToEarlyQ() {
 		break;
 
 	case 910: // BLOND WOMAN
-		Actor_Says(kActorMcCoy, 3515, 14);
+		if (_vm->_cutContent) {
+			Actor_Says(kActorMcCoy, 3515, 23); //00-3515.AUD	You ever seen this woman before?
+		} else {
+			Actor_Says(kActorMcCoy, 3515, 14); //00-3515.AUD	You ever seen this woman before?
+		}
 		Actor_Modify_Friendliness_To_Other(kActorEarlyQ, kActorMcCoy, -1);
-			// Made it so Early Q will only says that he recognises Dektora if he is a human. If he is a rep he will be protecting the reps so he will deny recognising Dektora.
-			if (!Game_Flag_Query(kFlagEarlyQIsReplicant)) { 
+		// Made it so Early Q will only says that he recognises Dektora if he is a human. If he is a rep he will be protecting the reps so he will deny recognising Dektora.
+		if (!Game_Flag_Query(kFlagEarlyQIsReplicant)) { 
 			// A BUG?
 			// TODO why is Grigorian's Note needed here, for EarlyQ to reveal who Hecuba is?
 			// TODO could CrazysInvolvement also do here?
@@ -601,13 +600,27 @@ void SceneScriptNR05::talkToEarlyQ() {
 			// --- for this specific bit of dialogue which reveals Hecuba's identity.
 			// --- Otherwiase it would create inconsistency to what is known about Hecuba
 			// - Dektora/Hecuba has *not* performed her act yet
-			Actor_Says(kActorEarlyQ, 580, 12); //18-0580.AUD	Hey. That kinda looks like Hecuba. The one I lent the jewelry to?
-			Actor_Says(kActorMcCoy, 3560, 13); 
-			Actor_Says(kActorEarlyQ, 590, 16); //18-0590.AUD	That’s it.
+			if (_vm->_cutContent) {
+				if (Actor_Clue_Query(kActorMcCoy, kClueEarlyInterviewA)) {
+					Actor_Says(kActorEarlyQ, 580, 12); //18-0580.AUD	Hey. That kinda looks like Hecuba. The one I lent the jewelry to?
+					Actor_Says(kActorMcCoy, 3560, 13); 
+					Actor_Says(kActorEarlyQ, 590, 16); //18-0590.AUD	That’s it.
+				} else {
+					Actor_Says(kActorEarlyQ, 560, 14); //18-0560.AUD	Nah, she ain’t one of mine.
+				}
+			} else {
+				Actor_Says(kActorEarlyQ, 580, 12); //18-0580.AUD	Hey. That kinda looks like Hecuba. The one I lent the jewelry to?
+				Actor_Says(kActorMcCoy, 3560, 13); 
+				Actor_Says(kActorEarlyQ, 590, 16); //18-0590.AUD	That’s it.
+			}
 			if (_vm->_cutContent) {
 				if (Player_Query_Agenda() == kPlayerAgendaSurly
 				|| (Player_Query_Agenda() == kPlayerAgendaErratic)) {
-					Actor_Says(kActorMcCoy, 3565, 16); //00-3565.AUD	There hasn’t been an exotic dancer who used her real name since Jesus was a pup.
+					if (Actor_Clue_Query(kActorMcCoy, kClueEarlyInterviewA)) {
+						Actor_Says(kActorMcCoy, 3565, 16); //00-3565.AUD	There hasn’t been an exotic dancer who used her real name since Jesus was a pup.
+					} else {
+						Actor_Says(kActorMcCoy, 6985, 16); //00-6985.AUD	Got the straight scoop for me or what?
+					}
 					Actor_Says(kActorEarlyQ, 600, 13);
 					Actor_Says(kActorMcCoy, 3570, 14); //00-3570.AUD	I’m gonna want to talk to her. When is she up?
 					Actor_Says(kActorEarlyQ, 620, 15); //18-0620.AUD	Next, General. Have a couple of drinks, relax a little. But wait until her act is over. I don’t want to deprive a lady of her livelihood.

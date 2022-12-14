@@ -88,6 +88,7 @@ void AIScriptPhotographer::ReceivedClue(int clueId, int fromActorId) {
 void AIScriptPhotographer::ClickedByPlayer() {
 	if ( Actor_Clue_Query(kActorMcCoy, kClueDragonflyEarring)
 	 && !Game_Flag_Query(kFlagTB06PhotographTalk1)
+	 && !Actor_Clue_Query(kActorMcCoy, kClueBombingSuspect)
 	) {
 		AI_Movement_Track_Pause(kActorPhotographer);
 		Actor_Face_Actor(kActorMcCoy, kActorPhotographer, true);

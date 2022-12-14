@@ -127,6 +127,7 @@ bool SceneScriptHC01::ClickedOnActor(int actorId) {
 				Actor_Face_Actor(kActorIzo, kActorMcCoy, true);
 				if (_vm->_cutContent) {
 					Actor_Face_Actor(kActorMcCoy, kActorIzo, true);
+					Actor_Says(kActorMcCoy, 4560, 23);
 					Actor_Says_With_Pause(kActorIzo, 0, 0.2f, 13);
 					Actor_Says_With_Pause(kActorIzo, 10, 0.2f, 13);
 				} else {
@@ -193,7 +194,11 @@ bool SceneScriptHC01::ClickedOnActor(int actorId) {
 			Game_Flag_Set(kFlagIzoPrepared);
 		} else {
 			Loop_Actor_Walk_To_XYZ(kActorMcCoy, 624.43f, 0.14f, 83.0f, 0, true, false, false);
-			Actor_Says(kActorMcCoy, 8605, 18); //00-8605.AUD	You staying out of trouble, buddy?.
+			if (Player_Query_Agenda() == kPlayerAgendaPolite) {
+				Actor_Says(kActorMcCoy, 2860, 13); // YouTakeCareOfYourself
+			} else {
+				Actor_Says(kActorMcCoy, 8605, 18); //00-8605.AUD	You staying out of trouble, buddy?.
+			}
 		}
 	}
 #endif // BLADERUNNER_ORIGINAL_BUGS
@@ -355,12 +360,12 @@ void SceneScriptHC01::dialogueWithIzo() {
 	if (_vm->_cutContent) {
 		if (Actor_Clue_Query(kActorMcCoy, kCluePeruvianLadyInterview)
 		&& !Actor_Clue_Query(kActorMcCoy, kClueIzoInterview)) {
-			DM_Add_To_List_Never_Repeat_Once_Selected(1020, 6, 7, 4); // DRAGONFLY JEWERLY
+			DM_Add_To_List_Never_Repeat_Once_Selected(1020, 6, 7, 8); // DRAGONFLY JEWERLY
 		} else if (Actor_Clue_Query(kActorMcCoy, kClueDragonflyEarring)
 				|| Actor_Clue_Query(kActorMcCoy, kClueBombingSuspect)
 				|| Actor_Clue_Query(kActorMcCoy, kClueDragonflyAnklet)
 		) {
-			DM_Add_To_List_Never_Repeat_Once_Selected(1010, 6, 7, 4); // INSECT JEWELRY
+			DM_Add_To_List_Never_Repeat_Once_Selected(1010, 6, 7, 8); // INSECT JEWELRY
 		}
 	} else if (Actor_Clue_Query(kActorMcCoy, kCluePeruvianLadyInterview)) {
 		DM_Add_To_List_Never_Repeat_Once_Selected(1020, 6, 7, 3); // DRAGONFLY JEWERLY
@@ -379,7 +384,7 @@ void SceneScriptHC01::dialogueWithIzo() {
 	if (_vm->_cutContent) {
 		if (Actor_Clue_Query(kActorMcCoy, kClueGrigorianInterviewB1)
 		|| Actor_Clue_Query(kActorMcCoy, kClueGrigorianInterviewB2)) {
-			DM_Add_To_List(1100, 1, 2, 3); // VOIGT-KAMPFF
+			DM_Add_To_List(1100, 1, 3, 4); // VOIGT-KAMPFF
 			DM_Add_To_List(1110, 3, 2, 1); // CRYSTAL
 		}
 	}
@@ -401,9 +406,9 @@ void SceneScriptHC01::dialogueWithIzo() {
 	// which is what Grigorian says in kClueGrigorianInterviewB2
 	if (_vm->_cutContent) {
 		if (Actor_Clue_Query(kActorMcCoy, kClueGrigorianInterviewB1)) {
-			DM_Add_To_List_Never_Repeat_Once_Selected(1050, 4, 3, 8); // GRIGORIAN 1
+			DM_Add_To_List_Never_Repeat_Once_Selected(1050, 4, 3, 5); // GRIGORIAN 1
 		} else if (Actor_Clue_Query(kActorMcCoy, kClueGrigorianInterviewB2)) {
-			DM_Add_To_List_Never_Repeat_Once_Selected(1060, 4, 3, 8); // GRIGORIAN 2
+			DM_Add_To_List_Never_Repeat_Once_Selected(1060, 4, 3, 5); // GRIGORIAN 2
 		}
 	} else if (Actor_Clue_Query(kActorMcCoy, kClueGrigorianInterviewB1)) {
 		DM_Add_To_List_Never_Repeat_Once_Selected(1050, -1, 3, 8); // GRIGORIAN 1
@@ -449,24 +454,8 @@ void SceneScriptHC01::dialogueWithIzo() {
 				Actor_Says(kActorMcCoy, 1070, 13); //00-1070.AUD	Ever see this piece? Real elite stuff.
 			}
 			if (_vm->_cutContent) { 
-				if (Game_Flag_Query(kFlagIzoIsReplicant)) {
+				if (Actor_Query_Friendliness_To_Other(kActorIzo, kActorMcCoy) < 50) {
 					Actor_Says(kActorIzo, 150, kAnimationModeTalk); //07-0150.AUD	Not for many years. You should try elsewhere.
-					if (Player_Query_Agenda() == kPlayerAgendaSurly
-					|| (Player_Query_Agenda() == kPlayerAgendaErratic)) {
-						Actor_Says(kActorMcCoy, 8519, 14);//00-8519.AUD	What do you say we dish each other the straight goods.
-						Actor_Modify_Friendliness_To_Other(kActorIzo, kActorMcCoy, -2);
-						Delay(2000);
-						Actor_Says(kActorIzo, 200, 17);
-						Actor_Says(kActorIzo, 210, 12);
-						Actor_Says(kActorMcCoy, 1115, 12);
-						Actor_Says(kActorIzo, 220, 16);
-						Actor_Says(kActorIzo, 230, kAnimationModeTalk);
-						Actor_Says(kActorIzo, 240, 15);
-						Actor_Clue_Acquire(kActorMcCoy, kClueIzoInterview, false, kActorIzo);
-						if (Query_Difficulty_Level() < kGameDifficultyHard) {
-							Actor_Modify_Friendliness_To_Other(kActorIzo, kActorMcCoy, -1);
-						}
-					}
 				} else {
 					Actor_Says(kActorIzo, 200, 17);
 					Actor_Says(kActorIzo, 210, 12);
@@ -493,33 +482,17 @@ void SceneScriptHC01::dialogueWithIzo() {
 			Dialogue_Menu_Remove_From_List(1020);
 			Actor_Says(kActorMcCoy, 1065, 15); //00-1065.AUD	You move a lot of valuable goods through here? Valuable and exotic?
 			if (_vm->_cutContent) { 
-				if (Game_Flag_Query(kFlagIzoIsReplicant)) {
-					// Restored: if Izo is a Replicant, he would probably lie
-					// so this line goes here
+				if (Actor_Query_Friendliness_To_Other(kActorIzo, kActorMcCoy) < 50) {
 					Actor_Says(kActorIzo, 150, kAnimationModeTalk); //07-0150.AUD	Not for many years. You should try elsewhere.
-					if (Player_Query_Agenda() == kPlayerAgendaSurly
-					|| (Player_Query_Agenda() == kPlayerAgendaErratic)) {
-						Actor_Modify_Friendliness_To_Other(kActorIzo, kActorMcCoy, -2);
-						Actor_Says(kActorMcCoy, 8519, 14);//00-8519.AUD	What do you say we dish each other the straight goods.
-						Delay(2000);
-						Actor_Says(kActorIzo, 160, kAnimationModeTalk); //07-0160.AUD	How exotic?
-						Actor_Says(kActorMcCoy, 1110, 16);
-						Actor_Says(kActorIzo, 210, 12); //07-0210.AUD	That's a white market item.
-						Actor_Says(kActorMcCoy, 1115, 12);
-						Actor_Says(kActorIzo, 220, 16);
-						Actor_Says(kActorIzo, 230, kAnimationModeTalk);
-						Actor_Says(kActorIzo, 240, 15);
-						Actor_Clue_Acquire(kActorMcCoy, kClueIzoInterview, false, kActorIzo);
-					}	
 				} else {
 					Actor_Says(kActorIzo, 160, kAnimationModeTalk); //07-0160.AUD	How exotic?
 					Actor_Says(kActorMcCoy, 1110, 16);
-					if (Actor_Query_Friendliness_To_Other(kActorIzo, kActorMcCoy) > 49) {
+					if (!Game_Flag_Query(kFlagIzoIsReplicant)) {
 						Actor_Says(kActorIzo, 170, kAnimationModeTalk); //07-0170.AUD	Ah, they were so majestic.
-					}
-					Actor_Says(kActorIzo, 180, kAnimationModeTalk); //07-0180.AUD	I remember them from my childhood.
-					if (Actor_Query_Friendliness_To_Other(kActorIzo, kActorMcCoy) < 50) {
+						Actor_Says(kActorIzo, 180, kAnimationModeTalk); //07-0180.AUD	I remember them from my childhood.
 						Actor_Says(kActorIzo, 190, 12); //07-0190.AUD	And that was the last time I've seen them.
+					} else {
+						Actor_Says(kActorIzo, 150, kAnimationModeTalk); //07-0150.AUD	Not for many years. You should try elsewhere.
 					}
 				}
 			} else {
@@ -572,7 +545,7 @@ void SceneScriptHC01::dialogueWithIzo() {
 					Actor_Says(kActorIzo, 280, 17); //07-0280.AUD	Semi-automatic.
 					Actor_Says(kActorMcCoy, 1135, 15); //00-1135.AUD	Big difference.
 				} else {
-					Actor_Says(kActorMcCoy, 1075, 18); //00-4955.AUD	You sell any Off-World stuff? Like Ender rifles?
+					Actor_Says(kActorMcCoy, 4955, 18); //00-4955.AUD	You sell any Off-World stuff? Like Ender rifles?
 					Actor_Says(kActorIzo, 320, 17); //07-0320.AUD	I don't deal in anything from the Off-World. Much too hard to authenticate.
 					Actor_Says(kActorIzo, 270, 16); //07-0270.AUD	That's why I don't sell them.
 				}
@@ -644,14 +617,21 @@ void SceneScriptHC01::dialogueWithIzo() {
 		if (answer == 1100) { // VK
 			Actor_Says(kActorMcCoy, 5480, 15); //00-5480.AUD	Look, just come along with me. You’re gonna have to take a little personality test.
 			Actor_Modify_Friendliness_To_Other(kActorIzo, kActorMcCoy, -2);
-			Game_Flag_Set(kFlagIzoGotAway);
+			Actor_Modify_Friendliness_To_Other(kActorSteele, kActorMcCoy, 1);
+			Actor_Modify_Friendliness_To_Other(kActorGuzza, kActorMcCoy, 1);
+			Actor_Modify_Friendliness_To_Other(kActorClovis, kActorMcCoy, -1);	
 			Game_Flag_Set(kFlagIzoFled);
+			Game_Flag_Set(kFlagIzoOnTheRun);
 			takePhotoAndRunAway();
 			end = true;
 		}
 		if (answer == 1110) { // CRYSTAL
 			Actor_Says(kActorMcCoy, 3690, 14); //00-3690.AUD	Look. I wanna warn you. There’s a woman looking for you and your friends.
 			// Added in two flags here, the first one is so the scene with Izo in the sewers will play and then will be reset so the scene doesn't repaet. The other will be used in the endgame to decide Steeles status towards McCoy.
+			Actor_Modify_Friendliness_To_Other(kActorSteele, kActorMcCoy, -1);
+			Actor_Modify_Friendliness_To_Other(kActorGuzza, kActorMcCoy, -1);
+			Actor_Modify_Friendliness_To_Other(kActorClovis, kActorMcCoy, 1);	
+			Game_Flag_Set(kFlagMcCoyIsHelpingReplicants);
 			Game_Flag_Set(kFlagIzoGotAway);
 			Game_Flag_Set(kFlagIzoFled);
 			Game_Flag_Set(kFlagIzoWarnedAboutCrystal);
@@ -734,8 +714,6 @@ void SceneScriptHC01::dialogueWithIzo() {
 						Actor_Says(kActorIzo, 520, 16); //07-0520.AUD	More importantly stay out of my face.
 						Actor_Says(kActorIzo, 530, 15); //07-0530.AUD	All I'd have to do is make one vid-call and you would be shoveling shit Off-World for the rest of your career.
 						Actor_Says(kActorMcCoy, 1210, 16); //00-1210.AUD	Talk to me like that some more and you'll be eating it.
-						Delay(1000);
-						Actor_Says_With_Pause(kActorMcCoy, 1105, 1.2f, 13);
 					} else {	
 						Actor_Says(kActorIzo, 440, 13); //07-0440.AUD	I am nothing but a humble salesman.
 						Actor_Says(kActorMcCoy, 4880, 16); //00-4880.AUD	Is that right?

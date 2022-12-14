@@ -579,7 +579,7 @@ void AIScriptSebastian::dialogue() {
 				|| Player_Query_Agenda() == kPlayerAgendaErratic) {
 					Actor_Says(kActorMcCoy, 7115, 13); //00-7115.AUD	You're sure there isn't anything missing?
 					Actor_Says(kActorSebastian, 280, 14); //56-0280.AUD	Yes. I mean… No, sir. All my things are here.
-					Actor_Says(kActorMcCoy, 4180, 13); //00-4180.AUD	You sure?
+					Actor_Says(kActorMcCoy, 5065, 13); //00-5065.AUD	Is that right?
 					Actor_Says(kActorSebastian, 270, 16); //56-0270.AUD	You saw for yourself nothing's here. I wish you'd leave me alone.
 					Actor_Modify_Friendliness_To_Other(kActorSebastian, kActorMcCoy, -2);
 				} else {

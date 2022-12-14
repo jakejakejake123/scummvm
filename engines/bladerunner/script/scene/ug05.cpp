@@ -101,7 +101,8 @@ bool SceneScriptUG05::ClickedOnActor(int actorId) {
 		) {
 			Actor_Says(kActorOfficerGrayford, 220, -1); //24-0220.AUD	You’re gonna pay, skin-job. You’re going down.
 			if (_vm->_cutContent) {
-				if (Player_Query_Agenda() == kPlayerAgendaPolite) {
+				if (Player_Query_Agenda() != kPlayerAgendaSurly 
+				&& Player_Query_Agenda() != kPlayerAgendaErratic) {
 					Actor_Says(kActorMcCoy, 5540, 14); 
 					Actor_Says(kActorOfficerGrayford, 230, -1); //24-0230.AUD	What do you care?
 					Actor_Says(kActorMcCoy, 5545, 17);

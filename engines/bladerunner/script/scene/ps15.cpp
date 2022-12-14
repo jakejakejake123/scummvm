@@ -130,6 +130,10 @@ bool SceneScriptPS15::ClickedOnActor(int actorId) {
 				} else {
 					Item_Pickup_Spin_Effect(kModelAnimationWeaponsOrderForm, 211, 239);
 					Actor_Says(kActorSergeantWalls, 150, 14); //34-0150.AUD	I guess there ain't no harm in it.
+					Actor_Clue_Acquire(kActorMcCoy, kClueWeaponsOrderForm, true, kActorSergeantWalls);
+					if (Game_Flag_Query(kFlagPS04WeaponsOrderForm)) {
+						Item_Remove_From_World(kItemWeaponsOrderForm);
+					}
 				}
 #if BLADERUNNER_ORIGINAL_BUGS
 				// This code makes no sense (why remove the order form from the world,
@@ -145,9 +149,11 @@ bool SceneScriptPS15::ClickedOnActor(int actorId) {
 				//         and if the order form was added to Guzza's office (PS04),
 				//         then the kFlagPS04WeaponsOrderForm would be set
 				//         so in that case we remove the item from the game world (ie. from PS04)
-				Actor_Clue_Acquire(kActorMcCoy, kClueWeaponsOrderForm, true, kActorSergeantWalls);
-				if (Game_Flag_Query(kFlagPS04WeaponsOrderForm)) {
-					Item_Remove_From_World(kItemWeaponsOrderForm);
+				if (!_vm->_cutContent) {
+					Actor_Clue_Acquire(kActorMcCoy, kClueWeaponsOrderForm, true, kActorSergeantWalls);
+					if (Game_Flag_Query(kFlagPS04WeaponsOrderForm)) {
+						Item_Remove_From_World(kItemWeaponsOrderForm);
+					}
 				}
 #endif // BLADERUNNER_ORIGINAL_BUGS
 			}
@@ -332,8 +338,7 @@ void SceneScriptPS15::PlayerWalkedIn() {
 			if (_vm->_cutContent) {
 				Actor_Says(kActorMcCoy, 8320, 18); //00-8320.AUD	Really?
 				Actor_Says(kActorSergeantWalls, 210, 0); //34-0210.AUD	Would I lie to you?
-				if (Player_Query_Agenda() == kPlayerAgendaSurly 
-				|| Player_Query_Agenda() == kPlayerAgendaErratic) {
+				if (Player_Query_Agenda() != kPlayerAgendaPolite) {
 					Delay(1000);
 				} else {
 					Actor_Says(kActorMcCoy, 3530, 13); //00-3530.AUD	No, sir.

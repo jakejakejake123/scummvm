@@ -174,11 +174,23 @@ void SceneScriptBB05::PlayerWalkedIn() {
 		Actor_Says(kActorSebastian, 120, 13);
 		Actor_Says(kActorMcCoy, 7030, 15);
 		Actor_Says(kActorSebastian, 130, 17);
-		Actor_Says(kActorSebastian, 140, 16);
-		Actor_Says(kActorSebastian, 150, 14);
-		Actor_Says(kActorSebastian, 160, 15);
-		Actor_Says(kActorMcCoy, 7035, 14);  //00-7035.AUD	You feeling all right?
-		Actor_Says(kActorSebastian, 170, 12);
+		if (_vm->_cutContent) {
+			if (Actor_Query_Friendliness_To_Other(kActorSebastian, kActorMcCoy) > 49) {
+				Actor_Says(kActorSebastian, 140, 16); //56-0140.AUD	He's a very nice man. You know he even fronted me the money to buy this building.
+				Actor_Says(kActorSebastian, 150, 14); //56-0150.AUD	It's a landmark, you know.
+				Actor_Says(kActorSebastian, 160, 15); //56-0160.AUD	You really should see the front edifice. They put some amazing detail into it.
+				if (Player_Query_Agenda() == kPlayerAgendaPolite) {
+					Actor_Says(kActorMcCoy, 7035, 14);  //00-7035.AUD	You feeling all right?
+					Actor_Says(kActorSebastian, 170, 12);
+				}
+			} 
+		} else {
+			Actor_Says(kActorSebastian, 140, 16); //56-0140.AUD	He's a very nice man. You know he even fronted me the money to buy this building.
+			Actor_Says(kActorSebastian, 150, 14); //56-0150.AUD	It's a landmark, you know.
+			Actor_Says(kActorSebastian, 160, 15); //56-0160.AUD	You really should see the front edifice. They put some amazing detail into it.
+			Actor_Says(kActorMcCoy, 7035, 14);  //00-7035.AUD	You feeling all right?
+			Actor_Says(kActorSebastian, 170, 12);
+		}
 		// Made it so if McCoy is not helping the replicants but is instead hunting them down he will question if Sebastian is hiding someone, most possibly a replicant.
 		if (_vm->_cutContent) {
 			if (!Game_Flag_Query(kFlagMcCoyIsHelpingReplicants)) {

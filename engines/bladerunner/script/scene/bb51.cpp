@@ -85,7 +85,13 @@ bool SceneScriptBB51::ClickedOn3DObject(const char *objectName, bool a2) {
 		Actor_Face_Object(kActorMcCoy, "TOP02", true);
 		Actor_Voice_Over(100, kActorVoiceOver);
 		Actor_Voice_Over(110, kActorVoiceOver);
-		Actor_Voice_Over(120, kActorVoiceOver);
+		if (_vm->_cutContent) {
+			if (Player_Query_Agenda() == kPlayerAgendaPolite) { 
+				Actor_Voice_Over(120, kActorVoiceOver); //99-0120.AUD	It was like liquid sunshine. Damn tasty.
+			}
+		} else {
+			Actor_Voice_Over(120, kActorVoiceOver);
+		}
 	}
 	return false;
 }

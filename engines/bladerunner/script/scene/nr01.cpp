@@ -412,7 +412,7 @@ void SceneScriptNR01::PlayerWalkedIn() {
 			Loop_Actor_Walk_To_XYZ(kActorMcCoy, 239.0f, 31.66f, -901.0f, 0, false, false, false);
 			Music_Stop(1u);
 			Music_Play(kMusicBatl226M, 50, 0, 2, -1, kMusicLoopPlayOnce, 0);
-			if (Game_Flag_Query(kFlagMcCoyIsHelpingReplicants)) {
+			if (Player_Query_Agenda() == kPlayerAgendaPolite) {
 				Player_Loses_Control();
 				Actor_Says(kActorGordo, 70, 81);
 				Actor_Says(kActorSteele, 990, kAnimationModeTalk);
@@ -712,39 +712,84 @@ void SceneScriptNR01::PlayerWalkedIn() {
 			// will immediately attack you instead of running away.
 			if (_vm->_cutContent) {
 				if (!Game_Flag_Query(kFlagMcCoyIsHelpingReplicants)) {
-					Music_Stop(1u);
-					Music_Play(kMusicMoraji, 71, 0, 0, -1, kMusicLoopPlayOnce, 2);
-					Player_Set_Combat_Mode(true);
-					Actor_Face_Actor(kActorMcCoy, kActorGordo, true);
-					Actor_Says(kActorMcCoy, 8945, 14); //00-8945.AUD	Freeze!
-					Actor_Change_Animation_Mode(kActorGordo, 4);
-					Delay(1000);
-					Actor_Set_Goal_Number(kActorGordo, kGoalGordoNR01Attack);
-					Non_Player_Actor_Combat_Mode_On(kActorGordo, kActorCombatStateIdle, true, kActorMcCoy, 3, kAnimationModeCombatIdle, kAnimationModeCombatWalk, kAnimationModeCombatRun, 0, -1, -1, 20, 300, false);
+					if (Actor_Clue_Query(kActorMcCoy, kClueGordoConfession)  
+					|| Actor_Clue_Query(kActorMcCoy, kClueGordoInterview3)
+					|| Actor_Clue_Query(kActorMcCoy, kClueGordosLighterReplicant)) {
+						Music_Stop(1u);
+						Music_Play(kMusicMoraji, 71, 0, 0, -1, kMusicLoopPlayOnce, 2);
+						Player_Set_Combat_Mode(true);
+						Actor_Face_Actor(kActorMcCoy, kActorGordo, true);
+						Actor_Says(kActorMcCoy, 8945, 14); //00-8945.AUD	Freeze!
+						Actor_Change_Animation_Mode(kActorGordo, 4);
+						Delay(1000);
+						Actor_Set_Goal_Number(kActorGordo, kGoalGordoNR01Attack);
+						Non_Player_Actor_Combat_Mode_On(kActorGordo, kActorCombatStateIdle, true, kActorMcCoy, 3, kAnimationModeCombatIdle, kAnimationModeCombatWalk, kAnimationModeCombatRun, 0, -1, -1, 20, 300, false);
+					} else {
+						Actor_Face_Actor(kActorGordo, kActorMcCoy, true);
+						Actor_Face_Actor(kActorMcCoy, kActorGordo, true);
+						Actor_Says(kActorMcCoy, 3970, 14); //00-3970.AUD	Hey.
+						Loop_Actor_Walk_To_Actor(kActorGordo, kActorMcCoy, 60, false, true);
+						Actor_Face_Actor(kActorGordo, kActorMcCoy, true);
+						Actor_Face_Actor(kActorMcCoy, kActorGordo, true);
+						Actor_Says(kActorMcCoy, 4270, 14); //00-4270.AUD	I got some more questions for you.
+						Actor_Says(kActorGordo, 330, 15); //02-0330.AUD	Man, don’t you got anything better to do than hassle innocent people at their place of work?
+						Actor_Says(kActorMcCoy, 7815, 13); //00-7815.AUD	No.
+						Delay(1000);
+						Actor_Says(kActorGordo, 40, 13);//02-0040.AUD	Unfortunately, my man, I got to book.
+						Actor_Says(kActorMcCoy, 7915, 14);	//00-7915.AUD	We're not finished yet.
+						Actor_Says(kActorGordo, 570, 14); //02-0570.AUD	Gotta go, daddy-o.
+						Actor_Set_Targetable(kActorGordo, false);
+						Game_Flag_Set(kFlagGordoEscaped);
+						Scene_Exits_Enable();
+						Actor_Set_Goal_Number(kActorGordo, kGoalGordoNR01RunAway);
+					}
 				} else {
-					Actor_Face_Actor(kActorGordo, kActorMcCoy, true);
-					Actor_Face_Actor(kActorMcCoy, kActorGordo, true);
-					Player_Set_Combat_Mode(false);
-					Actor_Says(kActorMcCoy, 455, 14); //00-0455.AUD	Relax. Nobody's gonna get retired. Okay?
-					Loop_Actor_Walk_To_Actor(kActorGordo, kActorMcCoy, 60, false, true);
-					Actor_Face_Actor(kActorGordo, kActorMcCoy, true);
-					Actor_Face_Actor(kActorMcCoy, kActorGordo, true);
-					Actor_Says(kActorMcCoy, 3105, 15); //Instead, I’m gonna let you go. But here’s what you’re gonna do.
-					Actor_Says(kActorMcCoy, 3110, 17); //00-3110.AUD	You’re gonna go tell your pal, Clovis, that I’m looking for him.
-					Actor_Says(kActorGordo, 250, 13);
-					Actor_Says(kActorGordo, 260, 18);
-					Actor_Says(kActorMcCoy, 3115, 14);
-					Actor_Says(kActorGordo, 270, 15); //02-0270.AUD	Very funny.
-					Actor_Says(kActorMcCoy, 3255, 18); //00-3255.AUD	Maybe I’ll see you again.
-					Actor_Says(kActorGordo, 10, 15); //02-0010.AUD	Catch you later.
-					Actor_Modify_Friendliness_To_Other(kActorSteele, kActorMcCoy, -2);
-					Actor_Modify_Friendliness_To_Other(kActorClovis, kActorMcCoy, 2);
-					Actor_Modify_Friendliness_To_Other(kActorGuzza, kActorMcCoy, -2);
-					Actor_Clue_Acquire(kActorGordo, kClueMcCoyHelpedGordo, true, kActorSteele);
-					Actor_Set_Targetable(kActorGordo, false);
-					Game_Flag_Set(kFlagGordoEscaped);
-					Scene_Exits_Enable();
-					Actor_Set_Goal_Number(kActorGordo, kGoalGordoNR01RunAway);
+					if (Actor_Clue_Query(kActorMcCoy, kClueGordoConfession)  
+					|| Actor_Clue_Query(kActorMcCoy, kClueGordoInterview3)
+					|| Actor_Clue_Query(kActorMcCoy, kClueGordosLighterReplicant)) {
+						Actor_Face_Actor(kActorGordo, kActorMcCoy, true);
+						Actor_Face_Actor(kActorMcCoy, kActorGordo, true);
+						Player_Set_Combat_Mode(false);
+						Actor_Says(kActorMcCoy, 455, 14); //00-0455.AUD	Relax. Nobody's gonna get retired. Okay?
+						Loop_Actor_Walk_To_Actor(kActorGordo, kActorMcCoy, 60, false, true);
+						Actor_Face_Actor(kActorGordo, kActorMcCoy, true);
+						Actor_Face_Actor(kActorMcCoy, kActorGordo, true);
+						Actor_Says(kActorMcCoy, 3105, 15); //Instead, I’m gonna let you go. But here’s what you’re gonna do.
+						Actor_Says(kActorMcCoy, 3110, 17); //00-3110.AUD	You’re gonna go tell your pal, Clovis, that I’m looking for him.
+						Actor_Says(kActorGordo, 250, 13);
+						Actor_Says(kActorGordo, 260, 18);
+						Actor_Says(kActorMcCoy, 3115, 14);
+						Actor_Says(kActorGordo, 270, 15); //02-0270.AUD	Very funny.
+						Actor_Says(kActorMcCoy, 3255, 18); //00-3255.AUD	Maybe I’ll see you again.
+						Actor_Says(kActorGordo, 10, 15); //02-0010.AUD	Catch you later.
+						Actor_Modify_Friendliness_To_Other(kActorSteele, kActorMcCoy, -2);
+						Actor_Modify_Friendliness_To_Other(kActorClovis, kActorMcCoy, 2);
+						Actor_Modify_Friendliness_To_Other(kActorGuzza, kActorMcCoy, -2);
+						Actor_Clue_Acquire(kActorGordo, kClueMcCoyHelpedGordo, true, kActorSteele);
+						Actor_Set_Targetable(kActorGordo, false);
+						Game_Flag_Set(kFlagGordoRanAway);
+						Game_Flag_Set(kFlagGordoEscaped);
+						Scene_Exits_Enable();
+						Actor_Set_Goal_Number(kActorGordo, kGoalGordoNR01RunAway);
+					} else {
+						Actor_Face_Actor(kActorGordo, kActorMcCoy, true);
+						Actor_Face_Actor(kActorMcCoy, kActorGordo, true);
+						Actor_Says(kActorMcCoy, 3970, 14); //00-3970.AUD	Hey.
+						Loop_Actor_Walk_To_Actor(kActorGordo, kActorMcCoy, 60, false, true);
+						Actor_Face_Actor(kActorGordo, kActorMcCoy, true);
+						Actor_Face_Actor(kActorMcCoy, kActorGordo, true);
+						Actor_Says(kActorMcCoy, 4270, 14); //00-4270.AUD	I got some more questions for you.
+						Actor_Says(kActorGordo, 330, 15); //02-0330.AUD	Man, don’t you got anything better to do than hassle innocent people at their place of work?
+						Actor_Says(kActorMcCoy, 7815, 13); //00-7815.AUD	No.
+						Delay(1000);
+						Actor_Says(kActorGordo, 40, 13);//02-0040.AUD	Unfortunately, my man, I got to book.
+						Actor_Says(kActorMcCoy, 7915, 14);	//00-7915.AUD	We're not finished yet.
+						Actor_Says(kActorGordo, 570, 14); //02-0570.AUD	Gotta go, daddy-o.
+						Actor_Set_Targetable(kActorGordo, false);
+						Game_Flag_Set(kFlagGordoEscaped);
+						Scene_Exits_Enable();
+						Actor_Set_Goal_Number(kActorGordo, kGoalGordoNR01RunAway);
+					}
 				}
 			} else {
 				Actor_Set_Goal_Number(kActorGordo, kGoalGordoNR01Attack);
@@ -773,7 +818,9 @@ void SceneScriptNR01::PlayerWalkedIn() {
 			if (_vm->_cutContent) {
 				if (Actor_Clue_Query(kActorMcCoy, kClueGordoConfession)
 				|| Actor_Clue_Query(kActorMcCoy, kClueGordoInterview3)) {
-					Player_Set_Combat_Mode(true);
+					if (!Game_Flag_Query(kFlagMcCoyIsHelpingReplicants)) {
+						Player_Set_Combat_Mode(true);
+					}
 				} 
 			} else {
 				Player_Set_Combat_Mode(true);

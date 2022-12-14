@@ -175,7 +175,8 @@ void AIScriptRunciter::OtherAgentEnteredCombatMode(int otherActorId, int combatM
 	if ( Actor_Query_Goal_Number(kActorRunciter) == kGoalRunciterRC02Wait
 	 &&  combatMode
 	 && !Game_Flag_Query(kFlagRC02RunciterTalkWithGun)
-	 && Actor_Query_In_Set(kActorRunciter, kSceneRC02)
+	 && !Actor_Query_In_Set(kActorRunciter, kSceneKP07)
+	 && !Actor_Query_In_Set(kActorRunciter, kScenePS09)
 	) {
 		Actor_Set_Targetable(kActorRunciter, true);
 		Actor_Face_Actor(kActorRunciter, kActorMcCoy, true);
@@ -299,10 +300,8 @@ void AIScriptRunciter::OtherAgentEnteredCombatMode(int otherActorId, int combatM
 		Delay(1000);
 		Actor_Says(kActorRunciter, 410, 13); //15-0410.AUD	My precious ones are gone. I cared for them. All of them.
 		Delay(2000);
-		if (Player_Query_Agenda() == kPlayerAgendaPolite) {
-			Actor_Says(kActorMcCoy, 2305, 13); //00-2305.AUD	I’m sorry.
-			Delay(1000);
-		}
+		Actor_Says(kActorMcCoy, 2305, 13); //00-2305.AUD	I’m sorry.
+		Delay(1000);
 		Actor_Face_Actor(kActorRunciter, kActorMcCoy, true);
 		Actor_Says(kActorMcCoy, 3690, 14); //00-3690.AUD	Look. I wanna warn you. There’s a woman looking for you and your friends.
 		Actor_Says(kActorRunciter, 590, 15); //15-0590.AUD	What? Who?

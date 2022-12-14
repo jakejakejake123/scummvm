@@ -230,11 +230,20 @@ bool SceneScriptUG13::ClickedOnActor(int actorId) {
 								Actor_Says(kActorTransient, 160, 31); //12-0160.AUD	Sure you don’t got that drink?
 								Delay(1500);
 							} else {
-								Actor_Says(kActorMcCoy, 5600, 14);               // Let me ask you
-								Actor_Says(kActorTransient, 100, 53);            // sleeping, mumbling
-								Actor_Says(kActorMcCoy, 5605, 18);               // I'm talking to you...
-								Actor_Start_Speech_Sample(kActorTransient, 110); // sleeping, mumbling
-								Actor_Set_Goal_Number(kActorTransient, 395);
+								if (Game_Flag_Query(kFlagTransientDead)) {
+									if (Player_Query_Agenda() == kPlayerAgendaSurly 
+									|| Player_Query_Agenda() == kPlayerAgendaErratic) {
+										Actor_Says(kActorMcCoy, 8665, 13); //00-8665.AUD	Disgusting.
+									} else {	
+										Actor_Says(kActorMcCoy, 8630, 12);  // What a waste
+									}
+								} else {
+									Actor_Says(kActorMcCoy, 5600, 14);               // Let me ask you
+									Actor_Says(kActorTransient, 100, 53);            // sleeping, mumbling
+									Actor_Says(kActorMcCoy, 5605, 18);               // I'm talking to you...
+									Actor_Start_Speech_Sample(kActorTransient, 110); // sleeping, mumbling
+									Actor_Set_Goal_Number(kActorTransient, 395);
+								}
 							}
 						} else {
 							Actor_Says(kActorMcCoy, 5600, 14);               // Let me ask you
@@ -342,7 +351,6 @@ bool SceneScriptUG13::ClickedOnExit(int exitId) {
 				}
 			} else {
 				Loop_Actor_Walk_To_XYZ(kActorMcCoy, -477.0f, 141.9f, -870.0f, 0, false, false, false);
-				Game_Flag_Set(kFlagUG13toUG18);
 				Set_Enter(kSetUG18, kSceneUG18);
 			}
 		}
@@ -506,7 +514,6 @@ void SceneScriptUG13::PlayerWalkedIn() {
 				Player_Set_Combat_Mode(true);
 				Game_Flag_Set(kFlagUG13Entered);
 			}				
-			Game_Flag_Set(kFlagUG13toUG18);
 			Set_Enter(kSetUG18, kSceneUG18);
 		}
 	}
@@ -701,7 +708,7 @@ void SceneScriptUG13::dialogueWithHomeless2() {
 	if (_vm->_cutContent) {
 		DM_Add_To_List_Never_Repeat_Once_Selected(1370, 1, 8, 1); // DIRECTIONS
 		if (!Actor_Clue_Query(kActorMcCoy, kClueFolder)) {
-			DM_Add_To_List_Never_Repeat_Once_Selected(1380, 1, 1, 8); // FAT MAN
+			DM_Add_To_List_Never_Repeat_Once_Selected(1380, 8, 1, 1); // FAT MAN
 		}
 	} else {
 		DM_Add_To_List_Never_Repeat_Once_Selected(1370, 1, 1, 8); // DIRECTIONS
@@ -709,7 +716,7 @@ void SceneScriptUG13::dialogueWithHomeless2() {
 	}
 	if (_vm->_cutContent) {
 		if (!Game_Flag_Query(kFlagMcCoyIsHelpingReplicants)) {
-			DM_Add_To_List_Never_Repeat_Once_Selected(1390, 8, 1, 1); // REPLICANTS
+			DM_Add_To_List_Never_Repeat_Once_Selected(1390, 1, 1, 8); // REPLICANTS
 		}
 	} else {
 		DM_Add_To_List_Never_Repeat_Once_Selected(1390, 8, 1, 1); // REPLICANTS
@@ -749,7 +756,6 @@ void SceneScriptUG13::dialogueWithHomeless2() {
 				Actor_Set_Goal_Number(kActorTransient, 599);
 				Game_Flag_Set(kFlagGuzzaKilledTransient);
 				Game_Flag_Set(kFlagTransientDead);
-				Game_Flag_Set(kFlagUG13toUG18);
 				Set_Enter(kSetUG18, kSceneUG18);
 			} else {
 				Actor_Says(kActorMcCoy, 5665, 16); // This place is a maze
@@ -836,7 +842,6 @@ void SceneScriptUG13::dialogueWithHomeless2() {
 				Actor_Set_Goal_Number(kActorTransient, 599);
 				Game_Flag_Set(kFlagGuzzaKilledTransient);
 				Game_Flag_Set(kFlagTransientDead);
-				Game_Flag_Set(kFlagUG13toUG18);
 				Set_Enter(kSetUG18, kSceneUG18);
 			} else {
 				Actor_Says(kActorMcCoy, 2635, 18); //00-2635.AUD	I’m all ears.
@@ -937,7 +942,6 @@ void SceneScriptUG13::dialogueWithHomeless2() {
 				Actor_Set_Goal_Number(kActorTransient, 599);
 				Game_Flag_Set(kFlagGuzzaKilledTransient);
 				Game_Flag_Set(kFlagTransientDead);
-				Game_Flag_Set(kFlagUG13toUG18);
 				Set_Enter(kSetUG18, kSceneUG18);
 			} else {
 				Actor_Says(kActorMcCoy, 5675, 9); // You say this place is crawling with Reps...

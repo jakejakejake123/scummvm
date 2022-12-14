@@ -175,6 +175,7 @@ void SceneScriptKP07::InitializeScene() {
 			if (Game_Flag_Query(kFlagRunciterIsReplicant)) {
 				if (Actor_Query_Goal_Number(kActorRunciter) < kGoalRunciterDead) {
 					AI_Movement_Track_Flush(kActorRunciter);
+					Actor_Set_Goal_Number(kActorRunciter, kGoalRunciterStill);
 					Actor_Put_In_Set(kActorRunciter, kSetKP07);
 					Actor_Set_At_XYZ(kActorRunciter, 22.81f, -41.29f, 57.89f, 0);
 				}
@@ -334,9 +335,7 @@ void SceneScriptKP07::PlayerWalkedIn() {
 					Actor_Face_Actor(kActorDektora, kActorMcCoy, true);
 					Actor_Face_Actor(kActorMcCoy, kActorDektora, true);
 					Actor_Says(kActorDektora, 2650, 3); //03-2650.AUD	I told you he’d come!
-					if (Player_Query_Agenda() == kPlayerAgendaPolite) {
-						Actor_Says(kActorMcCoy, 1400, kAnimationModeTalk); //00-1400.AUD	I promised you, didn't I?
-					}
+					Actor_Says(kActorMcCoy, 1400, kAnimationModeTalk); //00-1400.AUD	I promised you, didn't I?
 					Delay (1000);
 					Actor_Face_Actor(kActorDektora, kActorClovis, true);
 				}
@@ -345,9 +344,7 @@ void SceneScriptKP07::PlayerWalkedIn() {
 					Actor_Face_Actor(kActorLucy, kActorMcCoy, true);
 					Actor_Face_Actor(kActorMcCoy, kActorLucy, true);
 					Actor_Says(kActorLucy, 3040, 3); //06-3040.AUD	I told you he’d come!
-					if (Player_Query_Agenda() == kPlayerAgendaPolite) {
-						Actor_Says(kActorMcCoy, 1425, kAnimationModeTalk); //00-1425.AUD	I promised you, didn't I?
-					}
+					Actor_Says(kActorMcCoy, 1425, kAnimationModeTalk); //00-1425.AUD	I promised you, didn't I?
 					Delay (1000);
 					Actor_Face_Actor(kActorLucy, kActorClovis, true);
 				}
@@ -358,56 +355,84 @@ void SceneScriptKP07::PlayerWalkedIn() {
 				|| Actor_Clue_Query(kActorClovis, kClueMcCoyRetiredDektora) 
 				|| Actor_Query_Friendliness_To_Other(kActorClovis, kActorMcCoy) < 51) {
 					Actor_Says(kActorClovis, 160, 3); //05-0160.AUD	I’ve been expecting you.
+					Actor_Says(kActorMcCoy, 2130, 14); //00-2130.AUD	You’re the coldest person I’ve ever seen when it comes to killing.
+					Delay(1000);
+					Actor_Says(kActorClovis, 190, -1); //05-0190.AUD	And what about you, Ray McCoy?(coughs) After what you did to my family.
+					Actor_Says(kActorClovis, 200, kAnimationModeTalk); //05-0200.AUD	To my friends. Do you not also seek forgiveness?
+					if (Player_Query_Agenda() != kPlayerAgendaPolite) {
+						Actor_Says(kActorMcCoy, 2360, 18); //00-2360.AUD	I don’t need to.
+						Delay(500);
+						Actor_Says(kActorClovis, 10, 3); //05-0010.AUD	Enough!
+						if (Game_Flag_Query(kFlagSadikIsReplicant)) {
+							if (Actor_Query_Goal_Number(kActorSadik) == kGoalSadikKP06NeedsReactorCoreFromMcCoy) {
+								Actor_Put_In_Set(kActorSadik, kSetKP07);
+								Global_Variable_Increment(kVariableReplicantsSurvivorsAtMoonbus, 1);
+								Actor_Set_At_XYZ(kActorSadik, -12.0f, -41.58f, 72.0f, 0);
+								Actor_Face_Actor(kActorSadik, kActorClovis, true);
+								// Made it so Sadik is now targetable when he enters the moonbus.
+								Actor_Set_Targetable(kActorSadik, true);
+							}
+						}
+						Player_Set_Combat_Mode(true);
+						Actor_Set_Goal_Number(kActorClovis, kGoalClovisKP07ReplicantsAttackMcCoy);
+						Game_Flag_Set(kFlagKP07ReplicantsAttackMcCoy);
+						Music_Play(kMusicMoraji, 71, 0, 0, -1, kMusicLoopPlayOnce, 2);
+						Player_Gains_Control();
+					} else {	
+						Delay (2000);
+						Actor_Says(kActorMcCoy, 2305, 17); //00-2305.AUD	I’m sorry.
+						Delay (2000);
+						Actor_Says(kActorMcCoy, 8500, 3);
+						Delay (1000);
+						Actor_Says(kActorClovis, 1250, 3);
+						if (Game_Flag_Query(kFlagSadikIsReplicant)) {
+							if (Actor_Query_Goal_Number(kActorSadik) == kGoalSadikKP06NeedsReactorCoreFromMcCoy) {
+								Actor_Put_In_Set(kActorSadik, kSetKP07);
+								Global_Variable_Increment(kVariableReplicantsSurvivorsAtMoonbus, 1);
+								Actor_Set_At_XYZ(kActorSadik, -12.0f, -41.58f, 72.0f, 0);
+								Actor_Face_Actor(kActorSadik, kActorClovis, true);
+								// Made it so Sadik is now targetable when he enters the moonbus.
+								Actor_Set_Targetable(kActorSadik, true);
+							}
+						}
+					}
 				} else {
 					Actor_Says(kActorClovis, 1240, 3); //05-1240.AUD	Welcome, brother. We have very little time.
+					Actor_Says(kActorMcCoy, 8500, 3);
+					Actor_Says(kActorClovis, 1250, 3);
+					if (Game_Flag_Query(kFlagSadikIsReplicant)) {
+						if (Actor_Query_Goal_Number(kActorSadik) == kGoalSadikKP06NeedsReactorCoreFromMcCoy) {
+							Actor_Put_In_Set(kActorSadik, kSetKP07);
+							Global_Variable_Increment(kVariableReplicantsSurvivorsAtMoonbus, 1);
+							Actor_Set_At_XYZ(kActorSadik, -12.0f, -41.58f, 72.0f, 0);
+							Actor_Face_Actor(kActorSadik, kActorClovis, true);
+							// Made it so Sadik is now targetable when he enters the moonbus.
+							Actor_Set_Targetable(kActorSadik, true);
+						}
+					}
 				}
 			} else {
 				Actor_Says(kActorClovis, 1240, 3); //05-1240.AUD	Welcome, brother. We have very little time.
-			}
-			Actor_Says(kActorMcCoy, 8500, 3);
-			Actor_Says(kActorClovis, 1250, 3);
-			if (Actor_Query_Goal_Number(kActorSadik) == kGoalSadikKP06NeedsReactorCoreFromMcCoy) {
-				Actor_Put_In_Set(kActorSadik, kSetKP07);
-				Global_Variable_Increment(kVariableReplicantsSurvivorsAtMoonbus, 1);
-				Actor_Set_At_XYZ(kActorSadik, -12.0f, -41.58f, 72.0f, 0);
-				Actor_Face_Actor(kActorSadik, kActorClovis, true);
-				// Made it so Sadik is now targetable when he enters the moonbus.
-				Actor_Set_Targetable(kActorSadik, true);
-			}
+				Actor_Says(kActorMcCoy, 8500, 3);
+				Actor_Says(kActorClovis, 1250, 3);
+				if (Actor_Query_Goal_Number(kActorSadik) == kGoalSadikKP06NeedsReactorCoreFromMcCoy) {
+					Actor_Put_In_Set(kActorSadik, kSetKP07);
+					Global_Variable_Increment(kVariableReplicantsSurvivorsAtMoonbus, 1);
+					Actor_Set_At_XYZ(kActorSadik, -12.0f, -41.58f, 72.0f, 0);
+					Actor_Face_Actor(kActorSadik, kActorClovis, true);
+					// Made it so Sadik is now targetable when he enters the moonbus.
+					Actor_Set_Targetable(kActorSadik, true);
+				}
+			}			
 		} else {
 			Actor_Face_Actor(kActorMcCoy, kActorClovis, true);
 			Actor_Says(kActorClovis, 160, 3);
 			if (_vm->_cutContent) {
 				Actor_Set_Goal_Number(kActorMaggie, kGoalMaggieDead);
 				Scene_Exits_Disable();
-			}
-			if (_vm->_cutContent) {
-				if (Game_Flag_Query(kFlagMcCoyRetiredHuman)) {
-					Player_Set_Combat_Mode(true);
-					Delay(1500);
-					Actor_Change_Animation_Mode(kActorMcCoy, kAnimationModeCombatAim);
-					Delay(1000);
-					Actor_Says(kActorClovis, 170, -1);
-					Actor_Says(kActorClovis, 180, kAnimationModeTalk);
-					Actor_Says(kActorMcCoy, 2350, -1); //00-2350.AUD	You want me to feel sorry for you.
-					Delay(1000);
-					Actor_Says(kActorMcCoy, 2135, -1); //00-2135.AUD	How did it feel to kill an innocent animal.
-					Delay(2000);
-					Actor_Says(kActorMcCoy, 8395, -1); //00-8395.AUD	You don't have anything to say?
-					Delay(1000);
-					Actor_Says(kActorClovis, 210, kAnimationModeTalk); //05-0210.AUD	(coughs) I thought I could cheat my destiny.
-					Actor_Says(kActorClovis, 220, -1); //05-0220.AUD	I should have cherished what little time I had instead of wasting it in one precious minute... on revenge. (coughs)
-					Delay(2000);
-					Actor_Says(kActorMcCoy, 170, -1); //00-0170.AUD	Damn.
-					Delay(1000);
+				if (Player_Query_Agenda() != kPlayerAgendaSurly 
+				&& Player_Query_Agenda() != kPlayerAgendaErratic) {
 					Player_Set_Combat_Mode(false);
-					Delay(1500);
-					Player_Loses_Control();
-					Loop_Actor_Walk_To_XYZ(kActorMcCoy, -12.0f, -41.58f, 72.0f, 0, true, false, false);
-					Ambient_Sounds_Remove_All_Non_Looping_Sounds(true);
-					Ambient_Sounds_Remove_All_Looping_Sounds(1u);
-					Game_Flag_Set(kFlagKP07toKP06);
-					Set_Enter(kSetKP05_KP06, kSceneKP06);
 				}
 			}
 			Actor_Retired_Here(kActorClovis, 72, 60, 0, -1);

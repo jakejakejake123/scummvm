@@ -147,31 +147,30 @@ void SceneScriptMA07::PlayerWalkedIn() {
 	} else if (_vm->_cutContent && Actor_Query_Goal_Number(kActorRachael) == kGoalRachaelIsOutsideMcCoysBuildingAct4) {
 		Actor_Set_Goal_Number(kActorRachael, kGoalRachaelIsOutWalksToPoliceHQAct4);
 	}
+
 	if (_vm->_cutContent) {
-		if (Game_Flag_Query(kFlagMcCoyShotRachael)) {
-			if (Player_Query_Agenda() == kPlayerAgendaSurly 
-			|| Player_Query_Agenda() == kPlayerAgendaErratic) {
-				Actor_Put_In_Set(kActorRachael, kSetMA07);
-				Actor_Set_At_XYZ(kActorRachael, 27.19, -162.21, 184.93, 0);
-				AI_Movement_Track_Pause(kActorRachael);
-				Player_Loses_Control();
-				Actor_Face_Actor(kActorMcCoy, kActorRachael, true);
-				Delay(1000);
-				Actor_Face_Actor(kActorRachael, kActorMcCoy, true);
-				Actor_Says(kActorMcCoy, 5150, 18); //00-5150.AUD	One more thing.
-				Delay(1000);
-				Actor_Says(kActorMcCoy, 6865, 14); //00-6865.AUD	You're a Replicant.
-				Delay(1000);
-				Player_Set_Combat_Mode(true);
-				Delay(2000);
-				Sound_Play(kSfxGUNH1A, 100, 0, 0, 50);
-				Actor_Change_Animation_Mode(kActorMcCoy, 6);
-				Delay(500);
-				Player_Set_Combat_Mode(false);
-				Set_Enter(kSetPS04, kScenePS04);
+		if (Game_Flag_Query(kFlagRachaelWalks)) {
+			Actor_Put_In_Set(kActorRachael, kSetMA07);
+			Actor_Set_At_XYZ(kActorRachael, -8.09f, -162.8f, 135.33f, 544);
+			AI_Movement_Track_Flush(kActorRachael);
+			AI_Movement_Track_Append(kActorRachael, 468, 0); // kSetMA07
+			AI_Movement_Track_Append(kActorRachael, 39, 0);  // kSetFreeSlotG
+			AI_Movement_Track_Repeat(kActorRachael);
+			if (!Game_Flag_Query(kFlagMcCoyIsHelpingReplicants)
+			&& Global_Variable_Query(kVariableChapter) == 3) {
+				if (Player_Query_Agenda() == kPlayerAgendaSurly 
+				|| Player_Query_Agenda() == kPlayerAgendaErratic) {	
+					Player_Set_Combat_Mode(true);
+					Actor_Set_Targetable(kActorRachael, true);
+				} else {
+					Actor_Set_Targetable(kActorRachael, false);
+				}
+			} else {
+				Actor_Set_Targetable(kActorRachael, false);
 			}
 		}
 	}
+
 	if (Game_Flag_Query(kFlagMA06toMA07)) {
 		Game_Flag_Reset(kFlagMA06toMA07);
 	}
@@ -223,8 +222,13 @@ void SceneScriptMA07::PlayerWalkedIn() {
 				}
 			} else {
 				Actor_Voice_Over(1380, kActorVoiceOver); //99-1380.AUD	Bryant chewed me out for letting the Reps kill him…
-				Actor_Voice_Over(1390, kActorVoiceOver);
-				Actor_Voice_Over(1400, kActorVoiceOver);
+				if (Player_Query_Agenda() == kPlayerAgendaSurly 
+				|| Player_Query_Agenda() == kPlayerAgendaErratic) {
+					Actor_Voice_Over(1390, kActorVoiceOver);
+					Actor_Voice_Over(1400, kActorVoiceOver);
+				} else {
+					Actor_Voice_Over(3470, kActorVoiceOver); //99-3470.AUD	But I wasn’t gonna eat crow that easily.
+				}
 				Delay(1000);
 				Player_Gains_Control();
 				Game_Flag_Reset(kFlagMcCoyFreedOfAccusations);
@@ -243,6 +247,8 @@ void SceneScriptMA07::PlayerWalkedIn() {
 	}
 	if (_vm->_cutContent) {
 		if (!Game_Flag_Query(kFlagCrystalTalkAct4)
+		&& !Game_Flag_Query(kFlagMcCoyRetiredHuman)
+		&& !Game_Flag_Query(kFlagGuzzaSaved)
 		// Made it so whether of not you have affection towards Dektora or Lucy this will determine whether or not you will meet Crystal here.
 		&& Global_Variable_Query(kVariableAffectionTowards) != kAffectionTowardsDektora
 		&& Global_Variable_Query(kVariableAffectionTowards) != kAffectionTowardsLucy

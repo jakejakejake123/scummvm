@@ -225,9 +225,9 @@ bool SceneScriptMA04::ClickedOn2DRegion(int region) {
 				Actor_Says(kActorClovis, 310, 3);
 				Actor_Says(kActorClovis, 320, 3);
 				if (!Game_Flag_Query(kFlagDirectorsCut) && Global_Variable_Query(kVariableChapter) < 3) {
-					Actor_Voice_Over(1300, kActorVoiceOver);
-					Actor_Voice_Over(1310, kActorVoiceOver);
-					Actor_Voice_Over(1320, kActorVoiceOver);
+					Actor_Voice_Over(1300, kActorVoiceOver); //99-1300.AUD	Crank calls were a dime a dozen in this city and I'd had my share.
+					Actor_Voice_Over(1310, kActorVoiceOver); //99-1310.AUD	Still, this guy sounded more like an English teacher than the average scumbag.
+					Actor_Voice_Over(1320, kActorVoiceOver); //99-1320.AUD	If I'd been more awake, the message might have spooked me.
 				}
 				Actor_Says(kActorMcCoy, 2445, 13);
 				Sound_Play(kSfxSPNBEEP9, 100, 0, 0, 50);
@@ -245,9 +245,15 @@ bool SceneScriptMA04::ClickedOn2DRegion(int region) {
 					Actor_Says(kActorLucy, 520, 3); //-	06-0520.AUD	Sorry I missed you. Goodbye.
 				}
 				if (!Game_Flag_Query(kFlagDirectorsCut) && Global_Variable_Query(kVariableChapter) < 3) {
-					Actor_Voice_Over(1330, kActorVoiceOver);
-					Actor_Voice_Over(1340, kActorVoiceOver);
-					Actor_Voice_Over(1350, kActorVoiceOver);
+					Actor_Voice_Over(1330, kActorVoiceOver); //99-1330.AUD	The message could have come from any of a dozen people.
+					if (_vm->_cutContent) {
+						if (Player_Query_Agenda() == kPlayerAgendaPolite) { 
+							Actor_Voice_Over(1340, kActorVoiceOver); //99-1340.AUD	I'd done my share of favors when I was in uniform.
+						}
+					} else {
+						Actor_Voice_Over(1340, kActorVoiceOver); //99-1340.AUD	I'd done my share of favors when I was in uniform.
+					}
+					Actor_Voice_Over(1350, kActorVoiceOver); //99-1350.AUD	Something about the voice was familiar but I was too tired to place it for sure.
 				}
 				Actor_Says(kActorMcCoy, 2445, 13);
 				Sound_Play(kSfxSPNBEEP9, 100, 0, 0, 50);
@@ -448,7 +454,8 @@ void SceneScriptMA04::phoneCallWithDektora() {
 	Actor_Says(kActorDektora, 220, 3);
 	Actor_Says(kActorMcCoy, 2460, 0); 
 	if (_vm->_cutContent) {
-		if (Actor_Query_Friendliness_To_Other(kActorClovis, kActorMcCoy) > 50) {
+		if (Actor_Query_Friendliness_To_Other(kActorClovis, kActorMcCoy) > 50
+		&& !Actor_Clue_Query(kActorClovis, kClueMcCoyRetiredLucy)) {
 			Actor_Says(kActorDektora, 230, 3); //03-0230.AUD	Look, I think I got Clovis and Sadik to let you alone.
 			Actor_Says(kActorDektora, 240, 3);
 			Actor_Says(kActorMcCoy, 2465, 0);
@@ -489,7 +496,8 @@ void SceneScriptMA04::phoneCallWithDektora() {
 	Actor_Says(kActorDektora, 310, 3); //03-0310.AUD	That’s why he wants to help us.
 	Actor_Says(kActorMcCoy, 2490, 0); //00-2490.AUD	No hard feelings, huh?
 	if (_vm->_cutContent) {
-		if (Actor_Query_Friendliness_To_Other(kActorClovis, kActorMcCoy) > 50) {
+		if (Actor_Query_Friendliness_To_Other(kActorClovis, kActorMcCoy) > 50
+		&& !Actor_Clue_Query(kActorClovis, kClueMcCoyRetiredLucy)) {
 			Actor_Says(kActorDektora, 330, 3); 
 			Actor_Says(kActorMcCoy, 2495, 0); //00-2495.AUD	Okay.
 		} else {
@@ -543,14 +551,18 @@ void SceneScriptMA04::phoneCallWithDektora() {
 		Actor_Says(kActorMcCoy, 2515, 12); //00-2515.AUD	We’d need a Spinner to be able to get anywhere.
 		Actor_Says(kActorDektora, 390, 3); //03-0390.AUD	He’s got a couple for sale.
 		Actor_Says(kActorMcCoy, 2520, 13);  //00-2520.AUD	It’s real risky. And illegal.
-		Actor_Says(kActorDektora, 400, 3);
-		Actor_Says(kActorDektora, 410, 3);
+		Actor_Says(kActorDektora, 400, 3); //Well, it’s better than sitting out there in the Kipple waiting to die.
+		Actor_Says(kActorDektora, 410, 3); //03-0410.AUD	Watching everybody else die. If you won’t do it, I’ll go get the car myself.
 		Actor_Says(kActorMcCoy, 2525, 15);  //00-2525.AUD	I didn’t say I wasn’t gonna do it.
 		Actor_Says(kActorDektora, 420, 3); //03-0420.AUD	Then meet me there. I’ll be there within the hour.
+		if (_vm->_cutContent) {
+			Actor_Says(kActorMcCoy, 3780, 13); //00-3780.AUD	Okay, uh--
+		}
 		Sound_Play(kSfxSPNBEEP9, 100, 0, 0, 50);
 		if (_vm->_cutContent) {
 			Game_Flag_Set(kFlagCarEnding);
 			Actor_Clue_Acquire(kActorMcCoy, kCluePhoneCallDektora1, true, kActorDektora);
+			Actor_Set_Targetable(kActorDektora, false);
 		} else {
 			Actor_Clue_Acquire(kActorMcCoy, kCluePhoneCallDektora1, true, -1);
 		}
@@ -563,7 +575,10 @@ void SceneScriptMA04::phoneCallWithDektora() {
 		Actor_Says(kActorMcCoy, 2535, 12); //00-2535.AUD	There’s bound to be tons of radioactive waste between here and there.
 		Actor_Says(kActorDektora, 460, 3); //03-0460.AUD	There’s a tunnel in the sewers. That’s how Clovis and Sadik go back and forth.
 		Actor_Says_With_Pause(kActorDektora, 470, 1.0f, 3);
-		Actor_Says(kActorDektora, 480, 3);
+		Actor_Says(kActorDektora, 480, 3); //03-0480.AUD	I need you, Ray. I can’t watch my friends die. Not alone.
+		if (_vm->_cutContent) {
+			Actor_Says(kActorMcCoy, 3780, 13); //00-3780.AUD	Okay, uh--
+		}
 		Actor_Says(kActorDektora, 490, 3);
 		Sound_Play(kSfxSPNBEEP9, 100, 0, 0, 50);
 		if (_vm->_cutContent) {
@@ -606,10 +621,11 @@ void SceneScriptMA04::phoneCallWithLucy() {
 		if (Game_Flag_Query(kFlagCrazylegsArrested)
 		|| Actor_Query_Goal_Number(kActorCrazylegs) == kGoalCrazyLegsLeavesShowroom 
 		|| Player_Query_Agenda() == kPlayerAgendaPolite) {
-			Actor_Says_With_Pause(kActorMcCoy, 2570, 0.0f, 13); // Lucy, there's a good chance--
+			Actor_Says(kActorMcCoy, 6805, 13); //00-6805.AUD	I-- I promise you. But for now we gotta be careful. You should stay hidden for a while.
 			if (!Game_Flag_Query(kFlagDirectorsCut)) {
 				Actor_Says(kActorLucy, 640, 3);
 			}
+			Actor_Says_With_Pause(kActorMcCoy, 2570, 0.0f, 13); // Lucy, there's a good chance--
 			Sound_Play(kSfxSPNBEEP9, 100, 0, 0, 50); // (Lucy hangs up)
 			Actor_Says(kActorMcCoy, 2575, 15); // Wait, Lucy!
 			Game_Flag_Set(kFlagMcCoyIsHelpingReplicants);
@@ -623,6 +639,7 @@ void SceneScriptMA04::phoneCallWithLucy() {
 			Actor_Says(kActorMcCoy, 2520, 12); //00-2520.AUD	It’s real risky. And illegal.
 			Actor_Says(kActorLucy, 610, 3);
 			Actor_Says(kActorLucy, 620, 3);
+			Actor_Says(kActorMcCoy, 6805, 13); //00-6805.AUD	I-- I promise you. But for now we gotta be careful. You should stay hidden for a while.
 			Actor_Says_With_Pause(kActorLucy, 630, 0.0f, 3); //06-0630.AUD	I’ll meet you there, okay? At the place where he sells the cars.
 			Actor_Says_With_Pause(kActorMcCoy, 2575, 0.0f, 15);
 			if (!Game_Flag_Query(kFlagDirectorsCut)) {
@@ -668,6 +685,9 @@ void SceneScriptMA04::phoneCallWithLucy() {
 		Actor_Says_With_Pause(kActorMcCoy, 2575, 0.0f, 15);
 		if (!Game_Flag_Query(kFlagDirectorsCut)) {
 			Actor_Says(kActorLucy, 640, 3);
+		}
+		if (_vm->_cutContent) {
+			Actor_Set_Targetable(kActorLucy, false);
 		}
 #if BLADERUNNER_ORIGINAL_BUGS
 #else

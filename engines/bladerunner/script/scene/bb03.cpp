@@ -122,9 +122,11 @@ bool SceneScriptBB03::ClickedOnExit(int exitId) {
 					Actor_Says(kActorMcCoy, 6985, 16);
 					Actor_Says(kActorSebastian, 610, 14);
 				} else {
-					Ambient_Sounds_Remove_All_Non_Looping_Sounds(true);
-					Ambient_Sounds_Remove_All_Looping_Sounds(1u);
-					Set_Enter(kSetBB05, kSceneBB05);
+					if (Actor_Query_Goal_Number(kActorSebastian) != 200) {
+						Ambient_Sounds_Remove_All_Non_Looping_Sounds(true);
+						Ambient_Sounds_Remove_All_Looping_Sounds(1u);
+						Set_Enter(kSetBB05, kSceneBB05);
+					}
 				}
 			} else {
 				Ambient_Sounds_Remove_All_Non_Looping_Sounds(true);
@@ -140,9 +142,24 @@ bool SceneScriptBB03::ClickedOnExit(int exitId) {
 				Actor_Says(kActorMcCoy, 7015, 12);
 				Actor_Says(kActorSebastian, 90, kAnimationModeTalk);
 				Actor_Says(kActorMcCoy, 7020, 14);
-				Actor_Says(kActorSebastian, 100, kAnimationModeTalk);
-				Actor_Says(kActorMcCoy, 7025, 15);
-				Actor_Says(kActorSebastian, 110, kAnimationModeTalk);
+				Actor_Says(kActorSebastian, 100, kAnimationModeTalk); //56-0100.AUD	Well, everything's all right now. I'm pretty sure I can handle it.
+				if (_vm->_cutContent) {
+					if (Player_Query_Agenda() != kPlayerAgendaSurly 
+					&& Player_Query_Agenda() != kPlayerAgendaErratic) {
+						Actor_Says(kActorMcCoy, 7025, 15); //00-7025.AUD	You may think you can but believe me you can't. Better if I check it out.
+					} else {
+						Player_Set_Combat_Mode(true);
+						Actor_Says(kActorSebastian, 680, 12); //56-0680.AUD	Hey, you don't need to do that.
+						Actor_Says_With_Pause(kActorMcCoy, 7265, 0.0f, -1); //00-7265.AUD	Think real hard JF. You got anything here that someone would want?
+						Actor_Says(kActorSebastian, 690, 16);//56-0690.AUD	There's nothing in here. People don't even like to come inside my building.
+						Actor_Says(kActorMcCoy, 8519, -1);//00-8519.AUD	What do you say we dish each other the straight goods.
+						Actor_Modify_Friendliness_To_Other(kActorSebastian, kActorMcCoy, -2);
+						Delay(2000);
+					}
+				} else {
+					Actor_Says(kActorMcCoy, 7025, 15); //00-7025.AUD	You may think you can but believe me you can't. Better if I check it out.
+				}
+				Actor_Says(kActorSebastian, 110, kAnimationModeTalk); //56-0110.AUD	Well, if you insist…
 				Actor_Set_Targetable(kActorBryant, false);
 				Actor_Set_Targetable(kActorGeneralDoll, false);
 				Ambient_Sounds_Remove_All_Non_Looping_Sounds(true);

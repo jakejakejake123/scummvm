@@ -233,9 +233,9 @@ void SceneScriptCT02::dialogueWithZuben() {
 	// -. Make McCoy able to VK Zuben even in Polite mode
 	//
 	if (_vm->_cutContent) {
-		if (evidenceCount > 1
+		if (evidenceCount > 2
 		&& (Actor_Clue_Query(kActorMcCoy, kClueSushiMenu))) { 
-			DM_Add_To_List_Never_Repeat_Once_Selected(290, 1, 2, 3); // VOIGT-KAMPFF
+			DM_Add_To_List_Never_Repeat_Once_Selected(290, 1, 3, 4); // VOIGT-KAMPFF
 			DM_Add_To_List(1110, 3, 2, 1); // CRYSTAL
 		}			
 	} else {
@@ -285,13 +285,7 @@ void SceneScriptCT02::dialogueWithZuben() {
 
 	case 290: // VOIGT-KAMPFF
 		Actor_Says(kActorMcCoy, 395, 9);
-		if (_vm->_cutContent) {
-			if (Player_Query_Agenda() == kPlayerAgendaPolite) {
-				Actor_Says(kActorMcCoy, 400, 9); //00-0400.AUD	It won't take too long.
-			}
-		} else {
-			Actor_Says(kActorMcCoy, 400, 9);
-		}
+		Actor_Says(kActorMcCoy, 400, 9);
 		Actor_Says(kActorZuben, 70, 17); //19-0070.AUD	Test? What kind of test?
 		// If McCoy is surly or erratic he won't answer Zubens question and instead will just forcefully tell him to sit down.
 		if (_vm->_cutContent) {
@@ -309,6 +303,10 @@ void SceneScriptCT02::dialogueWithZuben() {
 			Actor_Says(kActorZuben, 80, 14);
 		}
 		if (_vm->_cutContent) {
+			Actor_Modify_Friendliness_To_Other(kActorSteele, kActorMcCoy, 1);
+			Actor_Modify_Friendliness_To_Other(kActorGuzza, kActorMcCoy, 1);
+			Actor_Modify_Friendliness_To_Other(kActorClovis, kActorMcCoy, -1);	
+			Game_Flag_Reset(kFlagMcCoyIsHelpingReplicants);
 			Actor_Set_Goal_Number(kActorMcCoy, kGoalMcCoyDodge);
 		}
 		Actor_Modify_Friendliness_To_Other(kActorZuben, kActorMcCoy, -10);
@@ -316,7 +314,10 @@ void SceneScriptCT02::dialogueWithZuben() {
 
 	case 1110:  // CRYSTAL
 		Actor_Says(kActorMcCoy, 3690, 14); //00-3690.AUD	Look. I wanna warn you. There’s a woman looking for you and your friends.
-		Actor_Set_Goal_Number(kActorMcCoy, kGoalMcCoyDodge);
+		Actor_Modify_Friendliness_To_Other(kActorSteele, kActorMcCoy, -1);
+		Actor_Modify_Friendliness_To_Other(kActorGuzza, kActorMcCoy, -1);
+		Actor_Modify_Friendliness_To_Other(kActorClovis, kActorMcCoy, 1);
+		Game_Flag_Set(kFlagMcCoyIsHelpingReplicants);
 		Actor_Modify_Friendliness_To_Other(kActorZuben, kActorMcCoy, -10);
 		break;
 
@@ -373,7 +374,7 @@ bool SceneScriptCT02::ClickedOnActor(int actorId) {
 					}
 					// Made it Zuben mentions his name when McCoy firsts talks to him. In the original game it was possible for McCoy to mis the Howie Lee interview clue
 					// where he mentions Zuben by name yet somehow McCoy would still know Zubens name anyway. This change fixes that.
-					Actor_Says(kActorZuben, 20, 9); //19-0020.AUD	You not come back here. Air bad.
+					Actor_Says(kActorZuben, 20, 19); //19-0020.AUD	You not come back here. Air bad.
 					Actor_Says(kActorMcCoy, 4880, 18); // 00-4880.AUD	Is that right?
 					Actor_Says(kActorZuben, 100, 19); //19-0100.AUD	What do you want from Zuben?
 					if (Player_Query_Agenda() == kPlayerAgendaSurly 
@@ -386,7 +387,6 @@ bool SceneScriptCT02::ClickedOnActor(int actorId) {
 					}
 					Actor_Says(kActorMcCoy, 385, 9); //00-0385.AUD	I'm looking for a girl about 14 years old with pink hair. You seen her?
 					Actor_Says(kActorZuben, 40, 19);
-					Actor_Modify_Friendliness_To_Other(kActorZuben, kActorMcCoy, -2);
 					Game_Flag_Set(kFlagCT02ZubenTalk);
 				} else {
 					Actor_Says(kActorZuben, 20, 19);

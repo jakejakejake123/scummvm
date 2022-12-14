@@ -114,8 +114,7 @@ bool SceneScriptTB02::ClickedOnActor(int actorId) {
 					Actor_Says(kActorMcCoy, 5150, 18); //00-5150.AUD	One more thing.
 					Actor_Says(kActorTyrellGuard, 60, 12); //17-0060.AUD	I've told you everything I know, detective.
 					if (_vm->_cutContent) {
-						if (Player_Query_Agenda() == kPlayerAgendaSurly 
-						|| Player_Query_Agenda() == kPlayerAgendaErratic) {
+						if (Player_Query_Agenda() != kPlayerAgendaPolite) {
 							Actor_Says(kActorMcCoy, 3910, 14); //00-3910.AUD	You’re lying.
 							Actor_Says(kActorTyrellGuard, 410, 12);	//17-0410.AUD	What I said is the truth, sir.
 						} else {
@@ -159,8 +158,7 @@ bool SceneScriptTB02::ClickedOnActor(int actorId) {
 					Actor_Face_Actor(kActorTyrellGuard, kActorMcCoy, true);
 					Actor_Says(kActorMcCoy, 5150, 18); //00-5150.AUD	One more thing.
 					Actor_Says(kActorTyrellGuard, 60, 12); //17-0060.AUD	I've told you everything I know, detective.
-					if (Player_Query_Agenda() == kPlayerAgendaSurly 
-					|| Player_Query_Agenda() == kPlayerAgendaErratic) {
+					if (Player_Query_Agenda() != kPlayerAgendaPolite) {
 						Actor_Says(kActorMcCoy, 3910, 14); //00-3910.AUD	You’re lying.
 						Actor_Says(kActorTyrellGuard, 410, 12);	//17-0410.AUD	What I said is the truth, sir.
 					} else {
@@ -193,7 +191,7 @@ bool SceneScriptTB02::ClickedOnActor(int actorId) {
 
 			if (chapter == 3) {
 				if (_vm->_cutContent) {
-					if (!Player_Query_Agenda() == kPlayerAgendaPolite) {
+					if (Player_Query_Agenda() != kPlayerAgendaPolite) {
 						Actor_Says(kActorMcCoy, 5235, 18);
 						Actor_Says(kActorTyrellGuard, 280, 13);
 					} else {
@@ -455,7 +453,11 @@ void SceneScriptTB02::PlayerWalkedIn() {
 				Actor_Face_Actor(kActorMcCoy, kActorTyrellGuard, true);
 				Actor_Face_Actor(kActorTyrellGuard, kActorMcCoy, true);
 			}
-			Actor_Says(kActorMcCoy, 5125, 18);
+			if (_vm->_cutContent) {	
+				Actor_Says(kActorMcCoy, 5125, 23);
+			} else {
+				Actor_Says(kActorMcCoy, 5125, 18);
+			}
 			Actor_Says(kActorTyrellGuard, 0, 14);
 			if (_vm->_cutContent) {	
 				Actor_Change_Animation_Mode(kActorTyrellGuard, 50);
@@ -694,7 +696,7 @@ void SceneScriptTB02::dialogueWithTyrellGuard() {
 
 	if (_vm->_cutContent) {
 		if (Actor_Clue_Query(kActorMcCoy, kClueDragonflyEarring)
-		|| Actor_Clue_Query(kActorMcCoy, kClueBombingSuspect)) {
+		&& !Actor_Clue_Query(kActorMcCoy, kClueBombingSuspect)) {
 			DM_Add_To_List_Never_Repeat_Once_Selected(710, 5, 5, 4); // EARRING
 		}
 	} else if (Actor_Clue_Query(kActorMcCoy, kClueDragonflyEarring)) {
@@ -703,7 +705,7 @@ void SceneScriptTB02::dialogueWithTyrellGuard() {
 
 	if (_vm->_cutContent) {
 		if (Actor_Clue_Query(kActorMcCoy, kClueAttemptedFileAccess)) {
-			DM_Add_To_List_Never_Repeat_Once_Selected(720, 3, 5, 5); // TYRELL
+			DM_Add_To_List_Never_Repeat_Once_Selected(720, 1, 2, 3); // TYRELL
 		}
 	} else if (Actor_Clue_Query(kActorMcCoy, kClueVictimInformation)
 	 || Actor_Clue_Query(kActorMcCoy, kClueAttemptedFileAccess)
@@ -748,7 +750,11 @@ void SceneScriptTB02::dialogueWithTyrellGuard() {
 		break;
 
 	case 710: // EARRING
-		Actor_Says(kActorMcCoy, 5170, 12);
+		if (_vm->_cutContent) {
+			Actor_Says(kActorMcCoy, 5170, 23);
+		} else {
+			Actor_Says(kActorMcCoy, 5170, 12);
+		}
 		if (_vm->_cutContent) {
 			if (Actor_Query_Friendliness_To_Other(kActorTyrellGuard, kActorMcCoy) < 50) {
 				Actor_Says(kActorTyrellGuard, 400, 12); //17-0400.AUD	I'm a little busy for this, sir.
@@ -765,8 +771,9 @@ void SceneScriptTB02::dialogueWithTyrellGuard() {
 				}
 			}
 			Actor_Says(kActorTyrellGuard, 440, 13); //17-0440.AUD	You wanna leave it for pickup?
-			if (Player_Query_Agenda() == kPlayerAgendaPolite) {
-				Actor_Says(kActorMcCoy, 7815, 16); //00-8000.AUD	Yes.
+			if (Player_Query_Agenda() == kPlayerAgendaPolite
+			&& !Actor_Clue_Query(kActorMcCoy, kClueBombingSuspect)) {
+				Actor_Says(kActorMcCoy, 8000, 16); //00-8000.AUD	Yes.
 				Actor_Change_Animation_Mode(kActorTyrellGuard, 23);
 				Actor_Change_Animation_Mode(kActorMcCoy, 23);
 				Delay (1000);
@@ -809,6 +816,7 @@ void SceneScriptTB02::dialogueWithTyrellGuard() {
 				// instead it will be this flag that activates after the guard denies you a meeting.
 				Game_Flag_Set(kFlagTyrellGuardTalkMeeting);
 			}
+			ADQ_Add(kActorDispatcher, 60, kAnimationModeTalk); //38-0060.AUD	BR-61661, report to division Headquarters. Code 3, repeat, code 3.
 		} else {		
 			Actor_Says(kActorTyrellGuard, 220, 13);
 			Actor_Says(kActorMcCoy, 5205, 15);

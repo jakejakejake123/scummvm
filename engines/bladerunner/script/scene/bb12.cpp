@@ -135,7 +135,8 @@ bool SceneScriptBB12::ClickedOnActor(int actorId) {
 			Actor_Face_Actor(kActorSebastian, kActorMcCoy, true);
 			Actor_Says(kActorSebastian, 670, 14); //56-0670.AUD	Familiar to what?
 			Actor_Set_Targetable(kActorGeneralDoll, false);
-			if (Game_Flag_Query(kFlagMcCoyIsHelpingReplicants)) { 
+			if (Game_Flag_Query(kFlagMcCoyIsHelpingReplicants)
+			|| Player_Query_Agenda() == kPlayerAgendaPolite) { 
 				Delay(1000);
 				Actor_Face_Actor(kActorMcCoy, kActorSebastian, true);
 				Actor_Says(kActorMcCoy, 1535, 16); //00-1535.AUD	Ah, never mind.
@@ -221,7 +222,6 @@ bool SceneScriptBB12::ClickedOnExit(int exitId) {
 		if (!Loop_Actor_Walk_To_XYZ(kActorMcCoy, -129.0f, 0.0f, 64.0f, 0, true, false, false)) {
 			Ambient_Sounds_Remove_All_Non_Looping_Sounds(true);
 			Ambient_Sounds_Remove_All_Looping_Sounds(1u);
-			Game_Flag_Set(kFlagBB12toBB08);
 			Set_Enter(kSetBB08, kSceneBB08);
 			// The trailing laughter of the toy monkey can be heard as you leave the room.
 			if (_vm->_cutContent) {

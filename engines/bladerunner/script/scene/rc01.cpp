@@ -299,13 +299,15 @@ bool SceneScriptRC01::ClickedOn3DObject(const char *objectName, bool a2) {
 								Actor_Says(kActorMcCoy, 4510, 14); //00-4510.AUD	No, I think it's horse chrome. Bag it and tag it.
 								Actor_Says(kActorOfficerLeary, 170, 13); //23-0170.AUD	You ain't talking to some flunky, McCoy.
 								Actor_Modify_Friendliness_To_Other(kActorOfficerLeary, kActorMcCoy, -2);
+								Actor_Clue_Acquire(kActorMcCoy, kClueChromeDebris, true, -1);
 							} else {
 								Actor_Says(kActorMcCoy, 1025, 13); //00-1025.AUD	Absolutely.
 								Actor_Says(kActorOfficerLeary, 280, 13); //23-0280.AUD	Sounds like another nutcase overdosed on too many lichen-dogs.
-								Actor_Says(kActorMcCoy, 8265, 18); //00-8265.AUD	Really?
+								Actor_Says(kActorMcCoy, 8320, 18); //00-8320.AUD	Really?
 								Actor_Says(kActorOfficerLeary, 460, 13); //23-0460.AUD	Either that or another street punk that sucked one too many sugar cubes.
 								Delay (500);
 								Actor_Says(kActorMcCoy, 5310, 11); //00-5310.AUD	You spot anything you think I ought to know about, tell me.
+								Actor_Clue_Acquire(kActorMcCoy, kClueChromeDebris, true, -1);
 							}
 						} else {
 							Game_Flag_Set(kFlagRC01ChromeDebrisTaken);
@@ -314,6 +316,7 @@ bool SceneScriptRC01::ClickedOn3DObject(const char *objectName, bool a2) {
 							Actor_Clue_Acquire(kActorMcCoy, kClueChromeDebris, true, -1);
 							Actor_Says(kActorMcCoy, 8755, 15); //00-8755.AUD	A piece of chrome.
 						}
+						ADQ_Add(kActorDispatcher, 70, kAnimationModeTalk); //38-0070.AUD	BR-61661, report to precinct Headquarters. Code 3, repeat, code 3.
 					}
 				}
 			}
@@ -345,17 +348,11 @@ bool SceneScriptRC01::ClickedOn3DObject(const char *objectName, bool a2) {
 				if (_vm->_cutContent) {
 					Actor_Voice_Over(1870, kActorVoiceOver); //99-1870.AUD	Whoever did it showed some serious strength. They busted the lock clean off.
 					Actor_Clue_Acquire(kActorMcCoy, kClueDoorForced2, true, -1);
+					Delay(500);
 					if (Actor_Query_Friendliness_To_Other(kActorOfficerLeary, kActorMcCoy) > 49) {
 						Actor_Face_Actor(kActorMcCoy, kActorOfficerLeary, true);
 						Actor_Says(kActorOfficerLeary, 180, 14); //23-0180.AUD	Gaff said you didn't need to hear this, but I guess you deserve to know.
-						if (Player_Query_Agenda() != kPlayerAgendaSurly 
-						&& Player_Query_Agenda() != kPlayerAgendaErratic) {
-							 Actor_Says(kActorMcCoy, 2635, 18); //00-2635.AUD	I’m all ears.. 
-						} else {
-							Actor_Says(kActorMcCoy, 8445, 14); //00-8445.AUD	Cough it up!
-							Delay(1000);
-							Actor_Modify_Friendliness_To_Other(kActorOfficerLeary, kActorMcCoy, -2);
-						}
+						Actor_Says(kActorMcCoy, 2635, 18); //00-2635.AUD	I’m all ears.. 
 						Actor_Says(kActorOfficerLeary, 0, 12); //23-0000.AUD	I already checked for a crowbar or some kind of tool. No luck but it looks like we've got some latents. 
 						Actor_Says(kActorMcCoy, 4495, 13); //00-4495.AUD	Make sure the lab boys run them through the mainframe. Human and Rep.
 						Game_Flag_Set(kFlagLearyForcedDoorTalk);
@@ -509,6 +506,7 @@ bool SceneScriptRC01::ClickedOnActor(int actorId) {
 								Game_Flag_Set(kFlagRC01ChromeDebrisTaken);
 								Item_Remove_From_World(kItemChromeDebris);
 								Item_Pickup_Spin_Effect(kModelAnimationChromeDebris, 426, 316);
+								Actor_Clue_Acquire(kActorMcCoy, kClueChromeDebris, true, -1);
 								I_Sez("JM: Chrome...is that what that is?");
 								Actor_Says(kActorMcCoy, 4505, 13);
 								// Jake - Added in a line where Leary is annoyed at McCoy for him being condescending towards him. 
@@ -519,13 +517,15 @@ bool SceneScriptRC01::ClickedOnActor(int actorId) {
 									Actor_Says(kActorMcCoy, 4510, 14); //00-4510.AUD	No, I think it's horse chrome. Bag it and tag it.
 									Actor_Says(kActorOfficerLeary, 170, 13); //23-0170.AUD	You ain't talking to some flunky, McCoy.
 									Actor_Modify_Friendliness_To_Other(kActorOfficerLeary, kActorMcCoy, -2);
+									Actor_Clue_Acquire(kActorMcCoy, kClueChromeDebris, true, -1);
 								} else {
 									Actor_Says(kActorMcCoy, 1025, 13); //00-1025.AUD	Absolutely.
 									Actor_Says(kActorOfficerLeary, 280, 13); //23-0280.AUD	Sounds like another nutcase overdosed on too many lichen-dogs.
-									Actor_Says(kActorMcCoy, 8265, 18); //00-8265.AUD	Really?
+									Actor_Says(kActorMcCoy, 8320, 18); //00-8320.AUD	Really?
 									Actor_Says(kActorOfficerLeary, 460, 13); //23-0460.AUD	Either that or another street punk that sucked one too many sugar cubes.
 									Delay (500);
 									Actor_Says(kActorMcCoy, 5310, 11); //00-5310.AUD	You spot anything you think I ought to know about, tell me.
+									Actor_Clue_Acquire(kActorMcCoy, kClueChromeDebris, true, -1);
 								}
 							} else {
 								Game_Flag_Set(kFlagRC01ChromeDebrisTaken);
@@ -535,6 +535,7 @@ bool SceneScriptRC01::ClickedOnActor(int actorId) {
 								Actor_Says(kActorMcCoy, 8755, 15); //00-8755.AUD	A piece of chrome.
 							}
 						}
+						ADQ_Add(kActorDispatcher, 70, kAnimationModeTalk); //38-0070.AUD	BR-61661, report to precinct Headquarters. Code 3, repeat, code 3.
 					}
 				} else {
 					if (_vm->_cutContent) {
@@ -664,13 +665,15 @@ bool SceneScriptRC01::ClickedOnItem(int itemId, bool a2) {
 							Actor_Says(kActorMcCoy, 4510, 14); //00-4510.AUD	No, I think it's horse chrome. Bag it and tag it.
 							Actor_Says(kActorOfficerLeary, 170, 13); //23-0170.AUD	You ain't talking to some flunky, McCoy.
 							Actor_Modify_Friendliness_To_Other(kActorOfficerLeary, kActorMcCoy, -2);
+							Actor_Clue_Acquire(kActorMcCoy, kClueChromeDebris, true, -1);
 						} else {
 							Actor_Says(kActorMcCoy, 1025, 13);
 							Actor_Says(kActorOfficerLeary, 280, 13); //23-0280.AUD	Sounds like another nutcase overdosed on too many lichen-dogs.
-							Actor_Says(kActorMcCoy, 8265, 18); //00-8265.AUD	Really?
+							Actor_Says(kActorMcCoy, 8320, 18); //00-8320.AUD	Really?
 							Actor_Says(kActorOfficerLeary, 460, 13); //23-0460.AUD	Either that or another street punk that sucked one too many sugar cubes.
 							Delay (500);
 							Actor_Says(kActorMcCoy, 5310, 11); //00-5310.AUD	You spot anything you think I ought to know about, tell me.
+							Actor_Clue_Acquire(kActorMcCoy, kClueChromeDebris, true, -1);
 						}
 					} else {
 						Game_Flag_Set(kFlagRC01ChromeDebrisTaken);
@@ -679,6 +682,7 @@ bool SceneScriptRC01::ClickedOnItem(int itemId, bool a2) {
 						Actor_Clue_Acquire(kActorMcCoy, kClueChromeDebris, true, -1);
 						Actor_Says(kActorMcCoy, 8755, 15); //00-8755.AUD	A piece of chrome.
 					}
+					ADQ_Add(kActorDispatcher, 70, kAnimationModeTalk); //38-0070.AUD	BR-61661, report to precinct Headquarters. Code 3, repeat, code 3.
 				}
 			} else {
 				Actor_Says(kActorOfficerLeary, 20, 12);
@@ -728,7 +732,7 @@ bool SceneScriptRC01::ClickedOnExit(int exitId) {
 		if (!walkToRC02ExitResult) {
 			if (Game_Flag_Query(kFlagRC02RunciterTalkWithGun)
 			|| Game_Flag_Query(kFlagMcCoyRetiredRunciter)
-			|| Game_Flag_Query(kFlagRunciterArrestTalk)
+			|| Game_Flag_Query(kFlagRunciterArrested)
 			|| Actor_Query_Goal_Number(kActorRunciter) > kGoalRunciterDead
 			|| Actor_Clue_Query(kActorMcCoy, kClueCrystalRetiredRunciter1)) {
 				if (!_vm->_cutContent) {	
@@ -1018,10 +1022,21 @@ void SceneScriptRC01::PlayerWalkedIn() {
 					Actor_Voice_Over(1910, kActorVoiceOver); //99-1910.AUD	It didn't add up. Animal murders, the lack of any theft.
 					Actor_Voice_Over(1920, kActorVoiceOver); //99-1920.AUD	The small animals alone were worth a good chunk of change on the street.
 					Actor_Voice_Over(1930, kActorVoiceOver); //99-1930.AUD	It seemed more like an act of vengeance.
-					ADQ_Add(kActorDispatcher, 70, kAnimationModeTalk); //38-0070.AUD	BR-61661, report to precinct Headquarters. Code 3, repeat, code 3.
 				} else {
 					Actor_Voice_Over(1940, kActorVoiceOver); //99-1940.AUD	I'd never seen so many authentic animals under the same roof. It was beautiful... and horrendous.
-					ADQ_Add(kActorDispatcher, 60, kAnimationModeTalk); //38-0060.AUD	BR-61661, report to division Headquarters. Code 3, repeat, code 3.
+					// Note: Quote 1950 is *boop* in ENG version
+					//       However it is voiced in FRA, DEU, ESP and ITA versions
+					//       In ESP and FRA this quote roughly translates to:
+					//       "Seeing them slaughtered was worse than any of my nightmares."
+					//       In DEU and ITA it seems to be the second (missing) half of the previous quote (1940)
+					//       and it is required for those.
+					if (_vm->_language == Common::FR_FRA
+						|| _vm->_language == Common::DE_DEU
+						|| _vm->_language == Common::ES_ESP
+						|| _vm->_language == Common::IT_ITA
+					) {
+						Actor_Voice_Over(1950, kActorVoiceOver);
+					}
 				}
 			} else {
 				Actor_Voice_Over(1910, kActorVoiceOver);

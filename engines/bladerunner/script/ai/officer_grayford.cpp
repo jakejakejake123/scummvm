@@ -558,7 +558,11 @@ bool AIScriptOfficerGrayford::GoalChanged(int currentGoalNumber, int newGoalNumb
 			Actor_Set_Goal_Number(kActorMcCoy, kGoalMcCoyArrested);
 		} else {
 			Actor_Says(kActorMcCoy, 960, 15);
-			Actor_Says(kActorMcCoy, 965, 18);
+			if (_vm->_cutContent) {
+				Actor_Says(kActorMcCoy, 965, 23); //00-0965.AUD	McCoy, Rep Detect. BR 61-661.
+			} else {
+				Actor_Says(kActorMcCoy, 965, 18); //00-0965.AUD	McCoy, Rep Detect. BR 61-661.
+			}
 			_animationState = 24;
 		}
 		return true;
@@ -573,6 +577,7 @@ bool AIScriptOfficerGrayford::GoalChanged(int currentGoalNumber, int newGoalNumb
 		if (_vm->_cutContent) {
 			if (!Game_Flag_Query(kFlagMorajiAlive)) {
 				Actor_Says_With_Pause(kActorMcCoy, 970, 0.2f, 13); // Got a dead man here. Victim of an explosion.
+				Actor_Clue_Acquire(kActorMcCoy, kClueMorajiInterview, true, kActorMoraji);
 				Actor_Says(kActorMcCoy, 975, 12); // TODO - a bug? McCoy may not know Moraji's name here(?)
 				if (Actor_Clue_Query(kActorMcCoy, kClueMorajiInterview) == 1) {
 					Actor_Says(kActorMcCoy, 980, 16);
@@ -641,7 +646,13 @@ bool AIScriptOfficerGrayford::GoalChanged(int currentGoalNumber, int newGoalNumb
 		Actor_Change_Animation_Mode(kActorOfficerGrayford, 43);
 
 		if (Player_Query_Current_Scene() == kSceneDR04) {
-			Actor_Says(kActorOfficerGrayford, 170, kAnimationModeTalk); // This is 32, Sector 3. Reporting a homicide. Possible act of terrorism.
+			if (_vm->_cutContent) {
+				if (!Game_Flag_Query(kFlagMorajiAlive)) {
+					Actor_Says(kActorOfficerGrayford, 170, kAnimationModeTalk); // This is 32, Sector 3. Reporting a homicide. Possible act of terrorism.
+				}
+			} else {
+				Actor_Says(kActorOfficerGrayford, 170, kAnimationModeTalk); // This is 32, Sector 3. Reporting a homicide. Possible act of terrorism.
+			}
 			Scene_Exits_Enable();
 		}
 		return true;

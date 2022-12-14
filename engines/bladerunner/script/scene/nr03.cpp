@@ -142,7 +142,7 @@ bool SceneScriptNR03::ClickedOnActor(int actorId) {
 							Actor_Says(kActorMcCoy, 1535, 16); //00-1535.AUD	Ah, never mind.
 						} else {
 							Actor_Says(kActorMcCoy, 8265, 16); //00-8265.AUD	Really?
-							Delay(1000);
+							Delay(2000);
 							Actor_Says(kActorMcCoy, 5145, 18); //00-5145.AUD	I may have more questions for you later on.
 						}
 					} else {
@@ -165,8 +165,8 @@ bool SceneScriptNR03::ClickedOnActor(int actorId) {
 							Actor_Says(kActorMcCoy, 3370, 13); //00-3370.AUD	As the banks of the LA river.
 						} else {
 							Actor_Says(kActorMcCoy, 4320, 14); //00-4320.AUD	Save the pitch for someone who gives a shit.
-							Actor_Set_Goal_Number(kActorHanoi, kGoalHanoiThrowOutMcCoy);
 						}
+						Delay(1000);
 						Actor_Says(kActorMcCoy, 5150, 18); //00-5150.AUD	One more thing.
 						Actor_Says(kActorMcCoy, 8615, 13); //00-8615.AUD	Heard anything on the street?
 						Actor_Says(kActorHanoi, 190, 14); //25-0190.AUD	I heard something, yeah. Maybe I’ll even tell it to you, mate.
@@ -281,10 +281,21 @@ bool SceneScriptNR03::ClickedOnExit(int exitId) {
 				}
 #endif
 			} else {
-				Ambient_Sounds_Remove_All_Non_Looping_Sounds(true);
-				Ambient_Sounds_Remove_All_Looping_Sounds(1u);
-				Game_Flag_Set(kFlagNR03toNR04);
-				Set_Enter(kSetNR04, kSceneNR04);
+				if (_vm->_cutContent) {
+					if (Game_Flag_Query(kFlagEarlyQDead)) {
+						Actor_Says(kActorMcCoy, 7815, 13); //00-7815.AUD	No.
+					} else {
+						Ambient_Sounds_Remove_All_Non_Looping_Sounds(true);
+						Ambient_Sounds_Remove_All_Looping_Sounds(1u);
+						Game_Flag_Set(kFlagNR03toNR04);
+						Set_Enter(kSetNR04, kSceneNR04);
+					}
+				} else {
+					Ambient_Sounds_Remove_All_Non_Looping_Sounds(true);
+					Ambient_Sounds_Remove_All_Looping_Sounds(1u);
+					Game_Flag_Set(kFlagNR03toNR04);
+					Set_Enter(kSetNR04, kSceneNR04);
+				}
 			}
 		}
 

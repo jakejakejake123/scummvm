@@ -468,14 +468,9 @@ bool AIScriptEarlyQ::GoalChanged(int currentGoalNumber, int newGoalNumber) {
 				}
 				Actor_Says_With_Pause(kActorEarlyQ, 140, 1.0f, kAnimationModeTalk); //18-0140.AUD	You want Dektora? Is that it? The girl with the Rep friends?
 				Actor_Says_With_Pause(kActorEarlyQ, 150, 1.0f, kAnimationModeTalk);
-				Delay(2000);
-				Actor_Says(kActorEarlyQ, 160, kAnimationModeTalk);
 				Actor_Says(kActorMcCoy, 3405, kAnimationModeCombatAim);
-				Delay(1000);
-				if (Player_Query_Agenda() == kPlayerAgendaSurly 
-				|| (Player_Query_Agenda() == kPlayerAgendaErratic)) {
-					Actor_Says(kActorMcCoy, 3410, kAnimationModeCombatAim); //00-3410.AUD	Sit down!
-				}
+				Actor_Says(kActorEarlyQ, 160, kAnimationModeTalk);
+				Actor_Says(kActorMcCoy, 3410, kAnimationModeCombatAim); //00-3410.AUD	Sit down!
 				Actor_Clue_Acquire(kActorMcCoy, kClueEarlyQInterview, false, kActorEarlyQ);
 				_vm->_aiScripts->callChangeAnimationMode(kActorMcCoy, kAnimationModeCombatIdle);
 				Player_Loses_Control();
@@ -527,6 +522,7 @@ bool AIScriptEarlyQ::GoalChanged(int currentGoalNumber, int newGoalNumber) {
 		Actor_Clue_Lose(kActorMcCoy, kClueEarlyQsClub);
 		// Made it so when McCoy is drugged by Early Q McCoy now appears in his apartment.
 		if (_vm->_cutContent) {
+			Actor_Set_Goal_Number(kActorEarlyQ, kGoalEarlyQNR04Leave);
 			Music_Stop(1u);
 			Ambient_Sounds_Remove_All_Non_Looping_Sounds(true);
 			Ambient_Sounds_Remove_All_Looping_Sounds(1u);
@@ -596,6 +592,7 @@ bool AIScriptEarlyQ::GoalChanged(int currentGoalNumber, int newGoalNumber) {
 					Actor_Modify_Friendliness_To_Other(kActorGuzza, kActorMcCoy, 2);
 					Actor_Modify_Friendliness_To_Other(kActorGaff, kActorMcCoy, 2);
 					Actor_Set_Targetable(kActorEarlyQ, false);
+					Scene_Exits_Enable();
 					if (Query_Difficulty_Level() != kGameDifficultyEasy) {
 						Global_Variable_Increment (kVariableChinyen, 200);
 					}
@@ -610,6 +607,8 @@ bool AIScriptEarlyQ::GoalChanged(int currentGoalNumber, int newGoalNumber) {
 					Actor_Modify_Friendliness_To_Other(kActorGuzza, kActorMcCoy, -2);
 					Actor_Set_Targetable(kActorEarlyQ, false);
 					Game_Flag_Set(kFlagMcCoyRetiredHuman);
+					Game_Flag_Set(kFlagEarlyQDead);
+					Scene_Exits_Enable();
 					if (Game_Flag_Query(kFlagHanoiIsReplicant)) {
 						Actor_Set_Goal_Number(kActorHanoi, kGoalHanoiNR04Enter);
 					}

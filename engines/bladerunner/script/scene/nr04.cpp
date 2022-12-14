@@ -398,76 +398,23 @@ void SceneScriptNR04::ActorChangedGoal(int actorId, int newGoal, int oldGoal, bo
 					} else {
 						if (Player_Query_Agenda() == kPlayerAgendaPolite) {
 							Actor_Says(kActorMcCoy, 8512, 15); // 00-8512.AUD	The disc? I'm keeping it for now.
-							Music_Stop(1u);
-							Delay(1000);
-							Actor_Change_Animation_Mode(kActorEarlyQ, 4);
-							Delay(1000);
-							Actor_Face_Actor(kActorEarlyQ, kActorMcCoy, true);
-							Actor_Change_Animation_Mode(kActorEarlyQ, kAnimationModeCombatAttack);
-							Actor_Change_Animation_Mode(kActorMcCoy, 21);
-							Music_Play(kMusicMoraji, 71, 0, 0, -1, kMusicLoopPlayOnce, 2);
-							Delay(1000);
-							Loop_Actor_Walk_To_XYZ(kActorMcCoy, 7.84, 0.26, 172.93, 0, false, true, false);
-							Actor_Face_Actor(kActorEarlyQ, kActorMcCoy, true);
-							Actor_Face_Actor(kActorMcCoy, kActorEarlyQ, true);
-							Sound_Play(kSfxGUNH1A, 100, 0, 0, 50);
-							Actor_Change_Animation_Mode(kActorMcCoy, 6);
-							Actor_Change_Animation_Mode(kActorEarlyQ, 21);
-							Delay(1000);
-							Loop_Actor_Walk_To_XYZ(kActorMcCoy, -17.91, 0.24, 247.39, 0, true, true, false);
-							Actor_Face_Actor(kActorEarlyQ, kActorMcCoy, true);
-							Actor_Face_Actor(kActorMcCoy, kActorEarlyQ, true);
-							Sound_Play(kSfxGUNH1A, 100, 0, 0, 50);
-							Actor_Change_Animation_Mode(kActorMcCoy, 6);
-							Actor_Change_Animation_Mode(kActorEarlyQ, 21);
-							Delay(1000);
-							Loop_Actor_Walk_To_XYZ(kActorMcCoy, -30.30, 0.22, 299.78, 0, false, true, false);
-							Actor_Face_Actor(kActorEarlyQ, kActorMcCoy, true);
-							Actor_Change_Animation_Mode(kActorEarlyQ, kAnimationModeCombatAttack);
-							Actor_Change_Animation_Mode(kActorMcCoy, 22);
-							Delay(1000);
-							Actor_Face_Actor(kActorMcCoy, kActorEarlyQ, true);
-							Sound_Play(kSfxGUNH1A, 100, 0, 0, 50);
-							Actor_Change_Animation_Mode(kActorMcCoy, 6);
-							Actor_Change_Animation_Mode(kActorEarlyQ, 21);
-							Delay(1000);
-							Loop_Actor_Walk_To_XYZ(kActorMcCoy, 31.22f, 0.0f, 267.51f, 0, true, false, false);
-							Actor_Face_Actor(kActorEarlyQ, kActorMcCoy, true);
-							Actor_Change_Animation_Mode(kActorEarlyQ, kAnimationModeCombatAttack);
-							Actor_Change_Animation_Mode(kActorMcCoy, 22);
-							Delay(1000);
-							Actor_Face_Actor(kActorEarlyQ, kActorMcCoy, true);
-							Actor_Change_Animation_Mode(kActorEarlyQ, 7);
 							Delay(1000);
 							Actor_Face_Actor(kActorEarlyQ, kActorMcCoy, true);
 							Actor_Face_Actor(kActorMcCoy, kActorEarlyQ, true);
-							Sound_Play(kSfxGUNH1A, 100, 0, 0, 50);
-							Actor_Change_Animation_Mode(kActorMcCoy, 6);
-							AI_Movement_Track_Flush(kActorEarlyQ);
-							Actor_Change_Animation_Mode(kActorEarlyQ, kAnimationModeDie);
-							Actor_Retired_Here(kActorEarlyQ, 6, 6, true, kActorMcCoy);
-							Actor_Face_Heading(kActorEarlyQ, 760, false);
-							Actor_Set_At_XYZ(kActorEarlyQ, 122.09f, 0.14f, 370.11f, 760);
-							Loop_Actor_Walk_To_Actor(kActorMcCoy, kActorEarlyQ, 24, true, false);
-							Actor_Face_Actor(kActorMcCoy, kActorEarlyQ, true);
-							Delay(2000);
-							Actor_Says(kActorMcCoy, 6865, 14); //00-6865.AUD	You're a Replicant.
-							Delay(2000);
-							Game_Flag_Set(kFlagEarlyQDead);
-							Game_Flag_Reset(kFlagMcCoyIsHelpingReplicants);
-							Actor_Modify_Friendliness_To_Other(kActorSteele, kActorMcCoy, 2);
-							Actor_Modify_Friendliness_To_Other(kActorClovis, kActorMcCoy, -2);
-							Actor_Modify_Friendliness_To_Other(kActorGuzza, kActorMcCoy, 2);
-							Actor_Modify_Friendliness_To_Other(kActorGaff, kActorMcCoy, 2);
-							Actor_Set_Targetable(kActorEarlyQ, false);
-							if (Query_Difficulty_Level() != kGameDifficultyEasy) {
-								Global_Variable_Increment (kVariableChinyen, 200);
-							}
-							if (Game_Flag_Query(kFlagHanoiIsReplicant)) {
-								Actor_Set_Goal_Number(kActorHanoi, kGoalHanoiNR04Enter);
-							} else {
-								Player_Gains_Control();
-							}
+							Actor_Says(kActorEarlyQ, 340, 12); //18-0340.AUD	No more free drinks for you, buddy boy.
+							Actor_Says(kActorMcCoy, 3465, 12); //00-3465.AUD	I didn’t get free drinks before.
+							Actor_Says(kActorEarlyQ, 350, 16);
+							Actor_Set_Goal_Number(kActorEarlyQ, kGoalEarlyQNR04Leave);
+							Delay(8000);
+							Player_Loses_Control();
+							Loop_Actor_Walk_To_XYZ(kActorMcCoy, 45.0f, 0.0f, -106.0f, 0, true, false, false);
+							Player_Gains_Control();
+							Ambient_Sounds_Remove_All_Non_Looping_Sounds(true);
+							Ambient_Sounds_Remove_All_Looping_Sounds(1u);
+							Game_Flag_Set(kFlagNR04toNR03);
+							Set_Enter(kSetNR03, kSceneNR03);
+							Scene_Exits_Enable();
+							Player_Gains_Control();
 						} else {
 							Actor_Says(kActorMcCoy, 3385, 3); //00-3385.AUD	I want information.
 							Actor_Says(kActorEarlyQ, 120, 74);
@@ -478,12 +425,15 @@ void SceneScriptNR04::ActorChangedGoal(int actorId, int newGoal, int oldGoal, bo
 				} else {
 					Actor_Face_Actor(kActorEarlyQ, kActorMcCoy, true);
 					if (Player_Query_Agenda() == kPlayerAgendaPolite) {
-						Delay(1000);
 						Actor_Says(kActorMcCoy, 8512, 15); 
-						Delay(2000);
+						Delay(1000);
+						Actor_Face_Actor(kActorEarlyQ, kActorMcCoy, true);
+						Actor_Face_Actor(kActorMcCoy, kActorEarlyQ, true);
 						Actor_Says(kActorEarlyQ, 340, 12); //18-0340.AUD	No more free drinks for you, buddy boy.
 						Actor_Says(kActorMcCoy, 3465, 12); //00-3465.AUD	I didn’t get free drinks before.
 						Actor_Says(kActorEarlyQ, 350, 16);
+						Actor_Set_Goal_Number(kActorEarlyQ, kGoalEarlyQNR04Leave);
+						Delay(8000);
 						Player_Loses_Control();
 						Loop_Actor_Walk_To_XYZ(kActorMcCoy, 45.0f, 0.0f, -106.0f, 0, true, false, false);
 						Player_Gains_Control();
@@ -491,6 +441,8 @@ void SceneScriptNR04::ActorChangedGoal(int actorId, int newGoal, int oldGoal, bo
 						Ambient_Sounds_Remove_All_Looping_Sounds(1u);
 						Game_Flag_Set(kFlagNR04toNR03);
 						Set_Enter(kSetNR03, kSceneNR03);
+						Scene_Exits_Enable();
+						Player_Gains_Control();
 					} else {
 						Actor_Says(kActorMcCoy, 3385, 3); //00-3385.AUD	I want information.
 						Actor_Says(kActorEarlyQ, 120, 74);
@@ -556,10 +508,15 @@ void SceneScriptNR04::ActorChangedGoal(int actorId, int newGoal, int oldGoal, bo
 					Actor_Says(kActorEarlyQ, 700, 30); //18-0700.AUD	I heard some things, yeah. I’m the kind of guy people confide in, you know.
 					Actor_Says(kActorMcCoy, 150, 13); //00-0150.AUD	You know anything about insects?
 					// Fixed the conversation so it flows better.
-					Actor_Says(kActorMcCoy, 1110, 13); //00-1110.AUD	We're talking exceptionally fine jewelry in the shape of a dragonfly.
+					Actor_Says(kActorMcCoy, 1110, 14); //00-1110.AUD	We're talking exceptionally fine jewelry in the shape of a dragonfly.
 					Delay (1000);
-					Actor_Says(kActorMcCoy, 8990, 13); //00-8990.AUD	What have you got there?
+					Actor_Says(kActorMcCoy, 8990, 18); //00-8990.AUD	What have you got there?
 					Delay (1000);
+					Player_Loses_Control();
+					Loop_Actor_Walk_To_Actor(kActorMcCoy, kActorEarlyQ, 24, true, false);
+					Player_Gains_Control();
+					Actor_Change_Animation_Mode(kActorMcCoy, 23);
+					Delay (2000);
 					Actor_Clue_Acquire(kActorMcCoy, kClueCollectionReceipt, false, kActorEarlyQ);
 					Item_Pickup_Spin_Effect(kModelAnimationCollectionReceipt, 200, 160);
 					Actor_Says(kActorMcCoy, 8845, 13); //00-8845.AUD	A receipt.
@@ -580,6 +537,11 @@ void SceneScriptNR04::ActorChangedGoal(int actorId, int newGoal, int oldGoal, bo
 					Actor_Set_Goal_Number(kActorEarlyQ, kGoalEarlyQNR04AskForDisk);
 				} else { 
 					Actor_Says(kActorMcCoy, 4940, 13); //00-4940.AUD	Okay, let's have it.
+					Player_Loses_Control();
+					Loop_Actor_Walk_To_Actor(kActorMcCoy, kActorEarlyQ, 24, true, false);
+					Player_Gains_Control();
+					Actor_Change_Animation_Mode(kActorMcCoy, 23);
+					Delay (2000);
 					Actor_Clue_Acquire(kActorMcCoy, kClueDektorasDressingRoom, false, kActorEarlyQ);
 					Item_Pickup_Spin_Effect(kModelAnimationPhoto, 200, 160);
 					if (Game_Flag_Query(kFlagDiscoveredEarlyQsMonitors)) {
@@ -591,20 +553,20 @@ void SceneScriptNR04::ActorChangedGoal(int actorId, int newGoal, int oldGoal, bo
 					|| Actor_Clue_Query(kActorMcCoy, kClueMorajiInterview)
 					|| Actor_Clue_Query(kActorMcCoy, kClueClovisAtMoonbus)
 					|| Actor_Clue_Query(kActorMcCoy, kClueIzosFriend)) {
-						Actor_Says_With_Pause(kActorMcCoy, 3425, 1.5f, 23); //00-3425.AUD	I’ve seen them before.
+						Actor_Says_With_Pause(kActorMcCoy, 3425, 1.5f, 13); //00-3425.AUD	I’ve seen them before.
 					} else {
 						Actor_Says(kActorMcCoy, 5065, 18); //00-5065.AUD	Is that right?
 					}
 					Actor_Says(kActorEarlyQ, 220, 30); //18-0220.AUD	Eh, he’s here all the time. You can be sure he ain’t coming around for the witty conversation.
-					Actor_Says(kActorMcCoy, 3430, kAnimationModeTalk); //00-3430.AUD	What makes you think he’s a Replicant?
+					Actor_Says(kActorMcCoy, 3430, 14); //00-3430.AUD	What makes you think he’s a Replicant?
 					Actor_Says(kActorEarlyQ, 240, 30);
-					Actor_Says(kActorMcCoy, 3435, kAnimationModeTalk); 
+					Actor_Says(kActorMcCoy, 3435, 18); 
 					Actor_Says(kActorEarlyQ, 250, 30);
-					Actor_Says(kActorMcCoy, 3440, kAnimationModeTalk);
+					Actor_Says(kActorMcCoy, 3440, 13);
 					Actor_Says(kActorEarlyQ, 280, 30);
 					if (Player_Query_Agenda() == kPlayerAgendaSurly 
 					|| Player_Query_Agenda() == kPlayerAgendaErratic) {
-						Actor_Says(kActorMcCoy, 3445, kAnimationModeTalk); //00-3445.AUD	Yeah. You’re a model citizen.
+						Actor_Says(kActorMcCoy, 3445, 18); //00-3445.AUD	Yeah. You’re a model citizen.
 					}
 					// Added in a clue.
 					Actor_Clue_Acquire(kActorMcCoy, kClueEarlyInterviewB2, true, kActorEarlyQ);
@@ -701,12 +663,13 @@ if (_vm->_cutContent) {
 			Actor_Says(kActorEarlyQ, 410, 12); //18-0410.AUD	Sorry, General. I’ve got a major crisis backstage. One of my girls ran full steam into a pencil and we’re fresh out of tampons.
 			Loop_Actor_Walk_To_XYZ(kActorEarlyQ, 45.02, 0.33, 5.52, 0, false, false, false);
 			Actor_Face_Actor(kActorMcCoy, kActorEarlyQ, true);
+			Actor_Face_Actor(kActorEarlyQ, kActorMcCoy, true);
 			Actor_Says(kActorMcCoy, 460, 14); //00-0460.AUD	Hold it right there!
 			// If Lucy is a rep McCoy arrests Early for being a rep sympathizier. If not he arrests him for what he did to her.
 			if (Game_Flag_Query(kFlagLucyIsReplicant)) {
 				Actor_Says(kActorMcCoy, 3090, 15); //00-3090.AUD	You may not be a Rep but you’re a damn Rep sympathizer for sure.
 			}
-			Actor_Says(kActorMcCoy, 3095, -15); //00-3095.AUD	Now we’re gonna take a little ride downtown.
+			Actor_Says(kActorMcCoy, 3095, 14); //00-3095.AUD	Now we’re gonna take a little ride downtown.
 			Actor_Modify_Friendliness_To_Other(kActorClovis, kActorMcCoy, 2);
 			Actor_Modify_Friendliness_To_Other(kActorSteele, kActorMcCoy, 1);
 			Actor_Modify_Friendliness_To_Other(kActorGuzza, kActorMcCoy, 1);

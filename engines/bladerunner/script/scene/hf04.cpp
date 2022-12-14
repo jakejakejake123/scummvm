@@ -169,8 +169,17 @@ void SceneScriptHF04::PlayerWalkedIn() {
 	if (Actor_Query_Goal_Number(kActorLucy) == kGoalLucyHF04Start
 	 || Actor_Query_Goal_Number(kActorLucy) == kGoalLucyHF04Run1
 	) {
-		Player_Set_Combat_Mode(true);
-		Music_Play(kMusicBatl226M, 60, 0, 2, -1, kMusicLoopPlayOnce, 0);
+		if (_vm->_cutContent) {
+			if (!Game_Flag_Query(kFlagMcCoyIsHelpingReplicants)
+			&& Player_Query_Agenda() != kPlayerAgendaPolite
+			&& Global_Variable_Query(kVariableAffectionTowards) != kAffectionTowardsLucy) {
+				Player_Set_Combat_Mode(true);
+				Music_Play(kMusicBatl226M, 60, 0, 2, -1, kMusicLoopPlayOnce, 0);
+			}
+		} else {
+			Player_Set_Combat_Mode(true);
+			Music_Play(kMusicBatl226M, 60, 0, 2, -1, kMusicLoopPlayOnce, 0);
+		}
 	}
 	Loop_Actor_Walk_To_XYZ(kActorMcCoy, -45.0f, -0.31f, 307.0f, 0, false, true, false);
 	Delay(2500);

@@ -144,7 +144,8 @@ void AIScriptGeneralDoll::ClickedByPlayer() {
 		if (!Game_Flag_Query(kFlagGeneralDollShot)) {
 			Actor_Face_Actor(kActorMcCoy, kActorGeneralDoll, true);
 			Actor_Voice_Over(30, kActorVoiceOver);
-			if (!Game_Flag_Query(kFlagMcCoyIsHelpingReplicants)) {
+			if (Player_Query_Agenda() == kPlayerAgendaSurly 
+			|| Player_Query_Agenda() == kPlayerAgendaErratic) {
 				Actor_Voice_Over(40, kActorVoiceOver);
 			}
 			Actor_Set_Targetable(kActorGeneralDoll, false);

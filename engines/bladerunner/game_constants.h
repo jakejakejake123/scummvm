@@ -424,8 +424,8 @@ enum Crimes {
 	kCrimeMorajiMurder      = 3,
 	kCrimeBradburyAssault   = 4,
 	kCrimeFactoryBombing    = 5,
-	kCrimeReplicantHarboring = 6, // TODO Name still appears as Bobs murder in game. The name has to be changed to replicant harboring within the games files.
-	kCrimeCheeseTheft       = 7, // TODO Name still appears as Runciters murder in game. The name has to be changed to cheese theft within the games files.
+	kCrimeBobMurder         = 6, // Unused
+	kCrimeRunciterMurder    = 7, // Unused
 	kCrimeMoonbusHijacking  = 8
 };
 
@@ -867,17 +867,17 @@ enum Flags {
 	kFlagKP03BombActive                       = 421,
 	kFlagKP03BombExploded                     = 422,
 	kFlagUG07toUG10                           = 423,
-	kFlagUG10toUG07                           = 424, // is never checked
-	kFlagUG07toUG08                           = 425, // is never checked
+	kFlagGordoReceivedAutograph               = 424, 
+	kFlagMorajiTalk                           = 425, 
 	kFlagUG08toUG07                           = 426,
-	kFlagUG07toUG09                           = 427, // is never checked
+	kFlagDektoraIdentified                    = 427, 
 	kFlagUG09ToUG07                           = 428,
 	kFlagUG08toUG13                           = 429,
 	kFlagUG13toUG08                           = 430,
 	kFlagUG08ElevatorUp                       = 431,
 	kFlagUG09toCT12                           = 432,
 	kFlagCT12ToUG09                           = 433,
-	kFlagUG13toUG18                           = 434, // is never checked
+	kFlagIzoBlockedByMcCoy                    = 434, 
 	kFlagUG18toUG13                           = 435,
 	kFlagUG13CallElevator                     = 436,
 	kFlagNR04toNR03                           = 437,
@@ -920,8 +920,8 @@ enum Flags {
 	kFlagUG10GateOpen                         = 474,
 	kFlagNR09toNR10                           = 475,
 	kFlagNR10toNR09                           = 476,
-	kFlagNR11toNR10                           = 477, // is never checked
-	kFlagMcCoyAtPS03                          = 478, // has no use
+	kFlagIzoOnTheRun                          = 477, 
+	kFlagRachaelThirdMeeting                  = 478, 
 	kFlagMcCoyInHawkersCircle                 = 479,
 	kFlagRunciterIsReplicant				  = 480,	
 	kFlagBulletBobIsReplicant				  = 481,	
@@ -950,7 +950,7 @@ enum Flags {
 	kFlagAR02DektoraWillBuyScorpions          = 504,
 	kFlagDR03ChewTalkExplosion                = 505,
 	kFlagBB08toBB12                           = 506,
-	kFlagBB12toBB08                           = 507, // is never checked
+	kFlagRachaelWalks                         = 507, 
 	kFlagNR07Entered                          = 508,
 	kFlagBB11SadikFight                       = 509,
 	kFlagFishLadyTalkFinsished                = 510, 

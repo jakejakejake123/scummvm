@@ -30,7 +30,6 @@ void SceneScriptUG09::InitializeScene() {
 		Game_Flag_Reset(kFlagCT12ToUG09);
 	} else {
 		Setup_Scene_Information(-53.0f, 156.94f,  174.0f, 1000);
-		Game_Flag_Reset(kFlagUG07toUG09);
 	}
 
 	Scene_Exit_Add_2D_Exit(0, 204, 159, 392, 360, 0);
@@ -217,9 +216,6 @@ void SceneScriptUG09::PlayerWalkedIn() {
 		if (Game_Flag_Query(kFlagIzoWarned)) {
 			Actor_Says(kActorIzo, 790, 16); //07-0790.AUD	I’ll tell him you helped me. That’s as much as I can do.
 			Actor_Says(kActorMcCoy, 4880, 13); //00-4880.AUD	Is that right?
-			if (Game_Flag_Query(kFlagIzoIsReplicant)) {
-				Actor_Clue_Acquire(kActorMcCoy, kClueMcCoyHelpedIzoIzoIsAReplicant, true, kActorIzo);
-			}
 		} 
 		Actor_Says(kActorIzo, 870, 17); //07-0870.AUD	I’ve been warned not to waste any more words with you.
 		if (Player_Query_Agenda() == kPlayerAgendaPolite) {

@@ -44,7 +44,9 @@ void AIScriptBulletBob::Initialize() {
 	_varNumOfTimesToHoldCurrentFrame = 0;
 
 	Actor_Set_Goal_Number(kActorBulletBob, kGoalBulletBobDefault);
-	Actor_Set_Targetable(kActorBulletBob, true);
+	if (!_vm->_cutContent) {
+		Actor_Set_Targetable(kActorBulletBob, true);
+	}
 }
 
 bool AIScriptBulletBob::Update() {
@@ -294,6 +296,7 @@ bool AIScriptBulletBob::GoalChanged(int currentGoalNumber, int newGoalNumber) {
 					} else {
 						Actor_Says(kActorMcCoy, 7860, -1); //00-7860.AUD	Stay right where you are.
 					}
+					Actor_Clue_Acquire(kActorMcCoy, kClueBobShotInSelfDefense, true, kActorBulletBob);
 					Actor_Set_Targetable(kActorBulletBob, true);
 					// If Bullet Bob is a replicant and McCoy has discovered this when McCoy pulls his gun out this exchange will happen.
 					if (Game_Flag_Query(kFlagBulletBobIsReplicant)) {
@@ -351,11 +354,10 @@ bool AIScriptBulletBob::GoalChanged(int currentGoalNumber, int newGoalNumber) {
 						Actor_Face_Actor(kActorBulletBob, kActorMcCoy, true);
 						Sound_Play(kSfxGUNH1A, 100, 0, 0, 50);
 						Actor_Change_Animation_Mode(kActorMcCoy, 6);
-						if (Player_Query_Agenda() == kPlayerAgendaErratic) {
+						if (Player_Query_Agenda() == kPlayerAgendaSurly 
+						|| (Player_Query_Agenda() == kPlayerAgendaErratic)) {
 							Actor_Start_Speech_Sample(kActorMcCoy, 490); //00-0490.AUD	Suck on this, skin-job!
 						}
-						Actor_Set_Targetable(kActorBulletBob, false);
-						Actor_Set_Goal_Number(kActorBulletBob, kGoalBulletBobGone);
 						_animationFrame = 0;
 						_animationState = 3;
 						Ambient_Sounds_Play_Speech_Sound(kActorGordo, 9000, 100, 0, 0, 0); // not a typo, it's really from Gordo
@@ -363,6 +365,8 @@ bool AIScriptBulletBob::GoalChanged(int currentGoalNumber, int newGoalNumber) {
 						//Made it so the clickable 2D region for the bullet proof vest is removed after you shoot Bob.
 						Delay(2000);
 						Actor_Voice_Over(920, kActorVoiceOver); // 99-0920.AUD	Easy money.
+						Actor_Set_Targetable(kActorBulletBob, false);
+						Actor_Set_Goal_Number(kActorBulletBob, kGoalBulletBobGone);
 						Player_Set_Combat_Mode (false);
 						Delay (1000);
 						if (Player_Query_Agenda() == kPlayerAgendaSurly 
@@ -375,7 +379,6 @@ bool AIScriptBulletBob::GoalChanged(int currentGoalNumber, int newGoalNumber) {
 						Scene_Exits_Enable();
 						Game_Flag_Reset (kFlagMcCoyIsHelpingReplicants);
 						Game_Flag_Set(kFlagBulletBobReplicantTalk);
-						Actor_Clue_Acquire(kActorMcCoy, kClueBobShotInSelfDefense, true, kActorBulletBob);
 						Actor_Modify_Friendliness_To_Other(kActorSteele, kActorMcCoy, 2);
 						Actor_Modify_Friendliness_To_Other(kActorClovis, kActorMcCoy, -2);
 						Actor_Modify_Friendliness_To_Other(kActorGuzza, kActorMcCoy, 2);
@@ -443,7 +446,6 @@ bool AIScriptBulletBob::GoalChanged(int currentGoalNumber, int newGoalNumber) {
 				Actor_Modify_Friendliness_To_Other(kActorGuzza, kActorMcCoy, -2);
 			}
 		}
-		return true;
 	} else if ( newGoalNumber == kGoalBulletBobDead
 	 && !Actor_Clue_Query(kActorMcCoy, kClueVKBobGorskyReplicant)
 	) {
@@ -545,7 +547,13 @@ bool AIScriptBulletBob::UpdateAnimation(int *animation, int *frame) {
 		}
 		if (_animationFrame == 5) {
 			Sound_Play(kSfxSHOTGUN1, 90, 0, 0, 50);
-			Actor_Set_Goal_Number(kActorBulletBob, kGoalBulletBobShotMcCoy);
+			if (_vm->_cutContent) {
+				if (!Actor_Clue_Query(kActorMcCoy, kClueBobShotInSelfDefense)) {
+					Actor_Set_Goal_Number(kActorBulletBob, kGoalBulletBobShotMcCoy);
+				}
+			} else {
+				Actor_Set_Goal_Number(kActorBulletBob, kGoalBulletBobShotMcCoy);
+			}
 		}
 		break;
 

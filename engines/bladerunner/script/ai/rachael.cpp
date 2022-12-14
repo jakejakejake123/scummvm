@@ -514,6 +514,10 @@ void AIScriptRachael::dialogue_agenda1() {
 		if (Player_Query_Agenda() == kPlayerAgendaPolite) {
 			Actor_Says(kActorMcCoy, 2860, 14);                    // YouTakeCareOfYourself
 		}
+		if (_vm->_cutContent) {
+			Game_Flag_Set(kFlagRachaelThirdMeeting);
+			Game_Flag_Set(kFlagRachaelWalks);
+		}
 	} else {
 		// original code
 		Actor_Says(kActorMcCoy, 2795, 13);                  // You are upset
@@ -546,7 +550,7 @@ void AIScriptRachael::dialogue_agenda1() {
 		Actor_Says(kActorRachael, 290, 14);                 // ThatsRight
 		Actor_Says_With_Pause(kActorRachael, 300, 1.0f, 3); // GoodbyeMcCoy
 		Actor_Says(kActorMcCoy, 2860, 14);                  // YouTakeCareOfYourself
-	}
+	}	
 }
 
 void AIScriptRachael::dialogue_agenda2() {
@@ -589,7 +593,10 @@ void AIScriptRachael::dialogue_agenda2() {
 			Actor_Says(kActorRachael, 130, 14);                  // ButReplicantsHowHumain
 		}
 		Actor_Says_With_Pause(kActorRachael, 300, 1.0f, 3); // GoodbyeMcCoy
-		Game_Flag_Set(kFlagMcCoyShotRachael);
+		if (_vm->_cutContent) {
+			Game_Flag_Set(kFlagRachaelThirdMeeting);
+			Game_Flag_Set(kFlagRachaelWalks);
+		}
 	} else {
 		// original code - missing some quotes or removing some quotes to make it fit better
 		Actor_Says(kActorRachael, 50, 15);                  // I don't think he'd appreciate being called that
@@ -679,6 +686,9 @@ void AIScriptRachael::dialogue_act4() {
 		Actor_Says(kActorMcCoy, 2935, 19);   //  YeahGoodIdeaMaybeIllDoThat
 	}	
 	if (_vm->_cutContent) {
+		Game_Flag_Reset(kFlagRachaelThirdMeeting);
+		Game_Flag_Set(kFlagRachaelWalks);
+		Actor_Set_Targetable(kActorRachael, false);
 		if (Actor_Query_Friendliness_To_Other(kActorRachael, kActorMcCoy) > 49) {
 			Actor_Says(kActorRachael, 470, 18);  //  Hope you get the answers looking for McCoy.
 		} else {

@@ -992,7 +992,6 @@ bool AIScriptSteele::GoalChanged(int currentGoalNumber, int newGoalNumber) {
 				Actor_Says(kActorSteele, 1930, kAnimationModeTalk); //01-1930.AUD	Just kidding, Slim.
 				Actor_Clue_Acquire(kActorMcCoy, kClueCrystalRetiredIzo, true, kActorSteele);
 			}
-			Game_Flag_Reset(kFlagMcCoyIsHelpingReplicants);
 			Actor_Set_Goal_Number(kActorSteele, kGoalSteeleLeaveRC03);
 		} else {
 			Actor_Force_Stop_Walking(kActorMcCoy);
@@ -1009,8 +1008,6 @@ bool AIScriptSteele::GoalChanged(int currentGoalNumber, int newGoalNumber) {
 			Actor_Says(kActorSteele, 1870, kAnimationModeTalk); //01-1870.AUD	Tracking this piece of shit.
 			Actor_Says(kActorSteele, 1880, kAnimationModeTalk); //01-1880.AUD	What are you doing here besides putting your nuts on the chopping block?
 			Actor_Says(kActorMcCoy, 4830, 13); //00-4830.AUD	Investigating Izo. Maybe we should compare notes.
-			Actor_Says(kActorSteele, 1890, kAnimationModeTalk); //01-1890.AUD	Maybe you should find another line of work.
-			Actor_Says(kActorSteele, 1900, kAnimationModeTalk); //01-1900.AUD	Just in case I'm not around to bail you out next time.
 			Actor_Says(kActorSteele, 1890, kAnimationModeTalk); //01-1890.AUD	Maybe you should find another line of work.
 			Actor_Says(kActorSteele, 1900, kAnimationModeTalk); //01-1900.AUD	Just in case I'm not around to bail you out next time.
 			Actor_Says(kActorSteele, 1910, kAnimationModeTalk); //01-1910.AUD	I'll wait for the uniforms. Why don't you grab yourself a slice of quiche or something.
@@ -1108,28 +1105,15 @@ bool AIScriptSteele::GoalChanged(int currentGoalNumber, int newGoalNumber) {
 		Actor_Face_Actor(kActorSteele, kActorMcCoy, true);
 		Actor_Face_Actor(kActorMcCoy, kActorSteele, true);
 		Actor_Says(kActorSteele, 1950, kAnimationModeTalk);
-		if (_vm->_cutContent) {
-			if (!Game_Flag_Query(kFlagMcCoyIsHelpingReplicants)) {
-				if (Player_Query_Agenda() == kPlayerAgendaPolite) { 
-					Actor_Says(kActorMcCoy, 4835, 14); //00-4835.AUD	Sorry, I bet you can still catch him if you want.
-				}
-			}
-		} else {
-			Actor_Says(kActorMcCoy, 4835, 14); //00-4835.AUD	Sorry, I bet you can still catch him if you want.
-		}
+		Actor_Says(kActorMcCoy, 4835, 14); //00-4835.AUD	Sorry, I bet you can still catch him if you want.
 		if (_vm->_cutContent) {
 			if (Actor_Query_Friendliness_To_Other(kActorSteele, kActorMcCoy) < 51) {
 				Actor_Says(kActorSteele, 1980, kAnimationModeTalk); //01-1980.AUD	If I didn't know any better, I'd think you wanted him to get away.
-				if (!Game_Flag_Query(kFlagMcCoyIsHelpingReplicants)) {
-					if (!Player_Query_Agenda() == kPlayerAgendaPolite) { 
-						Actor_Says(kActorMcCoy, 4840, 15); //00-4840.AUD	You crazy? I've been tailing him myself.
-					} else {
-						Actor_Says(kActorMcCoy, 7815, 13); //00-7815.AUD	No.
-					}
-				} else {
-					Actor_Says(kActorMcCoy, 7835, 16); //00-7835.AUD	Is that so?
-				}
+				Actor_Says(kActorMcCoy, 4840, 15); //00-4840.AUD	You crazy? I've been tailing him myself.
 			} 
+		} else {
+			Actor_Says(kActorMcCoy, 4840, 15); //00-4840.AUD	You crazy? I've been tailing him myself.		
+			Actor_Says(kActorMcCoy, 7815, 13); //00-7815.AUD	No.
 		}
 		Actor_Says(kActorSteele, 1990, kAnimationModeTalk); //01-1990.AUD	A little word of advice, Slim. Stay out of my way.
 		if (_vm->_cutContent) {
@@ -1140,6 +1124,11 @@ bool AIScriptSteele::GoalChanged(int currentGoalNumber, int newGoalNumber) {
 			Actor_Says(kActorSteele, 2000, kAnimationModeTalk); //01-2000.AUD	Next time I'm not gonna worry about who's in my line of fire, understand?
 		}
 		Actor_Set_Goal_Number(kActorSteele, kGoalSteeleLeaveRC03);
+		if (_vm->_cutContent) {
+			Player_Gains_Control();
+			Game_Flag_Set(kFlagIzoBlockedByMcCoy);
+			Game_Flag_Set(kFlagIzoGotAway);
+		}
 		Scene_Exits_Enable();
 		return true;
 
@@ -1214,7 +1203,17 @@ bool AIScriptSteele::GoalChanged(int currentGoalNumber, int newGoalNumber) {
 			Actor_Change_Animation_Mode(kActorSteele, kAnimationModeCombatIdle);
 			Delay(2000);
 			Actor_Says(kActorSteele, 1700, 58);
-			Actor_Says(kActorMcCoy, 3800, 3);
+			if (_vm->_cutContent) {
+				if (Player_Query_Agenda() != kPlayerAgendaPolite
+				&& !Game_Flag_Query(kFlagMcCoyIsHelpingReplicants)
+				&& !Actor_Clue_Query(kActorDektora, kClueMcCoyHelpedDektora)) {
+					Actor_Says(kActorMcCoy, 3800, 3); //00-3800.AUD	It’s gotta be around here somewhere.
+				} else {
+					Actor_Says(kActorMcCoy, 7815, 13); //00-7815.AUD	No.
+				}
+			} else {
+				Actor_Says(kActorMcCoy, 3800, 3);
+			}
 			Actor_Says(kActorSteele, 1710, 59);
 			Actor_Set_Goal_Number(kActorSteele, kGoalSteeleNR11Shoot);
 			break;
@@ -1243,7 +1242,8 @@ bool AIScriptSteele::GoalChanged(int currentGoalNumber, int newGoalNumber) {
 				|| Player_Query_Agenda() == kPlayerAgendaErratic) {
 					Actor_Says(kActorMcCoy, 3815, 19); //00-3815.AUD	I think we can safely say that one’s in bio-mechanical purgatory.
 				} else {
-					Actor_Says(kActorSteele, 5705, 19); //00-5705.AUD	Uh-huh.
+					Music_Play(kMusicBRBlues, 52, 0, 2, -1, kMusicLoopPlayOnce, 1);
+					Actor_Says(kActorMcCoy, 5705, 19); //00-5705.AUD	Uh-huh.
 				}
 			} else {
 				Actor_Says(kActorMcCoy, 3815, 19);
@@ -1264,6 +1264,7 @@ bool AIScriptSteele::GoalChanged(int currentGoalNumber, int newGoalNumber) {
 				Actor_Clue_Acquire(kActorClovis, kClueMcCoyRetiredDektora, true, kActorSteele);
 				Actor_Clue_Acquire(kActorMcCoy, kClueMcCoyRetiredDektora, true, kActorSteele);
 				Game_Flag_Reset(kFlagMcCoyIsHelpingReplicants);
+				Global_Variable_Set(kVariableAffectionTowards, kAffectionTowardsNone);
 				Actor_Modify_Friendliness_To_Other(kActorSteele, kActorMcCoy, 2);
 				Actor_Modify_Friendliness_To_Other(kActorClovis, kActorMcCoy, -4);
 				Actor_Modify_Friendliness_To_Other(kActorGuzza, kActorMcCoy, 2);
@@ -1376,7 +1377,11 @@ bool AIScriptSteele::GoalChanged(int currentGoalNumber, int newGoalNumber) {
 	case kGoalSteeleHF02ShootLucy:
 		if (_vm->_cutContent) {
 			Music_Stop(1u);
-			Actor_Says(kActorMcCoy, 1595, 14); //00-1595.AUD	Everybody out of the way!
+			if (!Game_Flag_Query(kFlagMcCoyIsHelpingReplicants)) {
+				Actor_Says(kActorMcCoy, 1595, 14); //00-1595.AUD	Everybody out of the way!
+			} else {
+				Actor_Says(kActorMcCoy, 8955, 16); //00-8955.AUD	Stop!
+			}
 			Actor_Says(kActorLucy, 330, 16); //06-0330.AUD	Please, please don’t!
 		}
 		Actor_Change_Animation_Mode(kActorSteele, kAnimationModeCombatAttack);
@@ -1967,6 +1972,7 @@ bool AIScriptSteele::GoalChanged(int currentGoalNumber, int newGoalNumber) {
 				}	
 				Actor_Says(kActorSteele, 980, 17); //01-0980.AUD	Now get cracking. Before I change my mind.
 			}
+			Music_Stop(1u);
 		} else {
 			Actor_Says(kActorMcCoy, 3015, 12); // 00-3015.AUD	You got a deal.	
 			Actor_Says(kActorSteele, 980, 17); //01-0980.AUD	Now get cracking. Before I change my mind.

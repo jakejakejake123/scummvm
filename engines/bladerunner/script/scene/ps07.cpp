@@ -165,6 +165,7 @@ bool SceneScriptPS07::ClickedOnActor(int actorId) {
 						Delay(2000);
 						Actor_Says(kActorMcCoy, 6985, 16); //00-6985.AUD	Got the straight scoop for me or what?
 						Actor_Modify_Friendliness_To_Other(kActorKlein, kActorMcCoy, -3);
+						Delay(1000);
 					}
 				}
 				Actor_Says(kActorKlein, 110, 12); //-	30-0110.AUD	About 50% were real. The rest were fakes.
@@ -240,8 +241,7 @@ bool SceneScriptPS07::ClickedOnActor(int actorId) {
 				//Jake - Added in a couple of lines.
 				if (_vm->_cutContent) {
 					Actor_Says(kActorKlein, 290, 14); //30-0290.AUD	Would I lie to you?
-					if (Player_Query_Agenda() == kPlayerAgendaSurly 
-					|| Player_Query_Agenda() == kPlayerAgendaErratic) {
+					if (Player_Query_Agenda() != kPlayerAgendaPolite) {
 						Actor_Says(kActorMcCoy, 8295, 13); //00-8295.AUD	You tell me.
 						Actor_Modify_Friendliness_To_Other(kActorKlein, kActorMcCoy, -3);
 						Delay (1000);
@@ -267,14 +267,14 @@ bool SceneScriptPS07::ClickedOnActor(int actorId) {
 						Delay(1000);
 						Actor_Says(kActorKlein, 280, 13); //30-0280.AUD	Come back at me when you got something worthwhile, McCoy.
 						Actor_Modify_Friendliness_To_Other(kActorKlein, kActorMcCoy, -3);
-						Actor_Set_Goal_Number(kActorKlein, kGoalKleinMovingInLab01);
-			  	    } else {
 						if (!Game_Flag_Query(kFlagKleinCarIdentityTalk)) {
+							Actor_Says(kActorMcCoy, 5150, 18); //00-5150.AUD	One more thing.
 							Actor_Says(kActorMcCoy, 4195, 13);
 							Actor_Says(kActorKlein, 240, 16); 
 							Game_Flag_Set(kFlagKleinCarIdentityTalk);
 							Actor_Set_Goal_Number(kActorKlein, kGoalKleinMovingInLab01);
 						}
+						Actor_Set_Goal_Number(kActorKlein, kGoalKleinMovingInLab01);
 				    }
 				} else {
 					Actor_Says(kActorKlein, 200, 16);

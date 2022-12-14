@@ -323,7 +323,6 @@ bool SceneScriptNR11::ClickedOnItem(int itemId, bool a2) {
 bool SceneScriptNR11::ClickedOnExit(int exitId) {
 	if (exitId == 0) {
 		if (!Loop_Actor_Walk_To_XYZ(kActorMcCoy, 100.0f, 1.75f, -8.0f, 0, true, false, false)) {
-			Game_Flag_Set(kFlagNR11toNR10);
 			Set_Enter(kSetNR10, kSceneNR10);
 			return true;
 		}
@@ -385,14 +384,19 @@ void SceneScriptNR11::SceneFrameAdvanced(int frame) {
 	if (Game_Flag_Query(kFlagNR11SteeleShoot)) {
 		untargetEverything();
 		Player_Loses_Control();
-		if (!Player_Query_Combat_Mode()) {
-			Player_Set_Combat_Mode(true);
-		}
 		if (_vm->_cutContent) {
-			if (!Game_Flag_Query(kFlagMcCoyIsHelpingReplicants)) {
+			if (Player_Query_Agenda() != kPlayerAgendaPolite
+			&& !Game_Flag_Query(kFlagMcCoyIsHelpingReplicants)
+			&& !Actor_Clue_Query(kActorDektora, kClueMcCoyHelpedDektora)) {
+				if (!Player_Query_Combat_Mode()) {
+					Player_Set_Combat_Mode(true);
+				}
 				Actor_Set_Goal_Number(kActorMcCoy, kGoalMcCoyNR11Shoot);
 			} 
 		} else {
+			if (!Player_Query_Combat_Mode()) {
+				Player_Set_Combat_Mode(true);
+			}
 			Actor_Set_Goal_Number(kActorMcCoy, kGoalMcCoyNR11Shoot);
 		}
 		Scene_Loop_Set_Default(kNR11LoopMainLoopFires);
@@ -429,7 +433,15 @@ void SceneScriptNR11::PlayerWalkedIn() {
 		Music_Stop(4u);
 	}
 	if (Actor_Query_Goal_Number(kActorDektora) == kGoalDektoraNR11Hiding) {
-		Player_Set_Combat_Mode(true);
+		if (_vm->_cutContent) {
+			if (Player_Query_Agenda() != kPlayerAgendaPolite
+			&& !Game_Flag_Query(kFlagMcCoyIsHelpingReplicants)
+			&& !Actor_Clue_Query(kActorDektora, kClueMcCoyHelpedDektora)) {
+				Player_Set_Combat_Mode(true);
+			}
+		} else {
+			Player_Set_Combat_Mode(true);
+		}
 		if (Game_Flag_Query(kFlagDektoraIsReplicant)) {
 			Actor_Set_Goal_Number(kActorSteele, kGoalSteeleNR11StartWaiting);
 		}
@@ -477,10 +489,13 @@ void SceneScriptNR11::PlayerWalkedIn() {
 					Actor_Says_With_Pause(kActorSteele, 1720, 0.3f, 16); //01-1720.AUD	Putz employs Replicants, you gotta expect the worst.
 				}
 				if (_vm->_cutContent) {
-					if (Player_Query_Agenda() == kPlayerAgendaSurly 
-					|| Player_Query_Agenda() == kPlayerAgendaErratic) {
+					if (Player_Query_Agenda() != kPlayerAgendaPolite
+					&& !Game_Flag_Query(kFlagMcCoyIsHelpingReplicants)
+					&& !Actor_Clue_Query(kActorDektora, kClueMcCoyHelpedDektora)) {
 						Actor_Says(kActorMcCoy, 1570, 13); //00-1570.AUD	You sure aired that sucker out.
+						Game_Flag_Reset(kFlagMcCoyIsHelpingReplicants);
 					} else {
+						Music_Play(kMusicBRBlues, 52, 0, 2, -1, kMusicLoopPlayOnce, 1);
 						Actor_Says(kActorMcCoy, 3810, 16); //00-3810.AUD	You could have taken her out in a more discrete way.
 						if (Actor_Query_Friendliness_To_Other(kActorSteele, kActorMcCoy) < 51) {
 							Actor_Says_With_Pause(kActorSteele, 1730, 0.2f, 14); //01-1730.AUD	What’s this "her" crap? It’s an "it", remember? A goddamn machine.
@@ -493,6 +508,9 @@ void SceneScriptNR11::PlayerWalkedIn() {
 					Actor_Says_With_Pause(kActorSteele, 1730, 0.2f, 14); //01-1730.AUD	What’s this "her" crap? It’s an "it", remember? A goddamn machine.
 				}
 				Actor_Says(kActorSteele, 1740, 15); //01-1740.AUD	Come on, let’s blow while the getting's good.
+				if (_vm->_cutContent) {
+					Global_Variable_Set(kVariableAffectionTowards, kAffectionTowardsNone);
+				}
 				Actor_Set_Goal_Number(kActorDektora, kGoalDektoraGone);
 				Actor_Put_In_Set(kActorDektora, kSetFreeSlotI);
 				Actor_Set_At_Waypoint(kActorDektora, 41, 0);

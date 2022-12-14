@@ -176,7 +176,6 @@ void SceneScriptUG08::PlayerWalkedIn() {
 		Footstep_Sound_Override_Off();
 		Player_Gains_Control();
 	}
-	Game_Flag_Reset(kFlagUG07toUG08);
 	Game_Flag_Reset(kFlagUG13toUG08);
 }
 

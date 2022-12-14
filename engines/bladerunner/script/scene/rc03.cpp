@@ -331,76 +331,34 @@ void SceneScriptRC03::PlayerWalkedIn() {
 					Actor_Says_With_Pause(kActorIzo, 630, 0.0f, -1); // TODO: A bug? why is animation mode set as -1? and why is "With_Pause" version used?
 					Actor_Says_With_Pause(kActorIzo, 640, 0.0f, -1); // TODO: A bug? why is animation mode set as -1? and why is "With_Pause" version used?
 					Actor_Says_With_Pause(kActorIzo, 650, 0.0f, -1); // TODO: A bug? why is animation mode set as -1? and why is "With_Pause" version used?
-					if (Game_Flag_Query(kFlagIzoIsReplicant)) {
-						if (Actor_Query_Goal_Number(kActorIzo) != kGoalIzoDie
-							&& Actor_Query_Goal_Number(kActorIzo) != kGoalIzoDieHidden
-							&& Actor_Query_Goal_Number(kActorIzo) != kGoalIzoRC03RanAwayDone
-							&& Actor_Query_Goal_Number(kActorIzo) != kGoalIzoEscape
-							&& Actor_Query_Goal_Number(kActorSteele) != kGoalSteeleShootIzo
-							&& Actor_Query_Goal_Number(kActorSteele) != kGoalSteeleIzoBlockedByMcCoy
-							&& Actor_Query_Goal_Number(kActorSteele) != kGoalSteeleLeaveRC03
-							&& Actor_Query_Goal_Number(kActorSteele) != kGoalSteeleGoToPoliceStation
-						) {
-							if (Game_Flag_Query(kFlagMcCoyIsHelpingReplicants)) {
-								Actor_Set_Goal_Number(kActorSteele, kGoalSteeleApprehendIzo);
-								Sound_Play(kSfxSHOTCOK1, 75, 0, 0, 50);
-								Actor_Face_Actor(kActorMcCoy, kActorSteele, true);
-								Loop_Actor_Walk_To_XYZ(kActorIzo, 180.0f, -4.0f, 184.0f, 0, false, false, false);
-								Actor_Change_Animation_Mode(kActorIzo, kAnimationModeCombatAttack);
-								Actor_Force_Stop_Walking(kActorMcCoy);
-								Actor_Set_Goal_Number(kActorIzo, kGoalIzoRC03RunAway);
-								Actor_Says(kActorSteele, 1940, kAnimationModeTalk); //01-1940.AUD	Move it!
-								Loop_Actor_Walk_To_Actor(kActorSteele, kActorMcCoy, 60, false, true);
-								Actor_Face_Actor(kActorSteele, kActorMcCoy, true);
-								Actor_Face_Actor(kActorMcCoy, kActorSteele, true);
-								Actor_Says(kActorSteele, 1950, kAnimationModeTalk); //01-1950.AUD	I've been tracking Izo for a week and you ruined my whole plan in two seconds.
-								if (_vm->_cutContent) {
-									if (!Game_Flag_Query(kFlagMcCoyIsHelpingReplicants)) {
-										if (Player_Query_Agenda() == kPlayerAgendaPolite) { 
-											Actor_Says(kActorMcCoy, 4835, 14); //00-4835.AUD	Sorry, I bet you can still catch him if you want.
-										}
-									}
-								} else {
-									Actor_Says(kActorMcCoy, 4835, 14); //00-4835.AUD	Sorry, I bet you can still catch him if you want.
-								}
-								if (_vm->_cutContent) {
-									if (Actor_Query_Friendliness_To_Other(kActorSteele, kActorMcCoy) < 51) {
-										Actor_Says(kActorSteele, 1980, kAnimationModeTalk); //01-1980.AUD	If I didn't know any better, I'd think you wanted him to get away.
-										if (!Game_Flag_Query(kFlagMcCoyIsHelpingReplicants)) {
-											if (Player_Query_Agenda() == kPlayerAgendaSurly 
-											|| Player_Query_Agenda() == kPlayerAgendaErratic) { 
-												Actor_Says(kActorMcCoy, 4840, 15); //00-4840.AUD	You crazy? I've been tailing him myself.
-											} else {
-												Actor_Says(kActorMcCoy, 7815, 13); //00-7815.AUD	No.
-											}
-										} else {
-											Actor_Says(kActorMcCoy, 7835, 16); //00-7835.AUD	Is that so?
-										}
-									} 
-								}
-								Actor_Says(kActorSteele, 1990, kAnimationModeTalk); //01-1990.AUD	A little word of advice, Slim. Stay out of my way.
-								if (_vm->_cutContent) {
-									if (Actor_Query_Friendliness_To_Other(kActorSteele, kActorMcCoy) < 51) {
-										Actor_Says(kActorSteele, 2000, kAnimationModeTalk); //01-2000.AUD	Next time I'm not gonna worry about who's in my line of fire, understand?
-									}
-								} else {
-									Actor_Says(kActorSteele, 2000, kAnimationModeTalk); //01-2000.AUD	Next time I'm not gonna worry about who's in my line of fire, understand?
-								}
-								Game_Flag_Set(kFlagIzoGotAway);
-								Actor_Modify_Friendliness_To_Other(kActorSteele, kActorMcCoy, -2);
-								Actor_Modify_Friendliness_To_Other(kActorGuzza, kActorMcCoy, -2);
-								Actor_Modify_Friendliness_To_Other(kActorClovis, kActorMcCoy, 2);
-								Actor_Set_Goal_Number(kActorSteele, kGoalSteeleLeaveRC03);
-								Player_Gains_Control();
-								Scene_Exits_Enable();
-							} else {
-								Actor_Set_Goal_Number(kActorSteele, kGoalSteeleApprehendIzo);
-								Player_Gains_Control();
-								Sound_Play(kSfxSHOTCOK1, 75, 0, 0, 50);
-								Actor_Change_Animation_Mode(kActorMcCoy, kAnimationModeDodge);
-								Loop_Actor_Walk_To_XYZ(kActorIzo, 180.0f, -4.0f, 184.0f, 0, false, false, false);
-								Actor_Change_Animation_Mode(kActorIzo, kAnimationModeCombatAttack);
-							}
+					if (Actor_Query_Goal_Number(kActorIzo) != kGoalIzoDie
+						&& Actor_Query_Goal_Number(kActorIzo) != kGoalIzoDieHidden
+						&& Actor_Query_Goal_Number(kActorIzo) != kGoalIzoRC03RanAwayDone
+						&& Actor_Query_Goal_Number(kActorIzo) != kGoalIzoEscape
+						&& Actor_Query_Goal_Number(kActorSteele) != kGoalSteeleShootIzo
+						&& Actor_Query_Goal_Number(kActorSteele) != kGoalSteeleIzoBlockedByMcCoy
+						&& Actor_Query_Goal_Number(kActorSteele) != kGoalSteeleLeaveRC03
+						&& Actor_Query_Goal_Number(kActorSteele) != kGoalSteeleGoToPoliceStation
+					) {
+						if (Game_Flag_Query(kFlagMcCoyIsHelpingReplicants)) {
+							AI_Movement_Track_Flush(kActorSteele);
+							AI_Movement_Track_Append_Run(kActorSteele, 202, 0);
+							AI_Movement_Track_Append_Run(kActorSteele, 203, 0);
+							AI_Movement_Track_Repeat(kActorSteele);
+							Sound_Play(kSfxSHOTCOK1, 75, 0, 0, 50);
+							Actor_Face_Actor(kActorMcCoy, kActorSteele, true);
+							Loop_Actor_Walk_To_XYZ(kActorIzo, 180.0f, -4.0f, 184.0f, 0, false, false, false);
+							Actor_Change_Animation_Mode(kActorIzo, kAnimationModeCombatAttack);
+							Actor_Set_Goal_Number(kActorSteele, kGoalSteeleIzoBlockedByMcCoy);
+							Player_Gains_Control();
+							Game_Flag_Set(kFlagIzoBlockedByMcCoy);
+						} else {
+							Actor_Set_Goal_Number(kActorSteele, kGoalSteeleApprehendIzo);
+							Player_Gains_Control();
+							Sound_Play(kSfxSHOTCOK1, 75, 0, 0, 50);
+							Actor_Change_Animation_Mode(kActorMcCoy, kAnimationModeDodge);
+							Loop_Actor_Walk_To_XYZ(kActorIzo, 180.0f, -4.0f, 184.0f, 0, false, false, false);
+							Actor_Change_Animation_Mode(kActorIzo, kAnimationModeCombatAttack);
 						}
 					}
 				} else {
@@ -498,7 +456,8 @@ void SceneScriptRC03::PlayerWalkedIn() {
 		}
 	}
 	if (_vm->_cutContent) {
-		if (Game_Flag_Query(kFlagIzoGotAway)) {
+		if (Game_Flag_Query(kFlagIzoGotAway)
+		&& !Game_Flag_Query(kFlagIzoBlockedByMcCoy)) {
 			Player_Loses_Control();
 			Actor_Set_Goal_Number(kActorSteele, 200);
 			Actor_Put_In_Set(kActorSteele, kSetRC03);

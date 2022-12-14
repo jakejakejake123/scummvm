@@ -152,7 +152,6 @@ bool SceneScriptUG10::ClickedOnExit(int exitId) {
 			if (!Loop_Actor_Walk_To_XYZ(kActorMcCoy, -385.0f, 1.15f, 57.44f, 0, true, false, false)) {
 				Actor_Face_Heading(kActorMcCoy, 1001, false);
 				Loop_Actor_Travel_Ladder(kActorMcCoy, 1, true, kAnimationModeIdle);
-				Game_Flag_Set(kFlagUG10toUG07);
 				Set_Enter(kSetUG07, kSceneUG07);
 				return true;
 			}

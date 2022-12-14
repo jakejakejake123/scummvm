@@ -118,7 +118,7 @@ void SceneScriptPS14::ActorChangedGoal(int actorId, int newGoal, int oldGoal, bo
 
 void SceneScriptPS14::PlayerWalkedIn() {
 	if (_vm->_cutContent) {
-		Game_Flag_Reset(kFlagMcCoyShotRachael);
+		Game_Flag_Reset(kFlagRachaelWalks);
 		Music_Stop(1u);
 	}
 	if (Game_Flag_Query(kFlagMA07toPS14)) {

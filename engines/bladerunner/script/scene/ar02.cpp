@@ -309,12 +309,16 @@ bool SceneScriptAR02::ClickedOnActor(int actorId) {
 			Actor_Face_Actor(kActorMcCoy, kActorHasan, true);
 			Actor_Face_Actor(kActorHasan, kActorMcCoy, true);
 			if (!Game_Flag_Query(kFlagAR02HassanTalk)) {
+				if (_vm->_cutContent) {
+					Actor_Says(kActorMcCoy, 8925, 18); //00-8925.AUD	You got a few minutes, buddy?
+				}
 				Actor_Says(kActorHasan, 0, 14);
 				if (_vm->_cutContent) {
 					if (Player_Query_Agenda() == kPlayerAgendaPolite) {
 						Actor_Says(kActorMcCoy, 140, 18);
 					} else {
 						Actor_Says(kActorMcCoy, 7815, 13); //00-7815.AUD	No.
+						Delay(1000);
 					}
 				} else {
 					Actor_Says(kActorMcCoy, 140, 18);
@@ -325,45 +329,47 @@ bool SceneScriptAR02::ClickedOnActor(int actorId) {
 					Actor_Says(kActorMcCoy, 7200, 13); //00-7200.AUD	Bingo.
 					Actor_Says(kActorMcCoy, 660, 14); //00-0660.AUD	You seen any suspicious types around here lately?
 					Actor_Says(kActorHasan, 250, 12); //20-0250.AUD	I'm afraid not, noble one. But you shall surely be the first to know, if I do hear something.
-					if (Player_Query_Agenda() == kPlayerAgendaSurly 
-					|| Player_Query_Agenda() == kPlayerAgendaErratic) {
+					if (Player_Query_Agenda() != kPlayerAgendaPolite) {
 						Actor_Says(kActorMcCoy, 3910, 16); //00-3910.AUD	You’re lying.
 						Actor_Says(kActorHasan, 270, 11); //20-0270.AUD	You sully my good name with such accusations. I speak only the truth, I swear!
-						Actor_Says(kActorMcCoy, 8519, 14);//00-8519.AUD	What do you say we dish each other the straight goods.
-						// Quote 80 is *boop* in ENG and DEU versions
-						// In FRA, ITA versions it is identical to the second half of quote 70, and thus redundant
-						// In ESP version it is the missing second half of quote 70, and is required!
-						if (_vm->_cutContent
-							&& _vm->_language == Common::ES_ESP
-						) {
-							Actor_Says_With_Pause(kActorHasan, 70, 0.0f, 12);
-							Actor_Says(kActorHasan, 80, kAnimationModeTalk);
+						if (Player_Query_Agenda() == kPlayerAgendaSurly 
+						|| Player_Query_Agenda() == kPlayerAgendaErratic) {
+							Actor_Says(kActorMcCoy, 8519, 14);//00-8519.AUD	What do you say we dish each other the straight goods.
+							// Quote 80 is *boop* in ENG and DEU versions
+							// In FRA, ITA versions it is identical to the second half of quote 70, and thus redundant
+							// In ESP version it is the missing second half of quote 70, and is required!
+							if (_vm->_cutContent
+								&& _vm->_language == Common::ES_ESP
+							) {
+								Actor_Says_With_Pause(kActorHasan, 70, 0.0f, 12);
+								Actor_Says(kActorHasan, 80, kAnimationModeTalk);
+							} else {
+								Actor_Says(kActorHasan, 70, 12);//20-0070.AUD	Certainly the LPD must have better things to do than to question a humble merchant over and over again about the same things.
+							}
+							Actor_Says(kActorHasan, 90, 12);//20-0090.AUD	Why aren't you out arresting criminals like that disreputable Bob fellow.
+							// Made it so McCoy only questions who Bob is and is directed to Bobs shop only if McCoy hasn't Met Bob.
+							if (!Game_Flag_Query(kFlagRC04Entered)) {
+								Actor_Says(kActorMcCoy, 180, 15); //00-0180.AUD	Bob?
+							}
+							Actor_Says(kActorHasan, 100, 14); //20-0100.AUD	He owns the armament shop up the street. He is insane, noble one. Insane.
+							Actor_Says(kActorHasan, 110, 12);
+							// Quote 130 is *boop* in ENG and DEU versions
+							// In FRA, ITA versions it is identical to the second half of quote 120, and thus redundant
+							// In ESP version it is the missing second half of quote 120, and is required!
+							if (_vm->_cutContent
+								&& _vm->_language == Common::ES_ESP
+							) {
+								Actor_Says_With_Pause(kActorHasan, 120, 0.0f, 13);
+								Actor_Says(kActorHasan, 130, kAnimationModeTalk);
+							} else {
+								Actor_Says(kActorHasan, 120, 13);
+							}
+							Actor_Modify_Friendliness_To_Other(kActorHasan, kActorMcCoy, -2);
+							Actor_Clue_Acquire(kActorMcCoy, kClueHasanInterview, false, kActorHasan);
 						} else {
-							Actor_Says(kActorHasan, 70, 12);//20-0070.AUD	Certainly the LPD must have better things to do than to question a humble merchant over and over again about the same things.
-						}
-						Actor_Says(kActorHasan, 90, 12);//20-0090.AUD	Why aren't you out arresting criminals like that disreputable Bob fellow.
-						// Made it so McCoy only questions who Bob is and is directed to Bobs shop only if McCoy hasn't Met Bob.
-						if (!Game_Flag_Query(kFlagRC04Entered)) {
-							Actor_Says(kActorMcCoy, 180, 15); //00-0180.AUD	Bob?
-						}
-						Actor_Says(kActorHasan, 100, 14); //20-0100.AUD	He owns the armament shop up the street. He is insane, noble one. Insane.
-						Actor_Says(kActorHasan, 110, 12);
-						// Quote 130 is *boop* in ENG and DEU versions
-						// In FRA, ITA versions it is identical to the second half of quote 120, and thus redundant
-						// In ESP version it is the missing second half of quote 120, and is required!
-						if (_vm->_cutContent
-							&& _vm->_language == Common::ES_ESP
-						) {
-							Actor_Says_With_Pause(kActorHasan, 120, 0.0f, 13);
-							Actor_Says(kActorHasan, 130, kAnimationModeTalk);
-						} else {
-							Actor_Says(kActorHasan, 120, 13);
-						}
-						Actor_Modify_Friendliness_To_Other(kActorHasan, kActorMcCoy, -2);
-						Actor_Clue_Acquire(kActorMcCoy, kClueHasanInterview, false, kActorHasan);
-					} else {
-						Actor_Says(kActorMcCoy, 8525, 13);
-					}			
+							Actor_Says(kActorMcCoy, 8525, 13);
+						}	
+					}		
 				}
 				Game_Flag_Set(kFlagAR02HassanTalk);
 				return true;
@@ -440,26 +446,32 @@ bool SceneScriptAR02::ClickedOnItem(int itemId, bool a2) {
 						Actor_Says(kActorInsectDealer, 190, 14); //16-0190.AUD	Sí, good products. Scorpions my best work. Finest quality. Even poison.
 						Actor_Says(kActorMcCoy, 105, 18); //00-0105.AUD	Isn't that illegal?
 						Actor_Says(kActorInsectDealer, 200, 14); //16-0200.AUD	I have permit, señor. My customers demand authenticity.
-						if (Player_Query_Agenda() == kPlayerAgendaSurly 
-						|| Player_Query_Agenda() == kPlayerAgendaErratic) {
+						if (Player_Query_Agenda() != kPlayerAgendaPolite) {
 							Actor_Says(kActorMcCoy, 3910, 14); //00-3910.AUD	You’re lying
 							Actor_Says(kActorInsectDealer, 420, 14); //16-0420.AUD	Believe what you will, señor. But I speak the truth.
 							Actor_Says(kActorMcCoy, 7835, 18); //00-7835.AUD	Is that so?
-							if (Global_Variable_Query(kVariableChapter) < 4) {
-								Actor_Says(kActorMcCoy, 1955, 14); //00-1955.AUD	We’re taking a little drive downtown.
-								Game_Flag_Set(kFlagAR02StungByScorpion);
-								Game_Flag_Set(kFlagInsectDealerArrested);
-								Music_Stop(1u);
-								Delay (1000);
-								Item_Remove_From_World(kItemScorpions);
-								Actor_Put_In_Set(kActorInsectDealer, kSetPS09);
-								Actor_Set_At_XYZ(kActorInsectDealer, -300.0f, 0.33f, -280.0f, 512);
-								Game_Flag_Reset(kFlagSpinnerAtAR01);
-								Game_Flag_Set(kFlagSpinnerAtPS01);
-								Game_Flag_Reset(kFlagMcCoyInAnimoidRow);
-								Game_Flag_Set(kFlagMcCoyInPoliceStation);
-								Outtake_Play(kOuttakeAway1, true, -1);
-								Set_Enter(kSetPS09, kScenePS09);
+							Delay(2000);
+							if (Player_Query_Agenda() == kPlayerAgendaSurly 
+							|| Player_Query_Agenda() == kPlayerAgendaErratic) {
+								if (Global_Variable_Query(kVariableChapter) < 4) {
+									if (!Game_Flag_Query(kFlagIzoGotAway)
+									&& !Game_Flag_Query(kFlagIzoOnTheRun)) {
+										Actor_Says(kActorMcCoy, 1955, 14); //00-1955.AUD	We’re taking a little drive downtown.
+										Game_Flag_Set(kFlagAR02StungByScorpion);
+										Game_Flag_Set(kFlagInsectDealerArrested);
+										Music_Stop(1u);
+										Delay (1000);
+										Item_Remove_From_World(kItemScorpions);
+										Actor_Put_In_Set(kActorInsectDealer, kSetPS09);
+										Actor_Set_At_XYZ(kActorInsectDealer, -300.0f, 0.33f, -280.0f, 512);
+										Game_Flag_Reset(kFlagSpinnerAtAR01);
+										Game_Flag_Set(kFlagSpinnerAtPS01);
+										Game_Flag_Reset(kFlagMcCoyInAnimoidRow);
+										Game_Flag_Set(kFlagMcCoyInPoliceStation);
+										Outtake_Play(kOuttakeAway1, true, -1);
+										Set_Enter(kSetPS09, kScenePS09);
+									}
+								}
 							}
 						}
 					} else {	
@@ -563,7 +575,11 @@ void SceneScriptAR02::PlayerWalkedIn() {
 			}
 		} else {
 			Actor_Says(kActorSteele, 1800, 16); //01-1800.AUD	You should have waited for me, Slim.
-			Actor_Says(kActorMcCoy, 2305, 15); //00-2305.AUD	I’m sorry.
+			if (Player_Query_Agenda() == kPlayerAgendaPolite) {
+				Actor_Says(kActorMcCoy, 2305, 15); //00-2305.AUD	I’m sorry.
+			} else {
+				Actor_Says(kActorMcCoy, 4880, 13); //00-4880.AUD	Is that right?
+			}
 			Actor_Says(kActorSteele, 1990, 15); //01-1990.AUD	A little word of advice, Slim. Stay out of my way.
 		}
 		Loop_Actor_Walk_To_XYZ(kActorSteele, -700.99, 0.74, -916.12, 48, false, true, false);
@@ -632,16 +648,19 @@ void SceneScriptAR02::dialogueWithInsectDealer1() {
 			Actor_Says(kActorInsectDealer, 410, 13); //	Ah, perhaps you should ask someone else.
 			Actor_Says(kActorMcCoy, 1620, 13);  //00-1620.AUD	I’m not gonna hurt you.
 			Actor_Says(kActorInsectDealer, 450, 13); // 16-0450.AUD	I know nothing except the value of simple insects.		
-			if (Player_Query_Agenda() == kPlayerAgendaSurly
-			|| Player_Query_Agenda() == kPlayerAgendaErratic) { 
+			if (Player_Query_Agenda() != kPlayerAgendaPolite) { 
 				Actor_Says(kActorMcCoy, 8450, 23); // Does this badge mean anything to you?
 				Actor_Says(kActorInsectDealer, 440, 14); // Please, this is all I know.
-				Actor_Says(kActorMcCoy, 8519, 14);//00-8519.AUD	What do you say we dish each other the straight goods.
-				Actor_Says(kActorInsectDealer, 430, 14); //16-0430.AUD	I did not mean to offend. I only thought to spare you from the truth of it.
-				Actor_Says(kActorMcCoy, 8455, 14); //00-8455.AUD	Let me judge what's gonna make me upset.	 		
-				Actor_Says(kActorInsectDealer, 380, 14); //16-0380.AUD	You promised no hurt!
-				Actor_Says(kActorMcCoy, 745, 14); //00-0745.AUD	I'm watching you, pal.
 				Actor_Modify_Friendliness_To_Other(kActorInsectDealer, kActorMcCoy, -2);
+				if (Player_Query_Agenda() == kPlayerAgendaSurly
+				|| Player_Query_Agenda() == kPlayerAgendaErratic) { 
+					Actor_Says(kActorMcCoy, 8519, 14);//00-8519.AUD	What do you say we dish each other the straight goods.
+					Actor_Says(kActorInsectDealer, 430, 14); //16-0430.AUD	I did not mean to offend. I only thought to spare you from the truth of it.
+					Actor_Says(kActorMcCoy, 8455, 14); //00-8455.AUD	Let me judge what's gonna make me upset.	 		
+					Actor_Says(kActorInsectDealer, 380, 14); //16-0380.AUD	You promised no hurt!
+					Actor_Says(kActorMcCoy, 745, 14); //00-0745.AUD	I'm watching you, pal.
+					Actor_Modify_Friendliness_To_Other(kActorInsectDealer, kActorMcCoy, -2);
+				}
 			} else {
 				if (Actor_Clue_Query(kActorMcCoy, kClueDragonflyEarring)) {
 					Actor_Says(kActorMcCoy, 7940, 13); //00-7940.AUD	Right.
@@ -845,9 +864,10 @@ void SceneScriptAR02::dialogueWithHassan() {
 	if (_vm->_cutContent) {
 		if (Global_Variable_Query(kVariableChapter) < 4) {
 			if (Actor_Clue_Query(kActorMcCoy, kClueBobRobbed)) {
-				if (Player_Query_Agenda() == kPlayerAgendaSurly 	
-				|| Player_Query_Agenda() == kPlayerAgendaErratic) { 
-					DM_Add_To_List(1250, -1, -1, 10); // ARREST
+				if (!Game_Flag_Query(kFlagIzoGotAway)
+				&& !Game_Flag_Query(kFlagIzoOnTheRun)
+				&& Game_Flag_Query(kFlagDNARowAvailableTalk)) {
+					DM_Add_To_List(1250, -1, -1, 1); // ARREST
 				}
 			}
 		}
@@ -888,22 +908,24 @@ void SceneScriptAR02::dialogueWithHassan() {
 					Actor_Says(kActorMcCoy, 175, 16); //00-0175.AUD	I think I've been following up on someone else's case.
 				} else {
 					Actor_Says(kActorHasan, 250, 14);  //20-0250.AUD	I'm afraid not, noble one. But you shall surely be the first to know, if I do hear something.
-					Actor_Says(kActorMcCoy, 3910, 16); //00-3910.AUD	You’re lying.
-					Actor_Says(kActorHasan, 270, 11); //20-0270.AUD	You sully my good name with such accusations. I speak only the truth, I swear!
-					if (Player_Query_Agenda() == kPlayerAgendaSurly 	
-					|| Player_Query_Agenda() == kPlayerAgendaErratic) {
-						Actor_Says(kActorMcCoy, 8519, 14);//00-8519.AUD	What do you say we dish each other the straight goods.
-						Delay (1000);
-						Actor_Says(kActorHasan, 280, 13); //20-0280.AUD	Oh, yes, now I remember. I misspoke before, that is all. Here's the truth of it.
-						Actor_Says(kActorMcCoy, 2635, 18); //00-2635.AUD	I’m all ears.
-						Actor_Says(kActorHasan, 40, 12); //20-0040.AUD	I told the last detective I sold the snake to Taffy Lewis.
-						Actor_Says(kActorMcCoy, 165, 13); //00-0165.AUD	The last detective?
-						Delay(1000);
-						Actor_Says(kActorMcCoy, 4130, kAnimationModeTalk); //00-4130.AUD	Anything else?
-						Actor_Says(kActorHasan, 50, 13); //20-0050.AUD	His name was Deckard.
-						Actor_Says(kActorMcCoy, 170, 19); //00-0170.AUD	Damn.
-						Actor_Says(kActorMcCoy, 175, 16); //00-0175.AUD	I think I've been following up on someone else's case.
-						Actor_Modify_Friendliness_To_Other(kActorHasan, kActorMcCoy, -2);			
+					if (Player_Query_Agenda() != kPlayerAgendaPolite) {
+						Actor_Says(kActorMcCoy, 3910, 16); //00-3910.AUD	You’re lying.
+						Actor_Says(kActorHasan, 270, 11); //20-0270.AUD	You sully my good name with such accusations. I speak only the truth, I swear!
+						if (Player_Query_Agenda() == kPlayerAgendaSurly 	
+						|| Player_Query_Agenda() == kPlayerAgendaErratic) {
+							Actor_Says(kActorMcCoy, 8519, 14);//00-8519.AUD	What do you say we dish each other the straight goods.
+							Delay (1000);
+							Actor_Says(kActorHasan, 280, 13); //20-0280.AUD	Oh, yes, now I remember. I misspoke before, that is all. Here's the truth of it.
+							Actor_Says(kActorMcCoy, 2635, 18); //00-2635.AUD	I’m all ears.
+							Actor_Says(kActorHasan, 40, 12); //20-0040.AUD	I told the last detective I sold the snake to Taffy Lewis.
+							Actor_Says(kActorMcCoy, 165, 13); //00-0165.AUD	The last detective?
+							Delay(1000);
+							Actor_Says(kActorMcCoy, 4130, kAnimationModeTalk); //00-4130.AUD	Anything else?
+							Actor_Says(kActorHasan, 50, 13); //20-0050.AUD	His name was Deckard.
+							Actor_Says(kActorMcCoy, 170, 19); //00-0170.AUD	Damn.
+							Actor_Says(kActorMcCoy, 175, 16); //00-0175.AUD	I think I've been following up on someone else's case.
+							Actor_Modify_Friendliness_To_Other(kActorHasan, kActorMcCoy, -2);			
+						}
 					}
 				}
 			}

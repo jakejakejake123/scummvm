@@ -114,10 +114,11 @@ bool SceneScriptMA02::ClickedOn3DObject(const char *objectName, bool a2) {
 		Actor_Face_Object(kActorMcCoy, "E-ESPER", true);
 		Delay(1000);
 		if (_vm->_cutContent) {
-			if (Global_Variable_Query(kVariableChapter) > 1) {
-				ESPER_Flag_To_Activate();
-			} else {
+			if (Global_Variable_Query(kVariableChapter) == 1
+			|| Global_Variable_Query(kVariableChapter) == 5) {
 				Actor_Says(kActorMcCoy, 5620, kAnimationModeTalk); //00-5620.AUD	Maybe later.
+			} else {
+				ESPER_Flag_To_Activate();
 			}
 		} else {
 			ESPER_Flag_To_Activate();

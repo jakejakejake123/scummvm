@@ -274,26 +274,23 @@ bool ESPERScript::SCRIPT_ESPER_DLL_Special_Region_Selected(int photo, int region
 				Actor_Clue_Acquire(kActorMcCoy, kClueMilitaryBoots, true, -1);
 			}
 		} else if (region == 5) {
-			Actor_Voice_Over(4120, kActorVoiceOver);
-			if (_vm->_cutContent) {
-				Actor_Says(kActorMcCoy, 6935, 3); //00-6935.AUD	Enhance.
-				Actor_Says(kActorAnsweringMachine, 210, kAnimationModeTalk); //39-0210.AUD	Unable to enhance further.
-				Actor_Says(kActorMcCoy, 170, 3); //00-0170.AUD	Damn.
-				Delay(1000);
-				if (!Actor_Clue_Query(kActorMcCoy, kCluePartialLicenseNumber)) {
-					if (_vm->_cutContent) {
-						if (Actor_Clue_Query(kActorMcCoy, kClueCarColorAndMake)) {
-							Actor_Says(kActorMcCoy, 6945, 3);
-							Sound_Play(kSfxBR034_1A, 50, 0, 0, 50);
-							Actor_Clue_Acquire(kActorMcCoy, kCluePartialLicenseNumber, true, -1);
-						} else {
-							Actor_Says(kActorMcCoy, 8525, 13); // 00-8525.AUD	Hmph.
-						}
-					} else {
+			Actor_Voice_Over(4120, kActorVoiceOver);	
+			if (!Actor_Clue_Query(kActorMcCoy, kCluePartialLicenseNumber)) {
+				if (_vm->_cutContent) {
+					if (Actor_Clue_Query(kActorMcCoy, kClueCarColorAndMake)) {
+						Actor_Says(kActorMcCoy, 6935, 3); //00-6935.AUD	Enhance.
+						Actor_Says(kActorAnsweringMachine, 210, kAnimationModeTalk); //39-0210.AUD	Unable to enhance further.
+						Actor_Says(kActorMcCoy, 170, 3); //00-0170.AUD	Damn.
 						Actor_Says(kActorMcCoy, 6945, 3);
 						Sound_Play(kSfxBR034_1A, 50, 0, 0, 50);
 						Actor_Clue_Acquire(kActorMcCoy, kCluePartialLicenseNumber, true, -1);
+					} else {
+						Actor_Says(kActorMcCoy, 8525, 13); // 00-8525.AUD	Hmph.
 					}
+				} else {
+					Actor_Says(kActorMcCoy, 6945, 3);
+					Sound_Play(kSfxBR034_1A, 50, 0, 0, 50);
+					Actor_Clue_Acquire(kActorMcCoy, kCluePartialLicenseNumber, true, -1);
 				}
 			}
 		} else if (region == 6) {

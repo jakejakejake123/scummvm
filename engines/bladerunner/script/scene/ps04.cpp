@@ -174,6 +174,46 @@ void SceneScriptPS04::PlayerWalkedIn() {
 	if (Actor_Query_Which_Set_In(kActorGuzza) == kSetPS04) {
 		Actor_Face_Actor(kActorMcCoy, kActorGuzza, true);
 	}
+	if (_vm->_cutContent) {
+		if (Game_Flag_Query(kFlagZubenSpared)
+		&& !Game_Flag_Query(kFlagPS04GuzzaTalkIsFurious)
+		&& !Game_Flag_Query(kFlagMcCoyRetiredRunciter)
+		&& !Game_Flag_Query(kFlagMcCoyShotRachael)) {
+			Actor_Put_In_Set(kActorGuzza, kSetPS04);
+			Actor_Set_At_XYZ(kActorGuzza, -728.0f, -354.0f, 1090.0f, 150);
+			Actor_Change_Animation_Mode(kActorGuzza, 53);
+			Actor_Face_Actor(kActorGuzza, kActorMcCoy, true);
+			Actor_Face_Actor(kActorMcCoy, kActorGuzza, true);
+			Actor_Says(kActorMcCoy, 3970, 18);
+			Actor_Says(kActorGuzza, 330, 30); //04-0330.AUD	What the hell you've been doing out there, McCoy? Rustling up toe jam?
+			Actor_Says(kActorGuzza, 340, 32); //04-0340.AUD	I need results and fast.
+			Actor_Says(kActorMcCoy, 3975, 13); //00-3975.AUD	I'm working on it.
+			Actor_Says(kActorGuzza, 350, 31); //04-0350.AUD	That's not good enough. Bryant's been crawling up my ass all morning.
+			if (Actor_Query_Friendliness_To_Other(kActorGuzza, kActorMcCoy) < 51) {
+				Actor_Says(kActorGuzza, 360, 34); //04-0360.AUD	If you can't cut it just tell me and I'll reassign the Gaffster or Steele.
+			}
+			Actor_Says(kActorMcCoy, 3980, 13); //00-3980.AUD	I can handle it.
+			Actor_Says(kActorGuzza, 370, 33); //04-0370.AUD	I don't know if you can, McCoy. I really got my doubts.
+			if (Actor_Query_Friendliness_To_Other(kActorGuzza, kActorMcCoy) < 51) {
+				Actor_Says(kActorGuzza, 380, 32); // 04-0380.AUD	You blow chunks on your first assignment, you can damn near shit-can your future here.
+				Actor_Says(kActorGuzza, 390, 31); //04-0390.AUD	Not to mention how it makes me look.
+			}
+			if (Player_Query_Agenda() == kPlayerAgendaSurly 
+			|| Player_Query_Agenda() == kPlayerAgendaErratic) {
+				Actor_Says(kActorMcCoy, 4320, 14); //00-4320.AUD	Save the pitch for someone who gives a shit.
+				Actor_Says(kActorGuzza, 410, 31);
+				Actor_Modify_Friendliness_To_Other(kActorGuzza, kActorMcCoy, -2);
+				Game_Flag_Set(kFlagPS04GuzzaTalkIsFurious);
+			} else {	
+				Actor_Says(kActorMcCoy, 3985, 18); //00-3985.AUD	I hear ya.
+				if (Actor_Query_Friendliness_To_Other(kActorGuzza, kActorMcCoy) < 51) {
+					Actor_Says(kActorGuzza, 400, 34); //04-0400.AUD	Get the hell out of here! And show me the promoting you wasn't a fool move.
+				}
+				Actor_Says(kActorGuzza, 410, 31);
+				Game_Flag_Set(kFlagPS04GuzzaTalkIsFurious);
+			}
+		}
+	}
 	// Code for the scene where Guzza gets angry at you for retiring Rachael.
 	if (_vm->_cutContent) {
 		if (Game_Flag_Query(kFlagMcCoyShotRachael)) {
@@ -186,17 +226,14 @@ void SceneScriptPS04::PlayerWalkedIn() {
 			Actor_Says(kActorMcCoy, 2725, 14); //00-2725.AUD	Bring her in! We'll do a bone marrow test, you'll see.
 			Actor_Says(kActorMcCoy, 2720, 15); //00-2720.AUD	She's a Rep. I'm telling you Nexus-6!
 			Actor_Says(kActorGuzza, 90, 33); //04-0090.AUD	So what? She's private property.
-			if (Actor_Query_Friendliness_To_Other(kActorGuzza, kActorMcCoy) < 51) {
-				Actor_Says(kActorGuzza, 100, 32); //04-0100.AUD	Did you even stop to think about what her last name was, idiot?
-			}
+			Actor_Says(kActorGuzza, 100, 32); //04-0100.AUD	Did you even stop to think about what her last name was, idiot?
 			Actor_Says(kActorGuzza, 110, 31); //04-0110.AUD	I can't save you, McCoy. Bryant wants your walking papers and I can't blame him.
-			if (Actor_Query_Friendliness_To_Other(kActorGuzza, kActorMcCoy) < 51) {
-				Actor_Says(kActorGuzza, 120, 34); //04-0120.AUD	I don't want to ever see your sorry ass again.
-			}
+			Actor_Says(kActorGuzza, 120, 34); //04-0120.AUD	I don't want to ever see your sorry ass again.
 			Delay(1000);
 			Actor_Retired_Here(kActorMcCoy, 6, 6, 1, -1);
 		}
 	}
+	
 
 	//return false;
 }
@@ -210,6 +247,7 @@ void SceneScriptPS04::DialogueQueueFlushed(int a1) {
 
 void SceneScriptPS04::dialogueWithGuzza() {
 	Dialogue_Menu_Clear_List();
+
 	if (_vm->_cutContent) {
 		if (Game_Flag_Query(kFlagTyrellGuardTalkMeeting)) { 
 			DM_Add_To_List_Never_Repeat_Once_Selected(110, 5, 7, 4); // REQUEST TYRELL MEETING
@@ -219,13 +257,22 @@ void SceneScriptPS04::dialogueWithGuzza() {
 	}
 	if (_vm->_cutContent) {
 		if (Game_Flag_Query(kFlagCT01TalkToHowieAfterZubenMissing)) { 
-			DM_Add_To_List_Never_Repeat_Once_Selected(120, 3, 2, 1); // MONEY
+			DM_Add_To_List_Never_Repeat_Once_Selected(120, 4, 3, 2); // MONEY
 		}
 	} else {
 		DM_Add_To_List_Never_Repeat_Once_Selected(120, 1, -1, -1); // MONEY
 	}
-	if (Actor_Clue_Query(kActorMcCoy, kClueHoldensBadge)) {
-		DM_Add_To_List_Never_Repeat_Once_Selected(150, 7, 6, 5); // HOLDEN'S BADGE
+	if (_vm->_cutContent) {
+		if (Player_Query_Agenda() != kPlayerAgendaSurly 
+		&& Player_Query_Agenda() != kPlayerAgendaErratic) {
+			if (Actor_Clue_Query(kActorMcCoy, kClueHoldensBadge)) {
+				DM_Add_To_List_Never_Repeat_Once_Selected(150, 7, 6, 5); // HOLDEN'S BADGE
+			}
+		}
+	} else {
+		if (Actor_Clue_Query(kActorMcCoy, kClueHoldensBadge)) {
+			DM_Add_To_List_Never_Repeat_Once_Selected(150, 7, 6, 5); // HOLDEN'S BADGE
+		}
 	}
 	if (_vm->_cutContent) {
 		if (Game_Flag_Query(kFlagCT04HomelessKilledByMcCoy)) {
@@ -341,39 +388,8 @@ void SceneScriptPS04::dialogueWithGuzza() {
 	case 130: // REPORT IN
 	//Altered code so Guzza gets angry at McCoy just based on the fact that he let Zuben escape. This fact alone should make Guzza
 	//angry and not all the other factors that was included in the code originally.
-		if (_vm->_cutContent) { 
-			if (Game_Flag_Query(kFlagZubenSpared)
-			&& !Game_Flag_Query(kFlagPS04GuzzaTalkIsFurious)
-			&& !Game_Flag_Query(kFlagMcCoyRetiredRunciter)) {
-				Actor_Says(kActorMcCoy, 3970, 18);
-				Actor_Says(kActorGuzza, 330, 30); //04-0330.AUD	What the hell you've been doing out there, McCoy? Rustling up toe jam?
-				Actor_Says(kActorGuzza, 340, 32); //04-0340.AUD	I need results and fast.
-				Actor_Says(kActorMcCoy, 3975, 13); //00-3975.AUD	I'm working on it.
-				Actor_Says(kActorGuzza, 350, 31); //04-0350.AUD	That's not good enough. Bryant's been crawling up my ass all morning.
-				if (Actor_Query_Friendliness_To_Other(kActorGuzza, kActorMcCoy) < 51) {
-					Actor_Says(kActorGuzza, 360, 34); //04-0360.AUD	If you can't cut it just tell me and I'll reassign the Gaffster or Steele.
-				}
-				Actor_Says(kActorMcCoy, 3980, 13); //00-3980.AUD	I can handle it.
-				Actor_Says(kActorGuzza, 370, 33); //04-0370.AUD	I don't know if you can, McCoy. I really got my doubts.
-				if (Actor_Query_Friendliness_To_Other(kActorGuzza, kActorMcCoy) < 51) {
-					Actor_Says(kActorGuzza, 380, 32); // 04-0380.AUD	You blow chunks on your first assignment, you can damn near shit-can your future here.
-					Actor_Says(kActorGuzza, 390, 31); //04-0390.AUD	Not to mention how it makes me look.
-				}
-				if (Player_Query_Agenda() == kPlayerAgendaSurly 
-				|| Player_Query_Agenda() == kPlayerAgendaErratic) {
-					Actor_Says(kActorMcCoy, 4320, 14); //00-4320.AUD	Save the pitch for someone who gives a shit.
-					Actor_Says(kActorGuzza, 410, 31);
-					Actor_Modify_Friendliness_To_Other(kActorGuzza, kActorMcCoy, -2);
-					Game_Flag_Set(kFlagPS04GuzzaTalkIsFurious);
-				} else {	
-					Actor_Says(kActorMcCoy, 3985, 18); //00-3985.AUD	I hear ya.
-					if (Actor_Query_Friendliness_To_Other(kActorGuzza, kActorMcCoy) < 51) {
-						Actor_Says(kActorGuzza, 400, 34); //04-0400.AUD	Get the hell out of here! And show me the promoting you wasn't a fool move.
-					}
-					Actor_Says(kActorGuzza, 410, 31);
-					Game_Flag_Set(kFlagPS04GuzzaTalkIsFurious);
-				}
-			} else if (!Game_Flag_Query(kFlagPS04GuzzaTalkIsFurious)
+		if (_vm->_cutContent) {
+			if (!Game_Flag_Query(kFlagPS04GuzzaTalkIsFurious)
 			&& !Game_Flag_Query(kFlagPS04GuzzaTalkZubenRetired)
 			&& !Game_Flag_Query(kFlagGuzzaInformed)
 			&& Actor_Clue_Query(kActorMcCoy, kClueMcCoyRetiredZuben) 

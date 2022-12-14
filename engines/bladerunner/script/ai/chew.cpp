@@ -83,7 +83,7 @@ void AIScriptChew::OtherAgentEnteredCombatMode(int otherActorId, int combatMode)
 		&& combatMode
 		) {
 			Actor_Face_Actor(kActorChew, kActorMcCoy, true);
-			Actor_Says(kActorChew, 660, 14); //52-0660.AUD	(yells) Ah!
+			Actor_Says(kActorChew, 660, -1); //52-0660.AUD	(yells) Ah!
 			Actor_Face_Actor(kActorMcCoy, kActorChew, true);
 			Delay(1000);
 			Actor_Says(kActorMcCoy, 1870, -1); //00-1870.AUD	I’m a cop.

@@ -360,6 +360,9 @@ void SceneScriptTB07::McCoyTalkWithRachaelAndTyrell() {
 		Actor_Says(kActorRachael, 640, 12); //57-0640.AUD	Replicants aren't pets.
 		Actor_Says(kActorMcCoy, 5410, 16); //00-5410.AUD	Right. Pets live longer and don't go around killing people.
 	}
+	if (_vm->_cutContent) {
+		Delay(1000);
+	}
 	Actor_Says(kActorRachael, 650, 15); //57-0650.AUD	They-- There are safeguards in the design.
 	Actor_Says_With_Pause(kActorMcCoy, 5415, 1.0f, 17); //00-5415.AUD	Yeah, I've seen the data. Implanted memories. A four-year lifespan.
 	Actor_Says(kActorMcCoy, 5420, 14); //00-5420.AUD	I'd probably get a little crazy too but I don't think I'd start killing people.

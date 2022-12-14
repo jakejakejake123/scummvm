@@ -29,7 +29,6 @@ void SceneScriptNR10::InitializeScene() {
 		Game_Flag_Reset(kFlagNR09toNR10);
 		Setup_Scene_Information(-136.78f, 2.84f, -234.43f, 320);
 	} else {
-		Game_Flag_Reset(kFlagNR11toNR10);
 		Setup_Scene_Information(  19.22f, 2.84f, -250.43f, 540);
 	}
 
@@ -158,7 +157,25 @@ void SceneScriptNR10::SceneFrameAdvanced(int frame) {
 			Player_Set_Combat_Mode(false);
 		}
 		Actor_Set_Invisible(kActorMcCoy, false);
-		Actor_Set_Goal_Number(kActorDektora, kGoalDektoraNR10AttackMcCoy);
+		if (_vm->_cutContent) {
+			if (!Actor_Clue_Query(kActorDektora, kClueMcCoyHelpedDektora)) {
+				Actor_Set_Goal_Number(kActorDektora, kGoalDektoraNR10AttackMcCoy);
+			} else {
+				Actor_Set_Goal_Number(kActorDektora, kGoalDektoraNR11Hiding);
+				Game_Flag_Set(kFlagNR10CameraDestroyed);
+				Game_Flag_Reset(kFlagNR10McCoyBlinded);
+				Actor_Set_Invisible(kActorMcCoy, false);
+				Actor_Set_Invisible(kActorDektora, false);
+				Ambient_Sounds_Remove_Looping_Sound(kSfx35MM, 1u);
+				Sound_Play(kSfx35MMBRK1, 52, 0, 0, 50);
+				Scene_Loop_Set_Default(0);
+				Scene_Loop_Start_Special(kSceneLoopModeOnce, 0, true);
+				Un_Combat_Target_Object("BOX18");
+				Scene_Exits_Enable();
+			}
+		} else {
+			Actor_Set_Goal_Number(kActorDektora, kGoalDektoraNR10AttackMcCoy);
+		}
 		//return true;
 		return;
 	}
@@ -170,7 +187,15 @@ void SceneScriptNR10::ActorChangedGoal(int actorId, int newGoal, int oldGoal, bo
 
 void SceneScriptNR10::PlayerWalkedIn() {
 	if (Actor_Query_Goal_Number(kActorDektora) == kGoalDektoraNR08GoToNR10) {
-		Player_Set_Combat_Mode(true);
+		if (_vm->_cutContent) {
+			if (Player_Query_Agenda() != kPlayerAgendaPolite
+			&& !Game_Flag_Query(kFlagMcCoyIsHelpingReplicants)
+			&& !Actor_Clue_Query(kActorDektora, kClueMcCoyHelpedDektora)) {
+				Player_Set_Combat_Mode(true);
+			}
+		} else {
+			Player_Set_Combat_Mode(true);
+		}
 		//return true;
 		return;
 	}

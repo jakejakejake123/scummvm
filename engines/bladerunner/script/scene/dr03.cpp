@@ -114,13 +114,7 @@ bool SceneScriptDR03::ClickedOnActor(int actorId) {
 		if (!Actor_Clue_Query(kActorMcCoy, kClueChewInterview)) {
 			Actor_Says(kActorMcCoy, 770, 12);
 			Actor_Says(kActorChew, 110, 12); //52-0110.AUD	Eisenduller? Ha, ha, no, no. No time for him. No go to lab.
-			if (_vm->_cutContent) {
-				if (Actor_Query_Friendliness_To_Other(kActorChew, kActorMcCoy) > 49) {
-					Actor_Says(kActorChew, 120, 13); //52-0120.AUD	Eisenduller test Off-World gravity. Chew work important organs. Visual Center, you see?
-				}
-			} else {
-				Actor_Says(kActorChew, 120, 13); //52-0120.AUD	Eisenduller test Off-World gravity. Chew work important organs. Visual Center, you see?
-			}
+			Actor_Says(kActorChew, 120, 13); //52-0120.AUD	Eisenduller test Off-World gravity. Chew work important organs. Visual Center, you see?
 			Actor_Says(kActorMcCoy, 835, 13); //00-0835.AUD	Marcus is dead.
 			Actor_Says(kActorChew, 130, 14); //52-0130.AUD	Chew work hard all night, all day. No stop, no break. No OT (paid overtime).
 			if (_vm->_cutContent) {
@@ -206,18 +200,22 @@ bool SceneScriptDR03::ClickedOnActor(int actorId) {
 			if (_vm->_cutContent) {
 				if (Game_Flag_Query(kFlagMorajiAlive)) { 
 					Actor_Says(kActorMcCoy, 4900, 13); //00-4900.AUD	Word is he's gonna be okay.
+					if (Game_Flag_Query(kFlagMorajiTalk)) { 
+						Actor_Clue_Acquire(kActorMcCoy, kClueMorajiInterview, true, kActorMoraji);
+					}
 				} else {
 					Actor_Says(kActorMcCoy, 825, 13); //00-0825.AUD	He didn't make it.
 				}
+			} else {
+				Actor_Says(kActorMcCoy, 825, 13); //00-0825.AUD	He didn't make it.
 			}
 			if (_vm->_cutContent) {
+				Delay(1000);
 				Actor_Says(kActorMcCoy, 4270, 18); //00-4270.AUD	I got some more questions for you.
 				if (Actor_Query_Friendliness_To_Other(kActorChew, kActorMcCoy) < 50) {
 					Actor_Says(kActorChew, 100, 13); //52-0100.AUD	You leave now, okay? Very busy. Must work. Must work, ah.
 					Actor_Says(kActorMcCoy, 5600, 14);               // Let me ask you
 					Actor_Says(kActorChew, 730, 15); //52-0730.AUD	Oy, I tell you something then you go, okay?
-				} else {
-					
 				}
 			} else {
 				Actor_Says(kActorChew, 100, 14); //52-0100.AUD	You leave now, okay? Very busy. Must work. Must work, ah.
@@ -350,14 +348,10 @@ void SceneScriptDR03::PlayerWalkedIn() {
 					Actor_Says(kActorChew, 700, 14); //52-0700.AUD	I not know. Feet hurt.
 					Actor_Says(kActorMcCoy, 3910, 14); // 00-3910.AUD	You’re lying.
 					Actor_Says(kActorChew, 760, 15); //52-0760.AUD	Ha. Been called worse than liar before. You go now.
-					if (Player_Query_Agenda() == kPlayerAgendaSurly 
-					|| Player_Query_Agenda() == kPlayerAgendaErratic) {
-						Actor_Says(kActorMcCoy, 2485, 18); //00-2485.AUD	I’ve a hard time believing that.
-						Actor_Says(kActorChew, 720, 14); //52-0720.AUD	Pah! You believe what you believe, McCoy.
-					}
 					Actor_Says(kActorMcCoy, 8190, 14); //00-8190.AUD	Why?
 					Actor_Says(kActorChew, 770, 14); //52-0770.AUD	Truth bad! You no like, that's why. I tell you anyway, then you go.
 					Actor_Says(kActorMcCoy, 1825, 15); //00-1825.AUD	Okay.
+					Actor_Says(kActorMcCoy, 930, 13); //00-0930.AUD	What did they want?
 				}
 				Actor_Says(kActorChew, 570, 12); //52-0570.AUD	DNA information. Incept dates. Stuff like that.
 				Actor_Says(kActorChew, 580, 13); // 52-0580.AUD	I give copies. Heh, heh. Still pressure me. Thought they kill me.
@@ -383,32 +377,36 @@ void SceneScriptDR03::PlayerWalkedIn() {
 					Actor_Says(kActorChew, 670, 14); // 52-0670.AUD	Hmph.  [mumbles in Chinese]
 					Actor_Says(kActorMcCoy, 905, 18); //00-0905.AUD	You light up my life too, pal. That's all you have?
 					Actor_Says(kActorChew, 590, 14); // 52-0590.AUD	Hah. LPD, you go arrest criminals. You no bother me anymore, huh? Gotta get back to work.
-				} else {
-					Actor_Says(kActorMcCoy, 5065, 13); //00-5065.AUD	Is that right?
 					Actor_Says(kActorMcCoy, 5150, 14); //00-5150.AUD	One more thing.
-					Actor_Says(kActorChew, 600, 14); // 52-0600.AUD	No, no time! You go. Find Nexus-6. That's your job. Ah.			
-					Actor_Says(kActorMcCoy, 940, 13); //00-0940.AUD	I need to ask you--
-					Actor_Says(kActorChew, 630, 15); //52-0630.AUD	No, no, no, no, no, no, no.
-					Delay (1000);
+					Actor_Says(kActorChew, 600, 14); // 52-0600.AUD	No, no time! You go. Find Nexus-6. That's your job. Ah.	
+					Delay(1000);
+					Actor_Says(kActorChew, 440, 18); //52-0440.AUD	You! But how in the world?
+					Actor_Says(kActorMcCoy, 8940, 14); //00-8940.AUD	What are you staring at?
+					Actor_Says(kActorChew, 470, 13); //52-0470.AUD	I do. I see you before.
+					Actor_Says(kActorMcCoy, 900, 18); //00-0900.AUD	Yeah, I've been around.
+					Actor_Says(kActorChew, 480, 12); //52-0480.AUD	No. Your eyes. Seen eyes.
+					Actor_Says(kActorMcCoy, 880, 13); //00-0880.AUD	That so?
+				} else {
+					Actor_Says(kActorMcCoy, 5150, 14); //00-5150.AUD	One more thing.
+					Actor_Says(kActorChew, 600, 14); // 52-0600.AUD	No, no time! You go. Find Nexus-6. That's your job. Ah.	
+					Actor_Says(kActorMcCoy, 5065, 13); //00-5065.AUD	Is that right?		
+					Delay(2000);
 					Game_Flag_Set(kFlagChewTalkGiveData);	
 					Game_Flag_Set(kFlagDR03toDR02);
 					Set_Enter(kSetDR01_DR02_DR04, kSceneDR02);
 					Player_Gains_Control();
 					Scene_Exits_Enable();
 				}
-				Actor_Says(kActorChew, 440, 18); //52-0440.AUD	You! But how in the world?
-				Actor_Says(kActorMcCoy, 8940, 14); //00-8940.AUD	What are you staring at?
-				Actor_Says(kActorChew, 470, 13); //52-0470.AUD	I do. I see you before.
-				Actor_Says(kActorMcCoy, 900, 18); //00-0900.AUD	Yeah, I've been around.
-				Actor_Says(kActorChew, 480, 12); //52-0480.AUD	No. Your eyes. Seen eyes.
-				Actor_Says(kActorMcCoy, 880, 13); //00-0880.AUD	That so?
 				if (Actor_Query_Friendliness_To_Other(kActorChew, kActorMcCoy) < 50) {
 					Actor_Says(kActorChew, 490, 18); //52-0490.AUD	All I know. About eyes. Please go! (whimpers) That's all I know. I promise.
 					Actor_Says(kActorMcCoy, 5150, 14); //00-5150.AUD	One more thing.
-					Actor_Says(kActorChew, 500, 18); //52-0500.AUD	No, no no. No, no, you please go. I give you all I have. Ah, no more. See, see? No more.
-					Actor_Says(kActorMcCoy, 815, 14); //00-0815.AUD	Listen to me!
+					if (Actor_Clue_Query(kActorMcCoy, kClueDNAChew)) {
+						Actor_Says(kActorChew, 500, 18); //52-0500.AUD	No, no no. No, no, you please go. I give you all I have. Ah, no more. See, see? No more.
+						Actor_Says(kActorMcCoy, 815, 14); //00-0815.AUD	Listen to me!
+					}
 					Actor_Says(kActorChew, 640, 14); //52-0640.AUD	[speaks in Chinese] You! You bad.
 					Actor_Says(kActorChew, 650, 15); //	52-0650.AUD	You go away! Never come back.
+					Delay(1000);
 					Actor_Face_Heading(kActorChew, 310, true);
 					Actor_Says(kActorChew, 610, 14); //52-0610.AUD	(whimpers) My eyes! They fog. Eyes melting, getting slimy. Oh, please eye! Oh, you so mushy!
 					Actor_Says(kActorChew, 660, 15); //52-0660.AUD	(yells) Ah!
@@ -560,20 +558,21 @@ void SceneScriptDR03::dialogueWithChew() {
 	case 650: // TWINS
 		Actor_Says(kActorMcCoy, 775, 11);
 		if (_vm->_cutContent) {
-			Actor_Says(kActorChew, 220, 14);
-			if (Actor_Clue_Query(kActorMcCoy, kClueEnvelope)
-			&& Actor_Clue_Query(kActorMcCoy, kClueLabCorpses)
-			&& Actor_Clue_Query(kActorMcCoy, kClueAnsweringMachineMessage))  {
-				Actor_Says(kActorMcCoy, 6975, 13); //00-6975.AUD	Interesting.
+			if (Actor_Query_Friendliness_To_Other(kActorChew, kActorMcCoy) < 50) {
+				Actor_Says(kActorChew, 40, 14); //52-0040.AUD	Hey, LPD, you deaf or something, huh, LPD?
+				Actor_Says(kActorChew, 50, 14); //52-0050.AUD	I very busy. Eyes will wait for nothing.
+				Actor_Says(kActorChew, 250, 14); //52-0250.AUD	I waste no more time. You think I nose around everybody's business, huh?
 			} else {
-				Actor_Says(kActorMcCoy, 860, 11); //00-0860.AUD	They're genetic designers?
-				if (Actor_Query_Friendliness_To_Other(kActorChew, kActorMcCoy) > 49) {
+				Actor_Says(kActorChew, 220, 14);
+				if (Actor_Clue_Query(kActorMcCoy, kClueEnvelope)
+				&& Actor_Clue_Query(kActorMcCoy, kClueLabCorpses)
+				&& Actor_Clue_Query(kActorMcCoy, kClueAnsweringMachineMessage))  {
+					Actor_Says(kActorMcCoy, 6975, 13); //00-6975.AUD	Interesting.
+				} else {
+					Actor_Says(kActorMcCoy, 860, 11); //00-0860.AUD	They're genetic designers?
 					Actor_Says(kActorChew, 230, 14);
 					Actor_Says(kActorMcCoy, 865, 11);
 					Actor_Says(kActorChew, 240, 14);
-				} else {
-					Actor_Says(kActorChew, 40, 14); //52-0040.AUD	Hey, LPD, you deaf or something, huh, LPD?
-					Actor_Says(kActorChew, 50, 14); //52-0050.AUD	I very busy. Eyes will wait for nothing.
 				}
 			}
 		} else {
@@ -642,7 +641,6 @@ void SceneScriptDR03::dialogueWithChew() {
 		if (_vm->_cutContent) {
 			if (Player_Query_Agenda() == kPlayerAgendaPolite) {
 				Actor_Says(kActorMcCoy, 805, 3); //00-0805.AUD	Sorry to bother you.
-				Actor_Modify_Friendliness_To_Other(kActorChew, kActorMcCoy, 1);
 			} else if (Player_Query_Agenda() == kPlayerAgendaSurly 
 			|| Player_Query_Agenda() == kPlayerAgendaErratic) {
 				Actor_Says(kActorMcCoy, 8720, 17); //00-8720.AUD	Freak.
@@ -668,7 +666,13 @@ void SceneScriptDR03::dialogueWithChew() {
 				Actor_Says(kActorChew, 410, 15);
 				Actor_Says(kActorMcCoy, 890, 18);
 				Actor_Says(kActorChew, 420, 13);
-				Actor_Says(kActorChew, 430, 12);
+				if (Player_Query_Agenda() != kPlayerAgendaPolite) {
+					Actor_Says(kActorMcCoy, 2485, 18); //00-2485.AUD	I’ve a hard time believing that.
+					Actor_Says(kActorChew, 720, 14); //52-0720.AUD	Pah! You believe what you believe, McCoy.
+					Actor_Modify_Friendliness_To_Other(kActorChew, kActorMcCoy, -1);
+				} else {
+					Actor_Says(kActorChew, 430, 12);
+				}
 			} else {
 				Actor_Says(kActorChew, 20, 14);//52-0020.AUD	Hmm. Talk, talk, talk, always talk. You wait. You no take up time. Busy, busy.
 			}

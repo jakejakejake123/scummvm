@@ -243,25 +243,23 @@ void AIScriptClovis::Retired(int byActorId) {
 				Player_Loses_Control();
 				if (_vm->_cutContent) {
 					if (Actor_Query_In_Set(kActorRunciter, kSetKP07)) {
-						if (Actor_Query_In_Set(kActorRunciter, kSetKP07)) {
-							Loop_Actor_Walk_To_XYZ(kActorRunciter, -12.0f, -41.58f, 72.0f, 0, true, false, false);
-							Actor_Put_In_Set(kActorRunciter, kSceneKP06);
+						Loop_Actor_Walk_To_XYZ(kActorRunciter, -12.0f, -41.58f, 72.0f, 0, true, false, false);
+						Actor_Put_In_Set(kActorRunciter, kSceneKP06);
+					}
+					if (Actor_Query_In_Set(kActorCrazylegs, kSetKP07)) {
+						Loop_Actor_Walk_To_XYZ(kActorCrazylegs, -12.0f, -41.58f, 72.0f, 0, true, false, false);
+						Actor_Put_In_Set(kActorCrazylegs, kSceneKP06);	
+					}
+					if (Game_Flag_Query(kFlagRunciterIsReplicant)) {
+						if (Actor_Query_Goal_Number(kActorRunciter) < kGoalRunciterDead) {
+							Delay(500);
+							Sound_Play(kSfxSMCAL3, 100, 0, 0, 50);
 						}
-						if (Actor_Query_In_Set(kActorCrazylegs, kSetKP07)) {
-							Loop_Actor_Walk_To_XYZ(kActorCrazylegs, -12.0f, -41.58f, 72.0f, 0, true, false, false);
-							Actor_Put_In_Set(kActorCrazylegs, kSceneKP06);	
-						}
-						if (Game_Flag_Query(kFlagRunciterIsReplicant)) {
-							if (Actor_Query_Goal_Number(kActorRunciter) < kGoalRunciterDead) {
-								Delay(500);
-								Sound_Play(kSfxSMCAL3, 100, 0, 0, 50);
-							}
-						}
-						if (Game_Flag_Query(kFlagCrazylegsIsReplicant)) {
-							if (!Game_Flag_Query(kFlagCrazylegsDead)) {
-								Delay(500);
-								Sound_Play(kSfxSMCAL3, 100, 0, 0, 50);
-							}
+					}
+					if (Game_Flag_Query(kFlagCrazylegsIsReplicant)) {
+						if (!Game_Flag_Query(kFlagCrazylegsDead)) {
+							Delay(500);
+							Sound_Play(kSfxSMCAL3, 100, 0, 0, 50);
 						}
 					}
 					Delay(2000);
@@ -575,26 +573,28 @@ bool AIScriptClovis::GoalChanged(int currentGoalNumber, int newGoalNumber) {
 	case kGoalClovisKP07TalkToMcCoy:
 		// Made it so McCoy only says that all the reps are dead besides Clovis if that is the case.
 		if (_vm->_cutContent) {
-			if ((((((((((Actor_Query_Goal_Number(kActorZuben) == kGoalZubenGone)))))))))) {
-				if (((((((((Game_Flag_Query(kFlagLucyIsReplicant)
-				&& Actor_Query_Goal_Number(kActorLucy) == kGoalLucyGone))))))))) {
-					if ((((((((Game_Flag_Query(kFlagDektoraIsReplicant) 
-					&& Actor_Query_Goal_Number(kActorDektora) == kGoalDektoraGone)))))))) {
-						if (((((((Game_Flag_Query(kFlagIzoIsReplicant) 
-						&& Actor_Query_Goal_Number(kActorIzo) == kGoalIzoGone))))))) {
-							if ((((((Game_Flag_Query(kFlagGordoIsReplicant) 
-							&& Actor_Query_Goal_Number(kActorGordo) == kGoalGordoGone)))))) {
-								if (((((Game_Flag_Query(kFlagLutherLanceIsReplicant) 
-								&& Actor_Query_Goal_Number(kActorLuther) == kGoalLutherGone))))) {
-									if ((((Game_Flag_Query(kFlagBulletBobIsReplicant) 
-									&& Actor_Query_Goal_Number(kActorBulletBob) == kGoalBulletBobGone)))) {
-										if (((Game_Flag_Query(kFlagCrazylegsIsReplicant) 
-										&& Game_Flag_Query(kFlagCrazylegsDead))))  {
-											if ((Game_Flag_Query(kFlagEarlyQIsReplicant) 
-											&& Game_Flag_Query(kFlagEarlyQDead)))  {
-												if (Game_Flag_Query(kFlagHanoiIsReplicant) 
-												&& Game_Flag_Query(kFlagHanoiDead))  {
-													Actor_Says(kActorMcCoy, 2345, 16); //00-2345.AUD	They’re all dead. You’re the last one.
+			if (((((((((((Actor_Query_Goal_Number(kActorZuben) == kGoalZubenGone))))))))))) {
+				if ((((((((((Actor_Query_Goal_Number(kActorLucy) == kGoalLucyGone)))))))))) {
+					if (((((((((Game_Flag_Query(kFlagDektoraIsReplicant) 
+					&& Actor_Query_Goal_Number(kActorDektora) == kGoalDektoraGone))))))))) {
+						if ((((((((Game_Flag_Query(kFlagIzoIsReplicant) 
+						&& Actor_Query_Goal_Number(kActorIzo) == kGoalIzoGone)))))))) {
+							if (((((((Game_Flag_Query(kFlagGordoIsReplicant) 
+							&& Actor_Query_Goal_Number(kActorGordo) == kGoalGordoGone))))))) {
+								if ((((((Game_Flag_Query(kFlagLutherLanceIsReplicant) 
+								&& Actor_Query_Goal_Number(kActorLuther) == kGoalLutherGone)))))) {
+									if (((((Game_Flag_Query(kFlagRunciterIsReplicant) 
+									&& Actor_Query_Goal_Number(kActorRunciter) == kGoalRunciterDead))))) {
+										if ((((Game_Flag_Query(kFlagBulletBobIsReplicant) 
+										&& Actor_Query_Goal_Number(kActorBulletBob) == kGoalBulletBobGone)))) {
+											if (((Game_Flag_Query(kFlagCrazylegsIsReplicant) 
+											&& Game_Flag_Query(kFlagCrazylegsDead))))  {
+												if ((Game_Flag_Query(kFlagEarlyQIsReplicant) 
+												&& Game_Flag_Query(kFlagEarlyQDead)))  {
+													if (Game_Flag_Query(kFlagHanoiIsReplicant) 
+													&& Game_Flag_Query(kFlagHanoiDead))  {
+														Actor_Says(kActorMcCoy, 2345, 16); //00-2345.AUD	They’re all dead. You’re the last one.
+													}
 												}
 											}
 										}
@@ -737,9 +737,11 @@ bool AIScriptClovis::GoalChanged(int currentGoalNumber, int newGoalNumber) {
 			|| Actor_Clue_Query(kActorMcCoy, kClueDNAMoraji) 
 			|| Actor_Clue_Query(kActorMcCoy, kClueDNALutherLance)
 			|| Actor_Clue_Query(kActorMcCoy, kClueDNAMarcus)) {
-				if (Actor_Query_Friendliness_To_Other(kActorClovis, kActorMcCoy) < 51) {
+				if (Player_Query_Agenda() == kPlayerAgendaSurly 
+				|| Player_Query_Agenda() == kPlayerAgendaErratic) {
 					Actor_Says(kActorMcCoy, 8503, kAnimationModeTalk); //00-8503.AUD	I think I'll hold on to it for the moment.
-					if (!Actor_Clue_Query(kActorClovis, kClueMcCoyRetiredLucy) 
+					if (Actor_Query_Friendliness_To_Other(kActorClovis, kActorMcCoy) > 50
+					&& !Actor_Clue_Query(kActorClovis, kClueMcCoyRetiredLucy) 
 					&& !Actor_Clue_Query(kActorClovis, kClueMcCoyRetiredDektora))  {
 						Actor_Says(kActorClovis, 1280, kAnimationModeTalk); //05-1280.AUD	You are here. That’s enough for now. Perhaps trust will come later.
 					} else {

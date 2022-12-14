@@ -280,13 +280,11 @@ void SceneScriptPS05::turnOnTV() {
 				ADQ_Add(kActorNewscaster, 140, kAnimationModeTalk);
 				ADQ_Add(kActorNewscaster, 150, kAnimationModeTalk);
 				if (_vm->_cutContent) {
-					if (Actor_Query_Friendliness_To_Other(kActorGuzza, kActorMcCoy) < 50) {
-						ADQ_Add(kActorGuzza, 1600, kAnimationModeTalk);
-					} else {
-						ADQ_Add(kActorGuzza, 1570, kAnimationModeTalk);
-						ADQ_Add(kActorGuzza, 1580, kAnimationModeTalk);
-						ADQ_Add(kActorGuzza, 1590, kAnimationModeTalk);
-					}
+					ADQ_Add(kActorGuzza, 1570, kAnimationModeTalk);
+					ADQ_Add(kActorGuzza, 1580, kAnimationModeTalk);
+					ADQ_Add(kActorGuzza, 1590, kAnimationModeTalk);
+					Delay(1500);
+					ADQ_Add(kActorGuzza, 1600, kAnimationModeTalk);
 				}
 			} else {
 				ADQ_Add(kActorNewscaster, 90, kAnimationModeTalk);

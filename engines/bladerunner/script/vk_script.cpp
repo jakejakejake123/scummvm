@@ -3424,12 +3424,6 @@ void VKScript::askBulletBob(int questionId) {
 		} else {
 			VK_Play_Speech_Line(kActorBulletBob, 1610, 0.5f); // B: I've had enough McCoy
 		} 
-		VK_Play_Speech_Line(kActorBulletBob, 1590, 0.5f);
-		VK_Play_Speech_Line(kActorMcCoy, 8315, 0.5f);
-		VK_Eye_Animates(1);
-		VK_Subject_Reacts(85, 10, 11, 0);
-		VK_Play_Speech_Line(kActorBulletBob, 1600, 0.5f);
-		VK_Eye_Animates(3);
 		break;
 	case 7670:                          // High 04
 		if (Game_Flag_Query(kFlagBulletBobIsReplicant)) {
