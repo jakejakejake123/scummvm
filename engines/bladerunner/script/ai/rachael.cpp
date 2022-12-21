@@ -509,14 +509,12 @@ void AIScriptRachael::dialogue_agenda1() {
 			Actor_Says(kActorMcCoy, 2855, 14);                      // ProgrammedToDoThingsThinkThings
 			Actor_Says(kActorRachael, 290, 14);                     // ThatsRight
 		}
-		Actor_Says_With_Pause(kActorRachael, 300, 1.0f, 14);  // GoodbyeMcCoy
+		Game_Flag_Set(kFlagRachaelThirdMeeting);
+		Game_Flag_Set(kFlagRachaelWalks);
+		Actor_Says_With_Pause(kActorRachael, 300, 1.0f, 14);  // GoodbyeMcCoy	
 		Actor_Says(kActorRachael, 310, 14);                   // Isnt ThisYourFloor --
 		if (Player_Query_Agenda() == kPlayerAgendaPolite) {
 			Actor_Says(kActorMcCoy, 2860, 14);                    // YouTakeCareOfYourself
-		}
-		if (_vm->_cutContent) {
-			Game_Flag_Set(kFlagRachaelThirdMeeting);
-			Game_Flag_Set(kFlagRachaelWalks);
 		}
 	} else {
 		// original code
@@ -592,11 +590,9 @@ void AIScriptRachael::dialogue_agenda2() {
 			Actor_Says(kActorMcCoy, 2790, 18);                   // Aha
 			Actor_Says(kActorRachael, 130, 14);                  // ButReplicantsHowHumain
 		}
+		Game_Flag_Set(kFlagRachaelThirdMeeting);
+		Game_Flag_Set(kFlagRachaelWalks);
 		Actor_Says_With_Pause(kActorRachael, 300, 1.0f, 3); // GoodbyeMcCoy
-		if (_vm->_cutContent) {
-			Game_Flag_Set(kFlagRachaelThirdMeeting);
-			Game_Flag_Set(kFlagRachaelWalks);
-		}
 	} else {
 		// original code - missing some quotes or removing some quotes to make it fit better
 		Actor_Says(kActorRachael, 50, 15);                  // I don't think he'd appreciate being called that

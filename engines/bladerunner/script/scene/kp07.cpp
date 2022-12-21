@@ -59,7 +59,7 @@ void SceneScriptKP07::InitializeScene() {
 				}
 			}
 		}
-
+		
 		if (Actor_Query_Goal_Number(kActorZuben) < kGoalZubenGone) {
 #if BLADERUNNER_ORIGINAL_BUGS
 #else
@@ -119,7 +119,9 @@ void SceneScriptKP07::InitializeScene() {
 			AI_Movement_Track_Flush(kActorLuther);
 			Actor_Set_Goal_Number(kActorLuther, kGoalLutherKP07Wait); // new goal to avoid resuming his walking around routine
 #endif // BLADERUNNER_ORIGINAL_BUGS
-			Global_Variable_Increment(kVariableReplicantsSurvivorsAtMoonbus, 1);
+			if (!_vm->_cutContent) {
+				Global_Variable_Increment(kVariableReplicantsSurvivorsAtMoonbus, 1);
+			}
 			Actor_Put_In_Set(kActorLuther, kSetKP07);
 			Actor_Set_At_XYZ(kActorLuther, -47.0f, 0.0f, 151.0f, 531);
 		}
@@ -151,8 +153,7 @@ void SceneScriptKP07::InitializeScene() {
 			if (Game_Flag_Query(kFlagEarlyQIsReplicant)) {
 				if (!Game_Flag_Query(kFlagEarlyQDead)) {
 					AI_Movement_Track_Flush(kActorEarlyQ);
-					Global_Variable_Increment(kVariableReplicantsSurvivorsAtMoonbus, 1);
-					Actor_Set_Targetable(kActorEarlyQ, true);
+					Actor_Set_Targetable(kActorEarlyQ, false);
 					Actor_Put_In_Set(kActorEarlyQ, kSetKP07);
 					Actor_Set_At_XYZ(kActorEarlyQ, -59.70, -42.72, -156.90, 760);
 				}
@@ -177,7 +178,7 @@ void SceneScriptKP07::InitializeScene() {
 					AI_Movement_Track_Flush(kActorRunciter);
 					Actor_Set_Goal_Number(kActorRunciter, kGoalRunciterStill);
 					Actor_Put_In_Set(kActorRunciter, kSetKP07);
-					Actor_Set_At_XYZ(kActorRunciter, 22.81f, -41.29f, 57.89f, 0);
+					Actor_Set_At_XYZ(kActorRunciter, 16.95f, -42.92f, 1.50f, 0);
 				}
 			}
 		}
@@ -332,18 +333,24 @@ void SceneScriptKP07::PlayerWalkedIn() {
 			if (_vm->_cutContent) {
 				if (Actor_Query_Is_In_Current_Set(kActorDektora) 
 				&& Global_Variable_Query(kVariableAffectionTowards) ==  kAffectionTowardsDektora) {
-					Actor_Face_Actor(kActorDektora, kActorMcCoy, true);
+					Actor_Face_Actor(kActorDektora, kActorClovis, true);
+					Actor_Face_Actor(kActorClovis, kActorDektora, true);
 					Actor_Face_Actor(kActorMcCoy, kActorDektora, true);
 					Actor_Says(kActorDektora, 2650, 3); //03-2650.AUD	I told you he’d come!
+					Actor_Face_Actor(kActorDektora, kActorMcCoy, true);
+					Actor_Face_Actor(kActorClovis, kActorMcCoy, true);
 					Actor_Says(kActorMcCoy, 1400, kAnimationModeTalk); //00-1400.AUD	I promised you, didn't I?
 					Delay (1000);
 					Actor_Face_Actor(kActorDektora, kActorClovis, true);
 				}
 				if (Actor_Query_Is_In_Current_Set(kActorLucy)
 				&& Global_Variable_Query(kVariableAffectionTowards) == kAffectionTowardsLucy) {
-					Actor_Face_Actor(kActorLucy, kActorMcCoy, true);
+					Actor_Face_Actor(kActorLucy, kActorClovis, true);
 					Actor_Face_Actor(kActorMcCoy, kActorLucy, true);
+					Actor_Face_Actor(kActorClovis, kActorLucy, true);
 					Actor_Says(kActorLucy, 3040, 3); //06-3040.AUD	I told you he’d come!
+					Actor_Face_Actor(kActorLucy, kActorMcCoy, true);
+					Actor_Face_Actor(kActorClovis, kActorMcCoy, true);
 					Actor_Says(kActorMcCoy, 1425, kAnimationModeTalk); //00-1425.AUD	I promised you, didn't I?
 					Delay (1000);
 					Actor_Face_Actor(kActorLucy, kActorClovis, true);
@@ -354,12 +361,15 @@ void SceneScriptKP07::PlayerWalkedIn() {
 				if (Actor_Clue_Query(kActorClovis, kClueMcCoyRetiredLucy) 
 				|| Actor_Clue_Query(kActorClovis, kClueMcCoyRetiredDektora) 
 				|| Actor_Query_Friendliness_To_Other(kActorClovis, kActorMcCoy) < 51) {
+					Actor_Face_Actor(kActorClovis, kActorMcCoy, true);
 					Actor_Says(kActorClovis, 160, 3); //05-0160.AUD	I’ve been expecting you.
 					Actor_Says(kActorMcCoy, 2130, 14); //00-2130.AUD	You’re the coldest person I’ve ever seen when it comes to killing.
 					Delay(1000);
-					Actor_Says(kActorClovis, 190, -1); //05-0190.AUD	And what about you, Ray McCoy?(coughs) After what you did to my family.
+					Actor_Says(kActorClovis, 190, 3); //05-0190.AUD	And what about you, Ray McCoy?(coughs) After what you did to my family.
 					Actor_Says(kActorClovis, 200, kAnimationModeTalk); //05-0200.AUD	To my friends. Do you not also seek forgiveness?
 					if (Player_Query_Agenda() != kPlayerAgendaPolite) {
+						Music_Stop(1u);
+						Delay(1000);
 						Actor_Says(kActorMcCoy, 2360, 18); //00-2360.AUD	I don’t need to.
 						Delay(500);
 						Actor_Says(kActorClovis, 10, 3); //05-0010.AUD	Enough!
@@ -397,6 +407,7 @@ void SceneScriptKP07::PlayerWalkedIn() {
 						}
 					}
 				} else {
+					Actor_Face_Actor(kActorClovis, kActorMcCoy, true);
 					Actor_Says(kActorClovis, 1240, 3); //05-1240.AUD	Welcome, brother. We have very little time.
 					Actor_Says(kActorMcCoy, 8500, 3);
 					Actor_Says(kActorClovis, 1250, 3);

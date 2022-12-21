@@ -169,7 +169,7 @@ bool AIScriptMoraji::GoalChanged(int currentGoalNumber, int newGoalNumber) {
 			Delay (2000);
 			Actor_Says(kActorMcCoy, 170, -1); //00-0170.AUD	Damn.
 			Actor_Voice_Over(300, kActorVoiceOver); //99-0300.AUD	I'd screwed up. Plain and simple.
-			Game_Flag_Set(kFlagMcCoyShotMoraji);
+			Game_Flag_Set(kFlagMcCoyRetiredHuman);
 		}
 		return true;
 

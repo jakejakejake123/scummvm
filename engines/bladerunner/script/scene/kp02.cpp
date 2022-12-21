@@ -139,6 +139,10 @@ void SceneScriptKP02::PlayerWalkedIn() {
 		Loop_Actor_Walk_To_XYZ(kActorMcCoy, -884.0f, -615.49f, 3035.0f, 0, false, false, false);
 		Game_Flag_Reset(kFlagKP01toKP02);
 	}
+	
+	if (_vm->_cutContent) {
+		Player_Set_Combat_Mode(true);
+	}
 
 	if (Game_Flag_Query(kFlagMcCoyIsHelpingReplicants)
 	 && Actor_Query_Goal_Number(kActorSteele) != 599

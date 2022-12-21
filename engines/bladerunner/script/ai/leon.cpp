@@ -209,7 +209,9 @@ bool AIScriptLeon::GoalChanged(int currentGoalNumber, int newGoalNumber) {
 		Loop_Actor_Walk_To_XYZ(kActorLeon, 198.0f, 349.0f, 865.0f, 0, false, false, false);
 		Actor_Face_Actor(kActorLeon, kActorMcCoy, true);
 		Actor_Face_Actor(kActorMcCoy, kActorLeon, true);
-		if (Actor_Clue_Query(kActorMcCoy, kClueWantedPoster)) { // there is no way how to obtain this poster
+		if (Actor_Clue_Query(kActorMcCoy, kClueWantedPoster) // there is no way how to obtain this poster
+		&& !Game_Flag_Query(kFlagMcCoyIsHelpingReplicants)
+		&& Player_Query_Agenda() != kPlayerAgendaPolite) {
 			Actor_Says_With_Pause(kActorMcCoy, 525, 0.2f, 14);
 			Actor_Says(kActorLeon, 90, 13);
 			Actor_Says(kActorMcCoy, 530, 16);
@@ -220,7 +222,8 @@ bool AIScriptLeon::GoalChanged(int currentGoalNumber, int newGoalNumber) {
 			Actor_Says_With_Pause(kActorMcCoy, 535, 0.8f, 17); //00-0535.AUD	What about him?
 			Actor_Says(kActorLeon, 100, 13); //62-0100.AUD	Nothing, I just thought you were gonna arrest me. That's all.
 			if (_vm->_cutContent) {
-				if (!Game_Flag_Query(kFlagCT09LeonInterrupted)) {
+				if (!Game_Flag_Query(kFlagCT09LeonInterrupted)
+				&& Player_Query_Agenda() != kPlayerAgendaPolite) {
 					Actor_Says_With_Pause(kActorMcCoy, 540, 0.0f, 19); //00-0540.AUD	I don't care about your little run-in with the manager, okay? I'm looking for a couple of Replicants.
 					Actor_Says(kActorLeon, 110, kAnimationModeTalk); //62-0110.AUD	Can't help you there, friend.
 				}

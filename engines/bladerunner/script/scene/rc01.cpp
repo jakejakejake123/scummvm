@@ -302,9 +302,6 @@ bool SceneScriptRC01::ClickedOn3DObject(const char *objectName, bool a2) {
 								Actor_Clue_Acquire(kActorMcCoy, kClueChromeDebris, true, -1);
 							} else {
 								Actor_Says(kActorMcCoy, 1025, 13); //00-1025.AUD	Absolutely.
-								Actor_Says(kActorOfficerLeary, 280, 13); //23-0280.AUD	Sounds like another nutcase overdosed on too many lichen-dogs.
-								Actor_Says(kActorMcCoy, 8320, 18); //00-8320.AUD	Really?
-								Actor_Says(kActorOfficerLeary, 460, 13); //23-0460.AUD	Either that or another street punk that sucked one too many sugar cubes.
 								Delay (500);
 								Actor_Says(kActorMcCoy, 5310, 11); //00-5310.AUD	You spot anything you think I ought to know about, tell me.
 								Actor_Clue_Acquire(kActorMcCoy, kClueChromeDebris, true, -1);
@@ -477,6 +474,12 @@ bool SceneScriptRC01::ClickedOnActor(int actorId) {
 					Actor_Face_Actor(kActorOfficerLeary, kActorMcCoy, true);
 					Actor_Says(kActorOfficerLeary, 130, 14);
 					I_Sez("JM: Did it have a huge, ugly piece of chrome on it?");
+					if (_vm->_cutContent) {
+						Delay(500);
+						Actor_Says(kActorOfficerLeary, 280, 13); //23-0280.AUD	Sounds like another nutcase overdosed on too many lichen-dogs.
+						Actor_Says(kActorMcCoy, 8320, 18); //00-8320.AUD	Really?
+						Actor_Says(kActorOfficerLeary, 460, 13); //23-0460.AUD	Either that or another street punk that sucked one too many sugar cubes.
+					}
 					Actor_Clue_Acquire(kActorMcCoy, kClueCrowdInterviewB, true, kActorOfficerLeary);
 					Game_Flag_Reset(kFlagRC01McCoyAndOfficerLearyTalking);
 					if (_vm->_cutContent) {
@@ -520,9 +523,6 @@ bool SceneScriptRC01::ClickedOnActor(int actorId) {
 									Actor_Clue_Acquire(kActorMcCoy, kClueChromeDebris, true, -1);
 								} else {
 									Actor_Says(kActorMcCoy, 1025, 13); //00-1025.AUD	Absolutely.
-									Actor_Says(kActorOfficerLeary, 280, 13); //23-0280.AUD	Sounds like another nutcase overdosed on too many lichen-dogs.
-									Actor_Says(kActorMcCoy, 8320, 18); //00-8320.AUD	Really?
-									Actor_Says(kActorOfficerLeary, 460, 13); //23-0460.AUD	Either that or another street punk that sucked one too many sugar cubes.
 									Delay (500);
 									Actor_Says(kActorMcCoy, 5310, 11); //00-5310.AUD	You spot anything you think I ought to know about, tell me.
 									Actor_Clue_Acquire(kActorMcCoy, kClueChromeDebris, true, -1);
@@ -668,9 +668,6 @@ bool SceneScriptRC01::ClickedOnItem(int itemId, bool a2) {
 							Actor_Clue_Acquire(kActorMcCoy, kClueChromeDebris, true, -1);
 						} else {
 							Actor_Says(kActorMcCoy, 1025, 13);
-							Actor_Says(kActorOfficerLeary, 280, 13); //23-0280.AUD	Sounds like another nutcase overdosed on too many lichen-dogs.
-							Actor_Says(kActorMcCoy, 8320, 18); //00-8320.AUD	Really?
-							Actor_Says(kActorOfficerLeary, 460, 13); //23-0460.AUD	Either that or another street punk that sucked one too many sugar cubes.
 							Delay (500);
 							Actor_Says(kActorMcCoy, 5310, 11); //00-5310.AUD	You spot anything you think I ought to know about, tell me.
 							Actor_Clue_Acquire(kActorMcCoy, kClueChromeDebris, true, -1);

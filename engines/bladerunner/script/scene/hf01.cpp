@@ -417,6 +417,7 @@ void SceneScriptHF01::PlayerWalkedIn() {
 	if (_vm->_cutContent) {
 		if (!Game_Flag_Query(kFlagZubenTalkAct4)
 		&& (Actor_Query_Goal_Number(kActorZuben) < kGoalZubenGone) 
+		&& !Game_Flag_Query(kFlagUG18GuzzaScene)
 		&& (Global_Variable_Query(kVariableChapter) == 4)) {
 			Actor_Put_In_Set(kActorZuben, kSetHF01);
 			Actor_Set_At_XYZ(kActorZuben, 500.07f, -0.01f, -205.43f, 0);
@@ -1158,20 +1159,15 @@ void SceneScriptHF01::dialogueWithMiaAndMurray() {
 
 void SceneScriptHF01::talkWithDektora() {
 	Actor_Says(kActorDektora, 0, kAnimationModeTalk);
-	if (_vm->_cutContent) {
-		Actor_Says(kActorDektora, 0, kAnimationModeTalk);
-		Actor_Says(kActorMcCoy, 1400, kAnimationModeTalk); //00-1400.AUD	I promised you, didn't I?
-		Actor_Says(kActorDektora, 10, kAnimationModeTalk); //03-0010.AUD	You’re one of the few people I’ve known who actually keep their promises.
-	} else {
-		Actor_Says(kActorMcCoy, 1400, kAnimationModeTalk); //00-1400.AUD	I promised you, didn't I?
-		Actor_Says(kActorDektora, 10, kAnimationModeTalk); //03-0010.AUD	You’re one of the few people I’ve known who actually keep their promises.
-	}
+	Actor_Says(kActorMcCoy, 1400, kAnimationModeTalk); //00-1400.AUD	I promised you, didn't I?
+	Actor_Says(kActorDektora, 10, kAnimationModeTalk); //03-0010.AUD	You’re one of the few people I’ve known who actually keep their promises.
 	Actor_Says(kActorMcCoy, 1405, kAnimationModeTalk); //00-1405.AUD	Where's Clovis?
 	Actor_Says(kActorDektora, 20, kAnimationModeTalk); //03-0020.AUD	He’s not coming with us.
 	Actor_Says(kActorMcCoy, 1410, kAnimationModeTalk); //00-1410.AUD	You're gonna miss him?
 	Actor_Says(kActorDektora, 30, kAnimationModeTalk); //03-0030.AUD	I’ve practically forgotten him already.
 	if (_vm->_cutContent) {
-		if (Actor_Query_Friendliness_To_Other(kActorClovis, kActorMcCoy) > 50) {
+		if (Actor_Query_Friendliness_To_Other(kActorClovis, kActorMcCoy) > 50 
+		&& !Actor_Clue_Query(kActorClovis, kClueMcCoyRetiredLucy)) {
 			Actor_Says(kActorMcCoy, 1415, kAnimationModeTalk); //00-1415.AUD	Some ways I wish I'd gotten to know him better.
 			Actor_Says(kActorDektora, 40, kAnimationModeTalk); //03-0040.AUD	Then you know him better than you think.
 			Actor_Says(kActorDektora, 50, kAnimationModeTalk); //03-0050.AUD	There’s a strange bond that exists between the two of you.
@@ -1197,7 +1193,8 @@ void SceneScriptHF01::talkWithLucy() {
 	Actor_Says(kActorMcCoy, 1425, kAnimationModeTalk); //00-1425.AUD	I promised you, didn't I?
 	Actor_Says(kActorLucy, 10, kAnimationModeTalk); //06-0010.AUD	Father wanted me to stay with him.
 	if (_vm->_cutContent) {
-		if (Actor_Query_Friendliness_To_Other(kActorClovis, kActorMcCoy) > 50) {
+		if (Actor_Query_Friendliness_To_Other(kActorClovis, kActorMcCoy) > 50
+		&& !Actor_Clue_Query(kActorClovis, kClueMcCoyRetiredDektora)) {
 			Actor_Says(kActorLucy, 20, kAnimationModeTalk); //06-0020.AUD	But when I told him I was going with you, he gave us his blessing.
 			Actor_Says(kActorMcCoy, 1430, kAnimationModeTalk); //00-1430.AUD	He is an extraordinary guy.
 			Actor_Says(kActorLucy, 30, kAnimationModeTalk); //06-0030.AUD	I know.

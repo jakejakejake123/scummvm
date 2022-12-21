@@ -121,7 +121,7 @@ void AIScriptRunciter::ClickedByPlayer() {
 	// Made it so if you click on Runciter and he is in lock up for animal fraud, if you have the envelope McCoy will question him about his deal with Luther and Lance.
 	if (_vm->_cutContent) {
 		if (Actor_Query_In_Set(kActorRunciter, kSetPS09)) {
-			if (!Loop_Actor_Walk_To_XYZ(kActorMcCoy, -381.11f, 0.0f, -135.55f, 0, false, true, false)) {
+			if (!Loop_Actor_Walk_To_XYZ(kActorMcCoy, -381.11f, 0.0f, -135.55f, 0, false, false, false)) {
 				Actor_Face_Actor(kActorMcCoy, kActorRunciter, true);
 				Actor_Face_Actor(kActorRunciter, kActorMcCoy, true);
 				Actor_Says(kActorMcCoy, 8920, 14); //00-8920.AUD	I gotta ask you a question.

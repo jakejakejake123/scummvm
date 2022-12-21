@@ -258,11 +258,10 @@ void SceneScriptMA07::PlayerWalkedIn() {
 			Actor_Face_Actor(kActorSteele, kActorMcCoy, true);
 			Actor_Face_Actor(kActorMcCoy, kActorSteele, true);
 			Music_Play(kMusicBRBlues, 52, 0, 2, -1, kMusicLoopPlayOnce, 1);
-			if (Actor_Query_Friendliness_To_Other(kActorSteele, kActorMcCoy) < 51) {
+			if (Actor_Query_Friendliness_To_Other(kActorSteele, kActorMcCoy) < 58) {
 				Actor_Says(kActorSteele, 2710, 12); //01-2710.AUD	You must be in better shape that I thought.
 				Actor_Says(kActorSteele, 2720, 13); //01-2720.AUD	You’re still alive.	
 				Actor_Says(kActorMcCoy, 5705, 13); //00-5705.AUD	Uh-huh.
-				Actor_Says(kActorSteele, 2650, 14); //01-2650.AUD	No wonder you can’t afford a better suit.
 				Actor_Says(kActorSteele, 2660, 15); //01-2660.AUD	Ever think of a new line of work?
 				Actor_Says(kActorSteele, 2670, 13); //01-2670.AUD	Maybe you’ll have better luck finding that than all those skin-jobs that are running roughshod over you.
 				Actor_Says(kActorMcCoy, 2685, 18); //00-2685.AUD	Hmph. Very funny.
@@ -270,10 +269,11 @@ void SceneScriptMA07::PlayerWalkedIn() {
 				Actor_Says(kActorSteele, 2640, 12); //01-2640.AUD	Killing time again, Slim?
 				Actor_Says(kActorMcCoy, 6215, 13); //00-6215.AUD	I plan to. I’m going home.
 			}
-			if (Actor_Query_Friendliness_To_Other(kActorSteele, kActorMcCoy) > 50) {
+			if (Actor_Query_Friendliness_To_Other(kActorSteele, kActorMcCoy) > 57) {
 				Actor_Says(kActorSteele, 2690, 14); //01-2690.AUD	Hey, Slim. I dug up some new dirt. What do you say we have a pow-wow.
 				if (Player_Query_Agenda() == kPlayerAgendaSurly 
-				|| Player_Query_Agenda() == kPlayerAgendaErratic) {
+				|| Player_Query_Agenda() == kPlayerAgendaErratic 
+				|| Game_Flag_Query(kFlagMcCoyIsHelpingReplicants)) {
 					Actor_Says(kActorMcCoy, 6305, 16); //00-6305.AUD	I don’t got the time or the inclination, Steele. 
 					Actor_Says(kActorSteele, 3300, 13); //01-3300.AUD	One day you’ll be begging me for time, I guarantee.
 					Player_Loses_Control();
@@ -290,6 +290,9 @@ void SceneScriptMA07::PlayerWalkedIn() {
 					Player_Gains_Control();
 					Actor_Face_Actor(kActorMcCoy, kActorSteele, true);
 					Actor_Face_Actor(kActorSteele, kActorMcCoy, true);
+					Actor_Change_Animation_Mode(kActorMcCoy, 23);
+					Actor_Change_Animation_Mode(kActorSteele, 23);
+					Delay(2000);
 					Ambient_Sounds_Play_Sound(kSfxDATALOAD, 50, 0, 0, 99);
 					Delay(2000);
 					Ambient_Sounds_Play_Sound(kSfxBEEPNEAT, 80, 0, 0, 99);
@@ -309,7 +312,7 @@ void SceneScriptMA07::PlayerWalkedIn() {
 							Actor_Clue_Acquire(kActorMcCoy, kClueVKCrazylegsHuman,  true, kActorSteele);
 							Actor_Clue_Acquire(kActorMcCoy, kClueCrystalTestedCrazylegs, true, kActorSteele);
 						} else if (Actor_Clue_Query(kActorMcCoy, kClueCrazysInvolvement)) {
-							if (Random_Query(1, 4) == 1) {
+							if (Random_Query(1, 3) == 1) {
 								Actor_Clue_Acquire(kActorMcCoy, kClueVKCrazylegsHuman,  true, kActorSteele);
 								Actor_Clue_Acquire(kActorMcCoy, kClueCrystalTestedCrazylegs, true, kActorSteele);
 								Actor_Clue_Acquire(kActorMcCoy, kClueCrystalArrestedCrazylegs,  true, kActorSteele);
@@ -324,10 +327,11 @@ void SceneScriptMA07::PlayerWalkedIn() {
 						|| Actor_Clue_Query(kActorMcCoy, kClueCrazylegsInterview1)
 						|| Actor_Clue_Query(kActorMcCoy, kClueCrazylegsInterview2)) {
 							if (!Game_Flag_Query(kFlagCrazylegsDead)) {
-								if (Random_Query(1, 4) == 1) {
+								if (Random_Query(1, 3) == 1) {
 									Actor_Clue_Acquire(kActorMcCoy, kClueVKCrazylegsReplicant, true, kActorSteele);
 									Actor_Clue_Acquire(kActorMcCoy, kClueCrystalRetiredCrazylegs, true, kActorSteele);
 									Actor_Set_Goal_Number(kActorCrazylegs, kGoalCrazyLegsLeavesShowroom);
+									Game_Flag_Set(kFlagCrazylegsDead);
 								}
 							}
 						}
@@ -339,7 +343,7 @@ void SceneScriptMA07::PlayerWalkedIn() {
 					|| Actor_Clue_Query(kActorMcCoy, kClueEnvelope)) {
 						if (Actor_Query_Goal_Number(kActorRunciter) < kGoalRunciterDead) {
 							if (Game_Flag_Query(kFlagRunciterIsReplicant)) {
-								if (Random_Query(1, 4) == 1) {
+								if (Random_Query(1, 3) == 1) {
 									Actor_Clue_Acquire(kActorMcCoy, kClueCrystalRetiredRunciter1, true, kActorSteele);
 									Actor_Clue_Acquire(kActorMcCoy, kClueCrystalRetiredRunciter2, true, kActorSteele);
 									Actor_Clue_Acquire(kActorMcCoy, kClueVKRunciterReplicant, true, kActorSteele);
@@ -349,13 +353,13 @@ void SceneScriptMA07::PlayerWalkedIn() {
 							} else {
 								Actor_Clue_Acquire(kActorMcCoy, kClueCrystalTestedRunciter, true, kActorSteele);
 								Actor_Clue_Acquire(kActorMcCoy, kClueVKRunciterHuman, true, kActorSteele);
-								Actor_Modify_Friendliness_To_Other(kActorSteele, kActorMcCoy, -1);
-								Actor_Modify_Friendliness_To_Other(kActorGuzza, kActorMcCoy, -1);
 								if (Actor_Clue_Query(kActorMcCoy, kClueLabCorpses)
 								|| Actor_Clue_Query(kActorMcCoy, kClueEnvelope)) {
-									Game_Flag_Set(kFlagRunciterArrested);
-									Actor_Put_In_Set(kActorRunciter, kSetPS09);
-									Actor_Set_At_XYZ(kActorRunciter, -389.43f, 2.06f, -200.77f, 512);
+									if (Random_Query(1, 3) == 1) {
+										Game_Flag_Set(kFlagRunciterArrested);
+										Actor_Put_In_Set(kActorRunciter, kSetPS09);
+										Actor_Set_At_XYZ(kActorRunciter, -389.43f, 2.06f, -200.77f, 512);
+									}
 								}
 							}
 						}
@@ -364,7 +368,7 @@ void SceneScriptMA07::PlayerWalkedIn() {
 					|| Actor_Clue_Query(kActorMcCoy, kClueHasanInterview)) {
 						if (Actor_Query_Goal_Number(kActorBulletBob) < kGoalBulletBobDead) {
 							if (Game_Flag_Query(kFlagBulletBobIsReplicant)) {
-								if (Random_Query(1, 4) == 1) {
+								if (Random_Query(1, 3) == 1) {
 									Actor_Clue_Acquire(kActorMcCoy, kClueCrystalRetiredBob, true, kActorSteele);
 									Actor_Clue_Acquire(kActorMcCoy, kClueVKBobGorskyReplicant, true, kActorSteele);
 									Actor_Set_Goal_Number(kActorBulletBob, kGoalBulletBobDead);
@@ -374,11 +378,11 @@ void SceneScriptMA07::PlayerWalkedIn() {
 								Actor_Clue_Acquire(kActorMcCoy, kClueCrystalTestedBulletBob, true, kActorSteele);
 								Actor_Clue_Acquire(kActorMcCoy, kClueVKBobGorskyHuman, true, kActorSteele);
 								if (Actor_Clue_Query(kActorMcCoy, kClueHasanInterview)) {
-									Actor_Modify_Friendliness_To_Other(kActorSteele, kActorMcCoy, -1);
-									Actor_Modify_Friendliness_To_Other(kActorGuzza, kActorMcCoy, -1);
-									Game_Flag_Set(kFlagBulletBobArrested);
-									Actor_Put_In_Set(kActorBulletBob, kSetPS09);
-									Actor_Set_At_XYZ(kActorBulletBob, -476.0f, 0.2f, -300.0f, 200);
+									if (Random_Query(1, 3) == 1) {
+										Game_Flag_Set(kFlagBulletBobArrested);
+										Actor_Put_In_Set(kActorBulletBob, kSetPS09);
+										Actor_Set_At_XYZ(kActorBulletBob, -476.0f, 0.2f, -300.0f, 200);
+									}
 								}
 							}
 						}
@@ -387,7 +391,7 @@ void SceneScriptMA07::PlayerWalkedIn() {
 					// she just finds Zuben by chance and doesn't have time to come up with a plan of attack so escapes into the sewers. This will give you the Zuben sighting clue.
 					if (Actor_Clue_Query(kActorMcCoy, kClueMcCoyLetZubenEscape)) {
 						Actor_Clue_Acquire(kActorMcCoy, kClueSightingZuben, true, kActorSteele);
-						if (Random_Query(1, 4) == 1) {
+						if (Random_Query(1, 3) == 1) {
 							Actor_Set_Goal_Number(kActorZuben, kGoalZubenGone);
 							Actor_Clue_Acquire(kActorMcCoy, kClueCrystalRetiredZuben, true, kActorSteele);
 						}
@@ -404,13 +408,15 @@ void SceneScriptMA07::PlayerWalkedIn() {
 						if (!Game_Flag_Query(kFlagEarlyQDead)
 						&& !Game_Flag_Query(kFlagNR04EarlyQStungByScorpions)) {
 							if (Game_Flag_Query(kFlagEarlyQIsReplicant)) {
-								if (Random_Query(1, 4) == 1) {
+								if (Random_Query(1, 3) == 1) {
 									Actor_Clue_Acquire(kActorMcCoy, kClueVKEarlyQReplicant, true, kActorSteele);
 									Game_Flag_Set(kFlagEarlyQDead);
 									if (Game_Flag_Query(kFlagHanoiIsReplicant)) {
 										Game_Flag_Set(kFlagHanoiDead);
 									}
-								} else {
+								}
+							} else {
+								if (Random_Query(1, 3) == 1) {
 									Actor_Clue_Acquire(kActorMcCoy, kClueVKEarlyQHuman, true, kActorSteele);
 									Actor_Put_In_Set(kActorEarlyQ, kSetPS09);
 									Actor_Set_At_XYZ(kActorEarlyQ, -425.88f, 0.15f, -220.74f, 512);
@@ -418,11 +424,36 @@ void SceneScriptMA07::PlayerWalkedIn() {
 							}
 						}
 					}
+					if (Actor_Clue_Query(kActorMcCoy, kClueSpecialIngredient)) {
+						if (Random_Query(1, 3) == 1) {
+							Game_Flag_Set(kFlagIsabellaArrested);
+							Actor_Put_In_Set(kActorIsabella, kSetPS09);
+							Actor_Set_At_XYZ(kActorIsabella, -450.0f, 0.2f, -200.0f, 518);
+						}
+					}
+					if (Actor_Clue_Query(kActorMcCoy, kClueBobRobbed)) {
+						if (Random_Query(1, 3) == 1) {
+							Game_Flag_Set(kFlagHasanArrested);
+							Actor_Put_In_Set(kActorHasan, kSetPS09);
+							Actor_Set_At_XYZ(kActorHasan, -300.0f, 0.33f, -330.0f, 512);
+						}
+					}
+					if (Actor_Clue_Query(kActorMcCoy, kClueMcCoyLetZubenEscape)
+					|| Actor_Clue_Query(kActorMcCoy, kClueMcCoyRetiredZuben)) {
+						if (Actor_Clue_Query(kActorSteele, kClueHowieLeeInterview)) {
+							if (Random_Query(1, 3) == 1) {
+								Game_Flag_Set(kFlagHowieLeeArrested); 
+								AI_Movement_Track_Flush(kActorHowieLee);
+								Actor_Put_In_Set(kActorHowieLee, kSetPS09);
+								Actor_Set_At_XYZ(kActorHowieLee, -399.0f, 0.2f, -255.0f, 200);
+							}
+						}
+					}
 				}
 			}
 			Actor_Says(kActorSteele, 2760, 13); //01-2760.AUD	What’s the latest?
 			Actor_Says(kActorMcCoy, 6345, 15); //00-6345.AUD	I think you already know the answer to that question
-			if (Actor_Query_Friendliness_To_Other(kActorSteele, kActorMcCoy) > 50) {
+			if (Actor_Query_Friendliness_To_Other(kActorSteele, kActorMcCoy) > 57) {
 				Actor_Says(kActorSteele, 2770, 14); //01-2770.AUD	I want to hear it from you.
 				Actor_Says(kActorMcCoy, 6350, 16); //00-6350.AUD	What’s the point? You are not gonna believe a word I say.
 			}
@@ -438,7 +469,7 @@ void SceneScriptMA07::PlayerWalkedIn() {
 				Actor_Says(kActorMcCoy, 5065, 18); //00-5065.AUD	Is that right?
 			}
 			// Made it so if McCoy has retired 4 replicants Steele is nicer to him.
-			if (Actor_Query_Friendliness_To_Other(kActorSteele, kActorMcCoy) > 50) {
+			if (Actor_Query_Friendliness_To_Other(kActorSteele, kActorMcCoy) > 57) {
 				Actor_Says(kActorSteele, 2790, 12); //01-2790.AUD	I guarantee it. I’ll put you on the Machine myself.
 				Actor_Says(kActorMcCoy, 6360, 13); //00-6360.AUD	Hey, you’re always crowing about the “magic”. What does it tell you now
 				Actor_Says(kActorSteele, 1390, 13); //01-1390.AUD	I ain’t sure yet. I like to be sure.
@@ -449,7 +480,7 @@ void SceneScriptMA07::PlayerWalkedIn() {
 				Actor_Says(kActorMcCoy, 6335, 13); //00-6335.AUD	Maybe he just doesn’t want to be found.
 				Actor_Says(kActorSteele, 2740, 14); //01-2740.AUD	That’s a big maybe.
 				Actor_Says(kActorMcCoy, 6340, 15); //00-6340.AUD	A likely maybe, don’t you think?
-				if (Actor_Query_Friendliness_To_Other(kActorSteele, kActorMcCoy) < 51) {
+				if (Actor_Query_Friendliness_To_Other(kActorSteele, kActorMcCoy) < 58) {
 					Actor_Says(kActorSteele, 2800, 15); //01-2800.AUD	You don’t want to know what I think.
 					Actor_Says(kActorMcCoy, 2990, 16); //00-2990.AUD	Are you saying I’m a Rep? Come off it!
 					Actor_Says(kActorSteele, 1360, 13); //01-1360.AUD	You’re not on my list yet. That means no retirement swag.
@@ -470,9 +501,11 @@ void SceneScriptMA07::PlayerWalkedIn() {
 			}
 			Actor_Says(kActorMcCoy, 3255, 18); //00-3255.AUD	Maybe I’ll see you again.
 			Actor_Says(kActorSteele, 970, 13); //01-0970.AUD	We’ll be meeting again, Slim. You can bank on it.
-			if (Actor_Query_Friendliness_To_Other(kActorSteele, kActorMcCoy) > 50) {
+			if (Player_Query_Agenda() == kPlayerAgendaPolite) { 
 				Actor_Says(kActorMcCoy, 5260, 15); //00-5260.AUD	Happy trails, Steele.
-				Actor_Says(kActorSteele, 2350, 14); //01-2350.AUD	Ditto.
+				if (Actor_Query_Friendliness_To_Other(kActorSteele, kActorMcCoy) > 57) {
+					Actor_Says(kActorSteele, 2350, 14); //01-2350.AUD	Ditto.
+				}
 			}
 			Loop_Actor_Walk_To_XYZ(kActorSteele, -270.65, -162.25, 276.32, 0, true, false, false);
 			Player_Gains_Control();
@@ -502,21 +535,17 @@ void SceneScriptMA07::PlayerWalkedIn() {
 				Actor_Says(kActorMcCoy, 8395, 18); //00-8395.AUD	You don't have anything to say?
 				Delay(1000);
 				Actor_Says(kActorGuzza, 1530, 15); //04-1530.AUD	I must have made a mistake or something. Truly, an honest mistake.
-				if (Player_Query_Agenda() == kPlayerAgendaSurly 
-				|| Player_Query_Agenda() == kPlayerAgendaErratic) {
-					Actor_Says(kActorMcCoy, 3910, 15); //00-3910.AUD	You’re lying.
-					Actor_Says(kActorGuzza, 1520, 16); //04-1520.AUD	Everything I say is as true as holy writ.
-				}	
+				Actor_Says(kActorMcCoy, 3910, 15); //00-3910.AUD	You’re lying.
+				Actor_Says(kActorGuzza, 1520, 16); //04-1520.AUD	Everything I say is as true as holy writ.
 				Actor_Says(kActorMcCoy, 2140, 14); //00-2140.AUD	Bullshit.
 				if (Player_Query_Agenda() == kPlayerAgendaPolite) {
-					Actor_Says(kActorMcCoy, 2130, 15); //00-2130.AUD	You’re the coldest person I’ve ever seen when it comes to killing.
 					Delay(1000);
+					Actor_Says(kActorMcCoy, 2130, 15); //00-2130.AUD	You’re the coldest person I’ve ever seen when it comes to killing.
 				}
+				Delay(1000);
 				Actor_Says(kActorMcCoy, 6645, 18); //00-6645.AUD	You were raking in the chinyen selling LPD wares to scumbags and Reps.
 				Actor_Says(kActorGuzza, 540, 14); //04-0540.AUD	Trust me. Ain't nobody getting rich unless they're sneaking some on the side.
-				if (Player_Query_Agenda() == kPlayerAgendaPolite) {
-					Actor_Says(kActorMcCoy, 8345, 18); //00-8345.AUD	I wouldn't know.
-				}
+				Actor_Says(kActorMcCoy, 8345, 18); //00-8345.AUD	I wouldn't know.
 				Delay(1000);
 				Actor_Says(kActorGuzza, 260, 16);//04-0260.AUD	Once you start carving up that juicy bacon kid, the taste never goes away.
 				Actor_Says(kActorGuzza, 270, 15);//04-0270.AUD	The great things in life...? Believe me you'll just be wanting more and more.
@@ -559,7 +588,7 @@ void SceneScriptMA07::PlayerWalkedIn() {
 					Actor_Says(kActorMcCoy, 8502, 14); //00-8502.AUD	I hope it's enough.
 					Actor_Says(kActorGuzza, 230, 14); //04-0230.AUD	Hey, don't worry. The boys upstairs want to keep our best and brightest happy.
 					Delay(1000);
-					Item_Pickup_Spin_Effect(kModelAnimationFolder, 391, 343);
+					Item_Pickup_Spin_Effect_From_Actor(kModelAnimationFolder, kActorGuzza, 0, 0);
 					Actor_Change_Animation_Mode(kActorMcCoy, 23);
 					Actor_Change_Animation_Mode(kActorGuzza, 23);
 					Delay(2000);
@@ -591,7 +620,7 @@ void SceneScriptMA07::PlayerWalkedIn() {
 }	
 
 void SceneScriptMA07::PlayerWalkedOut() {
-	if (_vm->_cutContent) {
+	if (_vm->_cutContent) {	
 		if (Actor_Query_Goal_Number(kActorRachael) == kGoalRachaelIsOutsideMcCoysBuildingAct3
 			|| Actor_Query_Goal_Number(kActorRachael) == kGoalRachaelIsOutWalksToPoliceHQAct3
 			|| Actor_Query_Goal_Number(kActorRachael) == kGoalRachaelIsOutFleeingToPoliceHQAct3
@@ -604,6 +633,8 @@ void SceneScriptMA07::PlayerWalkedOut() {
 		) {
 			Actor_Set_Goal_Number(kActorRachael, kGoalRachaelAtEndOfAct4);
 		}
+		Game_Flag_Reset(kFlagRachaelWalks);
+		Music_Stop(1u);		
 	}
 }
 

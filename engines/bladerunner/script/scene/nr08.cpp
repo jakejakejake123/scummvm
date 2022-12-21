@@ -234,9 +234,8 @@ void SceneScriptNR08::PlayerWalkedIn() {
 			if (_vm->_cutContent) {
 				if (Player_Query_Agenda() == kPlayerAgendaSurly 
 				|| Player_Query_Agenda() == kPlayerAgendaErratic) {
-					Actor_Face_Actor(kActorMcCoy, kActorSteele, true);
 					Delay(1000);
-					Actor_Says(kActorMcCoy, 7815, 14); //00-7815.AUD	No.
+					Actor_Says(kActorMcCoy, 7815, 13); //00-7815.AUD	No.
 					Delay(1000);
 				} else {
 					Actor_Says(kActorMcCoy, 3790, 13); //00-3790.AUD	Regular folks, Steele. Just like you and me.

@@ -148,6 +148,8 @@ void SceneScriptUG09::PlayerWalkedIn() {
 	// Added in correct flag.
 	&& Game_Flag_Query(kFlagIzoFled)
 	&& !Game_Flag_Query(kFlagUG18GuzzaScene)
+	&& !Game_Flag_Query(kFlagIzoArrested)
+	&& !Actor_Clue_Query(kActorMcCoy, kClueCrystalRetiredIzo)
 	&& (Global_Variable_Query(kVariableChapter) == 4)) {
 		Actor_Put_In_Set(kActorIzo, kSetUG09);
 		Actor_Set_At_XYZ(kActorIzo, -81.17, 157.41, 71.37, 0);
@@ -161,6 +163,7 @@ void SceneScriptUG09::PlayerWalkedIn() {
 			Actor_Says(kActorIzo, 850, 12); //07-0850.AUD	Non existent. You and Steele made sure of that. Scavengers took the rest.
 			Actor_Says(kActorMcCoy, 6740, 16); //00-6740.AUD	What exactly did the scavengers take?
 			Actor_Says(kActorIzo, 970, 17); //07-0970.AUD	Some of the police-issue weapons and electronics. They took them down into the sewers.
+			Actor_Says(kActorMcCoy, 7835, 16); //00-7835.AUD	Is that so?
 			Delay(1000);
 		}
 		//Made it so Izo only shares what he knows with McCoy in regards to who framed him if McCoy helped Izo in covering up his weapon smuggling operation.

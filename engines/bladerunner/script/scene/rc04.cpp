@@ -704,6 +704,13 @@ void SceneScriptRC04::dialogueWithBulletBob() {
 		Actor_Says(kActorMcCoy, 5115, 16); //00-5115.AUD	You're a smart guy, Bob. You'll think of something.
 		Actor_Says(kActorBulletBob, 870, 31); //14-0870.AUD	I could throw a few chinyen your way…
 		Actor_Says(kActorMcCoy, 5120, 15); //00-5120.AUD	That'll work.
+		if (_vm->_cutContent) {
+			Actor_Change_Animation_Mode(kActorMcCoy, 23);
+			Actor_Change_Animation_Mode(kActorBulletBob, 23);
+			Item_Pickup_Spin_Effect_From_Actor(kModelAnimationBadge, kActorBulletBob, 0, 0);
+			Delay(2000);
+			Actor_Says(kActorMcCoy, 8170, 13); //00-8170.AUD	There you go.
+		}
 		Actor_Says(kActorBulletBob, 880, 34);
 		Actor_Clue_Acquire(kActorBulletBob, kClueHoldensBadge, true, kActorMcCoy);
 		// Made it so you actually lose Holdens badge when you give it to Bob.

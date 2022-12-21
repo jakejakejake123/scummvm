@@ -575,7 +575,7 @@ bool AIScriptOfficerGrayford::GoalChanged(int currentGoalNumber, int newGoalNumb
 		Actor_Says(kActorOfficerGrayford, 120, 19);
 		// Made it so McCoy only says the dialogue of Moraji being dead and what his final words were if Moraji dies.
 		if (_vm->_cutContent) {
-			if (!Game_Flag_Query(kFlagMorajiAlive)) {
+			if (Game_Flag_Query(kFlagMorajiDead)) {
 				Actor_Says_With_Pause(kActorMcCoy, 970, 0.2f, 13); // Got a dead man here. Victim of an explosion.
 				Actor_Clue_Acquire(kActorMcCoy, kClueMorajiInterview, true, kActorMoraji);
 				Actor_Says(kActorMcCoy, 975, 12); // TODO - a bug? McCoy may not know Moraji's name here(?)
@@ -599,7 +599,7 @@ bool AIScriptOfficerGrayford::GoalChanged(int currentGoalNumber, int newGoalNumb
 			}
 			// If Moraji survives McCoy depending on his agenda, comforts Moraji or tries to question him. If he comforts him Moraji gives McCoy the DNA data and if
 			// McCoy questions him Moraji doesn't give him the data. Also made it so the scene eits enable.
-			if (Game_Flag_Query(kFlagMorajiAlive)) {
+			if (!Game_Flag_Query(kFlagMorajiDead)) {
 				Actor_Face_Actor(kActorMcCoy, kActorMoraji, true);
 				if (Player_Query_Agenda() == kPlayerAgendaSurly 
 				|| Player_Query_Agenda() == kPlayerAgendaErratic) {
@@ -647,7 +647,7 @@ bool AIScriptOfficerGrayford::GoalChanged(int currentGoalNumber, int newGoalNumb
 
 		if (Player_Query_Current_Scene() == kSceneDR04) {
 			if (_vm->_cutContent) {
-				if (!Game_Flag_Query(kFlagMorajiAlive)) {
+				if (Game_Flag_Query(kFlagMorajiDead)) {
 					Actor_Says(kActorOfficerGrayford, 170, kAnimationModeTalk); // This is 32, Sector 3. Reporting a homicide. Possible act of terrorism.
 				}
 			} else {
@@ -676,7 +676,7 @@ bool AIScriptOfficerGrayford::GoalChanged(int currentGoalNumber, int newGoalNumb
 	case kGoalOfficerGrayfordStopPatrolToTalkToMcCoyAtDR04:
 		Actor_Face_Actor(kActorMcCoy, kActorOfficerGrayford, true);
 		if (_vm->_cutContent) {
-			if (!Game_Flag_Query(kFlagMorajiAlive)) {
+			if (Game_Flag_Query(kFlagMorajiDead)) {
 				if (Player_Query_Agenda() == kPlayerAgendaPolite) {
 					Actor_Says(kActorMcCoy, 1000, 14); // You got a sheet or something...?
 					AI_Movement_Track_Flush(kActorOfficerGrayford);

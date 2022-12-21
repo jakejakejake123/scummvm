@@ -385,8 +385,7 @@ void SceneScriptNR11::SceneFrameAdvanced(int frame) {
 		untargetEverything();
 		Player_Loses_Control();
 		if (_vm->_cutContent) {
-			if (Player_Query_Agenda() != kPlayerAgendaPolite
-			&& !Game_Flag_Query(kFlagMcCoyIsHelpingReplicants)
+			if (!Game_Flag_Query(kFlagMcCoyIsHelpingReplicants)
 			&& !Actor_Clue_Query(kActorDektora, kClueMcCoyHelpedDektora)) {
 				if (!Player_Query_Combat_Mode()) {
 					Player_Set_Combat_Mode(true);

@@ -92,6 +92,7 @@ void SceneScriptCT10::checkCabinet() {
 				Item_Pickup_Spin_Effect(kModelAnimationPhoto, 435, 258);
 				Delay (2000);
 				Item_Pickup_Spin_Effect(kModelAnimationPhoto, 435, 258);
+				Actor_Voice_Over(4170, kActorVoiceOver); //99-4170.AUD	I've seen that guy around town.
 			}
 		} else if (Actor_Clue_Query(kActorMcCoy, kClueHoldensBadge)) {
 			Actor_Voice_Over(3700, kActorVoiceOver); //99-3700.AUD	Nothing.

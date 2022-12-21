@@ -230,6 +230,7 @@ bool SceneScriptNR07::ClickedOnItem(int itemId, bool a2) {
 								Actor_Modify_Friendliness_To_Other(kActorDektora, kActorMcCoy, -2);
 								Actor_Says(kActorDektora, 1980, 30); //03-1980.AUD	All right.
 								Actor_Says(kActorDektora, 1480, 30); //03-1480.AUD	Yes
+								Delay(500);
 								Actor_Says(kActorDektora, 770, 30);
 								Actor_Says(kActorMcCoy, 3720, 15);
 								Actor_Says_With_Pause(kActorDektora, 780, 2.0f, 30);
@@ -409,7 +410,7 @@ bool SceneScriptNR07::ClickedOn2DRegion(int region) {
 						Delay (2000);
 						Item_Pickup_Spin_Effect(kModelAnimationPhoto, 508, 401);
 						Actor_Clue_Acquire(kActorMcCoy, kClueDektoraIncept, false, kActorDektora);
-						Actor_Says(kActorMcCoy, 6975, 12); // Interesting
+						Actor_Says(kActorMcCoy, 7960, 12); //00-7960.AUD	Dektora? 
 						// We don't remove the region after picking the clue
 						// McCoy will just point out that there's nothing more there to find.
 						// (Saves us from using up a flag and having to write extra code)
@@ -497,6 +498,7 @@ void SceneScriptNR07::PlayerWalkedIn() {
 								Actor_Modify_Friendliness_To_Other(kActorDektora, kActorMcCoy, -2);
 								Actor_Says(kActorDektora, 1980, 30); //03-1980.AUD	All right.
 								Actor_Says(kActorDektora, 1480, 30); //03-1480.AUD	Yes
+								Delay(500);
 								Actor_Says(kActorDektora, 770, 30);
 								Actor_Says(kActorMcCoy, 3720, 15);
 								Actor_Says_With_Pause(kActorDektora, 780, 2.0f, 30);
@@ -963,6 +965,7 @@ void SceneScriptNR07::talkAboutBelt2() {
 					Actor_Modify_Friendliness_To_Other(kActorDektora, kActorMcCoy, -2);
 					Actor_Says(kActorDektora, 1980, 30); //03-1980.AUD	All right.
 					Actor_Says(kActorDektora, 1480, 30); //03-1480.AUD	Yes
+					Delay(500);
 					Actor_Says(kActorDektora, 770, 30);
 					Actor_Says(kActorMcCoy, 3720, 15);
 					Actor_Says_With_Pause(kActorDektora, 780, 2.0f, 30);
@@ -1319,7 +1322,7 @@ void SceneScriptNR07::talkAboutMoonbus() {
 		Game_Flag_Set(kFlagDektoraArrested);
 		Game_Flag_Reset(kFlagMcCoyIsHelpingReplicants);
 		Actor_Put_In_Set(kActorDektora, kSetPS09);
-		Actor_Set_At_XYZ(kActorDektora, -330.0f, 0.33f, -270.0f, 583);
+		Actor_Set_At_XYZ(kActorDektora, -280.0f, 0.33f, -270.0f, 583);
 		Game_Flag_Reset(kFlagSpinnerAtNR01);
 		Game_Flag_Reset(kFlagSpinnerAtHF01);
 		Game_Flag_Set(kFlagSpinnerAtPS01);

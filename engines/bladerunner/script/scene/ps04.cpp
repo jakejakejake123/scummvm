@@ -710,6 +710,12 @@ void SceneScriptPS04::dialogueWithGuzza() {
 			Actor_Says(kActorMcCoy, 4095, 17); 
 			Actor_Says(kActorGuzza, 680, 32);
 		}
+		if (_vm->_cutContent) {
+			Actor_Change_Animation_Mode(kActorMcCoy, 23);
+			Item_Pickup_Spin_Effect_From_Actor(kModelAnimationBadge, kActorGuzza, 0, 0);
+			Delay(2000);
+			Actor_Says(kActorMcCoy, 8170, 13); //00-8170.AUD	There you go.
+		}
 		Actor_Says(kActorGuzza, 690, 31);
 		if (_vm->_cutContent) {	
 			Actor_Clue_Acquire(kActorMcCoy, kClueMcCoyRecoveredHoldensBadge, true, kActorGuzza);

@@ -443,7 +443,7 @@ void SceneScriptNR01::PlayerWalkedIn() {
 				Actor_Says(kActorSteele, 1160, 15); //01-1160.AUD	Dah! What the hell?! Now we’ll never catch it.
 				Player_Set_Combat_Mode(false);
 				Actor_Says(kActorMcCoy, 3035, 14); //00-3035.AUD	You were gonna shoot!
-				if (Actor_Query_Friendliness_To_Other(kActorSteele, kActorMcCoy) < 51) {
+				if (Actor_Query_Friendliness_To_Other(kActorSteele, kActorMcCoy) < 56) {
 					Actor_Says(kActorSteele, 1170, 16); //01-1170.AUD	Damn straight!
 					if (Player_Query_Agenda() == kPlayerAgendaPolite) {
 						Actor_Says(kActorMcCoy, 3040, 15); //00-3040.AUD	What about the hostage?
@@ -454,7 +454,7 @@ void SceneScriptNR01::PlayerWalkedIn() {
 				}
 				Actor_Says(kActorMcCoy, 3045, 15); //00-3045.AUD	You think Bryant is gonna keep you on if you start wasting civilians in the middle of the street?
 				Actor_Says(kActorMcCoy, 3055, 15); //00-3055.AUD	I just saved your job, Steele.
-				if (Actor_Query_Friendliness_To_Other(kActorSteele, kActorMcCoy) < 51) {
+				if (Actor_Query_Friendliness_To_Other(kActorSteele, kActorMcCoy) < 56) {
 					Actor_Says(kActorSteele, 1190, 16); //01-1190.AUD	I can’t believe you took a shot at me!
 					Actor_Says(kActorMcCoy, 3060, 15); //00-3060.AUD	At your gun. There’s a difference.
 					Actor_Says(kActorSteele, 1200, 16); //01-1200.AUD	Yeah, about three inches!
@@ -539,7 +539,7 @@ void SceneScriptNR01::PlayerWalkedIn() {
 			// Changed a Steele line based on your friendliness with her.
 			if (_vm->_cutContent) {
 				// Steele will respond differently if McCoy retired a few reps.
-				if (Actor_Query_Friendliness_To_Other(kActorSteele, kActorMcCoy) > 50) {
+				if (Actor_Query_Friendliness_To_Other(kActorSteele, kActorMcCoy) > 55) {
 					Actor_Says(kActorSteele, 2360, 13); //01-2360.AUD	Slumming tonight, Slim?
 				} else {
 					Actor_Says(kActorSteele, 1440, 13);
@@ -549,7 +549,7 @@ void SceneScriptNR01::PlayerWalkedIn() {
 			}
 			Loop_Actor_Walk_To_Actor(kActorMcCoy, kActorSteele, 48, false, true);
 			Actor_Says(kActorMcCoy, 3145, 13);
-			if (Global_Variable_Query(kVariableHollowayArrest) == 1) {
+			if (Global_Variable_Query(kVariableHollowayArrest) != 3) {
 				Actor_Says(kActorSteele, 1450, 12);
 				Actor_Says(kActorSteele, 1460, 13);
 			}
@@ -579,7 +579,7 @@ void SceneScriptNR01::PlayerWalkedIn() {
 					Actor_Says(kActorSteele, 1340, 12); //01-1340.AUD	You’ve been shooting civilians? Because that’s what Guzza's saying.
 					Actor_Says(kActorSteele, 1350, 12); //01-1350.AUD	He wants to put you on the Machine.
 					Actor_Says(kActorMcCoy, 3120, 15); //00-3120.AUD	You’re gonna retire me, Steele?
-					if (Actor_Query_Friendliness_To_Other(kActorSteele, kActorMcCoy) < 51 
+					if (Actor_Query_Friendliness_To_Other(kActorSteele, kActorMcCoy) < 56 
 					|| Global_Variable_Query(kVariableAffectionTowards) == kAffectionTowardsDektora 
 					|| Global_Variable_Query(kVariableAffectionTowards) == kAffectionTowardsLucy) {
 						Actor_Says(kActorSteele, 1360, 12); //01-1360.AUD	You’re not on my list yet. That means no retirement swag.
@@ -629,21 +629,22 @@ void SceneScriptNR01::PlayerWalkedIn() {
 				int v0 = Global_Variable_Query(kVariableHollowayArrest);
 				if (v0 == 1) { // Dektora called the fake cops
 					Actor_Says(kActorSteele, 1510, 15); //01-1510.AUD	That stripper you interviewed. She’s one of them.
-					Actor_Says(kActorSteele, 1520, 14); //01-1520.AUD	Figure it out! She must have made the call to Baker and that other Bozo.
 					if (_vm->_cutContent) {
-						Delay(1000);
-						Actor_Says(kActorSteele, 1400, 12); //01-1400.AUD	Something ain’t right. That setup underground? I didn’t see a V-K Machine down there.
-						Actor_Says(kActorSteele, 1410, 12); //01-1410.AUD	Baker wasn’t gonna take you downtown and he wasn’t gonna test you.
-						Actor_Says(kActorMcCoy, 3135, 15); //00-3135.AUD	No kidding.
+						if (Actor_Query_Friendliness_To_Other(kActorSteele, kActorMcCoy) > 55) {
+							Actor_Says(kActorSteele, 1520, 14); //01-1520.AUD	Figure it out! She must have made the call to Baker and that other Bozo.
+							Delay(1000);
+							Actor_Says(kActorSteele, 1400, 12); //01-1400.AUD	Something ain’t right. That setup underground? I didn’t see a V-K Machine down there.
+							Actor_Says(kActorSteele, 1410, 12); //01-1410.AUD	Baker wasn’t gonna take you downtown and he wasn’t gonna test you.
+							Actor_Says(kActorMcCoy, 3135, 15); //00-3135.AUD	No kidding.
+							Actor_Clue_Acquire(kActorMcCoy, kClueSuspectDektora, true, kActorSteele);
+						}
 						Delay(1000);
 						Actor_Says(kActorSteele, 1570, 12); //01-1570.AUD	I bet she’s still there, Slim.
 						Actor_Says(kActorSteele, 1580, 14);
 						Actor_Says(kActorMcCoy, 3170, 13);
-					}
-					Actor_Says(kActorSteele, 1530, 13); //01-1530.AUD	Let’s attend to some business.
-					// Added in a clue.
-					if (_vm->_cutContent) {
-						Actor_Clue_Acquire(kActorMcCoy, kClueSuspectDektora, true, kActorSteele);
+						Actor_Says(kActorSteele, 1530, 13); //01-1530.AUD	Let’s attend to some business.
+					} else {
+						Actor_Says(kActorSteele, 1530, 13); //01-1530.AUD	Let’s attend to some business.
 					}
 					Actor_Set_Goal_Number(kActorSteele, kGoalSteeleNR01GoToNR08);
 				} else if (v0 == 2) { // Gordo called the fake cops
@@ -653,7 +654,7 @@ void SceneScriptNR01::PlayerWalkedIn() {
 					if (_vm->_cutContent) {
 						if (Game_Flag_Query(kFlagMcCoyIsHelpingReplicants)) {
 							Actor_Says(kActorMcCoy, 3200, 13); //00-3200.AUD	Yeah. That would have been good publicity for the Department.
-							if (Actor_Query_Friendliness_To_Other(kActorSteele, kActorMcCoy) < 51) {
+							if (Actor_Query_Friendliness_To_Other(kActorSteele, kActorMcCoy) < 56) {
 								Actor_Says(kActorSteele, 1610, 17); //01-1610.AUD	That’s your problem, McCoy. You worry too much about what people think.
 							}
 						} else {
@@ -664,7 +665,7 @@ void SceneScriptNR01::PlayerWalkedIn() {
 						Actor_Says(kActorSteele, 1610, 17); //01-1610.AUD	That’s your problem, McCoy. You worry too much about what people think.
 					}
 					if (_vm->_cutContent) {
-						if (Actor_Query_Friendliness_To_Other(kActorSteele, kActorMcCoy) < 51) {
+						if (Actor_Query_Friendliness_To_Other(kActorSteele, kActorMcCoy) < 56) {
 							Actor_Says(kActorSteele, 1620, 15); //01-1620.AUD	Now, excuse me while I go collect.
 						} else {
 							Actor_Says(kActorSteele, 1530, 13); //01-1530.AUD	Let’s attend to some business.

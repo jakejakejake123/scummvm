@@ -684,9 +684,12 @@ bool AIScriptMaggie::GoalChanged(int currentGoalNumber, int newGoalNumber) {
 					Actor_Says(kActorMcCoy, 2245, 3);
 					Actor_Says(kActorSadik, 90, 3);
 					Actor_Says(kActorSadik, 100, 3);
+					Player_Set_Combat_Mode(true);
 					Actor_Says(kActorMcCoy, 2250, 3);
-					Actor_Clue_Acquire(kActorMcCoy, kClueMcCoyRetiredSadik, true, kActorSadik);
 					Music_Play(kMusicMoraji, 71, 0, 0, -1, kMusicLoopPlayOnce, 2);
+					Loop_Actor_Walk_To_XYZ(kActorMcCoy, -929.61f, 1.31f, 893.68f, 0, true, true, false);
+					Actor_Face_Actor(kActorMcCoy, kActorSadik, true);
+					Actor_Clue_Acquire(kActorMcCoy, kClueMcCoyRetiredSadik, true, kActorSadik);
 					Actor_Set_Goal_Number(kActorSadik, 413);
 				}
 				Game_Flag_Reset(kFlagMcCoyIsHelpingReplicants);

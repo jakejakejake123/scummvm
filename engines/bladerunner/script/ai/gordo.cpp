@@ -452,6 +452,16 @@ void AIScriptGordo::Retired(int byActorId) {
 					Loop_Actor_Walk_To_XYZ(kActorRunciter, -12.0f, -41.58f, 72.0f, 0, true, false, false);
 					Actor_Put_In_Set(kActorRunciter, kSceneKP06);
 				}
+				if (Actor_Query_In_Set(kActorEarlyQ, kSetKP07)) {
+					Loop_Actor_Walk_To_XYZ(kActorEarlyQ, -12.0f, -41.58f, 72.0f, 0, true, false, false);
+					Actor_Put_In_Set(kActorEarlyQ, kSceneKP06);	
+				}
+				if (Game_Flag_Query(kFlagEarlyQIsReplicant)) {
+					if (!Game_Flag_Query(kFlagEarlyQDead)) {
+						Delay(500);
+						Sound_Play(kSfxSMCAL3, 100, 0, 0, 50);
+					}
+				}
 				if (Actor_Query_In_Set(kActorCrazylegs, kSetKP07)) {
 					Loop_Actor_Walk_To_XYZ(kActorCrazylegs, -12.0f, -41.58f, 72.0f, 0, true, false, false);
 					Actor_Put_In_Set(kActorCrazylegs, kSceneKP06);	

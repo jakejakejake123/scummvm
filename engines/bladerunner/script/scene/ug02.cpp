@@ -215,7 +215,7 @@ bool SceneScriptUG02::ClickedOnItem(int itemId, bool a2) {
 		Actor_Clue_Acquire(kActorMcCoy, kClueIzoIncept, true, kActorIzo);
 		Item_Remove_From_World(kItemNote);
 		Item_Pickup_Spin_Effect(kModelAnimationPhoto, 462, 252);
-		Actor_Voice_Over(4080, kActorVoiceOver);
+		Actor_Voice_Over(4170, kActorVoiceOver);
 		return true;
 	}
 	return false;

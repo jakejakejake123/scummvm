@@ -246,6 +246,10 @@ void AIScriptClovis::Retired(int byActorId) {
 						Loop_Actor_Walk_To_XYZ(kActorRunciter, -12.0f, -41.58f, 72.0f, 0, true, false, false);
 						Actor_Put_In_Set(kActorRunciter, kSceneKP06);
 					}
+					if (Actor_Query_In_Set(kActorEarlyQ, kSetKP07)) {
+						Loop_Actor_Walk_To_XYZ(kActorEarlyQ, -12.0f, -41.58f, 72.0f, 0, true, false, false);
+						Actor_Put_In_Set(kActorEarlyQ, kSceneKP06);	
+					}
 					if (Actor_Query_In_Set(kActorCrazylegs, kSetKP07)) {
 						Loop_Actor_Walk_To_XYZ(kActorCrazylegs, -12.0f, -41.58f, 72.0f, 0, true, false, false);
 						Actor_Put_In_Set(kActorCrazylegs, kSceneKP06);	
@@ -256,6 +260,12 @@ void AIScriptClovis::Retired(int byActorId) {
 							Sound_Play(kSfxSMCAL3, 100, 0, 0, 50);
 						}
 					}
+					if (Game_Flag_Query(kFlagEarlyQIsReplicant)) {
+					if (!Game_Flag_Query(kFlagEarlyQDead)) {
+						Delay(500);
+						Sound_Play(kSfxSMCAL3, 100, 0, 0, 50);
+					}
+				}
 					if (Game_Flag_Query(kFlagCrazylegsIsReplicant)) {
 						if (!Game_Flag_Query(kFlagCrazylegsDead)) {
 							Delay(500);
@@ -501,7 +511,9 @@ bool AIScriptClovis::GoalChanged(int currentGoalNumber, int newGoalNumber) {
 		return true;
 
 	case kGoalClovisStartChapter5:
-		Actor_Set_Goal_Number(kActorClovis, kGoalClovisDecide);
+		if (!_vm->_cutContent) {
+			Actor_Set_Goal_Number(kActorClovis, kGoalClovisDecide);
+		}
 		return true;
 
 	case kGoalClovisDecide:
@@ -718,8 +730,7 @@ bool AIScriptClovis::GoalChanged(int currentGoalNumber, int newGoalNumber) {
 	case kGoalClovisKP07FlyAway:
 		if (_vm->_cutContent) {
 			Loop_Actor_Walk_To_Actor(kActorMcCoy, kActorClovis, 24, true, false);
-			Actor_Face_Actor(kActorMcCoy, kActorClovis, true);
-			Actor_Face_Actor(kActorClovis, kActorMcCoy, true);
+			Actor_Face_Actor(kActorMcCoy, kActorClovis, true);	
 		}
 		Actor_Says(kActorMcCoy, 8501, kAnimationModeTalk);
 #if BLADERUNNER_ORIGINAL_BUGS
@@ -737,18 +748,16 @@ bool AIScriptClovis::GoalChanged(int currentGoalNumber, int newGoalNumber) {
 			|| Actor_Clue_Query(kActorMcCoy, kClueDNAMoraji) 
 			|| Actor_Clue_Query(kActorMcCoy, kClueDNALutherLance)
 			|| Actor_Clue_Query(kActorMcCoy, kClueDNAMarcus)) {
-				if (Player_Query_Agenda() == kPlayerAgendaSurly 
-				|| Player_Query_Agenda() == kPlayerAgendaErratic) {
+				if (Actor_Query_Friendliness_To_Other(kActorClovis, kActorMcCoy) < 51) {
 					Actor_Says(kActorMcCoy, 8503, kAnimationModeTalk); //00-8503.AUD	I think I'll hold on to it for the moment.
-					if (Actor_Query_Friendliness_To_Other(kActorClovis, kActorMcCoy) > 50
-					&& !Actor_Clue_Query(kActorClovis, kClueMcCoyRetiredLucy) 
-					&& !Actor_Clue_Query(kActorClovis, kClueMcCoyRetiredDektora))  {
+					if (!Actor_Clue_Query(kActorClovis, kClueMcCoyRetiredLucy) 
+					&& !Actor_Clue_Query(kActorClovis, kClueMcCoyRetiredDektora)) {
 						Actor_Says(kActorClovis, 1280, kAnimationModeTalk); //05-1280.AUD	You are here. That’s enough for now. Perhaps trust will come later.
 					} else {
 						Delay(1500);
 					}
 				} else {
-					Item_Pickup_Spin_Effect(kModelAnimationDNADataDisc, 229, 215);
+					Item_Pickup_Spin_Effect_From_Actor(kModelAnimationDNADataDisc, kActorClovis, 0, 0);
 					Actor_Change_Animation_Mode(kActorMcCoy, 23);
 					Actor_Change_Animation_Mode(kActorClovis, 23);
 					Delay(2000);
@@ -780,19 +789,26 @@ bool AIScriptClovis::GoalChanged(int currentGoalNumber, int newGoalNumber) {
 			&& Actor_Clue_Query(kActorMcCoy, kClueDNAMoraji) 
 			&& Actor_Clue_Query(kActorMcCoy, kClueDNALutherLance)
 			&& Actor_Clue_Query(kActorMcCoy, kClueDNAMarcus)) {
-				Actor_Says(kActorClovis, 1300, kAnimationModeTalk); //05-1300.AUD	Yes. Of course, I could be hit by lightning tomorrow but with the information 
+				if (Actor_Query_Friendliness_To_Other(kActorClovis, kActorMcCoy) > 50
+				&& !Actor_Clue_Query(kActorClovis, kClueMcCoyRetiredLucy) 
+				&& !Actor_Clue_Query(kActorClovis, kClueMcCoyRetiredDektora)) {
+					Actor_Says(kActorClovis, 1300, kAnimationModeTalk); //05-1300.AUD	Yes. Of course, I could be hit by lightning tomorrow but with the information 
+				} else {
+					Delay(2000);
+					Actor_Says(kActorMcCoy, 1885, kAnimationModeTalk); //00-1885.AUD	I’ll take that as a yes.
+					Delay(1000);
+				}
 			} else {
 				Delay(2000);
 				Actor_Says(kActorMcCoy, 1885, kAnimationModeTalk); //00-1885.AUD	I’ll take that as a yes.
 				Delay(1000);
 			}
 		} else {
-			Actor_Says(kActorMcCoy, 8505, kAnimationModeTalk); //
 			Actor_Says(kActorClovis, 1300, kAnimationModeTalk); //
 		}
 #if BLADERUNNER_ORIGINAL_BUGS
 #else
-		Actor_Face_Heading(kActorClovis, 780, true);
+	Actor_Face_Heading(kActorClovis, 780, true);
 #endif // BLADERUNNER_ORIGINAL_BUGS
 		// Made it so Clovis will only call Ray a friend if he didn't retire Dektora or Lucy and has high friendliness with Clovis.
 		if (_vm->_cutContent) {

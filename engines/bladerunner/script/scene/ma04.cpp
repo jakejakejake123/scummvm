@@ -462,25 +462,35 @@ void SceneScriptMA04::phoneCallWithDektora() {
 		}
 	} else {
 		Actor_Says(kActorDektora, 230, 3); //03-0230.AUD	Look, I think I got Clovis and Sadik to let you alone.
-		Actor_Says(kActorDektora, 240, 3);
-		Actor_Says(kActorMcCoy, 2465, 0); 
-	} 
-	Actor_Says(kActorDektora, 250, 3); //03-0250.AUD	What’s the matter?
-	Actor_Says_With_Pause(kActorMcCoy, 2470, 1.5f, 17);
-	Actor_Says(kActorDektora, 260, 3);
-	if (_vm->_cutContent) {
-		if (Player_Query_Agenda() == kPlayerAgendaSurly 
-		|| Player_Query_Agenda() == kPlayerAgendaErratic) {
-			Actor_Says(kActorMcCoy, 2475, 15); //00-2475.AUD	Not it. Her! Maggie.
+		Actor_Says(kActorDektora, 240, 3); //03-0240.AUD	I told them you weren’t hunting them anymore.
+		if (_vm->_cutContent) {
+			if (Actor_Clue_Query(kActorMcCoy, kClueCrystalsCigarette)) { 
+				Actor_Says(kActorMcCoy, 2465, 0); 
+				Actor_Says(kActorDektora, 250, 3); //03-0250.AUD	What’s the matter?
+				Actor_Says_With_Pause(kActorMcCoy, 2470, 1.5f, 17);
+				if (!Game_Flag_Query(kFlagDektoraIsReplicant)) {
+					Actor_Says(kActorDektora, 260, 3);
+					if (Player_Query_Agenda() == kPlayerAgendaSurly 
+					|| Player_Query_Agenda() == kPlayerAgendaErratic) {
+						Actor_Says(kActorMcCoy, 2475, 15); //00-2475.AUD	Not it. Her! Maggie.
+					} else {
+						Actor_Says(kActorMcCoy, 2460, 15); //00-2460.AUD	Yeah.
+					}
+				} 
+				Actor_Says(kActorDektora, 270, 3); //03-0270.AUD	Clovis didn’t do it. I’m sure of that.
+				Actor_Says(kActorMcCoy, 2480, 0); //00-2480.AUD	No kidding.
+			}
 		} else {
-			Actor_Says(kActorMcCoy, 2460, 15); //00-2460.AUD	Yeah.
+			Actor_Says(kActorMcCoy, 2465, 0);
+			Actor_Says(kActorDektora, 250, 3); //03-0250.AUD	What’s the matter?
+			Actor_Says(kActorDektora, 260, 3);
+			Actor_Says_With_Pause(kActorMcCoy, 2470, 1.5f, 17);
+			Actor_Says(kActorMcCoy, 2475, 15); //00-2475.AUD	Not it. Her! Maggie.
+			Actor_Says(kActorDektora, 270, 3); //03-0270.AUD	Clovis didn’t do it. I’m sure of that.
+			Actor_Says(kActorMcCoy, 2480, 0); //00-2480.AUD	No kidding.
 		}
-	} else {
-		Actor_Says(kActorMcCoy, 2475, 15); //00-2475.AUD	Not it. Her! Maggie.
 	}
-	Actor_Says(kActorDektora, 270, 3); //03-0270.AUD	Clovis didn’t do it. I’m sure of that.
-	Actor_Says(kActorMcCoy, 2480, 0); //00-2480.AUD	No kidding.
-	Actor_Says(kActorDektora, 280, 3);
+	Actor_Says(kActorDektora, 280, 3); //03-0280.AUD	I also told him about us, Ray. He took it very well.
 	Actor_Says(kActorDektora, 290, 3); //03-0290.AUD	He and I are finished for good this time.
 	if (_vm->_cutContent) {
 		if (Player_Query_Agenda() == kPlayerAgendaSurly 
@@ -551,13 +561,21 @@ void SceneScriptMA04::phoneCallWithDektora() {
 		Actor_Says(kActorMcCoy, 2515, 12); //00-2515.AUD	We’d need a Spinner to be able to get anywhere.
 		Actor_Says(kActorDektora, 390, 3); //03-0390.AUD	He’s got a couple for sale.
 		Actor_Says(kActorMcCoy, 2520, 13);  //00-2520.AUD	It’s real risky. And illegal.
-		Actor_Says(kActorDektora, 400, 3); //Well, it’s better than sitting out there in the Kipple waiting to die.
-		Actor_Says(kActorDektora, 410, 3); //03-0410.AUD	Watching everybody else die. If you won’t do it, I’ll go get the car myself.
-		Actor_Says(kActorMcCoy, 2525, 15);  //00-2525.AUD	I didn’t say I wasn’t gonna do it.
-		Actor_Says(kActorDektora, 420, 3); //03-0420.AUD	Then meet me there. I’ll be there within the hour.
 		if (_vm->_cutContent) {
-			Actor_Says(kActorMcCoy, 3780, 13); //00-3780.AUD	Okay, uh--
+			if (Game_Flag_Query(kFlagDektoraIsReplicant)) {
+				Actor_Says(kActorDektora, 400, 3); //Well, it’s better than sitting out there in the Kipple waiting to die.
+				Actor_Says(kActorDektora, 410, 3); //03-0410.AUD	Watching everybody else die. If you won’t do it, I’ll go get the car myself.
+				Actor_Says(kActorMcCoy, 2525, 15);  //00-2525.AUD	I didn’t say I wasn’t gonna do it.
+			} else {
+				Delay(2000);
+				Actor_Says(kActorMcCoy, 3780, 13); //00-3780.AUD	Okay, uh--
+			}
+		} else {
+			Actor_Says(kActorDektora, 400, 3); //Well, it’s better than sitting out there in the Kipple waiting to die.
+			Actor_Says(kActorDektora, 410, 3); //03-0410.AUD	Watching everybody else die. If you won’t do it, I’ll go get the car myself.
+			Actor_Says(kActorMcCoy, 2525, 15);  //00-2525.AUD	I didn’t say I wasn’t gonna do it.
 		}
+		Actor_Says(kActorDektora, 420, 3); //03-0420.AUD	Then meet me there. I’ll be there within the hour.
 		Sound_Play(kSfxSPNBEEP9, 100, 0, 0, 50);
 		if (_vm->_cutContent) {
 			Game_Flag_Set(kFlagCarEnding);
@@ -568,8 +586,14 @@ void SceneScriptMA04::phoneCallWithDektora() {
 		}
 	} else { 
 		Actor_Says_With_Pause(kActorMcCoy, 2505, 0.5f, 19);
-		Actor_Says(kActorDektora, 430, 3);
-		Actor_Says(kActorDektora, 440, 3);
+		Actor_Says(kActorDektora, 430, 3); //03-0430.AUD	He’s been struggling out in the Kipple. Trying to get the moonbus fixed.
+		if (_vm->_cutContent) {
+			if (Game_Flag_Query(kFlagDektoraIsReplicant)) {
+				Actor_Says(kActorDektora, 440, 3); //03-0440.AUD	If you could help repair it, maybe we can all leave together.
+			}
+		} else {
+			Actor_Says(kActorDektora, 440, 3); //03-0440.AUD	If you could help repair it, maybe we can all leave together.
+		}
 		Actor_Says(kActorMcCoy, 2530, 0); //00-2530.AUD	How far out are they?
 		Actor_Says(kActorDektora, 450, 3);
 		Actor_Says(kActorMcCoy, 2535, 12); //00-2535.AUD	There’s bound to be tons of radioactive waste between here and there.
@@ -579,7 +603,13 @@ void SceneScriptMA04::phoneCallWithDektora() {
 		if (_vm->_cutContent) {
 			Actor_Says(kActorMcCoy, 3780, 13); //00-3780.AUD	Okay, uh--
 		}
-		Actor_Says(kActorDektora, 490, 3);
+		if (_vm->_cutContent) {
+			if (Game_Flag_Query(kFlagDektoraIsReplicant)) {
+				Actor_Says(kActorDektora, 490, 3); //03-0490.AUD	And if you can’t come, adieu my love.
+			}
+		} else {
+			Actor_Says(kActorDektora, 490, 3); //03-0490.AUD	And if you can’t come, adieu my love.
+		}
 		Sound_Play(kSfxSPNBEEP9, 100, 0, 0, 50);
 		if (_vm->_cutContent) {
 			if (Player_Query_Agenda() == kPlayerAgendaSurly 
@@ -590,7 +620,22 @@ void SceneScriptMA04::phoneCallWithDektora() {
 			Actor_Says(kActorMcCoy, 2540, 15); //00-2540.AUD	Dektora, wait! Damn it.
 		}
 		if (_vm->_cutContent) {
-			Game_Flag_Set(kFlagMcCoyIsHelpingReplicants);
+			if (!Actor_Clue_Query(kActorClovis, kClueMcCoyRetiredLucy) 
+			&& !Actor_Clue_Query(kActorClovis, kClueMcCoyRetiredDektora)
+			&& Actor_Query_Friendliness_To_Other(kActorClovis, kActorMcCoy) > 50) {
+				Game_Flag_Set(kFlagMcCoyIsHelpingReplicants);
+				Actor_Set_Goal_Number(kActorClovis, kGoalClovisKP07Wait);
+				Actor_Set_Goal_Number(kActorSadik, 414);
+			} else {
+				if (!Actor_Clue_Query(kActorMcCoy, kClueCrystalsCigarette)) {
+					Game_Flag_Reset(kFlagMcCoyIsHelpingReplicants);
+					Actor_Set_Goal_Number(kActorSadik, 411);
+				} else {
+					Game_Flag_Set(kFlagMcCoyIsHelpingReplicants);
+					Actor_Set_Goal_Number(kActorClovis, kGoalClovisKP07Wait);
+					Actor_Set_Goal_Number(kActorSadik, 414);
+				}
+			}
 			Actor_Clue_Acquire(kActorMcCoy, kCluePhoneCallDektora2, true, kActorDektora);	
 		} else {
 			Actor_Clue_Acquire(kActorMcCoy, kCluePhoneCallDektora2, true, -1);
@@ -628,7 +673,22 @@ void SceneScriptMA04::phoneCallWithLucy() {
 			Actor_Says_With_Pause(kActorMcCoy, 2570, 0.0f, 13); // Lucy, there's a good chance--
 			Sound_Play(kSfxSPNBEEP9, 100, 0, 0, 50); // (Lucy hangs up)
 			Actor_Says(kActorMcCoy, 2575, 15); // Wait, Lucy!
-			Game_Flag_Set(kFlagMcCoyIsHelpingReplicants);
+			if (!Actor_Clue_Query(kActorClovis, kClueMcCoyRetiredLucy) 
+			&& !Actor_Clue_Query(kActorClovis, kClueMcCoyRetiredDektora)
+			&& Actor_Query_Friendliness_To_Other(kActorClovis, kActorMcCoy) > 50) {
+				Game_Flag_Set(kFlagMcCoyIsHelpingReplicants);
+				Actor_Set_Goal_Number(kActorClovis, kGoalClovisKP07Wait);
+				Actor_Set_Goal_Number(kActorSadik, 414);
+			} else {
+				if (!Actor_Clue_Query(kActorMcCoy, kClueCrystalsCigarette)) {
+					Game_Flag_Reset(kFlagMcCoyIsHelpingReplicants);
+					Actor_Set_Goal_Number(kActorSadik, 411);
+				} else {
+					Game_Flag_Set(kFlagMcCoyIsHelpingReplicants);
+					Actor_Set_Goal_Number(kActorClovis, kGoalClovisKP07Wait);
+					Actor_Set_Goal_Number(kActorSadik, 414);
+				}
+			}
 			Actor_Clue_Acquire(kActorMcCoy, kCluePhoneCallLucy2, true, kActorLucy);
 		} else {
 			Actor_Says(kActorLucy, 590, 3); //06-0590.AUD	We could buy a car. From that place next to the arcade.
@@ -703,9 +763,10 @@ void SceneScriptMA04::phoneCallWithLucy() {
 void SceneScriptMA04::phoneCallWithSteele() {
 	Actor_Says(kActorSteele, 680, 3);
 	if (_vm->_cutContent) {
-		if (Actor_Query_Friendliness_To_Other(kActorSteele, kActorMcCoy) < 51) {
+		if (Actor_Query_Friendliness_To_Other(kActorSteele, kActorMcCoy) < 58) {
 			Actor_Says(kActorMcCoy, 2630, 17); //00-2630.AUD	My dog is still missing.
 			Actor_Says(kActorSteele, 690, 3);
+			Actor_Says(kActorMcCoy, 2635, 18);
 		} else {
 			Actor_Says(kActorMcCoy, 8514, 14); //00-8514.AUD	Got anything new to tell me?
 		}
@@ -721,7 +782,7 @@ void SceneScriptMA04::phoneCallWithSteele() {
 	if (_vm->_cutContent) {
 		if (!Game_Flag_Query(kFlagMcCoyIsHelpingReplicants)) {
 			Actor_Says(kActorMcCoy, 2645, 13); //00-2645.AUD	Excellent. Where do we go?
-			if (Actor_Query_Friendliness_To_Other(kActorSteele, kActorMcCoy) < 51) {
+			if (Actor_Query_Friendliness_To_Other(kActorSteele, kActorMcCoy) < 58) {
 				Actor_Says(kActorSteele, 740, 3); //01-0740.AUD	We? How about moi? Here’s a hint, Slim.
 			}
 		}
@@ -735,9 +796,9 @@ void SceneScriptMA04::phoneCallWithSteele() {
 	// Restored some of the dialogue for the phone conversation with Crystal.
 	if (_vm->_cutContent) {
 		Actor_Says(kActorSteele, 770, 3); //01-0770.AUD	That son of a bitch, Clovis, was climbing in and out of a manhole right next to the police station and nobody ever noticed.
+		Actor_Says(kActorMcCoy, 2655, 16); //00-2655.AUD	Figures. With incompetents like Guzza at the helm.
 		if (Game_Flag_Query(kFlagGuzzaSaved)) {
-			if (Actor_Clue_Query(kActorMcCoy, kClueFolder)) {
-				Actor_Says(kActorMcCoy, 2655, 16); //00-2655.AUD	Figures. With incompetents like Guzza at the helm.
+			if (Actor_Clue_Query(kActorMcCoy, kClueFolder)) {	
 				// Made it so Crystal only says Guzza is going to be fed to the barracudas if McCoy saved Guzza and arrested him.
 				Actor_Says(kActorSteele, 790, 3); //01-0790.AUD	I think we can forget about Guzza. That guy’s gonna be fed to the barracudas.
 				if (Player_Query_Agenda() == kPlayerAgendaSurly 
@@ -750,7 +811,7 @@ void SceneScriptMA04::phoneCallWithSteele() {
 	} 
 	Actor_Says(kActorMcCoy, 2665, 13); //00-2665.AUD	We’re gonna air out the Reps together or what?
 	if (_vm->_cutContent) {
-		if (Actor_Query_Friendliness_To_Other(kActorSteele, kActorMcCoy) > 50) {
+		if (Actor_Query_Friendliness_To_Other(kActorSteele, kActorMcCoy) > 57) {
 			Actor_Says(kActorSteele, 810, 3); //01-0810.AUD	Mm. I’m liking your style more and more.
 			Actor_Says(kActorMcCoy, 1885, 13); //00-1885.AUD	I’ll take that as a yes.
 			Delay(1000);
@@ -765,7 +826,10 @@ void SceneScriptMA04::phoneCallWithSteele() {
 	Sound_Play(kSfxSPNBEEP9, 100, 0, 0, 50);
 	if (_vm->_cutContent) {
 		if (!Game_Flag_Query(kFlagMcCoyIsHelpingReplicants)) {
-			Actor_Set_Goal_Number(kActorMaggie, kGoalMaggieKP05Wait);
+			Actor_Set_Goal_Number(kActorSadik, 411);
+		} else {
+			Actor_Set_Goal_Number(kActorSadik, 414);
+			Actor_Set_Goal_Number(kActorClovis, kGoalClovisKP07Wait);
 		}
 		Actor_Clue_Acquire(kActorMcCoy, kCluePhoneCallCrystal, true, kActorSteele);
 	} else {
@@ -825,7 +889,7 @@ void SceneScriptMA04::phoneCallWithClovis() {
 		Actor_Says_With_Pause(kActorClovis, 420, 1.5f, 3); //05-0420.AUD	Is something the matter, brother?
 	}
 	if (_vm->_cutContent) {
-		if (Actor_Query_Goal_Number(kActorMaggie) == kGoalMaggieDead) {
+		if (Actor_Clue_Query(kActorMcCoy, kClueCrystalsCigarette)) { 
 			Actor_Says(kActorMcCoy, 2605, 17); //00-2605.AUD	My dog’s been murdered.
 			Actor_Says(kActorClovis, 430, 3); //05-0430.AUD	And does that not wet your thirst for vengeance?
 			Actor_Says(kActorClovis, 440, 3); //05-0440.AUD	Come back home to us. We’ll demand justice and receive it!
@@ -866,27 +930,31 @@ void SceneScriptMA04::phoneCallWithClovis() {
 		Actor_Says(kActorClovis, 510, 3); //05-0510.AUD	In the sewers near the police station is a tunnel that leads out to the Kipple.
 		Actor_Says(kActorClovis, 520, 3); //05-0520.AUD	Do you know it?
 		Actor_Says(kActorMcCoy, 2625, 14); //00-2625.AUD	I can find it.
-	}
-	Actor_Says(kActorClovis, 530, 3); //05-0530.AUD	It’s a passage to freedom, McCoy. To your destiny.
-	Actor_Says(kActorClovis, 540, 3); //05-0540.AUD	An underground railroad to carry you from bondage. We’ll be waiting.
-	Sound_Play(kSfxSPNBEEP9, 100, 0, 0, 50);
-	if (_vm->_cutContent) {
 		Actor_Clue_Acquire(kActorMcCoy, kCluePhoneCallClovis, true, kActorClovis);
 		if (!Actor_Clue_Query(kActorClovis, kClueMcCoyRetiredLucy) 
 		&& !Actor_Clue_Query(kActorClovis, kClueMcCoyRetiredDektora)
 		&& Actor_Query_Friendliness_To_Other(kActorClovis, kActorMcCoy) > 50) {
 			Game_Flag_Set(kFlagMcCoyIsHelpingReplicants);
+			Actor_Set_Goal_Number(kActorClovis, kGoalClovisKP07Wait);
+			Actor_Set_Goal_Number(kActorSadik, 414);
 		} else {
-			if (Actor_Query_Goal_Number(kActorMaggie) < kGoalMaggieDead) {
+			if (!Actor_Clue_Query(kActorMcCoy, kClueCrystalsCigarette)) {
 				Game_Flag_Reset(kFlagMcCoyIsHelpingReplicants);
-				Actor_Set_Goal_Number(kActorMaggie, kGoalMaggieKP05Wait);
+				Actor_Set_Goal_Number(kActorSadik, 411);
 			} else {
 				Game_Flag_Set(kFlagMcCoyIsHelpingReplicants);
+				Actor_Set_Goal_Number(kActorClovis, kGoalClovisKP07Wait);
+				Actor_Set_Goal_Number(kActorSadik, 414);
 			}
 		}
-	} else {
-		Actor_Clue_Acquire(kActorMcCoy, kCluePhoneCallClovis, true, -1);
 	}
+	if (!Actor_Clue_Query(kActorClovis, kClueMcCoyRetiredLucy) 
+	&& !Actor_Clue_Query(kActorClovis, kClueMcCoyRetiredDektora) 
+	&& Actor_Query_Friendliness_To_Other(kActorClovis, kActorMcCoy) > 50) {
+		Actor_Says(kActorClovis, 530, 3); //05-0530.AUD	It’s a passage to freedom, McCoy. To your destiny.
+		Actor_Says(kActorClovis, 540, 3); //05-0540.AUD	An underground railroad to carry you from bondage. We’ll be waiting.
+	}	
+	Sound_Play(kSfxSPNBEEP9, 100, 0, 0, 50);
 }
 void SceneScriptMA04::turnOnTV() {
 	Overlay_Play("MA04OVR2", 0, true, false, 0);

@@ -459,7 +459,7 @@ void SceneScriptNR05::talkToEarlyQ() {
 				if (Player_Query_Agenda() == kPlayerAgendaSurly
 				|| (Player_Query_Agenda() == kPlayerAgendaErratic)) {
 					Actor_Says(kActorMcCoy, 8519, 14);//00-8519.AUD	What do you say we dish each other the straight goods.
-					Actor_Says(kActorEarlyQ, 750, 12); //18-0750.AUD	Look, General. No reason to get your panties in a bind. If I’d known you were gonna get so testy, I would have tossed you the straight dope to begin with.
+					Actor_Says(kActorEarlyQ, 750, 18); //18-0750.AUD	Look, General. No reason to get your panties in a bind. If I’d known you were gonna get so testy, I would have tossed you the straight dope to begin with.
 					Actor_Says(kActorMcCoy, 3415, kAnimationModeTalk); //00-3415.AUD	Let’s hear what you got.
 					Actor_Says(kActorEarlyQ, 440, 15); //18-0440.AUD	Eh, those pieces ain’t hot. I got the papers to prove it. I picked them up at a legitimate auction. Cost me nearly a pound of flesh too.
 					Actor_Says(kActorMcCoy, 3535, 13);

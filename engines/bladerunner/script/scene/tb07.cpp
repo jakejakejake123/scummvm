@@ -89,7 +89,8 @@ bool SceneScriptTB07::ClickedOnItem(int itemId, bool a2) {
 			if (_vm->_cutContent) {
 				Delay(1500);
 				Item_Pickup_Spin_Effect(kModelAnimationPhoto, 331, 296);
-				Delay(1500);		
+				Delay(1000);
+				Actor_Voice_Over(4080, kActorVoiceOver);
 				Actor_Clue_Acquire(kActorMcCoy, kClueInceptShotRoy, true, kActorTyrell);
 			}
 		}

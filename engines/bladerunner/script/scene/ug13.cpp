@@ -672,7 +672,11 @@ void SceneScriptUG13::dialogueWithHomeless1() {
 		}
 		Actor_Clue_Acquire(kActorTransient, kClueFlaskOfAbsinthe, false, kActorMcCoy);
 		Actor_Says_With_Pause(kActorMcCoy, 5595, 1.0f, 23); // You still thirsty, pal?
-		Item_Pickup_Spin_Effect(kModelAnimationFlaskOfAbsinthe, 193, 325);
+		if (_vm->_cutContent) {
+			Item_Pickup_Spin_Effect_From_Actor(kModelAnimationFlaskOfAbsinthe, kActorTransient, 0, 0);
+		} else {
+			Item_Pickup_Spin_Effect(kModelAnimationFlaskOfAbsinthe, 193, 325);
+		}
 		Actor_Says(kActorTransient, 290, 33); // Mucho obligado, senor.
 		if (_vm->_cutContent) {
 			if (Player_Query_Agenda() == kPlayerAgendaPolite) {
@@ -706,9 +710,10 @@ void SceneScriptUG13::dialogueWithHomeless2() {
 	Actor_Set_Friendliness_To_Other(kActorTransient, kActorMcCoy, 40);
 	Dialogue_Menu_Clear_List();
 	if (_vm->_cutContent) {
-		DM_Add_To_List_Never_Repeat_Once_Selected(1370, 1, 8, 1); // DIRECTIONS
-		if (!Actor_Clue_Query(kActorMcCoy, kClueFolder)) {
-			DM_Add_To_List_Never_Repeat_Once_Selected(1380, 8, 1, 1); // FAT MAN
+		DM_Add_To_List_Never_Repeat_Once_Selected(1370, 6, 1, 1); // DIRECTIONS
+		if (!Actor_Clue_Query(kActorMcCoy, kClueFolder) 
+		&& !Actor_Clue_Query(kActorMcCoy, kClueGuzzaFramedMcCoy)) {
+			DM_Add_To_List_Never_Repeat_Once_Selected(1380, 9, 8, 7); // FAT MAN
 		}
 	} else {
 		DM_Add_To_List_Never_Repeat_Once_Selected(1370, 1, 1, 8); // DIRECTIONS
@@ -716,7 +721,7 @@ void SceneScriptUG13::dialogueWithHomeless2() {
 	}
 	if (_vm->_cutContent) {
 		if (!Game_Flag_Query(kFlagMcCoyIsHelpingReplicants)) {
-			DM_Add_To_List_Never_Repeat_Once_Selected(1390, 1, 1, 8); // REPLICANTS
+			DM_Add_To_List_Never_Repeat_Once_Selected(1390, 1, 2, 6); // REPLICANTS
 		}
 	} else {
 		DM_Add_To_List_Never_Repeat_Once_Selected(1390, 8, 1, 1); // REPLICANTS

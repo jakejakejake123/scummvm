@@ -166,7 +166,11 @@ bool SceneScriptUG18::ClickedOnItem(int itemId, bool combatMode) {
 		if (combatMode) {
 			Item_Remove_From_World(kItemBriefcase);
 		} else if (!Loop_Actor_Walk_To_Item(kActorMcCoy, kItemBriefcase, 12, true, false)) {
-			Item_Pickup_Spin_Effect(kModelAnimationBriefcase, 368, 243);
+			if (_vm->_cutContent) {
+				Item_Pickup_Spin_Effect(kModelAnimationBriefcase, 430, 239);
+			} else {
+				Item_Pickup_Spin_Effect(kModelAnimationBriefcase, 368, 243);
+			}
 			Item_Remove_From_World(itemId);
 			Game_Flag_Set(kFlagUG18BriefcaseTaken);
 			Actor_Clue_Acquire(kActorMcCoy, kClueBriefcase, true, kActorGuzza);
@@ -269,51 +273,13 @@ void SceneScriptUG18::ActorChangedGoal(int actorId, int newGoal, int oldGoal, bo
 				Actor_Modify_Friendliness_To_Other(kActorSadik, kActorMcCoy, 10);
 			} else {
 				Actor_Modify_Friendliness_To_Other(kActorClovis, kActorMcCoy, 2);
+				Actor_Set_Targetable(kActorClovis, false);
 			}
 			Player_Loses_Control();
 			Actor_Face_Actor(kActorGuzza, kActorMcCoy, true);
 			ADQ_Add(kActorGuzza, 1220, 58);
 			Scene_Exits_Enable();
 			Actor_Set_Goal_Number(kActorGuzza, kGoalGuzzaUG18ShotByMcCoy);
-			if (_vm->_cutContent) {
-				if (Actor_Query_Friendliness_To_Other(kActorClovis, kActorMcCoy) > 50 
-				&& !Actor_Clue_Query(kActorClovis, kClueMcCoyRetiredDektora)
-				&& !Actor_Clue_Query(kActorClovis, kClueMcCoyRetiredLucy)) {
-					Delay(2000);
-					Actor_Says(kActorSadik, 360, 14); // The Hunter, he do us a favor...
-					Actor_Says(kActorSadik, 380, 14); //08-0380.AUD	You better than I thought, mon. 
-					Actor_Modify_Friendliness_To_Other(kActorSadik, kActorMcCoy, 2);
-					Actor_Says(kActorClovis, 660, 13); // Brother, you killed a human...
-					if (!Game_Flag_Query(kFlagMcCoyIsHelpingReplicants)) {
-						Actor_Says(kActorMcCoy, 6000, 13); //00-6000.AUD	Stop calling me that!
-					} else {
-						Actor_Says(kActorMcCoy, 5990, 13); //00-5990.AUD	Does it make any difference now?
-					}
-					Actor_Says(kActorClovis, 670, 13); //05-0670.AUD	First things first. You must decide where you belong, brother.
-					Actor_Says_With_Pause(kActorClovis, 680, 2.0f, 13); //05-0680.AUD	You’ve wasted much precious time already.
-					Actor_Says(kActorClovis, 690, 13); //05-0690.AUD	No more choices, Ray McCoy.
-					Actor_Says(kActorClovis, 700, 13); 
-					Actor_Set_Targetable(kActorClovis, false);
-					Actor_Set_Goal_Number(kActorSadik, kGoalSadikUG18Leave);
-					Actor_Set_Goal_Number(kActorClovis, kGoalClovisUG18Leave);
-					Actor_Modify_Friendliness_To_Other(kActorSteele, kActorMcCoy, -2);
-					Actor_Clue_Acquire(kActorMcCoy, kClueMcCoyShotGuzza, true, kActorClovis);
-					Player_Loses_Control();
-					Loop_Actor_Walk_To_XYZ(kActorMcCoy, -684.71f, 0.0f, 171.59f, 0, false, true, false);
-					Player_Gains_Control();
-					Ambient_Sounds_Remove_All_Non_Looping_Sounds(true);
-					Ambient_Sounds_Remove_All_Looping_Sounds(1u);
-					Game_Flag_Set(kFlagUG18toUG13);
-					Set_Enter(kSetUG13, kSceneUG13);
-				} else {
-					Actor_Set_Targetable(kActorClovis, false);
-					ADQ_Add(kActorClovis, 650, 14); // So, what should we do with this detective.
-					ADQ_Add(kActorSadik, 370, 14);
-					ADQ_Add(kActorClovis, 1320, 14); // Perhaps you're right
-					Actor_Set_Goal_Number(kActorSadik, kGoalSadikUG18PrepareShootMcCoy);
-					Actor_Set_Goal_Number(kActorClovis, kGoalClovisUG18Leave);
-				}
-			}
 			break;
 
 		case kGoalGuzzaUG18MissedByMcCoy:
@@ -411,7 +377,9 @@ void SceneScriptUG18::ActorChangedGoal(int actorId, int newGoal, int oldGoal, bo
 		Actor_Face_Actor(kActorMcCoy, kActorGuzza, true);
 		Actor_Change_Animation_Mode(kActorMcCoy, 29);
 		Delay(1000);
-		ADQ_Add(kActorMcCoy, 3935, 13); //00-3935.AUD	Thanks.
+		if (Player_Query_Agenda() == kPlayerAgendaPolite) {
+			ADQ_Add(kActorMcCoy, 3935, 13); //00-3935.AUD	Thanks.
+		}
 		Delay(1000);
 		Player_Set_Combat_Mode(false);
 		Loop_Actor_Walk_To_XYZ(kActorGuzza, -684.71f, 0.0f, 171.59f, 0, false, true, false);
@@ -443,7 +411,6 @@ void SceneScriptUG18::ActorChangedGoal(int actorId, int newGoal, int oldGoal, bo
 				Actor_Says(kActorMcCoy, 5995, 13);
 				Actor_Says(kActorClovis, 670, 13);
 				Actor_Says(kActorMcCoy, 6000, 13); //00-6000.AUD	Stop calling me that!
-				Actor_Says(kActorMcCoy, 6000, 13);
 				Actor_Says_With_Pause(kActorClovis, 680, 2.0f, 13);
 				Actor_Says(kActorClovis, 690, 13);
 				Actor_Says(kActorClovis, 700, 13);
@@ -613,19 +580,51 @@ void SceneScriptUG18::DialogueQueueFlushed(int a1) {
 		Player_Gains_Control();
 		ADQ_Add_Pause(2000);
 		if (_vm->_cutContent) {
-			if (Actor_Query_Friendliness_To_Other(kActorClovis, kActorMcCoy) < 51 
-			|| Actor_Clue_Query(kActorClovis, kClueMcCoyRetiredDektora)
-			|| Actor_Clue_Query(kActorClovis, kClueMcCoyRetiredLucy)) {
-				ADQ_Add(kActorClovis, 650, 14); // So, what should we do with this detective.
-				ADQ_Add(kActorSadik, 370, 14);
-				ADQ_Add(kActorClovis, 1320, 14); // Perhaps you're right
+			if (Actor_Clue_Query(kActorClovis, kClueMcCoyRetiredLucy) 
+			|| Actor_Clue_Query(kActorClovis, kClueMcCoyRetiredDektora) 
+			|| Actor_Query_Friendliness_To_Other(kActorClovis, kActorMcCoy) < 51) { 
+				Actor_Set_Targetable(kActorClovis, false);
+				Delay(2000);
+				Actor_Says(kActorClovis, 650, 14);
+				Actor_Says(kActorSadik, 370, 14);
+				Actor_Says(kActorClovis, 1320, 14);
+				Actor_Clue_Acquire(kActorMcCoy, kClueClovisOrdersMcCoysDeath, true, kActorClovis);
+				Player_Loses_Control();
+				Loop_Actor_Walk_To_XYZ(kActorMcCoy, -684.71f, 0.0f, 171.59f, 0, false, true, false);
+				Player_Gains_Control();
+				Ambient_Sounds_Remove_All_Non_Looping_Sounds(true);
+				Ambient_Sounds_Remove_All_Looping_Sounds(1u);
+				Game_Flag_Set(kFlagUG18toUG13);
+				Set_Enter(kSetUG13, kSceneUG13);
 			} else {
-				ADQ_Add(kActorClovis, 550, 14); //05-0550.AUD	You’re making me very unhappy, old friend.
+				Actor_Says(kActorSadik, 360, 13); //08-0360.AUD	The Hunter? He do us a favor, mon. He bagged us a traitor.
+				Actor_Says(kActorSadik, 380, 13); //08-0380.AUD	You better than I thought, mon.
+				Actor_Says(kActorClovis, 660, 13); // Brother, you killed a human...
+				Actor_Says(kActorMcCoy, 5995, 13);
+				Actor_Says(kActorClovis, 670, 13);
+				if (!Game_Flag_Query(kFlagMcCoyIsHelpingReplicants)) {
+					Actor_Says(kActorMcCoy, 6000, 13); //00-6000.AUD	Stop calling me that!
+				} else {
+					Actor_Says(kActorMcCoy, 5990, 13); //00-5990.AUD	Does it make any difference now?
+				}
+				Actor_Says_With_Pause(kActorClovis, 680, 2.0f, 13);
+				Actor_Says(kActorClovis, 690, 13);
+				Actor_Says(kActorClovis, 700, 13);
+				Actor_Clue_Acquire(kActorMcCoy, kClueMcCoyShotGuzza, true, kActorClovis);
+				Game_Flag_Set(kFlagMcCoyIsHelpingReplicants);
+				Actor_Modify_Friendliness_To_Other(kActorSadik, kActorMcCoy, 2);
+				Actor_Modify_Friendliness_To_Other(kActorClovis, kActorMcCoy, 2);
+				Actor_Set_Goal_Number(kActorSadik, kGoalSadikUG18Leave);
+				Actor_Set_Goal_Number(kActorClovis, kGoalClovisUG18Leave);
+				Player_Loses_Control();
+				Loop_Actor_Walk_To_XYZ(kActorMcCoy, -684.71f, 0.0f, 171.59f, 0, false, true, false);
+				Player_Gains_Control();
+				Ambient_Sounds_Remove_All_Non_Looping_Sounds(true);
+				Ambient_Sounds_Remove_All_Looping_Sounds(1u);
+				Game_Flag_Set(kFlagUG18toUG13);
+				Set_Enter(kSetUG13, kSceneUG13);
 			}
 		} else {
-			if (!_vm->_cutContent) {
-				ADQ_Add(kActorSadik, 360, -1); // The Hunter, he do us a favor...
-			}
 			ADQ_Add_Pause(2000);
 			ADQ_Add(kActorClovis, 650, 14); // So, what should we do with this detective.
 			ADQ_Add(kActorSadik, 370, 14);
@@ -678,25 +677,15 @@ void SceneScriptUG18::DialogueQueueFlushed(int a1) {
 		}
 		ADQ_Add_Pause(2000);
 		if (_vm->_cutContent) {
+			Actor_Set_Targetable(kActorClovis, false);
 			if (Actor_Clue_Query(kActorClovis, kClueMcCoyRetiredLucy) 
 			|| Actor_Clue_Query(kActorClovis, kClueMcCoyRetiredDektora) 
 			|| Actor_Query_Friendliness_To_Other(kActorClovis, kActorMcCoy) < 51) { 
 				ADQ_Add(kActorClovis, 650, 14);
 				ADQ_Add(kActorSadik, 370, 14);
 				ADQ_Add(kActorClovis, 1320, 14);
-				Actor_Set_Goal_Number(kActorSadik, kGoalSadikUG18PrepareShootMcCoy);
-				Actor_Set_Goal_Number(kActorClovis, kGoalClovisUG18Leave);
 			} else {
 				ADQ_Add(kActorClovis, 60, 13); //05-0060.AUD	You're weak my friend. I expected so much more from you.
-				ADQ_Add(kActorClovis, 550, 13); //05-0550.AUD	You’re making me very unhappy, old friend.
-				Delay(2000);
-				Player_Loses_Control();
-				Loop_Actor_Walk_To_XYZ(kActorMcCoy, -684.71f, 0.0f, 171.59f, 0, false, true, false);
-				Player_Gains_Control();
-				Ambient_Sounds_Remove_All_Non_Looping_Sounds(true);
-				Ambient_Sounds_Remove_All_Looping_Sounds(1u);
-				Game_Flag_Set(kFlagUG18toUG13);
-				Set_Enter(kSetUG13, kSceneUG13);
 			}
 		} else {
 			ADQ_Add(kActorClovis, 650, 14);
@@ -714,31 +703,13 @@ void SceneScriptUG18::DialogueQueueFlushed(int a1) {
 		Actor_Set_Goal_Number(kActorSadik, kGoalSadikUG18Move);
 #else
 		// otherwise this gets repeated whenever dialogue queue re-empties
-		if (_vm->_cutContent) {
-			if (Actor_Query_Friendliness_To_Other(kActorClovis, kActorMcCoy) < 51) {
-				if (Actor_Query_Goal_Number(kActorSadik) == kGoalSadikUG18Wait) {
-					Actor_Set_Goal_Number(kActorSadik, kGoalSadikUG18Move);
-				}
-			}
-		} else {
-			if (Actor_Query_Goal_Number(kActorSadik) == kGoalSadikUG18Wait) {
-				Actor_Set_Goal_Number(kActorSadik, kGoalSadikUG18Move);
-			}
+		if (Actor_Query_Goal_Number(kActorSadik) == kGoalSadikUG18Wait) {
+			Actor_Set_Goal_Number(kActorSadik, kGoalSadikUG18Move);
 		}
 #endif // BLADERUNNER_ORIGINAL_BUGS
 		break;
 	}
-	if (_vm->_cutContent) {
-		if (Actor_Query_Friendliness_To_Other(kActorClovis, kActorMcCoy) < 51) {
-			if (Actor_Query_Goal_Number(kActorSadik) == kGoalSadikUG18WillShootMcCoy) {
-				// Bug in the original game - Why is Sadik set to die animation here?
-				// never triggered
-				Actor_Change_Animation_Mode(kActorSadik, kAnimationModeDie);
-				Actor_Set_Goal_Number(kActorSadik, kGoalSadikUG18PrepareShootMcCoy);
-				Actor_Set_Goal_Number(kActorClovis, kGoalClovisUG18Leave);
-			}
-		}
-	} else if (Actor_Query_Goal_Number(kActorSadik) == kGoalSadikUG18WillShootMcCoy) {
+	if (Actor_Query_Goal_Number(kActorSadik) == kGoalSadikUG18WillShootMcCoy) {
 		// Bug in the original game - Why is Sadik set to die animation here?
 		// never triggered
 		Actor_Change_Animation_Mode(kActorSadik, kAnimationModeDie);
@@ -838,8 +809,7 @@ void SceneScriptUG18::talkWithGuzza() {
 		Actor_Says(kActorGuzza, 970, 3); //04-0970.AUD	And we can all live happily ever after.
 	}
 	if (_vm->_cutContent) {
-		if (Game_Flag_Query(kFlagMcCoyRetiredHuman)
-		|| Game_Flag_Query(kFlagMcCoyShotMoraji)) {
+		if (Game_Flag_Query(kFlagMcCoyRetiredHuman)) {
 			Loop_Actor_Walk_To_XYZ(kActorMcCoy, -117.13f, 0.0f, -284.47f, 0, false, false, false);
 			Actor_Face_Actor(kActorMcCoy, kActorGuzza, true);
 			Actor_Says(kActorMcCoy, 5960, 9); 
@@ -975,8 +945,12 @@ void SceneScriptUG18::talkWithClovis() {
 		Delay(1000);
 		Loop_Actor_Walk_To_XYZ(kActorClovis, 1.14f, 0.39f, 507.35, 0, false, false, false);
 		Actor_Face_Actor(kActorClovis, kActorGuzza, true);
+		Actor_Set_Targetable(kActorClovis, true);
+		if (Player_Query_Agenda() != kPlayerAgendaPolite 
+		|| !Game_Flag_Query(kFlagMcCoyIsHelpingReplicants)) {
+			Player_Set_Combat_Mode(true);
+		}
 	}
-	Actor_Set_Targetable(kActorClovis, true);
 	Actor_Set_Goal_Number(kActorGuzza, kGoalGuzzaUG18Target);
 	ADQ_Add(kActorSadik, 350, 13);
 	ADQ_Add_Pause(1500);

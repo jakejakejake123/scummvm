@@ -159,10 +159,14 @@ bool SceneScriptHF05::ClickedOn3DObject(const char *objectName, bool a2) {
 					Delay (5000);
 					if (getCompanionActor() == kActorDektora) {
 						if (!Game_Flag_Query(kFlagDektoraIsReplicant)) {
+							Actor_Face_Actor(kActorMcCoy, getCompanionActor(), true);
+							Actor_Face_Actor(getCompanionActor(), kActorMcCoy, true);
 							Actor_Says(kActorDektora, 180, kAnimationModeTalk); //03-0180.AUD	What are you waiting for?
 							Actor_Says(kActorDektora, 190, kAnimationModeTalk); //03-0190.AUD	They’ll be coming in any second!
 						}
 					} else if (getCompanionActor() == kActorLucy) {
+						Actor_Face_Actor(kActorMcCoy, getCompanionActor(), true);
+						Actor_Face_Actor(getCompanionActor(), kActorMcCoy, true);
 						Actor_Says(kActorLucy, 460, kAnimationModeTalk); //06-0460.AUD	What are you waiting for?
 						Actor_Says(kActorLucy, 470, kAnimationModeTalk); //06-0470.AUD	They’ll be coming any second!
 					}

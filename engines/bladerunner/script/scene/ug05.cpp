@@ -98,23 +98,29 @@ bool SceneScriptUG05::ClickedOnActor(int actorId) {
 		if ( actorId == kActorOfficerGrayford
 		 &&  Game_Flag_Query(kFlagHF07Hole)
 		 && !Game_Flag_Query(kFlagUG05TalkToPolice)
-		) {
-			Actor_Says(kActorOfficerGrayford, 220, -1); //24-0220.AUD	You’re gonna pay, skin-job. You’re going down.
+		) {		
 			if (_vm->_cutContent) {
+				if (!Game_Flag_Query(kFlagMcCoyIsInnocent)) {
+					Actor_Says(kActorOfficerGrayford, 220, -1); //24-0220.AUD	You’re gonna pay, skin-job. You’re going down.
+				}
+				Actor_Says(kActorMcCoy, 5540, 14); //00-5540.AUD	Your friends will be coming soon. You’ll live.
+				Actor_Says(kActorOfficerGrayford, 230, -1); //24-0230.AUD	What do you care?
 				if (Player_Query_Agenda() != kPlayerAgendaSurly 
 				&& Player_Query_Agenda() != kPlayerAgendaErratic) {
-					Actor_Says(kActorMcCoy, 5540, 14); 
-					Actor_Says(kActorOfficerGrayford, 230, -1); //24-0230.AUD	What do you care?
-					Actor_Says(kActorMcCoy, 5545, 17);
-					Actor_Says(kActorOfficerGrayford, 240, -1);
+					if (!Game_Flag_Query(kFlagMcCoyIsInnocent)) {
+						Actor_Says(kActorMcCoy, 5545, 17); //00-5545.AUD	I feel sorry for you. Who knows? Maybe I’m not a Rep after all.
+						Actor_Says(kActorOfficerGrayford, 240, -1);
+						Actor_Says(kActorMcCoy, 5550, 3); //00-5550.AUD	They gotta find me first.
+					}
 				}
 			} else {
+				Actor_Says(kActorOfficerGrayford, 220, -1); //24-0220.AUD	You’re gonna pay, skin-job. You’re going down.
 				Actor_Says(kActorMcCoy, 5540, 14); 
 				Actor_Says(kActorOfficerGrayford, 230, -1); //24-0230.AUD	What do you care?
 				Actor_Says(kActorMcCoy, 5545, 17);
 				Actor_Says(kActorOfficerGrayford, 240, -1);
+				Actor_Says(kActorMcCoy, 5550, 3);
 			}
-			Actor_Says(kActorMcCoy, 5550, 3);
 			Game_Flag_Set(kFlagUG05TalkToPolice);
 			return false;
 		}
@@ -283,7 +289,37 @@ void SceneScriptUG05::endGame() {
 			}
 		} else {
 			Actor_Says(kActorLucy, 670, 17);
-			Actor_Says(kActorLucy, 930, 17); //06-0930.AUD	And this time the memories we create will be our own.
+			if (_vm->_cutContent) {
+				Actor_Says(kActorLucy, 930, 17); //06-0930.AUD	And this time the memories we create will be our own.
+			}
+		}
+		if (_vm->_cutContent) {
+			if (!Actor_Clue_Query(kActorMcCoy, kClueCrystalsCigarette)) { 
+				Actor_Put_In_Set(kActorMaggie, kSetUG05);
+				Actor_Set_At_XYZ(kActorMaggie, 4.0f, -11.67f, -4.0f, 0);
+				Delay(1000);
+				Actor_Face_Actor(kActorMcCoy, kActorMaggie, true);
+				Actor_Face_Actor(kActorMaggie, kActorMcCoy, true);
+				if (Actor_Query_Is_In_Current_Set(kActorDektora)) {
+					Actor_Face_Actor(kActorDektora, kActorMaggie, true);
+				} else if (Actor_Query_Is_In_Current_Set(kActorLucy)) {
+					Actor_Face_Actor(kActorLucy, kActorMaggie, true);
+				}
+				Actor_Change_Animation_Mode(kActorMaggie, 56);
+				Sound_Play(kSfxDOGBARK1,  40, 0, 0, 50);
+				Delay(2000);
+				Actor_Says(kActorMcCoy, 2225, kAnimationModeTalk); //00-2225.AUD	Maggie! Come here girl. Come on!
+				Loop_Actor_Walk_To_XYZ(kActorMaggie, -72.79f, -13.03f, -793.48f, 0, true, false, false);
+				Actor_Face_Actor(kActorMcCoy, kActorMaggie, true);
+				Actor_Face_Actor(kActorMaggie, kActorMcCoy, true);
+				if (Actor_Query_Is_In_Current_Set(kActorDektora)) {
+					Actor_Face_Actor(kActorDektora, kActorMaggie, true);
+				} else if (Actor_Query_Is_In_Current_Set(kActorLucy)) {
+					Actor_Face_Actor(kActorLucy, kActorMaggie, true);
+				}
+				Actor_Says(kActorMcCoy, 2435, kAnimationModeTalk); //00-2435.AUD	Good doggy.
+				Delay(2000);
+			}
 		}
 	}
 	if (_vm->_cutContent) {

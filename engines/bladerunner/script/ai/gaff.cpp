@@ -510,9 +510,11 @@ bool AIScriptGaff::GoalChanged(int currentGoalNumber, int newGoalNumber) {
 		return true;
 
 	case kGoalGaffGone:
-		AI_Movement_Track_Flush(kActorGaff);
-		Actor_Put_In_Set(kActorGaff, kSetKP05_KP06);
-		Actor_Set_At_XYZ(kActorGaff, -782.15f, 8.26f, -263.64f, 52);
+		if (!_vm->_cutContent) {
+			AI_Movement_Track_Flush(kActorGaff);
+			Actor_Put_In_Set(kActorGaff, kSetKP05_KP06);
+			Actor_Set_At_XYZ(kActorGaff, -782.15f, 8.26f, -263.64f, 52);
+		}
 		return true;
 	}
 	return false;

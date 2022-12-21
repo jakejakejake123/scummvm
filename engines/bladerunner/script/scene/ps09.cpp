@@ -96,11 +96,11 @@ void SceneScriptPS09::InitializeScene() {
 		}
 		if (Game_Flag_Query(kFlagEarlyQArrested)) {
 			Actor_Put_In_Set(kActorEarlyQ, kSetPS09);
-			Actor_Set_At_XYZ(kActorEarlyQ, -428.88f, 0.15f, -220.74f, 512);
+			Actor_Set_At_XYZ(kActorEarlyQ, -400.43f, 2.06f, -200.77f, 512);
 		}
 		if (Game_Flag_Query(kFlagDektoraArrested)) {
 			Actor_Put_In_Set(kActorDektora, kSetPS09);
-			Actor_Set_At_XYZ(kActorDektora, -330.0f, 0.33f, -270.0f, 583);
+			Actor_Set_At_XYZ(kActorDektora, -280.0f, 0.33f, -270.0f, 583);
 		}
 	}
 }

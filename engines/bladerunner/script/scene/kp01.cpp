@@ -161,7 +161,14 @@ void SceneScriptKP01::PlayerWalkedIn() {
 	}
 	// Added code so McCoy appears immediately in the set and it won't look like Crystal teleports in.
 	if (_vm->_cutContent) {
-		Actor_Set_At_XYZ(kActorMcCoy, 211.0f, -12.2f, -146.0f, 0);
+		if (Game_Flag_Query(kFlagMcCoyIsInnocent) 
+		&& Global_Variable_Query(kVariableAffectionTowards) != kAffectionTowardsDektora
+		&& Global_Variable_Query(kVariableAffectionTowards) != kAffectionTowardsLucy 
+		&& !Game_Flag_Query(kFlagMcCoyRetiredHuman)) {
+			Actor_Set_At_XYZ(kActorMcCoy, 211.0f, -12.2f, -146.0f, 0);
+		} else {
+			Loop_Actor_Walk_To_XYZ(kActorMcCoy, 211.0f, -12.2f, -146.0f, 0, false, false, false);
+		}
 	} else {
 		Loop_Actor_Walk_To_XYZ(kActorMcCoy, 211.0f, -12.2f, -146.0f, 0, false, false, false);
 	}

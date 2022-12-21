@@ -161,8 +161,7 @@ void SceneScriptPS14::PlayerWalkedIn() {
 			Actor_Says(kActorOfficerGrayford, 10, kAnimationModeTalk); //24-0010.AUD	Get Guzza on the horn ASAP. We got him cornered.
 			Actor_Says(kActorOfficerGrayford, 260, kAnimationModeTalk); //24-0260.AUD	We’re gonna nail your ass, McCoy!
 			// If McCoy doesn't have the evidence or retired a human he is arrested and it is game over.
-			if (!Actor_Clue_Query(kActorMcCoy, kClueBriefcase)
-			|| Game_Flag_Query(kFlagMcCoyRetiredHuman)) {
+			if (!Actor_Clue_Query(kActorMcCoy, kClueBriefcase)) {
 				Actor_Change_Animation_Mode(kActorOfficerGrayford, kAnimationModeCombatAttack);
 				if (Actor_Query_Friendliness_To_Other(kActorOfficerLeary, kActorMcCoy) < 50) {
 					Actor_Change_Animation_Mode(kActorOfficerLeary, kAnimationModeCombatAttack);
@@ -175,10 +174,12 @@ void SceneScriptPS14::PlayerWalkedIn() {
 				Actor_Says(kActorOfficerGrayford, 20, kAnimationModeTalk); //24-0020.AUD	Don’t bullshit, McCoy!
 				Actor_Says(kActorMcCoy, 715, 23); //00-0715.AUD	It's all in there!
 				Actor_Says(kActorOfficerGrayford, 30, kAnimationModeTalk); //24-0030.AUD	Let’s get the bomb squad out here!
-				//The Crystal will vouch for me line will only play if you are on good terms with Crystal meaning not having Lucy and Dektoras global affection goals activated.
+				//The Crystal will vouch for me line will only play if you are on good terms with Crystal meaning not having Lucy and Dektoras global affection goals activated.	 
 				if (Global_Variable_Query(kVariableAffectionTowards) != kAffectionTowardsDektora 	 
 				&& Global_Variable_Query(kVariableAffectionTowards) != kAffectionTowardsLucy) {
-					Actor_Says(kActorMcCoy, 720, kAnimationModeTalk); //00-0720.AUD	Talk to Crystal Steele, she'll vouch for me.
+					if (Actor_Query_Friendliness_To_Other(kActorSteele, kActorMcCoy) > 57) {
+						Actor_Says(kActorMcCoy, 720, kAnimationModeTalk); //00-0720.AUD	Talk to Crystal Steele, she'll vouch for me.
+					}
 				}
 				Actor_Says(kActorOfficerGrayford, 40, kAnimationModeTalk); //24-0040.AUD	Drop your gun, put your hands in the air and then we’ll talk.
 				Actor_Change_Animation_Mode(kActorMcCoy, 4);
@@ -204,6 +205,9 @@ void SceneScriptPS14::PlayerWalkedIn() {
 				Game_Flag_Set(kFlagMcCoyIsInnocent);
 				Actor_Set_Goal_Number(kActorMcCoy, kGoalMcCoyStartChapter5);
 			}
+		} else if (Global_Variable_Query(kVariableChapter) == 5) { 
+			Actor_Put_In_Set(kActorOfficerGrayford, kScenePS13);
+			Actor_Set_At_XYZ(kActorOfficerGrayford, -879.97, 507.86, -1132.41, 0);
 		}
 	}
 	//return false;

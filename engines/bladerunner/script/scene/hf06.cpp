@@ -301,6 +301,7 @@ void SceneScriptHF06::steelInterruption() {
 		if (Actor_Query_Is_In_Current_Set(kActorDektora)) {
 			if (!Game_Flag_Query(kFlagDektoraIsReplicant)
 			&& Game_Flag_Query(kFlagMcCoyIsInnocent)) {
+				Actor_Change_Animation_Mode(kActorMcCoy, 23);
 				Delay(2000);
 				Scene_Loop_Set_Default(3);
 				Scene_Loop_Start_Special(kSceneLoopModeOnce, 2, true);
@@ -321,6 +322,7 @@ void SceneScriptHF06::steelInterruption() {
 		} else if (Actor_Query_Is_In_Current_Set(kActorLucy)) {
 			if (!Game_Flag_Query(kFlagLucyIsReplicant)
 			&& Game_Flag_Query(kFlagMcCoyIsInnocent)) {
+				Actor_Change_Animation_Mode(kActorMcCoy, 23);
 				Delay(2000);
 				Scene_Loop_Set_Default(3);
 				Scene_Loop_Start_Special(kSceneLoopModeOnce, 2, true);

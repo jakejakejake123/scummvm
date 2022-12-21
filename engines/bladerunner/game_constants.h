@@ -676,7 +676,7 @@ enum Flags {
 	kFlagDR04toDR06                           = 230,
 	kFlagDR06toDR04                           = 231,
 	kFlagBulletBobArrested                    = 232,
-	kFlagMorajiAlive						  = 233,
+	kFlagMorajiDead							  = 233,
 	kFlagCT02toCT01walk                       = 234,
 	kFlagGaffTalk							  = 235,	
 	kFlagMcCoyAnimation1                      = 236,

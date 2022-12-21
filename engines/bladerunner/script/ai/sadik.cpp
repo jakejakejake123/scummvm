@@ -71,11 +71,13 @@ bool AIScriptSadik::Update() {
 	) {
 		Actor_Set_Goal_Number(kActorSadik, 200);
 	}
-
-	if (Global_Variable_Query(kVariableChapter) == 5
-	 && Actor_Query_Goal_Number(kActorSadik) < 400
-	) {
-		Actor_Set_Goal_Number(kActorSadik, 400);
+	
+	if (!_vm->_cutContent) {
+		if (Global_Variable_Query(kVariableChapter) == 5
+		&& Actor_Query_Goal_Number(kActorSadik) < 400
+		) {
+			Actor_Set_Goal_Number(kActorSadik, 400);
+		}
 	}
 
 	if (Actor_Query_Goal_Number(kActorSadik) == 411) {
@@ -277,12 +279,22 @@ void AIScriptSadik::Retired(int byActorId) {
 					Loop_Actor_Walk_To_XYZ(kActorRunciter, -12.0f, -41.58f, 72.0f, 0, true, false, false);
 					Actor_Put_In_Set(kActorRunciter, kSceneKP06);
 				}
+				if (Actor_Query_In_Set(kActorEarlyQ, kSetKP07)) {
+					Loop_Actor_Walk_To_XYZ(kActorEarlyQ, -12.0f, -41.58f, 72.0f, 0, true, false, false);
+					Actor_Put_In_Set(kActorEarlyQ, kSceneKP06);	
+				}
 				if (Actor_Query_In_Set(kActorCrazylegs, kSetKP07)) {
 					Loop_Actor_Walk_To_XYZ(kActorCrazylegs, -12.0f, -41.58f, 72.0f, 0, true, false, false);
 					Actor_Put_In_Set(kActorCrazylegs, kSceneKP06);	
 				}
 				if (Game_Flag_Query(kFlagRunciterIsReplicant)) {
 					if (Actor_Query_Goal_Number(kActorRunciter) < kGoalRunciterDead) {
+						Delay(500);
+						Sound_Play(kSfxSMCAL3, 100, 0, 0, 50);
+					}
+				}
+				if (Game_Flag_Query(kFlagEarlyQIsReplicant)) {
+					if (!Game_Flag_Query(kFlagEarlyQDead)) {
 						Delay(500);
 						Sound_Play(kSfxSMCAL3, 100, 0, 0, 50);
 					}
@@ -388,11 +400,18 @@ bool AIScriptSadik::GoalChanged(int currentGoalNumber, int newGoalNumber) {
 		return true;
 
 	case kGoalSadikUG18Move:
-		Actor_Set_Targetable(kActorSadik, true);
+		if (!_vm->_cutContent) {
+			Actor_Set_Targetable(kActorSadik, true);
+		}
 		World_Waypoint_Set(436, kSetUG18, -356.11f, 0.0f, 652.42f);
 		AI_Movement_Track_Flush(kActorSadik);
 		AI_Movement_Track_Append_Run(kActorSadik, 436, 0);
 		AI_Movement_Track_Repeat(kActorSadik);
+		if (_vm->_cutContent) {
+			Player_Loses_Control();
+			Delay(3000);
+			Actor_Set_Goal_Number(kActorSadik, kGoalSadikUG18PrepareShootMcCoy);
+		}
 		return true;
 
 	case kGoalSadikUG18Decide:
@@ -520,7 +539,7 @@ bool AIScriptSadik::GoalChanged(int currentGoalNumber, int newGoalNumber) {
 				|| Player_Query_Agenda() == kPlayerAgendaErratic) {
 					Actor_Says(kActorMcCoy, 8485, kAnimationModeTalk); //00-8485.AUD	One is a start.
 					Delay(1000);
-				} 
+				}
 				Actor_Says(kActorMcCoy, 2300, kAnimationModeTalk); 
 				if (Game_Flag_Query(kFlagSadikIsReplicant)) {
 					if (Actor_Query_Friendliness_To_Other(kActorSadik, kActorMcCoy) > 50
@@ -534,7 +553,6 @@ bool AIScriptSadik::GoalChanged(int currentGoalNumber, int newGoalNumber) {
 							Actor_Says(kActorMcCoy, 4880, 13); //00-4880.AUD	Is that right?
 						}
 					}
-					Actor_Says(kActorSadik, 200, kAnimationModeTalk); //08-0200.AUD	Truth be told killing don’t help much.
 				} else {
 					if (Actor_Query_Friendliness_To_Other(kActorSadik, kActorMcCoy) > 50
 					|| Actor_Clue_Query(kActorMcCoy, kClueMcCoyShotGuzza)) { 
@@ -548,9 +566,40 @@ bool AIScriptSadik::GoalChanged(int currentGoalNumber, int newGoalNumber) {
 						Actor_Says(kActorSadik, 160, kAnimationModeTalk);
 						Actor_Says(kActorSadik, 170, kAnimationModeTalk);
 					}
-					Actor_Says(kActorSadik, 200, kAnimationModeTalk); //08-0200.AUD	Truth be told killing don’t help much.
+				}
+				Actor_Says(kActorSadik, 200, kAnimationModeTalk); //08-0200.AUD	Truth be told killing don’t help much.
+			} else if (Actor_Query_Goal_Number(kActorSteele) > kGoalSteeleGone) {
+				Actor_Says(kActorMcCoy, 6250, 15); //00-6250.AUD	I thought it was all over, when Steele showed up.
+				Actor_Says(kActorSadik, 130, kAnimationModeTalk); //08-0130.AUD	Heh, she was a killer. She richly deserved it.
+			}
+			Actor_Says(kActorMcCoy, 2300, kAnimationModeTalk); 
+			if (Game_Flag_Query(kFlagSadikIsReplicant)) {
+				if (Actor_Query_Friendliness_To_Other(kActorSadik, kActorMcCoy) > 50
+				|| Actor_Clue_Query(kActorMcCoy, kClueMcCoyShotGuzza)) { 
+					Actor_Says(kActorSadik, 180, kAnimationModeTalk); //08-0180.AUD	My woman? She be killed by a Blade Runner. Revenge all I got left.
+					Actor_Says(kActorSadik, 190, kAnimationModeTalk);
+					if (Player_Query_Agenda() == kPlayerAgendaSurly 
+					|| Player_Query_Agenda() == kPlayerAgendaErratic) {
+						Actor_Says(kActorMcCoy, 2310, kAnimationModeTalk); //00-2310.AUD	I understand.
+					} else {
+						Actor_Says(kActorMcCoy, 4880, 13); //00-4880.AUD	Is that right?
+					}
+				}
+			} else {
+				if (Actor_Query_Friendliness_To_Other(kActorSadik, kActorMcCoy) > 50
+				|| Actor_Clue_Query(kActorMcCoy, kClueMcCoyShotGuzza)) { 
+					Actor_Says(kActorSadik, 140, kAnimationModeTalk); //08-0140.AUD	You bet, mon. Human too. My woman, she be Replicant.
+					Actor_Says(kActorSadik, 150, kAnimationModeTalk);
+					if (Player_Query_Agenda() == kPlayerAgendaPolite) {
+						Actor_Says(kActorMcCoy, 2305, kAnimationModeTalk); //00-2305.AUD	I’m sorry.
+					} else {
+						Actor_Says(kActorMcCoy, 4880, 13); //00-4880.AUD	Is that right?
+					}
+					Actor_Says(kActorSadik, 160, kAnimationModeTalk);
+					Actor_Says(kActorSadik, 170, kAnimationModeTalk);
 				}
 			}
+			Actor_Says(kActorSadik, 200, kAnimationModeTalk); //08-0200.AUD	Truth be told killing don’t help much.
 		} else {
 			Actor_Says(kActorMcCoy, 2300, kAnimationModeTalk);
 			if (Game_Flag_Query(kFlagSadikIsReplicant)) {
@@ -574,11 +623,8 @@ bool AIScriptSadik::GoalChanged(int currentGoalNumber, int newGoalNumber) {
 		Actor_Says(kActorSadik, 250, kAnimationModeTalk); //08-0250.AUD	Old reactor cores. Anything still got a glow.
 		// Added in a line.
 		if (_vm->_cutContent) {
-			if (Player_Query_Agenda() == kPlayerAgendaSurly 
-			|| Player_Query_Agenda() == kPlayerAgendaErratic) {
+			if (Game_Flag_Query(kFlagSadikIsReplicant)) {
 				Actor_Says(kActorMcCoy, 6195, kAnimationModeTalk); //00-6195.AUD	I thought you said we came to earth in this thing.
-			} else {
-				Actor_Says(kActorMcCoy, 8490, kAnimationModeTalk); //00-8490.AUD	And that would be...?
 			}
 		}
 		Actor_Says(kActorSadik, 260, kAnimationModeTalk); //08-0260.AUD	The generator? It take almost anything.

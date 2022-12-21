@@ -296,7 +296,7 @@ void SceneScriptTB06::PlayerWalkedIn() {
 					Player_Gains_Control();
 					Actor_Change_Animation_Mode(kActorMcCoy, 23);
 					Delay(1200);
-					Item_Pickup_Spin_Effect(kModelAnimationAmmoType00, 310, 262);
+					Item_Pickup_Spin_Effect_From_Actor(kModelAnimationAmmoType00, kActorMcCoy, 0, 0);
 					Delay(1000);
 					Actor_Face_Heading(kActorMcCoy, 240, true);
 					Actor_Voice_Over(4190, kActorVoiceOver); //99-4190.AUD	Where have I seen that before?

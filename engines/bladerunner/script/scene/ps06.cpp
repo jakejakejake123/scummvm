@@ -70,7 +70,7 @@ bool SceneScriptPS06::ClickedOn3DObject(const char *objectName, bool a2) {
 					Actor_Clue_Acquire(kActorMcCoy, kClueVKCrazylegsHuman,  true, kActorSteele);
 					Actor_Clue_Acquire(kActorMcCoy, kClueCrystalTestedCrazylegs, true, kActorSteele);
 				} else if (Actor_Clue_Query(kActorMcCoy, kClueCrazysInvolvement)) {
-					if (Random_Query(1, 4) == 1) {
+					if (Random_Query(1, 3) == 1) {
 						Actor_Clue_Acquire(kActorMcCoy, kClueVKCrazylegsHuman,  true, kActorSteele);
 						Actor_Clue_Acquire(kActorMcCoy, kClueCrystalTestedCrazylegs, true, kActorSteele);
 						Actor_Clue_Acquire(kActorMcCoy, kClueCrystalArrestedCrazylegs,  true, kActorSteele);
@@ -85,10 +85,12 @@ bool SceneScriptPS06::ClickedOn3DObject(const char *objectName, bool a2) {
 				|| Actor_Clue_Query(kActorMcCoy, kClueCrazylegsInterview1)
 				|| Actor_Clue_Query(kActorMcCoy, kClueCrazylegsInterview2)) {
 					if (!Game_Flag_Query(kFlagCrazylegsDead)) {
-						if (Random_Query(1, 4) == 1) {
+						if (Random_Query(1, 3) == 1) {
 							Actor_Clue_Acquire(kActorMcCoy, kClueVKCrazylegsReplicant, true, kActorSteele);
 							Actor_Clue_Acquire(kActorMcCoy, kClueCrystalRetiredCrazylegs, true, kActorSteele);
 							Actor_Set_Goal_Number(kActorCrazylegs, kGoalCrazyLegsLeavesShowroom);
+							Actor_Modify_Friendliness_To_Other(kActorSteele, kActorMcCoy, -2);
+							Actor_Modify_Friendliness_To_Other(kActorGuzza, kActorMcCoy, -2);
 						}
 					}
 				}
@@ -101,16 +103,23 @@ bool SceneScriptPS06::ClickedOn3DObject(const char *objectName, bool a2) {
 				if (Actor_Clue_Query(kActorMcCoy, kClueRuncitersVideo)) {
 					if (Actor_Query_Goal_Number(kActorRunciter) < kGoalRunciterDead) {
 						if (Game_Flag_Query(kFlagRunciterIsReplicant)) {
-							if (Random_Query(1, 4) == 1) {
+							if (Random_Query(1, 5) == 1) {
 								Actor_Clue_Acquire(kActorMcCoy, kClueCrystalRetiredRunciter1, true, kActorSteele);
 								Actor_Clue_Acquire(kActorMcCoy, kClueCrystalRetiredRunciter2, true, kActorSteele);
 								Actor_Clue_Acquire(kActorMcCoy, kClueVKRunciterReplicant, true, kActorSteele);
 								Actor_Set_Goal_Number(kActorRunciter, kGoalRunciterDead);
 								Game_Flag_Set(kFlagCrystalRetiredRunciter);
+								Actor_Modify_Friendliness_To_Other(kActorSteele, kActorMcCoy, -2);
+								Actor_Modify_Friendliness_To_Other(kActorGuzza, kActorMcCoy, -2);
 							}
 						} else {
-							Actor_Clue_Acquire(kActorMcCoy, kClueCrystalTestedRunciter, true, kActorSteele);
-							Actor_Clue_Acquire(kActorMcCoy, kClueVKRunciterHuman, true, kActorSteele);
+							if (Random_Query(1, 5) == 1) {
+								Actor_Clue_Acquire(kActorMcCoy, kClueCrystalTestedRunciter, true, kActorSteele);
+								Actor_Clue_Acquire(kActorMcCoy, kClueVKRunciterHuman, true, kActorSteele);
+								Game_Flag_Set(kFlagRunciterArrested);
+								Actor_Put_In_Set(kActorRunciter, kSetPS09);
+								Actor_Set_At_XYZ(kActorRunciter, -389.43f, 2.06f, -200.77f, 512);
+							}
 						}
 					}
 				}
@@ -124,16 +133,18 @@ bool SceneScriptPS06::ClickedOn3DObject(const char *objectName, bool a2) {
 							Actor_Clue_Acquire(kActorMcCoy, kClueVKBobGorskyReplicant, true, kActorSteele);
 							Actor_Set_Goal_Number(kActorBulletBob, kGoalBulletBobDead);
 							Game_Flag_Set(kFlagCrystalRetiredBulletBob);
+							Actor_Modify_Friendliness_To_Other(kActorSteele, kActorMcCoy, -2);
+							Actor_Modify_Friendliness_To_Other(kActorGuzza, kActorMcCoy, -2);
 						}
 					} else {
 						Actor_Clue_Acquire(kActorMcCoy, kClueCrystalTestedBulletBob, true, kActorSteele);
 						Actor_Clue_Acquire(kActorMcCoy, kClueVKBobGorskyHuman, true, kActorSteele);
 						if (Actor_Clue_Query(kActorMcCoy, kClueHasanInterview)) {
-							Actor_Modify_Friendliness_To_Other(kActorSteele, kActorMcCoy, -1);
-							Actor_Modify_Friendliness_To_Other(kActorGuzza, kActorMcCoy, -1);
-							Game_Flag_Set(kFlagBulletBobArrested);
-							Actor_Put_In_Set(kActorBulletBob, kSetPS09);
-							Actor_Set_At_XYZ(kActorBulletBob, -476.0f, 0.2f, -300.0f, 200);
+							if (Random_Query(1, 4) == 1) {
+								Game_Flag_Set(kFlagBulletBobArrested);
+								Actor_Put_In_Set(kActorBulletBob, kSetPS09);
+								Actor_Set_At_XYZ(kActorBulletBob, -476.0f, 0.2f, -300.0f, 200);
+							}
 						}
 					}
 				}
@@ -142,7 +153,7 @@ bool SceneScriptPS06::ClickedOn3DObject(const char *objectName, bool a2) {
 			// she just finds Zuben by chance and doesn't have time to come up with a plan of attack so escapes into the sewers. This will give you the Zuben sighting clue.
 			if (Actor_Clue_Query(kActorMcCoy, kClueMcCoyLetZubenEscape)) {
 				Actor_Clue_Acquire(kActorMcCoy, kClueSightingZuben, true, kActorSteele);
-				if (Random_Query(1, 4) == 1) {
+				if (Random_Query(1, 5) == 1) {
 					Actor_Set_Goal_Number(kActorZuben, kGoalZubenGone);
 					Actor_Clue_Acquire(kActorMcCoy, kClueCrystalRetiredZuben, true, kActorSteele);
 				}
@@ -166,12 +177,16 @@ bool SceneScriptPS06::ClickedOn3DObject(const char *objectName, bool a2) {
 			|| Actor_Clue_Query(kActorMcCoy, kClueDektorasDressingRoom)) {
 				if (!Game_Flag_Query(kFlagEarlyQDead)
 				&& !Game_Flag_Query(kFlagNR04EarlyQStungByScorpions)) {
-					if (Random_Query(1, 4) == 1) {
+					if (Random_Query(1, 3) == 1) {
 						if (Game_Flag_Query(kFlagEarlyQIsReplicant)) {
 							Actor_Clue_Acquire(kActorMcCoy, kClueVKEarlyQReplicant, true, kActorSteele);
 							Game_Flag_Set(kFlagEarlyQDead);
+							Actor_Modify_Friendliness_To_Other(kActorSteele, kActorMcCoy, -2);
+							Actor_Modify_Friendliness_To_Other(kActorGuzza, kActorMcCoy, -2);
 							if (Game_Flag_Query(kFlagHanoiIsReplicant)) {
 								Game_Flag_Set(kFlagHanoiDead);
+								Actor_Modify_Friendliness_To_Other(kActorSteele, kActorMcCoy, -2);
+								Actor_Modify_Friendliness_To_Other(kActorGuzza, kActorMcCoy, -2);
 							}
 						} else {
 							Actor_Clue_Acquire(kActorMcCoy, kClueVKEarlyQHuman, true, kActorSteele);
@@ -182,7 +197,7 @@ bool SceneScriptPS06::ClickedOn3DObject(const char *objectName, bool a2) {
 				}
 			}
 			if (Actor_Clue_Query(kActorMcCoy, kClueSpecialIngredient)) {
-				if (Random_Query(1, 4) == 1) {
+				if (Random_Query(1, 3) == 1) {
 					Game_Flag_Set(kFlagIsabellaArrested);
 					Actor_Put_In_Set(kActorIsabella, kSetPS09);
 					Actor_Set_At_XYZ(kActorIsabella, -450.0f, 0.2f, -200.0f, 518);
@@ -198,7 +213,7 @@ bool SceneScriptPS06::ClickedOn3DObject(const char *objectName, bool a2) {
 			if (Actor_Clue_Query(kActorMcCoy, kClueMcCoyLetZubenEscape)
 			|| Actor_Clue_Query(kActorMcCoy, kClueMcCoyRetiredZuben)) {
 				if (Actor_Clue_Query(kActorSteele, kClueHowieLeeInterview)) {
-					if (Random_Query(1, 4) == 1) {
+					if (Random_Query(1, 5) == 1) {
 						Game_Flag_Set(kFlagHowieLeeArrested); 
 						AI_Movement_Track_Flush(kActorHowieLee);
 						Actor_Put_In_Set(kActorHowieLee, kSetPS09);

@@ -401,7 +401,7 @@ void SceneScriptHF03::PlayerWalkedIn() {
 		Actor_Set_Goal_Number(kActorLucy, kGoalLucyHF03RunToHF041);
 		// Added in some dialogue.
 		if (_vm->_cutContent) {
-			if (Actor_Query_Friendliness_To_Other(kActorSteele, kActorMcCoy) < 51) {
+			if (Actor_Query_Friendliness_To_Other(kActorSteele, kActorMcCoy) < 56) {
 				Actor_Says(kActorSteele, 200, 13);  //01-0200.AUD	Don’t even ask me who’d be doing the leading, Rookie.
 				if (Player_Query_Agenda() == kPlayerAgendaSurly 
 				|| Player_Query_Agenda() == kPlayerAgendaErratic) {
@@ -428,14 +428,14 @@ void SceneScriptHF03::PlayerWalkedIn() {
 		if (_vm->_cutContent) {
 			if (Game_Flag_Query(kFlagMcCoyIsHelpingReplicants)) {
 				Actor_Says(kActorMcCoy, 1685, 13); //00-1685.AUD	I’ll take care of it. You just cover the exit.
-				if (Actor_Query_Friendliness_To_Other(kActorSteele, kActorMcCoy) < 51) {
+				if (Actor_Query_Friendliness_To_Other(kActorSteele, kActorMcCoy) < 56) {
 					Actor_Says(kActorSteele, 230, 16); //01-0230.AUD	Who’s giving the orders around here?
 				} else {
 					Actor_Says(kActorSteele, 2350, 13); //01-2350.AUD	Ditto.
 				}
 			} else {
 				Actor_Says(kActorMcCoy, 1690, 12); //00-1690.AUD	This one’s mine, Steele. I tracked it, I get the kill.
-				if (Actor_Query_Friendliness_To_Other(kActorSteele, kActorMcCoy) < 51) {
+				if (Actor_Query_Friendliness_To_Other(kActorSteele, kActorMcCoy) < 56) {
 					Actor_Says(kActorSteele, 240, 13); //01-0240.AUD	About time you strapped on some balls, Slim. Go for it.
 				} else {
 					Actor_Says(kActorSteele, 2350, 13); //01-2350.AUD	Ditto.

@@ -280,7 +280,7 @@ void SceneScriptUG16::PlayerWalkedIn() {
 		}
 		// Made it so Luther and Lance only mention Morajis death if Moraji died.
 		if (_vm->_cutContent) {
-			if (!Game_Flag_Query(kFlagMorajiAlive)) { 
+			if (Game_Flag_Query(kFlagMorajiDead)) { 
 				Actor_Says(kActorLuther, 50, 15); //10-0050.AUD	You’re investigating Moraji’s death.
 				Actor_Says(kActorLance, 20, 12); //13-0020.AUD	And Eisenduller’s.
 				if (Game_Flag_Query(kFlagLutherLanceIsReplicant)) {
@@ -386,7 +386,7 @@ void SceneScriptUG16::dialogueWithLuther() {
 	case 1400: // REPLICANTS
 		// If Moraji is alive McCoy won't mention that the reps killed him.
 		if (_vm->_cutContent) {
-			if (Game_Flag_Query(kFlagMorajiAlive)) { 
+			if (!Game_Flag_Query(kFlagMorajiDead)) { 
 				Actor_Says(kActorMcCoy, 785, 13);//00-0785.AUD	There could be a group of Nexus-6s tracking down genetic designers.
 				if (Player_Query_Agenda() == kPlayerAgendaPolite) {
 					Actor_Says(kActorMcCoy, 790, 14);//00-0790.AUD	You might consider knocking off work early.

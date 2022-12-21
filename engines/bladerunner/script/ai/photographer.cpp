@@ -97,7 +97,7 @@ void AIScriptPhotographer::ClickedByPlayer() {
 		Actor_Says(kActorPhotographer, 20, kAnimationModeTalk);
 		if (_vm->_cutContent) {
 			if (Player_Query_Agenda() != kPlayerAgendaPolite) { 
-				Actor_Says(kActorMcCoy, 7815, 18); //00-7815.AUD	No.
+				Actor_Says(kActorMcCoy, 2485, 13); //00-2485.AUD	I’ve a hard time believing that.
 			} else {
 				Actor_Says(kActorMcCoy, 5305, 15);
 			}

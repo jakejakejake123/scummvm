@@ -198,7 +198,7 @@ bool SceneScriptDR03::ClickedOnActor(int actorId) {
 			Actor_Says(kActorChew, 90, 14); //52-0090.AUD	Oh, what-- what of Moraji?
 			// Made it so if McCoy saves Moraji it is acknowledged in this dialogue.
 			if (_vm->_cutContent) {
-				if (Game_Flag_Query(kFlagMorajiAlive)) { 
+				if (!Game_Flag_Query(kFlagMorajiDead)) { 
 					Actor_Says(kActorMcCoy, 4900, 13); //00-4900.AUD	Word is he's gonna be okay.
 					if (Game_Flag_Query(kFlagMorajiTalk)) { 
 						Actor_Clue_Acquire(kActorMcCoy, kClueMorajiInterview, true, kActorMoraji);

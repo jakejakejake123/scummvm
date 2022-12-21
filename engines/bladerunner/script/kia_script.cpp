@@ -1736,8 +1736,12 @@ void KIAScript::SCRIPT_KIA_DLL_Play_Clue_Asset_Script(int notUsed, int clueId) {
 		KIA_Play_Slice_Model(kModelAnimationCrystalsCigarette);
 		KIA_Play_Actor_Dialogue(kActorVoiceOver, 1770);
 		KIA_Play_Actor_Dialogue(kActorVoiceOver, 1150);
-		KIA_Play_Actor_Dialogue(kActorVoiceOver, 1180);
-		if (!_vm->_cutContent) {	
+		if (_vm->_cutContent) {
+			KIA_Play_Actor_Dialogue(kActorVoiceOver, 1160);
+			KIA_Play_Actor_Dialogue(kActorVoiceOver, 1170);
+		}
+		if (!_vm->_cutContent) {
+			KIA_Play_Actor_Dialogue(kActorVoiceOver, 1180);
 			KIA_Play_Actor_Dialogue(kActorVoiceOver, 1190);
 		}
 		break;
@@ -1914,33 +1918,42 @@ void KIAScript::SCRIPT_KIA_DLL_Play_Clue_Asset_Script(int notUsed, int clueId) {
 		break;
 	case kClueZubenIncept:
 		KIA_Play_Slice_Model(kModelAnimationPhoto);
+		KIA_Play_Actor_Dialogue(kActorVoiceOver, 4080); //99-4080.AUD	He looks familiar.
 		break;
 	case kClueClovisIncept:
 		KIA_Play_Slice_Model(kModelAnimationPhoto);
 		break;
 	case kClueSadikIncept:
 		KIA_Play_Slice_Model(kModelAnimationPhoto);
+		KIA_Play_Actor_Dialogue(kActorVoiceOver, 4220); //99-4220.AUD	That guy sure gets around.
 		break;
 	case kClueDektoraIncept:
 		KIA_Play_Slice_Model(kModelAnimationPhoto);
+		KIA_Play_Actor_Dialogue(kActorMcCoy, 7690); //00-7960.AUD	Dektora?
 		break;
 	case kClueIzoIncept:
 		KIA_Play_Slice_Model(kModelAnimationPhoto);
+		KIA_Play_Actor_Dialogue(kActorVoiceOver, 4170); //99-4170.AUD	I've seen that guy around town.
 		break;
 	case kClueGordoIncept:
 		KIA_Play_Slice_Model(kModelAnimationPhoto);
+		KIA_Play_Actor_Dialogue(kActorVoiceOver, 4170); //99-4170.AUD	I've seen that guy around town.
 		break;
 	case kClueLucyIncept:
 		KIA_Play_Slice_Model(kModelAnimationPhoto);
+		KIA_Play_Actor_Dialogue(kActorVoiceOver, 4040); //99-4040.AUD	Hello there Lucy.
 		break;
 	case kClueMcCoyIncept:
 		KIA_Play_Slice_Model(kModelAnimationPhoto);
+		KIA_Play_Actor_Dialogue(kActorVoiceOver, 4240); //99-4240.AUD	That can't be me.
 		break;
 	case kClueInceptShotRoy:
 		KIA_Play_Slice_Model(kModelAnimationPhoto);
+		KIA_Play_Actor_Dialogue(kActorVoiceOver, 4080); //99-4080.AUD	He looks familiar.
 		break;
 	case kClueInceptShotsLeon:
 		KIA_Play_Slice_Model(kModelAnimationPhoto);
+		KIA_Play_Actor_Dialogue(kActorVoiceOver, 4170); //99-4170.AUD	I've seen that guy around town.
 		break;
 	case kClueCarWasStolen:
 		KIA_Play_Actor_Dialogue(kActorMcCoy, 3615); //00-3615.AUD	You buy a vehicle lately? A black Sedan?
@@ -2257,9 +2270,6 @@ void KIAScript::SCRIPT_KIA_DLL_Play_Clue_Asset_Script(int notUsed, int clueId) {
 		break;
 	case kClueEarlyInterviewA:
 		KIA_Play_Actor_Dialogue(kActorMcCoy, 3505); //00-3505.AUD	You buy some jewelry at an auction recently? Real old elite stuff?
-		KIA_Play_Actor_Dialogue(kActorEarlyQ, 420); //18-0420.AUD	Who’s asking?
-		KIA_Play_Actor_Dialogue(kActorEarlyQ, 430); //18-0430.AUD	You ain’t with Robbery-Homicide.
-		KIA_Play_Actor_Dialogue(kActorMcCoy, 3530); //00-3530.AUD	No, sir.
 		KIA_Play_Actor_Dialogue(kActorEarlyQ, 440); //18-0440.AUD	Eh, those pieces ain’t hot. I got the papers to prove it. I picked them up at a legitimate auction. Cost me nearly a pound of flesh too.
 		KIA_Play_Actor_Dialogue(kActorMcCoy, 3535); //00-3535.AUD	You give this stuff to a girlfriend, Early?
 		KIA_Play_Actor_Dialogue(kActorEarlyQ, 460); //18-0460.AUD	You kiddin’? I ain’t that stupid. No, no, no, no. I was letting one of my dancers use the stuff in her act. Kind of a tribute to the ancient swamp lands, you know what I mean?

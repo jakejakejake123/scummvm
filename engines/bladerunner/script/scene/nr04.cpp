@@ -677,7 +677,7 @@ if (_vm->_cutContent) {
 			Music_Stop(1u);
 			Game_Flag_Set(kFlagEarlyQArrested);
 			Actor_Put_In_Set(kActorEarlyQ, kSetPS09);
-			Actor_Set_At_XYZ(kActorEarlyQ, -428.88f, 0.15f, -220.74f, 512);
+			Actor_Set_At_XYZ(kActorEarlyQ, -400.43f, 2.06f, -200.77f, 512);
 			Game_Flag_Reset(kFlagSpinnerAtNR01);
 			Game_Flag_Reset(kFlagSpinnerAtHF01);
 			Game_Flag_Set(kFlagSpinnerAtPS01);

@@ -270,67 +270,10 @@ bool AIScriptEarlyQ::ShotAtAndHit() {
 	) {
 		Actor_Set_Goal_Number(kActorEarlyQ, kGoalEarlyQNR04GetShot);
 	}
-	if (_vm->_cutContent) {
-		if (Actor_Query_In_Set(kActorEarlyQ, kSetKP07)) {
-			AI_Movement_Track_Flush(kActorEarlyQ);
-			Actor_Retired_Here(kActorEarlyQ, 6, 6, true, kActorMcCoy);
-			Actor_Set_Goal_Number(kActorEarlyQ, kGoalEarlyQNR04GetShot);
-			Actor_Face_Heading(kActorEarlyQ, 760, false);
-			Actor_Set_At_XYZ(kActorEarlyQ, -58.84f, -42.70f, -142.27f, 760);
-			return true;
-		}
-	}
 	return false;
 }
 
 void AIScriptEarlyQ::Retired(int byActorId) {
-	// Made it so the replicant survivors at moonbus variable goes up when Early Q is at the moonbus and then goes down when he is retired.
-	if (_vm->_cutContent) {
-		if (Actor_Query_In_Set(kActorEarlyQ, kSetKP07)) {
-			Global_Variable_Decrement(kVariableReplicantsSurvivorsAtMoonbus, 1);
-			Actor_Set_Goal_Number(kActorEarlyQ, kGoalEarlyQNR04GetShot);
-			if (_vm->_cutContent) {
-				if (Query_Difficulty_Level() != kGameDifficultyEasy) {
-					Global_Variable_Increment (kVariableChinyen, 200);
-				}
-				Actor_Modify_Friendliness_To_Other(kActorGaff, kActorMcCoy, 2);
-			}
-
-			if (Global_Variable_Query(kVariableReplicantsSurvivorsAtMoonbus) == 0) {
-				Player_Loses_Control();
-				if (_vm->_cutContent) {
-					if (Actor_Query_In_Set(kActorRunciter, kSetKP07)) {
-						Loop_Actor_Walk_To_XYZ(kActorRunciter, -12.0f, -41.58f, 72.0f, 0, true, false, false);
-						Actor_Put_In_Set(kActorRunciter, kSceneKP06);
-					}
-					if (Actor_Query_In_Set(kActorCrazylegs, kSetKP07)) {
-						Loop_Actor_Walk_To_XYZ(kActorCrazylegs, -12.0f, -41.58f, 72.0f, 0, true, false, false);
-						Actor_Put_In_Set(kActorCrazylegs, kSceneKP06);	
-					}
-					if (Game_Flag_Query(kFlagRunciterIsReplicant)) {
-						if (Actor_Query_Goal_Number(kActorRunciter) < kGoalRunciterDead) {
-							Delay(500);
-							Sound_Play(kSfxSMCAL3, 100, 0, 0, 50);
-						}
-					}
-					if (Game_Flag_Query(kFlagCrazylegsIsReplicant)) {
-						if (!Game_Flag_Query(kFlagCrazylegsDead)) {
-							Delay(500);
-							Sound_Play(kSfxSMCAL3, 100, 0, 0, 50);
-						}
-					}
-					Delay(2000);
-					Player_Set_Combat_Mode(false);
-					Delay(2000);  
-				}
-				Ambient_Sounds_Remove_All_Non_Looping_Sounds(true);
-				Ambient_Sounds_Remove_All_Looping_Sounds(1u);
-				Game_Flag_Set(kFlagKP07toKP06);
-				Game_Flag_Reset(kFlagMcCoyIsHelpingReplicants);
-				Set_Enter(kSetKP05_KP06, kSceneKP06);
-			}
-		}
-	}
 	// return false;
 }
 
