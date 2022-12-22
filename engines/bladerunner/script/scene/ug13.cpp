@@ -325,7 +325,7 @@ bool SceneScriptUG13::ClickedOnExit(int exitId) {
 			// Restore this condition only for hard mode. Probably occurs before meeting with Guzza is set
 			// Since this situation always now happens in cut content mode it will only play in hard mode for the original game.
 			if (_vm->_cutContent && Game_Flag_Query(kFlagUG18GuzzaScene)) {
-				Actor_Says(kActorMcCoy, 8522, 14); // Locked
+				Actor_Says(kActorMcCoy, 7815, 13); //00-7815.AUD	No.
 				Actor_Face_Heading(kActorMcCoy, 325, false);
 				Loop_Actor_Travel_Stairs(kActorMcCoy, 11, false, kAnimationModeIdle);
 			} else if (!_vm->_cutContent && Query_Difficulty_Level() == kGameDifficultyHard) {

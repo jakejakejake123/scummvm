@@ -112,18 +112,26 @@ void SceneScriptKP07::InitializeScene() {
 			Actor_Put_In_Set(kActorLucy, kSetKP07);
 			Actor_Set_At_XYZ(kActorLucy, 78.0f, -41.52f, -119.0f, 659);
 		}
-
-		if (Actor_Query_Goal_Number(kActorLuther) < kGoalLutherGone) {
+		if (_vm->_cutContent) {
+			if (Game_Flag_Query(kFlagLutherLanceIsReplicant)) {
+				if (Actor_Query_Goal_Number(kActorLuther) < kGoalLutherGone) {
+					AI_Movement_Track_Flush(kActorLuther);
+					Actor_Set_Goal_Number(kActorLuther, kGoalLutherKP07Wait); // new goal to avoid resuming his walking around routine
+					Actor_Put_In_Set(kActorLuther, kSetKP07);
+					Actor_Set_At_XYZ(kActorLuther, -47.0f, 0.0f, 151.0f, 531);
+				}
+			}
+		} else {
+			if (Actor_Query_Goal_Number(kActorLuther) < kGoalLutherGone) {
 #if BLADERUNNER_ORIGINAL_BUGS
 #else
-			AI_Movement_Track_Flush(kActorLuther);
-			Actor_Set_Goal_Number(kActorLuther, kGoalLutherKP07Wait); // new goal to avoid resuming his walking around routine
+				AI_Movement_Track_Flush(kActorLuther);
+				Actor_Set_Goal_Number(kActorLuther, kGoalLutherKP07Wait); // new goal to avoid resuming his walking around routine
 #endif // BLADERUNNER_ORIGINAL_BUGS
-			if (!_vm->_cutContent) {
 				Global_Variable_Increment(kVariableReplicantsSurvivorsAtMoonbus, 1);
+				Actor_Put_In_Set(kActorLuther, kSetKP07);
+				Actor_Set_At_XYZ(kActorLuther, -47.0f, 0.0f, 151.0f, 531);
 			}
-			Actor_Put_In_Set(kActorLuther, kSetKP07);
-			Actor_Set_At_XYZ(kActorLuther, -47.0f, 0.0f, 151.0f, 531);
 		}
 		// Made it so Bullet bob will now be in the moonbus if he is a replicant and is alive. He will be leaning against a slanted
 		// wall at the front of the moobus.
@@ -437,7 +445,13 @@ void SceneScriptKP07::PlayerWalkedIn() {
 			}			
 		} else {
 			Actor_Face_Actor(kActorMcCoy, kActorClovis, true);
-			Actor_Says(kActorClovis, 160, 3);
+			if (_vm->_cutContent) {
+				if (Actor_Clue_Query(kActorMcCoy, kClueMcCoyRetiredSadik)) {
+					Actor_Says(kActorClovis, 160, 3);
+				}
+			} else {
+				Actor_Says(kActorClovis, 160, 3);
+			}
 			if (_vm->_cutContent) {
 				Actor_Set_Goal_Number(kActorMaggie, kGoalMaggieDead);
 				Scene_Exits_Disable();

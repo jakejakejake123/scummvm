@@ -313,10 +313,6 @@ void SceneScriptDR03::PlayerWalkedIn() {
 		if (_vm->_cutContent) {
 			if (!Game_Flag_Query(kFlagChewTalkGiveData)
 			&& (Global_Variable_Query(kVariableChapter) == 3))	{	
-				// Inserted the homeless guy into the set offscreen so when Chew has a panic attack and collapses on the ground we can use the homeless guys snoring sounds to show 
-				// that Chew isn't dead but is just sleeping.	
-				Actor_Put_In_Set(kActorTransient, kSetDR03);
-				Actor_Set_At_XYZ(kActorTransient, -310.0, 55.0, -350.0, 400);
 				Actor_Face_Actor(kActorMcCoy, kActorChew, true);
 				Actor_Face_Actor(kActorChew, kActorMcCoy, true);
 				Actor_Says(kActorChew, 510, 15); //52-0510.AUD	Oh, what, what, what? Oh, LPD. You late. Too late.

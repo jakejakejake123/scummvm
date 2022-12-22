@@ -64,6 +64,12 @@ void SceneScriptTB02::InitializeScene() {
 		Ambient_Sounds_Add_Sound(kSfx67_1140R, 5, 70, 12, 12, -100, 100, -101, -101, 0, 0);
 		Ambient_Sounds_Add_Sound(kSfx67_1160R, 5, 70, 12, 12, -100, 100, -101, -101, 0, 0);
 	}
+	if (_vm->_cutContent) {
+		if (Global_Variable_Query(kVariableChapter) == 4 
+		&& !Actor_Clue_Query(kActorMcCoy, kClueDNATyrell)) {
+			ADQ_Add(kActorTransient, 400, -1); //12-0400.AUD	Zzz…
+		}
+	}
 
 	if (Game_Flag_Query(kFlagSpinnerAtTB02)
 	 && Global_Variable_Query(kVariableChapter) < 4

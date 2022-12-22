@@ -323,8 +323,10 @@ void AIScriptSteele::CompletedMovementTrack() {
 				Actor_Says(kActorSteele, 640, 58); //01-0640.AUD	No chance.
 				if (Player_Query_Agenda() == kPlayerAgendaSurly 
 				|| (Player_Query_Agenda() == kPlayerAgendaErratic)) {
-					Actor_Says(kActorMcCoy, 2270, 12); //00-2270.AUD	The bastard killed my dog. He tried to convince me I wasn’t human.
-					Actor_Says(kActorSteele, 650, 59); //01-0650.AUD	The job ain’t about revenge, McCoy.
+					if (!Actor_Clue_Query(kActorMcCoy, kClueMcCoyRetiredSadik)) {
+						Actor_Says(kActorMcCoy, 2270, 12); //00-2270.AUD	The bastard killed my dog. He tried to convince me I wasn’t human.
+						Actor_Says(kActorSteele, 650, 59); //01-0650.AUD	The job ain’t about revenge, McCoy.
+					}
 				}
 				Actor_Says(kActorMcCoy, 2275, 16); //00-2275.AUD	If it’s the money you’re worried about, you can have it.
 				Actor_Says(kActorMcCoy, 2280, 15); //00-2280.AUD	But I’m doing this one alone.

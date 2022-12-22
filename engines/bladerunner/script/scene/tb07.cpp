@@ -92,6 +92,7 @@ bool SceneScriptTB07::ClickedOnItem(int itemId, bool a2) {
 				Delay(1000);
 				Actor_Voice_Over(4080, kActorVoiceOver);
 				Actor_Clue_Acquire(kActorMcCoy, kClueInceptShotRoy, true, kActorTyrell);
+				Scene_Exits_Enable();
 			}
 		}
 		Item_Remove_From_World(itemId);
@@ -209,6 +210,12 @@ void SceneScriptTB07::PlayerWalkedIn() {
 	) {
 		Player_Set_Combat_Mode(false);
 		McCoyTalkWithRachaelAndTyrell();
+	}
+	if (_vm->_cutContent) {
+		if (Global_Variable_Query(kVariableChapter) == 4
+		&& !Actor_Clue_Query(kActorMcCoy, kClueDNATyrell)) { 
+			Scene_Exits_Disable();
+		}
 	}
 }
 

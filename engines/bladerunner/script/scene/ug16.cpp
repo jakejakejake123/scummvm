@@ -457,21 +457,13 @@ void SceneScriptUG16::dialogueWithLuther() {
 			}
 		} else {
 			Actor_Says(kActorLuther, 180, 14); //10-0180.AUD	Clovis showed us our incept photos.
-			if (_vm->_cutContent) {
-				if (!Game_Flag_Query(kFlagMcCoyIsHelpingReplicants)) {
-					Actor_Says(kActorMcCoy, 5795, 18); //00-5795.AUD	So what?
-				} else {
-					Actor_Says(kActorMcCoy, 5025, 18); //00-5025.AUD	Yeah?
-				}
-			} else {
-				Actor_Says(kActorMcCoy, 5795, 13); //00-5795.AUD	So what?
-			}
+			Actor_Says(kActorMcCoy, 5795, 13); //00-5795.AUD	So what?
 			Actor_Says(kActorLance, 150, 17); //13-0150.AUD	That’s a pretty damn good argument, you gotta admit.
 			if (_vm->_cutContent) {
-				if (!Game_Flag_Query(kFlagMcCoyIsHelpingReplicants)) {
-					Actor_Says(kActorMcCoy, 5800, 14); //00-5800.AUD	Photos can be doctored. It’s not proof.
-					Actor_Says(kActorLuther, 190, 15);
-				}
+				Actor_Says(kActorMcCoy, 5800, 14); //00-5800.AUD	Photos can be doctored. It’s not proof.
+				Delay(1500);
+				Actor_Says(kActorLance, 290, 17); //13-0290.AUD	He’s sharp this one.
+				Actor_Says(kActorLuther, 350, 13); //10-0350.AUD	Still the work will go on with or without Clovis.
 			} else {
 				Actor_Says(kActorMcCoy, 5800, 13);  
 				Actor_Says(kActorLuther, 190, 15);

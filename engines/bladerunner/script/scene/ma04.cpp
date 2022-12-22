@@ -796,9 +796,9 @@ void SceneScriptMA04::phoneCallWithSteele() {
 	// Restored some of the dialogue for the phone conversation with Crystal.
 	if (_vm->_cutContent) {
 		Actor_Says(kActorSteele, 770, 3); //01-0770.AUD	That son of a bitch, Clovis, was climbing in and out of a manhole right next to the police station and nobody ever noticed.
-		Actor_Says(kActorMcCoy, 2655, 16); //00-2655.AUD	Figures. With incompetents like Guzza at the helm.
-		if (Game_Flag_Query(kFlagGuzzaSaved)) {
-			if (Actor_Clue_Query(kActorMcCoy, kClueFolder)) {	
+		if (Actor_Clue_Query(kActorMcCoy, kClueFolder)) {
+			Actor_Says(kActorMcCoy, 2655, 16); //00-2655.AUD	Figures. With incompetents like Guzza at the helm.
+			if (Game_Flag_Query(kFlagGuzzaSaved)) {	
 				// Made it so Crystal only says Guzza is going to be fed to the barracudas if McCoy saved Guzza and arrested him.
 				Actor_Says(kActorSteele, 790, 3); //01-0790.AUD	I think we can forget about Guzza. That guy’s gonna be fed to the barracudas.
 				if (Player_Query_Agenda() == kPlayerAgendaSurly 
@@ -826,7 +826,13 @@ void SceneScriptMA04::phoneCallWithSteele() {
 	Sound_Play(kSfxSPNBEEP9, 100, 0, 0, 50);
 	if (_vm->_cutContent) {
 		if (!Game_Flag_Query(kFlagMcCoyIsHelpingReplicants)) {
-			Actor_Set_Goal_Number(kActorSadik, 411);
+			if (Actor_Query_Goal_Number(kActorSadik) < kGoalSadikGone) {
+				Actor_Set_Goal_Number(kActorSadik, 411);
+			} else {
+				Actor_Set_Goal_Number(kActorMaggie, kGoalMaggieKP05Wait);
+				Actor_Put_In_Set(kActorClovis, kSetKP05_KP06);
+				Actor_Set_At_XYZ(kActorClovis, -961.0f, 0.0f, -778.0f, 150);
+			}
 		} else {
 			Actor_Set_Goal_Number(kActorSadik, 414);
 			Actor_Set_Goal_Number(kActorClovis, kGoalClovisKP07Wait);

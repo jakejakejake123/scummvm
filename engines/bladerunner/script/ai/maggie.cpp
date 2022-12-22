@@ -656,6 +656,8 @@ bool AIScriptMaggie::GoalChanged(int currentGoalNumber, int newGoalNumber) {
 			// Altered code so if Sadik is dead Clovis will be the one who kills Maggie. His dialogue with McCoy is already fixed in Clovis ai sheet and this code this will trigger it. 
 			if (_vm->_cutContent) { 
 				if (Actor_Query_Goal_Number(kActorSadik) == kGoalSadikGone) {
+					Actor_Face_Actor(kActorMcCoy, kActorClovis, true);
+					Actor_Face_Actor(kActorClovis, kActorMcCoy, true);
 					Actor_Says(kActorClovis, 110, kAnimationModeTalk);
 					if (Player_Query_Agenda() == kPlayerAgendaSurly 
 					|| (Player_Query_Agenda() == kPlayerAgendaErratic)) {
@@ -669,16 +671,13 @@ bool AIScriptMaggie::GoalChanged(int currentGoalNumber, int newGoalNumber) {
 					Actor_Says(kActorMcCoy, 2260, kAnimationModeTalk);
 					Actor_Says(kActorClovis, 150, kAnimationModeTalk); //05-0150.AUD	Come join me. Our final party before returning to the heavens.
 					Actor_Says(kActorClovis, 1330, kAnimationModeTalk); //05-1330.AUD	To the Heavens, brother. Off-World.
+					Loop_Actor_Walk_To_XYZ(kActorClovis, -731.0f, 8.26f, -657.0f, 0, false, false, false);
+					Actor_Put_In_Set(kActorClovis, kSetKP07);
 					Actor_Set_Goal_Number(kActorClovis, kGoalClovisKP07Wait);
 					Scene_Exits_Enable();
 				} else {
 					Actor_Says(kActorSadik, 60, 3);
-					if (Player_Query_Agenda() == kPlayerAgendaSurly 
-					|| (Player_Query_Agenda() == kPlayerAgendaErratic)) {
-						Actor_Says(kActorMcCoy, 2255, kAnimationModeTalk); //00-2255.AUD	She was innocent, you bastard!
-					} else {
-						Actor_Says(kActorMcCoy, 2240, kAnimationModeTalk); //00-2240.AUD	You bastard! She was an innocent!
-					}
+					Actor_Says(kActorMcCoy, 2240, kAnimationModeTalk); //00-2240.AUD	You bastard! She was an innocent!
 					Actor_Says(kActorSadik, 70, 3);
 					Actor_Says(kActorSadik, 80, 3);
 					Actor_Says(kActorMcCoy, 2245, 3);

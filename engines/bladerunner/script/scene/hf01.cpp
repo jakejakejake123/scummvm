@@ -413,6 +413,11 @@ void SceneScriptHF01::PlayerWalkedIn() {
 	// especially for a scene where McCoy learns some very important information.
 	if (_vm->_cutContent) {
 		Music_Stop(1u);
+		if (Actor_Query_Is_In_Current_Set(kActorDektora)) {
+			Actor_Set_Targetable(kActorDektora, false);
+		} else if (Actor_Query_Is_In_Current_Set(kActorLucy)) {
+			Actor_Set_Targetable(kActorLucy, false);
+		}
 	}
 	if (_vm->_cutContent) {
 		if (!Game_Flag_Query(kFlagZubenTalkAct4)

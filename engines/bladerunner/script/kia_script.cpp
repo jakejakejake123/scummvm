@@ -2457,6 +2457,7 @@ void KIAScript::SCRIPT_KIA_DLL_Play_Clue_Asset_Script(int notUsed, int clueId) {
 		// The dialogue for when Sadik blows up Maggie.
 	case kClueMcCoyRetiredSadik: 
 		KIA_Play_Actor_Dialogue(kActorSadik, 60); //08-0060.AUD	You like my present, mon?
+		KIA_Play_Actor_Dialogue(kActorMcCoy, 2240); //00-2240.AUD	You bastard! She was an innocent!
 		KIA_Play_Actor_Dialogue(kActorSadik, 70); //08-0070.AUD	She a fake, mon. A machine. Like you!
 		KIA_Play_Actor_Dialogue(kActorSadik, 80); //08-0080.AUD	Tyrell? He make her more doggy than dog, ya know?
 		KIA_Play_Actor_Dialogue(kActorMcCoy, 2245); //00-2245.AUD	That-- that’s a lie!

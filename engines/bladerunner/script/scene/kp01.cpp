@@ -148,6 +148,9 @@ void SceneScriptKP01::ActorChangedGoal(int actorId, int newGoal, int oldGoal, bo
 }
 
 void SceneScriptKP01::PlayerWalkedIn() {
+	if (_vm->_cutContent) {
+		Player_Set_Combat_Mode(false);
+	}
 	if (Game_Flag_Query(kFlagKP04toKP01)) {
 		Loop_Actor_Walk_To_XYZ(kActorMcCoy, -93.0f, -12.2f, -61.0f, 0, false, false, false);
 		Game_Flag_Reset(kFlagKP04toKP01);

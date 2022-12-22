@@ -627,9 +627,11 @@ bool AIScriptClovis::GoalChanged(int currentGoalNumber, int newGoalNumber) {
 		if (_vm->_cutContent) {
 			if (Player_Query_Agenda() == kPlayerAgendaSurly 
 			|| (Player_Query_Agenda() == kPlayerAgendaErratic)) {
-				Actor_Says(kActorMcCoy, 2355, 11); //00-2355.AUD	But after what you did to Maggie? No way.
+				if (!Actor_Clue_Query(kActorMcCoy, kClueMcCoyRetiredSadik)) {
+					Actor_Says(kActorMcCoy, 2355, 11); //00-2355.AUD	But after what you did to Maggie? No way.
+				}
 			}
-		} else if (!Game_Flag_Query(kFlagMcCoyAttackedReplicants)) {
+		} else {
 			Actor_Says(kActorMcCoy, 2355, 11); //00-2355.AUD	But after what you did to Maggie? No way.
 		}
 		Actor_Says(kActorClovis, 190, -1); //05-0190.AUD	And what about you, Ray McCoy?(coughs) After what you did to my family.
