@@ -92,43 +92,122 @@ void SceneScriptCT07::ActorChangedGoal(int actorId, int newGoal, int oldGoal, bo
 }
 
 void SceneScriptCT07::PlayerWalkedIn() {
-	Player_Gains_Control();
-	Non_Player_Actor_Combat_Mode_On(kActorZuben, kActorCombatStateIdle, false, kActorMcCoy, 2, kAnimationModeCombatIdle, kAnimationModeCombatWalk, kAnimationModeCombatRun, 0, 0, 100, 15, 300, false);
-	Game_Flag_Set(kFlagCT07ZubenAttack);
-	Actor_Face_Actor(kActorMcCoy, kActorZuben, true);
-	// Made it so if McCoy decided to spare replicant Runciter he will automatically spare Zuben.
 	if (_vm->_cutContent) {
-		if (Game_Flag_Query(kFlagMcCoyIsHelpingReplicants)	
-		&& !Game_Flag_Query(kFlagMcCoyShotAtZuben)) {
-			Delay(1000);
-			Non_Player_Actor_Combat_Mode_Off(kActorZuben);
-			Game_Flag_Reset(kFlagCT07ZubenAttack);
-			AI_Movement_Track_Flush(kActorZuben);
-			Actor_Modify_Friendliness_To_Other(kActorZuben, kActorMcCoy, 5);
-			Actor_Set_Goal_Number(kActorZuben, kGoalZubenCT07Spared);
-			Game_Flag_Set(kFlagCT01ZubenGone);
-			AI_Movement_Track_Flush(kActorZuben);
-			Actor_Face_Actor(kActorZuben, kActorMcCoy, true);
-			Music_Stop(3u);
-			Player_Set_Combat_Mode(false);
-			Actor_Says(kActorMcCoy, 455, -1); //00-0455.AUD	Relax. Nobody's gonna get retired. Okay?
+		Player_Gains_Control();
+		if (Game_Flag_Query(kFlagZubenIsReplicant)) {
+			Non_Player_Actor_Combat_Mode_On(kActorZuben, kActorCombatStateIdle, false, kActorMcCoy, 2, kAnimationModeCombatIdle, kAnimationModeCombatWalk, kAnimationModeCombatRun, 0, 0, 100, 15, 300, false);
+			Game_Flag_Set(kFlagCT07ZubenAttack);
+		}
+		Actor_Face_Actor(kActorMcCoy, kActorZuben, true);
+		// Made it so if McCoy decided to spare replicant Runciter he will automatically spare Zuben.
+		if (Game_Flag_Query(kFlagZubenIsReplicant)) {
+			if (Game_Flag_Query(kFlagMcCoyIsHelpingReplicants)	
+			&& !Game_Flag_Query(kFlagMcCoyShotAtZuben)) {
+				Delay(1000);
+				Non_Player_Actor_Combat_Mode_Off(kActorZuben);
+				Game_Flag_Reset(kFlagCT07ZubenAttack);
+				AI_Movement_Track_Flush(kActorZuben);
+				Actor_Modify_Friendliness_To_Other(kActorZuben, kActorMcCoy, 5);
+				Actor_Set_Goal_Number(kActorZuben, kGoalZubenCT07Spared);
+				Game_Flag_Set(kFlagCT01ZubenGone);
+				AI_Movement_Track_Flush(kActorZuben);
+				Actor_Face_Actor(kActorZuben, kActorMcCoy, true);
+				Music_Stop(3u);
+				Player_Set_Combat_Mode(false);
+				Actor_Says(kActorMcCoy, 455, -1); //00-0455.AUD	Relax. Nobody's gonna get retired. Okay?
+				Actor_Says(kActorZuben, 100, 19);
+				Actor_Says(kActorMcCoy, 470, 12); //00-0470.AUD	Just talk. That's all.
+				Actor_Says(kActorZuben, 110, 18);
+				Actor_Says(kActorMcCoy, 475, 12);
+				Actor_Says(kActorZuben, 120, 15);
+				Actor_Says(kActorMcCoy, 480, 16);
+				Actor_Says(kActorZuben, 130, 17);
+				Actor_Says(kActorMcCoy, 485, 14);
+				if (Player_Query_Agenda() == kPlayerAgendaSurly 
+				|| Player_Query_Agenda() == kPlayerAgendaErratic) {
+					Actor_Set_Goal_Number(kActorZuben, kGoalZubenCT07RunToFreeSlotA);
+					Player_Set_Combat_Mode(true);
+					Delay(1500);
+					Actor_Face_Actor(kActorMcCoy, kActorZuben, true);
+					Actor_Start_Speech_Sample(kActorMcCoy, 490); //00-0490.AUD	Suck on this, skin-job!
+					Sound_Play(kSfxGUNH1A, 100, 0, 0, 50);
+					Actor_Change_Animation_Mode(kActorMcCoy, 6);
+					Actor_Modify_Friendliness_To_Other(kActorSteele, kActorMcCoy, 1);
+					Actor_Modify_Friendliness_To_Other(kActorGuzza, kActorMcCoy, 1);
+					Actor_Modify_Friendliness_To_Other(kActorClovis, kActorMcCoy, -1);
+					Actor_Clue_Acquire(kActorZuben, kClueMcCoyShotZubenInTheBack, true, -1);
+					Actor_Clue_Lose(kActorZuben, kClueMcCoyLetZubenEscape);
+					Actor_Clue_Acquire(kActorMcCoy, kClueMcCoyShotZubenInTheBack, true, kActorZuben);
+					Game_Flag_Reset(kFlagMcCoyIsHelpingReplicants);
+					Game_Flag_Set(kFlagZubenEncounter);
+					Actor_Set_Goal_Number(kActorGaff, kGoalGaffCT05Wait);
+				} else {
+					Actor_Set_Goal_Number(kActorZuben, kGoalZubenCT07RunToFreeSlotA);
+					Game_Flag_Set(kFlagZubenSpared);
+					Game_Flag_Set(kFlagZubenEncounter);
+					Actor_Set_Goal_Number(kActorGaff, kGoalGaffCT05Wait);
+					Actor_Clue_Acquire(kActorZuben, kClueMcCoyLetZubenEscape, true, -1);
+					Actor_Clue_Acquire(kActorLucy, kClueMcCoyLetZubenEscape, true, -1);
+					Actor_Modify_Friendliness_To_Other(kActorSteele, kActorMcCoy, -1);
+					Actor_Modify_Friendliness_To_Other(kActorGuzza, kActorMcCoy, -1);
+					Actor_Modify_Friendliness_To_Other(kActorClovis, kActorMcCoy, 1);
+				}
+				if (Random_Query(1, 3) < 3) {
+					Actor_Clue_Acquire(kActorZuben, kClueMcCoysDescription, true, -1);
+				}
+				if (Random_Query(1, 5) < 5) {
+					Actor_Clue_Acquire(kActorZuben, kClueMcCoyIsABladeRunner, true, -1);
+				}
+			} 
+		} else {
 			Actor_Says(kActorZuben, 100, 19);
 			Actor_Says(kActorMcCoy, 470, 12); //00-0470.AUD	Just talk. That's all.
 			Actor_Says(kActorZuben, 110, 18);
 			Actor_Says(kActorMcCoy, 475, 12);
-			Actor_Says(kActorZuben, 120, 15);
-			Actor_Says(kActorMcCoy, 480, 16);
-			Actor_Says(kActorZuben, 130, 17);
-			Actor_Says(kActorMcCoy, 485, 14);
-			if (Player_Query_Agenda() == kPlayerAgendaPolite) {
+			Delay(1000);
+			Actor_Says(kActorMcCoy, 7295, 11); //00-7295.AUD	The girl. I need to know where's the girl.
+			if (Game_Flag_Query(kFlagMcCoyIsHelpingReplicants)) {
+				Actor_Says(kActorZuben, 200, 12); //19-0200.AUD	Girl?
+				Actor_Says(kActorMcCoy, 7315, 16); //00-7315.AUD	Lucy.
+				Actor_Says(kActorZuben, 210, 12); //19-0210.AUD	She daughter. She with Clovis.
+				Actor_Says(kActorZuben, 220, 14); //19-0220.AUD	You not hurt her.
+				Actor_Says(kActorMcCoy, 7940, 13);	//00-7940.AUD	Right.
 				Delay(1000);
-				Actor_Says(kActorMcCoy, 3690, 13); //00-3690.AUD	Look. I wanna warn you. There’s a woman looking for you and your friends.
-				Actor_Says(kActorMcCoy, 3700, 15); //00-3700.AUD	If I found you, so will she.
+				Actor_Says(kActorMcCoy, 7320, 17); //00-7320.AUD	Is she a Replicant?
+				if (Game_Flag_Query(kFlagLucyIsReplicant)) {
+					Delay(2000);
+					Actor_Says(kActorMcCoy, 1885, kAnimationModeTalk); //00-1885.AUD	I’ll take that as a yes.
+					Actor_Clue_Acquire(kActorMcCoy, kClueZubenTalksAboutLucy1, false, kActorZuben);
+				} else {
+					Delay(2000);
+					Actor_Says(kActorMcCoy, 7335, 14); //00-7335.AUD	She's not a Replicant?
+					Actor_Says(kActorZuben, 260, 15); //19-0260.AUD	She good girl. She stay with Clovis.
+					Actor_Says(kActorZuben, 340, 15); //19-0340.AUD	You promise no hurt.
+					Actor_Says(kActorMcCoy, 7345, 12); //00-7345.AUD	Right, no hurt. No hurt anymore.
+					Actor_Clue_Acquire(kActorMcCoy, kClueZubenTalksAboutLucy2, false, kActorZuben);
+				}
 				Delay(1000);
-				Actor_Says(kActorMcCoy, 1660, 14); //00-1660.AUD	Go! Quickly.
+				Actor_Says(kActorMcCoy, 7300, 13); //00-7300.AUD	Did you kill the animals?
+				Actor_Says(kActorZuben, 270, 15); //19-0270.AUD	Because he bad.
+				Actor_Says(kActorMcCoy, 7350, 14);	//00-7350.AUD	Runciter?
+				Actor_Says(kActorZuben, 280, 12); //19-0280.AUD	He not pay. Bad to Lucy. Bad to everybody. Make people starve.
+				Actor_Says(kActorZuben, 290, 15); //19-0290.AUD	He made Lucy do bad things. Lucy hurt. Clovis more angry.
+				Actor_Says(kActorZuben, 300, 14); //19-0300.AUD	Girl was forced to do bad things Off-World. Clovis thought Terra better.
+				Actor_Says(kActorZuben, 310, 13); //19-0310.AUD	But Terra's no better for young girls. Runciter bad to Lucy.
+				Delay(2000);
+				if (Player_Query_Agenda() != kPlayerAgendaPolite) {
+					Actor_Says(kActorMcCoy, 7365, 12);	//00-7365.AUD	You should have killed him.
+				} else {
+					Actor_Says(kActorMcCoy, 7360, 11); //00-7360.AUD	Did he do things to Lucy?
+				}
+				Actor_Says(kActorZuben, 320, 12); //19-0320.AUD	Clovis say Runciter love animals. Runciter still alive so he hurt now. Know what pain is.
+				Actor_Says(kActorZuben, 330, 12); //19-0330.AUD	Kill him, he not hurt. Just dead.
+				Actor_Clue_Acquire(kActorMcCoy, kClueZubensMotive, false, kActorZuben);
+				Delay(2000);
+				Actor_Says(kActorZuben, 170, 14); //19-0170.AUD	Now I go.
+				Actor_Says(kActorMcCoy, 2860, 13); // YouTakeCareOfYourself
 				Actor_Set_Goal_Number(kActorZuben, kGoalZubenCT07RunToFreeSlotA);
 				Game_Flag_Set(kFlagZubenSpared);
-				Game_Flag_Set(kFlagMcCoyIsHelpingReplicants);
 				Game_Flag_Set(kFlagZubenEncounter);
 				Actor_Set_Goal_Number(kActorGaff, kGoalGaffCT05Wait);
 				Actor_Clue_Acquire(kActorZuben, kClueMcCoyLetZubenEscape, true, -1);
@@ -136,42 +215,42 @@ void SceneScriptCT07::PlayerWalkedIn() {
 				Actor_Modify_Friendliness_To_Other(kActorSteele, kActorMcCoy, -2);
 				Actor_Modify_Friendliness_To_Other(kActorGuzza, kActorMcCoy, -2);
 				Actor_Modify_Friendliness_To_Other(kActorClovis, kActorMcCoy, 2);
-			} else if (Player_Query_Agenda() == kPlayerAgendaSurly 
-			|| Player_Query_Agenda() == kPlayerAgendaErratic) {
-				Actor_Set_Goal_Number(kActorZuben, kGoalZubenCT07RunToFreeSlotA);
-				Player_Set_Combat_Mode(true);
-				Delay(1500);
-				Actor_Face_Actor(kActorMcCoy, kActorZuben, true);
-				Actor_Start_Speech_Sample(kActorMcCoy, 490); //00-0490.AUD	Suck on this, skin-job!
-				Sound_Play(kSfxGUNH1A, 100, 0, 0, 50);
-				Actor_Change_Animation_Mode(kActorMcCoy, 6);
+			} else {
+				Delay(2000);
+				Actor_Says(kActorMcCoy, 8590, 13);  // Not the talkative type
+				Delay(2000);
+				Actor_Says(kActorZuben, 170, 14); //19-0170.AUD	Now I go.
+				Actor_Says(kActorMcCoy, 7860, 14); //00-7860.AUD	Stay right where you are.
+				Delay(1000);
+				Actor_Says(kActorMcCoy, 3090, 15); //00-3090.AUD	You may not be a Rep but you’re a damn Rep sympathizer for sure.
+				Actor_Says(kActorMcCoy, 3095, 14); //00-3095.AUD	Now we’re gonna take a little ride downtown.
+				Game_Flag_Set(kFlagZubenSpared);
+				Game_Flag_Set(kFlagZubenEncounter);
 				Actor_Modify_Friendliness_To_Other(kActorSteele, kActorMcCoy, 1);
 				Actor_Modify_Friendliness_To_Other(kActorGuzza, kActorMcCoy, 1);
 				Actor_Modify_Friendliness_To_Other(kActorClovis, kActorMcCoy, -1);
-				Actor_Clue_Acquire(kActorZuben, kClueMcCoyShotZubenInTheBack, true, -1);
-				Actor_Clue_Lose(kActorZuben, kClueMcCoyLetZubenEscape);
-				Actor_Clue_Acquire(kActorMcCoy, kClueMcCoyShotZubenInTheBack, true, kActorZuben);
-				Game_Flag_Reset(kFlagMcCoyIsHelpingReplicants);
-				Game_Flag_Set(kFlagZubenEncounter);
-				Actor_Set_Goal_Number(kActorGaff, kGoalGaffCT05Wait);
-			} else {
-				Actor_Set_Goal_Number(kActorZuben, kGoalZubenCT07RunToFreeSlotA);
-				Game_Flag_Set(kFlagZubenSpared);
-				Game_Flag_Set(kFlagZubenEncounter);
-				Actor_Set_Goal_Number(kActorGaff, kGoalGaffCT05Wait);
-				Actor_Clue_Acquire(kActorZuben, kClueMcCoyLetZubenEscape, true, -1);
-				Actor_Clue_Acquire(kActorLucy, kClueMcCoyLetZubenEscape, true, -1);
-				Actor_Modify_Friendliness_To_Other(kActorSteele, kActorMcCoy, -1);
-				Actor_Modify_Friendliness_To_Other(kActorGuzza, kActorMcCoy, -1);
-				Actor_Modify_Friendliness_To_Other(kActorClovis, kActorMcCoy, 1);
-			}
-			if (Random_Query(1, 3) < 3) {
-				Actor_Clue_Acquire(kActorZuben, kClueMcCoysDescription, true, -1);
-			}
-			if (Random_Query(1, 5) < 5) {
-				Actor_Clue_Acquire(kActorZuben, kClueMcCoyIsABladeRunner, true, -1);
+				Actor_Clue_Acquire(kActorClovis, kClueMcCoyRetiredZuben, true, -1);
+				Delay (1000);
+				Music_Stop(1u);
+				Game_Flag_Set(kFlagZubenArrested);
+				Actor_Put_In_Set(kActorZuben, kSetPS09);
+				Actor_Set_At_XYZ(kActorZuben, -399.5f, 0.2f, -255.0f, 512);
+				Game_Flag_Reset(kFlagSpinnerAtCT01);
+				Game_Flag_Set(kFlagSpinnerAtPS01);
+				Scene_Exits_Enable();
+				Game_Flag_Reset(kFlagMcCoyInChinaTown);
+				Game_Flag_Set(kFlagMcCoyInPoliceStation);
+				Ambient_Sounds_Remove_All_Non_Looping_Sounds(true);
+				Ambient_Sounds_Remove_All_Looping_Sounds(1u);
+				Actor_Set_Targetable(kActorZuben, false);
+				Set_Enter(kSetPS09, kScenePS09);
 			}
 		}
+	} else {
+		Player_Gains_Control();
+		Non_Player_Actor_Combat_Mode_On(kActorZuben, kActorCombatStateIdle, false, kActorMcCoy, 2, kAnimationModeCombatIdle, kAnimationModeCombatWalk, kAnimationModeCombatRun, 0, 0, 100, 15, 300, false);
+		Game_Flag_Set(kFlagCT07ZubenAttack);
+		Actor_Face_Actor(kActorMcCoy, kActorZuben, true);
 	}
 }
 

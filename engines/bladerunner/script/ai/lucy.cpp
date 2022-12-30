@@ -227,11 +227,13 @@ void AIScriptLucy::ReceivedClue(int clueId, int fromActorId) {
 void AIScriptLucy::ClickedByPlayer() {
 	if (_vm->_cutContent) {
 		if (Actor_Query_In_Set(kActorLucy, kSetKP07)) {
-			Loop_Actor_Walk_To_Actor(kActorMcCoy, kActorLucy, 24, false, false);
-			Actor_Face_Actor(kActorMcCoy, kActorLucy, true);
-			Actor_Face_Actor(kActorLucy, kActorMcCoy, true);
-			Actor_Says(kActorMcCoy, 4775, kAnimationModeTalk); //00-4775.AUD	Lucy.
-			Actor_Says(kActorLucy, 0, 17); //06-0000.AUD	I knew you’d come.
+			if (Actor_Query_Goal_Number(kActorLucy) < kGoalLucyGone) {
+				Loop_Actor_Walk_To_Actor(kActorMcCoy, kActorLucy, 24, false, false);
+				Actor_Face_Actor(kActorMcCoy, kActorLucy, true);
+				Actor_Face_Actor(kActorLucy, kActorMcCoy, true);
+				Actor_Says(kActorMcCoy, 4775, kAnimationModeTalk); //00-4775.AUD	Lucy.
+				Actor_Says(kActorLucy, 0, 17); //06-0000.AUD	I knew you’d come.
+			}
 		}
 	}
 	if (Actor_Query_Goal_Number(kActorLucy) == kGoalLucyGone) {
@@ -283,6 +285,8 @@ void AIScriptLucy::Retired(int byActorId) {
 		Global_Variable_Decrement(kVariableReplicantsSurvivorsAtMoonbus, 1);
 		Actor_Set_Goal_Number(kActorLucy, kGoalLucyGone);
 		if (_vm->_cutContent) {
+			Actor_Modify_Friendliness_To_Other(kActorSteele, kActorMcCoy, 2);
+			Game_Flag_Reset(kFlagMcCoyIsHelpingReplicants);
 			if (Query_Difficulty_Level() != kGameDifficultyEasy) {
 				Global_Variable_Increment (kVariableChinyen, 200);
 			}
@@ -298,29 +302,30 @@ void AIScriptLucy::Retired(int byActorId) {
 					Loop_Actor_Walk_To_XYZ(kActorRunciter, -12.0f, -41.58f, 72.0f, 0, true, false, false);
 					Actor_Put_In_Set(kActorRunciter, kSceneKP06);
 				}
-				if (Actor_Query_In_Set(kActorEarlyQ, kSetKP07)) {
-					Loop_Actor_Walk_To_XYZ(kActorEarlyQ, -12.0f, -41.58f, 72.0f, 0, true, false, false);
-					Actor_Put_In_Set(kActorEarlyQ, kSceneKP06);	
-				}
 				if (Actor_Query_In_Set(kActorCrazylegs, kSetKP07)) {
 					Loop_Actor_Walk_To_XYZ(kActorCrazylegs, -12.0f, -41.58f, 72.0f, 0, true, false, false);
 					Actor_Put_In_Set(kActorCrazylegs, kSceneKP06);	
 				}
+				if (Actor_Query_In_Set(kActorGrigorian, kSetKP07)) {
+					Actor_Face_Heading(kActorGrigorian, 900, false);
+					Delay(1000);
+					Actor_Put_In_Set(kActorGrigorian, kSceneKP06);
+				}
 				if (Game_Flag_Query(kFlagRunciterIsReplicant)) {
 					if (Actor_Query_Goal_Number(kActorRunciter) < kGoalRunciterDead) {
-						Delay(500);
-						Sound_Play(kSfxSMCAL3, 100, 0, 0, 50);
-					}
-				}
-				if (Game_Flag_Query(kFlagEarlyQIsReplicant)) {
-					if (!Game_Flag_Query(kFlagEarlyQDead)) {
-						Delay(500);
+						Delay(1000);
 						Sound_Play(kSfxSMCAL3, 100, 0, 0, 50);
 					}
 				}
 				if (Game_Flag_Query(kFlagCrazylegsIsReplicant)) {
 					if (!Game_Flag_Query(kFlagCrazylegsDead)) {
-						Delay(500);
+						Delay(1000);
+						Sound_Play(kSfxSMCAL3, 100, 0, 0, 50);
+					}
+				}
+				if (Game_Flag_Query(kFlagGrigorianIsReplicant)) {
+					if (!Game_Flag_Query(kFlagGrigorianDead)) {
+						Delay(1000);
 						Sound_Play(kSfxSMCAL3, 100, 0, 0, 50);
 					}
 				}
@@ -356,22 +361,23 @@ void AIScriptLucy::Retired(int byActorId) {
 		Non_Player_Actor_Combat_Mode_On(kActorSteele, kActorCombatStateUncover, true, kActorMcCoy, 15, kAnimationModeCombatIdle, kAnimationModeCombatWalk, kAnimationModeCombatRun, 0, 0, 100, 25, 300, false);
 	}
 
-	if (byActorId == kActorMcCoy
-	&& Actor_Query_In_Set(kActorLucy, kSetHF04)
-	&& Game_Flag_Query(kFlagLucyIsReplicant)) { 
-		if (Query_Difficulty_Level() != kGameDifficultyEasy) {
-			Global_Variable_Increment(kVariableChinyen, 200);
-		}
-		if (_vm->_cutContent) {
+	if (_vm->_cutContent) {
+		if (byActorId == kActorMcCoy
+		&& Actor_Query_In_Set(kActorLucy, kSetHF04)
+		&& Game_Flag_Query(kFlagLucyIsReplicant)) { 
+			if (Query_Difficulty_Level() != kGameDifficultyEasy) {
+				Global_Variable_Increment(kVariableChinyen, 200);
+			}
 			// Sad music will play when Lucy dies.
 			Music_Stop(1u);
-			if (Player_Query_Agenda() == kPlayerAgendaSurly 
-			|| Player_Query_Agenda() == kPlayerAgendaErratic) {
-				Actor_Voice_Over(920, kActorVoiceOver); // 99-0920.AUD	Easy money.
-			} else {
-				Actor_Voice_Over(930, kActorVoiceOver); // 99-0930.AUD	Hope I was right about her.	
-			}	
+			Delay(1000);
 			Music_Play(kMusicCrysDie1, 25, 0, 1, -1, kMusicLoopPlayOnce, 0);
+			Delay(1000);
+			Actor_Voice_Over(930, kActorVoiceOver); // 99-0930.AUD	Hope I was right about her.	
+			Delay(2000);
+			Actor_Voice_Over(1410, kActorVoiceOver); //99-1410.AUD	I’d retired another Replicant so more money was headed my way but I didn’t feel so good about it.
+			Delay(1000);
+			Actor_Says(kActorMcCoy, 170, 19); //00-0170.AUD	Damn.
 			Actor_Clue_Acquire(kActorClovis, kClueMcCoyRetiredLucy, true, -1);
 			Actor_Modify_Friendliness_To_Other(kActorClovis, kActorMcCoy, -4);
 			Game_Flag_Reset(kFlagMcCoyIsHelpingReplicants);
@@ -380,9 +386,37 @@ void AIScriptLucy::Retired(int byActorId) {
 			Actor_Modify_Friendliness_To_Other(kActorGaff, kActorMcCoy, 2);
 			// Made it so you lose affection to both Lucy and Dektora if you retire Lucy.
 			Global_Variable_Set(kVariableAffectionTowards, kAffectionTowardsNone);
+			Actor_Set_Goal_Number(kActorLucy, kGoalLucyGone);
+		} else if (byActorId == kActorMcCoy
+		&& Actor_Query_In_Set(kActorLucy, kSetHF04)
+		&& !Game_Flag_Query(kFlagLucyIsReplicant)) { 
+			Music_Stop(1u);
+			Delay(1000);
+			Music_Play(kMusicCrysDie1, 25, 0, 1, -1, kMusicLoopPlayOnce, 0);
+			Actor_Voice_Over(2100, kActorVoiceOver); //99-2100.AUD	I'd crossed the line.
+			Delay(1000);
+			Actor_Says(kActorMcCoy, 2390, kAnimationModeIdle); //00-2390.AUD	Oh, God. No.
+			Delay(2000);
+			Actor_Voice_Over(300, kActorVoiceOver); //99-0300.AUD	I'd screwed up. Plain and simple.
+			Delay(1000);
+			Actor_Says(kActorMcCoy, 2305, 13); //00-2305.AUD	I’m sorry.
+			Delay(2000);
+			Actor_Set_Goal_Number(kActorLucy, kGoalLucyGone);
+			Outtake_Play(kOuttakeAway1, true, -1);
+			Music_Stop(1u);
+			Actor_Set_Goal_Number(kActorMcCoy, kGoalMcCoyArrested);	
+		}
+	} else {
+		if (byActorId == kActorMcCoy
+		&& Actor_Query_In_Set(kActorLucy, kSetHF04)
+		&& Game_Flag_Query(kFlagLucyIsReplicant)) { 
+			if (Query_Difficulty_Level() != kGameDifficultyEasy) {
+				Global_Variable_Increment(kVariableChinyen, 200);
+			}
+			Music_Stop(1u);
+			Actor_Set_Goal_Number(kActorLucy, kGoalLucyGone);
 		}
 	}
-	Actor_Set_Goal_Number(kActorLucy, kGoalLucyGone);
 }
 
 int AIScriptLucy::GetFriendlinessModifierIfGetsClue(int otherActorId, int clueId) {

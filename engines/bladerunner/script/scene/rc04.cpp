@@ -217,7 +217,8 @@ void SceneScriptRC04::dialogueWithBulletBob() {
 		// Made it so Bobs opinion on Izo will be determined by Bobs replicant status. If Bob is a replicant he will always speak positively about Izo and
 		// if Bob is a human he will always speak negatively about Izo.
 		if (_vm->_cutContent) {
-			if (!Game_Flag_Query(kFlagBulletBobIsReplicant)) {
+			if (!Game_Flag_Query(kFlagBulletBobIsReplicant)
+			&& Actor_Query_Friendliness_To_Other(kActorBulletBob, kActorMcCoy) > 49) {
 				Actor_Says(kActorBulletBob, 320, 30);
 				Actor_Says(kActorBulletBob, 330, 33);
 				Actor_Says(kActorBulletBob, 340, 37); //14-0340.AUD	But who knows what the real title is.
@@ -369,7 +370,8 @@ void SceneScriptRC04::dialogueWithBulletBob() {
 		}
 		Actor_Says(kActorMcCoy, 5010, 11); //00-5010.AUD	You know anyone who might sell Ender rifles?
 		if (_vm->_cutContent) {
-			if (!Game_Flag_Query(kFlagBulletBobIsReplicant)) {
+			if (!Game_Flag_Query(kFlagBulletBobIsReplicant)
+			&& Actor_Query_Friendliness_To_Other(kActorBulletBob, kActorMcCoy) > 49) {
 				Actor_Says(kActorBulletBob, 320, 30);
 				Actor_Says(kActorBulletBob, 330, 33);
 				Actor_Says(kActorBulletBob, 340, 37); //14-0340.AUD	But who knows what the real title is.
@@ -1513,8 +1515,19 @@ void SceneScriptRC04::PlayerWalkedIn() {
 				}
 			} else {
 				Actor_Says(kActorDispatcher, 40, 3);
+				Actor_Face_Actor(kActorMcCoy, kActorBulletBob, true);
 				Actor_Says(kActorBulletBob, 890, 37);
-				Actor_Set_Goal_Number(kActorBulletBob, kGoalBulletBobShootMcCoy);
+				Actor_Change_Animation_Mode(kActorBulletBob, 4);
+				Delay(1500);
+				Actor_Face_Actor(kActorBulletBob, kActorMcCoy, true);
+				Sound_Play(kSfxSHOTCOK1, 75, 0, 0, 50);
+				Delay(1000);
+				Player_Loses_Control();
+				Loop_Actor_Walk_To_XYZ(kActorMcCoy, 45.0f, 0.15f, 68.0f, 0, true, true, true);
+				Player_Gains_Control();
+				Game_Flag_Set(kFlagBobAttackedMcCoy);
+				Game_Flag_Set(kFlagRC04toRC03);
+				Set_Enter(kSetRC03, kSceneRC03);
 			}
 		} else {
 			Actor_Says(kActorDispatcher, 40, 3);

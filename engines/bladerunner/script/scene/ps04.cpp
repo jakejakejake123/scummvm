@@ -233,8 +233,49 @@ void SceneScriptPS04::PlayerWalkedIn() {
 			Actor_Retired_Here(kActorMcCoy, 6, 6, 1, -1);
 		}
 	}
-	
-
+	if (_vm->_cutContent) {
+		if (Game_Flag_Query(kFlagMcCoyShotGrigorian)) {
+			Actor_Put_In_Set(kActorGuzza, kSetPS04);
+			Actor_Set_At_XYZ(kActorGuzza, -728.0f, -354.0f, 1090.0f, 150);
+			Actor_Change_Animation_Mode(kActorGuzza, 53);
+			Actor_Face_Actor(kActorGuzza, kActorMcCoy, true);
+			Actor_Face_Actor(kActorMcCoy, kActorGuzza, true);
+			Actor_Says(kActorGuzza, 150, 31); //04-0150.AUD	You've really been surprising the troops around here, kid.
+			Actor_Says(kActorGuzza, 160, 32); //04-0160.AUD	Gaff says you worked that retirement like a champ.
+			if (Player_Query_Agenda() != kPlayerAgendaSurly 
+			&& Player_Query_Agenda() != kPlayerAgendaErratic) {
+				Actor_Says(kActorMcCoy, 3925, 18); //00-3925.AUD	Just doing the job.
+			} else {
+				Actor_Says(kActorMcCoy, 2215, 18); //00-2215.AUD	That’s right.
+			}
+			Actor_Face_Actor(kActorGuzza, kActorMcCoy, true);
+			Actor_Says(kActorGuzza, 170, 33); //04-0170.AUD	Yeah, well don't get too cocky. Those Sixes can be damn unpredictable.
+			Loop_Actor_Walk_To_XYZ(kActorMcCoy, -716.0f, -354.85f, 1042.0f, 0, false, false, true);
+			Actor_Face_Actor(kActorMcCoy, kActorGuzza, true);
+			Actor_Says(kActorMcCoy, 3930, 13); // 00-3930.AUD	That I know. 
+			Actor_Says(kActorGuzza, 300, 31);	// Why don't you rest them dogs the rest of the day.
+			if (Player_Query_Agenda() != kPlayerAgendaSurly 
+			&& Player_Query_Agenda() != kPlayerAgendaErratic) {
+				Actor_Says(kActorMcCoy, 3965, 13);	// I still got plenty energy.
+				Actor_Says(kActorGuzza, 310, 33);	// That's an order McCoy.
+				Actor_Says(kActorGuzza, 320, 34);	// I'm ordering you to relax.
+			} else {
+				Actor_Says(kActorMcCoy, 8200, 13); //00-8200.AUD	When I'm done, maybe.
+			}
+			Scene_Exits_Enable();
+			Game_Flag_Set(kFlagGrigorianDead);
+			Game_Flag_Reset(kFlagMcCoyShotGrigorian);
+			if (Query_Difficulty_Level() != kGameDifficultyEasy) {
+				Global_Variable_Increment(kVariableChinyen, 200);
+			}
+			Actor_Set_At_XYZ(kActorGrigorian, -728.0f, -354.0f, 1090.0f, 150);
+			Actor_Modify_Friendliness_To_Other(kActorClovis, kActorMcCoy, -2);
+			Game_Flag_Reset(kFlagMcCoyIsHelpingReplicants);
+			Actor_Modify_Friendliness_To_Other(kActorSteele, kActorMcCoy, 2);
+			Actor_Modify_Friendliness_To_Other(kActorGuzza, kActorMcCoy, 2);
+			Actor_Modify_Friendliness_To_Other(kActorGaff, kActorMcCoy, 2);
+		}
+	}
 	//return false;
 }
 
@@ -476,6 +517,8 @@ void SceneScriptPS04::dialogueWithGuzza() {
 							Actor_Says(kActorMcCoy, 3965, 13);	// I still got plenty energy.
 							Actor_Says(kActorGuzza, 310, 33);	// That's an order McCoy.
 							Actor_Says(kActorGuzza, 320, 34);	// I'm ordering you to relax.
+						} else {
+							Actor_Says(kActorMcCoy, 8200, 13); //00-8200.AUD	When I'm done, maybe.
 						}
 					}
 				}

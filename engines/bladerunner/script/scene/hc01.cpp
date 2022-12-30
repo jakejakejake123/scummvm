@@ -698,28 +698,33 @@ void SceneScriptHC01::dialogueWithIzo() {
 			Actor_Says(kActorIzo, 460, 13); //07-0460.AUD	Said he wanted to do some gardening.
 			Actor_Says(kActorMcCoy, 1185, 18); // Calfskin?
 			Actor_Says(kActorIzo, 470, 14); //
-			Actor_Says(kActorMcCoy, 1190, 14); //00-1190.AUD	Grigorian said you were thrown out of C.A.R.S. for having violent tendencies.
-			Actor_Says(kActorIzo, 480, 13); //07-0480.AUD	Whoever Grigorian is, he's lying.
 			if (_vm->_cutContent) {
-				if (Player_Query_Agenda() == kPlayerAgendaSurly 
-				|| Player_Query_Agenda() == kPlayerAgendaErratic) {	
-					Actor_Says(kActorMcCoy, 1195, 16); //00-1195.AUD	He also said you were a borderline sociopath who ought to be locked up.
-					Actor_Says(kActorMcCoy, 1200, 18); //00-1200.AUD	But I'm inclined to agree.
-					if (Actor_Query_Friendliness_To_Other(kActorIzo, kActorMcCoy) < 50) {
-						Actor_Says(kActorIzo, 490, 12); //07-0490.AUD	Don't you wish I gave a damn about what you think?
-						Actor_Modify_Friendliness_To_Other(kActorIzo, kActorMcCoy, -2);
-						Actor_Says(kActorMcCoy, 1205, 14); //00-1205.AUD	I can make you give a damn.
-						Actor_Says(kActorIzo, 500, 14); //07-0500.AUD	(snickers) Let me give you a little word of advice, detective.
-						Actor_Says(kActorIzo, 510, 17); //07-0510.AUD	Stay out of my business.
-						Actor_Says(kActorIzo, 520, 16); //07-0520.AUD	More importantly stay out of my face.
-						Actor_Says(kActorIzo, 530, 15); //07-0530.AUD	All I'd have to do is make one vid-call and you would be shoveling shit Off-World for the rest of your career.
-						Actor_Says(kActorMcCoy, 1210, 16); //00-1210.AUD	Talk to me like that some more and you'll be eating it.
-					} else {	
+				if (!Game_Flag_Query(kFlagGrigorianIsReplicant)) {
+					Actor_Says(kActorMcCoy, 1190, 14); //00-1190.AUD	Grigorian said you were thrown out of C.A.R.S. for having violent tendencies.
+					Actor_Says(kActorIzo, 480, 13); //07-0480.AUD	Whoever Grigorian is, he's lying.
+					if (Player_Query_Agenda() == kPlayerAgendaSurly 
+					|| Player_Query_Agenda() == kPlayerAgendaErratic) {	
+						Actor_Says(kActorMcCoy, 1195, 16); //00-1195.AUD	He also said you were a borderline sociopath who ought to be locked up.
+						Actor_Says(kActorMcCoy, 1200, 18); //00-1200.AUD	But I'm inclined to agree.
+						if (Actor_Query_Friendliness_To_Other(kActorIzo, kActorMcCoy) < 50) {
+							Actor_Says(kActorIzo, 490, 12); //07-0490.AUD	Don't you wish I gave a damn about what you think?
+							Actor_Modify_Friendliness_To_Other(kActorIzo, kActorMcCoy, -2);
+							Actor_Says(kActorMcCoy, 1205, 14); //00-1205.AUD	I can make you give a damn.
+							Actor_Says(kActorIzo, 500, 14); //07-0500.AUD	(snickers) Let me give you a little word of advice, detective.
+							Actor_Says(kActorIzo, 510, 17); //07-0510.AUD	Stay out of my business.
+							Actor_Says(kActorIzo, 520, 16); //07-0520.AUD	More importantly stay out of my face.
+							Actor_Says(kActorIzo, 530, 15); //07-0530.AUD	All I'd have to do is make one vid-call and you would be shoveling shit Off-World for the rest of your career.
+							Actor_Says(kActorMcCoy, 1210, 16); //00-1210.AUD	Talk to me like that some more and you'll be eating it.
+						} else {	
+							Actor_Says(kActorIzo, 440, 13); //07-0440.AUD	I am nothing but a humble salesman.
+							Actor_Says(kActorMcCoy, 4880, 16); //00-4880.AUD	Is that right?
+						}
+					} else {
+						Actor_Says(kActorMcCoy, 1180, 14); // So, you're denying all involvement?
 						Actor_Says(kActorIzo, 440, 13); //07-0440.AUD	I am nothing but a humble salesman.
-						Actor_Says(kActorMcCoy, 4880, 16); //00-4880.AUD	Is that right?
 					}
 				} else {
-					Actor_Says(kActorMcCoy, 1180, 14); // So, you're denying all involvement?
+					Delay(1000);
 					Actor_Says(kActorIzo, 440, 13); //07-0440.AUD	I am nothing but a humble salesman.
 				}
 			} else {

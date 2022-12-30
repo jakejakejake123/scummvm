@@ -249,6 +249,7 @@ bool SceneScriptRC03::ClickedOnExit(int exitId) {
 				if (Global_Variable_Query(kVariableChapter) == 5
 				|| Game_Flag_Query(kFlagOfficerLearyKilledByBob)
 				|| Game_Flag_Query(kFlagBulletBobArrested)
+				|| Game_Flag_Query(kFlagBobAttackedMcCoy)
 				|| Actor_Query_Goal_Number(kActorBulletBob) > kGoalBulletBobGone 
 				|| Actor_Clue_Query(kActorMcCoy, kClueCrystalRetiredBob)) {
 					Actor_Says(kActorMcCoy, 8522, 14);

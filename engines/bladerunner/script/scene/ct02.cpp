@@ -60,7 +60,8 @@ void SceneScriptCT02::InitializeScene() {
 
 	Scene_Exit_Add_2D_Exit(kCT02ExitCT01, 590, 0, 639, 479, 1);
 	if (_vm->_cutContent) {
-		if (Game_Flag_Query(kFlagCT02PotTipped)) {	
+		if (Game_Flag_Query(kFlagCT02PotTipped)
+		|| Game_Flag_Query(kFlagCT01TalkToHowieAfterZubenMissing)) {
 			Scene_Exit_Add_2D_Exit(kCT02ExitCT03, 332, 163, 404, 297, 0);
 		} else {
 			Overlay_Play("ct02over", 0, true, false, 0);
@@ -104,7 +105,8 @@ void SceneScriptCT02::SceneLoaded() {
 	Obstacle_Object("LFTSTOVE-1", true);
 	Obstacle_Object("FRIDGE-1", true);
 	if (_vm->_cutContent) {
-		if (Game_Flag_Query(kFlagCT02PotTipped)) {	
+		if (Game_Flag_Query(kFlagCT02PotTipped)
+		|| Game_Flag_Query(kFlagCT01TalkToHowieAfterZubenMissing)) {	
 			Unobstacle_Object("BACK-DOOR", true);
 		} else {
 			Obstacle_Object("BACK-DOOR", true);
@@ -136,7 +138,8 @@ void SceneScriptCT02::SceneLoaded() {
 	if (_vm->_cutContent && !Actor_Clue_Query(kActorMcCoy, kClueCandyWrapper)) {
 		Item_Add_To_World(kItemChopstickWrapper, kModelAnimationCandyWrapper, kSetCT02, -144.69, -145.51, 195.58, 0, 12, 12, false, true, false, true);
 	}
-	if (!Game_Flag_Query(kFlagCT02PotTipped)) {
+	if (!Game_Flag_Query(kFlagCT02PotTipped)
+	&& !Game_Flag_Query(kFlagCT01TalkToHowieAfterZubenMissing)) {
 		Preload(kModelAnimationMcCoyWithGunIdle);
 		Preload(kModelAnimationMcCoyWithGunWalking);
 		Preload(kModelAnimationMcCoyWithGunWalking); // A bug? Why is this preloaded twice?
@@ -257,18 +260,25 @@ void SceneScriptCT02::dialogueWithZuben() {
 		} else {
 			Actor_Says(kActorMcCoy, 380, 11);
 		}
-		Actor_Says(kActorZuben, 30, 17);
-		Actor_Says(kActorZuben, 40, 15);
-		// Made it so McCoy only receives the Zuben interview clue if he is either surly or erratic which leads to McCoy pushing Zuben into revealing what he knows.
 		if (_vm->_cutContent) {
-			if (Player_Query_Agenda() == kPlayerAgendaSurly 
-			|| Player_Query_Agenda() == kPlayerAgendaErratic) {
-				Actor_Says(kActorMcCoy, 410, 9); //00-0410.AUD	Think hard.
+			if (Game_Flag_Query(kFlagZubenIsReplicant)) {
+				Actor_Says(kActorZuben, 30, 17);
+				Actor_Says(kActorZuben, 40, 15);
+				if (Player_Query_Agenda() == kPlayerAgendaSurly 
+				|| Player_Query_Agenda() == kPlayerAgendaErratic) {
+					Actor_Says(kActorMcCoy, 410, 9); //00-0410.AUD	Think hard.
+					Actor_Says(kActorZuben, 50, 18);
+					Actor_Says(kActorMcCoy, 415, 10);
+					Actor_Clue_Acquire(kActorMcCoy, kClueZubenInterview, false, kActorZuben);
+				}
+			} else {
 				Actor_Says(kActorZuben, 50, 18);
 				Actor_Says(kActorMcCoy, 415, 10);
 				Actor_Clue_Acquire(kActorMcCoy, kClueZubenInterview, false, kActorZuben);
 			}
 		} else {
+			Actor_Says(kActorZuben, 30, 17);
+			Actor_Says(kActorZuben, 40, 15);
 			Actor_Says(kActorMcCoy, 410, 9);
 			Actor_Says(kActorZuben, 50, 18);
 			Actor_Says(kActorMcCoy, 415, 10);
@@ -307,9 +317,15 @@ void SceneScriptCT02::dialogueWithZuben() {
 			Actor_Modify_Friendliness_To_Other(kActorGuzza, kActorMcCoy, 1);
 			Actor_Modify_Friendliness_To_Other(kActorClovis, kActorMcCoy, -1);	
 			Game_Flag_Reset(kFlagMcCoyIsHelpingReplicants);
-			Actor_Set_Goal_Number(kActorMcCoy, kGoalMcCoyDodge);
+			Game_Flag_Set(kFlagCT01TalkToHowieAfterZubenMissing);
+			Actor_Modify_Friendliness_To_Other(kActorZuben, kActorMcCoy, -10);
+			if (Game_Flag_Query(kFlagZubenIsReplicant)) {
+				Scene_Exit_Add_2D_Exit(kCT02ExitCT03, 332, 163, 404, 297, 0);
+				Actor_Set_Goal_Number(kActorMcCoy, kGoalMcCoyDodge);	
+			} 
+		} else {
+			Actor_Modify_Friendliness_To_Other(kActorZuben, kActorMcCoy, -10);
 		}
-		Actor_Modify_Friendliness_To_Other(kActorZuben, kActorMcCoy, -10);
 		break;
 
 	case 1110:  // CRYSTAL
@@ -318,6 +334,8 @@ void SceneScriptCT02::dialogueWithZuben() {
 		Actor_Modify_Friendliness_To_Other(kActorGuzza, kActorMcCoy, -1);
 		Actor_Modify_Friendliness_To_Other(kActorClovis, kActorMcCoy, 1);
 		Game_Flag_Set(kFlagMcCoyIsHelpingReplicants);
+		Game_Flag_Set(kFlagCT01TalkToHowieAfterZubenMissing);
+		Scene_Exit_Add_2D_Exit(kCT02ExitCT03, 332, 163, 404, 297, 0);
 		Actor_Modify_Friendliness_To_Other(kActorZuben, kActorMcCoy, -10);
 		break;
 
@@ -343,14 +361,23 @@ void SceneScriptCT02::dialogueWithZuben() {
 #if BLADERUNNER_ORIGINAL_BUGS
 #else
 		Unobstacle_Object("BACK-DOOR", true);
+
 #endif // BLADERUNNER_ORIGINAL_BUGS
-		Actor_Set_Goal_Number(kActorZuben, kGoalZubenCT02PushPot);
-		Game_Flag_Set(kFlagCT02PotTipped);
 		if (_vm->_cutContent) {
+			if (!Game_Flag_Query(kFlagZubenIsReplicant)) {
+				Actor_Set_Goal_Number(kActorZuben, kGoalZubenCT02RunToDoor);
+			} else  {
+				Actor_Set_Goal_Number(kActorZuben, kGoalZubenCT02PushPot);
+				Scene_Loop_Set_Default(kCT02LoopMainPotTipped);
+				Scene_Loop_Start_Special(kSceneLoopModeOnce, kCT02LoopTippingPot, true);
+			}
 			Game_Flag_Set(kFlagCT01TalkToHowieAfterZubenMissing);
+			Game_Flag_Set(kFlagCT02PotTipped);	
+		} else {
+			Game_Flag_Set(kFlagCT02PotTipped);
+			Scene_Loop_Set_Default(kCT02LoopMainPotTipped);
+			Scene_Loop_Start_Special(kSceneLoopModeOnce, kCT02LoopTippingPot, true);
 		}
-		Scene_Loop_Set_Default(kCT02LoopMainPotTipped);
-		Scene_Loop_Start_Special(kSceneLoopModeOnce, kCT02LoopTippingPot, true);
 	}
 }
 
@@ -374,8 +401,10 @@ bool SceneScriptCT02::ClickedOnActor(int actorId) {
 					}
 					// Made it Zuben mentions his name when McCoy firsts talks to him. In the original game it was possible for McCoy to mis the Howie Lee interview clue
 					// where he mentions Zuben by name yet somehow McCoy would still know Zubens name anyway. This change fixes that.
-					Actor_Says(kActorZuben, 20, 19); //19-0020.AUD	You not come back here. Air bad.
-					Actor_Says(kActorMcCoy, 4880, 18); // 00-4880.AUD	Is that right?
+					if (Game_Flag_Query(kFlagZubenIsReplicant)) {
+						Actor_Says(kActorZuben, 20, 19); //19-0020.AUD	You not come back here. Air bad.
+						Actor_Says(kActorMcCoy, 4880, 18); // 00-4880.AUD	Is that right?
+					}
 					Actor_Says(kActorZuben, 100, 19); //19-0100.AUD	What do you want from Zuben?
 					if (Player_Query_Agenda() == kPlayerAgendaSurly 
 					|| Player_Query_Agenda() == kPlayerAgendaErratic) {
@@ -507,7 +536,8 @@ void SceneScriptCT02::PlayerWalkedIn() {
 
 void SceneScriptCT02::PlayerWalkedOut() {
 	if (_vm->_cutContent) {
-		if (Game_Flag_Query(kFlagCT02PotTipped)) {	
+		if (Game_Flag_Query(kFlagCT02PotTipped)
+		|| Game_Flag_Query(kFlagCT01TalkToHowieAfterZubenMissing)) {	
 			Overlay_Remove("ct02over");
 		}
 	} else if (!Actor_Clue_Query(kActorMcCoy, kClueZubenRunsAway)) {

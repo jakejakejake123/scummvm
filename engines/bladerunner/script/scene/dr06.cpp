@@ -335,7 +335,6 @@ void SceneScriptDR06::PlayerWalkedIn() {
 		Loop_Actor_Walk_To_XYZ(kActorMcCoy, -729.57f, 136.6f, -1016.0f, 0, false, false, false);
 	}
 	Game_Flag_Reset(kFlagDR04toDR06);
-	Game_Flag_Reset(kFlagUG16toDR06);
 }
 
 void SceneScriptDR06::PlayerWalkedOut() {

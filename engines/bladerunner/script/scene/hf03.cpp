@@ -88,19 +88,23 @@ void SceneScriptHF03::dialogueWithLucy() {
 	switch (answer) {
 	case 840: // VOIGT-KAMPFF
 		Actor_Says(kActorMcCoy, 1630, 15);
-		if (Global_Variable_Query(kVariableHollowayArrest) == 3) {
+		if (_vm->_cutContent) {
+			Actor_Modify_Friendliness_To_Other(kActorSteele, kActorMcCoy, 1);
+			Actor_Modify_Friendliness_To_Other(kActorGuzza, kActorMcCoy, 1);
+			Actor_Modify_Friendliness_To_Other(kActorClovis, kActorMcCoy, -1);	
+			Game_Flag_Reset(kFlagMcCoyIsHelpingReplicants);
+			if (Global_Variable_Query(kVariableHollowayArrest) == 3) {
+				Actor_Set_Goal_Number(kActorLucy, kGoalLucyHF03RunAwayWithHelp1);
+			} else {
+				Actor_Set_Goal_Number(kActorLucy, kGoalLucyHF03RunToHF041);
+			}
+		} else if (Global_Variable_Query(kVariableHollowayArrest) == 3) {
 			Actor_Set_Goal_Number(kActorLucy, kGoalLucyHF03RunAwayWithHelp1);
 		} else if (Game_Flag_Query(kFlagLucyIsReplicant)) {
 			Actor_Set_Goal_Number(kActorLucy, kGoalLucyHF03RunToHF041);
 		} else {
 			Actor_Set_Goal_Number(kActorLucy, kGoalLucyHF03RunOutPhase1);
 			Game_Flag_Set(kFlagLucyRanAway);
-		}
-		if (_vm->_cutContent) {
-			Actor_Modify_Friendliness_To_Other(kActorSteele, kActorMcCoy, 1);
-			Actor_Modify_Friendliness_To_Other(kActorGuzza, kActorMcCoy, 1);
-			Actor_Modify_Friendliness_To_Other(kActorClovis, kActorMcCoy, -1);	
-			Game_Flag_Reset(kFlagMcCoyIsHelpingReplicants);
 		}
 		break;
 
@@ -226,31 +230,34 @@ void SceneScriptHF03::dialogueWithLucy() {
 		break;
 
 	case 870: // RUNCITER
-		Actor_Says(kActorMcCoy, 1645, 18);
 		if (_vm->_cutContent) {
-			if (Actor_Query_Friendliness_To_Other(kActorClovis, kActorMcCoy) < 51) {
-				if (Game_Flag_Query(kFlagLucyIsReplicant)) {
-					Actor_Says(kActorLucy, 90, 13); //06-0090.AUD	Leave me alone.
+			if (!Actor_Clue_Query(kActorMcCoy, kClueZubensMotive)) {
+				Actor_Says(kActorMcCoy, 1645, 18);
+				if (Actor_Query_Friendliness_To_Other(kActorClovis, kActorMcCoy) < 51) {
+					if (Game_Flag_Query(kFlagLucyIsReplicant)) {
+						Actor_Says(kActorLucy, 90, 13); //06-0090.AUD	Leave me alone.
+					} else {
+						Actor_Says(kActorLucy, 110, 13); //06-0110.AUD	Please, leave me alone.
+					}
 				} else {
-					Actor_Says(kActorLucy, 110, 13); //06-0110.AUD	Please, leave me alone.
+					Actor_Says(kActorLucy, 240, 14);
+					Actor_Says(kActorLucy, 250, 12);
+					Actor_Says(kActorLucy, 260, 13);
+					Actor_Says(kActorLucy, 270, 19);
+					if (!Actor_Clue_Query(kActorMcCoy, kClueLabCorpses)) {
+						Actor_Says(kActorMcCoy, 1665, 18); //00-1665.AUD	So, all the animals were real?
+						Actor_Says(kActorLucy, 280, 13); //06-0280.AUD	Mr. Runciter also used to buy some of the… others.
+						Actor_Says(kActorMcCoy, 1670, 12); //00-1670.AUD	Artificial?
+						Actor_Says(kActorLucy, 290, 14); //06-0290.AUD	He used to tell me that he was protected.
+						Actor_Says(kActorLucy, 300, 16); //06-0300.AUD	That they came from somebody close to the source.
+					}
+					Actor_Says(kActorMcCoy, 1675, 12); 
+					Actor_Says(kActorLucy, 310, 13);//06-0310.AUD	Father and uncle Zuben.
+					Actor_Clue_Acquire(kActorMcCoy, kClueLucyInterview, false, kActorLucy);
 				}
-			} else {
-				Actor_Says(kActorLucy, 240, 14);
-				Actor_Says(kActorLucy, 250, 12);
-				Actor_Says(kActorLucy, 260, 13);
-				Actor_Says(kActorLucy, 270, 19);
-				if (!Actor_Clue_Query(kActorMcCoy, kClueLabCorpses)) {
-					Actor_Says(kActorMcCoy, 1665, 18); //00-1665.AUD	So, all the animals were real?
-					Actor_Says(kActorLucy, 280, 13); //06-0280.AUD	Mr. Runciter also used to buy some of the… others.
-					Actor_Says(kActorMcCoy, 1670, 12); //00-1670.AUD	Artificial?
-					Actor_Says(kActorLucy, 290, 14); //06-0290.AUD	He used to tell me that he was protected.
-					Actor_Says(kActorLucy, 300, 16); //06-0300.AUD	That they came from somebody close to the source.
-				}
-				Actor_Says(kActorMcCoy, 1675, 12); 
-				Actor_Says(kActorLucy, 310, 13);//06-0310.AUD	Father and uncle Zuben.
-				Actor_Clue_Acquire(kActorMcCoy, kClueLucyInterview, false, kActorLucy);
 			}
 		} else {
+			Actor_Says(kActorMcCoy, 1645, 18);
 			Actor_Says(kActorLucy, 240, 14);
 			Actor_Says(kActorLucy, 250, 12);
 			Actor_Says(kActorLucy, 260, 13);

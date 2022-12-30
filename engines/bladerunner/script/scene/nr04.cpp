@@ -479,7 +479,13 @@ void SceneScriptNR04::ActorChangedGoal(int actorId, int newGoal, int oldGoal, bo
 			Actor_Says(kActorMcCoy, 3415, kAnimationModeTalk); //00-3415.AUD	Let’s hear what you got.
 			Actor_Says(kActorEarlyQ, 180, 30);
 			Actor_Says_With_Pause(kActorMcCoy, 3420, 1.5f, kAnimationModeTalk);
-			Actor_Says(kActorEarlyQ, 190, 30); //18-0190.AUD	You’re cold, General.
+			if (_vm->_cutContent) {
+				if (Game_Flag_Query(kFlagEarlyQIsReplicant)) {
+					Actor_Says(kActorEarlyQ, 190, 30); //18-0190.AUD	You’re cold, General.
+				}
+			} else {
+				Actor_Says(kActorEarlyQ, 190, 30); //18-0190.AUD	You’re cold, General.
+			}
 			if (_vm->_cutContent) {
 				if (Game_Flag_Query(kFlagEarlyQIsReplicant)) {	
 					// After Early Q says you're cold general, McCoy realizes that Early Q is a replicant.

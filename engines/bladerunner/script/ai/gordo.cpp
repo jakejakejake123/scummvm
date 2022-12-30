@@ -320,11 +320,13 @@ void AIScriptGordo::ClickedByPlayer() {
 	}
 	if (_vm->_cutContent) {
 		if (Actor_Query_In_Set(kActorGordo, kSetKP07)) {
-			Loop_Actor_Walk_To_Actor(kActorMcCoy, kActorGordo, 24, false, false);
-			Actor_Face_Actor(kActorMcCoy, kActorGordo, true);
-			Actor_Face_Actor(kActorGordo, kActorMcCoy, true);
-			Actor_Says(kActorMcCoy, 6515, 15); //00-6515.AUD	Gordo. I was wondering when you’d show your face again. –	
-			Actor_Says(kActorGordo, 1100, 11); //02-1100.AUD	Still swinging, baby. And I probably got you to thank.
+			if (Actor_Query_Goal_Number(kActorGordo) < kGoalGordoGone) {
+				Loop_Actor_Walk_To_Actor(kActorMcCoy, kActorGordo, 24, false, false);
+				Actor_Face_Actor(kActorMcCoy, kActorGordo, true);
+				Actor_Face_Actor(kActorGordo, kActorMcCoy, true);
+				Actor_Says(kActorMcCoy, 6515, 15); //00-6515.AUD	Gordo. I was wondering when you’d show your face again. –	
+				Actor_Says(kActorGordo, 1100, 11); //02-1100.AUD	Still swinging, baby. And I probably got you to thank.
+			}
 		}
 	}
 	//return false;
@@ -452,29 +454,30 @@ void AIScriptGordo::Retired(int byActorId) {
 					Loop_Actor_Walk_To_XYZ(kActorRunciter, -12.0f, -41.58f, 72.0f, 0, true, false, false);
 					Actor_Put_In_Set(kActorRunciter, kSceneKP06);
 				}
-				if (Actor_Query_In_Set(kActorEarlyQ, kSetKP07)) {
-					Loop_Actor_Walk_To_XYZ(kActorEarlyQ, -12.0f, -41.58f, 72.0f, 0, true, false, false);
-					Actor_Put_In_Set(kActorEarlyQ, kSceneKP06);	
-				}
-				if (Game_Flag_Query(kFlagEarlyQIsReplicant)) {
-					if (!Game_Flag_Query(kFlagEarlyQDead)) {
-						Delay(500);
-						Sound_Play(kSfxSMCAL3, 100, 0, 0, 50);
-					}
-				}
 				if (Actor_Query_In_Set(kActorCrazylegs, kSetKP07)) {
 					Loop_Actor_Walk_To_XYZ(kActorCrazylegs, -12.0f, -41.58f, 72.0f, 0, true, false, false);
 					Actor_Put_In_Set(kActorCrazylegs, kSceneKP06);	
 				}
+				if (Actor_Query_In_Set(kActorGrigorian, kSetKP07)) {
+					Actor_Face_Heading(kActorGrigorian, 900, false);
+					Delay(1000);
+					Actor_Put_In_Set(kActorGrigorian, kSceneKP06);
+				}
 				if (Game_Flag_Query(kFlagRunciterIsReplicant)) {
 					if (Actor_Query_Goal_Number(kActorRunciter) < kGoalRunciterDead) {
-						Delay(500);
+						Delay(1000);
 						Sound_Play(kSfxSMCAL3, 100, 0, 0, 50);
 					}
 				}
 				if (Game_Flag_Query(kFlagCrazylegsIsReplicant)) {
 					if (!Game_Flag_Query(kFlagCrazylegsDead)) {
-						Delay(500);
+						Delay(1000);
+						Sound_Play(kSfxSMCAL3, 100, 0, 0, 50);
+					}
+				}
+				if (Game_Flag_Query(kFlagGrigorianIsReplicant)) {
+					if (!Game_Flag_Query(kFlagGrigorianDead)) {
+						Delay(1000);
 						Sound_Play(kSfxSMCAL3, 100, 0, 0, 50);
 					}
 				}

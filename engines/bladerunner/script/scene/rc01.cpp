@@ -730,14 +730,13 @@ bool SceneScriptRC01::ClickedOnExit(int exitId) {
 			if (Game_Flag_Query(kFlagRC02RunciterTalkWithGun)
 			|| Game_Flag_Query(kFlagMcCoyRetiredRunciter)
 			|| Game_Flag_Query(kFlagRunciterArrested)
-			|| Game_Flag_Query(kFlagRunciterDiscovered)
 			|| Actor_Query_Goal_Number(kActorRunciter) > kGoalRunciterDead
-			|| Actor_Clue_Query(kActorMcCoy, kClueCrystalRetiredRunciter1)) {
+			|| Actor_Clue_Query(kActorMcCoy, kClueCrystalRetiredRunciter1)
+			|| Actor_Clue_Query(kActorMcCoy, kClueMcCoyKilledRunciter1)) {
 				if (!_vm->_cutContent) {	
 					Actor_Says(kActorMcCoy, 8522, 14); // Locked
 				} else {
-					if (Game_Flag_Query(kFlagRunciterDiscovered)
-					|| Game_Flag_Query(kFlagRC02RunciterTalkWithGun)) {
+					if (Game_Flag_Query(kFlagRC02RunciterTalkWithGun)) {
 						Actor_Says(kActorMcCoy, 8522, 14); // Locked
 					} else {
 						Actor_Says(kActorMcCoy, 7815, 13); //00-7815.AUD	No.

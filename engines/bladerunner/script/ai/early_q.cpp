@@ -203,13 +203,17 @@ void AIScriptEarlyQ::ClickedByPlayer() {
 				}
 				Actor_Says(kActorEarlyQ, 340, kAnimationModeTalk); //18-0340.AUD	No more free drinks for you, buddy boy.
 			}
-		} else if (Actor_Query_In_Set(kActorEarlyQ, kSetKP07)) {
-			Loop_Actor_Walk_To_Actor(kActorMcCoy, kActorEarlyQ, 24, false, false);
-			Actor_Face_Actor(kActorMcCoy, kActorEarlyQ, true);
-			Actor_Face_Actor(kActorEarlyQ, kActorMcCoy, true);
-			Actor_Says(kActorMcCoy, 8513, 18); //00-8513.AUD	Early, how's it hanging?
-			Actor_Says(kActorEarlyQ, 360, kAnimationModeTalk); //18-0360.AUD	Thick, slick and hard as a brick. How’s yours, General?
-		} else if (Game_Flag_Query(kFlagEarlyQDead)) {
+		}
+		if (Actor_Query_In_Set(kActorEarlyQ, kSetKP07)) {
+			if (!Game_Flag_Query(kFlagEarlyQDead)) {
+				Loop_Actor_Walk_To_Actor(kActorMcCoy, kActorEarlyQ, 24, false, false);
+				Actor_Face_Actor(kActorMcCoy, kActorEarlyQ, true);
+				Actor_Face_Actor(kActorEarlyQ, kActorMcCoy, true);
+				Actor_Says(kActorMcCoy, 8513, 18); //00-8513.AUD	Early, how's it hanging?
+				Actor_Says(kActorEarlyQ, 360, kAnimationModeTalk); //18-0360.AUD	Thick, slick and hard as a brick. How’s yours, General?
+			}
+		}
+		if (Game_Flag_Query(kFlagEarlyQDead)) {
 			if (Player_Query_Agenda() == kPlayerAgendaSurly 
 			|| Player_Query_Agenda() == kPlayerAgendaErratic) {
 				Actor_Says(kActorMcCoy, 8665, 13); //00-8665.AUD	Disgusting.
@@ -274,6 +278,59 @@ bool AIScriptEarlyQ::ShotAtAndHit() {
 }
 
 void AIScriptEarlyQ::Retired(int byActorId) {
+	if (Actor_Query_In_Set(kActorEarlyQ, kSetKP07)) {
+		Global_Variable_Decrement(kVariableReplicantsSurvivorsAtMoonbus, 1);
+		Actor_Modify_Friendliness_To_Other(kActorSteele, kActorMcCoy, 2);
+		Game_Flag_Reset(kFlagMcCoyIsHelpingReplicants);
+		Game_Flag_Set(kFlagEarlyQDead);
+		if (Query_Difficulty_Level() != kGameDifficultyEasy) {
+			Global_Variable_Increment (kVariableChinyen, 200);
+		}
+		Actor_Modify_Friendliness_To_Other(kActorGaff, kActorMcCoy, 2);
+
+		if (Global_Variable_Query(kVariableReplicantsSurvivorsAtMoonbus) == 0) {
+			Player_Loses_Control();
+			if (Actor_Query_In_Set(kActorRunciter, kSetKP07)) {
+				Loop_Actor_Walk_To_XYZ(kActorRunciter, -12.0f, -41.58f, 72.0f, 0, true, false, false);
+				Actor_Put_In_Set(kActorRunciter, kSceneKP06);
+			}
+			if (Actor_Query_In_Set(kActorCrazylegs, kSetKP07)) {
+				Loop_Actor_Walk_To_XYZ(kActorCrazylegs, -12.0f, -41.58f, 72.0f, 0, true, false, false);
+				Actor_Put_In_Set(kActorCrazylegs, kSceneKP06);	
+			}
+			if (Actor_Query_In_Set(kActorGrigorian, kSetKP07)) {
+				Actor_Face_Heading(kActorGrigorian, 900, false);
+				Delay(1000);
+				Actor_Put_In_Set(kActorGrigorian, kSceneKP06);
+			}
+			if (Game_Flag_Query(kFlagRunciterIsReplicant)) {
+				if (Actor_Query_Goal_Number(kActorRunciter) < kGoalRunciterDead) {
+					Delay(1000);
+					Sound_Play(kSfxSMCAL3, 100, 0, 0, 50);
+				}
+			}
+			if (Game_Flag_Query(kFlagCrazylegsIsReplicant)) {
+				if (!Game_Flag_Query(kFlagCrazylegsDead)) {
+					Delay(1000);
+					Sound_Play(kSfxSMCAL3, 100, 0, 0, 50);
+				}
+			}
+			if (Game_Flag_Query(kFlagGrigorianIsReplicant)) {
+				if (!Game_Flag_Query(kFlagGrigorianDead)) {
+					Delay(1000);
+					Sound_Play(kSfxSMCAL3, 100, 0, 0, 50);
+				}
+			}
+			Delay(2000);
+			Player_Set_Combat_Mode(false);
+			Delay(2000);  
+			Ambient_Sounds_Remove_All_Non_Looping_Sounds(true);
+			Ambient_Sounds_Remove_All_Looping_Sounds(1u);
+			Game_Flag_Set(kFlagKP07toKP06);
+			Game_Flag_Reset(kFlagMcCoyIsHelpingReplicants);
+			Set_Enter(kSetKP05_KP06, kSceneKP06);
+		}
+	}
 	// return false;
 }
 

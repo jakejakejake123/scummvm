@@ -33,7 +33,6 @@ void SceneScriptUG16::InitializeScene() {
 		Game_Flag_Reset(kFlagUG15toUG16a);
 	} else {
 		Setup_Scene_Information(-318.0f,   -34.0f,  -216.0f, 340);
-		Game_Flag_Reset(kFlagUG15toUG16b);
 	}
 
 	Scene_Exit_Add_2D_Exit(0, 242, 169, 282, 262, 3);
@@ -220,7 +219,6 @@ bool SceneScriptUG16::ClickedOnExit(int exitId) {
 			Loop_Actor_Travel_Stairs(kActorMcCoy, 13, true, kAnimationModeIdle);
 			Ambient_Sounds_Remove_All_Non_Looping_Sounds(true);
 			Ambient_Sounds_Remove_All_Looping_Sounds(1u);
-			Game_Flag_Set(kFlagUG16toDR06);
 			Set_Enter(kSetDR06, kSceneDR06);
 		}
 		return true;
@@ -461,9 +459,8 @@ void SceneScriptUG16::dialogueWithLuther() {
 			Actor_Says(kActorLance, 150, 17); //13-0150.AUD	That’s a pretty damn good argument, you gotta admit.
 			if (_vm->_cutContent) {
 				Actor_Says(kActorMcCoy, 5800, 14); //00-5800.AUD	Photos can be doctored. It’s not proof.
-				Delay(1500);
+				Delay(2000);
 				Actor_Says(kActorLance, 290, 17); //13-0290.AUD	He’s sharp this one.
-				Actor_Says(kActorLuther, 350, 13); //10-0350.AUD	Still the work will go on with or without Clovis.
 			} else {
 				Actor_Says(kActorMcCoy, 5800, 13);  
 				Actor_Says(kActorLuther, 190, 15);

@@ -139,11 +139,13 @@ void AIScriptSadik::ReceivedClue(int clueId, int fromActorId) {
 void AIScriptSadik::ClickedByPlayer() {
 	if (_vm->_cutContent) {
 		if (Actor_Query_In_Set(kActorSadik, kSetKP07)) {
-			Loop_Actor_Walk_To_Actor(kActorMcCoy, kActorSadik, 24, false, false);
-			Actor_Face_Actor(kActorMcCoy, kActorSadik, true);
-			Actor_Face_Actor(kActorSadik, kActorMcCoy, true);
-			Actor_Says(kActorMcCoy, 3210, kAnimationModeTalk); //00-3210.AUD	Hey, man.
-			Actor_Says(kActorSadik, 280, kAnimationModeTalk); //08-0280.AUD	You for real I’m thinking.
+			if (Actor_Query_Goal_Number(kActorSadik) < kGoalSadikGone) {
+				Loop_Actor_Walk_To_Actor(kActorMcCoy, kActorSadik, 24, false, false);
+				Actor_Face_Actor(kActorMcCoy, kActorSadik, true);
+				Actor_Face_Actor(kActorSadik, kActorMcCoy, true);
+				Actor_Says(kActorMcCoy, 3210, kAnimationModeTalk); //00-3210.AUD	Hey, man.
+				Actor_Says(kActorSadik, 280, kAnimationModeTalk); //08-0280.AUD	You for real I’m thinking.
+			}
 		}
 	}
 	if (Actor_Query_Goal_Number(kActorSadik) == kGoalSadikGone) {
@@ -252,6 +254,8 @@ void AIScriptSadik::Retired(int byActorId) {
 	) {
 		if (_vm->_cutContent) {
 			if (Game_Flag_Query(kFlagSadikIsReplicant)) {
+				Actor_Modify_Friendliness_To_Other(kActorSteele, kActorMcCoy, 2);
+				Game_Flag_Reset(kFlagMcCoyIsHelpingReplicants);
 				if (Query_Difficulty_Level() != kGameDifficultyEasy) {
 					Global_Variable_Increment(kVariableChinyen, 200);		
 				}	
@@ -266,6 +270,8 @@ void AIScriptSadik::Retired(int byActorId) {
 		Global_Variable_Decrement(kVariableReplicantsSurvivorsAtMoonbus, 1); // can't Sadik still be human (Rep-sympathiser here? A bug?
 		Actor_Set_Goal_Number(kActorSadik, kGoalSadikGone);
 		if (_vm->_cutContent) {
+			Actor_Modify_Friendliness_To_Other(kActorSteele, kActorMcCoy, 2);
+			Game_Flag_Reset(kFlagMcCoyIsHelpingReplicants);
 			if (Query_Difficulty_Level() != kGameDifficultyEasy) {
 				Global_Variable_Increment(kVariableChinyen, 200);		
 			}	
@@ -275,33 +281,35 @@ void AIScriptSadik::Retired(int byActorId) {
 		if (Global_Variable_Query(kVariableReplicantsSurvivorsAtMoonbus) == 0) {
 			Player_Loses_Control();
 			if (_vm->_cutContent) {
+				
 				if (Actor_Query_In_Set(kActorRunciter, kSetKP07)) {
 					Loop_Actor_Walk_To_XYZ(kActorRunciter, -12.0f, -41.58f, 72.0f, 0, true, false, false);
 					Actor_Put_In_Set(kActorRunciter, kSceneKP06);
-				}
-				if (Actor_Query_In_Set(kActorEarlyQ, kSetKP07)) {
-					Loop_Actor_Walk_To_XYZ(kActorEarlyQ, -12.0f, -41.58f, 72.0f, 0, true, false, false);
-					Actor_Put_In_Set(kActorEarlyQ, kSceneKP06);	
 				}
 				if (Actor_Query_In_Set(kActorCrazylegs, kSetKP07)) {
 					Loop_Actor_Walk_To_XYZ(kActorCrazylegs, -12.0f, -41.58f, 72.0f, 0, true, false, false);
 					Actor_Put_In_Set(kActorCrazylegs, kSceneKP06);	
 				}
+				if (Actor_Query_In_Set(kActorGrigorian, kSetKP07)) {
+					Actor_Face_Heading(kActorGrigorian, 900, false);
+					Delay(1000);
+					Actor_Put_In_Set(kActorGrigorian, kSceneKP06);
+				}
 				if (Game_Flag_Query(kFlagRunciterIsReplicant)) {
 					if (Actor_Query_Goal_Number(kActorRunciter) < kGoalRunciterDead) {
-						Delay(500);
-						Sound_Play(kSfxSMCAL3, 100, 0, 0, 50);
-					}
-				}
-				if (Game_Flag_Query(kFlagEarlyQIsReplicant)) {
-					if (!Game_Flag_Query(kFlagEarlyQDead)) {
-						Delay(500);
+						Delay(1000);
 						Sound_Play(kSfxSMCAL3, 100, 0, 0, 50);
 					}
 				}
 				if (Game_Flag_Query(kFlagCrazylegsIsReplicant)) {
 					if (!Game_Flag_Query(kFlagCrazylegsDead)) {
-						Delay(500);
+						Delay(1000);
+						Sound_Play(kSfxSMCAL3, 100, 0, 0, 50);
+					}
+				}
+				if (Game_Flag_Query(kFlagGrigorianIsReplicant)) {
+					if (!Game_Flag_Query(kFlagGrigorianDead)) {
+						Delay(1000);
 						Sound_Play(kSfxSMCAL3, 100, 0, 0, 50);
 					}
 				}

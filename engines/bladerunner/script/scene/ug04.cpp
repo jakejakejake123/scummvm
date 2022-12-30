@@ -123,7 +123,6 @@ bool SceneScriptUG04::ClickedOnExit(int exitId) {
 
 	if (exitId == 1) {
 		if (!Loop_Actor_Walk_To_XYZ(kActorMcCoy, 0.0f, -1.74f, -2400.0f, 0, true, false, false)) {
-			Game_Flag_Set(kFlagUG04toUG05);
 			Set_Enter(kSetUG05, kSceneUG05);
 		}
 		return true;

@@ -26,7 +26,6 @@ namespace BladeRunner {
 
 void SceneScriptHF06::InitializeScene() {
 	Setup_Scene_Information(150.0f, 349.93f, 502.0f, 229);
-	Game_Flag_Reset(kFlagHF05toHF06);
 	Scene_Exit_Add_2D_Exit(0, 195, 197, 271, 237, 2);
 
 	Ambient_Sounds_Add_Looping_Sound(kSfxCTRAIN1,  50,    0, 1);

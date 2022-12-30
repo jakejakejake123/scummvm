@@ -35,7 +35,6 @@ void SceneScriptUG05::InitializeScene() {
 		}
 	} else {
 		Setup_Scene_Information(0.0f, -1.37f, 0.0f, 0);
-		Game_Flag_Reset(kFlagUG04toUG05);
 	}
 
 	Scene_Exit_Add_2D_Exit(0, 215, 240, 254, 331, 3);

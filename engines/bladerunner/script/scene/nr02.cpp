@@ -261,12 +261,6 @@ void SceneScriptNR02::PlayerWalkedIn() {
 						Actor_Says(kActorDektora, 1150, 15); //03-1150.AUD	God forbid you ever have to find out how different he is.
 						Actor_Says(kActorDektora, 1160, 13); //03-1160.AUD	How dangerous he can be. And if he thinks that you and I… It can only bring trouble.
 					}
-					if (!Game_Flag_Query(kFlagDektoraIsReplicant)) {
-						if (!Game_Flag_Query(kFlagMcCoyIsHelpingReplicants)) {
-							Actor_Says(kActorMcCoy, 8510, 11); //00-8510.AUD	You got a real thing for machines, don't ya?
-							Delay(2000);
-						}
-					}
 					Actor_Says(kActorMcCoy, 6380, 12); //00-6380.AUD	Clovis is pretty low priority right now. I’ve been framed and I got the rest of the LPD trying to find me.
 					Actor_Says(kActorDektora, 1170, 13); //03-1170.AUD	We’re both running then.
 					Actor_Says(kActorDektora, 1180, 14); //03-1180.AUD	From Clovis.

@@ -30,7 +30,6 @@ void SceneScriptUG12::InitializeScene() {
 		Game_Flag_Reset(kFlagKP02toUG12);
 	} else {
 		Setup_Scene_Information(375.0f, -126.21f,  180.0f, 730);
-		Game_Flag_Reset(kFlagUG14toUG12);
 	}
 
 	Scene_Exit_Add_2D_Exit(0, 538, 222, 615, 346, 1);

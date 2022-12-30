@@ -176,7 +176,6 @@ bool SceneScriptBB06::ClickedOnExit(int exitId) {
 		if (!Loop_Actor_Walk_To_XYZ(kActorMcCoy, 101.0f, 0.0f, -25.0f, 0, true, false, false)) {
 			Ambient_Sounds_Remove_All_Non_Looping_Sounds(true);
 			Ambient_Sounds_Remove_All_Looping_Sounds(1u);
-			Game_Flag_Set(kFlagBB06toBB51);
 			Set_Enter(kSetBB02_BB04_BB06_BB51, kSceneBB51);
 		}
 		return true;

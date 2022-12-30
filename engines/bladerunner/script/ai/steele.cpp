@@ -1417,7 +1417,8 @@ bool AIScriptSteele::GoalChanged(int currentGoalNumber, int newGoalNumber) {
 		}
 		Actor_Face_Actor(kActorMcCoy, kActorSteele, true);
 		if (_vm->_cutContent) {
-			if (Player_Query_Agenda() == kPlayerAgendaPolite) {
+			if (Player_Query_Agenda() != kPlayerAgendaSurly 
+			&& Player_Query_Agenda() != kPlayerAgendaErratic) {
 				Actor_Says(kActorMcCoy, 1540, 16); //00-1540.AUD	Hope we were right about her.
 				Actor_Says(kActorSteele, 10, 13); //01-0010.AUD	I wouldn’t worry about ‘em.
 			}

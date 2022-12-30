@@ -363,23 +363,6 @@ void SceneScriptMA02::PlayerWalkedIn() {
 		}
 	}
 
-	if (_vm->_cutContent) {
-		if (Global_Variable_Query(kVariableChapter) == 1) {
-			if (!Game_Flag_Query(kFlagPhoneRung)) {
-				if (Actor_Clue_Query(kActorMcCoy, kClueMcCoyRetiredZuben)
-				|| Actor_Clue_Query(kActorMcCoy, kClueMcCoyLetZubenEscape)) {
-					Sound_Play(kSfxVIDFONE1, 100, 0, 0, 50);
-					Delay(2000);
-					Sound_Play(kSfxVIDFONE1, 100, 0, 0, 50);
-					Delay(2000);
-					Sound_Play(kSfxVIDFONE1, 100, 0, 0, 50);
-					Delay(3000);
-					Game_Flag_Set(kFlagPhoneRung);
-				}
-			}
-		}
-	}
-
 	Game_Flag_Reset(kFlagMA04ToMA02);
 	Game_Flag_Reset(kFlagMA06ToMA02);
 	//return false;

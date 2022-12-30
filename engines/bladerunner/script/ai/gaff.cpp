@@ -74,24 +74,25 @@ void AIScriptGaff::CompletedMovementTrack() {
 		if (_vm->_cutContent) {
 			if (!Game_Flag_Query(kFlagMcCoyIsHelpingReplicants)) {
 				Actor_Says(kActorMcCoy, 670, kAnimationModeTalk); //00-0670.AUD	Working on it.
-				Actor_Says(kActorGaff, 10, kAnimationModeTalk);
-				Actor_Says(kActorMcCoy, 675, kAnimationModeTalk); //00-0675.AUD	I understand it's got a hell of a retirement plan.
-				Delay(500);
 			} else {
-				Actor_Says(kActorMcCoy, 4880, 13); //00-4880.AUD	Is that right?
-				Delay(500);
+				Delay(1000);
 			}
 		} else {
 			Actor_Says(kActorMcCoy, 670, kAnimationModeTalk);
-			Actor_Says(kActorGaff, 10, kAnimationModeTalk);
-			Actor_Says(kActorMcCoy, 675, kAnimationModeTalk); //00-0675.AUD	I understand it's got a hell of a retirement plan.
 		}
+		Actor_Says(kActorGaff, 10, kAnimationModeTalk);
 		if (_vm->_cutContent) {
-			if (Player_Query_Agenda() == kPlayerAgendaPolite) {
-				Actor_Says(kActorMcCoy, 8610, 18); //00-8610.AUD	What's the word, friend?
+			if (!Game_Flag_Query(kFlagMcCoyIsHelpingReplicants)) {
+				Actor_Says(kActorMcCoy, 675, kAnimationModeTalk); //00-0675.AUD	I understand it's got a hell of a retirement plan.
 			} else {
-				Actor_Says(kActorMcCoy, 8514, 14);//00-8514.AUD	Got anything new to tell me?
+				if (Player_Query_Agenda() == kPlayerAgendaPolite) {
+					Actor_Says(kActorMcCoy, 8610, 18); //00-8610.AUD	What's the word, friend?
+				} else {
+					Actor_Says(kActorMcCoy, 8514, 14); //00-8514.AUD	Got anything new to tell me?
+				}
 			}
+		} else {
+			Actor_Says(kActorMcCoy, 675, kAnimationModeTalk);
 		}
 		Actor_Says(kActorGaff, 20, kAnimationModeTalk);
 		Actor_Says(kActorMcCoy, 680, kAnimationModeTalk);
@@ -107,37 +108,58 @@ void AIScriptGaff::CompletedMovementTrack() {
 		} else {
 			Actor_Says(kActorMcCoy, 690, kAnimationModeTalk); //00-0690.AUD	Gotcha.
 		}
-		if (Game_Flag_Query(kFlagZubenRetired)) {
-			Actor_Says(kActorGaff, 50, kAnimationModeTalk);
-			Actor_Says(kActorMcCoy, 695, kAnimationModeTalk);
-			Actor_Says(kActorGaff, 60, kAnimationModeTalk);
-			Actor_Says(kActorMcCoy, 700, kAnimationModeTalk); //00-0700.AUD	I'm starting to understand.
+		if (_vm->_cutContent) {
+			CDB_Set_Crime(kClueGaffsInformation, kCrimeMoonbusHijacking);
 			Actor_Says(kActorGaff, 70, kAnimationModeTalk);
-			Actor_Clue_Acquire(kActorGaff, kClueMcCoyRetiredZuben, true, -1);
-			//Restored clue McCoy retred Zuben as an audio clue for McCoy
-			if (_vm->_cutContent) {
-				Actor_Clue_Acquire(kActorMcCoy, kClueMcCoyRetiredZuben, true, kActorGaff);
-				Scene_Exits_Enable();
+			Delay(2000);
+		}
+		if (_vm->_cutContent) {
+			if (Game_Flag_Query(kFlagZubenIsReplicant)) {
+				if (Game_Flag_Query(kFlagZubenRetired)) {
+					Actor_Says(kActorGaff, 50, kAnimationModeTalk);
+					Actor_Says(kActorMcCoy, 695, kAnimationModeTalk);
+					Actor_Says(kActorGaff, 60, kAnimationModeTalk);
+					Actor_Says(kActorMcCoy, 700, kAnimationModeTalk); //00-0700.AUD	I'm starting to understand.	
+					if (Actor_Query_Friendliness_To_Other(kActorGaff, kActorMcCoy) > 49) {
+						Actor_Says(kActorGaff, 100, kAnimationModeTalk);
+					}
+					Actor_Clue_Acquire(kActorGaff, kClueMcCoyRetiredZuben, true, -1);
+					//Restored clue McCoy retred Zuben as an audio clue for McCoy
+					Actor_Clue_Acquire(kActorMcCoy, kClueMcCoyRetiredZuben, true, kActorGaff);
+					Scene_Exits_Enable();
+				} else {
+					Actor_Says(kActorGaff, 80, kAnimationModeTalk);
+					Actor_Says(kActorGaff, 90, kAnimationModeTalk);
+					Actor_Says(kActorMcCoy, 705, kAnimationModeTalk);
+					if (Actor_Query_Friendliness_To_Other(kActorGaff, kActorMcCoy) > 49) {
+						Actor_Says(kActorGaff, 100, kAnimationModeTalk);
+					}
+					Actor_Clue_Acquire(kActorGaff, kClueMcCoyLetZubenEscape, true, -1);
+					Actor_Clue_Acquire(kActorMcCoy, kClueMcCoyLetZubenEscape, true, kActorGaff);
+					Scene_Exits_Enable();
+				}
 			}
 		} else {
-			Actor_Says(kActorGaff, 80, kAnimationModeTalk);
-			Actor_Says(kActorGaff, 90, kAnimationModeTalk);
-			Actor_Says(kActorMcCoy, 705, kAnimationModeTalk);
-			if (_vm->_cutContent) {
-				if (Actor_Query_Friendliness_To_Other(kActorGaff, kActorMcCoy) > 49) {
-					Actor_Says(kActorGaff, 100, kAnimationModeTalk);
-				}
+			if (Game_Flag_Query(kFlagZubenRetired)) {
+				Actor_Says(kActorGaff, 50, kAnimationModeTalk);
+				Actor_Says(kActorMcCoy, 695, kAnimationModeTalk);
+				Actor_Says(kActorGaff, 60, kAnimationModeTalk);
+				Actor_Says(kActorMcCoy, 700, kAnimationModeTalk); //00-0700.AUD	I'm starting to understand.	
+				Actor_Clue_Acquire(kActorGaff, kClueMcCoyRetiredZuben, true, -1);
 			} else {
+				Actor_Says(kActorGaff, 80, kAnimationModeTalk);
+				Actor_Says(kActorGaff, 90, kAnimationModeTalk);
 				Actor_Says(kActorGaff, 100, kAnimationModeTalk);
-			}
-			Actor_Clue_Acquire(kActorGaff, kClueMcCoyLetZubenEscape, true, -1);
-			if (_vm->_cutContent) {
-				Actor_Clue_Acquire(kActorMcCoy, kClueMcCoyLetZubenEscape, true, kActorGaff);
-				Scene_Exits_Enable();
+				Actor_Clue_Acquire(kActorGaff, kClueMcCoyLetZubenEscape, true, -1);
 			}
 		}
 		Actor_Clue_Acquire(kActorMcCoy, kClueGaffsInformation, true, kActorGaff);
-		CDB_Set_Crime(kClueZubenSquadPhoto, kCrimeMoonbusHijacking);
+		if (!_vm->_cutContent) {
+			CDB_Set_Crime(kClueZubenSquadPhoto, kCrimeMoonbusHijacking);
+		}
+		if (_vm->_cutContent) {
+			CDB_Set_Crime(kClueGaffsInformation, kCrimeMoonbusHijacking);
+		}
 		Game_Flag_Set(kFlagGaffApproachedMcCoyAboutZuben);
 		Player_Gains_Control();
 		Actor_Set_Goal_Number(kActorGaff, kGoalGaffMA01Leave);

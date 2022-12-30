@@ -75,8 +75,7 @@ void SceneScriptCT01::InitializeScene() {
 			// Note 2: Gordo sitting at the diner overlaps with the counter bar in front of him
 			//         so the loop will be prevented from playing when he is there.
 			if ( Global_Variable_Query(kVariableChapter) < 4
-			    && Actor_Query_Which_Set_In(kActorGordo) != kSetCT01_CT12
-			    && Random_Query(1, 2) == 1
+			    && !Game_Flag_Query(kFlagCT01GordoTalk)
 			) {
 				// enhancement: don't always play
 				Scene_Loop_Start_Special(kSceneLoopModeLoseControl, kCT01LoopInshot, false);
@@ -256,22 +255,10 @@ bool SceneScriptCT01::ClickedOnActor(int actorId) {
 							Game_Flag_Set(kFlagMcCoyInPoliceStation);
 							Set_Enter(kSetPS09, kScenePS09);
 						}	
-					} else if (Game_Flag_Query(kFlagCT01TalkToHowieAboutDeadZuben)
-					&& Actor_Query_Friendliness_To_Other(kActorHowieLee, kActorMcCoy) < 60) {
+					} else if (Game_Flag_Query(kFlagCT01TalkToHowieAboutDeadZuben)) {
 						Actor_Says(kActorMcCoy, 310, 11);    // keeping out of trouble...?
 						Actor_Says(kActorHowieLee, 190, 13); // I look like I got time for chit-er chat-er?
-					} else if (Game_Flag_Query(kFlagCT01TalkToHowieAboutDeadZuben)
-					&& Actor_Query_Friendliness_To_Other(kActorHowieLee, kActorMcCoy) > 59) {
-						Actor_Says(kActorMcCoy, 330, 13);
-						Actor_Says(kActorHowieLee, 160, 15);  // real busy tonight
-					} else if (Game_Flag_Query(kFlagCT01ZubenGone)
-					&& Actor_Query_Friendliness_To_Other(kActorHowieLee, kActorMcCoy) < 60) {
-						Actor_Says(kActorMcCoy, 330, 17); //00-0330.AUD	Hey, Howie, what's cooking?
-						Actor_Says(kActorHowieLee, 130, 13); //28-0130.AUD	Nothing now, McCoy.
-						Actor_Says(kActorHowieLee, 140, 14); //28-0140.AUD	Got to find a new chef thanks to you.
-						Actor_Says(kActorMcCoy, 315, 16); //00-0315.AUD	Can't help you there, Howie.
-					} else if (Game_Flag_Query(kFlagCT01ZubenGone)
-					&& Actor_Query_Friendliness_To_Other(kActorHowieLee, kActorMcCoy) > 59) {
+					} else {
 						Actor_Says(kActorMcCoy, 310, 11);
 						Actor_Says(kActorHowieLee, 10, 16);
 					}
@@ -318,7 +305,15 @@ bool SceneScriptCT01::ClickedOnActor(int actorId) {
 				Actor_Says(kActorMcCoy, 3970, 13); //00-3970.AUD	Hey.
 			}
 			if (Actor_Query_Goal_Number(kActorZuben) == kGoalZubenDefault) {
-				Actor_Says(kActorZuben, 10, 16);
+				if (_vm->_cutContent) {
+					if (Game_Flag_Query(kFlagZubenIsReplicant)) {
+						Actor_Says(kActorZuben, 10, 16);
+					} else {
+						Actor_Says(kActorZuben, 100, 16); //19-0100.AUD	What do you want from Zuben?
+					}
+				} else {
+					Actor_Says(kActorZuben, 10, 16);
+				}
 				Actor_Face_Actor(kActorHowieLee, kActorMcCoy, true);
 				Actor_Says(kActorHowieLee, 150, kAnimationModeTalk);
 				Actor_Face_Actor(kActorMcCoy, kActorHowieLee, true);
@@ -480,6 +475,7 @@ bool SceneScriptCT01::ClickedOnExit(int exitId) {
 				&& Game_Flag_Query(kFlagCT01TalkToHowieAfterZubenMissing) 
 				&& !Actor_Clue_Query(kActorMcCoy, kClueMcCoyLetZubenEscape)
 				&& !Actor_Clue_Query(kActorMcCoy, kClueMcCoyRetiredZuben)
+				&& Game_Flag_Query(kFlagZubenIsReplicant) 
 				&& Actor_Query_Goal_Number(kActorZuben) < kGoalZubenGone) {
 					Actor_Set_Goal_Number(kActorZuben, kGoalZubenFled);
 				}
@@ -1003,8 +999,10 @@ void SceneScriptCT01::dialogueWithHowieLee() {
 		if (_vm->_cutContent) {
 			if (Actor_Query_Friendliness_To_Other(kActorHowieLee, kActorMcCoy) < 60) {
 				Actor_Says(kActorHowieLee, 190, 14);	//28-0190.AUD	I look like I got time for chit-er chat-er?
-			} else {
-				Actor_Says(kActorHowieLee, 90, 14);
+			} else if (!Game_Flag_Query(kFlagZubenIsReplicant)) {
+				Actor_Says(kActorHowieLee, 160, 14); //28-0160.AUD	I take care of you soon, McCoy. Real busy tonight.
+			} else if (Game_Flag_Query(kFlagZubenIsReplicant)) {
+				Actor_Says(kActorHowieLee, 90, 14); //
 				Actor_Says(kActorHowieLee, 100, 13);
 				Actor_Clue_Acquire(kActorMcCoy, kClueHowieLeeInterview, true, kActorHowieLee);
 			}

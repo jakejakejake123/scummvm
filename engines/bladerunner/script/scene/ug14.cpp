@@ -117,7 +117,6 @@ bool SceneScriptUG14::ClickedOnExit(int exitId) {
 		if (!Loop_Actor_Walk_To_XYZ(kActorMcCoy, -50.0f, 129.0f, -814.0f, 0, true, false, false)) {
 			Ambient_Sounds_Remove_All_Non_Looping_Sounds(true);
 			Ambient_Sounds_Remove_All_Looping_Sounds(1u);
-			Game_Flag_Set(kFlagUG14toUG12);
 			Set_Enter(kSetCT08_CT51_UG12, kSceneUG12);
 		}
 		return true;
@@ -174,7 +173,6 @@ void SceneScriptUG14::PlayerWalkedIn() {
 		Footstep_Sound_Override_Off();
 		Loop_Actor_Walk_To_XYZ(kActorMcCoy, 157.0f, 128.92f, -148.01f, 0, false, false, false);
 		Actor_Face_Heading(kActorMcCoy, 807, false);
-		Game_Flag_Reset(kFlagUG10toUG14);
 	}
 
 	if ( Global_Variable_Query(kVariableChapter) == 4

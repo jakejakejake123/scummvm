@@ -165,7 +165,6 @@ bool SceneScriptUG10::ClickedOnExit(int exitId) {
 		 || Game_Flag_Query(kFlagUG10GateOpen)
 		) {
 			if (!Loop_Actor_Walk_To_XYZ(kActorMcCoy, 2.5f, 1.15f, 405.0f, 0, true, false, false)) {
-				Game_Flag_Set(kFlagUG10toUG14);
 				Set_Enter(kSetUG14, kSceneUG14);
 				return true;
 			}

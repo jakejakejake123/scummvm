@@ -103,7 +103,10 @@ bool AIScriptLuther::Update() {
 		// McCoy scolds himself saying that he has crossed the line. This will also set the McCoy retired human flag.
 		if (_vm->_cutContent) {
 			if (Game_Flag_Query(kFlagLutherLanceIsReplicant)) {
-				Actor_Voice_Over(920, kActorVoiceOver); //99-0920.AUD	Easy money.
+				if (Player_Query_Agenda() == kPlayerAgendaSurly 
+				|| Player_Query_Agenda() == kPlayerAgendaErratic) {
+					Actor_Voice_Over(920, kActorVoiceOver); //99-0920.AUD	Easy money.
+				}
 				Delay(1000);
 				Actor_Says(kActorMcCoy, 8508, 12); //00-8508.AUD	No retirement swag.
 				Game_Flag_Reset(kFlagMcCoyIsHelpingReplicants);
@@ -174,10 +177,12 @@ void AIScriptLuther::ReceivedClue(int clueId, int fromActorId) {
 void AIScriptLuther::ClickedByPlayer() {
 	if (_vm->_cutContent) {
 		if (Actor_Query_In_Set(kActorLuther, kSetKP07)) {
-			Actor_Face_Actor(kActorMcCoy, kActorLuther, true);
-			Actor_Says(kActorMcCoy, 3970, 14);
-			Actor_Says(kActorLance, 0, 17); //13-0000.AUD	Hey, it’s about time you showed up.
-			Actor_Says(kActorLuther, 320, 6); //10-0320.AUD	No question.
+			if (Actor_Query_Goal_Number(kActorLuther) < kGoalLutherGone) {
+				Actor_Face_Actor(kActorMcCoy, kActorLuther, true);
+				Actor_Says(kActorMcCoy, 3970, 14);
+				Actor_Says(kActorLance, 0, 17); //13-0000.AUD	Hey, it’s about time you showed up.
+				Actor_Says(kActorLuther, 320, 6); //10-0320.AUD	No question.
+			}
 		}
 	}
 }
@@ -236,6 +241,8 @@ void AIScriptLuther::Retired(int byActorId) {
 		Global_Variable_Decrement(kVariableReplicantsSurvivorsAtMoonbus, 1);
 		Actor_Set_Goal_Number(kActorLuther, kGoalLutherGone);
 		if (_vm->_cutContent) {
+			Actor_Modify_Friendliness_To_Other(kActorSteele, kActorMcCoy, 4);
+			Game_Flag_Reset(kFlagMcCoyIsHelpingReplicants);
 			if (Query_Difficulty_Level() != kGameDifficultyEasy) {
 				Global_Variable_Increment (kVariableChinyen, 400);
 			}
@@ -249,29 +256,30 @@ void AIScriptLuther::Retired(int byActorId) {
 					Loop_Actor_Walk_To_XYZ(kActorRunciter, -12.0f, -41.58f, 72.0f, 0, true, false, false);
 					Actor_Put_In_Set(kActorRunciter, kSceneKP06);
 				}
-				if (Actor_Query_In_Set(kActorEarlyQ, kSetKP07)) {
-					Loop_Actor_Walk_To_XYZ(kActorEarlyQ, -12.0f, -41.58f, 72.0f, 0, true, false, false);
-					Actor_Put_In_Set(kActorEarlyQ, kSceneKP06);	
-				}
 				if (Actor_Query_In_Set(kActorCrazylegs, kSetKP07)) {
 					Loop_Actor_Walk_To_XYZ(kActorCrazylegs, -12.0f, -41.58f, 72.0f, 0, true, false, false);
 					Actor_Put_In_Set(kActorCrazylegs, kSceneKP06);	
 				}
+				if (Actor_Query_In_Set(kActorGrigorian, kSetKP07)) {
+					Actor_Face_Heading(kActorGrigorian, 900, false);
+					Delay(1000);
+					Actor_Put_In_Set(kActorGrigorian, kSceneKP06);
+				}
 				if (Game_Flag_Query(kFlagRunciterIsReplicant)) {
 					if (Actor_Query_Goal_Number(kActorRunciter) < kGoalRunciterDead) {
-						Delay(500);
-						Sound_Play(kSfxSMCAL3, 100, 0, 0, 50);
-					}
-				}
-				if (Game_Flag_Query(kFlagEarlyQIsReplicant)) {
-					if (!Game_Flag_Query(kFlagEarlyQDead)) {
-						Delay(500);
+						Delay(1000);
 						Sound_Play(kSfxSMCAL3, 100, 0, 0, 50);
 					}
 				}
 				if (Game_Flag_Query(kFlagCrazylegsIsReplicant)) {
 					if (!Game_Flag_Query(kFlagCrazylegsDead)) {
-						Delay(500);
+						Delay(1000);
+						Sound_Play(kSfxSMCAL3, 100, 0, 0, 50);
+					}
+				}
+				if (Game_Flag_Query(kFlagGrigorianIsReplicant)) {
+					if (!Game_Flag_Query(kFlagGrigorianDead)) {
+						Delay(1000);
 						Sound_Play(kSfxSMCAL3, 100, 0, 0, 50);
 					}
 				}

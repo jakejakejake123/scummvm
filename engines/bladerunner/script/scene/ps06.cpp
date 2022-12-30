@@ -153,9 +153,11 @@ bool SceneScriptPS06::ClickedOn3DObject(const char *objectName, bool a2) {
 			// she just finds Zuben by chance and doesn't have time to come up with a plan of attack so escapes into the sewers. This will give you the Zuben sighting clue.
 			if (Actor_Clue_Query(kActorMcCoy, kClueMcCoyLetZubenEscape)) {
 				Actor_Clue_Acquire(kActorMcCoy, kClueSightingZuben, true, kActorSteele);
-				if (Random_Query(1, 5) == 1) {
-					Actor_Set_Goal_Number(kActorZuben, kGoalZubenGone);
-					Actor_Clue_Acquire(kActorMcCoy, kClueCrystalRetiredZuben, true, kActorSteele);
+				if (Game_Flag_Query(kFlagZubenIsReplicant)) {
+					if (Random_Query(1, 5) == 1) {
+						Actor_Set_Goal_Number(kActorZuben, kGoalZubenGone);
+						Actor_Clue_Acquire(kActorMcCoy, kClueCrystalRetiredZuben, true, kActorSteele);
+					}
 				}
 			}
 			if (Game_Flag_Query(kFlagGordoIsReplicant)) { 

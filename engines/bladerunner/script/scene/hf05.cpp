@@ -254,7 +254,6 @@ bool SceneScriptHF05::ClickedOnExit(int exitId) {
 	if (exitId == 2) {
 		if (!Loop_Actor_Walk_To_XYZ(kActorMcCoy, 277.0f, 40.63f, 410.0f, 0, true, false, false)) {
 			if (!Game_Flag_Query(kFlagHF05PoliceAttacked)) {
-				Game_Flag_Set(kFlagHF05toHF06);
 				Set_Enter(kSetHF06, kSceneHF06);
 			}
 		}
@@ -453,7 +452,8 @@ void SceneScriptHF05::talkWithCrazyLegs2() {
 	Actor_Face_Actor(kActorMcCoy, kActorCrazylegs, true);
 	// Made it so when you enter Crazys store a second time if McCoy is surly or erratic he is mean towards Crazylegs. This annoys Crazylegs and he leaves the room.
 	if (_vm->_cutContent) {
-		if (Actor_Query_Friendliness_To_Other(kActorCrazylegs, kActorMcCoy) > 49) {
+		if (Actor_Query_Friendliness_To_Other(kActorCrazylegs, kActorMcCoy) > 49
+		&& !Game_Flag_Query(kFlagCrazylegsIsReplicant)) {
 			Actor_Says(kActorCrazylegs, 370, kAnimationModeTalk); //09-0370.AUD	Hey, Ray, how you’re doing?
 			if (Player_Query_Agenda() != kPlayerAgendaSurly
 			&& (Player_Query_Agenda() != kPlayerAgendaErratic)) {	
@@ -725,7 +725,8 @@ void SceneScriptHF05::dialogueWithCrazylegs1() {
 		Actor_Says(kActorMcCoy, 1895, kAnimationModeIdle); //00-1895.AUD	I gotta know more about the woman, Crazy.
 		// Made it so if Crazylegs is a replicant he will not tell you any further information about Dektora.
 		if (_vm->_cutContent) {
-			if (Game_Flag_Query(kFlagCrazylegsIsReplicant)) {
+			if (Game_Flag_Query(kFlagCrazylegsIsReplicant)
+			|| Actor_Query_Friendliness_To_Other(kActorCrazylegs, kActorMcCoy) < 50) {
 				Actor_Says(kActorCrazylegs, 1150, 14); //09-1150.AUD	Only thing I know is that the best deals you can make are right in this showroom.
 				if (Player_Query_Agenda() == kPlayerAgendaSurly 
 				|| Player_Query_Agenda() == kPlayerAgendaErratic) {
@@ -795,7 +796,8 @@ void SceneScriptHF05::dialogueWithCrazylegs1() {
 		Actor_Says(kActorMcCoy, 385, 9); //00-0385.AUD	I'm looking for a girl about 14 years old with pink hair. You seen her?
 		Actor_Says(kActorCrazylegs, 740, 14); //09-0740.AUD	You kidding? She ain’t old enough to drive.
 		Actor_Says(kActorMcCoy, 2030, 13); //00-2030.AUD	You’ve never seen her?
-		if (Game_Flag_Query(kFlagCrazylegsIsReplicant)) {
+		if (Game_Flag_Query(kFlagCrazylegsIsReplicant)
+		|| Actor_Query_Friendliness_To_Other(kActorCrazylegs, kActorMcCoy) < 50) {
 			Actor_Says(kActorCrazylegs, 1150, 14); //09-1150.AUD	Only thing I know is that the best deals you can make are right in this showroom.
 			Actor_Says(kActorMcCoy, 8565, 13); //00-8565.AUD	Really?
 			Actor_Says(kActorCrazylegs, 1180, 15); //09-1180.AUD	What do you expect? I sell cars for a living.
@@ -814,7 +816,8 @@ void SceneScriptHF05::dialogueWithCrazylegs1() {
 		Actor_Says(kActorMcCoy, 2030, 13); //00-2030.AUD	You’ve never seen her?
 		// Made it so Crazylegs doesn't tell McCoy where to find Lucy if he is a replicant.
 		if (_vm->_cutContent) {
-			if (Game_Flag_Query(kFlagCrazylegsIsReplicant)) {
+			if (Game_Flag_Query(kFlagCrazylegsIsReplicant)
+			|| Actor_Query_Friendliness_To_Other(kActorCrazylegs, kActorMcCoy) < 50) {
 				Actor_Says(kActorCrazylegs, 1150, 14); //09-1150.AUD	Only thing I know is that the best deals you can make are right in this showroom.
 				Actor_Says(kActorMcCoy, 8565, 13); //00-8565.AUD	Really?
 				Actor_Says(kActorCrazylegs, 1180, 15); //09-1180.AUD	What do you expect? I sell cars for a living.
@@ -846,7 +849,8 @@ void SceneScriptHF05::dialogueWithCrazylegs1() {
 		// So it needs that clue as a prerequisite
 		// for that specific part of the dialogue (McCoy's cues only)
 		Actor_Says(kActorMcCoy, 1910, kAnimationModeTalk); //00-1910.AUD	You know a man named Spencer Grigorian?
-		if (Game_Flag_Query(kFlagCrazylegsIsReplicant)) {
+		if (Game_Flag_Query(kFlagCrazylegsIsReplicant)
+		|| Actor_Query_Friendliness_To_Other(kActorCrazylegs, kActorMcCoy) < 50) {
 			Actor_Says(kActorCrazylegs, 780, 12); //09-0780.AUD	No, I never heard of him.
 			Actor_Says(kActorMcCoy, 2045, 17); //00-2045.AUD	Spencer Grigorian. The Citizens Against Replicant Slavery. CARS!
 		}
@@ -1430,7 +1434,6 @@ void SceneScriptHF05::talkWithCrazylegs3(int affectionTowardsActor) {
 					Actor_Says(kActorDektora, 110, 12); //03-0110.AUD	Please, we don’t have time for this. Let’s just take the Spinner and go!
 					Async_Actor_Walk_To_XYZ(affectionTowardsActor, 309.0f, 40.63f, 402.0f, 0, false);
 					Loop_Actor_Walk_To_XYZ(kActorMcCoy, 277.0f, 40.63f, 410.0f, 0, false, false, false);
-					Game_Flag_Set(kFlagHF05toHF06);
 					Set_Enter(kSetHF06, kSceneHF06);
 					// If McCoy is found to be innocent and his companion is human, Steele doesn't show up and this happens instead.
 				} else {
@@ -1439,7 +1442,6 @@ void SceneScriptHF05::talkWithCrazylegs3(int affectionTowardsActor) {
 					Actor_Says(kActorMcCoy, 2115, kAnimationModeTalk); //00-2115.AUD	Let’s go. There’s nothing here for us anymore.
 					Async_Actor_Walk_To_XYZ(affectionTowardsActor, 309.0f, 40.63f, 402.0f, 0, false);
 					Loop_Actor_Walk_To_XYZ(kActorMcCoy, 277.0f, 40.63f, 410.0f, 0, false, false, false);
-					Game_Flag_Set(kFlagHF05toHF06);
 					Set_Enter(kSetHF06, kSceneHF06);
 				}
 				// This is the code for when Lucy is with you.
@@ -1468,7 +1470,6 @@ void SceneScriptHF05::talkWithCrazylegs3(int affectionTowardsActor) {
 					Actor_Says(kActorLucy, 480, kAnimationModeTalk); //06-0480.AUD	I love you, Ray. Remember that.
 					Async_Actor_Walk_To_XYZ(affectionTowardsActor, 309.0f, 40.63f, 402.0f, 0, false);
 					Loop_Actor_Walk_To_XYZ(kActorMcCoy, 277.0f, 40.63f, 410.0f, 0, false, false, false);
-					Game_Flag_Set(kFlagHF05toHF06);
 					Set_Enter(kSetHF06, kSceneHF06);
 				} else {
 					Actor_Set_Goal_Number(kActorCrazylegs, kGoalCrazyLegsLeavesShowroom);
@@ -1476,7 +1477,6 @@ void SceneScriptHF05::talkWithCrazylegs3(int affectionTowardsActor) {
 					Actor_Says(kActorMcCoy, 2115, kAnimationModeTalk); //00-2115.AUD	Let’s go. There’s nothing here for us anymore.
 					Async_Actor_Walk_To_XYZ(affectionTowardsActor, 309.0f, 40.63f, 402.0f, 0, false);
 					Loop_Actor_Walk_To_XYZ(kActorMcCoy, 277.0f, 40.63f, 410.0f, 0, false, false, false);
-					Game_Flag_Set(kFlagHF05toHF06);
 					Set_Enter(kSetHF06, kSceneHF06);
 				}
 			}
@@ -1504,11 +1504,10 @@ void SceneScriptHF05::talkWithCrazylegs3(int affectionTowardsActor) {
 			Actor_Says(kActorMcCoy, 1745, kAnimationModeTalk);
 			Async_Actor_Walk_To_XYZ(affectionTowardsActor, 309.0f, 40.63f, 402.0f, 0, false);
 			Loop_Actor_Walk_To_XYZ(kActorMcCoy, 277.0f, 40.63f, 410.0f, 0, false, false, false);
-			Game_Flag_Set(kFlagHF05toHF06);
 			Set_Enter(kSetHF06, kSceneHF06);
-			}
 		}
 	}
+}
 
 void SceneScriptHF05::talkWithCrazyLegs1() {
 	Player_Loses_Control();

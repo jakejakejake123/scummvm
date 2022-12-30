@@ -421,9 +421,10 @@ void SceneScriptHF01::PlayerWalkedIn() {
 	}
 	if (_vm->_cutContent) {
 		if (!Game_Flag_Query(kFlagZubenTalkAct4)
-		&& (Actor_Query_Goal_Number(kActorZuben) < kGoalZubenGone) 
+		&& Actor_Query_Goal_Number(kActorZuben) < kGoalZubenGone
 		&& !Game_Flag_Query(kFlagUG18GuzzaScene)
-		&& (Global_Variable_Query(kVariableChapter) == 4)) {
+		&& !Actor_Clue_Query(kActorMcCoy, kClueZubensMotive) 
+		&& Global_Variable_Query(kVariableChapter) == 4) {
 			Actor_Put_In_Set(kActorZuben, kSetHF01);
 			Actor_Set_At_XYZ(kActorZuben, 500.07f, -0.01f, -205.43f, 0);
 			Actor_Face_Current_Camera(kActorZuben, true);
@@ -437,7 +438,8 @@ void SceneScriptHF01::PlayerWalkedIn() {
 			Actor_Says(kActorZuben, 140, 14); //19-0140.AUD	Stay away!
 			Actor_Says(kActorMcCoy, 7280, 11); //00-7280.AUD	You remember me?
 			Actor_Says(kActorZuben, 150, 15); //19-0150.AUD	You chased Zuben.
-			if (Game_Flag_Query(kFlagMcCoyIsHelpingReplicants)) {
+			if (Game_Flag_Query(kFlagMcCoyIsHelpingReplicants)
+			&& Game_Flag_Query(kFlagZubenIsReplicant)) {
 				Actor_Says(kActorMcCoy, 7285, 12); //00-7285.AUD	But I didn't kill you, did I?
 			} else {
 				Actor_Says(kActorMcCoy, 2790, 18); //00-2790.AUD	Uh-huh.
@@ -461,7 +463,11 @@ void SceneScriptHF01::PlayerWalkedIn() {
 				&& !Actor_Clue_Query(kActorMcCoy, kClueLucyIncept)) {
 					Actor_Says(kActorMcCoy, 7320, 17); //00-7320.AUD	Is she a Replicant?
 					if (Game_Flag_Query(kFlagLucyIsReplicant)) {
-						Actor_Says(kActorZuben, 230, 14); //19-0230.AUD	Daughter sick. Only four years to live. Four years. Daughter Zuben whole family.
+						if (Game_Flag_Query(kFlagZubenIsReplicant)) {
+							Actor_Says(kActorZuben, 230, 14); //19-0230.AUD	Daughter sick. Only four years to live. Four years. Daughter Zuben whole family.
+						} else {
+							Actor_Says(kActorMcCoy, 2750, kAnimationModeTalk); //00-2750.AUD	Okay, I get the picture.
+						}
 						Actor_Says(kActorMcCoy, 7325, 17); //00-7325.AUD	I know.
 						Actor_Says(kActorZuben, 240, 15); //19-0240.AUD	But Clovis he fix.
 						if (Game_Flag_Query(kFlagMcCoyIsHelpingReplicants)) {
@@ -469,7 +475,11 @@ void SceneScriptHF01::PlayerWalkedIn() {
 						}
 						Actor_Clue_Acquire(kActorMcCoy, kClueZubenTalksAboutLucy1, false, kActorZuben);
 					} else {
-						Actor_Says(kActorZuben, 250, 14); //19-0250.AUD	Daughter not like me.
+						if (Game_Flag_Query(kFlagZubenIsReplicant)) {
+							Actor_Says(kActorZuben, 250, 14); //19-0250.AUD	Daughter not like me.
+						} else {
+							Delay(2000);
+						}
 						Actor_Says(kActorMcCoy, 7335, 14); //00-7335.AUD	She's not a Replicant?
 						Actor_Says(kActorZuben, 260, 15); //19-0260.AUD	She good girl. She stay with Clovis.
 						Actor_Says(kActorMcCoy, 7340, 16); //00-7340.AUD	I know.

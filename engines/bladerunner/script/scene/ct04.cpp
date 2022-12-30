@@ -111,6 +111,9 @@ bool SceneScriptCT04::ClickedOn3DObject(const char *objectName, bool a2) {
 					Actor_Voice_Over(340, kActorVoiceOver);
 				}
 				Game_Flag_Set(kFlagCT04HomelessBodyInDumpster);
+				if (_vm->_cutContent) {
+					Actor_Set_Goal_Number(kActorZuben, kGoalZubenFled);
+				}
 			}
 			return false;
 		}

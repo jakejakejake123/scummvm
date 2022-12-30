@@ -59,17 +59,29 @@ void SceneScriptKP07::InitializeScene() {
 				}
 			}
 		}
-		
-		if (Actor_Query_Goal_Number(kActorZuben) < kGoalZubenGone) {
+		if (_vm->_cutContent) {
+			if (Game_Flag_Query(kFlagZubenIsReplicant)) {
+				if (Actor_Query_Goal_Number(kActorZuben) < kGoalZubenGone) {
+					AI_Movement_Track_Flush(kActorZuben);
+					Actor_Set_Goal_Number(kActorZuben, kGoalZubenKP07Wait); // new clear goal
+					Global_Variable_Increment(kVariableReplicantsSurvivorsAtMoonbus, 1);
+					Actor_Set_Targetable(kActorZuben, true);
+					Actor_Put_In_Set(kActorZuben, kSetKP07);
+					Actor_Set_At_XYZ(kActorZuben, -26.0f, -41.52f, -135.0f, 0);
+				}
+			}
+		} else {
+			if (Actor_Query_Goal_Number(kActorZuben) < kGoalZubenGone) {
 #if BLADERUNNER_ORIGINAL_BUGS
 #else
-			AI_Movement_Track_Flush(kActorZuben);
-			Actor_Set_Goal_Number(kActorZuben, kGoalZubenKP07Wait); // new clear goal
+				AI_Movement_Track_Flush(kActorZuben);
+				Actor_Set_Goal_Number(kActorZuben, kGoalZubenKP07Wait); // new clear goal
 #endif // BLADERUNNER_ORIGINAL_BUGS
-			Global_Variable_Increment(kVariableReplicantsSurvivorsAtMoonbus, 1);
-			Actor_Set_Targetable(kActorZuben, true);
-			Actor_Put_In_Set(kActorZuben, kSetKP07);
-			Actor_Set_At_XYZ(kActorZuben, -26.0f, -41.52f, -135.0f, 0);
+				Global_Variable_Increment(kVariableReplicantsSurvivorsAtMoonbus, 1);
+				Actor_Set_Targetable(kActorZuben, true);
+				Actor_Put_In_Set(kActorZuben, kSetKP07);
+				Actor_Set_At_XYZ(kActorZuben, -26.0f, -41.52f, -135.0f, 0);
+			}
 		}
 
 		if (Game_Flag_Query(kFlagIzoIsReplicant)
@@ -117,6 +129,7 @@ void SceneScriptKP07::InitializeScene() {
 				if (Actor_Query_Goal_Number(kActorLuther) < kGoalLutherGone) {
 					AI_Movement_Track_Flush(kActorLuther);
 					Actor_Set_Goal_Number(kActorLuther, kGoalLutherKP07Wait); // new goal to avoid resuming his walking around routine
+					Global_Variable_Increment(kVariableReplicantsSurvivorsAtMoonbus, 1);
 					Actor_Put_In_Set(kActorLuther, kSetKP07);
 					Actor_Set_At_XYZ(kActorLuther, -47.0f, 0.0f, 151.0f, 531);
 				}
@@ -159,11 +172,12 @@ void SceneScriptKP07::InitializeScene() {
 		// Made it so Early Q appears in the moonbus if he is a replicant and is alive.
 		if (_vm->_cutContent) {
 			if (Game_Flag_Query(kFlagEarlyQIsReplicant)) {
-				if (!Game_Flag_Query(kFlagEarlyQDead)) {
-					AI_Movement_Track_Flush(kActorEarlyQ);
-					Actor_Set_Targetable(kActorEarlyQ, false);
+				if (!Game_Flag_Query(kFlagEarlyQDead)
+				&& !Game_Flag_Query(kFlagNR04EarlyQStungByScorpions)) {
+					Global_Variable_Increment(kVariableReplicantsSurvivorsAtMoonbus, 1);
+					Actor_Set_Targetable(kActorEarlyQ, true);
 					Actor_Put_In_Set(kActorEarlyQ, kSetKP07);
-					Actor_Set_At_XYZ(kActorEarlyQ, -59.70, -42.72, -156.90, 760);
+					Actor_Set_At_XYZ(kActorEarlyQ, -59.70f, -42.72f, -150.90f, 240);
 				}
 			}
 		}
@@ -187,6 +201,15 @@ void SceneScriptKP07::InitializeScene() {
 					Actor_Set_Goal_Number(kActorRunciter, kGoalRunciterStill);
 					Actor_Put_In_Set(kActorRunciter, kSetKP07);
 					Actor_Set_At_XYZ(kActorRunciter, 16.95f, -42.92f, 1.50f, 0);
+				}
+			}
+		}
+		// Made it so Grigorian appears in the moonbus if he is a replicant and is alive.
+		if (_vm->_cutContent) {
+			if (Game_Flag_Query(kFlagGrigorianIsReplicant)) {
+				if (!Game_Flag_Query(kFlagGrigorianDead)) {
+					Actor_Put_In_Set(kActorGrigorian, kSetKP07);
+					Actor_Set_At_XYZ(kActorGrigorian, -40.38f, -41.29f, 47.27f, 921);
 				}
 			}
 		}

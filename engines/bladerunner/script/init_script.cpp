@@ -130,6 +130,18 @@ void InitScript::Init_Game_Flags() {
 			Game_Flag_Set(kFlagHanoiIsReplicant);
 		}
 	}
+	// Added code so Zuben is randomized as a replicant.
+	if (_vm->_cutContent) {
+		if (Random_Query(1, 2) == 1) {
+			Game_Flag_Set(kFlagZubenIsReplicant);
+		}
+	}
+	// Added code so Graigorian is randomized as a replicant.
+	if (_vm->_cutContent) {
+		if (Random_Query(1, 2) == 1) {
+			Game_Flag_Set(kFlagGrigorianIsReplicant);
+		}
+	}
 
 	if (!Game_Flag_Query(kFlagGordoIsReplicant)
 	 && !Game_Flag_Query(kFlagLucyIsReplicant)
@@ -2388,7 +2400,7 @@ void InitScript::Init_SDB() {
 		SDB_Add_Whereabouts_Clue(kSuspectClovis, kCluePhoneCallLucy2);
 		SDB_Add_Whereabouts_Clue(kSuspectClovis, kCluePhoneCallDektora2);
 		SDB_Add_Other_Clue(kSuspectClovis, kClueCrowdInterviewB);
-		SDB_Add_MO_Clue(kSuspectClovis, kClueZubensMotive);
+		SDB_Add_Identity_Clue(kSuspectClovis, kClueZubensMotive);
 		SDB_Add_Other_Clue(kSuspectClovis, kClueGordoBlabs);
 		SDB_Add_Other_Clue(kSuspectClovis, kClueClovisFlowers);
 		SDB_Add_Whereabouts_Clue(kSuspectClovis, kClueMoonbus1);

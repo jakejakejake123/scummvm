@@ -233,6 +233,8 @@ void AIScriptClovis::Retired(int byActorId) {
 			Actor_Set_Goal_Number(kActorClovis, kGoalClovisGone);
 			// Made it so McCoy receives 200 chinyen and friendliness with Gaff when he retires Clovis.
 			if (_vm->_cutContent) {
+				Actor_Modify_Friendliness_To_Other(kActorSteele, kActorMcCoy, 2);
+				Game_Flag_Reset(kFlagMcCoyIsHelpingReplicants);
 				if (Query_Difficulty_Level() != kGameDifficultyEasy) {
 					Global_Variable_Increment (kVariableChinyen, 200);
 				}
@@ -246,29 +248,30 @@ void AIScriptClovis::Retired(int byActorId) {
 						Loop_Actor_Walk_To_XYZ(kActorRunciter, -12.0f, -41.58f, 72.0f, 0, true, false, false);
 						Actor_Put_In_Set(kActorRunciter, kSceneKP06);
 					}
-					if (Actor_Query_In_Set(kActorEarlyQ, kSetKP07)) {
-						Loop_Actor_Walk_To_XYZ(kActorEarlyQ, -12.0f, -41.58f, 72.0f, 0, true, false, false);
-						Actor_Put_In_Set(kActorEarlyQ, kSceneKP06);	
-					}
 					if (Actor_Query_In_Set(kActorCrazylegs, kSetKP07)) {
 						Loop_Actor_Walk_To_XYZ(kActorCrazylegs, -12.0f, -41.58f, 72.0f, 0, true, false, false);
 						Actor_Put_In_Set(kActorCrazylegs, kSceneKP06);	
 					}
+					if (Actor_Query_In_Set(kActorGrigorian, kSetKP07)) {
+						Actor_Face_Heading(kActorGrigorian, 900, false);
+						Delay(1000);
+						Actor_Put_In_Set(kActorGrigorian, kSceneKP06);
+					}
 					if (Game_Flag_Query(kFlagRunciterIsReplicant)) {
 						if (Actor_Query_Goal_Number(kActorRunciter) < kGoalRunciterDead) {
-							Delay(500);
+							Delay(1000);
 							Sound_Play(kSfxSMCAL3, 100, 0, 0, 50);
 						}
 					}
-					if (Game_Flag_Query(kFlagEarlyQIsReplicant)) {
-					if (!Game_Flag_Query(kFlagEarlyQDead)) {
-						Delay(500);
-						Sound_Play(kSfxSMCAL3, 100, 0, 0, 50);
-					}
-				}
 					if (Game_Flag_Query(kFlagCrazylegsIsReplicant)) {
 						if (!Game_Flag_Query(kFlagCrazylegsDead)) {
-							Delay(500);
+							Delay(1000);
+							Sound_Play(kSfxSMCAL3, 100, 0, 0, 50);
+						}
+					}
+					if (Game_Flag_Query(kFlagGrigorianIsReplicant)) {
+						if (!Game_Flag_Query(kFlagGrigorianDead)) {
+							Delay(1000);
 							Sound_Play(kSfxSMCAL3, 100, 0, 0, 50);
 						}
 					}
@@ -585,27 +588,31 @@ bool AIScriptClovis::GoalChanged(int currentGoalNumber, int newGoalNumber) {
 	case kGoalClovisKP07TalkToMcCoy:
 		// Made it so McCoy only says that all the reps are dead besides Clovis if that is the case.
 		if (_vm->_cutContent) {
-			if (((((((((((Actor_Query_Goal_Number(kActorZuben) == kGoalZubenGone))))))))))) {
-				if ((((((((((Actor_Query_Goal_Number(kActorLucy) == kGoalLucyGone)))))))))) {
-					if (((((((((Game_Flag_Query(kFlagDektoraIsReplicant) 
-					&& Actor_Query_Goal_Number(kActorDektora) == kGoalDektoraGone))))))))) {
-						if ((((((((Game_Flag_Query(kFlagIzoIsReplicant) 
-						&& Actor_Query_Goal_Number(kActorIzo) == kGoalIzoGone)))))))) {
-							if (((((((Game_Flag_Query(kFlagGordoIsReplicant) 
-							&& Actor_Query_Goal_Number(kActorGordo) == kGoalGordoGone))))))) {
-								if ((((((Game_Flag_Query(kFlagLutherLanceIsReplicant) 
-								&& Actor_Query_Goal_Number(kActorLuther) == kGoalLutherGone)))))) {
-									if (((((Game_Flag_Query(kFlagRunciterIsReplicant) 
-									&& Actor_Query_Goal_Number(kActorRunciter) == kGoalRunciterDead))))) {
-										if ((((Game_Flag_Query(kFlagBulletBobIsReplicant) 
-										&& Actor_Query_Goal_Number(kActorBulletBob) == kGoalBulletBobGone)))) {
-											if (((Game_Flag_Query(kFlagCrazylegsIsReplicant) 
-											&& Game_Flag_Query(kFlagCrazylegsDead))))  {
-												if ((Game_Flag_Query(kFlagEarlyQIsReplicant) 
-												&& Game_Flag_Query(kFlagEarlyQDead)))  {
-													if (Game_Flag_Query(kFlagHanoiIsReplicant) 
-													&& Game_Flag_Query(kFlagHanoiDead))  {
-														Actor_Says(kActorMcCoy, 2345, 16); //00-2345.AUD	They’re all dead. You’re the last one.
+			if ((((((((((((Game_Flag_Query(kFlagGrigorianIsReplicant) 
+			&& Game_Flag_Query(kFlagGrigorianDead)))))))))))))  {
+				if (((((((((((Game_Flag_Query(kFlagZubenIsReplicant)
+				&& Actor_Query_Goal_Number(kActorZuben) == kGoalZubenGone))))))))))) {
+					if ((((((((((Actor_Query_Goal_Number(kActorLucy) == kGoalLucyGone)))))))))) {
+						if (((((((((Game_Flag_Query(kFlagDektoraIsReplicant) 
+						&& Actor_Query_Goal_Number(kActorDektora) == kGoalDektoraGone))))))))) {
+							if ((((((((Game_Flag_Query(kFlagIzoIsReplicant) 
+							&& Actor_Query_Goal_Number(kActorIzo) == kGoalIzoGone)))))))) {
+								if (((((((Game_Flag_Query(kFlagGordoIsReplicant) 
+								&& Actor_Query_Goal_Number(kActorGordo) == kGoalGordoGone))))))) {
+									if ((((((Game_Flag_Query(kFlagLutherLanceIsReplicant) 
+									&& Actor_Query_Goal_Number(kActorLuther) == kGoalLutherGone)))))) {
+										if (((((Game_Flag_Query(kFlagRunciterIsReplicant) 
+										&& Actor_Query_Goal_Number(kActorRunciter) == kGoalRunciterDead))))) {
+											if ((((Game_Flag_Query(kFlagBulletBobIsReplicant) 
+											&& Actor_Query_Goal_Number(kActorBulletBob) == kGoalBulletBobGone)))) {
+												if (((Game_Flag_Query(kFlagCrazylegsIsReplicant) 
+												&& Game_Flag_Query(kFlagCrazylegsDead))))  {
+													if ((Game_Flag_Query(kFlagEarlyQIsReplicant) 
+													&& Game_Flag_Query(kFlagEarlyQDead)))  {
+														if (Game_Flag_Query(kFlagHanoiIsReplicant) 
+														&& Game_Flag_Query(kFlagHanoiDead))  {
+															Actor_Says(kActorMcCoy, 2345, 16); //00-2345.AUD	They’re all dead. You’re the last one.
+														}
 													}
 												}
 											}
@@ -904,6 +911,13 @@ bool AIScriptClovis::GoalChanged(int currentGoalNumber, int newGoalNumber) {
 		 && Actor_Query_In_Set(kActorClovis, kSetKP07)
 		) {
 			Non_Player_Actor_Combat_Mode_On(kActorClovis, kActorCombatStateIdle, false, kActorMcCoy, 19, kAnimationModeCombatIdle, kAnimationModeCombatWalk, kAnimationModeCombatRun, 0, 0, 100, 10, 300, false);
+		}
+		if (_vm->_cutContent) {
+			if (Global_Variable_Query(kVariableChapter) == 5
+			&& Actor_Query_In_Set(kActorEarlyQ, kSetKP07)
+			) {
+				Non_Player_Actor_Combat_Mode_On(kActorEarlyQ, kActorCombatStateIdle, false, kActorMcCoy, 19, kAnimationModeCombatIdle, kAnimationModeCombatWalk, kAnimationModeCombatRun, 0, 0, 100, 10, 300, false);
+			}
 		}
 		return true;
 

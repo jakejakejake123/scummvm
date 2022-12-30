@@ -200,6 +200,7 @@ void SceneScriptUG09::PlayerWalkedIn() {
 		}
 		if (Actor_Clue_Query(kActorClovis, kClueMcCoyRetiredLucy) 
 		|| Actor_Clue_Query(kActorClovis, kClueMcCoyRetiredDektora)
+		|| Actor_Clue_Query(kActorClovis, kClueMcCoyRetiredZuben)
 		|| Game_Flag_Query(kFlagZubenRetired)
 		|| Actor_Query_Friendliness_To_Other(kActorClovis, kActorMcCoy) < 51) {
 			Actor_Says(kActorIzo, 750, 13); //07-0750.AUD	Clovis is looking for you, McCoy.

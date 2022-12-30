@@ -1187,12 +1187,14 @@ void SceneScriptNR07::talkAboutVoightKampff() {
 				Actor_Face_Actor(kActorDektora, kActorHanoi, true);
 				Actor_Says(kActorMcCoy, 3595, kAnimationModeTalk);
 				dektoraRunAway();
+				Actor_Set_Goal_Number(kActorDektora, kGoalDektoraNR08ReadyToRun);
 				Actor_Says(kActorMcCoy, 3785, kAnimationModeTalk); //00-3785.AUD	Let go, you lug. I gotta-- (grunts)
 				Ambient_Sounds_Remove_All_Non_Looping_Sounds(true);
 				Ambient_Sounds_Remove_All_Looping_Sounds(1u);
 				Actor_Set_Goal_Number(kActorHanoi, kGoalHanoiThrowOutMcCoy);
 			} else {
 				dektoraRunAway();
+				Actor_Set_Goal_Number(kActorDektora, kGoalDektoraNR08ReadyToRun);
 			}
 		} else {
 			dektoraRunAway();
@@ -1255,12 +1257,14 @@ void SceneScriptNR07::talkAboutSteele() {
 				Actor_Says(kActorMcCoy, 3595, kAnimationModeTalk);
 				Actor_Says(kActorDektora, 2610, 30);//03-2610.AUD	I… I've got to get out of here.
 				dektoraRunAway();
+				Actor_Set_Goal_Number(kActorDektora, kGoalDektoraNR08ReadyToRun);
 				Actor_Says(kActorMcCoy, 3785, kAnimationModeTalk); //00-3785.AUD	Let go, you lug. I gotta-- (grunts)
 				Ambient_Sounds_Remove_All_Non_Looping_Sounds(true);
 				Ambient_Sounds_Remove_All_Looping_Sounds(1u);
 				Actor_Set_Goal_Number(kActorHanoi, kGoalHanoiThrowOutMcCoy);
 			} else {
 				dektoraRunAway();
+				Actor_Set_Goal_Number(kActorDektora, kGoalDektoraNR08ReadyToRun);
 			}
 		} else {
 			dektoraRunAway();

@@ -323,32 +323,55 @@ void SceneScriptCT12::PlayerWalkedIn() {
 		}
 		Actor_Clue_Acquire(kActorMcCoy, kClueGaffsInformation, true, kActorGaff);
 		Game_Flag_Set(kFlagGaffApproachedMcCoyAboutZuben);
-		CDB_Set_Crime(kClueZubenSquadPhoto, kCrimeMoonbusHijacking);
-
-		if (Game_Flag_Query(kFlagGaffApproachedMcCoyAboutZuben)
-		 && Game_Flag_Query(kFlagZubenRetired)
-		) {
+		if (!_vm->_cutContent) {
+			CDB_Set_Crime(kClueZubenSquadPhoto, kCrimeMoonbusHijacking);
+		}
+		if (_vm->_cutContent) {
+			CDB_Set_Crime(kClueGaffsInformation, kCrimeMoonbusHijacking);
+			Actor_Says(kActorGaff, 70, kAnimationModeTalk);
+			Delay(2000);
+		}
+		if (_vm->_cutContent) {
+			if (Game_Flag_Query(kFlagZubenIsReplicant)) {
+				if (Game_Flag_Query(kFlagGaffApproachedMcCoyAboutZuben)
+				&& Game_Flag_Query(kFlagZubenRetired)) {
+					Actor_Says(kActorGaff, 50, kAnimationModeTalk);
+					Actor_Says(kActorMcCoy, 695, kAnimationModeTalk);
+					Actor_Says(kActorGaff, 60, kAnimationModeTalk);
+					Actor_Says(kActorMcCoy, 700, kAnimationModeTalk); //00-0700.AUD	I'm starting to understand.
+					if (Actor_Query_Friendliness_To_Other(kActorGaff, kActorMcCoy) > 49) {
+						Actor_Says(kActorGaff, 100, kAnimationModeTalk);
+					}
+					Actor_Clue_Acquire(kActorMcCoy, kClueMcCoyRetiredZuben, true, kActorGaff);
+					//Restored clue McCoy retired Zuben as an audio clue for McCoy.
+					Actor_Clue_Acquire(kActorGaff, kClueMcCoyRetiredZuben, true, kActorGaff);
+				} else if (Game_Flag_Query(kFlagGaffApproachedMcCoyAboutZuben)
+				&& Game_Flag_Query(kFlagZubenSpared)) {
+					Actor_Says(kActorGaff, 80, kAnimationModeTalk);
+					Actor_Says(kActorGaff, 90, kAnimationModeTalk);
+					Actor_Says(kActorMcCoy, 705, kAnimationModeTalk);
+					if (Actor_Query_Friendliness_To_Other(kActorGaff, kActorMcCoy) > 49) {
+						Actor_Says(kActorGaff, 100, kAnimationModeTalk);
+					}
+					Actor_Clue_Acquire(kActorGaff, kClueMcCoyLetZubenEscape, true, -1);
+					Actor_Clue_Acquire(kActorMcCoy, kClueMcCoyLetZubenEscape, true, kActorGaff);
+				}
+			}
+		} else if (Game_Flag_Query(kFlagGaffApproachedMcCoyAboutZuben)
+		&& Game_Flag_Query(kFlagZubenRetired)) {
 			Actor_Says(kActorGaff, 50, kAnimationModeTalk);
 			Actor_Says(kActorMcCoy, 695, kAnimationModeTalk);
 			Actor_Says(kActorGaff, 60, kAnimationModeTalk);
 			Actor_Says(kActorMcCoy, 700, kAnimationModeTalk); //00-0700.AUD	I'm starting to understand.
-			Actor_Says(kActorGaff, 70, kAnimationModeTalk);
 			Actor_Clue_Acquire(kActorMcCoy, kClueMcCoyRetiredZuben, true, kActorGaff);
 			//Restored clue McCoy retired Zuben as an audio clue for McCoy.
-			if (_vm->_cutContent) {
-				Actor_Clue_Acquire(kActorGaff, kClueMcCoyRetiredZuben, true, kActorGaff);
-			}
 		} else if (Game_Flag_Query(kFlagGaffApproachedMcCoyAboutZuben)
-		        && Game_Flag_Query(kFlagZubenSpared)
-		) {
+		&& Game_Flag_Query(kFlagZubenSpared)) {
 			Actor_Says(kActorGaff, 80, kAnimationModeTalk);
 			Actor_Says(kActorGaff, 90, kAnimationModeTalk);
 			Actor_Says(kActorMcCoy, 705, kAnimationModeTalk);
 			Actor_Says(kActorGaff, 100, kAnimationModeTalk);
 			Actor_Clue_Acquire(kActorGaff, kClueMcCoyLetZubenEscape, true, -1);
-			if (_vm->_cutContent) {
-				Actor_Clue_Acquire(kActorMcCoy, kClueMcCoyLetZubenEscape, true, kActorGaff);
-			}
 		}
 
 #if !BLADERUNNER_ORIGINAL_BUGS
@@ -366,35 +389,34 @@ void SceneScriptCT12::PlayerWalkedIn() {
 		Actor_Set_Goal_Number(kActorGaff, kGoalGaffCT12GoToSpinner);
 	}
 	//Added in the dispatcher dialogue for when Leary or Grayford find the car. Plays when Gaff is walking away.
-			if (_vm->_cutContent) {
-				if (!Game_Flag_Query(kFlagCT12Visited)) {
-					if (Global_Variable_Query(kVariableChapter) == 1) {
-						if (Game_Flag_Query(kFlagLearyChecksCar)) {
-							Delay (1000);
-							ADQ_Add(kActorOfficerLeary, 360, kAnimationModeTalk); 	//23-0360.AUD	LA, 31 Metro 3 is 10-97 at the scene. 
-							ADQ_Add(kActorDispatcher, 370, kAnimationModeTalk);   //38-0370.AUD	32 Metro 1 LA. Go ahead.
-							ADQ_Add(kActorOfficerLeary, 420, kAnimationModeTalk);	//23-0420.AUD	LA, 13 Metro 1. 10-29 on abandoned vehicle.
-							ADQ_Add(kActorOfficerLeary, 430, kAnimationModeTalk);  //23-0430.AUD	LA, 10-29 on 1-6-9-8-7. The ignition appears punched out. 10-20 is one block west of Tyrell.
-							ADQ_Add(kActorDispatcher, 380, kAnimationModeTalk);  //38-0380.AUD	32 Metro 1 LA. No wants in a 1959 Chevy Coupe with plate 16987. Transfer on file.
-							ADQ_Add(kActorDispatcher, 400, kAnimationModeTalk);  //38-0400.AUD	Registration info temporarily unavailable at this time.
-							ADQ_Add(kActorOfficerLeary, 270, kAnimationModeTalk);  	//23-0270.AUD	LA, 38 Metro 3. 10-4.
-							Game_Flag_Set(kFlagCT12Visited);
-						} else {
-							Delay (1000);
-							ADQ_Add(kActorOfficerGrayford, 380, kAnimationModeTalk);   //24-0380.AUD	LA, 31 Metro 3 is 10-97 at the scene.	
-							ADQ_Add(kActorDispatcher, 370, kAnimationModeTalk);  //38-0370.AUD	32 Metro 1 LA. Go ahead.
-							ADQ_Add(kActorOfficerGrayford, 420, kAnimationModeTalk);  //24-0420.AUD	LA, 13 Metro 1. 10-29 on abandoned vehicle.
-							ADQ_Add(kActorOfficerGrayford, 430, kAnimationModeTalk); //24-0430.AUD	LA, 10-29 on 16987. The ignition appears punched out.
-							ADQ_Add(kActorOfficerGrayford, 440, kAnimationModeTalk); //24-0440.AUD	LA, 10-20 is one block West of Tyrell.
-							ADQ_Add(kActorDispatcher, 380, kAnimationModeTalk); //38-0380.AUD	32 Metro 1 LA. No wants in a 1959 Chevy Coupe with plate 16987. Transfer on file.
-							ADQ_Add(kActorDispatcher, 400, kAnimationModeTalk); //38-0400.AUD	Registration info temporarily unavailable at this time.
-							ADQ_Add(kActorOfficerGrayford, 550, kAnimationModeTalk); //24-0550.AUD	LA, 38 Metro 3.10-4.
-							Game_Flag_Set(kFlagCT12Visited); 
-						}
-					}		
+	if (_vm->_cutContent) {
+		if (!Game_Flag_Query(kFlagCT12Visited)) {
+			if (Global_Variable_Query(kVariableChapter) == 1) {
+				if (Game_Flag_Query(kFlagLearyChecksCar)) {
+					Delay (1000);
+					ADQ_Add(kActorOfficerLeary, 360, kAnimationModeTalk); 	//23-0360.AUD	LA, 31 Metro 3 is 10-97 at the scene. 
+					ADQ_Add(kActorDispatcher, 370, kAnimationModeTalk);   //38-0370.AUD	32 Metro 1 LA. Go ahead.
+					ADQ_Add(kActorOfficerLeary, 420, kAnimationModeTalk);	//23-0420.AUD	LA, 13 Metro 1. 10-29 on abandoned vehicle.
+					ADQ_Add(kActorOfficerLeary, 430, kAnimationModeTalk);  //23-0430.AUD	LA, 10-29 on 1-6-9-8-7. The ignition appears punched out. 10-20 is one block west of Tyrell.
+					ADQ_Add(kActorDispatcher, 380, kAnimationModeTalk);  //38-0380.AUD	32 Metro 1 LA. No wants in a 1959 Chevy Coupe with plate 16987. Transfer on file.
+					ADQ_Add(kActorDispatcher, 400, kAnimationModeTalk);  //38-0400.AUD	Registration info temporarily unavailable at this time.
+					ADQ_Add(kActorOfficerLeary, 270, kAnimationModeTalk);  	//23-0270.AUD	LA, 38 Metro 3. 10-4.
+					Game_Flag_Set(kFlagCT12Visited);
+				} else {
+					Delay (1000);
+					ADQ_Add(kActorOfficerGrayford, 380, kAnimationModeTalk);   //24-0380.AUD	LA, 31 Metro 3 is 10-97 at the scene.	
+					ADQ_Add(kActorDispatcher, 370, kAnimationModeTalk);  //38-0370.AUD	32 Metro 1 LA. Go ahead.
+					ADQ_Add(kActorOfficerGrayford, 420, kAnimationModeTalk);  //24-0420.AUD	LA, 13 Metro 1. 10-29 on abandoned vehicle.
+					ADQ_Add(kActorOfficerGrayford, 430, kAnimationModeTalk); //24-0430.AUD	LA, 10-29 on 16987. The ignition appears punched out.
+					ADQ_Add(kActorOfficerGrayford, 440, kAnimationModeTalk); //24-0440.AUD	LA, 10-20 is one block West of Tyrell.
+					ADQ_Add(kActorDispatcher, 380, kAnimationModeTalk); //38-0380.AUD	32 Metro 1 LA. No wants in a 1959 Chevy Coupe with plate 16987. Transfer on file.
+					ADQ_Add(kActorDispatcher, 400, kAnimationModeTalk); //38-0400.AUD	Registration info temporarily unavailable at this time.
+					ADQ_Add(kActorOfficerGrayford, 550, kAnimationModeTalk); //24-0550.AUD	LA, 38 Metro 3.10-4.
+					Game_Flag_Set(kFlagCT12Visited); 
 				}
-			}
-
+			}		
+		}
+	}
 	if (Game_Flag_Query(kFlagCT11toCT12)) {
 		Loop_Actor_Walk_To_XYZ(kActorMcCoy, -520.0f, -6.5f, 1103.0f, 0, false, false, false);
 		Game_Flag_Reset(kFlagCT11toCT12);
