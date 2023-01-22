@@ -139,11 +139,11 @@ bool SceneScriptNR03::ClickedOnActor(int actorId) {
 							Actor_Says(kActorMcCoy, 3365, 16); //00-3365.AUD	You and I both know he ain’t at any spa, Hanoi.
 							Actor_Says(kActorHanoi, 70, 13); //25-0070.AUD	He ring you from the spa or what?
 							Delay(1000);
-							Actor_Says(kActorMcCoy, 1535, 16); //00-1535.AUD	Ah, never mind.
+							Actor_Says(kActorMcCoy, 1535, 19); //00-1535.AUD	Ah, never mind.
 						} else {
 							Actor_Says(kActorMcCoy, 8265, 16); //00-8265.AUD	Really?
 							Delay(2000);
-							Actor_Says(kActorMcCoy, 5145, 18); //00-5145.AUD	I may have more questions for you later on.
+							Actor_Says(kActorMcCoy, 1535, 19); //00-1535.AUD	Ah, never mind.
 						}
 					} else {
 						Game_Flag_Set(kFlagHanoiTalk);
@@ -160,12 +160,7 @@ bool SceneScriptNR03::ClickedOnActor(int actorId) {
 						Actor_Says(kActorHanoi, 90, 14); //25-0090.AUD	You can sit in here and do whatever you want.
 						Actor_Says(kActorHanoi, 100, 13); //25-0100.AUD	Drink, shoot some pocket nine ball. Whatever cops like to do in joints like this.
 						Actor_Says(kActorHanoi, 110, 14); //25-0110.AUD	Or you can take a flying leap through the front door. Are we clear?
-						if (Player_Query_Agenda() != kPlayerAgendaSurly 
-						&& Player_Query_Agenda() != kPlayerAgendaErratic) {
-							Actor_Says(kActorMcCoy, 3370, 13); //00-3370.AUD	As the banks of the LA river.
-						} else {
-							Actor_Says(kActorMcCoy, 4320, 14); //00-4320.AUD	Save the pitch for someone who gives a shit.
-						}
+						Actor_Says(kActorMcCoy, 3370, 13); //00-3370.AUD	As the banks of the LA river.
 						Delay(1000);
 						Actor_Says(kActorMcCoy, 5150, 18); //00-5150.AUD	One more thing.
 						Actor_Says(kActorMcCoy, 8615, 13); //00-8615.AUD	Heard anything on the street?

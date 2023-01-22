@@ -62,8 +62,7 @@ bool AIScriptInsectDealer::Update() {
 	// since she has no reason to wait around for you.
 	if (_vm->_cutContent) {
 		if (Global_Variable_Query(kVariableChapter) == 3) {
-			if (!Actor_Clue_Query(kActorMcCoy, kCluePeruvianLadyInterview) 
-			|| Actor_Query_Friendliness_To_Other(kActorInsectDealer, kActorMcCoy) < 50) {	
+			if (!Actor_Clue_Query(kActorMcCoy, kCluePeruvianLadyInterview)) {	
 				if (Actor_Query_Goal_Number(kActorInsectDealer) < 400) {
 					Actor_Set_Goal_Number(kActorInsectDealer, 400);
 					Item_Remove_From_World(kItemScorpions);
@@ -99,7 +98,7 @@ void AIScriptInsectDealer::ClickedByPlayer() {
 			if (!Loop_Actor_Walk_To_XYZ(kActorMcCoy, -295.0f, 0.34f, -193.0f, 12, false, false, false)) {
 				Actor_Face_Actor(kActorMcCoy, kActorInsectDealer, true);
 				Actor_Face_Actor(kActorInsectDealer, kActorMcCoy, true);
-				Actor_Says(kActorMcCoy, 4270, 18); 
+				Actor_Says(kActorMcCoy, 4270, 18);  //00-4270.AUD	I got some more questions for you.
 				Actor_Says(kActorInsectDealer, 440, kAnimationModeTalk); //16-0440.AUD	Please, this is all I know.
 			}
 		}

@@ -241,8 +241,8 @@ void AIScriptLucy::ClickedByPlayer() {
 		if (_vm->_cutContent) {
 			if (Player_Query_Agenda() == kPlayerAgendaSurly 
 			|| Player_Query_Agenda() == kPlayerAgendaErratic) {
-				Actor_Says(kActorMcCoy, 8665, 13); //00-8665.AUD	Disgusting.
-			} else {	
+				Actor_Says(kActorMcCoy, 8665, 13); //00-8665.AUD	Disgusting.	
+			} else { 	
 				Actor_Says(kActorMcCoy, 8630, 12);  // What a waste
 			}
 		} else {
@@ -315,18 +315,21 @@ void AIScriptLucy::Retired(int byActorId) {
 					if (Actor_Query_Goal_Number(kActorRunciter) < kGoalRunciterDead) {
 						Delay(1000);
 						Sound_Play(kSfxSMCAL3, 100, 0, 0, 50);
+						Actor_Set_Goal_Number(kActorRunciter, kGoalRunciterDead);
 					}
 				}
 				if (Game_Flag_Query(kFlagCrazylegsIsReplicant)) {
 					if (!Game_Flag_Query(kFlagCrazylegsDead)) {
 						Delay(1000);
 						Sound_Play(kSfxSMCAL3, 100, 0, 0, 50);
+						Game_Flag_Set(kFlagCrazylegsDead);
 					}
 				}
 				if (Game_Flag_Query(kFlagGrigorianIsReplicant)) {
 					if (!Game_Flag_Query(kFlagGrigorianDead)) {
 						Delay(1000);
 						Sound_Play(kSfxSMCAL3, 100, 0, 0, 50);
+						Game_Flag_Set(kFlagGrigorianDead);
 					}
 				}
 				Delay(2000);
@@ -371,15 +374,17 @@ void AIScriptLucy::Retired(int byActorId) {
 			// Sad music will play when Lucy dies.
 			Music_Stop(1u);
 			Delay(1000);
-			Music_Play(kMusicCrysDie1, 25, 0, 1, -1, kMusicLoopPlayOnce, 0);
+			Actor_Voice_Over(930, kActorVoiceOver); // 99-0930.AUD	Hope I was right about her.
 			Delay(1000);
-			Actor_Voice_Over(930, kActorVoiceOver); // 99-0930.AUD	Hope I was right about her.	
+			Music_Play(kMusicCrysDie1, 25, 0, 1, -1, kMusicLoopPlayOnce, 0);	
 			Delay(2000);
 			Actor_Voice_Over(1410, kActorVoiceOver); //99-1410.AUD	I’d retired another Replicant so more money was headed my way but I didn’t feel so good about it.
-			Delay(1000);
+			Delay(2000);
 			Actor_Says(kActorMcCoy, 170, 19); //00-0170.AUD	Damn.
+			Delay(2000);
 			Actor_Clue_Acquire(kActorClovis, kClueMcCoyRetiredLucy, true, -1);
 			Actor_Modify_Friendliness_To_Other(kActorClovis, kActorMcCoy, -4);
+			Game_Flag_Set(kFlagMcCoyRetiredReplicant);
 			Game_Flag_Reset(kFlagMcCoyIsHelpingReplicants);
 			Actor_Modify_Friendliness_To_Other(kActorSteele, kActorMcCoy, 2);
 			Actor_Modify_Friendliness_To_Other(kActorGuzza, kActorMcCoy, 2);
@@ -393,17 +398,19 @@ void AIScriptLucy::Retired(int byActorId) {
 			Music_Stop(1u);
 			Delay(1000);
 			Music_Play(kMusicCrysDie1, 25, 0, 1, -1, kMusicLoopPlayOnce, 0);
+			Delay(1000);
+			Player_Set_Combat_Mode(false);
 			Actor_Voice_Over(2100, kActorVoiceOver); //99-2100.AUD	I'd crossed the line.
 			Delay(1000);
 			Actor_Says(kActorMcCoy, 2390, kAnimationModeIdle); //00-2390.AUD	Oh, God. No.
-			Delay(2000);
-			Actor_Voice_Over(300, kActorVoiceOver); //99-0300.AUD	I'd screwed up. Plain and simple.
 			Delay(1000);
+			Actor_Voice_Over(300, kActorVoiceOver); //99-0300.AUD	I'd screwed up. Plain and simple.
+			Delay(2000);
 			Actor_Says(kActorMcCoy, 2305, 13); //00-2305.AUD	I’m sorry.
 			Delay(2000);
 			Actor_Set_Goal_Number(kActorLucy, kGoalLucyGone);
-			Outtake_Play(kOuttakeAway1, true, -1);
 			Music_Stop(1u);
+			Outtake_Play(kOuttakeAway1, true, -1);
 			Actor_Set_Goal_Number(kActorMcCoy, kGoalMcCoyArrested);	
 		}
 	} else {
@@ -548,8 +555,8 @@ bool AIScriptLucy::GoalChanged(int currentGoalNumber, int newGoalNumber) {
 			Actor_Says(kActorMcCoy, 1695, 16); //00-1695.AUD	Lucy? Come on out. I’m not the hunter anymore.
 		}
 		if (_vm->_cutContent) {
-			if (Player_Query_Agenda() != kPlayerAgendaPolite
-			&& !Game_Flag_Query(kFlagMcCoyIsHelpingReplicants)
+			if (!Game_Flag_Query(kFlagMcCoyIsHelpingReplicants)
+			&& Player_Query_Agenda() != kPlayerAgendaPolite
 			&& Global_Variable_Query(kVariableAffectionTowards) != kAffectionTowardsLucy) {
 				Actor_Says(kActorMcCoy, 1700, 16); //00-1700.AUD	I put my gun away.
 			}
@@ -565,13 +572,14 @@ bool AIScriptLucy::GoalChanged(int currentGoalNumber, int newGoalNumber) {
 				Actor_Clue_Acquire(kActorMcCoy, kClueMcCoyHelpedLucy, true, kActorLucy);
 			}
 			if (Global_Variable_Query(kVariableAffectionTowards) == kAffectionTowardsNone
-			) {
+			&& (Actor_Query_Friendliness_To_Other(kActorClovis, kActorMcCoy) > 50
+			&& Actor_Query_Goal_Number(kActorDektora) < kGoalDektoraGone)) {
 				Global_Variable_Set(kVariableAffectionTowards, kAffectionTowardsLucy);
 			}
 		}
 		AI_Movement_Track_Flush(kActorLucy);
 		if (_vm->_cutContent) {
-			Loop_Actor_Walk_To_Actor(kActorLucy, kActorMcCoy, 24, true, false);
+			Loop_Actor_Walk_To_Actor(kActorLucy, kActorMcCoy, 24, true, true);
 		}
 		Actor_Face_Actor(kActorLucy, kActorMcCoy, true);
 		Actor_Face_Actor(kActorMcCoy, kActorLucy, true);
@@ -590,14 +598,7 @@ bool AIScriptLucy::GoalChanged(int currentGoalNumber, int newGoalNumber) {
 		}
 		if (Global_Variable_Query(kVariableAffectionTowards) == kAffectionTowardsLucy) { // cut feature? if this is set lucy will not run into hf04
 			Actor_Says(kActorLucy, 940, 13);
-			if (_vm->_cutContent) {
-				if (Player_Query_Agenda() == kPlayerAgendaSurly 
-				|| Player_Query_Agenda() == kPlayerAgendaErratic) {
-					Actor_Says(kActorMcCoy, 6780, 12); //00-6780.AUD	Don’t jump to any conclusions.
-				}
-			} else {
-				Actor_Says(kActorMcCoy, 6780, 12); //00-6780.AUD	Don’t jump to any conclusions.
-			}
+			Actor_Says(kActorMcCoy, 6780, 12); //00-6780.AUD	Don’t jump to any conclusions.
 			Actor_Says(kActorLucy, 950, 12);
 			Actor_Says(kActorLucy, 960, 14);
 			Actor_Says(kActorMcCoy, 6785, 13);
@@ -633,10 +634,25 @@ bool AIScriptLucy::GoalChanged(int currentGoalNumber, int newGoalNumber) {
 				Actor_Says(kActorLucy, 1040, 18); //06-1040.AUD	Will I?
 				Actor_Says(kActorMcCoy, 6805, 13); //00-6805.AUD	I-- I promise you. But for now we gotta be careful. You should stay hidden for a while.
 				Actor_Says(kActorMcCoy, 6810, 14); //00-6810.AUD	Go. I’ll find you when it’s safe.
-				Actor_Says(kActorLucy, 230, 14); //06-0230.AUD	Thank you.
+				if (Game_Flag_Query(kFlagLucyIsReplicant)) {
+					Actor_Says(kActorLucy, 230, 14); //06-0230.AUD	Thank you.
+				} else {
+					Actor_Says(kActorLucy, 1050, 17); //06-1050.AUD	Oh, thank you. Thank you for everything.
+				}
 			}
 		}
-		Actor_Says(kActorLucy, 370, 14);
+		if (_vm->_cutContent) {
+			if (Game_Flag_Query(kFlagLucyIsReplicant)) {
+				Actor_Says(kActorLucy, 370, 14);
+			}
+		} else {
+			Actor_Says(kActorLucy, 370, 14);
+		}
+		if (_vm->_cutContent) {
+			if (Player_Query_Agenda() == kPlayerAgendaPolite) {
+				Actor_Says(kActorMcCoy, 1650, 13); //00-1650.AUD	Take care of yourself, kid.
+			}
+		}
 		Actor_Set_Goal_Number(kActorLucy, kGoalLucyHF04WalkAway);
 
 		if (Global_Variable_Query(kVariableHollowayArrest) == 3) {
@@ -1063,26 +1079,41 @@ void AIScriptLucy::voightKampffTest() {
 	Actor_Face_Actor(kActorMcCoy, kActorLucy, true);
 	// Added in some lines for Lucy and McCoy.
 	if (_vm->_cutContent) {
+		Actor_Face_Actor(kActorLucy, kActorMcCoy, true);
 		Actor_Says(kActorMcCoy, 1600, 11); //00-1600.AUD	Lucy? 
 	}
-	Actor_Says(kActorMcCoy, 6815, 11); //00-6815.AUD	I told you to stay hidden.
-	Actor_Face_Actor(kActorLucy, kActorMcCoy, true);
 	if (_vm->_cutContent) {
-		Actor_Says(kActorLucy, 650, 16); //06-0650.AUD	Haven’t we already been through this?
-		Actor_Says(kActorLucy, 660, 13); //06-0660.AUD	Why would I have any dealings with those people? 
-		Actor_Says(kActorMcCoy, 630, 11); //00-0630.AUD	What?
+		if (Player_Query_Agenda() != kPlayerAgendaPolite) {
+			Actor_Says(kActorMcCoy, 6815, 11); //00-6815.AUD	I told you to stay hidden
+			Actor_Says(kActorLucy, 650, 16); //06-0650.AUD	Haven’t we already been through this?
+			Actor_Says(kActorLucy, 660, 13); //06-0660.AUD	Why would I have any dealings with those people? 
+			Actor_Says(kActorMcCoy, 630, 11); //00-0630.AUD	What?
+			Actor_Says(kActorLucy, 1060, 13); //06-1060.AUD	I can’t stay there anymore.
+			Actor_Says(kActorLucy, 1070, 17); //06-1070.AUD	I don’t want to be with father. Not when he’s so angry. Besides…
+			Delay(1000);
+		} else {
+			Actor_Says(kActorLucy, 380, 13); //06-0380.AUD	Ray.
+			Delay(500);
+			Actor_Says(kActorMcCoy, 6185, 19); //00-6185.AUD	(sighs) You got any idea how glad I am to see ya?
+			Actor_Says(kActorLucy, 390, 13); //06-0390.AUD	I’m scared, Ray.
+			Actor_Says(kActorMcCoy, 8320, 11); //00-8320.AUD	Really?
+			Actor_Says(kActorLucy, 1130, 11); //06-1130.AUD	Uh-huh.
+			Delay(500);
+			Actor_Says(kActorLucy, 1530, 16); //06-1530.AUD	I'm always afraid.
+			Actor_Says(kActorMcCoy, 8190, -1);	// 00-8190.AUD	Why?
+			Actor_Says(kActorLucy, 1750, 13); //06-1750.AUD	I don't wanna tell you.
+			Delay(500);
+			Actor_Says(kActorMcCoy, 7985, 13); //00-7985.AUD	It's okay.
+			Delay(1000);
+		}
 	}
-	Actor_Says(kActorLucy, 1060, 13); //06-1060.AUD	I can’t stay there anymore.
-	Actor_Says(kActorLucy, 1070, 17); //06-1070.AUD	I don’t want to be with father. Not when he’s so angry. Besides…
-	Delay(1000);
 	Actor_Says(kActorLucy, 1080, 14); //06-1080.AUD	I need something.
 #if BLADERUNNER_ORIGINAL_BUGS
 	Actor_Says(kActorMcCoy, 6820, 16);
 #else
 	// McCoy is interrupted here
 	if (_vm->_cutContent) {
-		if (Player_Query_Agenda() == kPlayerAgendaSurly 
-		|| Player_Query_Agenda() == kPlayerAgendaErratic) {
+		if (Player_Query_Agenda() != kPlayerAgendaPolite) {
 			Actor_Says_With_Pause(kActorMcCoy, 6820, 0.0f, 16); //00-6820.AUD	We don't have time for an--
 		}
 	} else {
@@ -1099,8 +1130,9 @@ void AIScriptLucy::voightKampffTest() {
 	Actor_Says(kActorLucy, 1110, 15); //06-1110.AUD	Give it to me. Father won’t tell me anything anymore.
 	// Made it so McCoy only VKs Lucy if he is not Surly or Erratic.
 	if (_vm->_cutContent) {
-		if (Player_Query_Agenda() == kPlayerAgendaSurly 
-		|| Player_Query_Agenda() == kPlayerAgendaErratic) {	
+		if (Player_Query_Agenda() != kPlayerAgendaPolite) {	
+			Actor_Says_With_Pause(kActorMcCoy, 6840, 0.0f, 13); //00-6840.AUD	Is that why he was angry? Because you asked him--
+			Delay(1000);
 			Actor_Says(kActorMcCoy, 6905, 13); //00-6905.AUD	Now is not a good time.
 			Actor_Says(kActorLucy, 1230, 17); //06-1230.AUD	It’s never a good time!
 			Actor_Says(kActorMcCoy, 6910, 13); //00-6910.AUD	Listen! You have to be patient, you have to trust me. It's not safe here.
@@ -1108,7 +1140,6 @@ void AIScriptLucy::voightKampffTest() {
 			Player_Gains_Control();
 			Actor_Set_Goal_Number(kActorLucy, kGoalLucyUG01RunAway);
 		} else {
-			Actor_Says_With_Pause(kActorMcCoy, 6840, 0.0f, 13); //00-6840.AUD	Is that why he was angry? Because you asked him--
 			Delay(1000);
 			Actor_Says(kActorMcCoy, 6845, 12); //00-6845.AUD	You deserve it.
 			Delay(500);
@@ -1118,7 +1149,6 @@ void AIScriptLucy::voightKampffTest() {
 			Actor_Says(kActorMcCoy, 6860, 13); //00-6860.AUD	Are you ready?
 			Actor_Says(kActorLucy, 1130, 14); //06-1130.AUD	Uh-huh.
 			Player_Gains_Control();
-
 			Voight_Kampff_Activate(kActorLucy, 40);
 
 			Player_Loses_Control();

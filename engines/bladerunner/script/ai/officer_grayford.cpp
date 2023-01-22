@@ -575,7 +575,7 @@ bool AIScriptOfficerGrayford::GoalChanged(int currentGoalNumber, int newGoalNumb
 		Actor_Says(kActorOfficerGrayford, 120, 19);
 		// Made it so McCoy only says the dialogue of Moraji being dead and what his final words were if Moraji dies.
 		if (_vm->_cutContent) {
-			if (Game_Flag_Query(kFlagMorajiDead)) {
+			if (!Game_Flag_Query(kFlagMorajiAlive)) {
 				Actor_Says_With_Pause(kActorMcCoy, 970, 0.2f, 13); // Got a dead man here. Victim of an explosion.
 				Actor_Clue_Acquire(kActorMcCoy, kClueMorajiInterview, true, kActorMoraji);
 				Actor_Says(kActorMcCoy, 975, 12); // TODO - a bug? McCoy may not know Moraji's name here(?)
@@ -593,29 +593,28 @@ bool AIScriptOfficerGrayford::GoalChanged(int currentGoalNumber, int newGoalNumb
 			Actor_Says_With_Pause(kActorOfficerGrayford, 150, 0.0f, 17);
 			Actor_Says(kActorOfficerGrayford, 160, 15);
 			if (!Game_Flag_Query(kFlagMcCoyIsHelpingReplicants)) {
-				if (Player_Query_Agenda() == kPlayerAgendaPolite) { 
-					Actor_Says_With_Pause(kActorMcCoy, 995, 0.3f, 14); //00-0995.AUD	Appreciate it.
-				}
+				Actor_Says_With_Pause(kActorMcCoy, 995, 0.3f, 14); //00-0995.AUD	Appreciate it.
 			}
 			// If Moraji survives McCoy depending on his agenda, comforts Moraji or tries to question him. If he comforts him Moraji gives McCoy the DNA data and if
 			// McCoy questions him Moraji doesn't give him the data. Also made it so the scene eits enable.
-			if (!Game_Flag_Query(kFlagMorajiDead)) {
+			if (Game_Flag_Query(kFlagMorajiAlive)) {
 				Actor_Face_Actor(kActorMcCoy, kActorMoraji, true);
 				if (Player_Query_Agenda() == kPlayerAgendaSurly 
 				|| Player_Query_Agenda() == kPlayerAgendaErratic) {
 					Actor_Says(kActorMcCoy, 8920, 15); //00-8920.AUD	I gotta ask you a question.
+					Actor_Says(kActorMoraji, 9020, kAnimationModeTalk); //35-9020.AUD	No.
 					Delay (2000);
 					Actor_Says(kActorMcCoy, 440, 16); //00-0440.AUD	Forget it.
 				} else {
 					Actor_Says(kActorMcCoy, 945, 13); //00-0945.AUD	Hold on. An ambulance will be coming.
 					Delay (1000);
 					Actor_Says(kActorMcCoy, 8990, 15);	//00-8990.AUD	What have you got there?
-					Item_Pickup_Spin_Effect(kModelAnimationDNADataDisc, 381, 421);
-					Actor_Clue_Acquire(kActorMcCoy, kClueDNAMoraji, true, kActorMoraji);
-					Delay (1000);
+					Delay (2000);
+					Item_Pickup_Spin_Effect_From_Actor(kModelAnimationDNADataDisc, kActorMoraji, 0, 0);
 					Actor_Says(kActorMcCoy, 8501, 13); //00-8501.AUD	DNA information?
-					Delay (1000);
+					Delay (2000);
 					Actor_Says(kActorMcCoy, 1345, 18); //00-1345.AUD	Thanks.
+					Actor_Clue_Acquire(kActorMcCoy, kClueDNAMoraji, true, kActorMoraji);
 					Scene_Exits_Enable();
 				}
 			}
@@ -647,7 +646,7 @@ bool AIScriptOfficerGrayford::GoalChanged(int currentGoalNumber, int newGoalNumb
 
 		if (Player_Query_Current_Scene() == kSceneDR04) {
 			if (_vm->_cutContent) {
-				if (Game_Flag_Query(kFlagMorajiDead)) {
+				if (!Game_Flag_Query(kFlagMorajiAlive)) {
 					Actor_Says(kActorOfficerGrayford, 170, kAnimationModeTalk); // This is 32, Sector 3. Reporting a homicide. Possible act of terrorism.
 				}
 			} else {
@@ -676,7 +675,7 @@ bool AIScriptOfficerGrayford::GoalChanged(int currentGoalNumber, int newGoalNumb
 	case kGoalOfficerGrayfordStopPatrolToTalkToMcCoyAtDR04:
 		Actor_Face_Actor(kActorMcCoy, kActorOfficerGrayford, true);
 		if (_vm->_cutContent) {
-			if (Game_Flag_Query(kFlagMorajiDead)) {
+			if (!Game_Flag_Query(kFlagMorajiAlive)) {
 				if (Player_Query_Agenda() == kPlayerAgendaPolite) {
 					Actor_Says(kActorMcCoy, 1000, 14); // You got a sheet or something...?
 					AI_Movement_Track_Flush(kActorOfficerGrayford);

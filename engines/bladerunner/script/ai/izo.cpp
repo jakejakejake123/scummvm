@@ -204,9 +204,11 @@ void AIScriptIzo::ClickedByPlayer() {
 		if (_vm->_cutContent) {
 			if (Player_Query_Agenda() == kPlayerAgendaSurly 
 			|| Player_Query_Agenda() == kPlayerAgendaErratic) {
-				Actor_Says(kActorMcCoy, 8585, 13);
-			} else {	
+				Actor_Says(kActorMcCoy, 8590, 18); //00-8590.AUD	Not the talkative type
+			} else if (Player_Query_Agenda() == kPlayerAgendaPolite) {	
 				Actor_Says(kActorMcCoy, 8630, 12);  // What a waste
+			} else {
+				Actor_Says(kActorMcCoy, 8665, 13); //00-8665.AUD	Disgusting.	
 			}
 		} else {
 			Actor_Says(kActorMcCoy, 8585, 13);
@@ -311,28 +313,25 @@ bool AIScriptIzo::ShotAtAndHit() {
 					Loop_Actor_Walk_To_Actor(kActorSteele, kActorMcCoy, 60, false, true);
 					Actor_Face_Actor(kActorMcCoy, kActorSteele, true);
 					Actor_Face_Actor(kActorSteele, kActorMcCoy, true);
-					if (Actor_Query_Friendliness_To_Other(kActorSteele, kActorMcCoy) < 51) {
-						Actor_Says(kActorSteele, 1800,  kAnimationModeTalk); //01-1800.AUD	You should have waited for me, Slim.
-						if (Player_Query_Agenda() == kPlayerAgendaSurly 
-						|| Player_Query_Agenda() == kPlayerAgendaErratic) {
-							Actor_Says(kActorMcCoy, 3835, 12); // 00-3835.AUD	I had the shot, so I took it.
-						} else {
-							Actor_Says(kActorMcCoy, 6280, 15); //00-6280.AUD	Ha. A guy’s got to start somewhere.
-						}
-						Actor_Says(kActorSteele, 1810, kAnimationModeTalk); //01-1810.AUD	(smacks lips) We’ll see who has it next time.
+					Actor_Says(kActorSteele, 1790, kAnimationModeTalk); //01-1790.AUD	We having fun yet?
+					if (Player_Query_Agenda() == kPlayerAgendaSurly 
+					|| Player_Query_Agenda() == kPlayerAgendaErratic) {
+						Actor_Says(kActorMcCoy, 3830, 13);//00-3830.AUD	Oh, yeah.
 					} else {
-						Actor_Says(kActorSteele, 1790, kAnimationModeTalk); //01-1790.AUD	We having fun yet?
-						if (Player_Query_Agenda() == kPlayerAgendaSurly 
-						|| Player_Query_Agenda() == kPlayerAgendaErratic) {
-							Actor_Says(kActorMcCoy, 3830, 13);//00-3830.AUD	Oh, yeah.
-						} else {
-							Actor_Says(kActorMcCoy, 6275, 15); //00-6275.AUD	Just doing what I get paid the big bucks to do.
-						}
-						Actor_Says(kActorSteele, 1810, kAnimationModeTalk); //01-1810.AUD	(smacks lips) We’ll see who has it next time.
+						Actor_Says(kActorMcCoy, 6275, 15); //00-6275.AUD	Just doing what I get paid the big bucks to do.
 					}
+					Actor_Says(kActorSteele, 1800,  kAnimationModeTalk); //01-1800.AUD	You should have waited for me, Slim.
+					if (Player_Query_Agenda() == kPlayerAgendaSurly 
+					|| Player_Query_Agenda() == kPlayerAgendaErratic) {
+						Actor_Says(kActorMcCoy, 3835, 12); // 00-3835.AUD	I had the shot, so I took it.
+					} else {
+						Actor_Says(kActorMcCoy, 6280, 15); //00-6280.AUD	Ha. A guy’s got to start somewhere.
+					}
+					Actor_Says(kActorSteele, 1810, kAnimationModeTalk); //01-1810.AUD	(smacks lips) We’ll see who has it next time.
 					Actor_Set_Goal_Number(kActorSteele, kGoalSteeleLeaveRC03);
 					Scene_Exits_Enable();
 					Game_Flag_Set(kFlagMcCoyShotIzo);
+					Game_Flag_Set(kFlagMcCoyRetiredReplicant);
 					Game_Flag_Reset (kFlagMcCoyIsHelpingReplicants);
 					Actor_Modify_Friendliness_To_Other(kActorSteele, kActorMcCoy, 2);
 					Actor_Modify_Friendliness_To_Other(kActorGuzza, kActorMcCoy, 2);
@@ -421,18 +420,21 @@ void AIScriptIzo::Retired(int byActorId) {
 					if (Actor_Query_Goal_Number(kActorRunciter) < kGoalRunciterDead) {
 						Delay(1000);
 						Sound_Play(kSfxSMCAL3, 100, 0, 0, 50);
+						Actor_Set_Goal_Number(kActorRunciter, kGoalRunciterDead);
 					}
 				}
 				if (Game_Flag_Query(kFlagCrazylegsIsReplicant)) {
 					if (!Game_Flag_Query(kFlagCrazylegsDead)) {
 						Delay(1000);
 						Sound_Play(kSfxSMCAL3, 100, 0, 0, 50);
+						Game_Flag_Set(kFlagCrazylegsDead);
 					}
 				}
 				if (Game_Flag_Query(kFlagGrigorianIsReplicant)) {
 					if (!Game_Flag_Query(kFlagGrigorianDead)) {
 						Delay(1000);
 						Sound_Play(kSfxSMCAL3, 100, 0, 0, 50);
+						Game_Flag_Set(kFlagGrigorianDead);
 					}
 				}
 				Delay(2000);

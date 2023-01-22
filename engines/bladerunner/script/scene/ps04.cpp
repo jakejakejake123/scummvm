@@ -175,10 +175,15 @@ void SceneScriptPS04::PlayerWalkedIn() {
 		Actor_Face_Actor(kActorMcCoy, kActorGuzza, true);
 	}
 	if (_vm->_cutContent) {
-		if (Game_Flag_Query(kFlagZubenSpared)
+		if (!Actor_Clue_Query(kActorMcCoy, kClueMcCoyRetiredZuben) 
+		&& Game_Flag_Query(kFlagCT01TalkToHowieAfterZubenMissing)
 		&& !Game_Flag_Query(kFlagPS04GuzzaTalkIsFurious)
 		&& !Game_Flag_Query(kFlagMcCoyRetiredRunciter)
-		&& !Game_Flag_Query(kFlagMcCoyShotRachael)) {
+		&& !Game_Flag_Query(kFlagMcCoyShotRachael)
+		&& !Game_Flag_Query(kFlagMcCoyShotGrigorian)
+		&& !Game_Flag_Query(kFlagRunciterArrested)
+		&& !Game_Flag_Query(kFlagZubenArrested)
+		&& !Game_Flag_Query(kFlagGrigorianDead)) {
 			Actor_Put_In_Set(kActorGuzza, kSetPS04);
 			Actor_Set_At_XYZ(kActorGuzza, -728.0f, -354.0f, 1090.0f, 150);
 			Actor_Change_Animation_Mode(kActorGuzza, 53);
@@ -189,13 +194,19 @@ void SceneScriptPS04::PlayerWalkedIn() {
 			Actor_Says(kActorGuzza, 340, 32); //04-0340.AUD	I need results and fast.
 			Actor_Says(kActorMcCoy, 3975, 13); //00-3975.AUD	I'm working on it.
 			Actor_Says(kActorGuzza, 350, 31); //04-0350.AUD	That's not good enough. Bryant's been crawling up my ass all morning.
-			if (Actor_Query_Friendliness_To_Other(kActorGuzza, kActorMcCoy) < 51) {
-				Actor_Says(kActorGuzza, 360, 34); //04-0360.AUD	If you can't cut it just tell me and I'll reassign the Gaffster or Steele.
+			Actor_Says(kActorMcCoy, 3910, 15); //00-3910.AUD	You’re lying.
+			Actor_Says(kActorGuzza, 1520, 16); //04-1520.AUD	Everything I say is as true as holy writ.
+			if (Player_Query_Agenda() == kPlayerAgendaPolite) {
+				Actor_Says(kActorMcCoy, 4880, 13); //00-4880.AUD	Is that right?
+			} else {
+				Actor_Says(kActorMcCoy, 2485, 18); //00-2485.AUD	I’ve a hard time believing that.
 			}
+			Delay(1000);
+			Actor_Says(kActorGuzza, 360, 34); //04-0360.AUD	If you can't cut it just tell me and I'll reassign the Gaffster or Steele.
 			Actor_Says(kActorMcCoy, 3980, 13); //00-3980.AUD	I can handle it.
 			Actor_Says(kActorGuzza, 370, 33); //04-0370.AUD	I don't know if you can, McCoy. I really got my doubts.
-			if (Actor_Query_Friendliness_To_Other(kActorGuzza, kActorMcCoy) < 51) {
-				Actor_Says(kActorGuzza, 380, 32); // 04-0380.AUD	You blow chunks on your first assignment, you can damn near shit-can your future here.
+			Actor_Says(kActorGuzza, 380, 32); // 04-0380.AUD	You blow chunks on your first assignment, you can damn near shit-can your future here.
+			if (Actor_Query_Friendliness_To_Other(kActorGuzza, kActorMcCoy) < 51) {	
 				Actor_Says(kActorGuzza, 390, 31); //04-0390.AUD	Not to mention how it makes me look.
 			}
 			if (Player_Query_Agenda() == kPlayerAgendaSurly 
@@ -242,28 +253,14 @@ void SceneScriptPS04::PlayerWalkedIn() {
 			Actor_Face_Actor(kActorMcCoy, kActorGuzza, true);
 			Actor_Says(kActorGuzza, 150, 31); //04-0150.AUD	You've really been surprising the troops around here, kid.
 			Actor_Says(kActorGuzza, 160, 32); //04-0160.AUD	Gaff says you worked that retirement like a champ.
-			if (Player_Query_Agenda() != kPlayerAgendaSurly 
-			&& Player_Query_Agenda() != kPlayerAgendaErratic) {
-				Actor_Says(kActorMcCoy, 3925, 18); //00-3925.AUD	Just doing the job.
-			} else {
-				Actor_Says(kActorMcCoy, 2215, 18); //00-2215.AUD	That’s right.
-			}
-			Actor_Face_Actor(kActorGuzza, kActorMcCoy, true);
-			Actor_Says(kActorGuzza, 170, 33); //04-0170.AUD	Yeah, well don't get too cocky. Those Sixes can be damn unpredictable.
-			Loop_Actor_Walk_To_XYZ(kActorMcCoy, -716.0f, -354.85f, 1042.0f, 0, false, false, true);
-			Actor_Face_Actor(kActorMcCoy, kActorGuzza, true);
-			Actor_Says(kActorMcCoy, 3930, 13); // 00-3930.AUD	That I know. 
-			Actor_Says(kActorGuzza, 300, 31);	// Why don't you rest them dogs the rest of the day.
-			if (Player_Query_Agenda() != kPlayerAgendaSurly 
-			&& Player_Query_Agenda() != kPlayerAgendaErratic) {
-				Actor_Says(kActorMcCoy, 3965, 13);	// I still got plenty energy.
-				Actor_Says(kActorGuzza, 310, 33);	// That's an order McCoy.
-				Actor_Says(kActorGuzza, 320, 34);	// I'm ordering you to relax.
-			} else {
-				Actor_Says(kActorMcCoy, 8200, 13); //00-8200.AUD	When I'm done, maybe.
-			}
+			Actor_Says(kActorMcCoy, 2215, 18); //00-2215.AUD	That’s right.
+			Delay(1000);
+			Actor_Says(kActorMcCoy, 8514, 13); //00-8514.AUD	Got anything new to tell me?
+			Actor_Says(kActorGuzza, 290, 33); //04-0290.AUD	Don't push it, kid. You look like you're beat anyway.
+			Actor_Says(kActorMcCoy, 690, 18); //00-0690.AUD	Gotcha.
 			Scene_Exits_Enable();
 			Game_Flag_Set(kFlagGrigorianDead);
+			Game_Flag_Set(kFlagMcCoyRetiredReplicant);
 			Game_Flag_Reset(kFlagMcCoyShotGrigorian);
 			if (Query_Difficulty_Level() != kGameDifficultyEasy) {
 				Global_Variable_Increment(kVariableChinyen, 200);
@@ -303,17 +300,8 @@ void SceneScriptPS04::dialogueWithGuzza() {
 	} else {
 		DM_Add_To_List_Never_Repeat_Once_Selected(120, 1, -1, -1); // MONEY
 	}
-	if (_vm->_cutContent) {
-		if (Player_Query_Agenda() != kPlayerAgendaSurly 
-		&& Player_Query_Agenda() != kPlayerAgendaErratic) {
-			if (Actor_Clue_Query(kActorMcCoy, kClueHoldensBadge)) {
-				DM_Add_To_List_Never_Repeat_Once_Selected(150, 7, 6, 5); // HOLDEN'S BADGE
-			}
-		}
-	} else {
-		if (Actor_Clue_Query(kActorMcCoy, kClueHoldensBadge)) {
-			DM_Add_To_List_Never_Repeat_Once_Selected(150, 7, 6, 5); // HOLDEN'S BADGE
-		}
+	if (Actor_Clue_Query(kActorMcCoy, kClueHoldensBadge)) {
+		DM_Add_To_List_Never_Repeat_Once_Selected(150, 7, 6, 5); // HOLDEN'S BADGE
 	}
 	if (_vm->_cutContent) {
 		if (Game_Flag_Query(kFlagCT04HomelessKilledByMcCoy)) {
@@ -331,22 +319,27 @@ void SceneScriptPS04::dialogueWithGuzza() {
 
 	switch (answer) {
 	case 110: // REQUEST TYRELL MEETING
-		Actor_Says(kActorGuzza, 420, 31);
+		if (_vm->_cutContent) {
+			if (Actor_Query_Friendliness_To_Other(kActorGuzza, kActorMcCoy) < 51) {
+				Actor_Says(kActorGuzza, 420, 31);
+			} 
+		} else {
+			Actor_Says(kActorGuzza, 420, 31);
+		}
 		Actor_Says(kActorMcCoy, 3990, 19);
-		Actor_Says(kActorMcCoy, 3995, 17);
+		Actor_Says(kActorMcCoy, 3995, 17); 
 		if (_vm->_cutContent) {
 			if (Actor_Query_Friendliness_To_Other(kActorGuzza, kActorMcCoy) < 51) {
 				Actor_Says(kActorGuzza, 430, 33);
-				Actor_Says(kActorMcCoy, 4025, 18);
-				Actor_Says(kActorMcCoy, 4030, 12);
-			}
-		}
-		if (_vm->_cutContent) {
-			if (Actor_Query_Friendliness_To_Other(kActorGuzza, kActorMcCoy) < 51) {
+				Actor_Says(kActorMcCoy, 4025, 18); //00-4025.AUD	One of his employees got his brains splattered inside the pyramid.
+				Actor_Says(kActorMcCoy, 4030, 12); //00-4030.AUD	I thought maybe Tyrell could fill in some blanks.
 				Actor_Says(kActorGuzza, 440, 31);
-				Actor_Says(kActorMcCoy, 4035, 13);
+				Actor_Says(kActorMcCoy, 4035, 13); //00-4035.AUD	You and I both know it's a one-man show over there.
 			}
 		} else {
+			Actor_Says(kActorGuzza, 430, 33);
+			Actor_Says(kActorMcCoy, 4025, 18);
+			Actor_Says(kActorMcCoy, 4030, 12);
 			Actor_Says(kActorGuzza, 440, 31);
 			Actor_Says(kActorMcCoy, 4035, 13);
 		}
@@ -355,6 +348,8 @@ void SceneScriptPS04::dialogueWithGuzza() {
 		if (_vm->_cutContent) {
 			if (Player_Query_Agenda() == kPlayerAgendaPolite) {
 				Actor_Says(kActorMcCoy, 4040, 17); //00-4040.AUD	Appreciate it, Lieutenant.
+			} else {
+				Actor_Says(kActorMcCoy, 690, kAnimationModeTalk); //00-0690.AUD	Gotcha.
 			}
 		} else {
 			Actor_Says(kActorMcCoy, 4040, 17); //00-4040.AUD	Appreciate it, Lieutenant.
@@ -366,7 +361,6 @@ void SceneScriptPS04::dialogueWithGuzza() {
 	case 120: // MONEY
 		Actor_Says(kActorMcCoy, 4000, 18);
 		if (_vm->_cutContent) {
-			Game_Flag_Set(kFlagGuzzaLoanTalk);
 			if (Actor_Query_Friendliness_To_Other(kActorGuzza, kActorMcCoy) > 50) {
 				Actor_Clue_Acquire(kActorMcCoy, kClueGuzzasCash, true, kActorGuzza);
 				Actor_Says(kActorGuzza, 1490, 33); //04-1490.AUD	This has got your name written all over it.
@@ -379,15 +373,17 @@ void SceneScriptPS04::dialogueWithGuzza() {
 				Actor_Says(kActorGuzza, 530, 31); //04-0530.AUD	This goddamn city doesn't know how to manage funds. They've been flush for years.
 				Actor_Says(kActorMcCoy, 4060, 13);
 				Actor_Says(kActorGuzza, 540, 31); //04-0540.AUD	Trust me. Ain't nobody getting rich unless they're sneaking some on the side.
-				Actor_Says(kActorGuzza, 550, 32);
+				Actor_Says(kActorGuzza, 550, 32); //04-0550.AUD	Hell, I can barely pay for the fuel for my car.
 				if (Player_Query_Agenda() == kPlayerAgendaSurly 
 				|| Player_Query_Agenda() == kPlayerAgendaErratic) {
-					Actor_Says(kActorMcCoy, 4065, 18);
+					Actor_Says(kActorMcCoy, 4065, 18); //00-4065.AUD	Ever hear of public transportation?
 					Actor_Says(kActorGuzza, 560, 34);
 					Actor_Modify_Friendliness_To_Other(kActorGuzza, kActorMcCoy, -2);
 				} else if (Player_Query_Agenda() == kPlayerAgendaPolite) {
 					Actor_Says(kActorMcCoy, 2305, 14); //00-2305.AUD	I’m sorry.
 					Actor_Modify_Friendliness_To_Other(kActorGuzza, kActorMcCoy, 2);
+				} else {
+					Actor_Says(kActorMcCoy, 4880, 13); //00-4880.AUD	Is that right?
 				}
 				if (Query_Difficulty_Level() != kGameDifficultyEasy) {
 					Global_Variable_Increment(kVariableChinyen, 100);
@@ -405,8 +401,7 @@ void SceneScriptPS04::dialogueWithGuzza() {
 					Actor_Says(kActorMcCoy, 4880, 13); //00-4880.AUD	Is that right?
 				}
 				Actor_Says(kActorGuzza, 510, 31);	// Hey, you track down a Rep, you get an advance.
-				if (Player_Query_Agenda() == kPlayerAgendaSurly 
-				|| Player_Query_Agenda() == kPlayerAgendaErratic) {
+				if (Player_Query_Agenda() != kPlayerAgendaPolite) {
 					Actor_Says(kActorMcCoy, 4050, 18); //00-4050.AUD	Gee, wish I'd thought of that.
 				}
 			}
@@ -432,76 +427,69 @@ void SceneScriptPS04::dialogueWithGuzza() {
 		if (_vm->_cutContent) {
 			if (!Game_Flag_Query(kFlagPS04GuzzaTalkIsFurious)
 			&& !Game_Flag_Query(kFlagPS04GuzzaTalkZubenRetired)
+			&& Game_Flag_Query(kFlagCT01TalkToHowieAfterZubenMissing)
 			&& !Game_Flag_Query(kFlagGuzzaInformed)
-			&& Actor_Clue_Query(kActorMcCoy, kClueMcCoyRetiredZuben) 
-			) {			
+			&& (Game_Flag_Query(kFlagZubenRetired)
+			|| Game_Flag_Query(kFlagMcCoyRetiredRunciter))) {	
 				Actor_Says(kActorMcCoy, 3920, 13); //00-3920.AUD	Bryant go on permanent leave and you get full use of the office, Lieutenant?
 				Actor_Says(kActorGuzza, 140, 30); //04-0140.AUD	You'd be amazed at how accommodating a man can be after his hemorrhoids get lanced.
 				Actor_Face_Current_Camera(kActorGuzza, true);
 				Actor_Says(kActorGuzza, 150, 31); //04-0150.AUD	You've really been surprising the troops around here, kid.
 				Actor_Says(kActorGuzza, 160, 32); //04-0160.AUD	Gaff says you worked that retirement like a champ.
 				if (!Game_Flag_Query(kFlagMcCoyIsHelpingReplicants)) {
-					if (Player_Query_Agenda() == kPlayerAgendaPolite) {
-						Actor_Says(kActorMcCoy, 3925, 18); //00-3925.AUD	Just doing the job.
+					Actor_Says(kActorMcCoy, 3925, 18); //00-3925.AUD	Just doing the job.
+					Actor_Face_Actor(kActorGuzza, kActorMcCoy, true);
+					if (!Game_Flag_Query(kFlagMcCoyRetiredRunciter)) {
+						Actor_Says(kActorGuzza, 170, 33); //04-0170.AUD	Yeah, well don't get too cocky. Those Sixes can be damn unpredictable.
+						Loop_Actor_Walk_To_XYZ(kActorMcCoy, -716.0f, -354.85f, 1042.0f, 0, false, false, true);
+						Actor_Face_Actor(kActorMcCoy, kActorGuzza, true);
+						Actor_Says(kActorMcCoy, 3930, 13); // 00-3930.AUD	That I know. 
 					} else {
-						Actor_Says(kActorMcCoy, 2215, 18); //00-2215.AUD	That’s right.
+						Loop_Actor_Walk_To_XYZ(kActorMcCoy, -716.0f, -354.85f, 1042.0f, 0, false, false, true);
+						Actor_Face_Actor(kActorMcCoy, kActorGuzza, true);
 					}
-					Actor_Face_Actor(kActorGuzza, kActorMcCoy, true);
-					Actor_Says(kActorGuzza, 170, 33); //04-0170.AUD	Yeah, well don't get too cocky. Those Sixes can be damn unpredictable.
-					Loop_Actor_Walk_To_XYZ(kActorMcCoy, -716.0f, -354.85f, 1042.0f, 0, false, false, true);
-					Actor_Face_Actor(kActorMcCoy, kActorGuzza, true);
-					Actor_Says(kActorMcCoy, 3930, 13); // 00-3930.AUD	That I know. 
 				} else {
-					Actor_Face_Actor(kActorGuzza, kActorMcCoy, true);
 					Loop_Actor_Walk_To_XYZ(kActorMcCoy, -716.0f, -354.85f, 1042.0f, 0, false, false, true);
+					Actor_Face_Actor(kActorGuzza, kActorMcCoy, true);
 					Actor_Says(kActorMcCoy, 4880, 13); //00-4880.AUD	Is that right?
 				}
 				Game_Flag_Set(kFlagPS04GuzzaTalkZubenRetired);
 				Actor_Face_Actor(kActorGuzza, kActorMcCoy, true);
-	#if BLADERUNNER_ORIGINAL_BUGS
-				Actor_Says(kActorGuzza, 180, 34);	// But I'm proud of you McCoy. Why don't you take the rest of the day off?
-				Actor_Says(kActorMcCoy, 3935, 13);	// Thanks.
-	#else
 				if (Global_Variable_Query(kVariableChapter) == 1) { // only play this dialogue (about day off) on day one. It doesn't fit in the next days
 					Actor_Says(kActorGuzza, 180, 34);	// But I'm proud of you McCoy. Why don't you take the rest of the day off?
-					if (Player_Query_Agenda() == kPlayerAgendaPolite) {
-						Actor_Says(kActorMcCoy, 3935, 13);	// Thanks.
-					} else if (Player_Query_Agenda() == kPlayerAgendaSurly 
+					if (Player_Query_Agenda() == kPlayerAgendaSurly 
 					|| Player_Query_Agenda() == kPlayerAgendaErratic) {
 						Actor_Says(kActorMcCoy, 8200, 14); //00-8200.AUD	When I'm done, maybe.
 					} else {
-						Actor_Says(kActorMcCoy, 4070, 13); //00-4070.AUD	You got it.
+						Actor_Says(kActorMcCoy, 3935, 13);	// Thanks.
+					}
+					Actor_Says(kActorGuzza, 190, 30); //04-0190.AUD	Payments is wiring the advance to your account as we speak.
+					Actor_Says(kActorMcCoy, 3940, 16); //00-3940.AUD	How much? 
+					Actor_Says(kActorGuzza, 200, 31); //04-0200.AUD	Couple hundred chinyen. Enough to buy a sandwich or two.
+					Actor_Says(kActorGuzza, 210, 33); //04-0210.AUD	We got to hold back the rest until the lab does the autopsy.
+					Actor_Says(kActorGuzza, 220, 34); //04-0220.AUD	Paperwork, you know. Shouldn't take more than a couple of days.
+					Actor_Says(kActorMcCoy, 3945, 17); //00-3945.AUD	So the check's in the mail.
+					if (Actor_Query_Friendliness_To_Other(kActorGuzza, kActorMcCoy) > 50) {
+						Actor_Says(kActorGuzza, 230, 32); //04-0230.AUD	Hey, don't worry. The boys upstairs want to keep our best and brightest happy.
+					}
+					Actor_Says(kActorGuzza, 240, 31); //04-0240.AUD	Any idea what you want to spend it on?
+					Actor_Says(kActorMcCoy, 3950, 13); //00-3950.AUD	I was thinking maybe a companion for my animal at home.
+					Actor_Says(kActorGuzza, 250, 34); //04-0250.AUD	Forget that. Buy yourself something. Something nice.
+					Actor_Says(kActorGuzza, 260, 33); //04-0260.AUD	Once you start carving up that juicy bacon, kid, the taste never goes away.
+					Actor_Says(kActorGuzza, 270, 32); //04-0270.AUD	The great things in life…? Believe me you'll just be wanting more and more.
+					if (!Game_Flag_Query(kFlagZubenBountyPaid)) { // get retirement money only if haven't been auto-paid at end of Day 1 (sleep trigger)
+						if (Query_Difficulty_Level() != kGameDifficultyEasy) {
+							Global_Variable_Increment(kVariableChinyen, 200);
+						}
+						Game_Flag_Set(kFlagZubenBountyPaid); // not a proper bug, but was missing from original code, so the flag would remain in non-consistent state in this case
+					}
+					if (!Game_Flag_Query(kFlagRunciterBountyPaid)) { // get retirement money only if haven't been auto-paid at end of Day 1 (sleep trigger)
+						if (Query_Difficulty_Level() != kGameDifficultyEasy) {
+							Global_Variable_Increment(kVariableChinyen, 200);
+						}
+						Game_Flag_Set(kFlagRunciterBountyPaid); 
 					}
 				}
-	#endif // BLADERUNNER_ORIGINAL_BUGS
-				Actor_Says(kActorGuzza, 190, 30); //04-0190.AUD	Payments is wiring the advance to your account as we speak.
-				Actor_Says(kActorMcCoy, 3940, 16); //00-3940.AUD	How much? 
-				Actor_Says(kActorGuzza, 200, 31); //04-0200.AUD	Couple hundred chinyen. Enough to buy a sandwich or two.
-				Actor_Says(kActorGuzza, 210, 33); //04-0210.AUD	We got to hold back the rest until the lab does the autopsy.
-				Actor_Says(kActorGuzza, 220, 34); //04-0220.AUD	Paperwork, you know. Shouldn't take more than a couple of days.
-				Actor_Says(kActorMcCoy, 3945, 17); //00-3945.AUD	So the check's in the mail.
-				if (Actor_Query_Friendliness_To_Other(kActorGuzza, kActorMcCoy) > 50) {
-					Actor_Says(kActorGuzza, 230, 32); //04-0230.AUD	Hey, don't worry. The boys upstairs want to keep our best and brightest happy.
-				}
-				Actor_Says(kActorGuzza, 240, 31); //04-0240.AUD	Any idea what you want to spend it on?
-				Actor_Says(kActorMcCoy, 3950, 13); //00-3950.AUD	I was thinking maybe a companion for my animal at home.
-				Actor_Says(kActorGuzza, 250, 34); //04-0250.AUD	Forget that. Buy yourself something. Something nice.
-				Actor_Says(kActorGuzza, 260, 33); //04-0260.AUD	Once you start carving up that juicy bacon, kid, the taste never goes away.
-				Actor_Says(kActorGuzza, 270, 32); //04-0270.AUD	The great things in life…? Believe me you'll just be wanting more and more.
-				Game_Flag_Set(kFlagPS04GuzzaTalkZubenRetired);
-	#if BLADERUNNER_ORIGINAL_BUGS
-				if (Query_Difficulty_Level() != kGameDifficultyEasy) {
-					Global_Variable_Increment(kVariableChinyen, 200);
-				}
-				Game_Flag_Set(kFlagZubenBountyPaid);
-	#else
-				if (!Game_Flag_Query(kFlagZubenBountyPaid)) { // get retirement money only if haven't been auto-paid at end of Day 1 (sleep trigger)
-					if (Query_Difficulty_Level() != kGameDifficultyEasy) {
-						Global_Variable_Increment(kVariableChinyen, 200);
-					}
-					Game_Flag_Set(kFlagZubenBountyPaid); // not a proper bug, but was missing from original code, so the flag would remain in non-consistent state in this case
-				}
-	#endif // BLADERUNNER_ORIGINAL_BUGS
 			// Made it so Guzza is nice to McCoy if he retired Zuben and Guzza didn't get angry at McCoy. 
 			} else if (Game_Flag_Query(kFlagPS04GuzzaTalkZubenRetired)
 			&& !Game_Flag_Query(kFlagPS04GuzzaTalkDumpToMainframe)) {
@@ -513,11 +501,11 @@ void SceneScriptPS04::dialogueWithGuzza() {
 					if (Actor_Query_Friendliness_To_Other(kActorGuzza, kActorMcCoy) > 50) {
 						Actor_Says(kActorGuzza, 290, 32);	// Don't push it kid. You look like you're beat anyway.
 						Actor_Says(kActorGuzza, 300, 31);	// Why don't you rest them dogs the rest of the day.
-						if (Player_Query_Agenda() == kPlayerAgendaPolite) {
-							Actor_Says(kActorMcCoy, 3965, 13);	// I still got plenty energy.
-							Actor_Says(kActorGuzza, 310, 33);	// That's an order McCoy.
-							Actor_Says(kActorGuzza, 320, 34);	// I'm ordering you to relax.
-						} else {
+						Actor_Says(kActorMcCoy, 3965, 13);	// I still got plenty energy.
+						Actor_Says(kActorGuzza, 310, 33);	// That's an order McCoy.
+						Actor_Says(kActorGuzza, 320, 34);	// I'm ordering you to relax.
+						if (Player_Query_Agenda() == kPlayerAgendaSurly 
+						|| Player_Query_Agenda() == kPlayerAgendaErratic) {
 							Actor_Says(kActorMcCoy, 8200, 13); //00-8200.AUD	When I'm done, maybe.
 						}
 					}
@@ -525,7 +513,8 @@ void SceneScriptPS04::dialogueWithGuzza() {
 			} else if (!Game_Flag_Query(kFlagPS04GuzzaTalkDumpToMainframe)) {
 				Actor_Says(kActorMcCoy, 3920, 13); //00-3920.AUD	Bryant go on permanent leave and you get full use of the office, Lieutenant?
 				Actor_Says(kActorGuzza, 570, 32); //04-0570.AUD	You know the procedure. Dump it all in the mainframe upstairs and I'll read it later.
-				if (Player_Query_Agenda() == kPlayerAgendaPolite) {
+				if (Player_Query_Agenda() != kPlayerAgendaSurly 
+				|| Player_Query_Agenda() != kPlayerAgendaErratic) {
 					Actor_Says(kActorMcCoy, 4070, 13); //00-4070.AUD	You got it.
 				}
 				Game_Flag_Set(kFlagPS04GuzzaTalkDumpToMainframe);
@@ -557,10 +546,58 @@ void SceneScriptPS04::dialogueWithGuzza() {
 					Actor_Says(kActorMcCoy, 5075, 13); //00-5075.AUD	Hey, pal.
 				}
 			}
-		} else if (!_vm->_cutContent 
-		&& Game_Flag_Query(kFlagZubenSpared)
-		&& !Game_Flag_Query(kFlagPS04GuzzaTalkZubenEscaped)
+		} else if (Game_Flag_Query(kFlagZubenRetired)
+		    && !Game_Flag_Query(kFlagPS04GuzzaTalkZubenRetired)
 		) {
+			Actor_Says(kActorMcCoy, 3920, 13);
+			Actor_Says(kActorGuzza, 140, 30);
+			Actor_Face_Current_Camera(kActorGuzza, true);
+			Actor_Says(kActorGuzza, 150, 31);
+			Actor_Says(kActorGuzza, 160, 32);
+			Actor_Says(kActorMcCoy, 3925, 18);
+			Actor_Face_Actor(kActorGuzza, kActorMcCoy, true);
+			Actor_Says(kActorGuzza, 170, 33);
+			Loop_Actor_Walk_To_XYZ(kActorMcCoy, -716.0f, -354.85f, 1042.0f, 0, false, false, false);
+			Actor_Face_Actor(kActorMcCoy, kActorGuzza, true);
+			Actor_Says(kActorMcCoy, 3930, 13);
+			Actor_Face_Actor(kActorGuzza, kActorMcCoy, true);
+#if BLADERUNNER_ORIGINAL_BUGS
+			Actor_Says(kActorGuzza, 180, 34);	// But I'm proud of you McCoy. Why don't you take the rest of the day off?
+			Actor_Says(kActorMcCoy, 3935, 13);	// Thanks.
+#else
+			if (Global_Variable_Query(kVariableChapter) == 1) { // only play this dialogue (about day off) on day one. It doesn't fit in the next days
+				Actor_Says(kActorGuzza, 180, 34);	// But I'm proud of you McCoy. Why don't you take the rest of the day off?
+				Actor_Says(kActorMcCoy, 3935, 13);	// Thanks.
+			}
+#endif // BLADERUNNER_ORIGINAL_BUGS
+			Actor_Says(kActorGuzza, 190, 30);
+			Actor_Says(kActorMcCoy, 3940, 16);
+			Actor_Says(kActorGuzza, 200, 31);
+			Actor_Says(kActorGuzza, 210, 33);
+			Actor_Says(kActorGuzza, 220, 34);
+			Actor_Says(kActorMcCoy, 3945, 17);
+			Actor_Says(kActorGuzza, 230, 32);
+			Actor_Says(kActorGuzza, 240, 31);
+			Actor_Says(kActorMcCoy, 3950, 13);
+			Actor_Says(kActorGuzza, 250, 34);
+			Actor_Says(kActorGuzza, 260, 33);
+			Actor_Says(kActorGuzza, 270, 32);
+			Game_Flag_Set(kFlagPS04GuzzaTalkZubenRetired);
+#if BLADERUNNER_ORIGINAL_BUGS
+			if (Query_Difficulty_Level() != kGameDifficultyEasy) {
+				Global_Variable_Increment(kVariableChinyen, 200);
+			}
+			Game_Flag_Set(kFlagZubenBountyPaid);
+#else
+			if (!Game_Flag_Query(kFlagZubenBountyPaid)) { // get retirement money only if haven't been auto-paid at end of Day 1 (sleep trigger)
+				if (Query_Difficulty_Level() != kGameDifficultyEasy) {
+					Global_Variable_Increment(kVariableChinyen, 200);
+				}
+				Game_Flag_Set(kFlagZubenBountyPaid); // not a proper bug, but was missing from original code, so the flag would remain in non-consistent state in this case
+			}
+#endif // BLADERUNNER_ORIGINAL_BUGS
+		} else if (Game_Flag_Query(kFlagZubenSpared)
+		&& !Game_Flag_Query(kFlagPS04GuzzaTalkZubenEscaped)) {
 			Actor_Says(kActorMcCoy, 3955, 13); //00-3955.AUD	Bryant on permanent vacation or what, Lieutenant?
 			Actor_Says(kActorGuzza, 280, 30);
 			Actor_Says(kActorMcCoy, 3960, 18); //00-3960.AUD	Fresh out but I'm following up some leads.
@@ -580,8 +617,7 @@ void SceneScriptPS04::dialogueWithGuzza() {
 			}
 #endif // BLADERUNNER_ORIGINAL_BUGS
 			Game_Flag_Set(kFlagPS04GuzzaTalkZubenEscaped);
-		} else if ((!_vm->_cutContent  
-					|| Actor_Clue_Query(kActorMcCoy, kClueChopstickWrapper)
+		} else if (( Actor_Clue_Query(kActorMcCoy, kClueChopstickWrapper)
 		            || Actor_Clue_Query(kActorMcCoy, kClueSushiMenu))
 		           &&  Actor_Clue_Query(kActorMcCoy, kClueRunciterInterviewA)
 		           &&  Actor_Query_Friendliness_To_Other(kActorGuzza, kActorMcCoy) < 50
@@ -630,7 +666,8 @@ void SceneScriptPS04::dialogueWithGuzza() {
 		if (_vm->_cutContent) {
 			Actor_Says(kActorMcCoy, 4010, 12); //00-4010.AUD	Lieutenant, I-- I shot a guy. Down in Chinatown.
 			Actor_Says(kActorGuzza, 600, 31);
-			if (Player_Query_Agenda() == kPlayerAgendaPolite) {
+			if (Player_Query_Agenda() != kPlayerAgendaSurly 
+			&& Player_Query_Agenda() != kPlayerAgendaErratic) {
 				Actor_Says(kActorMcCoy, 4080, 18); //00-4080.AUD	Hey, I'm trying to do the right thing here. I could have left the guy to rot.
 			} else {
 				Actor_Says(kActorMcCoy, 8085, 14); //00-8085.AUD	Me either.
@@ -698,19 +735,6 @@ void SceneScriptPS04::dialogueWithGuzza() {
 			Actor_Says(kActorGuzza, 610, 33);
 			Actor_Face_Heading(kActorGuzza, 400, false);
 			Actor_Says(kActorGuzza, 620, 32);
-			if (_vm->_cutContent) {
-				// add a fade-out here while Guzza calls-in for favors
-				Scene_Loop_Start_Special(kSceneLoopModeOnce, kPS04LoopPanToPS04, true);
-				Scene_Loop_Set_Default(kPS04LoopMainLoop);
-				Delay(1000);
-				Actor_Face_Actor(kActorGuzza, kActorMcCoy, true);
-				Delay(1000);
-				// if McCoy confesses before the body is dumped, then the body should be found (even if in dumpster)
-				if (!Game_Flag_Query(kFlagCT04HomelessBodyThrownAway)) {
-					Game_Flag_Set(kFlagCT04HomelessBodyFound);
-					// return false;
-				}
-			}
 			Actor_Says(kActorGuzza, 700, 34);
 			Actor_Says(kActorMcCoy, 4100, 13); //00-4100.AUD	I kind of thought they might.
 			Actor_Says(kActorGuzza, 710, 31); //04-0710.AUD	That doesn't mean your ass is out of the fire with me, McCoy.
@@ -744,26 +768,19 @@ void SceneScriptPS04::dialogueWithGuzza() {
 		Actor_Says(kActorGuzza, 640, 31);
 		Actor_Says(kActorGuzza, 650, 32);
 		Actor_Says(kActorGuzza, 670, 34);
-		if (_vm->_cutContent) {
-			if (!Game_Flag_Query(kFlagMcCoyIsHelpingReplicants)) {
-				Actor_Says(kActorMcCoy, 4095, 17); //00-4095.AUD	Did he retire the Rep who shot Holden?
-				Actor_Says(kActorGuzza, 680, 32);
-			}
-		} else {
-			Actor_Says(kActorMcCoy, 4095, 17); 
-			Actor_Says(kActorGuzza, 680, 32);
-		}
+		Actor_Says(kActorMcCoy, 4095, 17); 
+		Actor_Says(kActorGuzza, 680, 32);
 		if (_vm->_cutContent) {
 			Actor_Change_Animation_Mode(kActorMcCoy, 23);
+			Delay(1000);
 			Item_Pickup_Spin_Effect_From_Actor(kModelAnimationBadge, kActorGuzza, 0, 0);
-			Delay(2000);
-			Actor_Says(kActorMcCoy, 8170, 13); //00-8170.AUD	There you go.
+			Actor_Start_Speech_Sample(kActorMcCoy, 8170); //00-8170.AUD	There you go.
 		}
 		Actor_Says(kActorGuzza, 690, 31);
 		if (_vm->_cutContent) {	
 			Actor_Clue_Acquire(kActorMcCoy, kClueMcCoyRecoveredHoldensBadge, true, kActorGuzza);
 			Actor_Clue_Lose(kActorMcCoy, kClueHoldensBadge);
-			Actor_Clue_Acquire(kActorGuzza, kClueHoldensBadge, true, kActorMcCoy);
+			Actor_Clue_Acquire(kActorGuzza, kClueHoldensBadge, true, -1);
 			Actor_Modify_Friendliness_To_Other(kActorGuzza, kActorMcCoy, 2);
 		} 
 		break;

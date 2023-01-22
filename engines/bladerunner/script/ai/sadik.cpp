@@ -153,9 +153,11 @@ void AIScriptSadik::ClickedByPlayer() {
 		if (_vm->_cutContent) {
 			if (Player_Query_Agenda() == kPlayerAgendaSurly 
 			|| Player_Query_Agenda() == kPlayerAgendaErratic) {
-				Actor_Says(kActorMcCoy, 8665, 13); //00-8665.AUD	Disgusting.
-			} else {	
+				Actor_Says(kActorMcCoy, 8590, 18); //00-8590.AUD	Not the talkative type
+			} else if (Player_Query_Agenda() == kPlayerAgendaPolite) {	
 				Actor_Says(kActorMcCoy, 8630, 12);  // What a waste
+			} else {
+				Actor_Says(kActorMcCoy, 8665, 13); //00-8665.AUD	Disgusting.	
 			}
 		} else {
 			Actor_Says(kActorMcCoy, 8665, 14);
@@ -299,18 +301,21 @@ void AIScriptSadik::Retired(int byActorId) {
 					if (Actor_Query_Goal_Number(kActorRunciter) < kGoalRunciterDead) {
 						Delay(1000);
 						Sound_Play(kSfxSMCAL3, 100, 0, 0, 50);
+						Actor_Set_Goal_Number(kActorRunciter, kGoalRunciterDead);
 					}
 				}
 				if (Game_Flag_Query(kFlagCrazylegsIsReplicant)) {
 					if (!Game_Flag_Query(kFlagCrazylegsDead)) {
 						Delay(1000);
 						Sound_Play(kSfxSMCAL3, 100, 0, 0, 50);
+						Game_Flag_Set(kFlagCrazylegsDead);
 					}
 				}
 				if (Game_Flag_Query(kFlagGrigorianIsReplicant)) {
 					if (!Game_Flag_Query(kFlagGrigorianDead)) {
 						Delay(1000);
 						Sound_Play(kSfxSMCAL3, 100, 0, 0, 50);
+						Game_Flag_Set(kFlagGrigorianDead);
 					}
 				}
 				Delay(2000);
@@ -548,34 +553,6 @@ bool AIScriptSadik::GoalChanged(int currentGoalNumber, int newGoalNumber) {
 					Actor_Says(kActorMcCoy, 8485, kAnimationModeTalk); //00-8485.AUD	One is a start.
 					Delay(1000);
 				}
-				Actor_Says(kActorMcCoy, 2300, kAnimationModeTalk); 
-				if (Game_Flag_Query(kFlagSadikIsReplicant)) {
-					if (Actor_Query_Friendliness_To_Other(kActorSadik, kActorMcCoy) > 50
-					|| Actor_Clue_Query(kActorMcCoy, kClueMcCoyShotGuzza)) { 
-						Actor_Says(kActorSadik, 180, kAnimationModeTalk); //08-0180.AUD	My woman? She be killed by a Blade Runner. Revenge all I got left.
-						Actor_Says(kActorSadik, 190, kAnimationModeTalk);
-						if (Player_Query_Agenda() == kPlayerAgendaSurly 
-						|| Player_Query_Agenda() == kPlayerAgendaErratic) {
-							Actor_Says(kActorMcCoy, 2310, kAnimationModeTalk); //00-2310.AUD	I understand.
-						} else {
-							Actor_Says(kActorMcCoy, 4880, 13); //00-4880.AUD	Is that right?
-						}
-					}
-				} else {
-					if (Actor_Query_Friendliness_To_Other(kActorSadik, kActorMcCoy) > 50
-					|| Actor_Clue_Query(kActorMcCoy, kClueMcCoyShotGuzza)) { 
-						Actor_Says(kActorSadik, 140, kAnimationModeTalk); //08-0140.AUD	You bet, mon. Human too. My woman, she be Replicant.
-						Actor_Says(kActorSadik, 150, kAnimationModeTalk);
-						if (Player_Query_Agenda() == kPlayerAgendaPolite) {
-							Actor_Says(kActorMcCoy, 2305, kAnimationModeTalk); //00-2305.AUD	I’m sorry.
-						} else {
-							Actor_Says(kActorMcCoy, 4880, 13); //00-4880.AUD	Is that right?
-						}
-						Actor_Says(kActorSadik, 160, kAnimationModeTalk);
-						Actor_Says(kActorSadik, 170, kAnimationModeTalk);
-					}
-				}
-				Actor_Says(kActorSadik, 200, kAnimationModeTalk); //08-0200.AUD	Truth be told killing don’t help much.
 			} else if (Actor_Query_Goal_Number(kActorSteele) > kGoalSteeleGone) {
 				Actor_Says(kActorMcCoy, 6250, 15); //00-6250.AUD	I thought it was all over, when Steele showed up.
 				Actor_Says(kActorSadik, 130, kAnimationModeTalk); //08-0130.AUD	Heh, she was a killer. She richly deserved it.
@@ -629,12 +606,6 @@ bool AIScriptSadik::GoalChanged(int currentGoalNumber, int newGoalNumber) {
 		Actor_Says(kActorSadik, 230, kAnimationModeTalk);
 		Actor_Says(kActorSadik, 240, kAnimationModeTalk);
 		Actor_Says(kActorSadik, 250, kAnimationModeTalk); //08-0250.AUD	Old reactor cores. Anything still got a glow.
-		// Added in a line.
-		if (_vm->_cutContent) {
-			if (Game_Flag_Query(kFlagSadikIsReplicant)) {
-				Actor_Says(kActorMcCoy, 6195, kAnimationModeTalk); //00-6195.AUD	I thought you said we came to earth in this thing.
-			}
-		}
 		Actor_Says(kActorSadik, 260, kAnimationModeTalk); //08-0260.AUD	The generator? It take almost anything.
 		if (_vm->_cutContent) {
 			Actor_Says(kActorMcCoy, 2750, kAnimationModeTalk); //00-2750.AUD	Okay, I get the picture.

@@ -191,6 +191,7 @@ void AIScriptHanoi::ClickedByPlayer() {
 					Actor_Says(kActorHanoi, 150, kAnimationModeTalk); //25-0150.AUD	Look but don’t touch!
 					Actor_Says(kActorMcCoy, 5075, 18); //00-5075.AUD	Hey, pal.
 					Actor_Says(kActorHanoi, 210, kAnimationModeTalk); //25-0210.AUD	Sod off, McCoy. I got no time for you.
+					Actor_Says(kActorMcCoy, 8595, 16);//00-8595.AUD	Hmm. He's damn unfriendly.
 				}
 			}
 		}
@@ -229,8 +230,7 @@ void AIScriptHanoi::OtherAgentEnteredCombatMode(int otherActorId, int combatMode
 			if (!Game_Flag_Query(kFlagHanoiIsReplicant)) {
 				Player_Set_Combat_Mode(false);
 				Actor_Says(kActorMcCoy, 725, -1); //00-0725.AUD	Relax! I hear ya.
-			} else {
-				Loop_Actor_Walk_To_Actor(kActorHanoi, kActorMcCoy, 48, true, false); 
+			} else { 
 				Actor_Set_Goal_Number(kActorHanoi, kGoalHanoiThrowOutMcCoy);
 			}
 		} else {
@@ -240,6 +240,24 @@ void AIScriptHanoi::OtherAgentEnteredCombatMode(int otherActorId, int combatMode
 #endif
 			Actor_Set_Goal_Number(kActorHanoi, kGoalHanoiThrowOutMcCoy);
 		} 
+	} else if (Player_Query_Current_Scene() == kSceneNR08
+	&& otherActorId == kActorMcCoy
+	&& combatMode
+	) {
+		Actor_Face_Actor(kActorHanoi, kActorMcCoy, true);
+		Actor_Face_Actor(kActorMcCoy, kActorHanoi, true);
+		Actor_Says(kActorHanoi, 160, 13); //25-0160.AUD	Here, what’s this then?
+		if (Game_Flag_Query(kFlagHanoiIsReplicant)) {
+			Actor_Says(kActorHanoi, 170, 14); //25-0170.AUD	You’re bomb mate waving your piece around in here like this.
+		} else {
+			Actor_Says(kActorHanoi, 180, 13); //25-0180.AUD	Early Q's is for lovers, not fighters.
+		}
+		if (!Game_Flag_Query(kFlagHanoiIsReplicant)) {
+			Player_Set_Combat_Mode(false);
+			Actor_Says(kActorMcCoy, 725, -1); //00-0725.AUD	Relax! I hear ya.
+		} else { 
+			Actor_Set_Goal_Number(kActorHanoi, kGoalHanoiThrowOutMcCoy);
+		}	
 	} else if (Player_Query_Current_Scene() == kSceneKP07
 	&& otherActorId == kActorMcCoy
 	&& combatMode
@@ -294,18 +312,21 @@ void AIScriptHanoi::Retired(int byActorId) {
 						if (Actor_Query_Goal_Number(kActorRunciter) < kGoalRunciterDead) {
 							Delay(1000);
 							Sound_Play(kSfxSMCAL3, 100, 0, 0, 50);
+							Actor_Set_Goal_Number(kActorRunciter, kGoalRunciterDead);
 						}
 					}
 					if (Game_Flag_Query(kFlagCrazylegsIsReplicant)) {
 						if (!Game_Flag_Query(kFlagCrazylegsDead)) {
 							Delay(1000);
 							Sound_Play(kSfxSMCAL3, 100, 0, 0, 50);
+							Game_Flag_Set(kFlagCrazylegsDead);
 						}
 					}
 					if (Game_Flag_Query(kFlagGrigorianIsReplicant)) {
 						if (!Game_Flag_Query(kFlagGrigorianDead)) {
 							Delay(1000);
 							Sound_Play(kSfxSMCAL3, 100, 0, 0, 50);
+							Game_Flag_Set(kFlagGrigorianDead);
 						}
 					}
 					Delay(2000);

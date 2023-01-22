@@ -79,7 +79,6 @@ bool SceneScriptTB05::ClickedOn3DObject(const char *objectName, bool a2) {
 	if (Object_Query_Click("MONITOR05", objectName)) {
 		if (!Loop_Actor_Walk_To_XYZ(kActorMcCoy, 122.54f, 147.12f, -197.17f, 0, true, false, false)) {
 			Actor_Face_Heading(kActorMcCoy, 38, false);
-
 			if (!Actor_Clue_Query(kActorMcCoy, kClueDNAMarcus)
 			 && !Game_Flag_Query(kFlagTB05MonitorIntro)) {
 				Actor_Clue_Acquire(kActorMcCoy, kClueAttemptedFileAccess, true, -1);
@@ -109,14 +108,40 @@ bool SceneScriptTB05::ClickedOn3DObject(const char *objectName, bool a2) {
 					} else {
 						Actor_Clue_Acquire(kActorMcCoy, kClueDNAMarcus, true, -1);
 					}
-					Actor_Voice_Over(2230, kActorVoiceOver);
+					if (_vm->_cutContent) {
+						Actor_Change_Animation_Mode(kActorMcCoy, 23);
+						Delay(2000);
+						Ambient_Sounds_Play_Sound(kSfxBEEPNEAT, 80, 0, 0, 99);
+						Delay(2000);
+						Actor_Voice_Over(2230, kActorVoiceOver);;
+						Actor_Change_Animation_Mode(kActorMcCoy, 23);
+						Delay(2000);
+					} else {
+						Actor_Voice_Over(2230, kActorVoiceOver); //99-2230.AUD	Eisenduller had used his dog's name as a password.
+					}		
 					Item_Pickup_Spin_Effect(kModelAnimationDNADataDisc, 352, 333);
-					Actor_Voice_Over(2240, kActorVoiceOver);
-					Actor_Voice_Over(2250, kActorVoiceOver);
-					Actor_Voice_Over(2260, kActorVoiceOver);
+					if (_vm->_cutContent) {
+						if (Player_Query_Agenda() != kPlayerAgendaSurly 
+						&& Player_Query_Agenda() != kPlayerAgendaErratic) {
+							Actor_Voice_Over(2240, kActorVoiceOver);
+							Actor_Voice_Over(2250, kActorVoiceOver);
+							Actor_Voice_Over(2260, kActorVoiceOver);
+						} else {
+							Delay(500);
+							Actor_Voice_Over(130, kActorVoiceOver); //99-0130.AUD	DNA research, incept dates.
+						}
+					} else {
+						Actor_Voice_Over(2240, kActorVoiceOver);
+						Actor_Voice_Over(2250, kActorVoiceOver);
+						Actor_Voice_Over(2260, kActorVoiceOver);
+					}
 					Game_Flag_Set(kFlagTB05MonitorUnlockAttempt);
 					Game_Flag_Set(kFlagTB05MonitorDone);
 				} else {
+					if (_vm->_cutContent) {
+						Actor_Change_Animation_Mode(kActorMcCoy, 23);
+						Delay(2000);
+					}
 					Actor_Voice_Over(2270, kActorVoiceOver);
 					Game_Flag_Set(kFlagTB05MonitorUnlockAttempt);
 				}
@@ -129,17 +154,30 @@ bool SceneScriptTB05::ClickedOn3DObject(const char *objectName, bool a2) {
 				if (Actor_Clue_Query(kActorMcCoy, kClueDogCollar1)
 				 || Actor_Clue_Query(kActorMcCoy, kClueDogCollar2)
 				) {
-					Actor_Clue_Acquire(kActorMcCoy, kClueDNAMarcus, true, -1);
-					Actor_Voice_Over(2230, kActorVoiceOver);
+					if (_vm->_cutContent) {
+						Actor_Clue_Acquire(kActorMcCoy, kClueDNAMarcus, true, kActorMarcus);
+					} else {
+						Actor_Clue_Acquire(kActorMcCoy, kClueDNAMarcus, true, -1);
+					}
+					if (_vm->_cutContent) {
+						Actor_Change_Animation_Mode(kActorMcCoy, 23);
+						Delay(2000);
+						Ambient_Sounds_Play_Sound(kSfxBEEPNEAT, 80, 0, 0, 99);
+						Delay(2000);
+						Actor_Voice_Over(2230, kActorVoiceOver);
+						Actor_Change_Animation_Mode(kActorMcCoy, 23);
+						Delay(2000);
+					} else {
+						Actor_Voice_Over(2230, kActorVoiceOver); //99-2230.AUD	Eisenduller had used his dog's name as a password.
+					}				
 					Item_Pickup_Spin_Effect(kModelAnimationDNADataDisc, 352, 333);
 					if (_vm->_cutContent) {
-						if (Player_Query_Agenda() != kPlayerAgendaSurly 
-						&& Player_Query_Agenda() != kPlayerAgendaErratic) {
+						if (Player_Query_Agenda() == kPlayerAgendaPolite) {
 							Actor_Voice_Over(2240, kActorVoiceOver);
 							Actor_Voice_Over(2250, kActorVoiceOver);
 							Actor_Voice_Over(2260, kActorVoiceOver);
 						} else {
-							Delay(1000);
+							Delay(500);
 							Actor_Voice_Over(130, kActorVoiceOver); //99-0130.AUD	DNA research, incept dates.
 						}
 					} else {
@@ -149,6 +187,10 @@ bool SceneScriptTB05::ClickedOn3DObject(const char *objectName, bool a2) {
 					}
 					Game_Flag_Set(kFlagTB05MonitorDone);
 				} else {
+					if (_vm->_cutContent) {
+						Actor_Change_Animation_Mode(kActorMcCoy, 23);
+						Delay(2000);
+					}
 					Actor_Voice_Over(2280, kActorVoiceOver);
 					Actor_Voice_Over(2290, kActorVoiceOver);
 					Game_Flag_Set(kFlagTB05MonitorDone);

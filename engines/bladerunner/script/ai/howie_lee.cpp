@@ -216,7 +216,7 @@ void AIScriptHowieLee::ClickedByPlayer() {
 			if (!Loop_Actor_Walk_To_XYZ(kActorMcCoy, -381.11f, 0.0f, -135.55f, 0, false, false, false)) {
 				Actor_Face_Actor(kActorMcCoy, kActorHowieLee, true);
 				Actor_Says(kActorMcCoy, 310, 18); //00-0310.AUD	Keeping out of trouble, Howie?
-				Actor_Says(kActorHowieLee, 190, kAnimationModeTalk); //28-0190.AUD	I look like I got time for chit-er chat-er?
+				Actor_Says(kActorHowieLee, 10, kAnimationModeTalk); //28-0010.AUD	(laughs) You bet, McCoy. Some joker you are.
 			}
 		}
 	//return false;

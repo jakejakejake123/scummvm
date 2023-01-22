@@ -158,7 +158,8 @@ void SceneScriptNR10::SceneFrameAdvanced(int frame) {
 		}
 		Actor_Set_Invisible(kActorMcCoy, false);
 		if (_vm->_cutContent) {
-			if (!Actor_Clue_Query(kActorDektora, kClueMcCoyHelpedDektora)) {
+			if (!Actor_Clue_Query(kActorDektora, kClueMcCoyHelpedDektora)
+			&& Game_Flag_Query(kFlagDektoraIsReplicant)) {
 				Actor_Set_Goal_Number(kActorDektora, kGoalDektoraNR10AttackMcCoy);
 			} else {
 				Actor_Set_Goal_Number(kActorDektora, kGoalDektoraNR11Hiding);
@@ -206,7 +207,7 @@ void SceneScriptNR10::PlayerWalkedIn() {
 		Actor_Face_Actor(kActorMcCoy, kActorSteele, true);
 		Actor_Says(kActorMcCoy, 1580, 14);
 		if (_vm->_cutContent) {
-			if (Actor_Query_Friendliness_To_Other(kActorSteele, kActorMcCoy) < 56) {
+			if (Actor_Query_Friendliness_To_Other(kActorSteele, kActorMcCoy) < 60) {
 				Actor_Says(kActorSteele, 160, 15); //01-0160.AUD	How the hell did it get away? We had it cornered.
 				Actor_Says(kActorMcCoy, 1585, 16);
 				Actor_Says(kActorSteele, 1160, 16); //01-1160.AUD	Dah! What the hell?! Now we’ll never catch it.

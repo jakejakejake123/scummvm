@@ -37,15 +37,6 @@ void SceneScriptUG03::InitializeScene() {
 	Scene_Exit_Add_2D_Exit(0,  46, 137, 131, 296, 0);
 	Scene_Exit_Add_2D_Exit(1, 559, 141, 639, 380, 1);
 
-	// Made it so Holloway appears in the set but offscreen for the scene where he tells McCoy about his incept photo. This is because Holloway is supposed to be lying down and doesn't have a lying down pose or animation 
-	// so to circumvent this he will appear offscreen.
-	if (_vm->_cutContent) {
-		if (Global_Variable_Query(kVariableChapter) == 3) {
-			Actor_Put_In_Set(kActorHolloway, kSetUG03);
-			Actor_Set_At_XYZ(kActorHolloway, 4.22f, -1.37f, -925.0f, 750);
-		}
-	}
-
 	Ambient_Sounds_Add_Looping_Sound(kSfxSTMLOOP7, 15, 0, 1);
 	Ambient_Sounds_Add_Looping_Sound(kSfxUGBED1,   40, 0, 1);
 	Ambient_Sounds_Add_Looping_Sound(kSfxUGBED2,   40, 0, 1);

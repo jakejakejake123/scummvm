@@ -90,11 +90,12 @@ bool SceneScriptKP06::ClickedOnActor(int actorId) {
 				Actor_Face_Actor(kActorMcCoy, kActorSadik, true);
 				Actor_Change_Animation_Mode(kActorMcCoy, 23);
 				Actor_Change_Animation_Mode(kActorSadik, 23);
-				Item_Pickup_Spin_Effect_From_Actor(kModelAnimationPowerSource, kActorSadik, 0, 0);
 				Delay(2000);
+				Item_Pickup_Spin_Effect_From_Actor(kModelAnimationPowerSource, kActorSadik, 0, 0);
 				Game_Flag_Set(kFlagMcCoyIsHelpingReplicants);
+				Actor_Set_Goal_Number(kActorClovis, kGoalClovisKP07Wait);
 				Actor_Clue_Lose(kActorMcCoy, kCluePowerSource);
-				Actor_Says(kActorMcCoy, 8170, 13); //00-8170.AUD	There you go.
+				Actor_Says(kActorMcCoy, 8170, 11); //00-8170.AUD	There you go.
 			}
 			Actor_Says(kActorSadik, 280, kAnimationModeTalk); //08-0280.AUD	You for real I’m thinking.
 			// Removed some lines that didn't belong here.
@@ -160,12 +161,12 @@ bool SceneScriptKP06::ClickedOnExit(int exitId) {
 				Actor_Face_Actor(kActorMcCoy, kActorSadik, true);
 				Actor_Change_Animation_Mode(kActorMcCoy, 23);
 				Actor_Change_Animation_Mode(kActorSadik, 23);
-				Item_Pickup_Spin_Effect_From_Actor(kModelAnimationPowerSource, kActorSadik, 0, 0);
 				Delay(2000);
+				Item_Pickup_Spin_Effect_From_Actor(kModelAnimationPowerSource, kActorSadik, 0, 0);
 				Game_Flag_Set(kFlagMcCoyIsHelpingReplicants);
 				Actor_Set_Goal_Number(kActorClovis, kGoalClovisKP07Wait);
 				Actor_Clue_Lose(kActorMcCoy, kCluePowerSource);
-				Actor_Says(kActorMcCoy, 8170, 13); //00-8170.AUD	There you go.
+				Actor_Says(kActorMcCoy, 8170, 11); //00-8170.AUD	There you go.
 			}
 			Actor_Says(kActorSadik, 280, kAnimationModeTalk); //08-0280.AUD	You for real I’m thinking.
 			Actor_Says(kActorSadik, 290, kAnimationModeTalk);
@@ -228,66 +229,42 @@ void SceneScriptKP06::PlayerWalkedIn() {
 				if (!Game_Flag_Query(kFlagMcCoyAttackedReplicants)) {
 					Actor_Says(kActorSteele, 2530, 13);
 					Actor_Says(kActorMcCoy, 6200, 11); //00-6200.AUD	Do it. You just might be doing me a favor.
-					if (Game_Flag_Query(kFlagMcCoyRetiredHuman)) {
-						Actor_Says(kActorSteele, 1330, 12); //01-1330.AUD	We got a problem, though. There’s an APB out for you.
-						Actor_Says(kActorSteele, 1380, 12); //01-1380.AUD	Is it true, Slim? Did you kill somebody?
-						if (Player_Query_Agenda() == kPlayerAgendaPolite) {
-							Delay(1500);
-							Actor_Says(kActorMcCoy, 7980, 19); //00-7980.AUD	Yeah. Maybe.
-						} else {
-							Actor_Says(kActorMcCoy, 3130, 15); //00-3130.AUD	What do you think?
-						}
-						Actor_Change_Animation_Mode(kActorSteele, 4);
-						Delay(1500);
-						Actor_Says(kActorSteele, 2210, 12); //01-2210.AUD	I guess I gotta take you in. They'll probably have to run a couple of tests, too.
-						Delay(2000);
-						Music_Stop(3u);
-						Player_Set_Combat_Mode(false);
-						Actor_Change_Animation_Mode(kActorMcCoy, kAnimationModeIdle);
-						Game_Flag_Set(kFlagMcCoyArrested);
-						Set_Enter(kSetPS09, kScenePS09);
-						Player_Loses_Control();
-						Delay(2000);
-						Game_Over();
+					Actor_Says(kActorSteele, 2540, 15);
+					if (Game_Flag_Query(kFlagMcCoyRetiredClovis)) {
+						Actor_Says(kActorMcCoy, 5705, 18); //00-5705.AUD	Uh-huh.
 					} else {
-						Actor_Says(kActorSteele, 2540, 15);
-						Delay(1000);
+						Delay(2000);
 					}
 				} else {
 					Actor_Says(kActorSteele, 2560, 12); //01-2560.AUD	I gotta admit. I had my doubts about you.
-					if (Player_Query_Agenda() == kPlayerAgendaSurly 
-					|| Player_Query_Agenda() == kPlayerAgendaErratic) {
+					if (Player_Query_Agenda() != kPlayerAgendaPolite) {
 						Actor_Says(kActorMcCoy, 6210, 14); //00-6210.AUD	What are you saying, Steele? You still wanna put me on the Machine?
 						Actor_Says(kActorSteele, 2570, 13); //01-2570.AUD	Take it easy, will ya?
 						Actor_Says(kActorMcCoy, 6215, 14); //00-6215.AUD	I plan to. I’m going home.
 					} else {
 						Actor_Says(kActorMcCoy, 5065, 18); //00-5065.AUD	Is that right?
 					}
-					if (Game_Flag_Query(kFlagMcCoyRetiredHuman)) {
-						Actor_Says(kActorSteele, 1330, 12); //01-1330.AUD	We got a problem, though. There’s an APB out for you.
-						Actor_Says(kActorSteele, 1380, 12); //01-1380.AUD	Is it true, Slim? Did you kill somebody?
-						if (Player_Query_Agenda() == kPlayerAgendaPolite) {
-							Delay(1500);
-							Actor_Says(kActorMcCoy, 7980, 19); //00-7980.AUD	Yeah. Maybe.
-						} else {
-							Actor_Says(kActorMcCoy, 3130, 15); //00-3130.AUD	What do you think?
-						}
-						Actor_Change_Animation_Mode(kActorSteele, 4);
-						Delay(2000);
-						Actor_Says(kActorSteele, 2210, 58); //01-2210.AUD	I guess I gotta take you in. They'll probably have to run a couple of tests, too.
-						Delay(2000);
-						Music_Stop(3u);
-						Player_Set_Combat_Mode(false);
-						Actor_Change_Animation_Mode(kActorMcCoy, kAnimationModeIdle);
-						Game_Flag_Set(kFlagMcCoyArrested);
-						Set_Enter(kSetPS09, kScenePS09);
-						Player_Loses_Control();
-						Delay(2000);
-						Game_Over();
+					Actor_Says(kActorSteele, 2580, 15); //01-2580.AUD	I gotta say, McCoy. You had me fooled. I thought for sure you were a Rep.
+					Actor_Says(kActorSteele, 2590, 12); //01-2590.AUD	Don’t get me wrong. I mean, you’re one crazy dude. But I like that.
+					Delay(1000);
+				}
+				if (Game_Flag_Query(kFlagMcCoyRetiredHuman)) {
+					Actor_Says(kActorSteele, 1330, 12); //01-1330.AUD	We got a problem, though. There’s an APB out for you.
+					Actor_Says(kActorSteele, 1380, 12); //01-1380.AUD	Is it true, Slim? Did you kill somebody?
+					if (Player_Query_Agenda() == kPlayerAgendaPolite) {
+						Delay(1500);
+						Actor_Says(kActorMcCoy, 7980, 19); //00-7980.AUD	Yeah. Maybe.
 					} else {
-						Actor_Says(kActorSteele, 2580, 15); //01-2580.AUD	I gotta say, McCoy. You had me fooled. I thought for sure you were a Rep.
-						Actor_Says(kActorSteele, 2590, 12); //01-2590.AUD	Don’t get me wrong. I mean, you’re one crazy dude. But I like that.
+						Actor_Says(kActorMcCoy, 3130, 15); //00-3130.AUD	What do you think?
 					}
+					Actor_Change_Animation_Mode(kActorSteele, 4);
+					Delay(1500);
+					Actor_Says(kActorSteele, 2210, 12); //01-2210.AUD	I guess I gotta take you in. They'll probably have to run a couple of tests, too.
+					Delay(2000);
+					Actor_Set_Goal_Number(kActorMcCoy, kGoalMcCoyArrested);
+					Delay(2000);
+					Game_Over();
+				} else {		
 					// Made it so Crystal or Gaff only mentions McCoy getting a promotion and having a lot of bonuses if he retires enough reps to earn 1500 chinyen.
 					if (Actor_Query_Friendliness_To_Other(kActorGaff, kActorMcCoy) > 59) {
 						Actor_Says(kActorSteele, 2550, 12); //01-2550.AUD	I think you got a promotion coming. Not to mention all those retirement bonuses.
@@ -327,12 +304,7 @@ void SceneScriptKP06::PlayerWalkedIn() {
 					Actor_Says(kActorGaff, 190, 14); //53-0190.AUD	It's like I said before. You retire a human, your career is over.
 					Actor_Says(kActorGaff, 200, 15); //53-0200.AUD	Your life too, maybe.
 					Delay(2000);
-					Music_Stop(3u);
-					Player_Set_Combat_Mode(false);
-					Actor_Change_Animation_Mode(kActorMcCoy, kAnimationModeIdle);
-					Game_Flag_Set(kFlagMcCoyArrested);
-					Set_Enter(kSetPS09, kScenePS09);
-					Player_Loses_Control();
+					Actor_Set_Goal_Number(kActorMcCoy, kGoalMcCoyArrested);
 					Delay(2000);
 					Game_Over();
 				} else {
@@ -363,7 +335,7 @@ void SceneScriptKP06::PlayerWalkedIn() {
 						Actor_Says(kActorMcCoy, 6265, 18); //00-6265.AUD	How come I don’t feel good about it?
 						Actor_Says(kActorGaff, 290, 14); //53-0290.AUD	Who knows?
 					} else {
-						Actor_Says(kActorMcCoy, 2215, 3); //00-2215.AUD	That’s right.
+						Actor_Says(kActorMcCoy, 2215, 14); //00-2215.AUD	That’s right.
 					}
 					// If Maggie is alive Gaffs lines about getting a new animal will not play and instead McCoy will say the city is a cess pool instead.
 					if (Actor_Query_Goal_Number(kActorMaggie) < kGoalMaggieDead) {

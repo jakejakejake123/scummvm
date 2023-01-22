@@ -192,14 +192,17 @@ void AIScriptMcCoy::ReceivedClue(int clueId, int fromActorId) {
 	case kClueCarRegistration1:
 		if (_vm->_cutContent) {
 			Spinner_Set_Selectable_Destination_Flag(kSpinnerDestinationHysteriaHall, true);
+			Spinner_Set_Selectable_Destination_Flag(kSpinnerDestinationNightclubRow, true);
 		}
 		break;
 
 	case kClueCarRegistration2:
-		// fall through
+		break;
+
 	case kClueCarRegistration3:
 		if (_vm->_cutContent) {
 			Spinner_Set_Selectable_Destination_Flag(kSpinnerDestinationHysteriaHall, true);
+			Spinner_Set_Selectable_Destination_Flag(kSpinnerDestinationNightclubRow, true);
 		}
 		break;
 
@@ -210,8 +213,12 @@ void AIScriptMcCoy::ReceivedClue(int clueId, int fromActorId) {
 
 	case kClueWeaponsCache:
 		if (_vm->_cutContent) {
-			Global_Variable_Increment(kVariableCorruptedGuzzaEvidence, 2);
+			Global_Variable_Increment(kVariableCorruptedGuzzaEvidence, 1);
 		}
+		break;
+
+	case kClueOriginalShippingForm:
+		Global_Variable_Increment(kVariableCorruptedGuzzaEvidence, 1);
 		break;
 
 	case kCluePoliceWeaponUsed:
@@ -248,7 +255,7 @@ void AIScriptMcCoy::ReceivedClue(int clueId, int fromActorId) {
 
 	case kClueHomelessManKid:
 		if (_vm->_cutContent) {
-			Global_Variable_Increment(kVariableCorruptedGuzzaEvidence, 2);
+			Global_Variable_Increment(kVariableCorruptedGuzzaEvidence, 3);
 		}
 		break;
 
@@ -547,7 +554,6 @@ bool AIScriptMcCoy::GoalChanged(int currentGoalNumber, int newGoalNumber) {
 		// Added in some dialogue for McCoy when he is thrown out of Early Qs club.
 		if (_vm->_cutContent) {
 			Player_Set_Combat_Mode(false);
-			Actor_Says(kActorMcCoy, 8595, 16);//00-8595.AUD	Hmm. He's damn unfriendly.
 		}
 		Delay(150);
 		Actor_Change_Animation_Mode(kActorMcCoy, kAnimationModeIdle);
@@ -641,18 +647,15 @@ bool AIScriptMcCoy::GoalChanged(int currentGoalNumber, int newGoalNumber) {
 		Actor_Says(kActorMcCoy, 6645, 19); //00-6645.AUD	You were raking in the chinyen selling LPD wares to scumbags and Reps.
 		Actor_Says(kActorMcCoy, 6650, 18); //00-6650.AUD	Oh, yeah.
 		Actor_Says(kActorMcCoy, 6655, 11); //00-6655.AUD	The department is gonna eat it up when they hear just how deep that corruption goes.
-		if (_vm->_cutContent) {
-			if (Actor_Query_Friendliness_To_Other(kActorGuzza, kActorMcCoy) < 51) {
-				Actor_Says(kActorGuzza, 1440, kAnimationModeTalk); //04-1440.AUD	That’s a load of crap.
-				Actor_Says(kActorMcCoy, 6660, 17); //00-6660.AUD	Let’s hope for your sake Bryant and the brass feel that way, when I lay this file on ‘em.
-				if (Player_Query_Agenda() == kPlayerAgendaSurly 
-				|| Player_Query_Agenda() == kPlayerAgendaErratic) {
-					Actor_Says(kActorMcCoy, 6665, 13); //00-6665.AUD	Otherwise, it’s a one-way ticket to the Off-World penal colony, fat man.
-				}
+		Actor_Says(kActorGuzza, 1440, kAnimationModeTalk); //04-1440.AUD	That’s a load of crap.
+		Actor_Says(kActorMcCoy, 6660, 17); //00-6660.AUD	Let’s hope for your sake Bryant and the brass feel that way, when I lay this file on ‘em.
+		if (_vm->_cutContent) {	
+			if (Player_Query_Agenda() == kPlayerAgendaSurly 
+			|| Player_Query_Agenda() == kPlayerAgendaErratic) {
+				Actor_Says(kActorMcCoy, 6665, 13); //00-6665.AUD	Otherwise, it’s a one-way ticket to the Off-World penal colony, fat man.
+				Actor_Modify_Friendliness_To_Other(kActorGuzza, kActorMcCoy, -2);
 			}
 		} else {
-			Actor_Says(kActorGuzza, 1440, kAnimationModeTalk); //04-1440.AUD	That’s a load of crap.
-			Actor_Says(kActorMcCoy, 6660, 17); //00-6660.AUD	Let’s hope for your sake Bryant and the brass feel that way, when I lay this file on ‘em.
 			Actor_Says(kActorMcCoy, 6665, 13); //00-6665.AUD	Otherwise, it’s a one-way ticket to the Off-World penal colony, fat man.
 		}
 		Delay(1000);

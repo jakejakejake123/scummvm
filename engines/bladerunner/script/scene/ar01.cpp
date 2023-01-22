@@ -174,8 +174,8 @@ bool SceneScriptAR01::ClickedOnActor(int actorId) {
 				&& !Game_Flag_Query(kFlagFishLadyTalkScale)
 				&& Global_Variable_Query(kVariableChapter) < 4
 				&& (Actor_Clue_Query(kActorMcCoy, kClueStrangeScale1)
-				|| Actor_Clue_Query(kActorMcCoy, kClueStrangeScale2))) {
-					Actor_Says(kActorMcCoy, 40, 11);
+				|| Actor_Clue_Query(kActorMcCoy, kClueStrangeScale2))) {	
+					Actor_Says(kActorMcCoy, 40, 23);
 					if (Actor_Query_Friendliness_To_Other(kActorFishDealer, kActorMcCoy) > 49) {		
 						Actor_Says(kActorFishDealer, 120, 14);
 						Actor_Says(kActorMcCoy, 45, 17); //00-0045.AUD	What other one?	
@@ -189,8 +189,9 @@ bool SceneScriptAR01::ClickedOnActor(int actorId) {
 							Actor_Says(kActorMcCoy, 50, 13);
 							Actor_Says(kActorFishDealer, 150, 14);
 						}
-						Game_Flag_Set(kFlagFishLadyTalkScale);
 						Actor_Clue_Acquire(kActorMcCoy, kClueFishLadyInterview, true, kActorFishDealer);
+						Game_Flag_Set(kFlagFishLadyTalkScale);
+						Actor_Set_Goal_Number(kActorFishDealer, 1);
 					} else {
 						Actor_Says(kActorFishDealer, 180, 14); //29-0180.AUD	I can't stand all day gabbing away. My fish require attention.
 						Game_Flag_Set(kFlagFishLadyTalkScale);
@@ -236,7 +237,6 @@ bool SceneScriptAR01::ClickedOnActor(int actorId) {
 							Actor_Says(kActorMcCoy, 8640, 14); // 00-8640.AUD	That's useless.
 							Actor_Says(kActorFishDealer, 190, 14); // Ah! You think you get better info somewhere else? You welcome to try.
 							Actor_Set_Goal_Number(kActorFishDealer, 1);
-							Actor_Modify_Friendliness_To_Other(kActorFishDealer, kActorMcCoy, -2);
 						} else {
 							if (Player_Query_Agenda() == kPlayerAgendaPolite) {
 								Actor_Says(kActorFishDealer, 80, 14);
@@ -248,22 +248,23 @@ bool SceneScriptAR01::ClickedOnActor(int actorId) {
 					}
 				} else if (!Game_Flag_Query(kFlagFishLadyTalkFinsished)) {	
 					if (!Game_Flag_Query(kFlagFishDealerBuyFishTalk)) {
-						Actor_Says(kActorFishDealer, 230, 14);
 						if (Global_Variable_Query(kVariableChapter) < 3) {
-							Delay(2000);
 							Actor_Says(kActorMcCoy, 8514, 11); // Got anything new to tell me?
 							if (Actor_Query_Friendliness_To_Other(kActorFishDealer, kActorMcCoy) > 49) {
 								Actor_Says(kActorFishDealer, 170, 14); // Afraid not. But been busy today. Maybe you ask me later.
+								Actor_Set_Goal_Number(kActorFishDealer, 1);
 							} else {
 								Actor_Says(kActorFishDealer, 220, 14); //29-0220.AUD	I haven't heard much. Row been very quiet.
 								Actor_Set_Goal_Number(kActorFishDealer, 1);
 							}
 						} else {
-							Item_Pickup_Spin_Effect_From_Actor(kModelAnimationGoldfish, kActorFishDealer, 0, -40);
+							Actor_Says(kActorFishDealer, 230, 14);
 							Game_Flag_Set(kFlagFishDealerBuyFishTalk);
 							if (!Game_Flag_Query(kFlagMcCoyIsHelpingReplicants)) {
+								Actor_Says(kActorMcCoy, 35, 13);
 								Actor_Voice_Over(1860, kActorVoiceOver); //99-1860.AUD	No self-respecting human would own one of those frauds.
 								Actor_Modify_Friendliness_To_Other(kActorFishDealer, kActorMcCoy, -2);
+								Actor_Set_Goal_Number(kActorFishDealer, 1);
 							} else {
 								dialogueWithFishDealerBuyGoldfish();
 							}
@@ -273,7 +274,7 @@ bool SceneScriptAR01::ClickedOnActor(int actorId) {
 							Actor_Says(kActorMcCoy, 155, 17); //00-0155.AUD	How's business?
 							Actor_Says(kActorFishDealer, 100, 14); //29-0100.AUD	Ah, business slow today. But tonight my people bring over baby barracudas.
 							Actor_Says(kActorFishDealer, 110, 14); //29-0110.AUD	They're very cute. You should buy.
-							Actor_Says(kActorMcCoy, 35, 13);
+							Actor_Says(kActorMcCoy, 1845, 16); //00-1845.AUD	I’ll have to think about it.
 							Game_Flag_Set(kFlagFishLadyTalkFinsished);
 						} else {
 							Actor_Says(kActorMcCoy, 30, 17);	//00-0030.AUD	Anything unusual happening down here?
@@ -468,14 +469,16 @@ bool SceneScriptAR01::ClickedOnExit(int exitId) {
 					if (Player_Query_Agenda() == kPlayerAgendaPolite) {
 						Delay(500);
 						Actor_Says(kActorMcCoy, 170, 14); //00-0170.AUD	Damn.
-						Delay(500);
+						Delay(1000);
 						Actor_Says(kActorMcCoy, 6875, 13); //00-6875.AUD	I gotta go.
 					}
 				}		
+				if (_vm->_cutContent) {
+					Game_Flag_Reset(kFlagIzoGotAway);
+					Game_Flag_Reset(kFlagIzoOnTheRun);
+					Game_Flag_Reset(kFlagIzoWarnedAboutCrystal);
+				}
 				Game_Flag_Set(kFlagDNARowAvailableTalk);
-				Game_Flag_Reset(kFlagIzoGotAway);
-				Game_Flag_Reset(kFlagIzoOnTheRun);
-				Game_Flag_Reset(kFlagIzoWarnedAboutCrystal);
 			}
 			Game_Flag_Reset(kFlagMcCoyInChinaTown);
 			Game_Flag_Reset(kFlagMcCoyInRunciters);
@@ -622,8 +625,6 @@ void SceneScriptAR01::PlayerWalkedIn() {
 				Actor_Says(kActorMcCoy, 35, 13); //00-0035.AUD	I'll pass.
 			}
 			Actor_Says(kActorMcCoy, 475, 13);  //00-0475.AUD	There are things I want to know.
-			Actor_Says(kActorFishDealer, 160, -1); //29-0160.AUD	I heard something, yeah. I tell it to you, if you like.
-			Actor_Says(kActorMcCoy, 4940, 13); //00-4940.AUD	Okay, let's have it.
 			Actor_Says(kActorFishDealer, 230, -1); // 29-0230.AUD	You buy fish? Highest quality.
 			Delay (1000);
 			Actor_Says(kActorMcCoy, 7815, 16); //00-7815.AUD	No.
@@ -640,18 +641,19 @@ void SceneScriptAR01::PlayerWalkedIn() {
 			Actor_Face_Actor(kActorMcCoy, kActorFishDealer, true);
 			Actor_Face_Actor(kActorFishDealer, kActorMcCoy, true);
 			Actor_Says(kActorMcCoy, 100, 18);//00-0100.AUD	I'll do that.
-			Delay (500);
+			Delay (1000);
 			Actor_Says(kActorMcCoy, 5150, 14); //00-5150.AUD	One more thing.
+			Actor_Says(kActorMcCoy, 8615, 16); //00-8615.AUD	Heard anything on the street?
+			Actor_Says(kActorFishDealer, 160, -1); //29-0160.AUD	I heard something, yeah. I tell it to you, if you like.
+			Actor_Says(kActorMcCoy, 2635, 18); //00-2635.AUD	I’m all ears.
 			Actor_Says(kActorFishDealer, 230, -1); // 29-0230.AUD	You buy fish? Highest quality.
 			Actor_Says(kActorMcCoy, 940, 13); //00-0940.AUD	I need to ask you--
 			Actor_Says(kActorFishDealer, 230, -1); // 29-0230.AUD	You buy fish? Highest quality.
-			Delay (3000);	
+			Delay (1500);							
+			Actor_Says(kActorMcCoy, 1535, 19); //00-1535.AUD	Ah, never mind.
+			Delay (2000);
 			Actor_Says(kActorFishDealer, 230, -1); // 29-0230.AUD	You buy fish? Highest quality.
-			Delay (2000);							
-			Actor_Says(kActorMcCoy, 1535, 16); //00-1535.AUD	Ah, never mind.
-			Delay (1000);
-			Actor_Says(kActorFishDealer, 230, -1); // 29-0230.AUD	You buy fish? Highest quality.
-			Delay (3000);	
+			Delay (2000);	
 			Game_Flag_Set(kFlagAR01Entered);
 			ADQ_Add(kActorOfficerLeary, 300, kAnimationModeTalk); //23-0300.AUD	LA, 38 Metro 3. Subject check.
 			ADQ_Add(kActorDispatcher, 480, kAnimationModeTalk); //38-0480.AUD	Sector 3 unit was under check. Go ahead.
@@ -715,6 +717,12 @@ void SceneScriptAR01::dialogueWithFishDealerBuyGoldfish() {
 	if (answerValue == 530) { // BUY
 	// Added in a flag so certain dialogue will trigger.
 		Actor_Says(kActorMcCoy, 7000, 23);
+		if (_vm->_cutContent) {
+			Actor_Change_Animation_Mode(kActorMcCoy, 23);
+			Delay(1000);
+			Item_Pickup_Spin_Effect_From_Actor(kModelAnimationGoldfish, kActorMcCoy, 0, 0);
+			Delay(1000);
+		}
 		Game_Flag_Set(kFlagBoughtFish);
 		if (Query_Difficulty_Level() != kGameDifficultyEasy) {
 			Global_Variable_Decrement(kVariableChinyen, 105);

@@ -164,9 +164,14 @@ bool SceneScriptUG16::ClickedOn3DObject(const char *objectName, bool a2) {
 				Delay(2000);
 				Actor_Says(kActorMcCoy, 5725, 14);
 				Delay(1000);
+				if (_vm->_cutContent) {
+					Actor_Change_Animation_Mode(kActorMcCoy, 23);
+					Delay(2000);
+				}
 				Item_Pickup_Spin_Effect(kModelAnimationDNADataDisc, 418, 305);
 				if (_vm->_cutContent) {
 					Actor_Clue_Acquire(kActorMcCoy, kClueDNALutherLance, true, kActorLuther);
+					Delay(1000);
 				} else {
 					Actor_Clue_Acquire(kActorMcCoy, kClueDNALutherLance, true, -1);
 				}
@@ -278,7 +283,7 @@ void SceneScriptUG16::PlayerWalkedIn() {
 		}
 		// Made it so Luther and Lance only mention Morajis death if Moraji died.
 		if (_vm->_cutContent) {
-			if (Game_Flag_Query(kFlagMorajiDead)) { 
+			if (!Game_Flag_Query(kFlagMorajiAlive)) { 
 				Actor_Says(kActorLuther, 50, 15); //10-0050.AUD	You’re investigating Moraji’s death.
 				Actor_Says(kActorLance, 20, 12); //13-0020.AUD	And Eisenduller’s.
 				if (Game_Flag_Query(kFlagLutherLanceIsReplicant)) {
@@ -326,7 +331,7 @@ void SceneScriptUG16::DialogueQueueFlushed(int a1) {
 void SceneScriptUG16::dialogueWithLuther() {
 	Dialogue_Menu_Clear_List();
 	if (_vm->_cutContent) {
-		DM_Add_To_List_Never_Repeat_Once_Selected(1400, 8, 6, 7); // REPLICANTS
+		DM_Add_To_List_Never_Repeat_Once_Selected(1400, 6, 4, 5); // REPLICANTS
 	} else {
 		DM_Add_To_List_Never_Repeat_Once_Selected(1400, 5, 6, 2); // REPLICANTS
 	}
@@ -335,18 +340,23 @@ void SceneScriptUG16::dialogueWithLuther() {
 	// Made it so this option is only available if you had the interview with Tyrell. When you pick this option McCoy mentions that Tyrell said the 4 year lifespan for reps can not be extended, 
 	// which he would only know if he talked to Tyrell about it.
 	if (_vm->_cutContent) {
+		DM_Add_To_List_Never_Repeat_Once_Selected(1410, 6, 4, 5); // WORK
+	} else {
+		DM_Add_To_List_Never_Repeat_Once_Selected(1410, 5, 4, 8); // WORK
+	}
+	if (_vm->_cutContent) {
 		if (Game_Flag_Query(kFlagLutherLanceTalkWork)) {
 			if (Actor_Clue_Query(kActorMcCoy, kClueTyrellInterview)) {
 				DM_Add_To_List_Never_Repeat_Once_Selected(1420, 6, 4, 5); // LIFESPAN
 			}
 		}
-	} else {
-		DM_Add_To_List_Never_Repeat_Once_Selected(1420, 6, 4, 5); // LIFESPAN
 	}
-	DM_Add_To_List_Never_Repeat_Once_Selected(1410, 5, 4, 8); // WORK
 	if (Game_Flag_Query(kFlagUG16LutherLanceTalkReplicants)
 	 || Game_Flag_Query(kFlagUG16LutherLanceTalkHumans)
 	) {
+		if (!_vm->_cutContent) {
+			DM_Add_To_List_Never_Repeat_Once_Selected(1420, 6, 4, 5); // LIFESPAN
+		}
 		DM_Add_To_List_Never_Repeat_Once_Selected(1430, 6, 4, 5); // CLOVIS
 		if (_vm->_cutContent) {
 			DM_Add_To_List_Never_Repeat_Once_Selected(1440, -1, 4, 5); // VOIGT-KAMPFF
@@ -384,16 +394,18 @@ void SceneScriptUG16::dialogueWithLuther() {
 	case 1400: // REPLICANTS
 		// If Moraji is alive McCoy won't mention that the reps killed him.
 		if (_vm->_cutContent) {
-			if (!Game_Flag_Query(kFlagMorajiDead)) { 
+			if (Game_Flag_Query(kFlagMorajiAlive)) { 
 				Actor_Says(kActorMcCoy, 785, 13);//00-0785.AUD	There could be a group of Nexus-6s tracking down genetic designers.
-				if (Player_Query_Agenda() == kPlayerAgendaPolite) {
+				if (Player_Query_Agenda() != kPlayerAgendaSurly 
+				&& Player_Query_Agenda() != kPlayerAgendaErratic) {
 					Actor_Says(kActorMcCoy, 790, 14);//00-0790.AUD	You might consider knocking off work early.
 				}
 				// Made it so McCoy will not mention the reps killing Eisenduller and Moraji if Moraji survived the explosion.
 				// Also McCoy will only warn Luther and Lance if he is not surly or erratic.
 			} else {
 				Actor_Says(kActorMcCoy, 5730, 13); //00-5730.AUD	The Reps that killed Marcus and Moraji. They’ll be looking for you.
-				if (Player_Query_Agenda() == kPlayerAgendaPolite) {
+				if (Player_Query_Agenda() != kPlayerAgendaSurly 
+				&& Player_Query_Agenda() != kPlayerAgendaErratic) {
 					Actor_Says(kActorMcCoy, 790, 14);//00-0790.AUD	You might consider knocking off work early.
 				}
 			}
@@ -402,7 +414,15 @@ void SceneScriptUG16::dialogueWithLuther() {
 		}
 		Actor_Face_Actor(kActorMcCoy, kActorLuther, true);
 		Actor_Says(kActorLuther, 100, 18);
-		Actor_Says(kActorMcCoy, 5775, 13); //00-5775.AUD	So why are you still walking around?
+		if (_vm->_cutContent) {
+			if (!Game_Flag_Query(kFlagMcCoyIsHelpingReplicants)) {
+				Actor_Says(kActorMcCoy, 5775, 13); //00-5775.AUD	So why are you still walking around?
+			} else {
+				Actor_Says(kActorMcCoy, 5695, 14); // How's that?
+			}
+		} else {
+			Actor_Says(kActorMcCoy, 5775, 13); //00-5775.AUD	So why are you still walking around?
+		}
 		Actor_Says(kActorLance, 70, 17); //13-0070.AUD	Cause we’re all part of the same suit of cards, you know what I mean?
 		if (_vm->_cutContent) {
 			if (Game_Flag_Query(kFlagLutherLanceIsReplicant)) {		
@@ -457,12 +477,11 @@ void SceneScriptUG16::dialogueWithLuther() {
 			Actor_Says(kActorLuther, 180, 14); //10-0180.AUD	Clovis showed us our incept photos.
 			Actor_Says(kActorMcCoy, 5795, 13); //00-5795.AUD	So what?
 			Actor_Says(kActorLance, 150, 17); //13-0150.AUD	That’s a pretty damn good argument, you gotta admit.
+			Actor_Says(kActorMcCoy, 5800, 14); //00-5800.AUD	Photos can be doctored. It’s not proof.
 			if (_vm->_cutContent) {
-				Actor_Says(kActorMcCoy, 5800, 14); //00-5800.AUD	Photos can be doctored. It’s not proof.
 				Delay(2000);
 				Actor_Says(kActorLance, 290, 17); //13-0290.AUD	He’s sharp this one.
-			} else {
-				Actor_Says(kActorMcCoy, 5800, 13);  
+			} else { 
 				Actor_Says(kActorLuther, 190, 15);
 			}
 			Game_Flag_Set(kFlagUG16LutherLanceTalkHumans);
@@ -512,7 +531,8 @@ void SceneScriptUG16::dialogueWithLuther() {
 		}	
 		if (_vm->_cutContent) {
 			Actor_Says(kActorMcCoy, 5825, 18); //00-5825.AUD	Keep talking.
-			if (Actor_Query_Friendliness_To_Other(kActorLuther, kActorMcCoy) < 50) {
+			if (Actor_Query_Friendliness_To_Other(kActorLuther, kActorMcCoy) < 50 
+			|| Game_Flag_Query(kFlagLutherLanceIsReplicant)) {
 				Actor_Says(kActorLuther, 90, 15); //10-0090.AUD	Can’t talk now.
 				Actor_Says(kActorLance, 50, 6); //13-0050.AUD	We gotta get this done.
 			} else {
@@ -557,7 +577,8 @@ void SceneScriptUG16::dialogueWithLuther() {
 			Actor_Clue_Acquire(kActorMcCoy, kClueSightingClovis, true, kActorLuther);
 		}
 		if (_vm->_cutContent) {
-			if (Player_Query_Agenda() == kPlayerAgendaPolite) {
+			if (Player_Query_Agenda() != kPlayerAgendaSurly 
+			&& Player_Query_Agenda() != kPlayerAgendaErratic) {
 				Actor_Says(kActorMcCoy, 5815, 14); //00-5815.AUD	He’ll kill Tyrell, if he gets to him.
 				// Made it so if the twins are replicants the have no remorse in regards to Clovis trying to kill Tyrell. If they are human Clovis' lied about his intentions and the twins believe
 				// that Clovis won't kill Tyrell.
@@ -580,7 +601,8 @@ void SceneScriptUG16::dialogueWithLuther() {
 		Actor_Says(kActorMcCoy, 5750, 13);
 		Actor_Face_Actor(kActorMcCoy, kActorLuther, true);
 		if (_vm->_cutContent) {
-			if (Actor_Query_Friendliness_To_Other(kActorLuther, kActorMcCoy) < 50) {
+			if (Actor_Query_Friendliness_To_Other(kActorLuther, kActorMcCoy) < 50
+			|| Game_Flag_Query(kFlagLutherLanceIsReplicant)) { 
 				Actor_Says(kActorLance, 280, 6); //13-0280.AUD	(scoffs) Do you believe this clown? He wants to Voigt Kampff us.
 				Actor_Says(kActorLuther, 300, 14); //10-0300.AUD	Sorry, McCoy. Shoot us or leave us alone.
 				Actor_Says(kActorLuther, 310, 15); //10-0310.AUD	Let’s get back to work.
@@ -607,6 +629,7 @@ void SceneScriptUG16::dialogueWithLuther() {
 				Actor_Says(kActorLance, 30, 16); //13-0030.AUD	Hell of a smart cookie there.
 			} else {
 				Actor_Says(kActorLance, 290, 17); //13-0290.AUD	He’s sharp this one.
+				Actor_Says(kActorLuther, 320, 16); //10-0320.AUD	No question.
 			}
 		} else {
 			Actor_Says(kActorLance, 290, 17); //13-0290.AUD	He’s sharp this one.
@@ -629,22 +652,30 @@ void SceneScriptUG16::dialogueWithLuther() {
 		if (_vm->_cutContent) {
 			if (Player_Query_Agenda() == kPlayerAgendaSurly 
 			|| Player_Query_Agenda() == kPlayerAgendaErratic) {
+				Actor_Says(kActorMcCoy, 690, 18); //00-0690.AUD	Gotcha.
+			} else {
 				Actor_Says(kActorMcCoy, 5830, 14); 
 				Actor_Says(kActorLance, 320, 16);
-				Actor_Modify_Friendliness_To_Other(kActorLuther, kActorMcCoy, -2);
+				Actor_Says(kActorLance, 330, 15);
 			}
 		} else {
 			Actor_Says(kActorMcCoy, 5830, 13); //00-5830.AUD	You want me to break into the Tyrell Building for you? You’re nuts.
 			Actor_Says(kActorLance, 320, 16);
+			Actor_Says(kActorLance, 330, 15);
 		}
-		Actor_Says(kActorLance, 330, 15);
 		Game_Flag_Set(kFlagUG15LanceLuthorTrade);
 		break;
 
 	case 1460: // RUNCITER
 		Actor_Says(kActorMcCoy, 5760, 13);
 		Actor_Face_Actor(kActorMcCoy, kActorLuther, true);
-		Actor_Says(kActorLuther, 370, 15);
+		if (_vm->_cutContent) {
+			if (!Game_Flag_Query(kFlagLutherLanceIsReplicant)) {
+				Actor_Says(kActorLuther, 370, 15);
+			}
+		} else {
+			Actor_Says(kActorLuther, 370, 15);
+		}
 		Actor_Says(kActorLance, 340, 14); //13-0340.AUD	We just wanted to make some extra cash on the side.
 		// Added in some lines.
 		if (_vm->_cutContent) {
@@ -652,7 +683,8 @@ void SceneScriptUG16::dialogueWithLuther() {
 			Actor_Says(kActorLance, 360, 14); //13-0360.AUD	He was going to pawn them off as real.
 		}
 		if (_vm->_cutContent) {
-			if (Player_Query_Agenda() == kPlayerAgendaPolite) {
+			if (Player_Query_Agenda() != kPlayerAgendaSurly 
+			&& Player_Query_Agenda() != kPlayerAgendaErratic) {
 				Actor_Says(kActorMcCoy, 5835, 18); //00-5835.AUD	That probably had something to do with you guys getting fired.
 				if (Game_Flag_Query(kFlagLutherLanceIsReplicant)) {
 					Actor_Says(kActorLance, 370, 6); //13-0370.AUD	Since Eldon is such a pain in the ass control freak…
@@ -675,7 +707,8 @@ void SceneScriptUG16::dialogueWithLuther() {
 		Actor_Says(kActorMcCoy, 5765, 13);
 		Actor_Face_Actor(kActorMcCoy, kActorLuther, true);
 		if (_vm->_cutContent) {
-			if (Actor_Query_Friendliness_To_Other(kActorLuther, kActorMcCoy) < 50) {
+			if (Actor_Query_Friendliness_To_Other(kActorLuther, kActorMcCoy) < 50
+			|| Game_Flag_Query(kFlagLutherLanceIsReplicant))  {
 				Actor_Says(kActorLance, 400, 15); //13-0400.AUD	Check it out, bro. The little man with the big gun did good.
 			} else {
 				Actor_Says(kActorLance, 290, 17); //13-0290.AUD	He’s sharp this one.
@@ -708,6 +741,8 @@ void SceneScriptUG16::dialogueWithLuther() {
 			Player_Gains_Control();
 			Actor_Change_Animation_Mode(kActorMcCoy, 23);
 			Delay(2000);
+			Item_Pickup_Spin_Effect_From_Actor(kModelAnimationFolder, kActorMcCoy, 0, 0);
+			Actor_Voice_Over(2740, kActorVoiceOver);
 		}
 #if BLADERUNNER_ORIGINAL_BUGS
 		// This quote is repeated (also used in RUNCITER question
@@ -717,9 +752,9 @@ void SceneScriptUG16::dialogueWithLuther() {
 #endif // BLADERUNNER_ORIGINAL_BUGS
 		if (!_vm->_cutContent) {
 			Delay(1000);
-		}
-		Item_Pickup_Spin_Effect(kModelAnimationFolder, 239, 454);
-		Actor_Voice_Over(2740, kActorVoiceOver);
+			Item_Pickup_Spin_Effect(kModelAnimationFolder, 239, 454);
+			Actor_Voice_Over(2740, kActorVoiceOver);
+		}	
 		Actor_Voice_Over(2750, kActorVoiceOver);
 		Actor_Voice_Over(2760, kActorVoiceOver);
 		Actor_Voice_Over(2770, kActorVoiceOver);
@@ -744,7 +779,8 @@ void SceneScriptUG16::dialogueWithLuther() {
 		Actor_Says(kActorMcCoy, 5850, 13); 
 		Actor_Says(kActorLuther, 400, 15); //10-0400.AUD	From Clovis. He told us to hold it for him.
 		if (_vm->_cutContent) {
-			if (Actor_Query_Friendliness_To_Other(kActorLuther, kActorMcCoy) < 50) {
+			if (Actor_Query_Friendliness_To_Other(kActorLuther, kActorMcCoy) < 50
+			|| Game_Flag_Query(kFlagLutherLanceIsReplicant)) {
 				Actor_Says(kActorLance, 430, 6); //13-0430.AUD	Come to think of it I’m not sure you’re supposed to see it. You wanna give it back now?
 				if (Player_Query_Agenda() == kPlayerAgendaSurly 
 				|| Player_Query_Agenda() == kPlayerAgendaErratic) {
@@ -771,7 +807,8 @@ void SceneScriptUG16::dialogueWithLuther() {
 		if (_vm->_cutContent) {
 			Actor_Face_Actor(kActorMcCoy, kActorLuther, true);
 			Actor_Says(kActorMcCoy, 5770, 15); //00-5770.AUD	Listen, fellas.
-			if (Actor_Query_Friendliness_To_Other(kActorLuther, kActorMcCoy) < 50) {
+			if (Actor_Query_Friendliness_To_Other(kActorLuther, kActorMcCoy) < 50
+			|| Game_Flag_Query(kFlagLutherLanceIsReplicant)) {
 				Actor_Says(kActorLuther, 70, 6); //10-0070.AUD	Take your guns and your violence elsewhere. We’ve got important work to do.
 			} else {
 				Actor_Says(kActorLuther, 90, 15); //10-0090.AUD	Can’t talk now.
@@ -781,9 +818,10 @@ void SceneScriptUG16::dialogueWithLuther() {
 			if (Player_Query_Agenda() == kPlayerAgendaSurly 
 			|| Player_Query_Agenda() == kPlayerAgendaErratic) {
 				Actor_Says(kActorMcCoy, 8720, 17); //00-8720.AUD	Freak.
-				Actor_Modify_Friendliness_To_Other(kActorLuther, kActorMcCoy, -1);
 			} else if (Player_Query_Agenda() == kPlayerAgendaPolite) { 
 				Actor_Says(kActorMcCoy, 805, 3); //00-0805.AUD	Sorry to bother you.
+			} else {
+				Actor_Says(kActorMcCoy, 4595, 14);
 			}
 		} else {
 			Actor_Says(kActorMcCoy, 4595, 14);

@@ -130,27 +130,35 @@ bool SceneScriptUG02::ClickedOn3DObject(const char *objectName, bool a2) {
 		}
 		if (_vm->_cutContent) {
 			if (Global_Variable_Query(kVariableChapter) > 3) {
-				if (Actor_Clue_Query(kActorMcCoy, kClueWeaponsCache)
-				&& !Actor_Clue_Query(kActorMcCoy, kClueIzosStashRaided)) {
-					Actor_Voice_Over(2470, kActorVoiceOver);
-					Actor_Voice_Over(2480, kActorVoiceOver);
-					Actor_Voice_Over(2490, kActorVoiceOver);
-					Actor_Voice_Over(2500, kActorVoiceOver);
-					Actor_Clue_Acquire(kActorMcCoy, kClueIzosStashRaided, true, -1);
-				} else if (!Actor_Clue_Query(kActorMcCoy, kClueWeaponsCache)) {
+				if (!Game_Flag_Query(kFlagIzoWarned)) {
 					Actor_Voice_Over(2510, kActorVoiceOver); //99-2510.AUD	Someone had really torn the place up.
-					Actor_Voice_Over(2520, kActorVoiceOver);
-					if (Game_Flag_Query(kFlagUG02toHC03)
-					|| Game_Flag_Query(kFlagHC03toUG02)) {	
-						Actor_Voice_Over(2530, kActorVoiceOver);				
-					}
-				} else if (!Game_Flag_Query(kFlagUG02AmmoTaken)) {
-					Item_Pickup_Spin_Effect(kModelAnimationAmmoType02, 360, 440);
-					Actor_Says(kActorMcCoy, 8525, 14);
-					Give_McCoy_Ammo(2, 18);
-					Game_Flag_Set(kFlagUG02AmmoTaken);
+					Delay(1000);
+					Actor_Says(kActorMcCoy, 8580, 14); //00-8580.AUD	Nothing else there.
 				} else {
-					Actor_Says(kActorMcCoy, 8580, 14);
+				 	if (Actor_Clue_Query(kActorMcCoy, kClueWeaponsCache)
+					&& !Actor_Clue_Query(kActorMcCoy, kClueIzosStashRaided)) {
+						Actor_Voice_Over(2470, kActorVoiceOver);
+						Actor_Voice_Over(2480, kActorVoiceOver);
+						Actor_Voice_Over(2490, kActorVoiceOver);
+						Actor_Voice_Over(2500, kActorVoiceOver);
+						Actor_Clue_Acquire(kActorMcCoy, kClueIzosStashRaided, true, -1);
+					} else if (!Actor_Clue_Query(kActorMcCoy, kClueWeaponsCache)) {
+						Actor_Voice_Over(2510, kActorVoiceOver); //99-2510.AUD	Someone had really torn the place up.
+						Actor_Voice_Over(2520, kActorVoiceOver);
+						if (Game_Flag_Query(kFlagUG02toHC03)
+						|| Game_Flag_Query(kFlagHC03toUG02)) {	
+							Actor_Voice_Over(2530, kActorVoiceOver);				
+						}
+					} else if (!Game_Flag_Query(kFlagUG02AmmoTaken)) {
+						Actor_Change_Animation_Mode(kActorMcCoy, 23);
+						Delay(2000);
+						Item_Pickup_Spin_Effect(kModelAnimationAmmoType02, 360, 440);
+						Actor_Says(kActorMcCoy, 8525, 13);
+						Give_McCoy_Ammo(2, 18);
+						Game_Flag_Set(kFlagUG02AmmoTaken);
+					} else {
+						Actor_Says(kActorMcCoy, 8585, 14); //00-8585.AUD	Nothing more to find.
+					}
 				}
 				return true;
 			}
@@ -277,6 +285,9 @@ void SceneScriptUG02::ActorChangedGoal(int actorId, int newGoal, int oldGoal, bo
 }
 
 void SceneScriptUG02::PlayerWalkedIn() {
+	if (_vm->_cutContent) {
+		Music_Stop(3u);
+	}
 	if (Game_Flag_Query(kFlagUG01toUG02)) {
 		Actor_Set_At_XYZ(kActorMcCoy, -106.01f, 84.13f, -228.62f, 575);
 		Loop_Actor_Walk_To_XYZ(kActorMcCoy, -148.0f, 84.13f, -67.0f, 0, false, false, false);

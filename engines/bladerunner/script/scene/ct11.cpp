@@ -225,6 +225,7 @@ bool SceneScriptCT11::ClickedOn2DRegion(int region) {
 					Scene_2D_Region_Remove(0);
 		#endif // !BLADERUNNER_ORIGINAL_BUGS
 				} else {
+					Actor_Says(kActorMcCoy, 8865, 18); //00-8865.AUD	A lichen-dog wrapper.
 					Actor_Says(kActorMcCoy, 8525, 13); // 00-8525.AUD	Hmph.
 				}
 			} else {
@@ -290,6 +291,9 @@ bool SceneScriptCT11::ClickedOn2DRegion(int region) {
 				if (Actor_Clue_Query(kActorMcCoy, kClueChromeDebris)) {
 					++cluesFound;
 				}
+				if (Actor_Clue_Query(kActorMcCoy, kClueLicensePlateMatch)) {
+					++cluesFound;
+				}
 				if (Actor_Clue_Query(kActorMcCoy, kClueLicensePlate)) {
 					cluesFound += 2;
 				}
@@ -299,10 +303,7 @@ bool SceneScriptCT11::ClickedOn2DRegion(int region) {
 				if (Actor_Clue_Query(kActorMcCoy, kCluePartialLicenseNumber)) {
 					cluesFound += 2;
 				}
-				if (Actor_Clue_Query(kActorMcCoy, kClueLabPaintTransfer)) {
-					cluesFound += 2;
-				}
-				if ( cluesFound > 3
+				if ( cluesFound > 5
 				&& !Actor_Clue_Query(kActorMcCoy, kClueCar)
 				) {
 					Actor_Voice_Over(510, kActorVoiceOver);
@@ -320,8 +321,8 @@ bool SceneScriptCT11::ClickedOn2DRegion(int region) {
 					Scene_2D_Region_Remove(4);
 #endif // !BLADERUNNER_ORIGINAL_BUGS
 				} else {
-					Actor_Says(kActorMcCoy, 8525, 12); //00-8525.AUD	Hmph.
 					Actor_Says(kActorMcCoy, 8524, 13); //00-8524.AUD	That's a washout.
+					Actor_Says(kActorMcCoy, 8525, 12); //00-8525.AUD	Hmph.
 				}
 			} else {
 				int cluesFound = 0;

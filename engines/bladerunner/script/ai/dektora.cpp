@@ -169,8 +169,7 @@ void AIScriptDektora::CompletedMovementTrack() {
 		&& !Game_Flag_Query(kFlagEarlyQIsReplicant)
 		&& Game_Flag_Query(kFlagDektoraIsReplicant)
 		&& !Game_Flag_Query(kFlagInsectDealerArrested)
-		&& Actor_Query_Goal_Number(kActorEarlyQ) != 1
-		&& Actor_Query_Goal_Number(kActorEarlyQ) != 101
+		&& !Game_Flag_Query(kFlagAR02DektoraWillBuyScorpions)
 		) {
 			Game_Flag_Set(kFlagAR02DektoraWillBuyScorpions);
 			Actor_Set_Goal_Number(kActorDektora, kGoalDektoraStartWalkingAround);
@@ -194,8 +193,7 @@ void AIScriptDektora::CompletedMovementTrack() {
 		&& !Game_Flag_Query(kFlagEarlyQIsReplicant)
 		&& Game_Flag_Query(kFlagDektoraIsReplicant)
 		&& !Game_Flag_Query(kFlagInsectDealerArrested)
-		&& Actor_Query_Goal_Number(kActorEarlyQ) != 1
-		&& Actor_Query_Goal_Number(kActorEarlyQ) != 101
+		&& !Game_Flag_Query(kFlagAR02DektoraWillBuyScorpions)
 		) {
 			Game_Flag_Set(kFlagAR02DektoraWillBuyScorpions);
 			Actor_Set_Goal_Number(kActorDektora, kGoalDektoraStartWalkingAround);
@@ -263,9 +261,11 @@ void AIScriptDektora::ClickedByPlayer() {
 		if (_vm->_cutContent) {
 			if (Player_Query_Agenda() == kPlayerAgendaSurly 
 			|| Player_Query_Agenda() == kPlayerAgendaErratic) {
-				Actor_Says(kActorMcCoy, 8665, 13); //00-8665.AUD	Disgusting.
-			} else {	
+				Actor_Says(kActorMcCoy, 8590, 18); //00-8590.AUD	Not the talkative type
+			} else if (Player_Query_Agenda() == kPlayerAgendaPolite) {	
 				Actor_Says(kActorMcCoy, 8630, 12);  // What a waste
+			} else {
+				Actor_Says(kActorMcCoy, 8665, 13); //00-8665.AUD	Disgusting.	
 			}
 		} else {
 			Actor_Says(kActorMcCoy, 8665, 14);
@@ -425,18 +425,21 @@ void AIScriptDektora::Retired(int byActorId) {
 					if (Actor_Query_Goal_Number(kActorRunciter) < kGoalRunciterDead) {
 						Delay(1000);
 						Sound_Play(kSfxSMCAL3, 100, 0, 0, 50);
+						Actor_Set_Goal_Number(kActorRunciter, kGoalRunciterDead);
 					}
 				}
 				if (Game_Flag_Query(kFlagCrazylegsIsReplicant)) {
 					if (!Game_Flag_Query(kFlagCrazylegsDead)) {
 						Delay(1000);
 						Sound_Play(kSfxSMCAL3, 100, 0, 0, 50);
+						Game_Flag_Set(kFlagCrazylegsDead);
 					}
 				}
 				if (Game_Flag_Query(kFlagGrigorianIsReplicant)) {
 					if (!Game_Flag_Query(kFlagGrigorianDead)) {
 						Delay(1000);
 						Sound_Play(kSfxSMCAL3, 100, 0, 0, 50);
+						Game_Flag_Set(kFlagGrigorianDead);
 					}
 				}
 				Delay(2000);

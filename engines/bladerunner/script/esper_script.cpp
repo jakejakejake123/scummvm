@@ -269,9 +269,19 @@ bool ESPERScript::SCRIPT_ESPER_DLL_Special_Region_Selected(int photo, int region
 		} else if (region == 4) {
 			Actor_Voice_Over(4110, kActorVoiceOver);
 			if (!Actor_Clue_Query(kActorMcCoy, kClueMilitaryBoots)) {
-				Actor_Says(kActorMcCoy, 6945, 3);
-				Sound_Play(kSfxBR034_1A, 50, 0, 0, 50);
-				Actor_Clue_Acquire(kActorMcCoy, kClueMilitaryBoots, true, -1);
+				if (_vm->_cutContent) {
+					if (Actor_Clue_Query(kActorMcCoy, kClueAnimalMurderSuspect)) {
+						Actor_Says(kActorMcCoy, 6945, 3);
+						Sound_Play(kSfxBR034_1A, 50, 0, 0, 50);
+						Actor_Clue_Acquire(kActorMcCoy, kClueMilitaryBoots, true, -1);
+					} else {
+						Actor_Says(kActorMcCoy, 8525, 13); // 00-8525.AUD	Hmph.
+					}
+				} else {
+					Actor_Says(kActorMcCoy, 6945, 3);
+					Sound_Play(kSfxBR034_1A, 50, 0, 0, 50);
+					Actor_Clue_Acquire(kActorMcCoy, kClueMilitaryBoots, true, -1);
+				}
 			}
 		} else if (region == 5) {
 			Actor_Voice_Over(4120, kActorVoiceOver);	
@@ -328,8 +338,19 @@ bool ESPERScript::SCRIPT_ESPER_DLL_Special_Region_Selected(int photo, int region
 				|| Actor_Clue_Query(kActorMcCoy, kClueScorpions)) {
 					Actor_Voice_Over(4190, kActorVoiceOver);
 				} else {
-					Actor_Voice_Over(4180, kActorVoiceOver); //99-4180.AUD	Scorpions.
+					Actor_Says(kActorMcCoy, 8525, 13); // 00-8525.AUD	Hmph.
 				}
+				if (!Actor_Clue_Query(kActorMcCoy, kClueScorpionbox)) {
+					if (Actor_Clue_Query(kActorMcCoy, kCluePurchasedScorpions)) {
+						Actor_Says(kActorMcCoy, 6945, 3);
+						Sound_Play(kSfxBR034_1A, 50, 0, 0, 50);
+						Actor_Clue_Acquire(kActorMcCoy, kClueScorpionbox, true, -1);
+					} else if (Actor_Clue_Query(kActorMcCoy, kClueScorpions)) {
+						Actor_Says(kActorMcCoy, 6945, 3);
+						Sound_Play(kSfxBR034_1A, 50, 0, 0, 50);
+						Actor_Clue_Acquire(kActorMcCoy, kClueScorpionbox, true, -1);
+					}
+				}		
 			} else {
 				Actor_Voice_Over(4190, kActorVoiceOver);
 			}
@@ -421,7 +442,7 @@ bool ESPERScript::SCRIPT_ESPER_DLL_Special_Region_Selected(int photo, int region
 			if (_vm->_cutContent) {
 				if (Actor_Clue_Query(kActorMcCoy, kClueAnimalMurderSuspect)
 				|| Actor_Clue_Query(kActorMcCoy, kClueMoonbus1)
-				|| Actor_Clue_Query(kActorMcCoy, kClueDektorasDressingRoom)){
+				|| Actor_Clue_Query(kActorMcCoy, kClueDektorasDressingRoom)) {
 					Actor_Voice_Over(4220, kActorVoiceOver); //99-4220.AUD	That guy sure gets around.
 				} else {
 					Actor_Voice_Over(4080, kActorVoiceOver);
@@ -458,12 +479,11 @@ bool ESPERScript::SCRIPT_ESPER_DLL_Special_Region_Selected(int photo, int region
 	case 8:
 		switch (region) {
 		case 18:
+			Actor_Says(kActorMcCoy, 8775, 3);
 			if (_vm->_cutContent) {
-				if (!Actor_Clue_Query(kActorMcCoy, kClueTyrellGuardInterview)) {
-					Actor_Says(kActorMcCoy, 8775, 3);
+				if (!Actor_Clue_Query(kActorMcCoy, kClueTyrellGuardInterview)) {	
 					Actor_Says(kActorMcCoy, 8525, 13); // 00-8525.AUD	Hmph.
 				} else {
-					Actor_Says(kActorMcCoy, 8775, 3);
 					if (!Actor_Clue_Query(kActorMcCoy, kClueKingstonKitchenBox2)) {
 						Actor_Says(kActorMcCoy, 6945, 3);
 						Sound_Play(kSfxBR034_1A, 50, 0, 0, 50);
@@ -487,12 +507,14 @@ bool ESPERScript::SCRIPT_ESPER_DLL_Special_Region_Selected(int photo, int region
 					Actor_Says(kActorMcCoy, 8525, 13); // 00-8525.AUD	Hmph.
 				} else {
 					Actor_Voice_Over(4160, kActorVoiceOver);
+				}
+				if (Actor_Clue_Query(kActorMcCoy, kClueAttemptedFileAccess)) {
 					if (!Actor_Clue_Query(kActorMcCoy, kClueDogCollar2)) {
 						Actor_Says(kActorMcCoy, 6945, 3);
 						Sound_Play(kSfxBR034_1A, 50, 0, 0, 50);
 						Actor_Clue_Acquire(kActorMcCoy, kClueDogCollar2, true, -1);
 					}
-				} 
+				}
 			} else {
 				Actor_Voice_Over(4160, kActorVoiceOver);
 				if (!Actor_Clue_Query(kActorMcCoy, kClueDogCollar2)) {
@@ -574,7 +596,7 @@ bool ESPERScript::SCRIPT_ESPER_DLL_Special_Region_Selected(int photo, int region
 			if (_vm->_cutContent) {
 				if (Actor_Clue_Query(kActorMcCoy, kClueAnimalMurderSuspect)
 				|| Actor_Clue_Query(kActorMcCoy, kClueIzosFriend)
-				|| Actor_Clue_Query(kActorMcCoy, kClueDektorasDressingRoom)){
+				|| Actor_Clue_Query(kActorMcCoy, kClueDektorasDressingRoom)) {
 					Actor_Voice_Over(4220, kActorVoiceOver);
 				} else {
 					Actor_Voice_Over(4080, kActorVoiceOver);

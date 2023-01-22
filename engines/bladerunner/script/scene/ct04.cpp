@@ -99,7 +99,8 @@ bool SceneScriptCT04::ClickedOn3DObject(const char *objectName, bool a2) {
 				Actor_Set_At_XYZ(kActorTransient, 0, 0, 0, 0);
 				Actor_Change_Animation_Mode(kActorMcCoy, 40);
 				if (_vm->_cutContent) { 
-					if (Player_Query_Agenda() == kPlayerAgendaPolite) {
+					if (Player_Query_Agenda() != kPlayerAgendaSurly 
+					&& Player_Query_Agenda() != kPlayerAgendaErratic) {
 						Actor_Voice_Over(320, kActorVoiceOver);
 						Actor_Voice_Over(330, kActorVoiceOver);
 					}
@@ -131,7 +132,8 @@ bool SceneScriptCT04::ClickedOn3DObject(const char *objectName, bool a2) {
 			} else if (Game_Flag_Query(kFlagCT04HomelessBodyFound)) {
 				Actor_Voice_Over(250, kActorVoiceOver); //99-0250.AUD	The body had vanished but the trash was still there.
 				if (_vm->_cutContent) { 
-					if (Player_Query_Agenda() == kPlayerAgendaPolite) {
+					if (Player_Query_Agenda() != kPlayerAgendaSurly 
+					&& Player_Query_Agenda() != kPlayerAgendaErratic) {
 						Actor_Voice_Over(260, kActorVoiceOver); //99-0260.AUD	I'd screwed up and screwed up bad. But maybe there was still a way to make it right.
 					}
 				} else {
@@ -210,10 +212,10 @@ void SceneScriptCT04::dialogueWithHomeless() {
 			|| Query_Difficulty_Level() == kGameDifficultyEasy) {
 				DM_Add_To_List_Never_Repeat_Once_Selected(410, 8, 4, -1); // YES
 			} else {
-				DM_Add_To_List_Never_Repeat_Once_Selected(420, 2, 6, 8); // NO
+				DM_Add_To_List_Never_Repeat_Once_Selected(420, -1, 6, 8); // NO
 			}
 		} else {
-			DM_Add_To_List_Never_Repeat_Once_Selected(420, 2, 6, 8); // NO
+			DM_Add_To_List_Never_Repeat_Once_Selected(420, -1, 6, 8); // NO
 		}
 	} else {
 		if (Global_Variable_Query(kVariableChinyen) > 10
@@ -270,7 +272,13 @@ bool SceneScriptCT04::ClickedOnActor(int actorId) {
 			if (!Loop_Actor_Walk_To_Actor(kActorMcCoy, kActorTransient, 36, true, false)) {
 				Actor_Voice_Over(290, kActorVoiceOver); //99-0290.AUD	He was just an old bum. Not Howie's cook and certainly not a Replicant.
 				Actor_Voice_Over(300, kActorVoiceOver); //99-0300.AUD	I'd screwed up. Plain and simple.
-				Actor_Voice_Over(310, kActorVoiceOver);
+				if (_vm->_cutContent) { 
+					if (Player_Query_Agenda() != kPlayerAgendaPolite) {
+						Actor_Voice_Over(310, kActorVoiceOver);
+					}
+				} else {
+					Actor_Voice_Over(310, kActorVoiceOver);
+				}
 			}
 		} else {
 			Actor_Set_Targetable(kActorTransient, false);

@@ -201,14 +201,15 @@ void SceneScriptKP05::PlayerWalkedIn() {
 					if (Player_Query_Agenda() == kPlayerAgendaPolite) {
 						Actor_Says(kActorMcCoy, 2205, 3); //00-2205.AUD	Show some mercy?
 						Actor_Says(kActorSteele, 560, 15); //01-0560.AUD	Well, I guess that’s why you’re there and I’m here.
+					} else {
+						Delay(2000);
 					}
 				} else {
 					Actor_Says(kActorSteele, 330, 15); //01-0330.AUD	Nobody gives a damn.
 				}
 				Actor_Says(kActorSteele, 570, 16); //01-0570.AUD	Now, why don’t you explain to me what you’re doing out here, Slim.
 				Actor_Says(kActorSteele, 580, 13); //01-0580.AUD	Maybe you can ease my suspicious mind.
-				if (Player_Query_Agenda() == kPlayerAgendaSurly 
-				|| Player_Query_Agenda() == kPlayerAgendaErratic) {
+				if (Player_Query_Agenda() != kPlayerAgendaPolite) {
 					Actor_Says(kActorMcCoy, 2210, 3); //00-2210.AUD	I’m just checking it out.
 					Actor_Says(kActorSteele, 590, 13); //01-0590.AUD	Just doing a little sightseeing?
 					Actor_Says(kActorMcCoy, 2215, 3); //00-2215.AUD	That’s right.
@@ -252,14 +253,15 @@ void SceneScriptKP05::PlayerWalkedIn() {
 						if (Player_Query_Agenda() == kPlayerAgendaPolite) {
 							Actor_Says(kActorMcCoy, 2205, 3); //00-2205.AUD	Show some mercy?
 							Actor_Says(kActorSteele, 560, 15); //01-0560.AUD	Well, I guess that’s why you’re there and I’m here.
+						} else { 
+							Delay(2000);
 						}
 					} else {
 						Actor_Says(kActorSteele, 330, 15); //01-0330.AUD	Nobody gives a damn.
 					}
 					Actor_Says(kActorSteele, 570, 16); //01-0570.AUD	Now, why don’t you explain to me what you’re doing out here, Slim.
 					Actor_Says(kActorSteele, 580, 13); //01-0580.AUD	Maybe you can ease my suspicious mind.
-					if (Player_Query_Agenda() == kPlayerAgendaSurly 
-					|| Player_Query_Agenda() == kPlayerAgendaErratic) {
+					if (Player_Query_Agenda() != kPlayerAgendaPolite) {
 						Actor_Says(kActorMcCoy, 2210, 3); //00-2210.AUD	I’m just checking it out.
 						Actor_Says(kActorSteele, 590, 13); //01-0590.AUD	Just doing a little sightseeing?
 						Actor_Says(kActorMcCoy, 2215, 3); //00-2215.AUD	That’s right.
@@ -301,14 +303,15 @@ void SceneScriptKP05::PlayerWalkedIn() {
 						if (Player_Query_Agenda() == kPlayerAgendaPolite) {
 							Actor_Says(kActorMcCoy, 2205, 3); //00-2205.AUD	Show some mercy?
 							Actor_Says(kActorSteele, 560, 15); //01-0560.AUD	Well, I guess that’s why you’re there and I’m here.
+						} else {
+							Delay(2000);
 						}
 					} else {
 						Actor_Says(kActorSteele, 330, 15); //01-0330.AUD	Nobody gives a damn.
 					}
 					Actor_Says(kActorSteele, 570, 16); //01-0570.AUD	Now, why don’t you explain to me what you’re doing out here, Slim.
 					Actor_Says(kActorSteele, 580, 13); //01-0580.AUD	Maybe you can ease my suspicious mind.
-					if (Player_Query_Agenda() == kPlayerAgendaSurly 
-					|| Player_Query_Agenda() == kPlayerAgendaErratic) {
+					if (Player_Query_Agenda() != kPlayerAgendaPolite) {
 						Actor_Says(kActorMcCoy, 2210, 3); //00-2210.AUD	I’m just checking it out.
 						Actor_Says(kActorSteele, 590, 13); //01-0590.AUD	Just doing a little sightseeing?
 						Actor_Says(kActorMcCoy, 2215, 3); //00-2215.AUD	That’s right.

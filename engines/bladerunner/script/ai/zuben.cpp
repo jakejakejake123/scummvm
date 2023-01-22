@@ -283,6 +283,7 @@ void AIScriptZuben::ClickedByPlayer() {
 							Actor_Face_Actor(kActorZuben, kActorRunciter, true);
 							Actor_Face_Actor(kActorMcCoy, kActorRunciter, true);
 						}
+						Actor_Says(kActorMcCoy, 7355, 14); //00-7355.AUD	All those animals died.
 						Actor_Says(kActorZuben, 290, 15); //19-0290.AUD	He made Lucy do bad things. Lucy hurt. Clovis more angry.
 						if (Actor_Query_Is_In_Current_Set(kActorRunciter)) {
 							Actor_Face_Actor(kActorRunciter, kActorZuben, true);
@@ -340,7 +341,7 @@ void AIScriptZuben::ClickedByPlayer() {
 						Actor_Clue_Acquire(kActorMcCoy, kClueZubensMotive, false, kActorZuben);
 						Delay(2000);
 						Actor_Face_Actor(kActorRunciter, kActorMcCoy, true);
-						Actor_Face_Actor(kActorZuben, kActorRunciter, true);
+						Actor_Face_Actor(kActorZuben, kActorMcCoy, true);
 					}
 				}
 			}
@@ -413,7 +414,11 @@ void AIScriptZuben::OtherAgentEnteredCombatMode(int otherActorId, int combatMode
 		Non_Player_Actor_Combat_Mode_Off(kActorZuben);
 		Game_Flag_Reset(kFlagCT07ZubenAttack);
 		AI_Movement_Track_Flush(kActorZuben);
-		Actor_Says(kActorMcCoy, 455, 18);
+		if (_vm->_cutContent) {
+			Actor_Start_Speech_Sample(kActorMcCoy, 455);
+		} else {
+			Actor_Says(kActorMcCoy, 455, 18);
+		}
 		Actor_Modify_Friendliness_To_Other(kActorZuben, kActorMcCoy, 5);
 		Actor_Set_Goal_Number(kActorZuben, kGoalZubenCT07Spared);
 		Game_Flag_Set(kFlagCT01ZubenGone);
@@ -457,7 +462,9 @@ bool AIScriptZuben::ShotAtAndHit() {
 		Actor_Clue_Lose(kActorZuben, kClueMcCoyLetZubenEscape);
 		Actor_Start_Speech_Sample(kActorMcCoy, 490);
 		if (_vm->_cutContent) {
-			Actor_Clue_Acquire(kActorMcCoy, kClueMcCoyShotZubenInTheBack, true, kActorZuben);
+			if (Player_Query_Current_Scene() == kSceneCT07) {
+				Actor_Clue_Acquire(kActorMcCoy, kClueMcCoyShotZubenInTheBack, true, kActorZuben);
+			}
 		}
 	}
 	if (Player_Query_Current_Scene() == kSceneCT07) {
@@ -505,18 +512,21 @@ void AIScriptZuben::Retired(int byActorId) {
 				if (Actor_Query_Goal_Number(kActorRunciter) < kGoalRunciterDead) {
 					Delay(1000);
 					Sound_Play(kSfxSMCAL3, 100, 0, 0, 50);
+					Actor_Set_Goal_Number(kActorRunciter, kGoalRunciterDead);
 				}
 			}
 			if (Game_Flag_Query(kFlagCrazylegsIsReplicant)) {
 				if (!Game_Flag_Query(kFlagCrazylegsDead)) {
 					Delay(1000);
 					Sound_Play(kSfxSMCAL3, 100, 0, 0, 50);
+					Game_Flag_Set(kFlagCrazylegsDead);
 				}
 			}
 			if (Game_Flag_Query(kFlagGrigorianIsReplicant)) {
 				if (!Game_Flag_Query(kFlagGrigorianDead)) {
 					Delay(1000);
 					Sound_Play(kSfxSMCAL3, 100, 0, 0, 50);
+					Game_Flag_Set(kFlagGrigorianDead);
 				}
 			}
 			Delay(2000);
@@ -608,9 +618,9 @@ bool AIScriptZuben::GoalChanged(int currentGoalNumber, int newGoalNumber) {
 					Actor_Set_Goal_Number(kActorGaff, kGoalGaffCT05Wait);
 					Actor_Clue_Acquire(kActorZuben, kClueMcCoyLetZubenEscape, true, -1);
 					Actor_Clue_Acquire(kActorLucy, kClueMcCoyLetZubenEscape, true, -1);
-					Actor_Modify_Friendliness_To_Other(kActorSteele, kActorMcCoy, -1);
-					Actor_Modify_Friendliness_To_Other(kActorGuzza, kActorMcCoy, -1);
-					Actor_Modify_Friendliness_To_Other(kActorClovis, kActorMcCoy, 1);
+					Actor_Modify_Friendliness_To_Other(kActorSteele, kActorMcCoy, -2);
+					Actor_Modify_Friendliness_To_Other(kActorGuzza, kActorMcCoy, -2);
+					Actor_Modify_Friendliness_To_Other(kActorClovis, kActorMcCoy, 2);
 				}
 				if (Random_Query(1, 3) < 3) {
 					Actor_Clue_Acquire(kActorZuben, kClueMcCoysDescription, true, -1);
@@ -670,7 +680,9 @@ bool AIScriptZuben::GoalChanged(int currentGoalNumber, int newGoalNumber) {
 			Actor_Modify_Friendliness_To_Other(kActorGuzza, kActorMcCoy, 2);
 			Actor_Modify_Friendliness_To_Other(kActorClovis, kActorMcCoy, -2);
 			Actor_Modify_Friendliness_To_Other(kActorGaff, kActorMcCoy, 2);	
+			Actor_Modify_Friendliness_To_Other(kActorHowieLee, kActorMcCoy, -2);
 			Game_Flag_Reset(kFlagMcCoyIsHelpingReplicants);
+			Game_Flag_Set(kFlagMcCoyRetiredReplicant);
 		}
 		Actor_Set_Goal_Number(kActorZuben, kGoalZubenGone);	
 		return false;

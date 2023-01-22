@@ -458,16 +458,17 @@ void AIScriptSebastian::dialogue() {
 		case 940: // EISENDULLER
 			Actor_Says(kActorMcCoy, 7080, 15);
 			Actor_Says(kActorSebastian, 310, 13); //56-0310.AUD	We're in different fields.
-			Actor_Says(kActorSebastian, 320, 16); //56-0320.AUD	I'm in basic bio-genetic design and he works on the practical application of Off-World physics.
 			if (_vm->_cutContent) {
 				if (Actor_Query_Friendliness_To_Other(kActorSebastian, kActorMcCoy) > 49) {
+					Actor_Says(kActorSebastian, 320, 16); //56-0320.AUD	I'm in basic bio-genetic design and he works on the practical application of Off-World physics.
 					Actor_Says(kActorSebastian, 340, 12); //56-0340.AUD	He seems to be a very nice man.
 					Actor_Says(kActorMcCoy, 7120, 14);
 					Actor_Says(kActorSebastian, 350, kAnimationModeTalk);
 				} else {
-					Delay(1000);
+					Actor_Says(kActorMcCoy, 4880, 13); //00-4880.AUD	Is that right?
 				}
 			} else {
+				Actor_Says(kActorSebastian, 320, 16); //56-0320.AUD	I'm in basic bio-genetic design and he works on the practical application of Off-World physics.
 				Actor_Says(kActorSebastian, 340, 12); //56-0340.AUD	He seems to be a very nice man.
 				Actor_Says(kActorMcCoy, 7120, 14);
 				Actor_Says(kActorSebastian, 350, kAnimationModeTalk);
@@ -476,9 +477,12 @@ void AIScriptSebastian::dialogue() {
 			Actor_Says(kActorSebastian, 360, 17);
 			Actor_Says_With_Pause(kActorMcCoy, 7130, 1.0f, kAnimationModeTalk);
 			if (_vm->_cutContent) {
-				if (Player_Query_Agenda() == kPlayerAgendaPolite) {
+				if (Player_Query_Agenda() != kPlayerAgendaSurly 
+				&& Player_Query_Agenda() != kPlayerAgendaErratic) {	
 					Actor_Says(kActorMcCoy, 7135, 18); //00-7135.AUD	And who do you think they'll start looking for next?
 				} 
+			} else {
+				Actor_Says(kActorMcCoy, 7135, 18); //00-7135.AUD	And who do you think they'll start looking for next?
 			}
 			break;
 
@@ -489,7 +493,7 @@ void AIScriptSebastian::dialogue() {
 			if (_vm->_cutContent) {
 				if (Actor_Query_Friendliness_To_Other(kActorSebastian, kActorMcCoy) > 49) {
 					Actor_Says(kActorSebastian, 390, 14); //56-0390.AUD	Dr. Tyrell and I play chess every week. I've only beaten him once.
-					if (Actor_Clue_Query(kActorMcCoy, kClueChessTable)) {
+					if (Game_Flag_Query(kFlagChessTableChecked)) {
 						Actor_Says(kActorMcCoy, 7140, kAnimationModeTalk); //00-7140.AUD	You're in the middle of a game right now?
 						Actor_Says(kActorSebastian, 400, 12);
 						Actor_Says(kActorMcCoy, 7145, 16); //00-7145.AUD	I don't have the patience for chess.
@@ -497,6 +501,7 @@ void AIScriptSebastian::dialogue() {
 						Actor_Says(kActorMcCoy, 7150, 17);
 						Actor_Says(kActorSebastian, 420, 13);
 						Actor_Says(kActorSebastian, 430, 14);
+						Actor_Clue_Acquire(kActorMcCoy, kClueChessTable, true, kActorSebastian);
 					}
 				}
 			} else {
@@ -633,12 +638,27 @@ void AIScriptSebastian::setMcCoyIsABladeRunner() {
 	}
 	Actor_Says(kActorMcCoy, 7205, 17); //00-7205.AUD	The guys who broke in might be Replicants.
 	Actor_Says(kActorSebastian, 580, 13);
-	Actor_Says_With_Pause(kActorMcCoy, 7210, 1.0f, 16); //00-7210.AUD	You worked on the Nexus-6 series, didn't you?
-	Actor_Says(kActorSebastian, 590, 12);
-	Actor_Says(kActorMcCoy, 7215, 19); //00-7215.AUD	Would you say that the Sixes are smarter than the old Fours and Fives?
-	Actor_Says(kActorSebastian, 600, 14);
-	Actor_Says(kActorMcCoy, 7220, 13); //00-7220.AUD	So, maybe they want to learn more about themselves.
-	Actor_Says_With_Pause(kActorMcCoy, 7225, 0.80f, 14); //00-7225.AUD	Maybe they want to pick your brain about their brains.
+	if (_vm->_cutContent) {
+		if (Player_Query_Agenda() == kPlayerAgendaSurly 
+		|| Player_Query_Agenda() == kPlayerAgendaErratic) {
+			Actor_Says(kActorMcCoy, 7975, 18); //00-7975.AUD	You tell me.
+			Delay(2000);
+		} else {
+			Actor_Says_With_Pause(kActorMcCoy, 7210, 1.0f, 16); //00-7210.AUD	You worked on the Nexus-6 series, didn't you?
+			Actor_Says(kActorSebastian, 590, 12);
+			Actor_Says(kActorMcCoy, 7215, 19); //00-7215.AUD	Would you say that the Sixes are smarter than the old Fours and Fives?
+			Actor_Says(kActorSebastian, 600, 14);
+			Actor_Says(kActorMcCoy, 7220, 13); //00-7220.AUD	So, maybe they want to learn more about themselves.
+			Actor_Says_With_Pause(kActorMcCoy, 7225, 0.80f, 14); //00-7225.AUD	Maybe they want to pick your brain about their brains.
+		}
+	} else {
+		Actor_Says_With_Pause(kActorMcCoy, 7210, 1.0f, 16); //00-7210.AUD	You worked on the Nexus-6 series, didn't you?
+		Actor_Says(kActorSebastian, 590, 12);
+		Actor_Says(kActorMcCoy, 7215, 19); //00-7215.AUD	Would you say that the Sixes are smarter than the old Fours and Fives?
+		Actor_Says(kActorSebastian, 600, 14);
+		Actor_Says(kActorMcCoy, 7220, 13); //00-7220.AUD	So, maybe they want to learn more about themselves.
+		Actor_Says_With_Pause(kActorMcCoy, 7225, 0.80f, 14); //00-7225.AUD	Maybe they want to pick your brain about their brains.
+	}
 	Actor_Says(kActorSebastian, 610, 15);
 	if (_vm->_cutContent) {
 		Delay(1000);

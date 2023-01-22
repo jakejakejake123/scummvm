@@ -96,16 +96,17 @@ bool SceneScriptMA01::ClickedOnActor(int actorId) {
 	//Added in some code so you can find Zubens photo on his body when you retire him on McCoys roof.
 	if (_vm->_cutContent) {
 		if (actorId == kActorZuben) {
-			if (Actor_Clue_Query(kActorMcCoy, kClueMcCoyRetiredZuben)) {
+			if (Actor_Query_Goal_Number(kActorZuben) > kGoalZubenGone) {
 				Loop_Actor_Walk_To_Actor(kActorMcCoy, kActorZuben, 24, true, false);
 				Actor_Face_Actor(kActorMcCoy, kActorZuben, true);
-				if (!Game_Flag_Query(kFlagCT06ZubenPhoto)) {
+				if (!Actor_Clue_Query(kActorMcCoy, kClueZubenSquadPhoto)) {
 					Actor_Clue_Acquire(kActorMcCoy, kClueZubenSquadPhoto, true, kActorZuben);
-					Item_Pickup_Spin_Effect(kModelAnimationPhoto, 340, 369);
+					Item_Pickup_Spin_Effect_From_Actor(kModelAnimationPhoto, kActorZuben, 0, 0);
 					Actor_Voice_Over(350, kActorVoiceOver);
 					Actor_Voice_Over(360, kActorVoiceOver);
 					Actor_Voice_Over(370, kActorVoiceOver);
-					if (Player_Query_Agenda() == kPlayerAgendaPolite) {
+					if (Player_Query_Agenda() != kPlayerAgendaSurly 
+					&& Player_Query_Agenda() != kPlayerAgendaErratic) {
 						Actor_Voice_Over(380, kActorVoiceOver); //99-0380.AUD	The poor guy kind of reminded me of one of those Buffalo Soldiers...
 						Actor_Voice_Over(390, kActorVoiceOver);
 						Actor_Voice_Over(400, kActorVoiceOver);
@@ -113,11 +114,13 @@ bool SceneScriptMA01::ClickedOnActor(int actorId) {
 					}
 					Game_Flag_Set(kFlagCT06ZubenPhoto);
 				} else { 
-					if (Player_Query_Agenda() != kPlayerAgendaSurly 
-					|| Player_Query_Agenda() != kPlayerAgendaErratic) {
+					if (Player_Query_Agenda() == kPlayerAgendaSurly 
+					|| Player_Query_Agenda() == kPlayerAgendaErratic) {
+						Actor_Says(kActorMcCoy, 8590, 18); //00-8590.AUD	Not the talkative type
+					} else if (Player_Query_Agenda() == kPlayerAgendaPolite) {	
 						Actor_Says(kActorMcCoy, 8630, 12);  // What a waste
 					} else {
-						Actor_Says(kActorMcCoy, 8665, 13); //00-8665.AUD	Disgusting.
+						Actor_Says(kActorMcCoy, 8665, 13); //00-8665.AUD	Disgusting.	
 					}
 				}
 			}
@@ -163,7 +166,7 @@ bool SceneScriptMA01::ClickedOnExit(int exitId) {
 							Player_Set_Combat_Mode(false);
 							Actor_Face_Actor(kActorMcCoy, kActorZuben, true);
 							Actor_Face_Actor(kActorZuben, kActorMcCoy, true);
-							Actor_Says(kActorMcCoy, 455, -1); //00-0455.AUD	Relax. Nobody's gonna get retired. Okay?
+							Actor_Start_Speech_Sample(kActorMcCoy, 455); //00-0455.AUD	Relax. Nobody's gonna get retired. Okay?
 							Actor_Says(kActorZuben, 100, 19);
 							Actor_Says(kActorMcCoy, 470, 12); //00-0470.AUD	Just talk. That's all.
 							Actor_Says(kActorZuben, 110, 18);
@@ -172,33 +175,14 @@ bool SceneScriptMA01::ClickedOnExit(int exitId) {
 							Actor_Says(kActorMcCoy, 480, 16);
 							Actor_Says(kActorZuben, 130, 17);
 							Actor_Says(kActorMcCoy, 485, 14);
-							if (Player_Query_Agenda() == kPlayerAgendaSurly 
-							|| Player_Query_Agenda() == kPlayerAgendaErratic) {
-								Loop_Actor_Walk_To_XYZ(kActorZuben, 950.09f, 0.93f, 170.97f, 0, false, true, false);
-								Player_Set_Combat_Mode(true);
-								Delay(1000);
-								Actor_Face_Actor(kActorMcCoy, kActorZuben, true);
-								Actor_Start_Speech_Sample(kActorMcCoy, 490); //00-0490.AUD	Suck on this, skin-job!
-								Sound_Play(kSfxGUNH1A, 100, 0, 0, 50);
-								Actor_Change_Animation_Mode(kActorMcCoy, 6);
-								Actor_Modify_Friendliness_To_Other(kActorSteele, kActorMcCoy, 1);
-								Actor_Modify_Friendliness_To_Other(kActorGuzza, kActorMcCoy, 1);
-								Actor_Modify_Friendliness_To_Other(kActorClovis, kActorMcCoy, -1);
-								Actor_Clue_Acquire(kActorZuben, kClueMcCoyShotZubenInTheBack, true, -1);
-								Actor_Clue_Lose(kActorZuben, kClueMcCoyLetZubenEscape);
-								Actor_Clue_Acquire(kActorMcCoy, kClueMcCoyShotZubenInTheBack, true, kActorZuben);
-								Game_Flag_Reset(kFlagMcCoyIsHelpingReplicants);
-								Game_Flag_Set(kFlagZubenEncounter);
-							} else {
-								Loop_Actor_Walk_To_XYZ(kActorZuben, 950.09f, 0.93f, 170.97f, 0, false, true, false);
-								Game_Flag_Set(kFlagZubenSpared);
-								Game_Flag_Set(kFlagZubenEncounter);
-								Actor_Clue_Acquire(kActorZuben, kClueMcCoyLetZubenEscape, true, -1);
-								Actor_Clue_Acquire(kActorLucy, kClueMcCoyLetZubenEscape, true, -1);
-								Actor_Modify_Friendliness_To_Other(kActorSteele, kActorMcCoy, -1);
-								Actor_Modify_Friendliness_To_Other(kActorGuzza, kActorMcCoy, -1);
-								Actor_Modify_Friendliness_To_Other(kActorClovis, kActorMcCoy, 1);
-							}
+							Loop_Actor_Walk_To_XYZ(kActorZuben, 950.09f, 0.93f, 170.97f, 0, false, true, false);
+							Game_Flag_Set(kFlagZubenSpared);
+							Game_Flag_Set(kFlagZubenEncounter);
+							Actor_Clue_Acquire(kActorZuben, kClueMcCoyLetZubenEscape, true, -1);
+							Actor_Clue_Acquire(kActorLucy, kClueMcCoyLetZubenEscape, true, -1);
+							Actor_Modify_Friendliness_To_Other(kActorSteele, kActorMcCoy, -1);
+							Actor_Modify_Friendliness_To_Other(kActorGuzza, kActorMcCoy, -1);
+							Actor_Modify_Friendliness_To_Other(kActorClovis, kActorMcCoy, 1);
 							if (Random_Query(1, 3) < 3) {
 								Actor_Clue_Acquire(kActorZuben, kClueMcCoysDescription, true, -1);
 							}

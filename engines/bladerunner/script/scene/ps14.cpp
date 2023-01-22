@@ -175,9 +175,9 @@ void SceneScriptPS14::PlayerWalkedIn() {
 				Actor_Says(kActorMcCoy, 715, 23); //00-0715.AUD	It's all in there!
 				Actor_Says(kActorOfficerGrayford, 30, kAnimationModeTalk); //24-0030.AUD	Let’s get the bomb squad out here!
 				//The Crystal will vouch for me line will only play if you are on good terms with Crystal meaning not having Lucy and Dektoras global affection goals activated.	 
-				if (Global_Variable_Query(kVariableAffectionTowards) != kAffectionTowardsDektora 	 
-				&& Global_Variable_Query(kVariableAffectionTowards) != kAffectionTowardsLucy) {
-					if (Actor_Query_Friendliness_To_Other(kActorSteele, kActorMcCoy) > 57) {
+				if (Global_Variable_Query(kVariableAffectionTowards) == kAffectionTowardsDektora 	 
+				|| Global_Variable_Query(kVariableAffectionTowards) == kAffectionTowardsLucy) {
+					if (Actor_Query_Friendliness_To_Other(kActorSteele, kActorMcCoy) > 59) {
 						Actor_Says(kActorMcCoy, 720, kAnimationModeTalk); //00-0720.AUD	Talk to Crystal Steele, she'll vouch for me.
 					}
 				}

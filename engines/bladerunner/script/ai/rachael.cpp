@@ -492,8 +492,7 @@ void AIScriptRachael::dialogue_agenda1() {
 			}
 			Actor_Says(kActorMcCoy, 2840, 12);                      // MaybeTheyVeGottenARawDeal
 			Delay(1000);
-		}
-		if (!Game_Flag_Query(kFlagMcCoyIsHelpingReplicants)) {
+		} else {
 			Actor_Says(kActorMcCoy, 2780, 17);                      // ReplicantsArentPeople
 			Delay(1000);
 		}
@@ -666,7 +665,7 @@ void AIScriptRachael::dialogue_act4() {
 			} else {
 				Actor_Says(kActorMcCoy, 2925, 15);   //  NotAReplicantGoddamnit
 			}
-			Delay(1000);
+			Delay(2000);
 			if (Actor_Query_Friendliness_To_Other(kActorRachael, kActorMcCoy) > 49) {
 				Actor_Says(kActorMcCoy, 2930, 14);   //  MaybeYouCanHelpMeYouAreTyrellsNiece
 				Actor_Says(kActorRachael, 460, 13);  //  Why not take that V-K test

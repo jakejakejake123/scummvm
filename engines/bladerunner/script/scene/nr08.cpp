@@ -232,8 +232,7 @@ void SceneScriptNR08::PlayerWalkedIn() {
 		Actor_Says(kActorSteele, 1640, 12);
 		if (!Game_Flag_Query(kFlagDirectorsCut)) {
 			if (_vm->_cutContent) {
-				if (Player_Query_Agenda() == kPlayerAgendaSurly 
-				|| Player_Query_Agenda() == kPlayerAgendaErratic) {
+				if (Player_Query_Agenda() == kPlayerAgendaPolite) {
 					Delay(1000);
 					Actor_Says(kActorMcCoy, 7815, 13); //00-7815.AUD	No.
 					Delay(1000);

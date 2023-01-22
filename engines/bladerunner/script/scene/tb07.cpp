@@ -79,6 +79,10 @@ bool SceneScriptTB07::ClickedOnItem(int itemId, bool a2) {
 	if (!Loop_Actor_Walk_To_Item(kActorMcCoy, itemId, 36, true, false)) {
 		Actor_Face_Item(kActorMcCoy, itemId, true);
 		if (itemId == kItemDNATyrell) {
+			if (_vm->_cutContent) {
+				Actor_Change_Animation_Mode(kActorMcCoy, 23);
+				Delay(2000);
+			}
 			Item_Pickup_Spin_Effect(kModelAnimationDNADataDisc, 331, 296);
 			if (_vm->_cutContent) {
 				Actor_Clue_Acquire(kActorMcCoy, kClueDNATyrell, false, kActorTyrell);	
@@ -87,9 +91,10 @@ bool SceneScriptTB07::ClickedOnItem(int itemId, bool a2) {
 			}
 			// Added in the incept shot Roy clue. You pick it up when you pick up the Tyrell DNA data.
 			if (_vm->_cutContent) {
-				Delay(1500);
-				Item_Pickup_Spin_Effect(kModelAnimationPhoto, 331, 296);
 				Delay(1000);
+				Actor_Change_Animation_Mode(kActorMcCoy, 23);
+				Delay(2000);
+				Item_Pickup_Spin_Effect(kModelAnimationPhoto, 331, 296);
 				Actor_Voice_Over(4080, kActorVoiceOver);
 				Actor_Clue_Acquire(kActorMcCoy, kClueInceptShotRoy, true, kActorTyrell);
 				Scene_Exits_Enable();
@@ -262,8 +267,7 @@ void SceneScriptTB07::McCoyTalkWithRachaelAndTyrell() {
 			Loop_Actor_Walk_To_XYZ(kActorRachael, -60.15f, 12.0f, 60.84f, 0, false, false, false);
 			Actor_Face_Actor(kActorRachael, kActorMcCoy, true);
 			Actor_Face_Actor(kActorMcCoy, kActorRachael, true);
-			if (Player_Query_Agenda() == kPlayerAgendaSurly 
-			|| Player_Query_Agenda() == kPlayerAgendaErratic) {
+			if (Player_Query_Agenda() != kPlayerAgendaPolite) {
 				Actor_Says(kActorMcCoy, 5330, 14);
 				Actor_Says(kActorRachael, 510, 12); //57-0510.AUD	Dr. Tyrell.
 				Actor_Says(kActorMcCoy, 5335, 16);
@@ -337,9 +341,10 @@ void SceneScriptTB07::McCoyTalkWithRachaelAndTyrell() {
 				Actor_Says(kActorRachael, 620, 18); //57-0620.AUD	Are we here to discuss corporate policy or Marcus Eisenduller's murder?
 				Actor_Says_With_Pause(kActorMcCoy, 5385, 2.0f, 12); //00-5385.AUD	A little of both.
 			} else {
-				Delay(1000);
+				Actor_Says(kActorRachael, 290, 14);                 // ThatsRight
 			}
 		}
+		Delay(1000);
 	} else {
 		Actor_Says(kActorMcCoy, 5375, 18); //00-5375.AUD	I thought Replicants were safe! “More human than human”.
 		Actor_Says(kActorMcCoy, 5380, 19); //00-5380.AUD	Isn't Dr. Tyrell pushing to make it legal to use Rep labor to clean up the Kipple?
@@ -356,10 +361,8 @@ void SceneScriptTB07::McCoyTalkWithRachaelAndTyrell() {
 			if (!Game_Flag_Query(kFlagMcCoyIsHelpingReplicants)) {
 				Actor_Says(kActorMcCoy, 5405, kAnimationModeTalk); //00-5405.AUD	The public gets nervous when your pets wander around the city without a leash.
 				Actor_Modify_Friendliness_To_Other(kActorRachael, kActorMcCoy, -2);
-				if (Actor_Query_Friendliness_To_Other(kActorRachael, kActorMcCoy) < 50) {
-					Actor_Says(kActorRachael, 640, 12); //57-0640.AUD	Replicants aren't pets.
-					Actor_Says(kActorMcCoy, 5410, 16); //00-5410.AUD	Right. Pets live longer and don't go around killing people.
-				}
+				Actor_Says(kActorRachael, 640, 12); //57-0640.AUD	Replicants aren't pets.
+				Actor_Says(kActorMcCoy, 5410, 16); //00-5410.AUD	Right. Pets live longer and don't go around killing people.
 			}
 		}
 	} else {
@@ -373,12 +376,26 @@ void SceneScriptTB07::McCoyTalkWithRachaelAndTyrell() {
 	}
 	Actor_Says(kActorRachael, 650, 15); //57-0650.AUD	They-- There are safeguards in the design.
 	Actor_Says_With_Pause(kActorMcCoy, 5415, 1.0f, 17); //00-5415.AUD	Yeah, I've seen the data. Implanted memories. A four-year lifespan.
-	Actor_Says(kActorMcCoy, 5420, 14); //00-5420.AUD	I'd probably get a little crazy too but I don't think I'd start killing people.
-	if (_vm->_cutContent) {
-		if (Actor_Query_Friendliness_To_Other(kActorRachael, kActorMcCoy) < 50) {
-			Actor_Says(kActorRachael, 660, 15);
+	if (_vm->_cutContent) {	
+		if (!Game_Flag_Query(kFlagMcCoyIsHelpingReplicants)) {
+			if (Player_Query_Agenda() == kPlayerAgendaSurly 
+			|| Player_Query_Agenda() == kPlayerAgendaErratic) {	
+				Actor_Says(kActorMcCoy, 8420, 18); //00-8420.AUD	Must be rough.
+				Actor_Modify_Friendliness_To_Other(kActorRachael, kActorMcCoy, -2);
+				Delay(1000);
+			} else {
+				Actor_Says(kActorMcCoy, 5420, 14); //00-5420.AUD	I'd probably get a little crazy too but I don't think I'd start killing people.
+				if (Actor_Query_Friendliness_To_Other(kActorRachael, kActorMcCoy) < 50) {
+					Actor_Says(kActorRachael, 660, 15);
+				}
+			}
+		} else {
+			Actor_Says(kActorMcCoy, 8365, 16); //00-8365.AUD	How do you feel about that?
+			Actor_Modify_Friendliness_To_Other(kActorRachael, kActorMcCoy, 2);
+			Delay(1000);
 		}
 	} else {
+		Actor_Says(kActorMcCoy, 5420, 14); //00-5420.AUD	I'd probably get a little crazy too but I don't think I'd start killing people.
 		Actor_Says(kActorRachael, 660, 15);
 	}
 	Actor_Put_In_Set(kActorTyrell, kSetTB07);
@@ -405,6 +422,7 @@ void SceneScriptTB07::McCoyTalkWithRachaelAndTyrell() {
 		if (!Game_Flag_Query(kFlagMcCoyIsHelpingReplicants)) {
 			Actor_Says(kActorMcCoy, 5430, 17); //00-5430.AUD	Not really, no.
 		} else {
+			Actor_Says(kActorMcCoy, 1025, 13); //00-1025.AUD	Absolutely.
 			Delay(1000);
 		}
 	} else {
@@ -416,7 +434,8 @@ void SceneScriptTB07::McCoyTalkWithRachaelAndTyrell() {
 	Actor_Says(kActorMcCoy, 5440, 14); //00-5440.AUD	They want more life.
 	Actor_Says(kActorTyrell, 70, 13);
 	if (_vm->_cutContent) {
-		if (Player_Query_Agenda() == kPlayerAgendaPolite) {
+		if (Player_Query_Agenda() != kPlayerAgendaSurly 
+		&& Player_Query_Agenda() != kPlayerAgendaErratic) {	
 			Actor_Says(kActorMcCoy, 5445, 15); //00-5445.AUD	They're gonna come for you. Just like they came for Eisenduller.
 			Actor_Says_With_Pause(kActorTyrell, 80, 1.0f, 12);
 		}
@@ -425,8 +444,17 @@ void SceneScriptTB07::McCoyTalkWithRachaelAndTyrell() {
 		Actor_Says_With_Pause(kActorTyrell, 80, 1.0f, 12);
 	}
 	Actor_Says(kActorTyrell, 90, 15);
-	Actor_Says_With_Pause(kActorMcCoy, 5450, 1.0f, 15);
-	Actor_Says(kActorMcCoy, 5455, 12);
+	if (_vm->_cutContent) {
+		if (Game_Flag_Query(kFlagMcCoyIsHelpingReplicants)) {
+			Actor_Says(kActorMcCoy, 5705, 13); //00-5705.AUD	Uh-huh.
+		} else {
+			Actor_Says_With_Pause(kActorMcCoy, 5450, 1.0f, 15);
+			Actor_Says(kActorMcCoy, 5455, 12); //00-5455.AUD	Yeah, maybe.
+		}
+	} else {
+		Actor_Says_With_Pause(kActorMcCoy, 5450, 1.0f, 15);
+		Actor_Says(kActorMcCoy, 5455, 12); //00-5455.AUD	Yeah, maybe.
+	}
 	Actor_Says(kActorTyrell, 100, 14);
 	// Added in the moonbus 2 clue. Essentially it is the dialogue where Rachael and McCoy talk about the moonbus hijacking.
 	if (_vm->_cutContent) {

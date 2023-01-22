@@ -85,7 +85,7 @@ bool SceneScriptPS15::ClickedOnActor(int actorId) {
 						Actor_Says(kActorSergeantWalls, 180, 23); // 34-0180.AUD	Yeah, dig this. It's been doing the circuits around the station
 						Actor_Change_Animation_Mode(kActorMcCoy, 23);
 						Delay (2000);
-						Item_Pickup_Spin_Effect(kModelAnimationWeaponsOrderForm, 211, 239);
+						Item_Pickup_Spin_Effect_From_Actor(kModelAnimationWeaponsOrderForm, kActorMcCoy, 0, 0);
 						Actor_Clue_Acquire(kActorMcCoy, kClueWeaponsOrderForm, true, kActorSergeantWalls);
 						if (Game_Flag_Query(kFlagPS04WeaponsOrderForm)) {
 							Item_Remove_From_World(kItemWeaponsOrderForm);
@@ -96,11 +96,9 @@ bool SceneScriptPS15::ClickedOnActor(int actorId) {
 				} else {
 					Actor_Says(kActorSergeantWalls, 130, 12); //34-0130.AUD	Why? You got a pressing need to rummage through my private files?
 				}
-				// Made it so McCoy only insults Walls if he is surly or erratic.
 				if (_vm->_cutContent) {
 					if (Game_Flag_Query(kFlagWallsUpset)) {
-						if (Player_Query_Agenda() == kPlayerAgendaSurly 
-						|| Player_Query_Agenda() == kPlayerAgendaErratic) {
+						if (Player_Query_Agenda() != kPlayerAgendaPolite) {
 							Actor_Says(kActorMcCoy, 4475, 17); //00-4475.AUD	Yeah. I forgot you were keeping your lacy underthings in there.
 						}
 					}
@@ -119,11 +117,13 @@ bool SceneScriptPS15::ClickedOnActor(int actorId) {
 				if (_vm->_cutContent) {
 					// If McCoy is on bad terms with Walls he will aggressively question Walls about why he didn't mention the assault teams losing their weapons before.
 					if (Game_Flag_Query(kFlagWallsUpset)) {
-						if (Player_Query_Agenda() == kPlayerAgendaSurly 
-						|| Player_Query_Agenda() == kPlayerAgendaErratic) {
+						if (Player_Query_Agenda() != kPlayerAgendaPolite) {
 							Actor_Says(kActorMcCoy, 3725, 18); //00-3725.AUD	Is that right? Any reason you didn’t tell me that right off?
 							Actor_Says(kActorSergeantWalls, 220, 16); // 34-0220.  AUD	I didn't think you needed to hear about this.
 							Actor_Says(kActorMcCoy, 8519, 14); // 00-8519.AUD	What do you say we dish each other the straight goods.
+							Actor_Says(kActorSergeantWalls, 200, 13); //34-0200.AUD	Come back at me when you got something worthwhile, McCoy.	
+						} else {
+							Actor_Says(kActorMcCoy, 6985, 16); //00-6985.AUD	Got the straight scoop for me or what?
 							Actor_Says(kActorSergeantWalls, 200, 13); //34-0200.AUD	Come back at me when you got something worthwhile, McCoy.	
 						}
 					}
@@ -290,6 +290,9 @@ void SceneScriptPS15::ActorChangedGoal(int actorId, int newGoal, int oldGoal, bo
 }
 
 void SceneScriptPS15::PlayerWalkedIn() {
+	if (_vm->_cutContent) {
+		Player_Set_Combat_Mode(false);
+	}
 	Loop_Actor_Walk_To_XYZ(kActorMcCoy, -326.93f, -113.43f, 101.42f, 0, false, false, false);
 	if (!Game_Flag_Query(kFlagPS15Entered)) {
 		Actor_Face_Actor(kActorMcCoy, kActorSergeantWalls, true);
@@ -307,8 +310,8 @@ void SceneScriptPS15::PlayerWalkedIn() {
 			Actor_Says(kActorSergeantWalls, 180, 23); //34-0180.AUD	Yeah, dig this. It's been doing the circuits around the station
 			Actor_Change_Animation_Mode(kActorMcCoy, 23);
 			Delay(2000);
-			Item_Pickup_Spin_Effect(kModelAnimationRequisitionForm, 211, 239);
-			Actor_Says(kActorMcCoy, 8805, -1); //00-8805.AUD	A requisition form.
+			Item_Pickup_Spin_Effect_From_Actor(kModelAnimationRequisitionForm, kActorMcCoy, 0, 0);
+			Actor_Says(kActorMcCoy, 8805, 13); //00-8805.AUD	A requisition form.
 			Actor_Voice_Over(3930, kActorVoiceOver);
 			Actor_Voice_Over(3940, kActorVoiceOver);
 			Actor_Clue_Acquire(kActorMcCoy, kClueRequisitionForm, true, kActorSergeantWalls);
@@ -344,8 +347,8 @@ void SceneScriptPS15::PlayerWalkedIn() {
 					Actor_Says(kActorMcCoy, 3530, 13); //00-3530.AUD	No, sir.
 				}
 			}
-			Actor_Says(kActorSergeantWalls, 50, 12); //34-0050.AUD	And take it easy in there.
 		}
+		Actor_Says(kActorSergeantWalls, 50, 12); //34-0050.AUD	And take it easy in there.
 		Actor_Says(kActorSergeantWalls, 60, 13);
 		Actor_Says(kActorSergeantWalls, 70, 12);
 		Actor_Says(kActorMcCoy, 4460, 15);
@@ -377,7 +380,9 @@ void SceneScriptPS15::PlayerWalkedIn() {
 				Actor_Says(kActorMcCoy, 1970, 13); //00-1970.AUD	You should start thinking about the company you keep.
 				Actor_Says(kActorSergeantWalls, 200, 13); //34-0200.AUD	Come back at me when you got something worthwhile, McCoy.
 				Game_Flag_Set(kFlagWallsUpset); 
-			} 
+			} else {
+				Actor_Says(kActorMcCoy, 7835, 18); //00-7835.AUD	Is that so?
+			}
 		} else {
 			Actor_Says(kActorMcCoy, 4555, 14);
 		}

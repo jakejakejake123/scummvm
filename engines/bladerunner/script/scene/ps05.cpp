@@ -96,7 +96,9 @@ bool SceneScriptPS05::ClickedOn3DObject(const char *objectName, bool a2) {
 		// to cover for the reps, Guzza perhaps?
 		if (_vm->_cutContent) {
 			if (!Actor_Clue_Query (kActorMcCoy, kClueWantedPoster)) {
-				Item_Pickup_Spin_Effect(kModelAnimationGrigoriansNote, 513, 285);		
+				Ambient_Sounds_Play_Sound(kSfxGARBAGE, 45, 30, 30, 0);
+				Delay(1000);
+				Item_Pickup_Spin_Effect(kModelAnimationGrigoriansNote, 513, 285);	
 				Actor_Voice_Over(4080, kActorVoiceOver); //	99-4080.AUD	He looks familiar.		
 				Actor_Clue_Acquire(kActorMcCoy, kClueWantedPoster, true, -1); 		
 			} else {
@@ -188,10 +190,11 @@ void SceneScriptPS05::PlayerWalkedIn() {
 			Actor_Says(kActorMcCoy, 8525, -1); // 00-8525.AUD	Hmph.
 			Delay(1000);
 			Loop_Actor_Walk_To_XYZ(kActorMcCoy, 662.0f, 0.37f, -180.0f, 0, true, false, false);
+			Actor_Face_Object(kActorMcCoy, "ASHTRAY", true);
 			Actor_Voice_Over(1770, kActorVoiceOver);
 			Actor_Voice_Over(1780, kActorVoiceOver);
 			Actor_Voice_Over(1790, kActorVoiceOver);
-			Delay(2000);
+			Delay(1000);
 			Loop_Actor_Walk_To_Waypoint(kActorMcCoy, 2, 24, true, false);
 			Ambient_Sounds_Remove_All_Non_Looping_Sounds(true);
 			Ambient_Sounds_Remove_All_Looping_Sounds(1u);
@@ -283,7 +286,7 @@ void SceneScriptPS05::turnOnTV() {
 					ADQ_Add(kActorGuzza, 1570, kAnimationModeTalk);
 					ADQ_Add(kActorGuzza, 1580, kAnimationModeTalk);
 					ADQ_Add(kActorGuzza, 1590, kAnimationModeTalk);
-					Delay(1500);
+					ADQ_Add_Pause(1000);
 					ADQ_Add(kActorGuzza, 1600, kAnimationModeTalk);
 				}
 			} else {

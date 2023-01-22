@@ -2695,6 +2695,7 @@ void InitScript::Init_SDB() {
 		SDB_Add_Other_Clue(kSuspectIzo, kCluePhotoOfMcCoy2);
 		SDB_Add_Other_Clue(kSuspectIzo, kClueIzosFriend);	
 		SDB_Add_Whereabouts_Clue(kSuspectIzo, kClueHomelessManInterview1);
+		SDB_Add_Whereabouts_Clue(kSuspectIzo, kClueMoonbus1);
 		SDB_Add_Non_Replicant_Clue(kSuspectIzo, kClueCrystalRetiredIzo);
 		SDB_Add_Replicant_Clue(kSuspectIzo, kClueIzoIncept);
 		SDB_Add_Replicant_Clue(kSuspectIzo, kClueMcCoyHelpedIzoIzoIsAReplicant);

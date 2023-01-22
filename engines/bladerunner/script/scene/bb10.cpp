@@ -54,9 +54,6 @@ void SceneScriptBB10::InitializeScene() {
 	Ambient_Sounds_Add_Sound(kSfxBBMOVE3, 5,  50, 17, 27, -100, 100, -101, -101, 0, 0);
 	Ambient_Sounds_Add_Sound(kSfxHAUNT1,  5,  50, 17, 27, -100, 100, -101, -101, 0, 0);
 	Ambient_Sounds_Add_Sound(kSfxHAUNT2,  5,  50, 17, 27, -100, 100, -101, -101, 0, 0);
-	if (_vm->_cutContent) {
-		Music_Stop(3u);
-	}
 
 	if (!Game_Flag_Query(kFlagBB10Shelf1Available)) {
 		Scene_2D_Region_Add(0, 458, 99, 522, 133);
@@ -190,6 +187,9 @@ void SceneScriptBB10::ActorChangedGoal(int actorId, int newGoal, int oldGoal, bo
 
 void SceneScriptBB10::PlayerWalkedIn() {
 	if (Game_Flag_Query(kFlagBB09toBB10a)) {
+		if (_vm->_cutContent) {
+			Music_Stop(3u);
+		}
 		Player_Loses_Control();
 		Actor_Set_At_XYZ(kActorMcCoy, 214.01f, 66.84f, -349.62f, 462);
 		Loop_Actor_Walk_To_XYZ(kActorMcCoy, 206.01f, 66.84f, -261.62f, 0, false, false, false);

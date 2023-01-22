@@ -180,6 +180,12 @@ void SceneScriptUG19::PlayerWalkedIn() {
 						Actor_Says(kActorMcCoy, 3250, kAnimationModeTalk);
 						Actor_Says(kActorGordo, 530, 18);
 						Actor_Says(kActorMcCoy, 3300, 15);
+						Actor_Says(kActorGordo, 540, 13);
+						Actor_Says(kActorMcCoy, 3305, kAnimationModeTalk);
+						Actor_Says(kActorGordo, 550, 16); //02-0550.AUD	For crying out loud. Can’t a guy make a living in this fakakta place without being hassled?
+						Actor_Says(kActorMcCoy, 7815, 13); //00-7815.AUD	No.
+						Actor_Clue_Acquire(kActorMcCoy, kClueGordoConfession, true, kActorGordo);
+						Delay(1000);	
 					}
 					Actor_Clue_Acquire(kActorMcCoy, kClueGordoInterview2, true, kActorGordo);	
 					Actor_Says(kActorMcCoy, 6600, 13); //00-6600.AUD	Why the big deal over food?
@@ -244,7 +250,11 @@ void SceneScriptUG19::PlayerWalkedIn() {
 				Actor_Says(kActorMcCoy, 6575, 15); //00-6575.AUD	I need some answers, that’s why. I’m running out of time.
 				if (Game_Flag_Query(kFlagGordoIsReplicant)) {
 					Actor_Says(kActorGordo, 1230, 13); //02-1230.AUD	Join the club. 
-					Actor_Says(kActorMcCoy, 6580, 15); //00-6580.AUD	I ain’t a member of your club.	
+					if (!Game_Flag_Query(kFlagMcCoyIsHelpingReplicants)) {
+						Actor_Says(kActorMcCoy, 6580, 15); //00-6580.AUD	I ain’t a member of your club.	
+					} else {
+						Actor_Says(kActorMcCoy, 6985, 16); //00-6985.AUD	Got the straight scoop for me or what?
+					}
 				} 
 				Actor_Says(kActorGordo, 1240, 12); //02-1240.AUD	Easy, boss. I’m just saying… that we’re all like a bunch of kids’ tops.
 				Actor_Says(kActorGordo, 1250, 13); //02-1250.AUD	Been wound up with a string and sent off spinning in all directions.

@@ -119,6 +119,7 @@ bool SceneScriptHC04::ClickedOnActor(int actorId) {
 							if (Player_Query_Agenda() != kPlayerAgendaPolite) {	
 								Actor_Says(kActorMcCoy, 4560, 23); //00-4560.AUD	McCoy, LPD.
 								Actor_Says(kActorMcCoy, 8920, 14); //00-8920.AUD	I gotta ask you a question.
+								Actor_Says(kActorIsabella, 20, kAnimationModeTalk);
 							} else {
 								Actor_Says(kActorMcCoy, 1280, 23); //00-1280.AUD	McCoy, LPD. Mind if I ask you a couple of questions?
 								Actor_Says(kActorIsabella, 20, kAnimationModeTalk);
@@ -207,18 +208,18 @@ void SceneScriptHC04::dialogueWithIsabella() {
 			if (Global_Variable_Query(kVariableChapter) < 4) {
 				if (Actor_Clue_Query(kActorMcCoy, kClueBombingSuspect)
 				&& !Actor_Clue_Query(kActorMcCoy, kClueStolenCheese)) {
-					DM_Add_To_List_Never_Repeat_Once_Selected(350, 5, 6, 5); // DELIVERYMEN
+					DM_Add_To_List_Never_Repeat_Once_Selected(350, 4, 5, 6); // DELIVERYMEN
 				}
 			}
 		} else if (Actor_Clue_Query(kActorMcCoy, kClueBombingSuspect)) {
 			DM_Add_To_List_Never_Repeat_Once_Selected(340, 5, 6, 5); // SADIK PHOTO
-		} else if (!_vm->_cutContent && Actor_Clue_Query(kActorMcCoy, kClueTyrellSecurityPhoto)) {
+		} else if (Actor_Clue_Query(kActorMcCoy, kClueTyrellSecurityPhoto)) {
 			DM_Add_To_List_Never_Repeat_Once_Selected(350, 5, 6, 5); // DELIVERYMEN
 		}
 		if (_vm->_cutContent) {
 			if (Global_Variable_Query(kVariableChapter) < 4) {
 				if  (!Actor_Clue_Query(kActorMcCoy, kClueStolenCheese)) {
-					DM_Add_To_List_Never_Repeat_Once_Selected(360, 6, 4, 3); // MARCUS EISENDULLER
+					DM_Add_To_List_Never_Repeat_Once_Selected(360, 5, 6, 7); // MARCUS EISENDULLER
 				}
 			}		
 		} else {
@@ -229,7 +230,7 @@ void SceneScriptHC04::dialogueWithIsabella() {
 		if (Global_Variable_Query(kVariableChapter) < 4) {
 			if ( Actor_Clue_Query(kActorMcCoy, kClueCheese)
 			&& !Actor_Clue_Query(kActorMcCoy, kClueSpecialIngredient)) {
-				DM_Add_To_List_Never_Repeat_Once_Selected(370, 3, 4, 7); // CHEESE
+				DM_Add_To_List_Never_Repeat_Once_Selected(370, 3, 4, 5); // CHEESE
 			}
 		}
 	} else if ( Actor_Clue_Query(kActorMcCoy, kClueCheese)
@@ -240,7 +241,7 @@ void SceneScriptHC04::dialogueWithIsabella() {
 	if (_vm->_cutContent) {
 		if (Global_Variable_Query(kVariableChapter) < 4) {
 			if (Actor_Clue_Query(kActorMcCoy, kClueSpecialIngredient)) {
-				DM_Add_To_List_Never_Repeat_Once_Selected(380, 1, 5, 8); // MIA AND MURRAY INFO
+				DM_Add_To_List_Never_Repeat_Once_Selected(380, 6, 7, 8); // MIA AND MURRAY INFO
 			}
 		}
 	} else if (Actor_Clue_Query(kActorMcCoy, kClueSpecialIngredient)) {
@@ -288,22 +289,6 @@ void SceneScriptHC04::dialogueWithIsabella() {
 				Actor_Says(kActorMcCoy, 1290, kAnimationModeTalk); //00-1290.AUD	How many delivery men you got working here?
 				Delay(2000);
 				Actor_Says(kActorMcCoy, 8590, 13);  // Not the talkative type
-				if (Player_Query_Agenda() == kPlayerAgendaSurly
-				|| (Player_Query_Agenda() == kPlayerAgendaErratic)) {
-					Actor_Says(kActorMcCoy, 6985, 16); //00-6985.AUD	Got the straight scoop for me or what?
-					Delay(1000);
-					Actor_Says(kActorIsabella, 70, kAnimationModeTalk); //59-0070.AUD	Two. Sometimes three on the busy night.
-					Actor_Says(kActorIsabella, 80, kAnimationModeTalk); //59-0080.AUD	Usual two riders. They Chinese. Third guy part timer. He Moroccan I think.
-					Actor_Says(kActorMcCoy, 1340, kAnimationModeTalk); //00-1340.AUD	A big guy with dreadlocks?
-					Actor_Says(kActorIsabella, 90, kAnimationModeTalk); //59-0090.AUD	Oh no. Shaved head. Real short.
-					Actor_Says(kActorMcCoy, 1335, kAnimationModeTalk); //00-1335.AUD	Any Rastafarians?
-					Delay(500);
-					Actor_Says(kActorMcCoy, 1285, 23); //00-1285.AUD	This guy work for you?
-					Delay(2000);
-					Actor_Says(kActorMcCoy, 7995, kAnimationModeTalk); //00-7995.AUD	No?
-					Delay(2000);
-					Actor_Says(kActorMcCoy, 8525, 13); // 00-8525.AUD	Hmph.
-				}
 			}
 		} else {
 			Actor_Says(kActorMcCoy, 1290, kAnimationModeTalk);
@@ -325,21 +310,15 @@ void SceneScriptHC04::dialogueWithIsabella() {
 				Actor_Says(kActorIsabella, 110, kAnimationModeTalk);
 				Actor_Says(kActorMcCoy, 1355, kAnimationModeTalk);
 				Actor_Says(kActorIsabella, 130, kAnimationModeTalk);
-				Actor_Says(kActorMcCoy, 1360, kAnimationModeTalk); //00-1360.AUD	You may have a little trouble collecting. He's dead.
+				if (Player_Query_Agenda() == kPlayerAgendaPolite) {
+					Actor_Says(kActorMcCoy, 1360, kAnimationModeTalk); //00-1360.AUD	You may have a little trouble collecting. He's dead.
+				}
 			} else {
 				Actor_Says(kActorMcCoy, 1295, kAnimationModeTalk);
-				Actor_Says(kActorIsabella, 170, kAnimationModeTalk); //59-0170.AUD	Why you pick on Mama Isabella? I never do you no harm.
-				if (Player_Query_Agenda() == kPlayerAgendaSurly
-				|| (Player_Query_Agenda() == kPlayerAgendaErratic)) {
-					Actor_Says(kActorMcCoy, 8519, 14);//00-8519.AUD	What do you say we dish each other the straight goods.
-					Delay(1000);
-					Actor_Says(kActorIsabella, 100, kAnimationModeTalk);
-					Actor_Says(kActorMcCoy, 1350, kAnimationModeTalk);
-					Delay(2000);
-					Actor_Says(kActorMcCoy, 7995, kAnimationModeTalk); //00-7995.AUD	No?
-					Delay(2000);
-					Actor_Says(kActorMcCoy, 4595, 14); //00-4595.AUD	Stick around. I may not be finished with you.
-				}
+				Delay(2000);
+				Actor_Says(kActorMcCoy, 7995, kAnimationModeTalk); //00-7995.AUD	No?
+				Delay(2000);
+				Actor_Says(kActorMcCoy, 1535, 19);  //00-1535.AUD	Ah, never mind.
 			}
 		} else {
 			Actor_Says(kActorMcCoy, 1295, kAnimationModeTalk);
@@ -358,12 +337,14 @@ void SceneScriptHC04::dialogueWithIsabella() {
 		if (_vm->_cutContent) {
 			if (Player_Query_Agenda() == kPlayerAgendaPolite) {
 				Actor_Says(kActorMcCoy, 1365, kAnimationModeTalk);
-				Actor_Says(kActorIsabella, 150, kAnimationModeTalk);
 			} else if (Player_Query_Agenda() == kPlayerAgendaSurly
 			|| (Player_Query_Agenda() == kPlayerAgendaErratic)) {
-				Actor_Says(kActorMcCoy, 6995, 18); //00-6995.AUD	That's not what I heard. You wanna set the record straight?
-				Actor_Says(kActorIsabella, 150, kAnimationModeTalk);
+				Actor_Says(kActorMcCoy, 8519, 14);//00-8519.AUD	What do you say we dish each other the straight goods.
+				Actor_Modify_Friendliness_To_Other(kActorIsabella, kActorMcCoy, -2);
+			} else {
+				Actor_Says(kActorMcCoy, 3910, 16); //00-3910.AUD	You’re lying.
 			}
+			Actor_Says(kActorIsabella, 150, kAnimationModeTalk);
 		} else {
 			Actor_Says(kActorMcCoy, 1365, kAnimationModeTalk);
 			Actor_Says(kActorIsabella, 150, kAnimationModeTalk);
@@ -381,6 +362,7 @@ void SceneScriptHC04::dialogueWithIsabella() {
 			|| (Player_Query_Agenda() == kPlayerAgendaErratic)) {
 				Actor_Says(kActorMcCoy, 1370, kAnimationModeTalk);
 				Actor_Says(kActorIsabella, 170, kAnimationModeTalk); //59-0170.AUD	Why you pick on Mama Isabella? I never do you no harm.
+				Actor_Modify_Friendliness_To_Other(kActorIsabella, kActorMcCoy, -2);
 			}
 		} else {
 			Actor_Says(kActorMcCoy, 1370, kAnimationModeTalk);
@@ -395,6 +377,7 @@ void SceneScriptHC04::dialogueWithIsabella() {
 				Actor_Says(kActorMcCoy, 8519, 14); //00-8519.AUD	What do you say we dish each other the straight goods.
 				Actor_Says(kActorIsabella, 150, kAnimationModeTalk); //59-0150.AUD	This is a clean place man. Mama Isabella law-abiding soul.
 				Actor_Says(kActorMcCoy, 7835, 18); //00-7835.AUD	Is that so?
+				Delay (1000);
 				Actor_Says(kActorMcCoy, 1955, 14); //00-1955.AUD	We’re taking a little drive downtown.
 				Game_Flag_Set(kFlagIsabellaArrested);
 				Music_Stop(1u);
@@ -424,6 +407,7 @@ void SceneScriptHC04::dialogueWithIsabella() {
 				if (Player_Query_Agenda() == kPlayerAgendaPolite) {
 					Actor_Says(kActorMcCoy, 1395, kAnimationModeTalk); //00-1395.AUD	You're right. But I still think you ought to get yourself a different secret ingredient.
 					Actor_Says(kActorIsabella, 330, kAnimationModeTalk); //59-0330.AUD	You bet, mon. That cheese’s been nothing but trouble for Mama Isabella.
+					Actor_Modify_Friendliness_To_Other(kActorIsabella, kActorMcCoy, 2);
 				} else {
 					Actor_Says(kActorMcCoy, 7815, 13); //00-7815.AUD	No.
 				}
@@ -455,7 +439,6 @@ void SceneScriptHC04::dialogueWithIsabella() {
 			Actor_Face_Actor(kActorIsabella, kActorMcCoy, true);
 			if (Player_Query_Agenda() == kPlayerAgendaPolite) {
 				Actor_Says(kActorMcCoy, 1310, kAnimationModeTalk);
-				Actor_Modify_Friendliness_To_Other(kActorIsabella, kActorMcCoy, 2);
 			} else {
 				Actor_Says(kActorMcCoy, 8990, 12); //00-8990.AUD	What have you got there?
 			}
@@ -477,9 +460,8 @@ void SceneScriptHC04::dialogueWithIsabella() {
 				if (Player_Query_Agenda() == kPlayerAgendaSurly 
 				|| Player_Query_Agenda() == kPlayerAgendaErratic) {
 					Actor_Says(kActorMcCoy, 5685, 15); //00-5685.AUD	Triple-A you ain’t.
-					Actor_Says(kActorIsabella, 170, kAnimationModeTalk); //59-0170.AUD	Why you pick on Mama Isabella? I never do you no harm.
 					Actor_Modify_Friendliness_To_Other(kActorIsabella, kActorMcCoy, -2);
-					Delay(1000);
+					Actor_Says(kActorIsabella, 170, kAnimationModeTalk); //59-0170.AUD	Why you pick on Mama Isabella? I never do you no harm.		
 				}
 			} else {
 				Actor_Says(kActorMcCoy, 1320, kAnimationModeTalk); // 00-1320.AUD	Smells good. What is it?
@@ -490,9 +472,12 @@ void SceneScriptHC04::dialogueWithIsabella() {
 					if (Query_Difficulty_Level() != kGameDifficultyEasy) {
 						Global_Variable_Decrement(kVariableChinyen, 30);
 					}
-					Delay (1000);
-					Item_Pickup_Spin_Effect(kModelAnimationKingstonKitchenBox, 228, 224);
-					Actor_Says(kActorMcCoy, 1345, 12); //00-1345.AUD	Thanks.		
+					Actor_Change_Animation_Mode(kActorMcCoy, 23);
+					Actor_Change_Animation_Mode(kActorIsabella, 23);
+					Delay(1000);
+					Item_Pickup_Spin_Effect_From_Actor(kModelAnimationKingstonKitchenBox, kActorMcCoy, 0, 0);
+					Actor_Modify_Friendliness_To_Other(kActorIsabella, kActorMcCoy, 2);
+					Actor_Says(kActorMcCoy, 1345, 13); //00-1345.AUD	Thanks.		
 				} else {
 					Actor_Says(kActorMcCoy, 1325, 13); //00-1325.AUD/Uh... I'm not that hungry anyway.
 				}

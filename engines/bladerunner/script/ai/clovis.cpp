@@ -137,9 +137,11 @@ void AIScriptClovis::ClickedByPlayer() {
 		if (_vm->_cutContent) {
 			if (Player_Query_Agenda() == kPlayerAgendaSurly 
 			|| Player_Query_Agenda() == kPlayerAgendaErratic) {
-				Actor_Says(kActorMcCoy, 8665, 13); //00-8665.AUD	Disgusting.
-			} else {	
+				Actor_Says(kActorMcCoy, 8590, 18); //00-8590.AUD	Not the talkative type
+			} else if (Player_Query_Agenda() == kPlayerAgendaPolite) {	
 				Actor_Says(kActorMcCoy, 8630, 12);  // What a waste
+			} else {
+				Actor_Says(kActorMcCoy, 8665, 13); //00-8665.AUD	Disgusting.	
 			}
 		} else {
 			Actor_Says(kActorMcCoy, 8630, 16);
@@ -190,12 +192,16 @@ bool AIScriptClovis::ShotAtAndHit() {
 			} else {
 				ADQ_Add(kActorMcCoy, 2340, -1); //00-2340.AUD	I never did like poetry.
 			}
+			if (_vm->_cutContent) {
+				Game_Flag_Set(kFlagMcCoyRetiredClovis);
+			}
 			Music_Stop(3u);
 			// Made it so McCoy receives 200 chinyen when he retires Clovis.
 			if (_vm->_cutContent) {
 				if (Query_Difficulty_Level() != kGameDifficultyEasy) {
 					Global_Variable_Increment(kVariableChinyen, 200);
 				}
+				Actor_Modify_Friendliness_To_Other(kActorSteele, kActorMcCoy, 2);
 				Actor_Modify_Friendliness_To_Other(kActorGaff, kActorMcCoy, 2);
 			}
 			// Made it so the scene exits enable aftter Clovis dies.
@@ -212,6 +218,7 @@ bool AIScriptClovis::ShotAtAndHit() {
 				if (Query_Difficulty_Level() != kGameDifficultyEasy) {
 					Global_Variable_Increment(kVariableChinyen, 200);
 				}
+				Actor_Modify_Friendliness_To_Other(kActorSteele, kActorMcCoy, 2);
 				Actor_Modify_Friendliness_To_Other(kActorGaff, kActorMcCoy, 2);
 			}
 			// Made it so the scene exits enable aftter Clovis dies.
@@ -233,6 +240,7 @@ void AIScriptClovis::Retired(int byActorId) {
 			Actor_Set_Goal_Number(kActorClovis, kGoalClovisGone);
 			// Made it so McCoy receives 200 chinyen and friendliness with Gaff when he retires Clovis.
 			if (_vm->_cutContent) {
+				Game_Flag_Set(kFlagMcCoyRetiredClovis);
 				Actor_Modify_Friendliness_To_Other(kActorSteele, kActorMcCoy, 2);
 				Game_Flag_Reset(kFlagMcCoyIsHelpingReplicants);
 				if (Query_Difficulty_Level() != kGameDifficultyEasy) {
@@ -261,18 +269,21 @@ void AIScriptClovis::Retired(int byActorId) {
 						if (Actor_Query_Goal_Number(kActorRunciter) < kGoalRunciterDead) {
 							Delay(1000);
 							Sound_Play(kSfxSMCAL3, 100, 0, 0, 50);
+							Actor_Set_Goal_Number(kActorRunciter, kGoalRunciterDead);
 						}
 					}
 					if (Game_Flag_Query(kFlagCrazylegsIsReplicant)) {
 						if (!Game_Flag_Query(kFlagCrazylegsDead)) {
 							Delay(1000);
 							Sound_Play(kSfxSMCAL3, 100, 0, 0, 50);
+							Game_Flag_Set(kFlagCrazylegsDead);
 						}
 					}
 					if (Game_Flag_Query(kFlagGrigorianIsReplicant)) {
 						if (!Game_Flag_Query(kFlagGrigorianDead)) {
 							Delay(1000);
 							Sound_Play(kSfxSMCAL3, 100, 0, 0, 50);
+							Game_Flag_Set(kFlagGrigorianDead);
 						}
 					}
 					Delay(2000);
@@ -385,7 +396,8 @@ bool AIScriptClovis::GoalChanged(int currentGoalNumber, int newGoalNumber) {
 		Actor_Set_Goal_Number(kActorSadik, kGoalSadikBB11TalkWithClovis);
 		// Made it so Clovis only gets annoyed at Sadik for continually beating up McCoy if Clovis has high friendliness with McCoy.
 		if (_vm->_cutContent) {
-			if (Actor_Query_Friendliness_To_Other(kActorClovis, kActorMcCoy) > 50) {
+			if (Actor_Query_Friendliness_To_Other(kActorClovis, kActorMcCoy) > 50
+			&& !Game_Flag_Query(kFlagMcCoyRetiredReplicant)) {
 				Actor_Says(kActorClovis, 10, 15); //05-0010.AUD	Enough!
 			} else {
 				Delay(1000);
@@ -405,7 +417,8 @@ bool AIScriptClovis::GoalChanged(int currentGoalNumber, int newGoalNumber) {
 		Actor_Face_Actor(kActorSadik, kActorMcCoy, true);
 		// Made it so Clovis says that McCoy is not a problem but an opportunity if he has high friendliness with him.
 		if (_vm->_cutContent) {
-			if (Actor_Query_Friendliness_To_Other(kActorClovis, kActorMcCoy) > 50) {		
+			if (Actor_Query_Friendliness_To_Other(kActorClovis, kActorMcCoy) > 50 
+			&& !Game_Flag_Query(kFlagMcCoyRetiredReplicant)) {		
 				Actor_Says(kActorClovis, 50, 14); //05-0050.AUD	This one? He's not a problem. He's an opportunity.
 			}
 		} else {
@@ -417,7 +430,8 @@ bool AIScriptClovis::GoalChanged(int currentGoalNumber, int newGoalNumber) {
 	case kGoalClovisBB11TalkToMcCoy:
 		// Clovis' comment towards McCoy will be different depending on whether or not he has been helping or hunting replicants.
 		if (_vm->_cutContent) {
-			if (Actor_Query_Friendliness_To_Other(kActorClovis, kActorMcCoy) > 50) {
+			if (Actor_Query_Friendliness_To_Other(kActorClovis, kActorMcCoy) > 50
+			&& !Game_Flag_Query(kFlagMcCoyRetiredReplicant)) {
 				Actor_Says(kActorClovis, 60, 30); //05-0060.AUD	You're weak my friend. I expected so much more from you.
 			} else {
 				Actor_Says(kActorClovis, 550, 30); //05-0550.AUD	You’re making me very unhappy, old friend.
@@ -544,17 +558,12 @@ bool AIScriptClovis::GoalChanged(int currentGoalNumber, int newGoalNumber) {
 					Actor_Says(kActorMcCoy, 2240, kAnimationModeTalk); //00-2240.AUD	You bastard! She was an innocent!
 				}
 			} else {
-				Actor_Says(kActorMcCoy, 2255, kAnimationModeTalk);
+				Actor_Says(kActorMcCoy, 2255, kAnimationModeTalk); //00-2255.AUD	She was innocent, you bastard!
 			}
 			Actor_Says(kActorClovis, 120, kAnimationModeTalk); //05-0120.AUD	Can’t see it yet? You came down to Terra with us, McCoy.
-			if (_vm->_cutContent) {
-				Actor_Says(kActorMcCoy, 2260, kAnimationModeTalk); 
-			}
 			Actor_Says(kActorClovis, 130, kAnimationModeTalk); //05-0130.AUD	The police got a hold of you and Tyrell created your past.
-			Actor_Says(kActorClovis, 140, kAnimationModeTalk);
-			if (!_vm->_cutContent) {
-				Actor_Says(kActorMcCoy, 2260, kAnimationModeTalk); 
-			}
+			Actor_Says(kActorClovis, 140, kAnimationModeTalk); //05-0140.AUD	They made you the experiment.
+			Actor_Says(kActorMcCoy, 2260, kAnimationModeTalk); //00-2260.AUD	That line almost worked before, Clovis.
 			Actor_Says(kActorClovis, 150, kAnimationModeTalk); //05-0150.AUD	Come join me. Our final party before returning to the heavens.
 			if (_vm->_cutContent) {
 				Actor_Says(kActorClovis, 1330, kAnimationModeTalk); //05-1330.AUD	To the Heavens, brother. Off-World.
@@ -588,41 +597,74 @@ bool AIScriptClovis::GoalChanged(int currentGoalNumber, int newGoalNumber) {
 	case kGoalClovisKP07TalkToMcCoy:
 		// Made it so McCoy only says that all the reps are dead besides Clovis if that is the case.
 		if (_vm->_cutContent) {
-			if ((((((((((((Game_Flag_Query(kFlagGrigorianIsReplicant) 
-			&& Game_Flag_Query(kFlagGrigorianDead)))))))))))))  {
-				if (((((((((((Game_Flag_Query(kFlagZubenIsReplicant)
-				&& Actor_Query_Goal_Number(kActorZuben) == kGoalZubenGone))))))))))) {
-					if ((((((((((Actor_Query_Goal_Number(kActorLucy) == kGoalLucyGone)))))))))) {
-						if (((((((((Game_Flag_Query(kFlagDektoraIsReplicant) 
-						&& Actor_Query_Goal_Number(kActorDektora) == kGoalDektoraGone))))))))) {
-							if ((((((((Game_Flag_Query(kFlagIzoIsReplicant) 
-							&& Actor_Query_Goal_Number(kActorIzo) == kGoalIzoGone)))))))) {
-								if (((((((Game_Flag_Query(kFlagGordoIsReplicant) 
-								&& Actor_Query_Goal_Number(kActorGordo) == kGoalGordoGone))))))) {
-									if ((((((Game_Flag_Query(kFlagLutherLanceIsReplicant) 
-									&& Actor_Query_Goal_Number(kActorLuther) == kGoalLutherGone)))))) {
-										if (((((Game_Flag_Query(kFlagRunciterIsReplicant) 
-										&& Actor_Query_Goal_Number(kActorRunciter) == kGoalRunciterDead))))) {
-											if ((((Game_Flag_Query(kFlagBulletBobIsReplicant) 
-											&& Actor_Query_Goal_Number(kActorBulletBob) == kGoalBulletBobGone)))) {
-												if (((Game_Flag_Query(kFlagCrazylegsIsReplicant) 
-												&& Game_Flag_Query(kFlagCrazylegsDead))))  {
-													if ((Game_Flag_Query(kFlagEarlyQIsReplicant) 
-													&& Game_Flag_Query(kFlagEarlyQDead)))  {
-														if (Game_Flag_Query(kFlagHanoiIsReplicant) 
-														&& Game_Flag_Query(kFlagHanoiDead))  {
-															Actor_Says(kActorMcCoy, 2345, 16); //00-2345.AUD	They’re all dead. You’re the last one.
-														}
-													}
-												}
-											}
-										}
-									}
-								}
-							}
-						}
-					}
-				}
+			if (Game_Flag_Query(kFlagGrigorianIsReplicant)) {
+				Global_Variable_Increment(kVariableReplicantsSurvivorsAtMoonbus, 1);
+			} 
+			if (Game_Flag_Query(kFlagBulletBobIsReplicant)) {
+				Global_Variable_Increment(kVariableReplicantsSurvivorsAtMoonbus, 1);
+			}
+			if (Game_Flag_Query(kFlagCrazylegsIsReplicant)) {
+				Global_Variable_Increment(kVariableReplicantsSurvivorsAtMoonbus, 1);
+			}
+			if (Game_Flag_Query(kFlagDektoraIsReplicant)) {
+				Global_Variable_Increment(kVariableReplicantsSurvivorsAtMoonbus, 1);
+			} 
+			if (Game_Flag_Query(kFlagEarlyQIsReplicant)) {
+				Global_Variable_Increment(kVariableReplicantsSurvivorsAtMoonbus, 1);
+			}
+			if (Game_Flag_Query(kFlagGordoIsReplicant)) {
+				Global_Variable_Increment(kVariableReplicantsSurvivorsAtMoonbus, 1);
+			}
+			if (Game_Flag_Query(kFlagHanoiIsReplicant)) {
+				Global_Variable_Increment(kVariableReplicantsSurvivorsAtMoonbus, 1);
+			} 
+			if (Game_Flag_Query(kFlagIzoIsReplicant)) {
+				Global_Variable_Increment(kVariableReplicantsSurvivorsAtMoonbus, 1);
+			}
+			if (Game_Flag_Query(kFlagLucyIsReplicant)) {
+				Global_Variable_Increment(kVariableReplicantsSurvivorsAtMoonbus, 1);
+			}
+			if (Game_Flag_Query(kFlagLutherLanceIsReplicant)) {
+				Global_Variable_Increment(kVariableReplicantsSurvivorsAtMoonbus, 1);
+			} 
+			if (Game_Flag_Query(kFlagZubenIsReplicant)) {
+				Global_Variable_Increment(kVariableReplicantsSurvivorsAtMoonbus, 1);
+			}
+			if (Game_Flag_Query(kFlagGrigorianDead)) {
+				Global_Variable_Decrement(kVariableReplicantsSurvivorsAtMoonbus, 1);
+			}
+			if (Actor_Query_Goal_Number(kActorBulletBob) > kGoalBulletBobGone) {
+				Global_Variable_Decrement(kVariableReplicantsSurvivorsAtMoonbus, 1);
+			}
+			if (Game_Flag_Query(kFlagCrazylegsDead)) {
+				Global_Variable_Decrement(kVariableReplicantsSurvivorsAtMoonbus, 1);
+			}
+			if (Actor_Query_Goal_Number(kActorDektora) > kGoalDektoraGone) {
+				Global_Variable_Decrement(kVariableReplicantsSurvivorsAtMoonbus, 1);
+			}
+			if (Game_Flag_Query(kFlagEarlyQDead)) {
+				Global_Variable_Decrement(kVariableReplicantsSurvivorsAtMoonbus, 1);
+			}
+			if (Actor_Query_Goal_Number(kActorGordo) > kGoalGordoGone) {
+				Global_Variable_Decrement(kVariableReplicantsSurvivorsAtMoonbus, 1);
+			}
+			if (Game_Flag_Query(kFlagHanoiDead)) {
+				Global_Variable_Decrement(kVariableReplicantsSurvivorsAtMoonbus, 1);
+			}
+			if (Actor_Query_Goal_Number(kActorIzo) < 599) {
+				Global_Variable_Decrement(kVariableReplicantsSurvivorsAtMoonbus, 1);
+			}
+			if (Actor_Query_Goal_Number(kActorLucy) > kGoalLucyGone) {
+				Global_Variable_Decrement(kVariableReplicantsSurvivorsAtMoonbus, 1);
+			}
+			if (Actor_Query_Goal_Number(kActorLuther) > kGoalLutherGone) {
+				Global_Variable_Decrement(kVariableReplicantsSurvivorsAtMoonbus, 1);
+			}
+			if (Actor_Query_Goal_Number(kActorZuben) > kGoalZubenGone) {
+				Global_Variable_Decrement(kVariableReplicantsSurvivorsAtMoonbus, 1);
+			}
+			if (Global_Variable_Query(kVariableReplicantsSurvivorsAtMoonbus) == 0) {
+				Actor_Says(kActorMcCoy, 2345, 16); //00-2345.AUD	They’re all dead. You’re the last one.									
 			}
 		} else {
 			Actor_Says(kActorMcCoy, 2345, 16);
@@ -656,6 +698,8 @@ bool AIScriptClovis::GoalChanged(int currentGoalNumber, int newGoalNumber) {
 				Delay (2000);
 				Actor_Says(kActorMcCoy, 2305, 17); //00-2305.AUD	I’m sorry.
 			}
+		} else {
+			Actor_Says(kActorMcCoy, 2360, 18); //00-2360.AUD	I don’t need to.
 		}
 		Actor_Says(kActorClovis, 210, kAnimationModeTalk); //05-0210.AUD	(coughs) I thought I could cheat my destiny.
 		if (_vm->_cutContent) {
@@ -699,10 +743,10 @@ bool AIScriptClovis::GoalChanged(int currentGoalNumber, int newGoalNumber) {
 				Player_Loses_Control();
 				Delay(500);
 				Actor_Change_Animation_Mode(kActorClovis, 54);
-				Delay(1000);
+				Delay(2000);
 				Actor_Put_In_Set(kActorGaff, kSetKP07);
 				Actor_Set_At_XYZ(kActorGaff, -8.83f, -41.28f, 64.63f, 0);
-				Delay(1000);
+				Delay(2000);
 				Loop_Actor_Walk_To_XYZ(kActorGaff, 25.50f, -42.94f, -138.72f, 0, false, false, false);
 				Actor_Face_Actor(kActorGaff, kActorMcCoy, true);
 				Delay (2000);
@@ -758,26 +802,20 @@ bool AIScriptClovis::GoalChanged(int currentGoalNumber, int newGoalNumber) {
 			|| Actor_Clue_Query(kActorMcCoy, kClueDNALutherLance)
 			|| Actor_Clue_Query(kActorMcCoy, kClueDNAMarcus)) {
 				if (Actor_Query_Friendliness_To_Other(kActorClovis, kActorMcCoy) < 51) {
-					Actor_Says(kActorMcCoy, 8503, kAnimationModeTalk); //00-8503.AUD	I think I'll hold on to it for the moment.
-					if (!Actor_Clue_Query(kActorClovis, kClueMcCoyRetiredLucy) 
-					&& !Actor_Clue_Query(kActorClovis, kClueMcCoyRetiredDektora)) {
-						Actor_Says(kActorClovis, 1280, kAnimationModeTalk); //05-1280.AUD	You are here. That’s enough for now. Perhaps trust will come later.
-					} else {
-						Delay(1500);
-					}
+					Actor_Says(kActorMcCoy, 8503, kAnimationModeTalk); //00-8503.AUD	I think I'll hold on to it for the moment.now. Perhaps trust will come later.
+					Delay(1000);
 				} else {
-					Item_Pickup_Spin_Effect_From_Actor(kModelAnimationDNADataDisc, kActorClovis, 0, 0);
 					Actor_Change_Animation_Mode(kActorMcCoy, 23);
 					Actor_Change_Animation_Mode(kActorClovis, 23);
 					Delay(2000);
-					Actor_Says(kActorMcCoy, 8170, 13); //00-8170.AUD	There you go.
+					Item_Pickup_Spin_Effect_From_Actor(kModelAnimationDNADataDisc, kActorClovis, 0, 0);
+					Actor_Says(kActorMcCoy, 8170, kAnimationModeTalk); //00-8170.AUD	There you go.
 					Delay(1000);
 				}
 			} else {
 				Actor_Says(kActorMcCoy, 8502, kAnimationModeTalk); //00-8502.AUD	I hope it's enough.
-				if (!Actor_Clue_Query(kActorClovis, kClueMcCoyRetiredLucy) 
-				&& !Actor_Clue_Query(kActorClovis, kClueMcCoyRetiredDektora) 
-				&& Actor_Query_Friendliness_To_Other(kActorClovis, kActorMcCoy) > 50) {
+				if (Actor_Query_Friendliness_To_Other(kActorClovis, kActorMcCoy) > 50
+				&& !Game_Flag_Query(kFlagMcCoyRetiredReplicant)) {
 					Actor_Says(kActorClovis, 1270, kAnimationModeTalk); //05-1270.AUD	It will have to be.
 				} else {
 					Delay(1500);
@@ -799,8 +837,7 @@ bool AIScriptClovis::GoalChanged(int currentGoalNumber, int newGoalNumber) {
 			&& Actor_Clue_Query(kActorMcCoy, kClueDNALutherLance)
 			&& Actor_Clue_Query(kActorMcCoy, kClueDNAMarcus)) {
 				if (Actor_Query_Friendliness_To_Other(kActorClovis, kActorMcCoy) > 50
-				&& !Actor_Clue_Query(kActorClovis, kClueMcCoyRetiredLucy) 
-				&& !Actor_Clue_Query(kActorClovis, kClueMcCoyRetiredDektora)) {
+				&& !Game_Flag_Query(kFlagMcCoyRetiredReplicant)) {
 					Actor_Says(kActorClovis, 1300, kAnimationModeTalk); //05-1300.AUD	Yes. Of course, I could be hit by lightning tomorrow but with the information 
 				} else {
 					Delay(2000);
@@ -821,9 +858,8 @@ bool AIScriptClovis::GoalChanged(int currentGoalNumber, int newGoalNumber) {
 #endif // BLADERUNNER_ORIGINAL_BUGS
 		// Made it so Clovis will only call Ray a friend if he didn't retire Dektora or Lucy and has high friendliness with Clovis.
 		if (_vm->_cutContent) {
-			if (!Actor_Clue_Query(kActorClovis, kClueMcCoyRetiredLucy) 
-			&& !Actor_Clue_Query(kActorClovis, kClueMcCoyRetiredDektora) 
-			&& Actor_Query_Friendliness_To_Other(kActorClovis, kActorMcCoy) > 50) {
+			if (Actor_Query_Friendliness_To_Other(kActorClovis, kActorMcCoy) > 50
+			&& !Game_Flag_Query(kFlagMcCoyRetiredReplicant)) {
 				Actor_Says(kActorClovis, 1310, kAnimationModeTalk); //05-1310.AUD	He’s a hunter no more. He has come home. It’s time to go, my friend.
 			}
 		} else {
@@ -833,6 +869,7 @@ bool AIScriptClovis::GoalChanged(int currentGoalNumber, int newGoalNumber) {
 		if (_vm->_cutContent) {	
 			Actor_Says(kActorMcCoy, 8506, kAnimationModeTalk); //00-8506.AUD	Where are we headed?
 			Music_Stop(1u);
+			Delay(1000);
 		}
 		Ambient_Sounds_Remove_All_Non_Looping_Sounds(true);
 		Ambient_Sounds_Remove_All_Looping_Sounds(1u);

@@ -57,17 +57,16 @@ void SceneScriptKP03::InitializeScene() {
 		Game_Flag_Set(kFlagKP03BombActive);
 	}
 // Alltered code so Crystal will appear in the set based on the new parameters.
-if (_vm->_cutContent) {
-	if ( Actor_Query_Goal_Number(kActorSteele) != kGoalSteeleGone
-	 && !Game_Flag_Query(kFlagKP03BombExploded)
-	 && !Game_Flag_Query(kFlagKP03BombDisarmed)) {
- 		if (!Game_Flag_Query(kFlagMcCoyRetiredHuman)
+	if (_vm->_cutContent) {
+		if (Actor_Query_Goal_Number(kActorSteele) != kGoalSteeleGone
+		&& !Game_Flag_Query(kFlagKP03BombExploded)
+		&& !Game_Flag_Query(kFlagKP03BombDisarmed)) {
+ 			if (!Game_Flag_Query(kFlagMcCoyRetiredHuman)
 			&& Global_Variable_Query(kVariableAffectionTowards) != kAffectionTowardsDektora
-			&& Global_Variable_Query(kVariableAffectionTowards) != kAffectionTowardsLucy) {
-				if (Game_Flag_Query(kFlagMcCoyIsInnocent)) {
-					Actor_Put_In_Set(kActorSteele, kSetKP03);
-					Actor_Set_At_XYZ(kActorSteele, -300.0f, -36.55f, 26.0f, 350);
-				}
+			&& Global_Variable_Query(kVariableAffectionTowards) != kAffectionTowardsLucy 
+			&& Game_Flag_Query(kFlagMcCoyIsInnocent)) {
+				Actor_Put_In_Set(kActorSteele, kSetKP03);
+				Actor_Set_At_XYZ(kActorSteele, -300.0f, -36.55f, 26.0f, 350);
 			}
 		}
 	} else if (( Actor_Query_Goal_Number(kActorSteele) != kGoalSteeleGone
@@ -137,6 +136,8 @@ bool SceneScriptKP03::ClickedOn3DObject(const char *objectName, bool combatMode)
 				Actor_Voice_Over(1120, kActorVoiceOver);
 				if (_vm->_cutContent) {
 					Actor_Voice_Over(1130, kActorVoiceOver); // One false step and...
+					Actor_Change_Animation_Mode(kActorMcCoy, 23);
+					Delay(2000);
 				}
 			} else {
 				Actor_Face_Object(kActorMcCoy, "BRACK MID", true);
@@ -358,13 +359,7 @@ void SceneScriptKP03::saveSteele() {
 	Scene_Loop_Set_Default(kKP03MainLoopBombNoWire);
 	Scene_Loop_Start_Special(kSceneLoopModeOnce, kKP03MainLoopBombNoWire, false);
 	Actor_Set_Goal_Number(kActorSteele, kGoalSteeleKP03Leave);
-	if (_vm->_cutContent) {
-		if (Player_Query_Agenda() == kPlayerAgendaPolite) {
-			Actor_Says(kActorMcCoy, 2195, 14);
-		}
-	} else {
-			Actor_Says(kActorMcCoy, 2195, 14);
-	}
+	Actor_Says(kActorMcCoy, 2195, 14);
 	Ambient_Sounds_Play_Sound(kSfxLABMISC6, 40, -60, -60, 0);
 	Loop_Actor_Walk_To_XYZ(kActorMcCoy, 1.0f, -36.55f, 111.0f, 0, false, false, false);
 	Actor_Set_Goal_Number(kActorSteele, kGoalSteeleKP05Enter);

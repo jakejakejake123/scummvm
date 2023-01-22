@@ -80,7 +80,11 @@ bool SceneScriptDR06::ClickedOn3DObject(const char *objectName, bool a2) {
 	if (Object_Query_Click("BOX16", objectName)) {
 		Loop_Actor_Walk_To_XYZ(kActorMcCoy, -743.0f, 136.6f, -1091.0f, 0, true, false, false);
 		Actor_Face_Object(kActorMcCoy, "BOX16", true);
-		if (!Game_Flag_Query(kFlagDR06JesterActive)) {
+		if (_vm->_cutContent) {
+			Actor_Change_Animation_Mode(kActorMcCoy, 23);
+			Delay(2000);
+		}
+		if (!Game_Flag_Query(kFlagDR06JesterActive)) {			
 			Overlay_Play("DR06over", 1, true, true, 0);
 			Ambient_Sounds_Add_Looping_Sound(kSfxJESTMOV1, 47, -75, 0);
 			if (_vm->_cutContent) {
@@ -98,15 +102,19 @@ bool SceneScriptDR06::ClickedOn3DObject(const char *objectName, bool a2) {
 		return true;
 	}
 	// Made it so if you click on the ashtray and Lucy is a replicant you find the Lucy incept photo.
-	if (Object_Query_Click("X2_ASHTRAY", objectName)) {
-		if (!Loop_Actor_Walk_To_XYZ(kActorMcCoy, -645.03, 136.84, -1111.44, 0, true, false, false)) {
-			Actor_Face_Object(kActorMcCoy, "X2_ASHTRAY", true);
-			if (_vm->_cutContent) {
+	if (_vm->_cutContent) {
+		if (Object_Query_Click("X2_ASHTRAY", objectName)) {
+			if (!Loop_Actor_Walk_To_XYZ(kActorMcCoy, -645.03, 136.84, -1111.44, 0, true, false, false)) {
+				Actor_Face_Object(kActorMcCoy, "X2_ASHTRAY", true);
 				if (Game_Flag_Query(kFlagLucyIsReplicant) 
 				&& !Actor_Clue_Query(kActorMcCoy, kClueLucyIncept)) {
+					Actor_Change_Animation_Mode(kActorMcCoy, 23);
+					Delay(2000);
 					Item_Pickup_Spin_Effect(kModelAnimationPhoto, 365, 344);
 					Actor_Voice_Over(4040, kActorVoiceOver);
 					Actor_Clue_Acquire(kActorMcCoy, kClueLucyIncept, true, -1);
+				} else {
+					Actor_Says(kActorMcCoy, 8525, 13); // 00-8525.AUD	Hmph.
 				}
 			}
 		}
@@ -119,6 +127,12 @@ bool SceneScriptDR06::ClickedOn3DObject(const char *objectName, bool a2) {
 		} else {
 			if (!Loop_Actor_Walk_To_XYZ(kActorMcCoy, -684.94f, 136.6f, -1136.12f, 0, true, false, false)) {
 				Actor_Face_Object(kActorMcCoy, "X2_MON01A04", true);
+				if (_vm->_cutContent) {
+					Actor_Change_Animation_Mode(kActorMcCoy, 23);
+					Delay(1000);
+					Sound_Play(kSfxSPNBEEP9, 50, 0, 0, 50);
+					Delay(1000);
+				}
 				Actor_Says(kActorAnsweringMachine, 10, kAnimationModeTalk);
 				Actor_Says(kActorAnsweringMachine, 20, kAnimationModeTalk);
 				Actor_Says(kActorAnsweringMachine, 30, kAnimationModeTalk);
@@ -154,6 +168,8 @@ bool SceneScriptDR06::ClickedOn3DObject(const char *objectName, bool a2) {
 			// I did this because I would really like the player to see this scene especially after putting a lot of time and effort into restoring it.
 			if (_vm->_cutContent) { 
 				if (Global_Variable_Query(kVariableAffectionTowards) == kAffectionTowardsDektora) {
+					Actor_Change_Animation_Mode(kActorMcCoy, 23);
+					Delay(1000);
 					Sound_Play(kSfxSPNBEEP9, 50, 0, 0, 50);
 					Delay(2000);
 					Actor_Says(kActorMcCoy, 170, 13); //00-0170.AUD	Damn.
@@ -161,16 +177,15 @@ bool SceneScriptDR06::ClickedOn3DObject(const char *objectName, bool a2) {
 				} else if ( Actor_Clue_Query(kActorMcCoy, kClueFolder)
 				&&  Actor_Clue_Query(kActorMcCoy, kClueGuzzaFramedMcCoy)
 				&& !Game_Flag_Query(kFlagCallWithGuzza)) {
+					Actor_Change_Animation_Mode(kActorMcCoy, 23);
+					Delay(1000);
 					Actor_Set_Goal_Number(kActorMcCoy, kGoalMcCoyCallWithGuzza);
 					Game_Flag_Set(kFlagCallWithGuzza);
 				} else if (!Game_Flag_Query(kFlagDR06VidphoneChecked)) {
 					Actor_Voice_Over(770, kActorVoiceOver);
 					Actor_Voice_Over(780, kActorVoiceOver);
 					Actor_Voice_Over(790, kActorVoiceOver);
-					if (Player_Query_Agenda() == kPlayerAgendaSurly 
-					|| Player_Query_Agenda() == kPlayerAgendaErratic) {
-						Actor_Voice_Over(800, kActorVoiceOver); //99-0800.AUD	No wonder this sucker was on the blink.
-					}
+					Actor_Voice_Over(800, kActorVoiceOver); //99-0800.AUD	No wonder this sucker was on the blink.
 					Game_Flag_Set(kFlagDR06VidphoneChecked);
 				} else {
 					Actor_Says(kActorMcCoy, 8570, 13);
@@ -223,6 +238,10 @@ bool SceneScriptDR06::ClickedOn3DObject(const char *objectName, bool a2) {
 			}
 
 			if (!Game_Flag_Query(kFlagDR06MannequinHeadOpen)) {
+				if (_vm->_cutContent) {
+					Actor_Change_Animation_Mode(kActorMcCoy, 23);
+					Delay(2000);
+				}
 				Overlay_Play("DR06ovr2", 0, true, false, 0);
 				Game_Flag_Set(kFlagDR06MannequinHeadOpen);
 				Sound_Play(kSfxCEMENTL1, 100, 0, 0, 50);
@@ -232,8 +251,9 @@ bool SceneScriptDR06::ClickedOn3DObject(const char *objectName, bool a2) {
 						Actor_Says(kActorMcCoy, 8800, 13); //00-8800.AUD	An envelope full of money.
 						Actor_Voice_Over(850, kActorVoiceOver);
 						Actor_Voice_Over(860, kActorVoiceOver);
-						if (Actor_Clue_Query(kActorMcCoy, kClueLabCorpses)	
-						&& Actor_Clue_Query(kActorMcCoy, kClueAnsweringMachineMessage)) {	
+						if (Actor_Clue_Query(kActorMcCoy, kClueAnsweringMachineMessage)
+						&& (Actor_Clue_Query(kActorMcCoy, kClueLabCorpses)
+						|| 	Actor_Clue_Query(kActorMcCoy, kClueLucyInterview))) {	
 							Actor_Voice_Over(870, kActorVoiceOver); //99-0870.AUD	But I didn't expect to find hundreds of chinyen inside.
 						} else {
 							Actor_Voice_Over(870, kActorVoiceOver); //99-0870.AUD	But I didn't expect to find hundreds of chinyen inside.
@@ -328,6 +348,9 @@ void SceneScriptDR06::ActorChangedGoal(int actorId, int newGoal, int oldGoal, bo
 }
 
 void SceneScriptDR06::PlayerWalkedIn() {
+	if (_vm->_cutContent) {
+		Game_Flag_Set(kFlagDR06Entered);
+	}
 	if (Game_Flag_Query(kFlagDR04toDR06)) {
 		if (_vm->_cutContent) {
 			ADQ_Add(kActorAnsweringMachine, 60, kAnimationModeTalk);

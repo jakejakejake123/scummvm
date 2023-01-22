@@ -222,8 +222,7 @@ bool AIScriptLeon::GoalChanged(int currentGoalNumber, int newGoalNumber) {
 			Actor_Says_With_Pause(kActorMcCoy, 535, 0.8f, 17); //00-0535.AUD	What about him?
 			Actor_Says(kActorLeon, 100, 13); //62-0100.AUD	Nothing, I just thought you were gonna arrest me. That's all.
 			if (_vm->_cutContent) {
-				if (!Game_Flag_Query(kFlagCT09LeonInterrupted)
-				&& Player_Query_Agenda() != kPlayerAgendaPolite) {
+				if (!Game_Flag_Query(kFlagCT09LeonInterrupted)) {
 					Actor_Says_With_Pause(kActorMcCoy, 540, 0.0f, 19); //00-0540.AUD	I don't care about your little run-in with the manager, okay? I'm looking for a couple of Replicants.
 					Actor_Says(kActorLeon, 110, kAnimationModeTalk); //62-0110.AUD	Can't help you there, friend.
 				}
@@ -239,8 +238,7 @@ bool AIScriptLeon::GoalChanged(int currentGoalNumber, int newGoalNumber) {
 					Actor_Says(kActorMcCoy, 560, kAnimationModeTalk);
 					Actor_Says_With_Pause(kActorLeon, 130, 0.8f, kAnimationModeTalk); //62-0130.AUD	Nothing, friend. I ain't done nothing.
 					Actor_Face_Current_Camera(kActorMcCoy, true);
-					if (Player_Query_Agenda() == kPlayerAgendaSurly 
-					|| Player_Query_Agenda() == kPlayerAgendaErratic) {
+					if (Player_Query_Agenda() != kPlayerAgendaPolite) {
 						Actor_Says(kActorMcCoy, 565, 18); //00-0565.AUD	We're all innocents, aren't we?
 					} else {
 						Actor_Says(kActorMcCoy, 4880, 13); //00-4880.AUD	Is that right?

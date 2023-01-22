@@ -127,7 +127,7 @@ bool SceneScriptHC01::ClickedOnActor(int actorId) {
 				Actor_Face_Actor(kActorIzo, kActorMcCoy, true);
 				if (_vm->_cutContent) {
 					Actor_Face_Actor(kActorMcCoy, kActorIzo, true);
-					Actor_Says(kActorMcCoy, 4560, 23);
+					Actor_Says(kActorMcCoy, 4560, 23); //00-4560.AUD	McCoy, LPD.
 					Actor_Says_With_Pause(kActorIzo, 0, 0.2f, 13);
 					Actor_Says_With_Pause(kActorIzo, 10, 0.2f, 13);
 				} else {
@@ -179,7 +179,9 @@ bool SceneScriptHC01::ClickedOnActor(int actorId) {
 		Actor_Face_Actor(kActorMcCoy, actorId, true);
 		Actor_Says(kActorMcCoy, 8910, 14); 
 		// This is the code for the conversation that you have with Izo if you warned him about Crystal.
-	} else if (actorId == kActorIzo && Game_Flag_Query(kFlagIzoFled)) {
+	} else if (_vm->_cutContent
+	&& actorId == kActorIzo 
+	&& Game_Flag_Query(kFlagIzoWarned)) {
 		if (!Game_Flag_Query(kFlagIzoPrepared)) {
 			Loop_Actor_Walk_To_XYZ(kActorMcCoy, 624.43f, 0.14f, 83.0f, 0, true, false, false);
 			Actor_Face_Actor(kActorMcCoy, kActorIzo, true);
@@ -194,11 +196,9 @@ bool SceneScriptHC01::ClickedOnActor(int actorId) {
 			Game_Flag_Set(kFlagIzoPrepared);
 		} else {
 			Loop_Actor_Walk_To_XYZ(kActorMcCoy, 624.43f, 0.14f, 83.0f, 0, true, false, false);
-			if (Player_Query_Agenda() == kPlayerAgendaPolite) {
-				Actor_Says(kActorMcCoy, 2860, 13); // YouTakeCareOfYourself
-			} else {
-				Actor_Says(kActorMcCoy, 8605, 18); //00-8605.AUD	You staying out of trouble, buddy?.
-			}
+			Actor_Face_Actor(kActorMcCoy, kActorIzo, true);
+			Actor_Face_Actor(kActorIzo, kActorMcCoy, true);
+			Actor_Says(kActorMcCoy, 2860, 13); // YouTakeCareOfYourself
 		}
 	}
 #endif // BLADERUNNER_ORIGINAL_BUGS
@@ -384,8 +384,8 @@ void SceneScriptHC01::dialogueWithIzo() {
 	if (_vm->_cutContent) {
 		if (Actor_Clue_Query(kActorMcCoy, kClueGrigorianInterviewB1)
 		|| Actor_Clue_Query(kActorMcCoy, kClueGrigorianInterviewB2)) {
-			DM_Add_To_List(1100, 1, 3, 4); // VOIGT-KAMPFF
-			DM_Add_To_List(1110, 3, 2, 1); // CRYSTAL
+			DM_Add_To_List(1100, -1, 2, 3); // VOIGT-KAMPFF
+			DM_Add_To_List(1110, 3, 1, -1); // CRYSTAL
 		}
 	}
 #if BLADERUNNER_ORIGINAL_BUGS
@@ -454,7 +454,8 @@ void SceneScriptHC01::dialogueWithIzo() {
 				Actor_Says(kActorMcCoy, 1070, 13); //00-1070.AUD	Ever see this piece? Real elite stuff.
 			}
 			if (_vm->_cutContent) { 
-				if (Actor_Query_Friendliness_To_Other(kActorIzo, kActorMcCoy) < 50) {
+				if (Actor_Query_Friendliness_To_Other(kActorIzo, kActorMcCoy) < 50
+				|| Game_Flag_Query(kFlagIzoIsReplicant)) {
 					Actor_Says(kActorIzo, 150, kAnimationModeTalk); //07-0150.AUD	Not for many years. You should try elsewhere.
 				} else {
 					Actor_Says(kActorIzo, 200, 17);
@@ -482,18 +483,15 @@ void SceneScriptHC01::dialogueWithIzo() {
 			Dialogue_Menu_Remove_From_List(1020);
 			Actor_Says(kActorMcCoy, 1065, 15); //00-1065.AUD	You move a lot of valuable goods through here? Valuable and exotic?
 			if (_vm->_cutContent) { 
-				if (Actor_Query_Friendliness_To_Other(kActorIzo, kActorMcCoy) < 50) {
+				if (Actor_Query_Friendliness_To_Other(kActorIzo, kActorMcCoy) < 50
+				|| Game_Flag_Query(kFlagIzoIsReplicant)) {
 					Actor_Says(kActorIzo, 150, kAnimationModeTalk); //07-0150.AUD	Not for many years. You should try elsewhere.
 				} else {
 					Actor_Says(kActorIzo, 160, kAnimationModeTalk); //07-0160.AUD	How exotic?
 					Actor_Says(kActorMcCoy, 1110, 16);
-					if (!Game_Flag_Query(kFlagIzoIsReplicant)) {
-						Actor_Says(kActorIzo, 170, kAnimationModeTalk); //07-0170.AUD	Ah, they were so majestic.
-						Actor_Says(kActorIzo, 180, kAnimationModeTalk); //07-0180.AUD	I remember them from my childhood.
-						Actor_Says(kActorIzo, 190, 12); //07-0190.AUD	And that was the last time I've seen them.
-					} else {
-						Actor_Says(kActorIzo, 150, kAnimationModeTalk); //07-0150.AUD	Not for many years. You should try elsewhere.
-					}
+					Actor_Says(kActorIzo, 170, kAnimationModeTalk); //07-0170.AUD	Ah, they were so majestic.
+					Actor_Says(kActorIzo, 180, kAnimationModeTalk); //07-0180.AUD	I remember them from my childhood.
+					Actor_Says(kActorIzo, 190, 12); //07-0190.AUD	And that was the last time I've seen them.
 				}
 			} else {
 				Actor_Says(kActorIzo, 160, kAnimationModeTalk);
@@ -513,7 +511,8 @@ void SceneScriptHC01::dialogueWithIzo() {
 		) {
 			Actor_Says_With_Pause(kActorMcCoy, 1120, 0.9f, 17);
 			if (_vm->_cutContent) { 
-				if (Actor_Query_Friendliness_To_Other(kActorIzo, kActorMcCoy) < 50) {
+				if (Actor_Query_Friendliness_To_Other(kActorIzo, kActorMcCoy) < 50
+				|| Game_Flag_Query(kFlagIzoIsReplicant)) {
 					Actor_Says(kActorIzo, 370, 13);	//07-0370.AUD	I don't have time for such pursuits.
 					Actor_Says(kActorMcCoy, 1125, 14);
 				} else {
@@ -558,7 +557,8 @@ void SceneScriptHC01::dialogueWithIzo() {
 				Actor_Says(kActorMcCoy, 1135, 15); //00-1135.AUD	Big difference.
 			}
 			if (_vm->_cutContent) { 
-				if (Actor_Query_Friendliness_To_Other(kActorIzo, kActorMcCoy) > 49) {
+				if (Actor_Query_Friendliness_To_Other(kActorIzo, kActorMcCoy) > 49
+				&& !Game_Flag_Query(kFlagIzoIsReplicant)) {
 					Actor_Says(kActorIzo, 290, 15); //07-0290.AUD	There was a time when men operated with a code of honor
 					Actor_Says(kActorIzo, 300, 12); //07-0300.AUD	Guns and rifles weren't necessary.
 					Actor_Says(kActorIzo, 310, 17); //07-0310.AUD	The very presence of a sword was enough to ensure stability.
@@ -591,7 +591,8 @@ void SceneScriptHC01::dialogueWithIzo() {
 				if (Player_Query_Agenda() == kPlayerAgendaPolite) {
 					Actor_Says(kActorMcCoy, 1145, 13); //00-1145.AUD	A man of your expertise could probably tell though.
 				} else {
-					Actor_Says(kActorMcCoy, 7835, 18); //00-7835.AUD	Is that so?
+					Actor_Says(kActorMcCoy, 3910, 16); //00-3910.AUD	You’re lying.
+					Actor_Modify_Friendliness_To_Other(kActorIzo, kActorMcCoy, -2);
 				}
 			} else {
 				Actor_Says(kActorMcCoy, 1145, 13); //00-1145.AUD	A man of your expertise could probably tell though.
@@ -600,7 +601,8 @@ void SceneScriptHC01::dialogueWithIzo() {
 			//Considering that a main factor as to whether or not someone is a rep is whether or not they mention having any friends or family it feels appropriate for
 			//Izo only to say these lines if he is human.
 			if (_vm->_cutContent) {
-				if (!Game_Flag_Query(kFlagIzoIsReplicant)) {
+				if (Actor_Query_Friendliness_To_Other(kActorIzo, kActorMcCoy) > 49
+				&& !Game_Flag_Query(kFlagIzoIsReplicant)) {
 					Actor_Says(kActorIzo, 340, 13); //07-0340.AUD	My friend Shoshane Yuri picked up the EOS plague from some gunner's space helmet.
 					Actor_Says(kActorIzo, 350, 12); //07-0350.AUD	He was vomiting blood for days.
 				}
@@ -616,10 +618,8 @@ void SceneScriptHC01::dialogueWithIzo() {
 		// innocent.
 		if (answer == 1100) { // VK
 			Actor_Says(kActorMcCoy, 5480, 15); //00-5480.AUD	Look, just come along with me. You’re gonna have to take a little personality test.
-			Actor_Modify_Friendliness_To_Other(kActorIzo, kActorMcCoy, -2);
-			Actor_Modify_Friendliness_To_Other(kActorSteele, kActorMcCoy, 1);
-			Actor_Modify_Friendliness_To_Other(kActorGuzza, kActorMcCoy, 1);
-			Actor_Modify_Friendliness_To_Other(kActorClovis, kActorMcCoy, -1);	
+			Actor_Modify_Friendliness_To_Other(kActorIzo, kActorMcCoy, -2);	
+			Game_Flag_Reset(kFlagMcCoyIsHelpingReplicants);
 			Game_Flag_Set(kFlagIzoFled);
 			Game_Flag_Set(kFlagIzoOnTheRun);
 			takePhotoAndRunAway();
@@ -627,10 +627,8 @@ void SceneScriptHC01::dialogueWithIzo() {
 		}
 		if (answer == 1110) { // CRYSTAL
 			Actor_Says(kActorMcCoy, 3690, 14); //00-3690.AUD	Look. I wanna warn you. There’s a woman looking for you and your friends.
-			// Added in two flags here, the first one is so the scene with Izo in the sewers will play and then will be reset so the scene doesn't repaet. The other will be used in the endgame to decide Steeles status towards McCoy.
-			Actor_Modify_Friendliness_To_Other(kActorSteele, kActorMcCoy, -1);
-			Actor_Modify_Friendliness_To_Other(kActorGuzza, kActorMcCoy, -1);
-			Actor_Modify_Friendliness_To_Other(kActorClovis, kActorMcCoy, 1);	
+			// Added in two flags here, the first one is so the scene with Izo in the sewers will play and then will be reset so the scene doesn't repaet. The other will be used in the endgame to decide Steeles status towards McCoy.	
+			Actor_Modify_Friendliness_To_Other(kActorIzo, kActorMcCoy, 2);
 			Game_Flag_Set(kFlagMcCoyIsHelpingReplicants);
 			Game_Flag_Set(kFlagIzoGotAway);
 			Game_Flag_Set(kFlagIzoFled);
@@ -655,6 +653,7 @@ void SceneScriptHC01::dialogueWithIzo() {
 						Actor_Says(kActorIzo, 390, 16);
 						Actor_Modify_Friendliness_To_Other(kActorIzo, kActorMcCoy, -2);
 					}
+					Delay(1000);
 					Actor_Says(kActorMcCoy, 1170, 12); //00-1170.AUD	What would you say if I told you Grigorian named you as one of the people who was there when the Tyrell Building blew up.
 					Actor_Says(kActorIzo, 400, 13); //07-0400.AUD	There's a mistake somewhere along the chain of communication.
 					Actor_Says(kActorMcCoy, 1180, 14); // So, you're denying all involvement?
@@ -715,7 +714,8 @@ void SceneScriptHC01::dialogueWithIzo() {
 							Actor_Says(kActorIzo, 520, 16); //07-0520.AUD	More importantly stay out of my face.
 							Actor_Says(kActorIzo, 530, 15); //07-0530.AUD	All I'd have to do is make one vid-call and you would be shoveling shit Off-World for the rest of your career.
 							Actor_Says(kActorMcCoy, 1210, 16); //00-1210.AUD	Talk to me like that some more and you'll be eating it.
-						} else {	
+						} else {
+							Delay(1000);	
 							Actor_Says(kActorIzo, 440, 13); //07-0440.AUD	I am nothing but a humble salesman.
 							Actor_Says(kActorMcCoy, 4880, 16); //00-4880.AUD	Is that right?
 						}
@@ -726,6 +726,7 @@ void SceneScriptHC01::dialogueWithIzo() {
 				} else {
 					Delay(1000);
 					Actor_Says(kActorIzo, 440, 13); //07-0440.AUD	I am nothing but a humble salesman.
+					Actor_Says(kActorMcCoy, 4880, 16); //00-4880.AUD	Is that right?
 				}
 			} else {
 				Actor_Says(kActorMcCoy, 1195, 16); //00-1195.AUD	He also said you were a borderline sociopath who ought to be locked up.
@@ -765,7 +766,7 @@ void SceneScriptHC01::takePhotoAndRunAway() {
 			Actor_Says(kActorMcCoy, 815, 14); //00-0815.AUD	Listen to me!
 		} else if (Player_Query_Agenda() == kPlayerAgendaSurly 
 		|| Player_Query_Agenda() == kPlayerAgendaErratic) {	
-			Actor_Says(kActorMcCoy, 3095, 18); //00-3095.AUD	Now we’re gonna take a little ride downtown.	
+			Actor_Says(kActorMcCoy, 4320, 14); //00-4320.AUD	Save the pitch for someone who gives a shit.	
 		} else {
 			Actor_Says_With_Pause(kActorMcCoy, 1050, 0.2f, kAnimationModeTalk);
 			Actor_Says(kActorIzo, 120, kAnimationModeTalk);

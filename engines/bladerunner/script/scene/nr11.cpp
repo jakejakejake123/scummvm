@@ -202,64 +202,65 @@ bool SceneScriptNR11::ClickedOn3DObject(const char *objectName, bool combatMode)
 							Actor_Says(kActorDektora, 990, 13); //03-0990.AUD	You say a lot of things, Mr. McCoy.
 							Actor_Says(kActorDektora, 1000, 14); //03-1000.AUD	But you’re a Blade Runner. It’s hard to know what’s real.
 						}
-					} else {
-						Actor_Says(kActorDektora, 990, 13); //03-0990.AUD	You say a lot of things, Mr. McCoy.
-						Actor_Says(kActorDektora, 1000, 14); //03-1000.AUD	But you’re a Blade Runner. It’s hard to know what’s real.
-					}
-					Loop_Actor_Walk_To_Actor(kActorDektora, kActorMcCoy, 108, false, false);
-					if (_vm->_cutContent) {
+						Loop_Actor_Walk_To_Actor(kActorDektora, kActorMcCoy, 108, false, false);
+						Actor_Says(kActorMcCoy, 3845, 13); //00-3845.AUD	One of my associates is after you and your friends.
+						Actor_Says(kActorMcCoy, 2090, 13); //03-2090.AUD	Oh.
+						Delay(1000);
 						if (Game_Flag_Query(kFlagDektoraIsReplicant)) {
-							Actor_Says(kActorMcCoy, 3845, 13); //00-3845.AUD	One of my associates is after you and your friends.
 							Actor_Says(kActorMcCoy, 3850, 15); //00-3850.AUD	I’m not sure I can hold her off much longer.
 							Actor_Says(kActorDektora, 1010, 14); //03-1010.AUD	I’m not worried. She may kill some of us but not all of us. Clovis will see to that.		
 						} else { 
-							Actor_Says(kActorDektora, 1330, 14); // 03-1330.AUD	The police know I’ve been helping Clovis. They probably think I’m a Replicant.
-						}
-						if (!Actor_Clue_Query(kActorMcCoy, kClueClovisFlowers)) {
-							Actor_Says(kActorMcCoy, 3855, 13); //00-3855.AUD	Is he the one that sent you the flowers?
-							Actor_Says(kActorDektora, 1020, 12); //03-1020.AUD	Yes.
-							Actor_Says(kActorMcCoy, 3860, 12);
-							Actor_Says_With_Pause(kActorDektora, 1030, 1.0f, 14); //03-1030.AUD	We were once. But now we’ve evolved beyond that.
-							if (!Game_Flag_Query(kFlagDektoraIsReplicant)) {
-								Actor_Says(kActorMcCoy, 8510, 11); //00-8510.AUD	You got a real thing for machines, don't ya?
+							Actor_Says(kActorMcCoy, 6535, 15); //00-6535.AUD	I need to see Clovis ASAP.
+							Actor_Says(kActorMcCoy, 3870, 3); //00-3870.AUD	Can you take me to him?
+							if (!Actor_Clue_Query(kActorDektora, kClueMcCoyHelpedDektora)) {
+								Actor_Says(kActorDektora, 2060, 14);//03-2060.AUD	No.
+								Delay(1000);
+							} else {
+								Actor_Says(kActorDektora, 1070, 14);
+								Actor_Says(kActorDektora, 1080, 14);
 								Delay(1000);
 							}
 						}
-						Actor_Says(kActorDektora, 1040, 13); //03-1040.AUD	They are still my family. Clovis and Lucy.
-						Actor_Says(kActorMcCoy, 3865, 15);
-						if (!Actor_Clue_Query(kActorDektora, kClueMcCoyHelpedDektora)) {
-							Actor_Says(kActorDektora, 1440, 13); //03-1440.AUD	I don't see why you need to know that.
-							Actor_Says(kActorMcCoy, 3870, 3); //00-3870.AUD	Can you take me to him?
-							Actor_Says(kActorDektora, 2060, 14);//03-2060.AUD	No.
-						} else {
-							Actor_Says_With_Pause(kActorDektora, 1050, 0.8f, 14); //03-1050.AUD	Information. Data. Four years isn’t enough time, Mr. McCoy.
-							if (!Game_Flag_Query(kFlagDektoraIsReplicant)) {
-								Actor_Says(kActorDektora, 1060, 13); //03-1060.AUD	If anyone deserves more than four years, it’s Clovis. If you could only meet him.
+						if (!Actor_Clue_Query(kActorMcCoy, kClueClovisFlowers)) {
+							Actor_Says(kActorMcCoy, 3855, 13); //00-3855.AUD	Is he the one that sent you the flowers?
+							if (!Actor_Clue_Query(kActorDektora, kClueMcCoyHelpedDektora)) {
+								Actor_Says(kActorDektora, 2060, 14);//03-2060.AUD	No.
+								Delay(1000);
+							} else {
+								Actor_Says(kActorDektora, 1020, 12); //03-1020.AUD	Yes.
+								Actor_Says(kActorMcCoy, 3860, 12);
+								Actor_Says_With_Pause(kActorDektora, 1030, 1.0f, 14); //03-1030.AUD	We were once. But now we’ve evolved beyond that.
+								Delay(1000);
 							}
+						}
+						if (Actor_Clue_Query(kActorDektora, kClueMcCoyHelpedDektora)) {
+							Actor_Says(kActorDektora, 1040, 13); //03-1040.AUD	They are still my family. Clovis and Lucy.
+							Actor_Says(kActorMcCoy, 3865, 15); //00-3865.AUD	What’s Clovis looking for?
+							Actor_Says_With_Pause(kActorDektora, 1050, 0.8f, 14); //03-1050.AUD	Information. Data. Four years isn’t enough time, Mr. McCoy.
+							Actor_Says(kActorDektora, 1060, 13); //03-1060.AUD	If anyone deserves more than four years, it’s Clovis. If you could only meet him.
 							Actor_Says(kActorMcCoy, 3870, 3); //00-3870.AUD	Can you take me to him?
 							Actor_Says(kActorDektora, 1070, 14);
-						}
+							Actor_Says(kActorDektora, 1080, 14);
+							Delay(1000);
+						} 
+						Actor_Says(kActorMcCoy, 3875, 14);
+						Actor_Says(kActorDektora, 1090, 17);     // I... appreciate it, Mr. McCoy.
 						Game_Flag_Set(kFlagMcCoyIsHelpingReplicants);
 						Actor_Modify_Friendliness_To_Other(kActorSteele, kActorMcCoy, -2);
 						Actor_Modify_Friendliness_To_Other(kActorClovis, kActorMcCoy, 2);
 						Actor_Modify_Friendliness_To_Other(kActorGuzza, kActorMcCoy, -2);
 						Actor_Modify_Friendliness_To_Other(kActorDektora, kActorMcCoy, 2);
-						if (Actor_Query_Friendliness_To_Other(kActorDektora, kActorMcCoy) > 50
+						if (Actor_Query_Friendliness_To_Other(kActorDektora, kActorMcCoy) > 49
+						&& Actor_Query_Friendliness_To_Other(kActorClovis, kActorMcCoy) > 50
 						&& Global_Variable_Query(kVariableAffectionTowards) == kAffectionTowardsNone
 						&& Actor_Query_Goal_Number(kActorLucy) < kGoalLucyGone) { 
 							Global_Variable_Set(kVariableAffectionTowards, kAffectionTowardsDektora);
 						}
-						Actor_Says(kActorDektora, 1080, 13);
-						Actor_Says(kActorMcCoy, 3875, 14);
-						Actor_Says(kActorDektora, 1090, 17);     // I... appreciate it, Mr. McCoy.
 						if (Global_Variable_Query(kVariableAffectionTowards) == kAffectionTowardsDektora) {
 							Actor_Says(kActorMcCoy, 3880, -1);   // Call me Ray.
 							Actor_Says(kActorDektora, 1100, 12); // Okay. Ray.
 						}
 					} else {
-						Actor_Face_Actor(kActorDektora, kActorMcCoy, true);
-						Actor_Face_Actor(kActorMcCoy, kActorDektora, true);
-						Actor_Clue_Acquire(kActorMcCoy, kClueDektoraInterview4, true, kActorDektora);
 						Actor_Says(kActorDektora, 990, 13);
 						Actor_Says(kActorDektora, 1000, 14);
 						Loop_Actor_Walk_To_Actor(kActorDektora, kActorMcCoy, 108, false, false);
@@ -274,17 +275,17 @@ bool SceneScriptNR11::ClickedOn3DObject(const char *objectName, bool combatMode)
 						Actor_Says(kActorMcCoy, 3865, 15);
 						Actor_Says_With_Pause(kActorDektora, 1050, 0.8f, 14);
 						Actor_Says(kActorDektora, 1060, 13);
-						Actor_Says(kActorMcCoy, 3870, 3);
+						Actor_Says(kActorMcCoy, 3870, 3); //00-3870.AUD	Can you take me to him?
 						Actor_Says(kActorDektora, 1070, 14);
 						Actor_Modify_Friendliness_To_Other(kActorDektora, kActorMcCoy, 5);
 						if (Actor_Query_Friendliness_To_Other(kActorDektora, kActorMcCoy) > 55
 						&& Global_Variable_Query(kVariableAffectionTowards) == kAffectionTowardsNone
 						) {
 							Global_Variable_Set(kVariableAffectionTowards, kAffectionTowardsDektora);
-							Actor_Says(kActorDektora, 1130, 17);
-							Actor_Says(kActorMcCoy, 6365, 12);
+							Actor_Says(kActorDektora, 1130, 17); 
+							Actor_Says(kActorMcCoy, 6365, 12); //00-6365.AUD	Jealous, huh? On top of everything else?
 							Actor_Says(kActorDektora, 1140, 14);
-							Actor_Says(kActorMcCoy, 6370, 14);
+							Actor_Says(kActorMcCoy, 6370, 14); //00-6370.AUD	Then he’s no different from anybody else.
 							Actor_Says(kActorDektora, 1150, 12);
 							Actor_Says(kActorDektora, 1160, 16);
 						}
@@ -315,7 +316,13 @@ bool SceneScriptNR11::ClickedOn3DObject(const char *objectName, bool combatMode)
 					Unclickable_Object("CLOTHING B 03");
 					Unclickable_Object("BUST BUST");
 #endif // !BLADERUNNER_ORIGINAL_BUGS
-					if (Global_Variable_Query(kVariableHollowayArrest) == 1) {
+					if (_vm->_cutContent) {
+						if (Game_Flag_Query(kFlagDektoraIsReplicant)) {
+							if (Global_Variable_Query(kVariableHollowayArrest) == 1) {
+								Actor_Set_Goal_Number(kActorSteele, kGoalSteeleNR10Wait);
+							}
+						}
+					} else if (Global_Variable_Query(kVariableHollowayArrest) == 1) {
 						Actor_Set_Goal_Number(kActorSteele, kGoalSteeleNR10Wait);
 					}
 					Game_Flag_Set(kFlagDektoraRanAway);
@@ -516,10 +523,10 @@ void SceneScriptNR11::PlayerWalkedIn() {
 					&& !Actor_Clue_Query(kActorDektora, kClueMcCoyHelpedDektora)) {
 						Actor_Says(kActorMcCoy, 1570, 13); //00-1570.AUD	You sure aired that sucker out.
 						Game_Flag_Reset(kFlagMcCoyIsHelpingReplicants);
+						Delay(500);
 					} else {
-						Music_Play(kMusicBRBlues, 52, 0, 2, -1, kMusicLoopPlayOnce, 1);
 						Actor_Says(kActorMcCoy, 3810, 16); //00-3810.AUD	You could have taken her out in a more discrete way.
-						if (Actor_Query_Friendliness_To_Other(kActorSteele, kActorMcCoy) < 51) {
+						if (Actor_Query_Friendliness_To_Other(kActorSteele, kActorMcCoy) < 58) {
 							Actor_Says_With_Pause(kActorSteele, 1730, 0.2f, 14); //01-1730.AUD	What’s this "her" crap? It’s an "it", remember? A goddamn machine.
 						} else {
 							Delay(1000);
@@ -540,9 +547,10 @@ void SceneScriptNR11::PlayerWalkedIn() {
 			}
 		} else {
 			if (_vm->_cutContent) {
+				Delay(2000);
 				Actor_Voice_Over(2100, kActorVoiceOver); //99-2100.AUD	I'd crossed the line.
 				Player_Set_Combat_Mode(false);
-				Delay(2000);
+				Delay(1000);
 				Actor_Voice_Over(300, kActorVoiceOver); //99-0300.AUD	I'd screwed up. Plain and simple.
 				Delay(2000);
 				if (Player_Query_Agenda() == kPlayerAgendaSurly 
@@ -559,6 +567,7 @@ void SceneScriptNR11::PlayerWalkedIn() {
 				} else {
 					Actor_Says(kActorMcCoy, 2305, 13); //00-2305.AUD	I’m sorry.
 					Delay(2000);
+					Outtake_Play(kOuttakeAway1, true, -1);
 					Actor_Set_Goal_Number(kActorMcCoy, kGoalMcCoyArrested);
 				}
 			} else {

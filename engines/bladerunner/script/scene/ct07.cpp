@@ -45,9 +45,6 @@ void SceneScriptCT07::InitializeScene() {
 	Ambient_Sounds_Add_Sound(kSfxDISH2,   10,  30, 12,  14, 100, 100, -101, -101, 0, 0);
 	Ambient_Sounds_Add_Sound(kSfxDISH3,   10,  30, 12,  14, 100, 100, -101, -101, 0, 0);
 	Ambient_Sounds_Add_Sound(kSfxDISH4,   10,  30, 12,  14, 100, 100, -101, -101, 0, 0);
-	if (_vm->_cutContent) {
-		Ambient_Sounds_Add_Sound(kSfxDISH5,   10,  30, 12,  14, 100, 100, -101, -101, 0, 0);
-	}
 }
 
 void SceneScriptCT07::SceneLoaded() {
@@ -114,7 +111,7 @@ void SceneScriptCT07::PlayerWalkedIn() {
 				Actor_Face_Actor(kActorZuben, kActorMcCoy, true);
 				Music_Stop(3u);
 				Player_Set_Combat_Mode(false);
-				Actor_Says(kActorMcCoy, 455, -1); //00-0455.AUD	Relax. Nobody's gonna get retired. Okay?
+				Actor_Start_Speech_Sample(kActorMcCoy, 455); //00-0455.AUD	Relax. Nobody's gonna get retired. Okay?
 				Actor_Says(kActorZuben, 100, 19);
 				Actor_Says(kActorMcCoy, 470, 12); //00-0470.AUD	Just talk. That's all.
 				Actor_Says(kActorZuben, 110, 18);
@@ -135,6 +132,7 @@ void SceneScriptCT07::PlayerWalkedIn() {
 					Actor_Modify_Friendliness_To_Other(kActorSteele, kActorMcCoy, 1);
 					Actor_Modify_Friendliness_To_Other(kActorGuzza, kActorMcCoy, 1);
 					Actor_Modify_Friendliness_To_Other(kActorClovis, kActorMcCoy, -1);
+					Actor_Modify_Friendliness_To_Other(kActorHowieLee, kActorMcCoy, -1);
 					Actor_Clue_Acquire(kActorZuben, kClueMcCoyShotZubenInTheBack, true, -1);
 					Actor_Clue_Lose(kActorZuben, kClueMcCoyLetZubenEscape);
 					Actor_Clue_Acquire(kActorMcCoy, kClueMcCoyShotZubenInTheBack, true, kActorZuben);
@@ -148,9 +146,10 @@ void SceneScriptCT07::PlayerWalkedIn() {
 					Actor_Set_Goal_Number(kActorGaff, kGoalGaffCT05Wait);
 					Actor_Clue_Acquire(kActorZuben, kClueMcCoyLetZubenEscape, true, -1);
 					Actor_Clue_Acquire(kActorLucy, kClueMcCoyLetZubenEscape, true, -1);
-					Actor_Modify_Friendliness_To_Other(kActorSteele, kActorMcCoy, -1);
-					Actor_Modify_Friendliness_To_Other(kActorGuzza, kActorMcCoy, -1);
-					Actor_Modify_Friendliness_To_Other(kActorClovis, kActorMcCoy, 1);
+					Actor_Modify_Friendliness_To_Other(kActorSteele, kActorMcCoy, -2);
+					Actor_Modify_Friendliness_To_Other(kActorGuzza, kActorMcCoy, -2);
+					Actor_Modify_Friendliness_To_Other(kActorClovis, kActorMcCoy, 2);
+					Actor_Modify_Friendliness_To_Other(kActorHowieLee, kActorMcCoy, 2);
 				}
 				if (Random_Query(1, 3) < 3) {
 					Actor_Clue_Acquire(kActorZuben, kClueMcCoysDescription, true, -1);
@@ -164,6 +163,8 @@ void SceneScriptCT07::PlayerWalkedIn() {
 			Actor_Says(kActorMcCoy, 470, 12); //00-0470.AUD	Just talk. That's all.
 			Actor_Says(kActorZuben, 110, 18);
 			Actor_Says(kActorMcCoy, 475, 12);
+			Actor_Says(kActorZuben, 120, 15);
+			Actor_Says(kActorMcCoy, 480, 16);
 			Delay(1000);
 			Actor_Says(kActorMcCoy, 7295, 11); //00-7295.AUD	The girl. I need to know where's the girl.
 			if (Game_Flag_Query(kFlagMcCoyIsHelpingReplicants)) {
@@ -191,6 +192,7 @@ void SceneScriptCT07::PlayerWalkedIn() {
 				Actor_Says(kActorZuben, 270, 15); //19-0270.AUD	Because he bad.
 				Actor_Says(kActorMcCoy, 7350, 14);	//00-7350.AUD	Runciter?
 				Actor_Says(kActorZuben, 280, 12); //19-0280.AUD	He not pay. Bad to Lucy. Bad to everybody. Make people starve.
+				Actor_Says(kActorMcCoy, 7355, 14); //00-7355.AUD	All those animals died.
 				Actor_Says(kActorZuben, 290, 15); //19-0290.AUD	He made Lucy do bad things. Lucy hurt. Clovis more angry.
 				Actor_Says(kActorZuben, 300, 14); //19-0300.AUD	Girl was forced to do bad things Off-World. Clovis thought Terra better.
 				Actor_Says(kActorZuben, 310, 13); //19-0310.AUD	But Terra's no better for young girls. Runciter bad to Lucy.
@@ -215,6 +217,7 @@ void SceneScriptCT07::PlayerWalkedIn() {
 				Actor_Modify_Friendliness_To_Other(kActorSteele, kActorMcCoy, -2);
 				Actor_Modify_Friendliness_To_Other(kActorGuzza, kActorMcCoy, -2);
 				Actor_Modify_Friendliness_To_Other(kActorClovis, kActorMcCoy, 2);
+				Actor_Modify_Friendliness_To_Other(kActorHowieLee, kActorMcCoy, 2);
 			} else {
 				Delay(2000);
 				Actor_Says(kActorMcCoy, 8590, 13);  // Not the talkative type
@@ -229,6 +232,7 @@ void SceneScriptCT07::PlayerWalkedIn() {
 				Actor_Modify_Friendliness_To_Other(kActorSteele, kActorMcCoy, 1);
 				Actor_Modify_Friendliness_To_Other(kActorGuzza, kActorMcCoy, 1);
 				Actor_Modify_Friendliness_To_Other(kActorClovis, kActorMcCoy, -1);
+				Actor_Modify_Friendliness_To_Other(kActorHowieLee, kActorMcCoy, -1);
 				Actor_Clue_Acquire(kActorClovis, kClueMcCoyRetiredZuben, true, -1);
 				Delay (1000);
 				Music_Stop(1u);

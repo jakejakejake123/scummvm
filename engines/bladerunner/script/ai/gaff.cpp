@@ -165,28 +165,30 @@ void AIScriptGaff::CompletedMovementTrack() {
 		Actor_Set_Goal_Number(kActorGaff, kGoalGaffMA01Leave);
 		//Added dispatcher dialogue which plays after McCoy talks with Gaff on the apartment roof.
 		if (_vm->_cutContent) {
-			if (!Game_Flag_Query(kFlagCT12Visited)) {
-				if (Game_Flag_Query(kFlagLearyChecksCar)) {
-					Delay (1000);
-					ADQ_Add(kActorOfficerLeary, 360, kAnimationModeTalk); 	//23-0360.AUD	LA, 31 Metro 3 is 10-97 at the scene. 
-					ADQ_Add(kActorDispatcher, 370, kAnimationModeTalk);   //38-0370.AUD	32 Metro 1 LA. Go ahead.
-					ADQ_Add(kActorOfficerLeary, 420, kAnimationModeTalk);	//23-0420.AUD	LA, 13 Metro 1. 10-29 on abandoned vehicle.
-					ADQ_Add(kActorOfficerLeary, 430, kAnimationModeTalk);  //23-0430.AUD	LA, 10-29 on 1-6-9-8-7. The ignition appears punched out. 10-20 is one block west of Tyrell.
-					ADQ_Add(kActorDispatcher, 380, kAnimationModeTalk);  //38-0380.AUD	32 Metro 1 LA. No wants in a 1959 Chevy Coupe with plate 16987. Transfer on file.
-					ADQ_Add(kActorDispatcher, 400, kAnimationModeTalk);  //38-0400.AUD	Registration info temporarily unavailable at this time.
-					ADQ_Add(kActorOfficerLeary, 270, kAnimationModeTalk);  	//23-0270.AUD	LA, 38 Metro 3. 10-4.
-					Game_Flag_Set(kFlagCT12Visited);
-				} else {
-					Delay (1000);
-					ADQ_Add(kActorOfficerGrayford, 380, kAnimationModeTalk);   //24-0380.AUD	LA, 31 Metro 3 is 10-97 at the scene.	
-					ADQ_Add(kActorDispatcher, 370, kAnimationModeTalk);  //38-0370.AUD	32 Metro 1 LA. Go ahead.
-					ADQ_Add(kActorOfficerGrayford, 420, kAnimationModeTalk);  //24-0420.AUD	LA, 13 Metro 1. 10-29 on abandoned vehicle.
-					ADQ_Add(kActorOfficerGrayford, 430, kAnimationModeTalk); //24-0430.AUD	LA, 10-29 on 16987. The ignition appears punched out.
-					ADQ_Add(kActorOfficerGrayford, 440, kAnimationModeTalk); //24-0440.AUD	LA, 10-20 is one block West of Tyrell.
-					ADQ_Add(kActorDispatcher, 380, kAnimationModeTalk); //38-0380.AUD	32 Metro 1 LA. No wants in a 1959 Chevy Coupe with plate 16987. Transfer on file.
-					ADQ_Add(kActorDispatcher, 400, kAnimationModeTalk); //38-0400.AUD	Registration info temporarily unavailable at this time.
-					ADQ_Add(kActorOfficerGrayford, 550, kAnimationModeTalk); //24-0550.AUD	LA, 38 Metro 3.10-4.
-					Game_Flag_Set(kFlagCT12Visited); 
+			if (Global_Variable_Query(kVariableChapter) == 1) {
+				if (!Game_Flag_Query(kFlagCT12Visited)) {
+					if (Game_Flag_Query(kFlagLearyChecksCar)) {						
+						Delay (1000);
+						ADQ_Add(kActorOfficerLeary, 360, kAnimationModeTalk); 	//23-0360.AUD	LA, 31 Metro 3 is 10-97 at the scene. 
+						ADQ_Add(kActorDispatcher, 370, kAnimationModeTalk);   //38-0370.AUD	32 Metro 1 LA. Go ahead.
+						ADQ_Add(kActorOfficerLeary, 420, kAnimationModeTalk);	//23-0420.AUD	LA, 13 Metro 1. 10-29 on abandoned vehicle.
+						ADQ_Add(kActorOfficerLeary, 430, kAnimationModeTalk);  //23-0430.AUD	LA, 10-29 on 1-6-9-8-7. The ignition appears punched out. 10-20 is one block west of Tyrell.
+						ADQ_Add(kActorDispatcher, 380, kAnimationModeTalk);  //38-0380.AUD	32 Metro 1 LA. No wants in a 1959 Chevy Coupe with plate 16987. Transfer on file.
+						ADQ_Add(kActorDispatcher, 400, kAnimationModeTalk);  //38-0400.AUD	Registration info temporarily unavailable at this time.
+						ADQ_Add(kActorOfficerLeary, 270, kAnimationModeTalk);  	//23-0270.AUD	LA, 38 Metro 3. 10-4.
+						Game_Flag_Set(kFlagCT12Visited);
+					} else {
+						Delay (1000);
+						ADQ_Add(kActorOfficerGrayford, 380, kAnimationModeTalk);   //24-0380.AUD	LA, 31 Metro 3 is 10-97 at the scene.	
+						ADQ_Add(kActorDispatcher, 370, kAnimationModeTalk);  //38-0370.AUD	32 Metro 1 LA. Go ahead.
+						ADQ_Add(kActorOfficerGrayford, 420, kAnimationModeTalk);  //24-0420.AUD	LA, 13 Metro 1. 10-29 on abandoned vehicle.
+						ADQ_Add(kActorOfficerGrayford, 430, kAnimationModeTalk); //24-0430.AUD	LA, 10-29 on 16987. The ignition appears punched out.
+						ADQ_Add(kActorOfficerGrayford, 440, kAnimationModeTalk); //24-0440.AUD	LA, 10-20 is one block West of Tyrell.
+						ADQ_Add(kActorDispatcher, 380, kAnimationModeTalk); //38-0380.AUD	32 Metro 1 LA. No wants in a 1959 Chevy Coupe with plate 16987. Transfer on file.
+						ADQ_Add(kActorDispatcher, 400, kAnimationModeTalk); //38-0400.AUD	Registration info temporarily unavailable at this time.
+						ADQ_Add(kActorOfficerGrayford, 550, kAnimationModeTalk); //24-0550.AUD	LA, 38 Metro 3.10-4.
+						Game_Flag_Set(kFlagCT12Visited); 
+					}
 				}		
 			}
 		}
@@ -252,9 +254,7 @@ void AIScriptGaff::ClickedByPlayer() {
 					Actor_Says(kActorMcCoy, 8320, kAnimationModeTalk); //00-8320.AUD	Really?
 				}
 				Actor_Says(kActorGaff, 190, kAnimationModeTalk); //53-0190.AUD	It's like I said before. You retire a human, your career is over.
-				if (Actor_Query_Friendliness_To_Other(kActorGaff, kActorMcCoy) < 50) {
-					Actor_Says(kActorGaff, 200, kAnimationModeTalk); //53-0200.AUD	Your life too, maybe.
-				}
+				Actor_Says(kActorGaff, 200, kAnimationModeTalk); //53-0200.AUD	Your life too, maybe.
 				Delay (1000);
 				Game_Flag_Set(kFlagGaffTalk);
 				AI_Movement_Track_Unpause(kActorGaff);
@@ -466,29 +466,40 @@ bool AIScriptGaff::GoalChanged(int currentGoalNumber, int newGoalNumber) {
 			}
 			Loop_Actor_Walk_To_Actor(kActorMcCoy, kActorGaff, 36, false, false);
 			Actor_Says(kActorGaff, 150, kAnimationModeTalk);
-			if (Player_Query_Agenda() == kPlayerAgendaSurly 
-			|| Player_Query_Agenda() == kPlayerAgendaErratic) {
-				Actor_Says(kActorMcCoy, 2960, 12); //00-2960.AUD	Yeah, well, I've been too busy to visit lately.
+			if (_vm->_cutContent) {
+				if (Player_Query_Agenda() == kPlayerAgendaSurly 
+				|| Player_Query_Agenda() == kPlayerAgendaErratic) {
+					Actor_Says(kActorMcCoy, 2960, 12); //00-2960.AUD	Yeah, well, I've been too busy to visit lately.
+				} else {
+					Actor_Says(kActorMcCoy, 5705, 13); //00-5705.AUD	Uh-huh.
+				} 
 			} else {
-				Actor_Says(kActorMcCoy, 5705, 13); //00-5705.AUD	Uh-huh.
+				Actor_Says(kActorMcCoy, 2960, 12); //00-2960.AUD	Yeah, well, I've been too busy to visit lately.
 			}
 			Actor_Says_With_Pause(kActorGaff, 160, 1.0f, 16); //53-0160.AUD	You gonna turn yourself in?
-			if (Player_Query_Agenda() == kPlayerAgendaSurly 
-			|| Player_Query_Agenda() == kPlayerAgendaErratic) {
-				Actor_Says(kActorMcCoy, 5855, 14); //00-5855.AUD	Not a chance.
+			if (_vm->_cutContent) {
+				if (Player_Query_Agenda() == kPlayerAgendaSurly 
+				|| Player_Query_Agenda() == kPlayerAgendaErratic) {
+					Actor_Says(kActorMcCoy, 5855, 14); //00-5855.AUD	Not a chance.
+				} else {
+					Actor_Says(kActorMcCoy, 2965, 13); //00-2965.AUD	I'm thinking about it.
+					if (Actor_Query_Friendliness_To_Other(kActorGaff, kActorMcCoy) < 50) {
+						Actor_Says_With_Pause(kActorGaff, 170, 1.0f, kAnimationModeTalk); //53-0170.AUD	Think hard.
+					}
+				}
 			} else {
 				Actor_Says(kActorMcCoy, 2965, 13); //00-2965.AUD	I'm thinking about it.
-				if (Actor_Query_Friendliness_To_Other(kActorGaff, kActorMcCoy) < 50) {
-					Actor_Says_With_Pause(kActorGaff, 170, 1.0f, kAnimationModeTalk); //53-0170.AUD	Think hard.
-				}
+				Actor_Says_With_Pause(kActorGaff, 170, 1.0f, kAnimationModeTalk); //53-0170.AUD	Think hard.
 			}
-			if (Actor_Query_Friendliness_To_Other(kActorGaff, kActorMcCoy) < 50) {
+			if (_vm->_cutContent) {
+				if (Actor_Query_Friendliness_To_Other(kActorGaff, kActorMcCoy) < 50) {
+					Actor_Says_With_Pause(kActorGaff, 180, 1.0f, 12); //53-0180.AUD	You killed anyone yet?
+				}
+			} else {
 				Actor_Says_With_Pause(kActorGaff, 180, 1.0f, 12); //53-0180.AUD	You killed anyone yet?
 			}
 			Actor_Says(kActorGaff, 190, 14); //53-0190.AUD	It's like I said before. You retire a human, your career is over.
-			if (Actor_Query_Friendliness_To_Other(kActorGaff, kActorMcCoy) < 50) {
-				Actor_Says(kActorGaff, 200, 15); //53-0200.AUD	Your life too, maybe.
-			}
+			Actor_Says(kActorGaff, 200, 15); //53-0200.AUD	Your life too, maybe.
 			Async_Actor_Walk_To_XYZ(kActorGaff, -388.44f, -162.8f, 165.08f, false, false);
 			Delay(4000);
 			Player_Gains_Control();

@@ -77,7 +77,6 @@ bool AIScriptOfficerLeary::Update() {
 		&&  Game_Flag_Query(kFlagRC51ChopstickWrapperTaken)
 		&&  Actor_Clue_Query(kActorMcCoy, kClueCrowdInterviewA)
 		&&  Actor_Clue_Query(kActorMcCoy, kClueRuncitersVideo)
-		&&  Actor_Clue_Query(kActorMcCoy, kClueDoorForced2)
 		&&  Player_Query_Current_Scene() != kSceneRC01
 		&&  !Game_Flag_Query(kFlagRC01PoliceDone)          // otherwise this clause keeps repeating
 		&&  Global_Variable_Query(kVariableChapter) < 2

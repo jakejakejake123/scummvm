@@ -177,11 +177,11 @@ void SceneScriptCT02::dialogueWithZuben() {
 			DM_Add_To_List_Never_Repeat_Once_Selected(270, 8, 5, 3); // LUCY PHOTO
 		}
 	}
-	// Made it so McCoy always asks Zuben about Lucy since he always receives Lucys description by default.
+
 	if (!_vm->_cutContent) {
 		 if (Actor_Clue_Query(kActorMcCoy, kClueRunciterInterviewA)
 		 && !Actor_Clue_Query(kActorMcCoy, kClueLucy)) {
-			DM_Add_To_List_Never_Repeat_Once_Selected(280, 8, 5, 4); // LUCY
+			DM_Add_To_List(280, 8, 5, 3); // LUCY
 		}
 	}
 	int evidenceCount = 0;
@@ -276,6 +276,7 @@ void SceneScriptCT02::dialogueWithZuben() {
 				Actor_Says(kActorMcCoy, 415, 10);
 				Actor_Clue_Acquire(kActorMcCoy, kClueZubenInterview, false, kActorZuben);
 			}
+			Game_Flag_Set(kFlagZubenTalkLucy);
 		} else {
 			Actor_Says(kActorZuben, 30, 17);
 			Actor_Says(kActorZuben, 40, 15);
@@ -313,9 +314,6 @@ void SceneScriptCT02::dialogueWithZuben() {
 			Actor_Says(kActorZuben, 80, 14);
 		}
 		if (_vm->_cutContent) {
-			Actor_Modify_Friendliness_To_Other(kActorSteele, kActorMcCoy, 1);
-			Actor_Modify_Friendliness_To_Other(kActorGuzza, kActorMcCoy, 1);
-			Actor_Modify_Friendliness_To_Other(kActorClovis, kActorMcCoy, -1);	
 			Game_Flag_Reset(kFlagMcCoyIsHelpingReplicants);
 			Game_Flag_Set(kFlagCT01TalkToHowieAfterZubenMissing);
 			Actor_Modify_Friendliness_To_Other(kActorZuben, kActorMcCoy, -10);
@@ -330,9 +328,6 @@ void SceneScriptCT02::dialogueWithZuben() {
 
 	case 1110:  // CRYSTAL
 		Actor_Says(kActorMcCoy, 3690, 14); //00-3690.AUD	Look. I wanna warn you. There’s a woman looking for you and your friends.
-		Actor_Modify_Friendliness_To_Other(kActorSteele, kActorMcCoy, -1);
-		Actor_Modify_Friendliness_To_Other(kActorGuzza, kActorMcCoy, -1);
-		Actor_Modify_Friendliness_To_Other(kActorClovis, kActorMcCoy, 1);
 		Game_Flag_Set(kFlagMcCoyIsHelpingReplicants);
 		Game_Flag_Set(kFlagCT01TalkToHowieAfterZubenMissing);
 		Scene_Exit_Add_2D_Exit(kCT02ExitCT03, 332, 163, 404, 297, 0);

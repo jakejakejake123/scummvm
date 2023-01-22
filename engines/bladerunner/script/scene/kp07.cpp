@@ -53,10 +53,8 @@ void SceneScriptKP07::InitializeScene() {
 		// If McCoy got both Crystal and the reps to trust him Maggie will be alive and in the moonbus. The reps took her but instead wanted to take her with them along with McCoy.
 		if (_vm->_cutContent) {
 			if (Actor_Query_Goal_Number(kActorMaggie) < kGoalMaggieDead) {
-				if (Game_Flag_Query(kFlagMcCoyIsHelpingReplicants)) {
-					Actor_Put_In_Set(kActorMaggie, kSetKP07);
-					Actor_Set_At_XYZ(kActorMaggie, 19.85f, -42.80f, -152.90f, 659);	
-				}
+				Actor_Put_In_Set(kActorMaggie, kSetKP07);
+				Actor_Set_At_XYZ(kActorMaggie, 19.85f, -42.80f, -152.90f, 659);	
 			}
 		}
 		if (_vm->_cutContent) {
@@ -245,8 +243,8 @@ void SceneScriptKP07::InitializeScene() {
 
 void SceneScriptKP07::SceneLoaded() {
 	// Added the Clovis incept photo into the scene.
-	if (_vm->_cutContent &&
-		!Actor_Clue_Query(kActorMcCoy, kClueClovisIncept)) {
+	if (_vm->_cutContent 
+	&& !Actor_Clue_Query(kActorMcCoy, kClueClovisIncept)) {
 		Item_Add_To_World(kItemPhoto, kModelAnimationPhoto, kSetKP07, 78.84, -41.37, -116.75, 0, 12, 12, false, true, false, true);
 	}
 	if (!Game_Flag_Query(kFlagMcCoyIsHelpingReplicants)) {
@@ -356,7 +354,7 @@ void SceneScriptKP07::PlayerWalkedIn() {
 				if (Actor_Query_Is_In_Current_Set(kActorMaggie)) {
 					Actor_Face_Actor(kActorMcCoy, kActorMaggie, true);
 					Actor_Face_Actor(kActorMaggie, kActorMcCoy, true);
-					Actor_Says(kActorMcCoy, 2395, 14); //00-2395.AUD	Hey, Maggie!
+					Actor_Says(kActorMcCoy, 2395, 18); //00-2395.AUD	Hey, Maggie!
 				}
 			}
 			// Added in some dialogue for McCoy, Lucy and Dektora. If McCoy enters the moonbus and is helping the replicants and has an affection rating
@@ -389,20 +387,23 @@ void SceneScriptKP07::PlayerWalkedIn() {
 			}
 			Actor_Face_Actor(kActorMcCoy, kActorClovis, true);
 			if (_vm->_cutContent) {
-				if (Actor_Clue_Query(kActorClovis, kClueMcCoyRetiredLucy) 
-				|| Actor_Clue_Query(kActorClovis, kClueMcCoyRetiredDektora) 
-				|| Actor_Query_Friendliness_To_Other(kActorClovis, kActorMcCoy) < 51) {
+				if (Actor_Query_Friendliness_To_Other(kActorClovis, kActorMcCoy) < 51
+				|| Game_Flag_Query(kFlagMcCoyRetiredReplicant)) {
 					Actor_Face_Actor(kActorClovis, kActorMcCoy, true);
 					Actor_Says(kActorClovis, 160, 3); //05-0160.AUD	I’ve been expecting you.
 					Actor_Says(kActorMcCoy, 2130, 14); //00-2130.AUD	You’re the coldest person I’ve ever seen when it comes to killing.
 					Delay(1000);
 					Actor_Says(kActorClovis, 190, 3); //05-0190.AUD	And what about you, Ray McCoy?(coughs) After what you did to my family.
 					Actor_Says(kActorClovis, 200, kAnimationModeTalk); //05-0200.AUD	To my friends. Do you not also seek forgiveness?
-					if (Player_Query_Agenda() != kPlayerAgendaPolite) {
+					if (Player_Query_Agenda() == kPlayerAgendaSurly 
+					&& Player_Query_Agenda() == kPlayerAgendaErratic) {
 						Music_Stop(1u);
 						Delay(1000);
 						Actor_Says(kActorMcCoy, 2360, 18); //00-2360.AUD	I don’t need to.
+						Delay(1000);
+						Actor_Says(kActorMcCoy, 5150, 18); //00-5150.AUD	One more thing.
 						Delay(500);
+						Actor_Says(kActorMcCoy, 6180, 14); //00-6180.AUD	Your breath smells like you wiped your ass with your teeth..
 						Actor_Says(kActorClovis, 10, 3); //05-0010.AUD	Enough!
 						if (Game_Flag_Query(kFlagSadikIsReplicant)) {
 							if (Actor_Query_Goal_Number(kActorSadik) == kGoalSadikKP06NeedsReactorCoreFromMcCoy) {
@@ -423,8 +424,9 @@ void SceneScriptKP07::PlayerWalkedIn() {
 						Delay (2000);
 						Actor_Says(kActorMcCoy, 2305, 17); //00-2305.AUD	I’m sorry.
 						Delay (2000);
-						Actor_Says(kActorMcCoy, 8500, 3);
+						Actor_Says(kActorClovis, 1280, kAnimationModeTalk); //05-1280.AUD	You are here. That’s enough for 
 						Delay (1000);
+						Actor_Says(kActorMcCoy, 8500, 3);
 						Actor_Says(kActorClovis, 1250, 3);
 						if (Game_Flag_Query(kFlagSadikIsReplicant)) {
 							if (Actor_Query_Goal_Number(kActorSadik) == kGoalSadikKP06NeedsReactorCoreFromMcCoy) {
@@ -470,7 +472,7 @@ void SceneScriptKP07::PlayerWalkedIn() {
 			Actor_Face_Actor(kActorMcCoy, kActorClovis, true);
 			if (_vm->_cutContent) {
 				if (Actor_Clue_Query(kActorMcCoy, kClueMcCoyRetiredSadik)) {
-					Actor_Says(kActorClovis, 160, 3);
+					Actor_Says(kActorClovis, 160, 3); //05-0160.AUD	I’ve been expecting you.
 				}
 			} else {
 				Actor_Says(kActorClovis, 160, 3);

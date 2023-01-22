@@ -219,9 +219,17 @@ bool SceneScriptMA04::ClickedOn2DRegion(int region) {
 				return false;
 			}
 			if (Actor_Clue_Query(kActorClovis, kClueMcCoyRetiredZuben) && !Game_Flag_Query(kFlagMA04PhoneMessageFromClovis)) {
-				Sound_Play(kSfxSPNBEEP9, 100, 0, 0, 50);
-				Overlay_Remove("MA04OVER");
-				Delay(500);
+				if (_vm->_cutContent) {
+					Actor_Change_Animation_Mode(kActorMcCoy, 23);
+					Delay(1000);
+					Sound_Play(kSfxSPNBEEP9, 100, 0, 0, 50);
+					Overlay_Remove("MA04OVER");
+					Delay(1000);
+				} else {
+					Sound_Play(kSfxSPNBEEP9, 100, 0, 0, 50);
+					Overlay_Remove("MA04OVER");
+					Delay(500);
+				}	
 				Actor_Says(kActorClovis, 310, 3);
 				Actor_Says(kActorClovis, 320, 3);
 				if (!Game_Flag_Query(kFlagDirectorsCut) && Global_Variable_Query(kVariableChapter) < 3) {
@@ -235,9 +243,17 @@ bool SceneScriptMA04::ClickedOn2DRegion(int region) {
 				return true;
 			}
 			if (Actor_Clue_Query(kActorLucy, kClueMcCoyLetZubenEscape) && !Game_Flag_Query(kFlagMA04PhoneMessageFromLucy)) {
-				Sound_Play(kSfxSPNBEEP9, 100, 0, 0, 50);
-				Overlay_Remove("MA04OVER");
-				Delay(500);
+				if (_vm->_cutContent) {
+					Actor_Change_Animation_Mode(kActorMcCoy, 23);
+					Delay(1000);
+					Sound_Play(kSfxSPNBEEP9, 100, 0, 0, 50);
+					Overlay_Remove("MA04OVER");
+					Delay(1000);
+				} else {
+					Sound_Play(kSfxSPNBEEP9, 100, 0, 0, 50);
+					Overlay_Remove("MA04OVER");
+					Delay(500);
+				}	
 				Actor_Says(kActorLucy, 500, 3);
 				Actor_Says(kActorLucy, 510, 3); //-	06-0510.AUD	I heard about what you did for my friend and I just wanted to say thanks.
 				//Added in an extra line
@@ -455,7 +471,7 @@ void SceneScriptMA04::phoneCallWithDektora() {
 	Actor_Says(kActorMcCoy, 2460, 0); 
 	if (_vm->_cutContent) {
 		if (Actor_Query_Friendliness_To_Other(kActorClovis, kActorMcCoy) > 50
-		&& !Actor_Clue_Query(kActorClovis, kClueMcCoyRetiredLucy)) {
+		&& !Game_Flag_Query(kFlagMcCoyRetiredReplicant)) {
 			Actor_Says(kActorDektora, 230, 3); //03-0230.AUD	Look, I think I got Clovis and Sadik to let you alone.
 			Actor_Says(kActorDektora, 240, 3);
 			Actor_Says(kActorMcCoy, 2465, 0);
@@ -507,7 +523,7 @@ void SceneScriptMA04::phoneCallWithDektora() {
 	Actor_Says(kActorMcCoy, 2490, 0); //00-2490.AUD	No hard feelings, huh?
 	if (_vm->_cutContent) {
 		if (Actor_Query_Friendliness_To_Other(kActorClovis, kActorMcCoy) > 50
-		&& !Actor_Clue_Query(kActorClovis, kClueMcCoyRetiredLucy)) {
+		&& !Game_Flag_Query(kFlagMcCoyRetiredReplicant)) {
 			Actor_Says(kActorDektora, 330, 3); 
 			Actor_Says(kActorMcCoy, 2495, 0); //00-2495.AUD	Okay.
 		} else {
@@ -524,7 +540,7 @@ void SceneScriptMA04::phoneCallWithDektora() {
 			answer = 1170; // CLOVIS
 		} else {
 			Dialogue_Menu_Clear_List();
-			DM_Add_To_List_Never_Repeat_Once_Selected(1160, 1, 1, 2); // OK
+			DM_Add_To_List_Never_Repeat_Once_Selected(1160, 1, 2, 3); // OK
 			DM_Add_To_List_Never_Repeat_Once_Selected(1170, 2, 1, 1); // CLOVIS
 			Dialogue_Menu_Appear(320, 240);
 			answer = Dialogue_Menu_Query_Input();
@@ -612,17 +628,15 @@ void SceneScriptMA04::phoneCallWithDektora() {
 		}
 		Sound_Play(kSfxSPNBEEP9, 100, 0, 0, 50);
 		if (_vm->_cutContent) {
-			if (Player_Query_Agenda() == kPlayerAgendaSurly 
-			|| Player_Query_Agenda() == kPlayerAgendaErratic) {
+			if (Player_Query_Agenda() != kPlayerAgendaPolite) {
 				Actor_Says(kActorMcCoy, 2540, 15); //00-2540.AUD	Dektora, wait! Damn it.
 			}
 		} else {
 			Actor_Says(kActorMcCoy, 2540, 15); //00-2540.AUD	Dektora, wait! Damn it.
 		}
 		if (_vm->_cutContent) {
-			if (!Actor_Clue_Query(kActorClovis, kClueMcCoyRetiredLucy) 
-			&& !Actor_Clue_Query(kActorClovis, kClueMcCoyRetiredDektora)
-			&& Actor_Query_Friendliness_To_Other(kActorClovis, kActorMcCoy) > 50) {
+			if (Actor_Query_Friendliness_To_Other(kActorClovis, kActorMcCoy) > 50
+			&& !Game_Flag_Query(kFlagMcCoyRetiredReplicant)) {
 				Game_Flag_Set(kFlagMcCoyIsHelpingReplicants);
 				Actor_Set_Goal_Number(kActorClovis, kGoalClovisKP07Wait);
 				Actor_Set_Goal_Number(kActorSadik, 414);
@@ -673,9 +687,8 @@ void SceneScriptMA04::phoneCallWithLucy() {
 			Actor_Says_With_Pause(kActorMcCoy, 2570, 0.0f, 13); // Lucy, there's a good chance--
 			Sound_Play(kSfxSPNBEEP9, 100, 0, 0, 50); // (Lucy hangs up)
 			Actor_Says(kActorMcCoy, 2575, 15); // Wait, Lucy!
-			if (!Actor_Clue_Query(kActorClovis, kClueMcCoyRetiredLucy) 
-			&& !Actor_Clue_Query(kActorClovis, kClueMcCoyRetiredDektora)
-			&& Actor_Query_Friendliness_To_Other(kActorClovis, kActorMcCoy) > 50) {
+			if (Actor_Query_Friendliness_To_Other(kActorClovis, kActorMcCoy) > 50
+			&& !Game_Flag_Query(kFlagMcCoyRetiredReplicant)) {
 				Game_Flag_Set(kFlagMcCoyIsHelpingReplicants);
 				Actor_Set_Goal_Number(kActorClovis, kGoalClovisKP07Wait);
 				Actor_Set_Goal_Number(kActorSadik, 414);
@@ -694,9 +707,6 @@ void SceneScriptMA04::phoneCallWithLucy() {
 			Actor_Says(kActorLucy, 590, 3); //06-0590.AUD	We could buy a car. From that place next to the arcade.
 			Actor_Says(kActorMcCoy, 2565, 12);
 			Actor_Says(kActorLucy, 600, 3); //06-0600.AUD	One of those flying cars would though. 
-			//Added in a line where McCoy says Lucys escape plan is risky and illegal. This will help mitigate some conclusion for players wherew Lucy is human
-			//and McCoy is found innocent yet the police still show up at Crazylegs place.
-			Actor_Says(kActorMcCoy, 2520, 12); //00-2520.AUD	It’s real risky. And illegal.
 			Actor_Says(kActorLucy, 610, 3);
 			Actor_Says(kActorLucy, 620, 3);
 			Actor_Says(kActorMcCoy, 6805, 13); //00-6805.AUD	I-- I promise you. But for now we gotta be careful. You should stay hidden for a while.
@@ -708,6 +718,7 @@ void SceneScriptMA04::phoneCallWithLucy() {
 			Sound_Play(kSfxSPNBEEP9, 100, 0, 0, 50);
 			Game_Flag_Set(kFlagCarEnding);
 			Actor_Clue_Acquire(kActorMcCoy, kCluePhoneCallLucy1, true, kActorLucy);
+			Actor_Set_Targetable(kActorLucy, false);
 		} 
 	} else if (Game_Flag_Query(kFlagCrazylegsArrested)
 	|| Actor_Query_Goal_Number(kActorCrazylegs) == kGoalCrazyLegsLeavesShowroom
@@ -745,9 +756,6 @@ void SceneScriptMA04::phoneCallWithLucy() {
 		Actor_Says_With_Pause(kActorMcCoy, 2575, 0.0f, 15);
 		if (!Game_Flag_Query(kFlagDirectorsCut)) {
 			Actor_Says(kActorLucy, 640, 3);
-		}
-		if (_vm->_cutContent) {
-			Actor_Set_Targetable(kActorLucy, false);
 		}
 #if BLADERUNNER_ORIGINAL_BUGS
 #else
@@ -850,9 +858,8 @@ void SceneScriptMA04::phoneCallWithClovis() {
 	// Altered code so Clovis and McCoy will be angry with each other if McCoy retired Dektora Lucy or Zuben or he didn't kill Guzza.
 	// If he didn't do any of that Clovis is nicer to him.
 	if (_vm->_cutContent) {
-		if (Actor_Clue_Query(kActorClovis, kClueMcCoyRetiredLucy) 
-		|| Actor_Clue_Query(kActorClovis, kClueMcCoyRetiredDektora) 
-		|| Actor_Query_Friendliness_To_Other(kActorClovis, kActorMcCoy) < 51) {
+		if (Actor_Query_Friendliness_To_Other(kActorClovis, kActorMcCoy) < 51
+		|| Game_Flag_Query(kFlagMcCoyRetiredReplicant)) {
 			Actor_Says(kActorMcCoy, 2580, 14); //00-2580.AUD	No thanks to you.
 			Actor_Says(kActorClovis, 340, 3); //05-0340.AUD	Don’t you think you’d already be dead, if that’s what I so desired?
 			Actor_Says(kActorMcCoy, 2585, 19); //00-2585.AUD	Talking like a god, Clovis. Isn’t that a little over the top? Even for you?
@@ -910,9 +917,8 @@ void SceneScriptMA04::phoneCallWithClovis() {
 	Actor_Says(kActorClovis, 460, 3); //05-0460.AUD	To see if you could really act as one of them.
 	Actor_Says(kActorClovis, 470, 3); //05-0470.AUD	He wiped out all your memories of our time together.
 	if (_vm->_cutContent) {
-		if (!Actor_Clue_Query(kActorClovis, kClueMcCoyRetiredLucy) 
-		&& !Actor_Clue_Query(kActorClovis, kClueMcCoyRetiredDektora) 
-		&& Actor_Query_Friendliness_To_Other(kActorClovis, kActorMcCoy) > 50) {
+		if (Actor_Query_Friendliness_To_Other(kActorClovis, kActorMcCoy) > 50
+		&& !Game_Flag_Query(kFlagMcCoyRetiredReplicant)) {
 			Actor_Says(kActorClovis, 480, 3); //05-0480.AUD	As soldiers during the Phobos wars.
 			Actor_Says(kActorClovis, 490, 3); //05-0490.AUD	The battle of the Gemini. Firefights on the top of the Olympus Mountains!
 		}
@@ -923,9 +929,8 @@ void SceneScriptMA04::phoneCallWithClovis() {
 	Actor_Says(kActorMcCoy, 2615, 17); //00-2615.AUD	I don’t remember.
 	//Restored some dialogue for the phone call.
 	if (_vm->_cutContent) {
-		if (!Actor_Clue_Query(kActorClovis, kClueMcCoyRetiredLucy) 
-		&& !Actor_Clue_Query(kActorClovis, kClueMcCoyRetiredDektora) 
-		&& Actor_Query_Friendliness_To_Other(kActorClovis, kActorMcCoy) > 50) {
+		if (Actor_Query_Friendliness_To_Other(kActorClovis, kActorMcCoy) > 50
+		&& !Game_Flag_Query(kFlagMcCoyRetiredReplicant)) {
 			Actor_Says(kActorClovis, 1230, 3); //05-1230.AUD	That’s what I remember.
 			Actor_Says(kActorMcCoy, 8565, 13); //00-8565.AUD	Really?
 		}
@@ -936,10 +941,14 @@ void SceneScriptMA04::phoneCallWithClovis() {
 		Actor_Says(kActorClovis, 510, 3); //05-0510.AUD	In the sewers near the police station is a tunnel that leads out to the Kipple.
 		Actor_Says(kActorClovis, 520, 3); //05-0520.AUD	Do you know it?
 		Actor_Says(kActorMcCoy, 2625, 14); //00-2625.AUD	I can find it.
+		if (Actor_Query_Friendliness_To_Other(kActorClovis, kActorMcCoy) > 50
+		&& !Game_Flag_Query(kFlagMcCoyRetiredReplicant)) {
+			Actor_Says(kActorClovis, 530, 3); //05-0530.AUD	It’s a passage to freedom, McCoy. To your destiny.
+			Actor_Says(kActorClovis, 540, 3); //05-0540.AUD	An underground railroad to carry you from bondage. We’ll be waiting.
+		}	
 		Actor_Clue_Acquire(kActorMcCoy, kCluePhoneCallClovis, true, kActorClovis);
-		if (!Actor_Clue_Query(kActorClovis, kClueMcCoyRetiredLucy) 
-		&& !Actor_Clue_Query(kActorClovis, kClueMcCoyRetiredDektora)
-		&& Actor_Query_Friendliness_To_Other(kActorClovis, kActorMcCoy) > 50) {
+		if (Actor_Query_Friendliness_To_Other(kActorClovis, kActorMcCoy) > 50
+		&& !Game_Flag_Query(kFlagMcCoyRetiredReplicant)) {
 			Game_Flag_Set(kFlagMcCoyIsHelpingReplicants);
 			Actor_Set_Goal_Number(kActorClovis, kGoalClovisKP07Wait);
 			Actor_Set_Goal_Number(kActorSadik, 414);
@@ -953,10 +962,7 @@ void SceneScriptMA04::phoneCallWithClovis() {
 				Actor_Set_Goal_Number(kActorSadik, 414);
 			}
 		}
-	}
-	if (!Actor_Clue_Query(kActorClovis, kClueMcCoyRetiredLucy) 
-	&& !Actor_Clue_Query(kActorClovis, kClueMcCoyRetiredDektora) 
-	&& Actor_Query_Friendliness_To_Other(kActorClovis, kActorMcCoy) > 50) {
+	} else {
 		Actor_Says(kActorClovis, 530, 3); //05-0530.AUD	It’s a passage to freedom, McCoy. To your destiny.
 		Actor_Says(kActorClovis, 540, 3); //05-0540.AUD	An underground railroad to carry you from bondage. We’ll be waiting.
 	}	
@@ -1055,6 +1061,12 @@ void SceneScriptMA04::sleep() {
 					Global_Variable_Increment(kVariableChinyen, 200);
 				}
 				Game_Flag_Set(kFlagZubenBountyPaid); // not a proper bug, but was missing from original code, so the flag would remain in non-consistent state in this case
+			}
+			if (!Game_Flag_Query(kFlagRunciterBountyPaid) && Game_Flag_Query(kFlagMcCoyRetiredRunciter)) { // get retirement money at end of day 1 only if Zuben was retired.
+				if (Query_Difficulty_Level() != kGameDifficultyEasy) {
+					Global_Variable_Increment(kVariableChinyen, 200);
+				}
+				Game_Flag_Set(kFlagRunciterBountyPaid); // not a proper bug, but was missing from original code, so the flag would remain in non-consistent state in this case
 			}
 #endif // BLADERUNNER_ORIGINAL_BUGS
 		} else {

@@ -194,13 +194,7 @@ void AIScriptEarlyQ::ClickedByPlayer() {
 			if (!Loop_Actor_Walk_To_XYZ(kActorMcCoy, -381.11f, 0.0f, -135.55f, 0, false, false, false)) {
 				Actor_Face_Actor(kActorMcCoy, kActorEarlyQ, true);
 				Actor_Face_Actor(kActorEarlyQ, kActorMcCoy, true);
-				if (_vm->_cutContent) {
-					if (Player_Query_Agenda() == kPlayerAgendaPolite) {
-						Actor_Says(kActorMcCoy, 8513, 18); //00-8513.AUD	Early, how's it hanging?
-					} else {
-						Actor_Says(kActorMcCoy, 3520, kAnimationModeTalk); //00-3520.AUD	Hey, Early.
-					}
-				}
+				Actor_Says(kActorMcCoy, 3520, kAnimationModeTalk); //00-3520.AUD	Hey, Early.
 				Actor_Says(kActorEarlyQ, 340, kAnimationModeTalk); //18-0340.AUD	No more free drinks for you, buddy boy.
 			}
 		}
@@ -216,9 +210,11 @@ void AIScriptEarlyQ::ClickedByPlayer() {
 		if (Game_Flag_Query(kFlagEarlyQDead)) {
 			if (Player_Query_Agenda() == kPlayerAgendaSurly 
 			|| Player_Query_Agenda() == kPlayerAgendaErratic) {
-				Actor_Says(kActorMcCoy, 8665, 13); //00-8665.AUD	Disgusting.
-			} else {	
+				Actor_Says(kActorMcCoy, 8590, 18); //00-8590.AUD	Not the talkative type
+			} else if (Player_Query_Agenda() == kPlayerAgendaPolite) {	
 				Actor_Says(kActorMcCoy, 8630, 12);  // What a waste
+			} else {
+				Actor_Says(kActorMcCoy, 8665, 13); //00-8665.AUD	Disgusting.	
 			}
 		}
 	}
@@ -307,18 +303,21 @@ void AIScriptEarlyQ::Retired(int byActorId) {
 				if (Actor_Query_Goal_Number(kActorRunciter) < kGoalRunciterDead) {
 					Delay(1000);
 					Sound_Play(kSfxSMCAL3, 100, 0, 0, 50);
+					Actor_Set_Goal_Number(kActorRunciter, kGoalRunciterDead);
 				}
 			}
 			if (Game_Flag_Query(kFlagCrazylegsIsReplicant)) {
 				if (!Game_Flag_Query(kFlagCrazylegsDead)) {
 					Delay(1000);
 					Sound_Play(kSfxSMCAL3, 100, 0, 0, 50);
+					Game_Flag_Set(kFlagCrazylegsDead);
 				}
 			}
 			if (Game_Flag_Query(kFlagGrigorianIsReplicant)) {
 				if (!Game_Flag_Query(kFlagGrigorianDead)) {
 					Delay(1000);
 					Sound_Play(kSfxSMCAL3, 100, 0, 0, 50);
+					Game_Flag_Set(kFlagGrigorianDead);
 				}
 			}
 			Delay(2000);
@@ -491,10 +490,22 @@ bool AIScriptEarlyQ::GoalChanged(int currentGoalNumber, int newGoalNumber) {
 		break;
 
 	case kGoalEarlyQNR04ScorpionsCheck:
-		if (Game_Flag_Query(kFlagAR02DektoraBoughtScorpions)) {
-			Actor_Set_Goal_Number(kActorEarlyQ, kGoalEarlyQNR04StungByScorpions);
+		if (_vm->_cutContent) {
+			if (!Game_Flag_Query(kFlagEarlyQIsReplicant)) {		
+				if (Game_Flag_Query(kFlagAR02DektoraBoughtScorpions)) {
+					Actor_Set_Goal_Number(kActorEarlyQ, kGoalEarlyQNR04StungByScorpions);
+				} else {
+					Actor_Set_Goal_Number(kActorEarlyQ, kGoalEarlyQNR04Talk2);
+				}
+			} else {
+				Actor_Set_Goal_Number(kActorEarlyQ, kGoalEarlyQNR04Talk2);
+			}
 		} else {
-			Actor_Set_Goal_Number(kActorEarlyQ, kGoalEarlyQNR04Talk2);
+			if (Game_Flag_Query(kFlagAR02DektoraBoughtScorpions)) {
+				Actor_Set_Goal_Number(kActorEarlyQ, kGoalEarlyQNR04StungByScorpions);
+			} else {
+				Actor_Set_Goal_Number(kActorEarlyQ, kGoalEarlyQNR04Talk2);
+			}
 		}
 		break;
 
@@ -585,6 +596,7 @@ bool AIScriptEarlyQ::GoalChanged(int currentGoalNumber, int newGoalNumber) {
 			if (Actor_Query_In_Set(kActorEarlyQ, kSetNR04)) {
 				if (Game_Flag_Query(kFlagEarlyQIsReplicant)) {
 					Game_Flag_Set(kFlagEarlyQDead);
+					Game_Flag_Set(kFlagMcCoyRetiredReplicant);
 					Game_Flag_Reset(kFlagMcCoyIsHelpingReplicants);
 					Actor_Voice_Over(920, kActorVoiceOver); //99-0920.AUD	Easy money.
 					Actor_Modify_Friendliness_To_Other(kActorSteele, kActorMcCoy, 2);

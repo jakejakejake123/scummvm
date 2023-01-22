@@ -124,6 +124,8 @@ bool SceneScriptRC51::ClickedOnItem(int itemId, bool a2) {
 			Actor_Face_Item(kActorMcCoy, kItemCandy, true);
 			if (_vm->_cutContent) {
 				Actor_Clue_Acquire(kActorMcCoy, kClueCandy, true, kActorLucy);
+				Actor_Change_Animation_Mode(kActorMcCoy, 23);
+				Delay(2000);
 			} else {
 				Actor_Clue_Acquire(kActorMcCoy, kClueCandy, true, -1);
 			}

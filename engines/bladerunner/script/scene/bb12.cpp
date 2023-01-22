@@ -70,6 +70,9 @@ void SceneScriptBB12::InitializeScene() {
 	Ambient_Sounds_Add_Sound(kSfxTHNDER3, 5, 180, 25, 25, -100, 100, -101, -101, 0, 0);
 
 	if (!Game_Flag_Query(kFlagBB12Entered)) {
+		if (_vm->_cutContent) {
+			Music_Play(kMusicBatl226M, 50, 0, 2, -1, kMusicLoopPlayOnce, 0);
+		}
 		Overlay_Play("BB12OVER", 0, false, false, 0); // Sadik's shadow going left
 		Game_Flag_Set(kFlagBB12Entered);
 	}
@@ -129,6 +132,7 @@ bool SceneScriptBB12::ClickedOnActor(int actorId) {
 			if (Actor_Query_Friendliness_To_Other(kActorSebastian, kActorMcCoy) < 50) {
 				Actor_Says(kActorSebastian, 650, 14); //56-0650.AUD	I haven't named her yet.
 			}
+			Delay(1000);
 			Actor_Says(kActorMcCoy, 7250, 13); //00-7250.AUD	She almost looks real.
 			Actor_Says(kActorSebastian, 660, 14); //56-0660.AUD	She isn't. Believe you me.
 			Actor_Says(kActorMcCoy, 7255, 15); //00-7255.AUD	You know, I can't place her for sure but she looks familiar.

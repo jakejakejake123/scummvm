@@ -398,17 +398,18 @@ void SceneScriptMA02::talkWithRajif() {
 		if (Player_Query_Agenda() == kPlayerAgendaSurly 
 		|| Player_Query_Agenda() == kPlayerAgendaErratic) {
 			Actor_Says(kActorMcCoy, 4320, 14); //00-4320.AUD	Save the pitch for someone who gives a shit.
-			Player_Set_Combat_Mode(true);
-			Delay(200); 
+			Delay(500); 
 			Sound_Play(kSfxSHOTCOK1, 100, 0, 100, 50);
+			Delay(500);
+			Player_Set_Combat_Mode(true);
 			Delay(2000);
 			Actor_Says(kActorRajif, 30, 13); //40-0030.AUD	Now, you got two seconds to mosey along.
+			Delay(500);
+			Actor_Change_Animation_Mode(kActorMcCoy, 5);
 			Delay(1000);
-			Actor_Says(kActorMcCoy, 170, -1); //00-0170.AUD	Damn.
-			Player_Set_Combat_Mode(false);
-			Delay(3000);
+			Sound_Play(kSfxGUNH1A, 100, 0, 0, 50);
 		} else {
-			Actor_Says(kActorMcCoy, 2380, 13);
+			Actor_Says(kActorMcCoy, 2380, 14);
 			Sound_Play(kSfxSHOTCOK1, 100, 0, 100, 50);
 			Actor_Says(kActorRajif, 40, 13);
 			Delay(3000);

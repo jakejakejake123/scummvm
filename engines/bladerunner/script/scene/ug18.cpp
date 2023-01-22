@@ -298,104 +298,104 @@ void SceneScriptUG18::ActorChangedGoal(int actorId, int newGoal, int oldGoal, bo
 	} else if (actorId == kActorClovis) {
 		switch (newGoal) {
 		case kGoalClovisUG18HitByMcCoy:
-		ADQ_Flush();
-		Player_Loses_Control();
-		Scene_Exits_Enable();
-		Music_Play(kMusicBeating1, 71, 0, 0, -1, kMusicLoopPlayOnce, 2);
-		Actor_Change_Animation_Mode(kActorClovis, kAnimationModeCombatHit);
-		Delay(1000);
-		Loop_Actor_Walk_To_XYZ(kActorSadik, -157.44, 0.46, 418.53, 2, false, true, false);
-		Actor_Face_Actor(kActorSadik, kActorMcCoy, true);
-		Actor_Face_Actor(kActorMcCoy, kActorSadik, true);
-		Delay(200);
-		Actor_Change_Animation_Mode(kActorSadik, kAnimationModeCombatAttack);
-		ADQ_Add(kActorGuzza, 410, 13); //04-0410.AUD	Jesus.
-		Loop_Actor_Walk_To_Actor(kActorMcCoy, kActorGuzza, 36, false, true);
-		ADQ_Add(kActorMcCoy, 1660, 13); //00-1660.AUD	Go! Quickly.
-		Actor_Face_Actor(kActorSadik, kActorMcCoy, true);	
-		Delay(1000);
-		Actor_Change_Animation_Mode(kActorSadik, kAnimationModeCombatAttack);
-		Loop_Actor_Walk_To_XYZ(kActorMcCoy, -370.97f, 0.94f, -27.25f, 0, false, false, false);
-		Actor_Face_Actor(kActorSadik, kActorMcCoy, true);
-		Delay(200);
-		Actor_Change_Animation_Mode(kActorSadik, kAnimationModeCombatAttack);
-		Actor_Face_Actor(kActorMcCoy, kActorSadik, true);
-		Sound_Play(kSfxGUNH1A, 100, 0, 0, 50);
-		Actor_Change_Animation_Mode(kActorMcCoy, 6);	
-		Delay(1000);
-		Loop_Actor_Walk_To_XYZ(kActorMcCoy, -513.39f, 0.68f, 130.59f, 0, false, false, false);
-		Actor_Face_Actor(kActorSadik, kActorMcCoy, true);
-		Actor_Change_Animation_Mode(kActorSadik, kAnimationModeCombatAttack);
-		Actor_Face_Actor(kActorClovis, kActorMcCoy, true);
-		Delay(200);
-		Actor_Face_Actor(kActorMcCoy, kActorSadik, true);
-		Actor_Change_Animation_Mode(kActorMcCoy, 6);
-		Sound_Play(kSfxGUNH1A, 100, 0, 0, 50);
-		Music_Stop(3u);
-		Loop_Actor_Walk_To_Actor(kActorSadik, kActorMcCoy, 36, false, true);
-		Actor_Face_Actor(kActorClovis, kActorMcCoy, true);
-		Actor_Face_Actor(kActorMcCoy, kActorSadik, true);
-		Actor_Face_Actor(kActorSadik, kActorMcCoy, true);
-		Sound_Play(kSfxSHOTCOK1, 100, 0, 100, 50);
-		Delay(1000);
-		Music_Play(kMusicMoraji, 71, 0, 0, -1, kMusicLoopPlayOnce, 2);
-		Ambient_Sounds_Play_Sound(kSfxKICK1, 90, 99, 0, 0);
-		Actor_Change_Animation_Mode(kActorSadik, 62);
-		Actor_Change_Animation_Mode(kActorMcCoy, 21);
-		Delay(2000);
-		Ambient_Sounds_Play_Sound(kSfxKICK2, 90, 99, 0, 0);
-		Actor_Change_Animation_Mode(kActorSadik, 63);
-		Actor_Change_Animation_Mode(kActorMcCoy, 21);
-		Delay(2000);
-		Actor_Face_Actor(kActorMcCoy, kActorGuzza, true);
-		Ambient_Sounds_Play_Sound(kSfxKICK1, 90, 99, 0, 0);
-		Actor_Change_Animation_Mode(kActorSadik, 62);
-		Actor_Change_Animation_Mode(kActorMcCoy, 85);
-		Delay(1500);
-		Actor_Change_Animation_Mode(kActorSadik, kAnimationModeCombatIdle);
-		Sound_Play(kSfxSHOTCOK1, 100, 0, 100, 50);
-		Delay(1500);
-		Actor_Face_Actor(kActorGuzza, kActorSadik, true);
-		Actor_Face_Actor(kActorSadik, kActorGuzza, true);
-		ADQ_Add(kActorGuzza, 9005, 13); //04-9005.AUD	Hey.
-		Delay(500);
-		Sound_Play(kSfxLGCAL3, 100, 0, 0, 50);
-		Actor_Change_Animation_Mode(kActorGuzza, kAnimationModeCombatAttack);
-		Actor_Change_Animation_Mode(kActorSadik, kAnimationModeCombatHit);
-		Delay(1000);
-		Actor_Change_Animation_Mode(kActorSadik, kAnimationModeCombatAttack);
-		Loop_Actor_Walk_To_XYZ(kActorGuzza, -88.77, 1.09, -315.81, 0, false, true, false);
-		Actor_Face_Actor(kActorGuzza, kActorSadik, true);
-		Sound_Play(kSfxLGCAL3, 100, 0, 0, 50);
-		Actor_Change_Animation_Mode(kActorGuzza, kAnimationModeCombatAttack);
-		Actor_Change_Animation_Mode(kActorSadik, kAnimationModeDie);
-		Actor_Retired_Here(kActorSadik, 36, 12, true, -1);
-		Actor_Set_Goal_Number(kActorSadik, kGoalSadikGone);
-		Delay(1000);
-		Loop_Actor_Walk_To_Actor(kActorGuzza, kActorMcCoy, 36, false, true);
-		Actor_Face_Actor(kActorGuzza, kActorMcCoy, true);
-		Actor_Face_Actor(kActorMcCoy, kActorGuzza, true);
-		Actor_Change_Animation_Mode(kActorMcCoy, 29);
-		Delay(1000);
-		if (Player_Query_Agenda() == kPlayerAgendaPolite) {
-			ADQ_Add(kActorMcCoy, 3935, 13); //00-3935.AUD	Thanks.
-		}
-		Delay(1000);
-		Player_Set_Combat_Mode(false);
-		Loop_Actor_Walk_To_XYZ(kActorGuzza, -684.71f, 0.0f, 171.59f, 0, false, true, false);
-		Game_Flag_Set(kFlagGuzzaSaved);
-		Global_Variable_Set(kVariableAffectionTowards, kAffectionTowardsNone);
-		Game_Flag_Reset(kFlagMcCoyIsHelpingReplicants);
-		Actor_Modify_Friendliness_To_Other(kActorClovis, kActorMcCoy, -20);
-		Actor_Face_Actor(kActorMcCoy, kActorClovis, true);
-		Actor_Face_Actor(kActorClovis, kActorMcCoy, true);
-		Delay(2000);
-		Loop_Actor_Walk_To_XYZ(kActorMcCoy, -684.71f, 0.0f, 171.59f, 0, true, false, false);
-		Player_Gains_Control();
-		Ambient_Sounds_Remove_All_Non_Looping_Sounds(true);
-		Ambient_Sounds_Remove_All_Looping_Sounds(1u);
-		Game_Flag_Set(kFlagUG18toUG13);
-		Set_Enter(kSetUG13, kSceneUG13);
+			ADQ_Flush();
+			Player_Loses_Control();
+			Scene_Exits_Enable();
+			Music_Play(kMusicBeating1, 71, 0, 0, -1, kMusicLoopPlayOnce, 2);
+			Actor_Change_Animation_Mode(kActorClovis, kAnimationModeCombatHit);
+			Delay(1000);
+			Loop_Actor_Walk_To_XYZ(kActorSadik, -157.44, 0.46, 418.53, 2, false, true, false);
+			Actor_Face_Actor(kActorSadik, kActorMcCoy, true);
+			Actor_Face_Actor(kActorMcCoy, kActorSadik, true);
+			Delay(200);
+			Actor_Change_Animation_Mode(kActorSadik, kAnimationModeCombatAttack);
+			ADQ_Add(kActorGuzza, 410, 13); //04-0410.AUD	Jesus.
+			Loop_Actor_Walk_To_Actor(kActorMcCoy, kActorGuzza, 36, false, true);
+			ADQ_Add(kActorMcCoy, 1660, 13); //00-1660.AUD	Go! Quickly.
+			Actor_Face_Actor(kActorSadik, kActorMcCoy, true);	
+			Delay(1000);
+			Actor_Change_Animation_Mode(kActorSadik, kAnimationModeCombatAttack);
+			Loop_Actor_Walk_To_XYZ(kActorMcCoy, -370.97f, 0.94f, -27.25f, 0, false, false, false);
+			Actor_Face_Actor(kActorSadik, kActorMcCoy, true);
+			Delay(200);
+			Actor_Change_Animation_Mode(kActorSadik, kAnimationModeCombatAttack);
+			Actor_Face_Actor(kActorMcCoy, kActorSadik, true);
+			Sound_Play(kSfxGUNH1A, 100, 0, 0, 50);
+			Actor_Change_Animation_Mode(kActorMcCoy, 6);	
+			Delay(1000);
+			Loop_Actor_Walk_To_XYZ(kActorMcCoy, -513.39f, 0.68f, 130.59f, 0, false, false, false);
+			Actor_Face_Actor(kActorSadik, kActorMcCoy, true);
+			Actor_Change_Animation_Mode(kActorSadik, kAnimationModeCombatAttack);
+			Actor_Face_Actor(kActorClovis, kActorMcCoy, true);
+			Delay(200);
+			Actor_Face_Actor(kActorMcCoy, kActorSadik, true);
+			Actor_Change_Animation_Mode(kActorMcCoy, 6);
+			Sound_Play(kSfxGUNH1A, 100, 0, 0, 50);
+			Music_Stop(3u);
+			Loop_Actor_Walk_To_Actor(kActorSadik, kActorMcCoy, 36, false, true);
+			Actor_Face_Actor(kActorClovis, kActorMcCoy, true);
+			Actor_Face_Actor(kActorMcCoy, kActorSadik, true);
+			Actor_Face_Actor(kActorSadik, kActorMcCoy, true);
+			Sound_Play(kSfxSHOTCOK1, 100, 0, 100, 50);
+			Delay(1000);
+			Music_Play(kMusicMoraji, 71, 0, 0, -1, kMusicLoopPlayOnce, 2);
+			Ambient_Sounds_Play_Sound(kSfxKICK1, 90, 99, 0, 0);
+			Actor_Change_Animation_Mode(kActorSadik, 62);
+			Actor_Change_Animation_Mode(kActorMcCoy, 21);
+			Delay(2000);
+			Ambient_Sounds_Play_Sound(kSfxKICK2, 90, 99, 0, 0);
+			Actor_Change_Animation_Mode(kActorSadik, 63);
+			Actor_Change_Animation_Mode(kActorMcCoy, 21);
+			Delay(2000);
+			Actor_Face_Actor(kActorMcCoy, kActorGuzza, true);
+			Ambient_Sounds_Play_Sound(kSfxKICK1, 90, 99, 0, 0);
+			Actor_Change_Animation_Mode(kActorSadik, 62);
+			Actor_Change_Animation_Mode(kActorMcCoy, 85);
+			Delay(1500);
+			Actor_Change_Animation_Mode(kActorSadik, kAnimationModeCombatIdle);
+			Sound_Play(kSfxSHOTCOK1, 100, 0, 100, 50);
+			Delay(1500);
+			Actor_Face_Actor(kActorGuzza, kActorSadik, true);
+			Actor_Face_Actor(kActorSadik, kActorGuzza, true);
+			ADQ_Add(kActorGuzza, 9005, 13); //04-9005.AUD	Hey.
+			Delay(500);
+			Sound_Play(kSfxLGCAL3, 100, 0, 0, 50);
+			Actor_Change_Animation_Mode(kActorGuzza, kAnimationModeCombatAttack);
+			Actor_Change_Animation_Mode(kActorSadik, kAnimationModeCombatHit);
+			Delay(1000);
+			Actor_Change_Animation_Mode(kActorSadik, kAnimationModeCombatAttack);
+			Loop_Actor_Walk_To_XYZ(kActorGuzza, -88.77, 1.09, -315.81, 0, false, true, false);
+			Actor_Face_Actor(kActorGuzza, kActorSadik, true);
+			Sound_Play(kSfxLGCAL3, 100, 0, 0, 50);
+			Actor_Change_Animation_Mode(kActorGuzza, kAnimationModeCombatAttack);
+			Actor_Change_Animation_Mode(kActorSadik, kAnimationModeDie);
+			Actor_Retired_Here(kActorSadik, 36, 12, true, -1);
+			Actor_Set_Goal_Number(kActorSadik, kGoalSadikGone);
+			Delay(1000);
+			Loop_Actor_Walk_To_Actor(kActorGuzza, kActorMcCoy, 36, false, true);
+			Actor_Face_Actor(kActorGuzza, kActorMcCoy, true);
+			Actor_Face_Actor(kActorMcCoy, kActorGuzza, true);
+			Actor_Change_Animation_Mode(kActorMcCoy, 29);
+			Delay(1000);
+			if (Player_Query_Agenda() == kPlayerAgendaPolite) {
+				ADQ_Add(kActorMcCoy, 3935, 13); //00-3935.AUD	Thanks.
+				Delay(1000);
+			}
+			Player_Set_Combat_Mode(false);
+			Loop_Actor_Walk_To_XYZ(kActorGuzza, -684.71f, 0.0f, 171.59f, 0, false, true, false);
+			Game_Flag_Set(kFlagGuzzaSaved);
+			Global_Variable_Set(kVariableAffectionTowards, kAffectionTowardsNone);
+			Game_Flag_Reset(kFlagMcCoyIsHelpingReplicants);
+			Actor_Modify_Friendliness_To_Other(kActorClovis, kActorMcCoy, -20);
+			Actor_Face_Actor(kActorMcCoy, kActorClovis, true);
+			Actor_Face_Actor(kActorClovis, kActorMcCoy, true);
+			Delay(2000);
+			Loop_Actor_Walk_To_XYZ(kActorMcCoy, -684.71f, 0.0f, 171.59f, 0, true, false, false);
+			Player_Gains_Control();
+			Ambient_Sounds_Remove_All_Non_Looping_Sounds(true);
+			Ambient_Sounds_Remove_All_Looping_Sounds(1u);
+			Game_Flag_Set(kFlagUG18toUG13);
+			Set_Enter(kSetUG13, kSceneUG13);
 		break;
 		}
 	}
@@ -580,15 +580,15 @@ void SceneScriptUG18::DialogueQueueFlushed(int a1) {
 		Player_Gains_Control();
 		ADQ_Add_Pause(2000);
 		if (_vm->_cutContent) {
-			if (Actor_Clue_Query(kActorClovis, kClueMcCoyRetiredLucy) 
-			|| Actor_Clue_Query(kActorClovis, kClueMcCoyRetiredDektora) 
-			|| Actor_Query_Friendliness_To_Other(kActorClovis, kActorMcCoy) < 51) { 
+			if (Actor_Query_Friendliness_To_Other(kActorClovis, kActorMcCoy) < 51
+			|| Game_Flag_Query(kFlagMcCoyRetiredReplicant)) { 
 				Actor_Set_Targetable(kActorClovis, false);
 				Delay(2000);
 				Actor_Says(kActorClovis, 650, 14);
 				Actor_Says(kActorSadik, 370, 14);
 				Actor_Says(kActorClovis, 1320, 14);
 				Actor_Clue_Acquire(kActorMcCoy, kClueClovisOrdersMcCoysDeath, true, kActorClovis);
+				Game_Flag_Set(kFlagMcCoyRetiredHuman);
 				Player_Loses_Control();
 				Loop_Actor_Walk_To_XYZ(kActorMcCoy, -684.71f, 0.0f, 171.59f, 0, false, true, false);
 				Player_Gains_Control();
@@ -612,6 +612,7 @@ void SceneScriptUG18::DialogueQueueFlushed(int a1) {
 				Actor_Says(kActorClovis, 700, 13);
 				Actor_Clue_Acquire(kActorMcCoy, kClueMcCoyShotGuzza, true, kActorClovis);
 				Game_Flag_Set(kFlagMcCoyIsHelpingReplicants);
+				Game_Flag_Set(kFlagMcCoyRetiredHuman);
 				Actor_Modify_Friendliness_To_Other(kActorSadik, kActorMcCoy, 2);
 				Actor_Modify_Friendliness_To_Other(kActorClovis, kActorMcCoy, 2);
 				Actor_Set_Goal_Number(kActorSadik, kGoalSadikUG18Leave);
@@ -678,24 +679,34 @@ void SceneScriptUG18::DialogueQueueFlushed(int a1) {
 		ADQ_Add_Pause(2000);
 		if (_vm->_cutContent) {
 			Actor_Set_Targetable(kActorClovis, false);
-			if (Actor_Clue_Query(kActorClovis, kClueMcCoyRetiredLucy) 
-			|| Actor_Clue_Query(kActorClovis, kClueMcCoyRetiredDektora) 
-			|| Actor_Query_Friendliness_To_Other(kActorClovis, kActorMcCoy) < 51) { 
+			if (Game_Flag_Query(kFlagMcCoyRetiredReplicant)) { 
 				ADQ_Add(kActorClovis, 650, 14);
 				ADQ_Add(kActorSadik, 370, 14);
 				ADQ_Add(kActorClovis, 1320, 14);
+				Actor_Set_Goal_Number(kActorGuzza, kGoalGuzzaUG18ShotBySadik);
+				Actor_Retired_Here(kActorGuzza, 72, 32, true, kActorSadik);
+				Actor_Set_Goal_Number(kActorClovis, kGoalClovisUG18GuzzaDied);
+				Scene_Exits_Enable();
 			} else {
 				ADQ_Add(kActorClovis, 60, 13); //05-0060.AUD	You're weak my friend. I expected so much more from you.
+				Scene_Exits_Enable();
+				Player_Loses_Control();
+				Loop_Actor_Walk_To_XYZ(kActorMcCoy, -684.71f, 0.0f, 171.59f, 0, false, true, false);
+				Player_Gains_Control();
+				Ambient_Sounds_Remove_All_Non_Looping_Sounds(true);
+				Ambient_Sounds_Remove_All_Looping_Sounds(1u);
+				Game_Flag_Set(kFlagUG18toUG13);
+				Set_Enter(kSetUG13, kSceneUG13);
 			}
 		} else {
 			ADQ_Add(kActorClovis, 650, 14);
 			ADQ_Add(kActorSadik, 370, 14);
 			ADQ_Add(kActorClovis, 1320, 14);
-		}
-		Actor_Set_Goal_Number(kActorGuzza, kGoalGuzzaUG18ShotBySadik);
-		Actor_Retired_Here(kActorGuzza, 72, 32, true, kActorSadik);
-		Actor_Set_Goal_Number(kActorClovis, kGoalClovisUG18GuzzaDied);
-		Scene_Exits_Enable();
+			Actor_Set_Goal_Number(kActorGuzza, kGoalGuzzaUG18ShotBySadik);
+			Actor_Retired_Here(kActorGuzza, 72, 32, true, kActorSadik);
+			Actor_Set_Goal_Number(kActorClovis, kGoalClovisUG18GuzzaDied);
+			Scene_Exits_Enable();
+		}	
 		break;
 
 	case kGoalClovisUG18GuzzaDied:
@@ -739,11 +750,23 @@ void SceneScriptUG18::talkWithGuzza() {
 		}
 	}
 	Actor_Says(kActorMcCoy, 5875, 13); //00-5875.AUD	Let me guess. Clovis gave them to you.
-	Actor_Says(kActorGuzza, 830, 3); //04-0830.AUD	I must seem pretty gullible but it sounded on the level.
-	Actor_Says(kActorGuzza, 840, 12); //04-0840.AUD	He called you his brother. Said you came down in the moonbus with all of them.
-	Actor_Says(kActorGuzza, 850, 14); //04-0850.AUD	He said Tyrell was using you to get inside the LPD.
-	Actor_Says(kActorGuzza, 860, 13); //04-0860.AUD	You hadn’t been on the job too long, so I thought… maybe.
-	Actor_Says(kActorMcCoy, 5880, 15); //00-5880.AUD	You’d screw with my head? How convenient.
+	if (_vm->_cutContent) {
+		if (Actor_Query_Friendliness_To_Other(kActorGuzza, kActorMcCoy) > 50) {
+			Actor_Says(kActorGuzza, 830, 3); //04-0830.AUD	I must seem pretty gullible but it sounded on the level.
+			Actor_Says(kActorGuzza, 840, 12); //04-0840.AUD	He called you his brother. Said you came down in the moonbus with all of them.
+			Actor_Says(kActorGuzza, 850, 14); //04-0850.AUD	He said Tyrell was using you to get inside the LPD.
+			Actor_Says(kActorGuzza, 860, 13); //04-0860.AUD	You hadn’t been on the job too long, so I thought… maybe.
+			Actor_Says(kActorMcCoy, 5880, 15); //00-5880.AUD	You’d screw with my head? How convenient.
+		} else {
+			Delay(1000);
+		}
+	} else {
+		Actor_Says(kActorGuzza, 830, 3); //04-0830.AUD	I must seem pretty gullible but it sounded on the level.
+		Actor_Says(kActorGuzza, 840, 12); //04-0840.AUD	He called you his brother. Said you came down in the moonbus with all of them.
+		Actor_Says(kActorGuzza, 850, 14); //04-0850.AUD	He said Tyrell was using you to get inside the LPD.
+		Actor_Says(kActorGuzza, 860, 13); //04-0860.AUD	You hadn’t been on the job too long, so I thought… maybe.
+		Actor_Says(kActorMcCoy, 5880, 15); //00-5880.AUD	You’d screw with my head? How convenient.
+	}
 #if BLADERUNNER_ORIGINAL_BUGS
 	Actor_Says(kActorMcCoy, 5885, 9);
 #else
@@ -793,6 +816,8 @@ void SceneScriptUG18::talkWithGuzza() {
 			Actor_Says(kActorMcCoy, 5925, 14); //00-5925.AUD	Helping Reps also part of the job?
 			Actor_Says(kActorGuzza, 940, 14); //04-0940.AUD	I was gonna whack them myself once the heat was off. Tie up those loose ends.
 			Actor_Says(kActorMcCoy, 5930, 18); //00-5930.AUD	Once I was out of the way.
+		} else {
+			Delay(1000);
 		}
 	} else {
 		Actor_Says(kActorMcCoy, 5925, 14); //00-5925.AUD	Helping Reps also part of the job?

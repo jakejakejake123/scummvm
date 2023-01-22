@@ -79,15 +79,11 @@ bool SceneScriptNR07::ClickedOnActor(int actorId) {
 		Dialogue_Menu_Clear_List();
 		if (Game_Flag_Query(kFlagNR07McCoyIsCop)) {
 			if (_vm->_cutContent) {
-				DM_Add_To_List_Never_Repeat_Once_Selected(1100, 1, 3, 4); // VOIGT-KAMPFF
-				if (Actor_Query_Goal_Number(kActorLucy) < kGoalLucyGone) {
-					DM_Add_To_List_Never_Repeat_Once_Selected(1110, 3, 2, 1); // CRYSTAL	
-				}
+				DM_Add_To_List_Never_Repeat_Once_Selected(1100, -1, 3, 4); // VOIGT-KAMPFF
+				DM_Add_To_List_Never_Repeat_Once_Selected(1110, 3, 2, -1); // CRYSTAL	
 			} else {
 				DM_Add_To_List_Never_Repeat_Once_Selected(1100, -1, 3, 8); // VOIGT-KAMPFF
-				if (Actor_Query_Goal_Number(kActorLucy) < kGoalLucyGone) {
-					DM_Add_To_List_Never_Repeat_Once_Selected(1110, 8, 2, -1); // CRYSTAL	
-				}
+				DM_Add_To_List_Never_Repeat_Once_Selected(1110, 8, 2, -1); // CRYSTAL	
 			}
 			if (_vm->_cutContent) {
 				if (Actor_Clue_Query(kActorMcCoy, kClueEarlyInterviewB2)) {
@@ -99,8 +95,7 @@ bool SceneScriptNR07::ClickedOnActor(int actorId) {
 					DM_Add_To_List_Never_Repeat_Once_Selected(1130, 4, 5, 7); // BLACK SEDAN
 				}
 			}
-			// Made it so the scorpions option is now available. The trigger for this will be the clue purchased scorpions.
-			if (Game_Flag_Query(kFlagScorpionsDiscovered)) {
+			if (Actor_Clue_Query(kActorMcCoy, kCluePowerSource)) {
 				DM_Add_To_List_Never_Repeat_Once_Selected(1140, 5, 6, 7); // SCORPIONS
 			}
 		} else {
@@ -132,20 +127,24 @@ bool SceneScriptNR07::ClickedOnActor(int actorId) {
 			Actor_Says(kActorDektora, 630, 30);
 #else
 			// Dektora is interrupted here
-			// If Early Q is a rep Dektora says that he's always treated her well since he is now nice to the replicants. If he is human she aggressively says 
-			// that McCoy doesn't need to know that.
 			if (_vm->_cutContent) {
 				if (!Game_Flag_Query(kFlagEarlyQIsReplicant)) {
-					Actor_Says(kActorDektora, 630, 31); //03-0630.AUD	He’s always treated me very well. I--
+					Actor_Says_With_Pause(kActorDektora, 630, 0.0f, 30); //03-0630.AUD	He’s always treated me very well. I--
+					Actor_Says(kActorMcCoy, 3655, 16);
+					if (Game_Flag_Query(kFlagDektoraIsReplicant)) {
+						Actor_Says(kActorDektora, 640, 31);
+					} else {
+						Actor_Says(kActorDektora, 2060, 30); //03-2060.AUD	No.
+					}
 				} else {
 					Actor_Says(kActorDektora, 1440, 31); //03-1440.AUD	I don't see why you need to know that.
 				}
 			} else {
 				Actor_Says_With_Pause(kActorDektora, 630, 0.0f, 30);
-			}
 #endif // BLADERUNNER_ORIGINAL_BUGS
-			Actor_Says(kActorMcCoy, 3655, 16);
-			Actor_Says(kActorDektora, 640, 31);
+				Actor_Says(kActorMcCoy, 3655, 16);
+				Actor_Says(kActorDektora, 640, 31);
+			}
 			break;
 
 		case 1100: // VOIGT-KAMPFF
@@ -179,95 +178,137 @@ bool SceneScriptNR07::ClickedOnActor(int actorId) {
 
 bool SceneScriptNR07::ClickedOnItem(int itemId, bool a2) {
 		// Code for picking up the dragonfly belt.
-		if (itemId == kItemDragonflyBelt) {
-			if (Actor_Query_Is_In_Current_Set(kActorDektora)) {
-				if (!Game_Flag_Query(kFlagNR07McCoyIsCop)) {
-					Actor_Face_Item(kActorMcCoy, kItemDragonflyBelt, true);
-					Actor_Clue_Acquire(kActorMcCoy, kClueDektoraInterview2, true, kActorDektora);
-					Actor_Face_Actor(kActorDektora, kActorMcCoy, true);
-					Actor_Says(kActorMcCoy, 3625, 19);
-					if (Actor_Query_Friendliness_To_Other(kActorDektora, kActorMcCoy) < 50) {
-						Actor_Says(kActorDektora, 1480, 30); //03-1480.AUD	Yes
-						Delay(1000);
-					} else {
-						Actor_Says(kActorDektora, 570, 30);
-						Actor_Says_With_Pause(kActorDektora, 580, 1.0f, 31);
-						Actor_Says(kActorMcCoy, 3630, 13);
-						Actor_Says_With_Pause(kActorDektora, 590, 1.0f, 30);
-						Actor_Says(kActorDektora, 600, 30);
-						Actor_Says_With_Pause(kActorMcCoy, 3635, 1.5f, 18); // Insects, hm.
-					}
-					Actor_Face_Actor(kActorMcCoy, kActorDektora, true);
-					Actor_Start_Speech_Sample(kActorMcCoy, 3640);  // Tell you the truth, I'm from the LPD. (...)
-					Actor_Modify_Friendliness_To_Other(kActorDektora, kActorMcCoy, -2);
-					Game_Flag_Set(kFlagNR07McCoyIsCop);
-					Actor_Says_With_Pause(kActorDektora, 610, 0.0f, 31);
-					if (Actor_Clue_Query(kActorMcCoy, kClueEarlyInterviewA)
-					&& !Actor_Clue_Query(kActorMcCoy, kClueCollectionReceipt)) {
-						Actor_Says(kActorMcCoy, 3645, 12);
-						Actor_Says(kActorDektora, 620, 30); //03-0620.AUD	I’m sure I don’t know what you mean.
-						if (Player_Query_Agenda() == kPlayerAgendaSurly 
-						|| Player_Query_Agenda() == kPlayerAgendaErratic) {
-							Actor_Says(kActorMcCoy, 2485, 19); //00-2485.AUD	I’ve a hard time believing that.
-							Actor_Modify_Friendliness_To_Other(kActorDektora, kActorMcCoy, -2);
+		if (_vm->_cutContent) {
+			if (itemId == kItemDragonflyBelt) {
+				if (Actor_Query_Is_In_Current_Set(kActorDektora)) {
+					if (!Game_Flag_Query(kFlagNR07McCoyIsCop)) {
+						Actor_Face_Item(kActorMcCoy, kItemDragonflyBelt, true);
+						Actor_Face_Actor(kActorDektora, kActorMcCoy, true);
+						Actor_Says(kActorMcCoy, 3625, 19);
+						if (Actor_Query_Friendliness_To_Other(kActorDektora, kActorMcCoy) < 50 
+						|| Game_Flag_Query(kFlagDektoraIsReplicant)) {
+							Actor_Says(kActorDektora, 1480, 30); //03-1480.AUD	Yes
 							Delay(1000);
 						} else {
-							Actor_Says(kActorMcCoy, 8225, 14); //00-8225.AUD	Just relax.
-							Delay(1000);
-							Actor_Modify_Friendliness_To_Other(kActorDektora, kActorMcCoy, 2);
+							Actor_Says(kActorDektora, 570, 30);
+							Actor_Says_With_Pause(kActorDektora, 580, 1.0f, 31);
+							Actor_Says(kActorMcCoy, 3630, 13);
+							Actor_Says_With_Pause(kActorDektora, 590, 1.0f, 30);
+							Actor_Says(kActorDektora, 600, 30);
+							Actor_Says_With_Pause(kActorMcCoy, 3635, 1.5f, 18); // Insects, hm.
+							Actor_Clue_Acquire(kActorMcCoy, kClueDektoraInterview2, true, kActorDektora);
 						}
-					}
-					Actor_Says(kActorMcCoy, 7395, 14); //00-7395.AUD	What's your name?
-					Actor_Says(kActorDektora, 1470, 30); //03-1470.AUD	Dektora.
-					if (Actor_Clue_Query(kActorMcCoy, kClueCarRegistration1)) {
-						Actor_Says(kActorMcCoy, 3615, 16);
-						if (Actor_Query_Friendliness_To_Other(kActorDektora, kActorMcCoy) < 50) {
-							Actor_Says(kActorDektora, 2060, 30); //03-2060.AUD	No.
-							if (Player_Query_Agenda() == kPlayerAgendaSurly 
-							|| Player_Query_Agenda() == kPlayerAgendaErratic) {
-								Actor_Says(kActorMcCoy, 6995, 18); //00-6995.AUD	That's not what I heard. You wanna set the record straight?
-								Delay(1000); 
-								Actor_Modify_Friendliness_To_Other(kActorDektora, kActorMcCoy, -2);
-								Actor_Says(kActorDektora, 1980, 30); //03-1980.AUD	All right.
+						Actor_Face_Actor(kActorMcCoy, kActorDektora, true);
+						Actor_Start_Speech_Sample(kActorMcCoy, 3640);  // Tell you the truth, I'm from the LPD. (...)
+						Actor_Modify_Friendliness_To_Other(kActorDektora, kActorMcCoy, -2);
+						Game_Flag_Set(kFlagNR07McCoyIsCop);
+						Actor_Says_With_Pause(kActorDektora, 610, 0.0f, 31);
+						if (!Actor_Clue_Query(kActorMcCoy, kClueDragonflyCollection)) {
+							Actor_Says(kActorMcCoy, 3645, 12);
+							if (Actor_Query_Friendliness_To_Other(kActorDektora, kActorMcCoy) < 50 
+							|| Game_Flag_Query(kFlagDektoraIsReplicant)) {
+								Actor_Says(kActorDektora, 620, 30); //03-0620.AUD	I’m sure I don’t know what you mean.
+								if (Player_Query_Agenda() == kPlayerAgendaSurly 
+								|| Player_Query_Agenda() == kPlayerAgendaErratic) {
+									Actor_Says(kActorMcCoy, 2485, 19); //00-2485.AUD	I’ve a hard time believing that.
+									Actor_Modify_Friendliness_To_Other(kActorDektora, kActorMcCoy, -2);
+									Delay(1000);
+								} else {
+									Actor_Says(kActorMcCoy, 8225, 14); //00-8225.AUD	Just relax.
+									Actor_Modify_Friendliness_To_Other(kActorDektora, kActorMcCoy, 2);
+									Delay(1000);
+								}
+							} else {
 								Actor_Says(kActorDektora, 1480, 30); //03-1480.AUD	Yes
-								Delay(500);
+							}
+						}
+						Actor_Says(kActorMcCoy, 7395, 14); //00-7395.AUD	What's your name?
+						Actor_Says(kActorDektora, 1470, 30); //03-1470.AUD	Dektora.
+						Delay(1000);
+						if (Actor_Clue_Query(kActorMcCoy, kClueCarRegistration1)) {
+							Actor_Says(kActorMcCoy, 3615, 16);
+							if (Actor_Query_Friendliness_To_Other(kActorDektora, kActorMcCoy) < 50) {
+								Actor_Says(kActorDektora, 2060, 30); //03-2060.AUD	No.
+								if (Player_Query_Agenda() == kPlayerAgendaSurly 
+								|| Player_Query_Agenda() == kPlayerAgendaErratic) {
+									Actor_Says(kActorMcCoy, 6995, 18); //00-6995.AUD	That's not what I heard. You wanna set the record straight?
+									Delay(1000); 
+									Actor_Modify_Friendliness_To_Other(kActorDektora, kActorMcCoy, -2);
+									Actor_Says(kActorDektora, 1980, 30); //03-1980.AUD	All right.
+									Actor_Says(kActorDektora, 1480, 30); //03-1480.AUD	Yes
+									Delay(500);
+									Actor_Says(kActorDektora, 770, 30);
+									Actor_Says(kActorMcCoy, 3720, 15);
+									Actor_Says_With_Pause(kActorDektora, 780, 2.0f, 30);
+									Actor_Says(kActorDektora, 790, 31);
+									Actor_Clue_Acquire(kActorMcCoy, kClueCarWasStolen, true, kActorDektora);
+									Actor_Says(kActorMcCoy, 3725, 18); //00-3725.AUD	Is that right? Any reason you didn’t tell me that right off?
+									Actor_Says(kActorDektora, 800, 30);
+									Actor_Says_With_Pause(kActorMcCoy, 3730, 2.0f, 13); //00-3730.AUD	Animal murder is pretty horrible.
+									Actor_Says(kActorDektora, 1480, 30); //03-1480.AUD	Yes
+								}
+							} else {
 								Actor_Says(kActorDektora, 770, 30);
 								Actor_Says(kActorMcCoy, 3720, 15);
 								Actor_Says_With_Pause(kActorDektora, 780, 2.0f, 30);
 								Actor_Says(kActorDektora, 790, 31);
 								Actor_Clue_Acquire(kActorMcCoy, kClueCarWasStolen, true, kActorDektora);
-								Actor_Says(kActorMcCoy, 3725, 18); //00-3725.AUD	Is that right? Any reason you didn’t tell me that right off?
-								Actor_Says(kActorDektora, 800, 30);
+								if (Player_Query_Agenda() == kPlayerAgendaSurly 
+								|| Player_Query_Agenda() == kPlayerAgendaErratic) {
+									Actor_Says(kActorMcCoy, 3725, 18); //00-3725.AUD	Is that right? Any reason you didn’t tell me that right off?
+									Actor_Says(kActorDektora, 800, 30);
+									Actor_Modify_Friendliness_To_Other(kActorDektora, kActorMcCoy, -2);
+								} 
 								Actor_Says_With_Pause(kActorMcCoy, 3730, 2.0f, 13); //00-3730.AUD	Animal murder is pretty horrible.
-								Actor_Says(kActorDektora, 1480, 30); //03-1480.AUD	Yes
-							}
-						} else {
-							Actor_Says(kActorDektora, 770, 30);
-							Actor_Says(kActorMcCoy, 3720, 15);
-							Actor_Says_With_Pause(kActorDektora, 780, 2.0f, 30);
-							Actor_Says(kActorDektora, 790, 31);
-							Actor_Clue_Acquire(kActorMcCoy, kClueCarWasStolen, true, kActorDektora);
-							if (Player_Query_Agenda() == kPlayerAgendaSurly 
-							|| Player_Query_Agenda() == kPlayerAgendaErratic) {
-								Actor_Says(kActorMcCoy, 3725, 18); //00-3725.AUD	Is that right? Any reason you didn’t tell me that right off?
-								Actor_Says(kActorDektora, 800, 30);
-								Actor_Modify_Friendliness_To_Other(kActorDektora, kActorMcCoy, -2);
-							}
-							Actor_Says_With_Pause(kActorMcCoy, 3730, 2.0f, 13); //00-3730.AUD	Animal murder is pretty horrible.
-							if (Actor_Query_Friendliness_To_Other(kActorDektora, kActorMcCoy) < 50) {
-								Actor_Says(kActorDektora, 1480, 30); //03-1480.AUD	Yes
-							} else {
-								Actor_Says_With_Pause(kActorDektora, 810, 1.0f, kAnimationModeSit);
-								Actor_Says(kActorDektora, 820, 30);	 //03-0820.AUD	Any murder is horrible. And unfortunate.
-								Actor_Says(kActorMcCoy, 3735, 14); //00-3735.AUD	Some are worse than others.
-								Actor_Says(kActorDektora, 830, 31);
-								Actor_Says(kActorMcCoy, 3740, 19);
+								if (Actor_Query_Friendliness_To_Other(kActorDektora, kActorMcCoy) < 50) {
+									Actor_Says(kActorDektora, 1480, 30); //03-1480.AUD	Yes
+								} else {
+									Actor_Says_With_Pause(kActorDektora, 810, 1.0f, kAnimationModeSit);
+									Actor_Says(kActorDektora, 820, 30);	 //03-0820.AUD	Any murder is horrible. And unfortunate.
+									Actor_Says(kActorMcCoy, 3735, 14); //00-3735.AUD	Some are worse than others.
+									Actor_Says(kActorDektora, 830, 31);
+									Actor_Says(kActorMcCoy, 3740, 19);
+								}
 							}
 						}
-					}
-					if (Actor_Clue_Query(kActorMcCoy, kCluePurchasedScorpions)) { 
-						if (Actor_Clue_Query(kActorMcCoy, kClueScorpionbox)
-						|| Game_Flag_Query(kFlagScorpionsDiscovered)) {
+						if (Actor_Clue_Query(kActorMcCoy, kCluePurchasedScorpions)) { 
+							if (Actor_Clue_Query(kActorMcCoy, kClueScorpionbox)
+							|| Game_Flag_Query(kFlagScorpionsDiscovered)) {
+								Delay(1000);
+								Actor_Face_Actor(kActorDektora, kActorMcCoy, true);
+								Actor_Face_Actor(kActorMcCoy, kActorDektora, true);
+								Actor_Says(kActorMcCoy, 3620, 19); //00-3620.AUD	You like scorpions, huh?
+								Actor_Says(kActorDektora, 840, 30); //03-0840.AUD	Scorpions?
+								Actor_Says(kActorMcCoy, 3745, 9); //00-3745.AUD	Insects. Fakes. From Animoid Row. You buy a box of them?
+								if (Actor_Query_Friendliness_To_Other(kActorDektora, kActorMcCoy) < 50) {
+									Actor_Says(kActorDektora, 2360, 30); //03-2360.AUD	Of course not.
+									if (Player_Query_Agenda() == kPlayerAgendaSurly 
+									|| Player_Query_Agenda() == kPlayerAgendaErratic) {
+										Actor_Says(kActorMcCoy, 8519, 14);//00-8519.AUD	What do you say we dish each other the straight goods.
+										Actor_Modify_Friendliness_To_Other(kActorDektora, kActorMcCoy, -2);
+										Delay(1000);
+										Actor_Says_With_Pause(kActorDektora, 850, 1.0f, 30); // I didn't know what they were called
+										Actor_Says(kActorDektora, 860, 31); //03-0860.AUD	Insects make excellent pets. And they were so beautiful I just had to have the whole set.
+										Actor_Clue_Acquire(kActorMcCoy, kClueDektoraInterview4, true, kActorDektora);
+									}
+								} else {
+									Actor_Says_With_Pause(kActorDektora, 850, 1.0f, 30); // I didn't know what they were called
+									Actor_Says(kActorDektora, 860, 31); //03-0860.AUD	Insects make excellent pets. And they were so beautiful I just had to have the whole set.
+									Actor_Clue_Acquire(kActorMcCoy, kClueDektoraInterview4, true, kActorDektora);
+									if (Player_Query_Agenda() != kPlayerAgendaSurly 
+									&& Player_Query_Agenda() != kPlayerAgendaErratic) {
+										Actor_Says(kActorMcCoy, 3750, 11); //00-3750.AUD	Did you know they were poisonous?
+										Actor_Says(kActorDektora, 880, 30);
+										Actor_Says(kActorMcCoy, 3755, 16); //00-3755.AUD	And that doesn’t scare you?
+										Actor_Says(kActorDektora, 890, 31);
+										// Repurposed the Dektora interview 4 clue to be about the scorpions. The original Dektora interview 4 clue dialogue will now be under the clue
+										// Dektora confession where she admits to McCoy about being involved with Clovis and even calling him and Lucy her family.
+										Actor_Says(kActorDektora, 900, 30); // Who would need to add insects to the list?
+									}
+								}
+							}
+						} else if (Actor_Clue_Query(kActorMcCoy, kClueScorpions)
+						&& Actor_Clue_Query(kActorMcCoy, kClueWomanInAnimoidRow)) {
 							Delay(1000);
 							Actor_Face_Actor(kActorDektora, kActorMcCoy, true);
 							Actor_Face_Actor(kActorMcCoy, kActorDektora, true);
@@ -275,10 +316,10 @@ bool SceneScriptNR07::ClickedOnItem(int itemId, bool a2) {
 							Actor_Says(kActorDektora, 840, 30); //03-0840.AUD	Scorpions?
 							Actor_Says(kActorMcCoy, 3745, 9); //00-3745.AUD	Insects. Fakes. From Animoid Row. You buy a box of them?
 							if (Actor_Query_Friendliness_To_Other(kActorDektora, kActorMcCoy) < 50) {
-								Actor_Says(kActorDektora, 2360, 30); //03-2360.AUD	Of course not.
+								Actor_Says(kActorDektora, 2060, 30); //03-2060.AUD	No.
 								if (Player_Query_Agenda() == kPlayerAgendaSurly 
 								|| Player_Query_Agenda() == kPlayerAgendaErratic) {
-									Actor_Says(kActorMcCoy, 8519, 14);//00-8519.AUD	What do you say we dish each other the straight goods.
+									Actor_Says(kActorMcCoy, 6995, 18); //00-6995.AUD	That's not what I heard. You wanna set the record straight?
 									Actor_Modify_Friendliness_To_Other(kActorDektora, kActorMcCoy, -2);
 									Delay(1000);
 									Actor_Says_With_Pause(kActorDektora, 850, 1.0f, 30); // I didn't know what they were called
@@ -289,7 +330,8 @@ bool SceneScriptNR07::ClickedOnItem(int itemId, bool a2) {
 								Actor_Says_With_Pause(kActorDektora, 850, 1.0f, 30); // I didn't know what they were called
 								Actor_Says(kActorDektora, 860, 31); //03-0860.AUD	Insects make excellent pets. And they were so beautiful I just had to have the whole set.
 								Actor_Clue_Acquire(kActorMcCoy, kClueDektoraInterview4, true, kActorDektora);
-								if (Player_Query_Agenda() == kPlayerAgendaPolite) {
+								if (Player_Query_Agenda() != kPlayerAgendaSurly 
+								&& Player_Query_Agenda() != kPlayerAgendaErratic) {
 									Actor_Says(kActorMcCoy, 3750, 11); //00-3750.AUD	Did you know they were poisonous?
 									Actor_Says(kActorDektora, 880, 30);
 									Actor_Says(kActorMcCoy, 3755, 16); //00-3755.AUD	And that doesn’t scare you?
@@ -300,64 +342,27 @@ bool SceneScriptNR07::ClickedOnItem(int itemId, bool a2) {
 								}
 							}
 						}
-					} else if (Actor_Clue_Query(kActorMcCoy, kClueScorpions)
-					&& Actor_Clue_Query(kActorMcCoy, kClueWomanInAnimoidRow)) {
-						Actor_Face_Actor(kActorDektora, kActorMcCoy, true);
-						Actor_Face_Actor(kActorMcCoy, kActorDektora, true);
+					} else {
+						Loop_Actor_Walk_To_Item(kActorMcCoy, kItemDragonflyBelt, 12, true, false);
+						Actor_Face_Item(kActorMcCoy, kItemDragonflyBelt, true);
+						Actor_Modify_Friendliness_To_Other(kActorDektora, kActorMcCoy, -2);
+						Actor_Change_Animation_Mode(kActorMcCoy, 23);
 						Delay(1000);
-						Actor_Says(kActorMcCoy, 3620, 19); //00-3620.AUD	You like scorpions, huh?
-						Actor_Says(kActorDektora, 840, 30); //03-0840.AUD	Scorpions?
-						Actor_Says(kActorMcCoy, 3745, 9); //00-3745.AUD	Insects. Fakes. From Animoid Row. You buy a box of them?
-						if (Actor_Query_Friendliness_To_Other(kActorDektora, kActorMcCoy) < 50) {
-							Actor_Says(kActorDektora, 2060, 30); //03-2060.AUD	No.
-							if (Player_Query_Agenda() == kPlayerAgendaSurly 
-							|| Player_Query_Agenda() == kPlayerAgendaErratic) {
-								Actor_Says(kActorMcCoy, 6995, 18); //00-6995.AUD	That's not what I heard. You wanna set the record straight?
-								Actor_Modify_Friendliness_To_Other(kActorDektora, kActorMcCoy, -2);
-								Delay(2000);
-								Actor_Says_With_Pause(kActorDektora, 850, 1.0f, 30); // I didn't know what they were called
-								Actor_Says(kActorDektora, 860, 31); //03-0860.AUD	Insects make excellent pets. And they were so beautiful I just had to have the whole set.
-								Actor_Clue_Acquire(kActorMcCoy, kClueDektoraInterview4, true, kActorDektora);
-							}
-						} else {
-							Actor_Says_With_Pause(kActorDektora, 850, 1.0f, 30); // I didn't know what they were called
-							Actor_Says(kActorDektora, 860, 31); //03-0860.AUD	Insects make excellent pets. And they were so beautiful I just had to have the whole set.
-							Actor_Clue_Acquire(kActorMcCoy, kClueDektoraInterview4, true, kActorDektora);
-							if (Player_Query_Agenda() == kPlayerAgendaPolite) {
-								Actor_Says(kActorMcCoy, 3750, 11); //00-3750.AUD	Did you know they were poisonous?
-								Actor_Says(kActorDektora, 880, 30);
-								Actor_Says(kActorMcCoy, 3755, 16); //00-3755.AUD	And that doesn’t scare you?
-								Actor_Says(kActorDektora, 890, 31);
-								// Repurposed the Dektora interview 4 clue to be about the scorpions. The original Dektora interview 4 clue dialogue will now be under the clue
-								// Dektora confession where she admits to McCoy about being involved with Clovis and even calling him and Lucy her family.
-								Actor_Says(kActorDektora, 900, 30); // Who would need to add insects to the list?
-							}
-						}
+						Actor_Face_Object(kActorDektora, "VANITY", true);
+						Actor_Says(kActorDektora, 560, 31); // Please don't touch that. It's private.
+						Actor_Says(kActorMcCoy, 8525, 19);  // Hmph.
 					}
 				} else {
 					Loop_Actor_Walk_To_Item(kActorMcCoy, kItemDragonflyBelt, 12, true, false);
 					Actor_Face_Item(kActorMcCoy, kItemDragonflyBelt, true);
-					Actor_Modify_Friendliness_To_Other(kActorDektora, kActorMcCoy, -2);
-					Actor_Face_Object(kActorDektora, "VANITY", true);
-					Actor_Says(kActorDektora, 560, 31); // Please don't touch that. It's private.
-					if (_vm->_cutContent) {
-						if (!Game_Flag_Query(kFlagNR07McCoyIsCop)) {
-							Actor_Says(kActorMcCoy, 3610, 19);  // Sorry (McCoy fake fan voice)
-						} else {
-							Actor_Says(kActorMcCoy, 8525, 19);  // Hmph.
-						}
-					} else {
-						Actor_Says(kActorMcCoy, 8525, 19);  // Hmph.
-					}
-				}
-			} else {
-				Loop_Actor_Walk_To_Item(kActorMcCoy, kItemDragonflyBelt, 12, true, false);
-				Actor_Face_Item(kActorMcCoy, kItemDragonflyBelt, true);
-				Actor_Clue_Acquire(kActorMcCoy, kClueDragonflyBelt, true, kActorDektora);
-				Item_Pickup_Spin_Effect(kModelAnimationDragonflyBelt, 542, 350);
-				Item_Remove_From_World(kItemDragonflyBelt);
-				Actor_Says(kActorMcCoy, 8825, 12);
-			}	
+					Actor_Change_Animation_Mode(kActorMcCoy, 23);
+					Delay(2000);
+					Actor_Clue_Acquire(kActorMcCoy, kClueDragonflyBelt, true, kActorDektora);
+					Item_Pickup_Spin_Effect(kModelAnimationDragonflyBelt, 542, 350);
+					Item_Remove_From_World(kItemDragonflyBelt);
+					Actor_Says(kActorMcCoy, 8825, 13);
+				}	
+			}
 		}
 	return true;
 }
@@ -383,8 +388,10 @@ bool SceneScriptNR07::ClickedOn2DRegion(int region) {
 			Player_Loses_Control();
 			Actor_Face_Object(kActorMcCoy, "VANITY", true);
 			if (Actor_Query_Is_In_Current_Set(kActorDektora)) {
-				Actor_Modify_Friendliness_To_Other(kActorDektora, kActorMcCoy, -2);
+				Actor_Change_Animation_Mode(kActorMcCoy, 23);
+				Delay(1000);
 				Actor_Face_Object(kActorDektora, "VANITY", true);
+				Actor_Modify_Friendliness_To_Other(kActorDektora, kActorMcCoy, -2);
 				Actor_Says(kActorDektora, 560, 31); // Please don't touch that. It's private.
 				if (!Game_Flag_Query(kFlagNR07McCoyIsCop)) {
 					Actor_Says(kActorMcCoy, 3610, 19);  // Sorry (McCoy fake fan voice)
@@ -397,20 +404,24 @@ bool SceneScriptNR07::ClickedOn2DRegion(int region) {
 						Actor_Says(kActorMcCoy, 8580, 12); // Nothing else there
 					} else {
 						Sound_Play(kSfxDRAWER1, 90, 85, 85, 50);
-						Delay(700);
+						Actor_Change_Animation_Mode(kActorMcCoy, 23);
+						Delay(2000);
 						Actor_Clue_Acquire(kActorMcCoy, kClueCrazysInvolvement, false, kActorDektora);
 						// McCoy picks up a sales brochure (it's CrazyLeg's -- but the model is the same as the Tyrell's Pamphlet)
 						Item_Pickup_Spin_Effect(kModelAnimationTyrellSalesPamphlet, 508, 401);
 						// McCoy finds something inside the brochure - CrazyLeg's note to the Replicants
 						// Logic is similar to HC03 (finding photos inside Izo's camera)
-						Actor_Voice_Over(3690, kActorVoiceOver); // Hmm
+						Actor_Voice_Over(3690, kActorVoiceOver);
 						Delay(1200);
 						Item_Pickup_Spin_Effect(kModelAnimationLetter, 508, 401);
+						Delay(1000);
 						// Added in code so you receive the Dektora incept clue when you are searching her desk.
+						Actor_Change_Animation_Mode(kActorMcCoy, 23);
 						Delay (2000);
 						Item_Pickup_Spin_Effect(kModelAnimationPhoto, 508, 401);
 						Actor_Clue_Acquire(kActorMcCoy, kClueDektoraIncept, false, kActorDektora);
 						Actor_Says(kActorMcCoy, 7960, 12); //00-7960.AUD	Dektora? 
+						Delay(1000);
 						// We don't remove the region after picking the clue
 						// McCoy will just point out that there's nothing more there to find.
 						// (Saves us from using up a flag and having to write extra code)
@@ -462,26 +473,43 @@ void SceneScriptNR07::PlayerWalkedIn() {
 			}
 			Actor_Says(kActorDektora, 500, 30);
 			if (_vm->_cutContent) {
-				if (Player_Query_Agenda() == kPlayerAgendaSurly 
-				|| Player_Query_Agenda() == kPlayerAgendaErratic) {
+				if (Player_Query_Agenda() != kPlayerAgendaPolite) {
 					Actor_Says(kActorMcCoy, 3585, 14); //00-3585.AUD	I just wanted to say: Wow, you were awe inspiring.
 					Actor_Says(kActorDektora, 510, 30);
 					Actor_Start_Speech_Sample(kActorMcCoy, 3590);
+					Delay(1000);
 					Actor_Says(kActorDektora, 520, kAnimationModeSit);
 				} else {
-					Actor_Says(kActorMcCoy, 1280, 13); //00-1280.AUD	McCoy, LPD. Mind if I ask you a couple of questions?
-					if (Game_Flag_Query(kFlagDektoraIsReplicant)) {
-						Actor_Says(kActorDektora, 1020, kAnimationModeSit); //03-1020.AUD	Yes.
-						Delay(500);
-						if (Player_Query_Agenda() == kPlayerAgendaPolite) { 
-							Actor_Says(kActorMcCoy, 8225, 14); //00-8225.AUD	Just relax.
-							Actor_Modify_Friendliness_To_Other(kActorDektora, kActorMcCoy, 2);
-							Delay(500);
+					Actor_Face_Item(kActorMcCoy, kItemDragonflyBelt, true);
+					Delay(1000);
+					Actor_Says(kActorMcCoy, 4920, 15); //00-4920.AUD	You got some nice pieces here.
+					Actor_Modify_Friendliness_To_Other(kActorDektora, kActorMcCoy, 2);
+					Actor_Face_Actor(kActorMcCoy, kActorDektora, true);
+					Actor_Says(kActorDektora, 510, 30); //03-0510.AUD	Well, thank you very much, mister…?
+					Actor_Says(kActorMcCoy, 1820, 13); //00-1820.AUD	Ray McCoy.
+					Delay(1000);
+					Actor_Says(kActorDektora, 520, kAnimationModeSit); //03-0520.AUD	Is there something I can do for you, Mr. McCoy?
+					Actor_Start_Speech_Sample(kActorMcCoy, 3640);  // Tell you the truth, I'm from the LPD. (...)
+					Actor_Says_With_Pause(kActorDektora, 610, 0.0f, 31); //03-0610.AUD	Is this about Early Q? Because I could tell you--
+					if (!Actor_Clue_Query(kActorMcCoy, kClueDragonflyCollection)) {	
+						Actor_Says(kActorMcCoy, 3645, 12);
+						if (Actor_Query_Friendliness_To_Other(kActorDektora, kActorMcCoy) < 50 
+						|| Game_Flag_Query(kFlagDektoraIsReplicant)) {
+							Actor_Says(kActorDektora, 620, 30); //03-0620.AUD	I’m sure I don’t know what you mean.
+							if (Player_Query_Agenda() == kPlayerAgendaSurly 
+							|| Player_Query_Agenda() == kPlayerAgendaErratic) {
+								Actor_Says(kActorMcCoy, 2485, 19); //00-2485.AUD	I’ve a hard time believing that.
+								Actor_Modify_Friendliness_To_Other(kActorDektora, kActorMcCoy, -2);
+								Delay(1000);
+							} else {
+								Actor_Says(kActorMcCoy, 8225, 14); //00-8225.AUD	Just relax.
+								Actor_Modify_Friendliness_To_Other(kActorDektora, kActorMcCoy, 2);
+								Delay(1000);
+							}
+						} else {
+							Actor_Says(kActorDektora, 1480, 30); //03-1480.AUD	Yes
+							Delay(1000);
 						}
-						Actor_Says(kActorMcCoy, 400, 9); //00-0400.AUD	It won't take too long.
-					} else {
-						Delay(1000);
-						Actor_Says(kActorDektora, 2060, kAnimationModeSit); //03-2060.AUD	No.
 					}
 					Actor_Says(kActorMcCoy, 7395, 14); //00-7395.AUD	What's your name?
 					Actor_Says(kActorDektora, 1470, 30); //03-1470.AUD	Dektora.
@@ -557,7 +585,8 @@ void SceneScriptNR07::PlayerWalkedIn() {
 								Actor_Says_With_Pause(kActorDektora, 850, 1.0f, 30); // I didn't know what they were called
 								Actor_Says(kActorDektora, 860, 31); //03-0860.AUD	Insects make excellent pets. And they were so beautiful I just had to have the whole set.
 								Actor_Clue_Acquire(kActorMcCoy, kClueDektoraInterview4, true, kActorDektora);
-								if (Player_Query_Agenda() == kPlayerAgendaPolite) {
+								if (Player_Query_Agenda() != kPlayerAgendaSurly 
+								&& Player_Query_Agenda() != kPlayerAgendaErratic) {
 									Actor_Says(kActorMcCoy, 3750, 11); //00-3750.AUD	Did you know they were poisonous?
 									Actor_Says(kActorDektora, 880, 30);
 									Actor_Says(kActorMcCoy, 3755, 16); //00-3755.AUD	And that doesn’t scare you?
@@ -590,7 +619,8 @@ void SceneScriptNR07::PlayerWalkedIn() {
 							Actor_Says_With_Pause(kActorDektora, 850, 1.0f, 30); // I didn't know what they were called
 							Actor_Says(kActorDektora, 860, 31); //03-0860.AUD	Insects make excellent pets. And they were so beautiful I just had to have the whole set.
 							Actor_Clue_Acquire(kActorMcCoy, kClueDektoraInterview4, true, kActorDektora);
-							if (Player_Query_Agenda() == kPlayerAgendaPolite) {
+							if (Player_Query_Agenda() != kPlayerAgendaSurly 
+							&& Player_Query_Agenda() != kPlayerAgendaErratic) {
 								Actor_Says(kActorMcCoy, 3750, 11); //00-3750.AUD	Did you know they were poisonous?
 								Actor_Says(kActorDektora, 880, 30);
 								Actor_Says(kActorMcCoy, 3755, 16); //00-3755.AUD	And that doesn’t scare you?
@@ -612,9 +642,12 @@ void SceneScriptNR07::PlayerWalkedIn() {
 				Actor_Face_Actor(kActorMcCoy, kActorDektora, true);
 			}
 			if (_vm->_cutContent) {
-				if (Actor_Query_Friendliness_To_Other(kActorDektora, kActorMcCoy) < 50) {
-					Actor_Says(kActorDektora, 530, 31);
-					Actor_Modify_Friendliness_To_Other(kActorDektora, kActorMcCoy, -2);
+				if (Actor_Query_Friendliness_To_Other(kActorDektora, kActorMcCoy) < 50 
+				|| Game_Flag_Query(kFlagDektoraIsReplicant)) {
+					if (Game_Flag_Query(kFlagHanoiIsReplicant)) {
+						Actor_Says(kActorDektora, 530, 31);
+						Actor_Modify_Friendliness_To_Other(kActorDektora, kActorMcCoy, -2);
+					}
 				}
 			} else {
 				Actor_Says(kActorDektora, 530, 31);
@@ -665,7 +698,7 @@ void SceneScriptNR07::callHolloway() {
 	if (_vm->_cutContent) {
 		if (!Actor_Clue_Query(kActorDektora, kClueMcCoyHelpedDektora)) {
 			Actor_Says_With_Pause(kActorDektora, 910, 1.0f, 30);
-		} 
+		}
 	} else {
 		Actor_Says_With_Pause(kActorDektora, 910, 1.0f, 30);
 	}
@@ -694,8 +727,6 @@ void SceneScriptNR07::callHolloway() {
 		if (!Actor_Clue_Query(kActorDektora, kClueMcCoyHelpedDektora)) {
 			Actor_Change_Animation_Mode(kActorDektora, kAnimationModeCombatIdle);
 			Actor_Says(kActorMcCoy, 3760, 19);
-		} else {
-			Delay(1000);
 		}
 	} else {
 		Actor_Change_Animation_Mode(kActorDektora, kAnimationModeCombatIdle);
@@ -707,49 +738,23 @@ void SceneScriptNR07::callHolloway() {
 			Delay(3000);
 		} else {
 			Actor_Says(kActorMcCoy, 3765, kAnimationModeTalk); // Let me show you my ID.
-			if (Actor_Query_Friendliness_To_Other(kActorDektora, kActorMcCoy) < 50) {
-				Actor_Says(kActorDektora, 920, kAnimationModeSit); //03-0920.AUD	If your hand moves, I’ll shoot.
-			} else {
-				Actor_Says(kActorDektora, 2060, kAnimationModeSit);//03-2060.AUD	No.
-				Delay(1000);
+			Actor_Says(kActorDektora, 920, kAnimationModeSit); //03-0920.AUD	If your hand moves, I’ll shoot.
+			Actor_Says_With_Pause(kActorMcCoy, 3780, 0.0f, kAnimationModeIdle); //00-3780.AUD	Okay, uh--
+			Actor_Says(kActorDektora, 970, kAnimationModeSit);
+			Actor_Voice_Over(1710, kActorVoiceOver);
+			Actor_Voice_Over(1720, kActorVoiceOver); //99-1720.AUD	Any other mark, I’d had been a dead man.
+			if (!Actor_Clue_Query(kActorMcCoy, kClueVKDektoraReplicant)) {
+				Actor_Voice_Over(1730, kActorVoiceOver); //99-1730.AUD	But if she was a Replicant, she must not have known it if she was willing to call the police.
 			}
 		}
 	} else {
 		Actor_Says(kActorDektora, 920, kAnimationModeSit);
-	}
-	if (_vm->_cutContent) {
-		if (!Actor_Clue_Query(kActorDektora, kClueMcCoyHelpedDektora)
-		 && Actor_Query_Friendliness_To_Other(kActorDektora, kActorMcCoy) < 50) {
 #if BLADERUNNER_ORIGINAL_BUGS
 			Actor_Says(kActorMcCoy, 3780, kAnimationModeIdle);
 #else
 			// McCoy is interrupted here
 			Actor_Says_With_Pause(kActorMcCoy, 3780, 0.0f, kAnimationModeIdle); //00-3780.AUD	Okay, uh--
 #endif // BLADERUNNER_ORIGINAL_BUGS
-		}
-	} else {
-		Actor_Says_With_Pause(kActorMcCoy, 3780, 0.0f, kAnimationModeIdle);
-	}
-	if (_vm->_cutContent) {
-		if (!Actor_Clue_Query(kActorDektora, kClueMcCoyHelpedDektora)
-		 && Actor_Query_Friendliness_To_Other(kActorDektora, kActorMcCoy) < 50) {
-			Actor_Says(kActorDektora, 970, kAnimationModeSit);
-		}
-	} else {
-		Actor_Says(kActorDektora, 970, kAnimationModeSit); //03-0970.AUD	Please don’t talk. The sound of your voice grates on my nerves.
-	}
-	if (_vm->_cutContent) {
-		if (!Actor_Clue_Query(kActorDektora, kClueMcCoyHelpedDektora)) {
-			Actor_Voice_Over(1710, kActorVoiceOver);
-			if (!Actor_Clue_Query(kActorDektora, kClueMcCoyHelpedDektora)
-			&& Actor_Query_Friendliness_To_Other(kActorDektora, kActorMcCoy) < 50) {
-				Actor_Voice_Over(1720, kActorVoiceOver); //99-1720.AUD	Any other mark, I’d had been a dead man.
-				if (!Actor_Clue_Query(kActorMcCoy, kClueVKDektoraReplicant)) {
-					Actor_Voice_Over(1730, kActorVoiceOver); //99-1730.AUD	But if she was a Replicant, she must not have known it if she was willing to call the police.
-				}
-			}
-		}
-	} else {
 		Actor_Voice_Over(1710, kActorVoiceOver);
 		Actor_Voice_Over(1720, kActorVoiceOver); //99-1720.AUD	Any other mark, I’d had been a dead man.
 		Actor_Voice_Over(1730, kActorVoiceOver); //99-1730.AUD	But if she was a Replicant, she must not have known it if she was willing to call the police.
@@ -787,7 +792,8 @@ void SceneScriptNR07::clickedOnVase() {
 				}
 				Actor_Says(kActorMcCoy, 3600, 19);  // The flowers are beautiful. (McCoy fake fan voice)
 				if (_vm->_cutContent) {					
-					if (Actor_Query_Friendliness_To_Other(kActorDektora, kActorMcCoy) < 50) {
+					if (Actor_Query_Friendliness_To_Other(kActorDektora, kActorMcCoy) < 50 
+					|| Game_Flag_Query(kFlagDektoraIsReplicant)) {
 						Actor_Says(kActorDektora, 1480, 30); //03-1480.AUD	Yes.
 					} else {
 						Actor_Says(kActorDektora, 550, 30); // And a extremely rare (...)
@@ -804,10 +810,12 @@ void SceneScriptNR07::clickedOnVase() {
 				}
 			} else {
 				if (_vm->_cutContent) {
-					Actor_Face_Actor(kActorDektora, kActorMcCoy, true);
-					Actor_Face_Actor(kActorMcCoy, kActorDektora, true);
+					Actor_Change_Animation_Mode(kActorMcCoy, 23);
+					Delay(1000);
+					Actor_Says(kActorDektora, 560, 31); // Please don't touch that. It's private.
+				} else {
+					Actor_Says(kActorDektora, 560, 31); // Please don't touch that. It's private.
 				}
-				Actor_Says(kActorDektora, 560, 31); // Please don't touch that. It's private.
 				if (_vm->_cutContent) {
 					if (!Game_Flag_Query(kFlagNR07McCoyIsCop)) {
 						Actor_Says(kActorMcCoy, 3610, 19);  // Sorry (McCoy fake fan voice)
@@ -840,10 +848,13 @@ void SceneScriptNR07::clickedOnVase() {
 			Actor_Clue_Acquire(kActorMcCoy, kClueDektorasCard, true, -1);
 		}
 		Loop_Actor_Walk_To_Scene_Object(kActorMcCoy, "VASE", 100, true, false);
-		Actor_Change_Animation_Mode(kActorMcCoy, 23);
+		if (_vm->_cutContent) {
+			Actor_Change_Animation_Mode(kActorMcCoy, 23);
+			Delay(1000);
+		}
 		Item_Pickup_Spin_Effect(kModelAnimationDektorasCard, 526, 268);
 		if (_vm->_cutContent) {
-			Actor_Says(kActorMcCoy, 8835, 14);	//00-8835.AUD	A card.
+			Actor_Says(kActorMcCoy, 8835, 13);	//00-8835.AUD	A card.
 		}
 		Actor_Voice_Over(1690, kActorVoiceOver);
 		if (_vm->_cutContent) {
@@ -873,7 +884,8 @@ void SceneScriptNR07::talkAboutBelt1() {
 	}
 	Actor_Says(kActorMcCoy, 3625, 19);
 	if (_vm->_cutContent) {
-		if (Actor_Query_Friendliness_To_Other(kActorDektora, kActorMcCoy) < 50) {
+		if (Actor_Query_Friendliness_To_Other(kActorDektora, kActorMcCoy) < 50 
+		|| Game_Flag_Query(kFlagDektoraIsReplicant)) {
 			Actor_Says(kActorDektora, 1480, 30); //03-1480.AUD	Yes
 			Delay(1000);
 		} else {
@@ -932,24 +944,26 @@ void SceneScriptNR07::talkAboutBelt2() {
 	Actor_Says(kActorDektora, 610, 31);
 #else
 	// Dektora is interrupted here
-	Actor_Says_With_Pause(kActorDektora, 610, 0.0f, 31);
+	Actor_Says_With_Pause(kActorDektora, 610, 0.0f, 31); //03-0610.AUD	Is this about Early Q? Because I could tell you--
 #endif // BLADERUNNER_ORIGINAL_BUGS
 	if (_vm->_cutContent) {
-		if (Actor_Clue_Query(kActorMcCoy, kClueEarlyInterviewA)
-		&& !Actor_Clue_Query(kActorMcCoy, kClueCollectionReceipt)) {
+		if (!Actor_Clue_Query(kActorMcCoy, kClueDragonflyCollection)) {
 			Actor_Says(kActorMcCoy, 3645, 12);
-			Actor_Says(kActorDektora, 620, 30); //03-0620.AUD	I’m sure I don’t know what you mean.
-			// Made it so Dektora mentons her name when you first meet her. In the original game McCoy would always know Dektoras name despite not receiving any clues that refer to her by name,
-			// so this fixes that.
-			if (Player_Query_Agenda() == kPlayerAgendaSurly 
-			|| Player_Query_Agenda() == kPlayerAgendaErratic) {
-				Actor_Says(kActorMcCoy, 2485, 19); //00-2485.AUD	I’ve a hard time believing that.
-				Actor_Modify_Friendliness_To_Other(kActorDektora, kActorMcCoy, -2);
-				Delay(1000);
+			if (Actor_Query_Friendliness_To_Other(kActorDektora, kActorMcCoy) < 50 
+			|| Game_Flag_Query(kFlagDektoraIsReplicant)) {
+				Actor_Says(kActorDektora, 620, 30); //03-0620.AUD	I’m sure I don’t know what you mean.
+				if (Player_Query_Agenda() == kPlayerAgendaSurly 
+				|| Player_Query_Agenda() == kPlayerAgendaErratic) {
+					Actor_Says(kActorMcCoy, 2485, 19); //00-2485.AUD	I’ve a hard time believing that.
+					Actor_Modify_Friendliness_To_Other(kActorDektora, kActorMcCoy, -2);
+					Delay(1000);
+				} else {
+					Actor_Says(kActorMcCoy, 8225, 14); //00-8225.AUD	Just relax.
+					Delay(1000);
+					Actor_Modify_Friendliness_To_Other(kActorDektora, kActorMcCoy, 2);
+				}
 			} else {
-				Actor_Says(kActorMcCoy, 8225, 14); //00-8225.AUD	Just relax.
-				Delay(1000);
-				Actor_Modify_Friendliness_To_Other(kActorDektora, kActorMcCoy, 2);
+				Actor_Says(kActorDektora, 1480, 30); //03-1480.AUD	Yes
 			}
 		}
 		Actor_Says(kActorMcCoy, 7395, 14); //00-7395.AUD	What's your name?
@@ -1024,7 +1038,8 @@ void SceneScriptNR07::talkAboutBelt2() {
 					Actor_Says_With_Pause(kActorDektora, 850, 1.0f, 30); // I didn't know what they were called
 					Actor_Says(kActorDektora, 860, 31); //03-0860.AUD	Insects make excellent pets. And they were so beautiful I just had to have the whole set.
 					Actor_Clue_Acquire(kActorMcCoy, kClueDektoraInterview4, true, kActorDektora);
-					if (Player_Query_Agenda() == kPlayerAgendaPolite) {
+					if (Player_Query_Agenda() != kPlayerAgendaSurly 
+					&& Player_Query_Agenda() != kPlayerAgendaErratic) {
 						Actor_Says(kActorMcCoy, 3750, 11); //00-3750.AUD	Did you know they were poisonous?
 						Actor_Says(kActorDektora, 880, 30);
 						Actor_Says(kActorMcCoy, 3755, 16); //00-3755.AUD	And that doesn’t scare you?
@@ -1057,7 +1072,8 @@ void SceneScriptNR07::talkAboutBelt2() {
 				Actor_Says_With_Pause(kActorDektora, 850, 1.0f, 30); // I didn't know what they were called
 				Actor_Says(kActorDektora, 860, 31); //03-0860.AUD	Insects make excellent pets. And they were so beautiful I just had to have the whole set.
 				Actor_Clue_Acquire(kActorMcCoy, kClueDektoraInterview4, true, kActorDektora);
-				if (Player_Query_Agenda() == kPlayerAgendaPolite) {
+				if (Player_Query_Agenda() != kPlayerAgendaSurly 
+				&& Player_Query_Agenda() != kPlayerAgendaErratic) {
 					Actor_Says(kActorMcCoy, 3750, 11); //00-3750.AUD	Did you know they were poisonous?
 					Actor_Says(kActorDektora, 880, 30);
 					Actor_Says(kActorMcCoy, 3755, 16); //00-3755.AUD	And that doesn’t scare you?
@@ -1114,36 +1130,51 @@ void SceneScriptNR07::talkAboutVoightKampff() {
 		Actor_Says(kActorDektora, 660, 31); //03-0660.AUD	If it’s Early Q, I’ll help you any way you want.
 		Actor_Says(kActorMcCoy, 3665, 18);
 	}
-	Actor_Face_Actor(kActorDektora, kActorMcCoy, true);
-	Actor_Says(kActorDektora, 670, 31); //03-0670.AUD	This is insane. I have a family, a daughter for heaven’s sake.
 	if (_vm->_cutContent) {
-		Actor_Modify_Friendliness_To_Other(kActorDektora, kActorMcCoy, -2);
-		Actor_Modify_Friendliness_To_Other(kActorSteele, kActorMcCoy, 1);
-		Actor_Modify_Friendliness_To_Other(kActorGuzza, kActorMcCoy, 1);
-		Actor_Modify_Friendliness_To_Other(kActorClovis, kActorMcCoy, -1);	
-		Game_Flag_Reset(kFlagMcCoyIsHelpingReplicants);
+		if (Actor_Query_Goal_Number(kActorLucy) < kGoalLucyGone) {
+			Actor_Face_Actor(kActorDektora, kActorMcCoy, true);
+			Actor_Says(kActorDektora, 670, 31); //03-0670.AUD	This is insane. I have a family, a daughter for heaven’s sake.
+			Game_Flag_Reset(kFlagMcCoyIsHelpingReplicants);
+		}
+	} else {
+		Actor_Face_Actor(kActorDektora, kActorMcCoy, true);
+		Actor_Says(kActorDektora, 670, 31); //03-0670.AUD	This is insane. I have a family, a daughter for heaven’s sake.
 	}
 	// If Early Q is a rep Dektora won't say how she will testify against him which leads to her questioning if McCoy is a replicant. 
 	// Instead McCoy will just say the test won't take too long and the rest of the dialogue will be skipped.
 	if (_vm->_cutContent) {
 		if (Game_Flag_Query(kFlagEarlyQIsReplicant)) {
+			Delay(1000);
+			Actor_Says(kActorMcCoy, 8325, 13); //00-8325.AUD	It's just a test.
 			Actor_Says(kActorMcCoy, 400, 14); //00-0400.AUD	It won't take too long.
-			Voight_Kampff_Activate(kActorDektora, 40);
 		} else {
 			Actor_Says(kActorDektora, 680, 30); //03-0680.AUD	Look, I’m willing to testify against Early Q.
 			Actor_Says(kActorDektora, 690, 31); //03-0690.AUD	A Replicant wouldn’t do that, would it?
 			if (!Game_Flag_Query(kFlagMcCoyIsHelpingReplicants)) {
 				Actor_Says(kActorMcCoy, 3670, 17);
-				Actor_Says(kActorDektora, 700, 30); //03-0700.AUD	Then, you must be a Replicant.
-				Actor_Says(kActorMcCoy, 3675, 19); 
-				Actor_Says(kActorDektora, 710, 30); //03-0710.AUD	How do you know you’re not a Replicant? Did you ever take that test yourself?
-				Actor_Says(kActorMcCoy, 3680, 19); 
-				Actor_Says(kActorDektora, 720, 30); //03-0720.AUD	Don’t Replicants go around with false memories?
-				Actor_Says(kActorDektora, 730, 30); //03-0730.AUD	Maybe somewhere along the line you killed a human, took his place and your superiors don’t even know about it.
+				if (Actor_Query_Friendliness_To_Other(kActorDektora, kActorMcCoy) < 50 
+				|| Game_Flag_Query(kFlagDektoraIsReplicant)) {	
+					Actor_Says(kActorDektora, 700, 30); //03-0700.AUD	Then, you must be a Replicant.
+					Actor_Says(kActorMcCoy, 3675, 19); 
+					Actor_Says(kActorDektora, 710, 30); //03-0710.AUD	How do you know you’re not a Replicant? Did you ever take that test yourself?
+					Actor_Says(kActorMcCoy, 3680, 19); 
+					Actor_Says(kActorDektora, 720, 30); //03-0720.AUD	Don’t Replicants go around with false memories?
+					Actor_Says(kActorDektora, 730, 30); //03-0730.AUD	Maybe somewhere along the line you killed a human, took his place and your superiors don’t even know about it.
+					Actor_Says(kActorMcCoy, 3685, 13); //00-3685.AUD	Interesting idea. But I’m still gonna give you the test.
+				} else {
+					Delay(1000);
+					Actor_Says(kActorMcCoy, 8325, 13); //00-8325.AUD	It's just a test.
+					Actor_Says(kActorMcCoy, 400, 14); //00-0400.AUD	It won't take too long.
+				}
+			} else {
+				Delay(1000);
+				Actor_Says(kActorMcCoy, 8325, 13); //00-8325.AUD	It's just a test.
+				Actor_Says(kActorMcCoy, 400, 14); //00-0400.AUD	It won't take too long.
 			}
-			Actor_Says(kActorMcCoy, 3685, 13); //00-3685.AUD	Interesting idea. But I’m still gonna give you the test.
-			Voight_Kampff_Activate(kActorDektora, 40);
 		}
+		Game_Flag_Reset(kFlagMcCoyIsHelpingReplicants);
+		Actor_Modify_Friendliness_To_Other(kActorDektora, kActorMcCoy, -2);
+		Voight_Kampff_Activate(kActorDektora, 40);
 	} else {
 		Actor_Says(kActorDektora, 680, 30); //03-0680.AUD	Look, I’m willing to testify against Early Q.
 		Actor_Says(kActorDektora, 690, 31); //03-0690.AUD	A Replicant wouldn’t do that, would it?
@@ -1215,19 +1246,15 @@ void SceneScriptNR07::talkAboutSteele() {
 	Actor_Says(kActorMcCoy, 3695, 15);
 	if (_vm->_cutContent) {
 		Actor_Says(kActorMcCoy, 3700, kAnimationModeTalk); // If I found you, so will she.
-		Actor_Clue_Acquire(kActorDektora, kClueMcCoyHelpedDektora, true, kActorDektora);
-		Actor_Modify_Friendliness_To_Other(kActorDektora, kActorMcCoy, 20);
-	}
-	// Made it so when you warn Dektora about Crystal you receive the global affection for Dektora which will trigger the car ending with her.
-	// Originally you were only able to do this when she was a replicant and as a result you could never receive the car ending where she is a human.
-	// This altered code will now change that.
-	if (_vm->_cutContent) {
-		Actor_Modify_Friendliness_To_Other(kActorSteele, kActorMcCoy, -2);
-		Actor_Modify_Friendliness_To_Other(kActorClovis, kActorMcCoy, 2);
-		Actor_Modify_Friendliness_To_Other(kActorGuzza, kActorMcCoy, -2);
 		Game_Flag_Set(kFlagMcCoyIsHelpingReplicants);
-		if (Global_Variable_Query(kVariableAffectionTowards) == kAffectionTowardsNone) {
-			Global_Variable_Set(kVariableAffectionTowards, kAffectionTowardsDektora);
+		Actor_Modify_Friendliness_To_Other(kActorDektora, kActorMcCoy, 2);
+		if (Actor_Query_Friendliness_To_Other(kActorDektora, kActorMcCoy) > 49
+		&& Actor_Query_Friendliness_To_Other(kActorClovis, kActorMcCoy) > 50
+		&& Actor_Query_Goal_Number(kActorLucy) < kGoalLucyGone) {
+			Actor_Clue_Acquire(kActorDektora, kClueMcCoyHelpedDektora, true, kActorDektora);
+			if (Global_Variable_Query(kVariableAffectionTowards) == kAffectionTowardsNone) {
+				Global_Variable_Set(kVariableAffectionTowards, kAffectionTowardsDektora);
+			}
 		}
 	}
 	if (Game_Flag_Query(kFlagDektoraIsReplicant)) {
@@ -1339,109 +1366,26 @@ void SceneScriptNR07::talkAboutMoonbus() {
 }
 
 void SceneScriptNR07::talkAboutBlackSedan() {
-	if (!_vm->_cutContent) {
-		Actor_Modify_Friendliness_To_Other(kActorDektora, kActorMcCoy, -3);
-	}
-	if (_vm->_cutContent) {
-		Actor_Face_Actor(kActorDektora, kActorMcCoy, true);
-		Actor_Face_Actor(kActorMcCoy, kActorDektora, true);
-	}
+	Actor_Modify_Friendliness_To_Other(kActorDektora, kActorMcCoy, -3);
 	Actor_Says(kActorMcCoy, 3615, 16);
-	if (_vm->_cutContent) {
-		if (Actor_Query_Friendliness_To_Other(kActorDektora, kActorMcCoy) < 50) {
-			Actor_Says(kActorDektora, 1440, 30); //03-1440.AUD	I don't see why you need to know that.
-			if (Player_Query_Agenda() == kPlayerAgendaSurly 
-			|| Player_Query_Agenda() == kPlayerAgendaErratic) {
-				Actor_Says(kActorMcCoy, 8519, 14);//00-8519.AUD	What do you say we dish each other the straight goods.
-				Delay(2000); 
-				Actor_Says(kActorDektora, 1980, 30); //03-1980.AUD	All right.
-				Actor_Modify_Friendliness_To_Other(kActorDektora, kActorMcCoy, -2);
-				Delay(1000);
-				Actor_Says(kActorMcCoy, 3615, 16);
-				Actor_Says(kActorDektora, 770, 30);
-				Actor_Says(kActorMcCoy, 3720, 15);
-				Actor_Says_With_Pause(kActorDektora, 780, 2.0f, 30);
-				Actor_Says(kActorDektora, 790, 31);
-				Actor_Clue_Acquire(kActorMcCoy, kClueCarWasStolen, true, kActorDektora);
-				Actor_Says(kActorMcCoy, 3725, 18); //00-3725.AUD	Is that right? Any reason you didn’t tell me that right off?
-				Actor_Says(kActorDektora, 800, 30);
-				Actor_Says_With_Pause(kActorMcCoy, 3730, 2.0f, 13); //00-3730.AUD	Animal murder is pretty horrible.
-				Actor_Says(kActorDektora, 1480, 30); //03-1480.AUD	Yes
-			}
-		} else {
-			Actor_Says(kActorDektora, 770, 30);
-			Actor_Says(kActorMcCoy, 3720, 15);
-			Actor_Says_With_Pause(kActorDektora, 780, 2.0f, 30);
-			Actor_Says(kActorDektora, 790, 31);
-			Actor_Clue_Acquire(kActorMcCoy, kClueCarWasStolen, true, kActorDektora);
-			if (Player_Query_Agenda() == kPlayerAgendaSurly 
-			|| Player_Query_Agenda() == kPlayerAgendaErratic) {
-				Actor_Says(kActorMcCoy, 3725, 18); //00-3725.AUD	Is that right? Any reason you didn’t tell me that right off?
-				Actor_Says(kActorDektora, 800, 30);
-				Actor_Modify_Friendliness_To_Other(kActorDektora, kActorMcCoy, -2);
-			}
-			Actor_Says_With_Pause(kActorMcCoy, 3730, 2.0f, 13); //00-3730.AUD	Animal murder is pretty horrible.
-			if (Actor_Query_Friendliness_To_Other(kActorDektora, kActorMcCoy) < 50) {
-				Actor_Says(kActorDektora, 1480, 30); //03-1480.AUD	Yes
-			} else {
-				Actor_Says_With_Pause(kActorDektora, 810, 1.0f, kAnimationModeSit);
-				Actor_Says(kActorDektora, 820, 30);	 //03-0820.AUD	Any murder is horrible. And unfortunate.
-				Actor_Says(kActorMcCoy, 3735, 14); //00-3735.AUD	Some are worse than others.
-				Actor_Says(kActorDektora, 830, 31);
-				Actor_Says(kActorMcCoy, 3740, 19);
-			}
-		}
-	} else {
-		Actor_Says(kActorDektora, 770, 30);
-		Actor_Says(kActorMcCoy, 3720, 15);
-		Actor_Says_With_Pause(kActorDektora, 780, 2.0f, 30);
-		Actor_Says(kActorDektora, 790, 31);
-		Actor_Says(kActorMcCoy, 3725, 18); //00-3725.AUD	Is that right? Any reason you didn’t tell me that right off?
-		Actor_Says(kActorDektora, 800, 30);
-		Actor_Says_With_Pause(kActorMcCoy, 3730, 2.0f, 13); //00-3730.AUD	Animal murder is pretty horrible.
-		Actor_Says_With_Pause(kActorDektora, 810, 1.0f, kAnimationModeSit);
-		Actor_Says(kActorDektora, 820, 30);	 //03-0820.AUD	Any murder is horrible. And unfortunate.
-		Actor_Says(kActorMcCoy, 3735, 14); //00-3735.AUD	Some are worse than others.
-		Actor_Says(kActorDektora, 830, 31);
-		Actor_Says(kActorMcCoy, 3740, 19);
-	}
+	Actor_Says(kActorDektora, 770, 30);
+	Actor_Says(kActorMcCoy, 3720, 15);
+	Actor_Says_With_Pause(kActorDektora, 780, 2.0f, 30);
+	Actor_Says(kActorDektora, 790, 31);
+	Actor_Says(kActorMcCoy, 3725, 18); //00-3725.AUD	Is that right? Any reason you didn’t tell me that right off?
+	Actor_Says(kActorDektora, 800, 30);
+	Actor_Says_With_Pause(kActorMcCoy, 3730, 2.0f, 13); //00-3730.AUD	Animal murder is pretty horrible.
+	Actor_Says_With_Pause(kActorDektora, 810, 1.0f, kAnimationModeSit);
+	Actor_Says(kActorDektora, 820, 30);	 //03-0820.AUD	Any murder is horrible. And unfortunate.
+	Actor_Says(kActorMcCoy, 3735, 14); //00-3735.AUD	Some are worse than others.
+	Actor_Says(kActorDektora, 830, 31);
+	Actor_Says(kActorMcCoy, 3740, 19);
 }
 
 void SceneScriptNR07::talkAboutScorpions() {
-	if (_vm->_cutContent) {
-		Actor_Face_Actor(kActorDektora, kActorMcCoy, true);
-		Actor_Face_Actor(kActorMcCoy, kActorDektora, true);
-	}
 	Actor_Says(kActorMcCoy, 3620, 19); //00-3620.AUD	You like scorpions, huh?
 	Actor_Says(kActorDektora, 840, 30); //03-0840.AUD	Scorpions?
 	Actor_Says(kActorMcCoy, 3745, 9); //00-3745.AUD	Insects. Fakes. From Animoid Row. You buy a box of them?
-	if (_vm->_cutContent) {
-		if (Actor_Query_Friendliness_To_Other(kActorDektora, kActorMcCoy) < 50) {
-			Actor_Says(kActorDektora, 2060, 30); //03-2060.AUD	No.
-			if (Player_Query_Agenda() == kPlayerAgendaSurly 
-			|| Player_Query_Agenda() == kPlayerAgendaErratic) {
-				Actor_Says(kActorMcCoy, 6995, 18); //00-6995.AUD	That's not what I heard. You wanna set the record straight?
-				Actor_Modify_Friendliness_To_Other(kActorDektora, kActorMcCoy, -2);
-				Delay(2000);
-				Actor_Says_With_Pause(kActorDektora, 850, 1.0f, 30); // I didn't know what they were called
-				Actor_Says(kActorDektora, 860, 31); //03-0860.AUD	Insects make excellent pets. And they were so beautiful I just had to have the whole set.
-				Actor_Clue_Acquire(kActorMcCoy, kClueDektoraInterview4, true, kActorDektora);
-			}
-		} else {
-			Actor_Says_With_Pause(kActorDektora, 850, 1.0f, 30); // I didn't know what they were called
-			Actor_Says(kActorDektora, 860, 31); //03-0860.AUD	Insects make excellent pets. And they were so beautiful I just had to have the whole set.
-			Actor_Clue_Acquire(kActorMcCoy, kClueDektoraInterview4, true, kActorDektora);
-			if (Player_Query_Agenda() == kPlayerAgendaPolite) {
-				Actor_Says(kActorMcCoy, 3750, 11); //00-3750.AUD	Did you know they were poisonous?
-				Actor_Says(kActorDektora, 880, 30);
-				Actor_Says(kActorMcCoy, 3755, 16); //00-3755.AUD	And that doesn’t scare you?
-				Actor_Says(kActorDektora, 890, 31);
-				// Repurposed the Dektora interview 4 clue to be about the scorpions. The original Dektora interview 4 clue dialogue will now be under the clue
-				// Dektora confession where she admits to McCoy about being involved with Clovis and even calling him and Lucy her family.
-				Actor_Says(kActorDektora, 900, 30); // Who would need to add insects to the list?
-			}
-		}
-	} else {
 #if BLADERUNNER_ORIGINAL_BUGS
 	Actor_Says_With_Pause(kActorDektora, 850, 1.0f, 30);
 	Actor_Says(kActorDektora, 860, 30);
@@ -1451,14 +1395,13 @@ void SceneScriptNR07::talkAboutScorpions() {
 	Actor_Says(kActorDektora, 860, 31); //03-0860.AUD	Insects make excellent pets. And they were so beautiful I just had to have the whole set.
 	Actor_Clue_Acquire(kActorMcCoy, kClueDektoraInterview4, true, kActorDektora);
 #endif // BLADERUNNER_ORIGINAL_BUGS
-		Actor_Says(kActorMcCoy, 3750, 11); //00-3750.AUD	Did you know they were poisonous?
-		Actor_Says(kActorDektora, 880, 30);
-		Actor_Says(kActorMcCoy, 3755, 16); //00-3755.AUD	And that doesn’t scare you?
-		Actor_Says(kActorDektora, 890, 31);
-		// Repurposed the Dektora interview 4 clue to be about the scorpions. The original Dektora interview 4 clue dialogue will now be under the clue
-		// Dektora confession where she admits to McCoy about being involved with Clovis and even calling him and Lucy her family.
-		Actor_Says(kActorDektora, 900, 30); // Who would need to add insects to the list?
-	}
+	Actor_Says(kActorMcCoy, 3750, 11); //00-3750.AUD	Did you know they were poisonous?
+	Actor_Says(kActorDektora, 880, 30);
+	Actor_Says(kActorMcCoy, 3755, 16); //00-3755.AUD	And that doesn’t scare you?
+	Actor_Says(kActorDektora, 890, 31);
+	// Repurposed the Dektora interview 4 clue to be about the scorpions. The original Dektora interview 4 clue dialogue will now be under the clue
+	// Dektora confession where she admits to McCoy about being involved with Clovis and even calling him and Lucy her family.
+	Actor_Says(kActorDektora, 900, 30); // Who would need to add insects to the list?
 }
 
 } // End of namespace BladeRunner

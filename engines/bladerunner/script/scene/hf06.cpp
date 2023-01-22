@@ -210,13 +210,21 @@ void SceneScriptHF06::ActorChangedGoal(int actorId, int newGoal, int oldGoal, bo
 			}
 			Player_Set_Combat_Mode(false);
 			Delay(1000);
-			Actor_Voice_Over(990, kActorVoiceOver);
+			if (_vm->_cutContent) {
+				if (Actor_Query_Goal_Number(kActorMaggie) > kGoalMaggieDead) {
+					Actor_Voice_Over(990, kActorVoiceOver); //99-0990.AUD	Everything I’d ever been close to was dead.
+				}
+			} else {
+				Actor_Voice_Over(990, kActorVoiceOver); //99-0990.AUD	Everything I’d ever been close to was dead.
+			}
 			Actor_Voice_Over(1000, kActorVoiceOver);
 			Actor_Voice_Over(1010, kActorVoiceOver);
 			Loop_Actor_Walk_To_Actor(kActorMcCoy, otherActorId, 24, false, false);
-			Item_Pickup_Spin_Effect(kModelAnimationBomb, 355, 200);
 			if (_vm->_cutContent) {
+				Item_Pickup_Spin_Effect_From_Actor(kModelAnimationBomb, kActorMcCoy, 0, 0);
 				Actor_Says(kActorMcCoy, 8890, 13); //00-8890.AUD	A bomb.
+			} else {
+				Item_Pickup_Spin_Effect(kModelAnimationBomb, 355, 200);
 			}
 			Actor_Voice_Over(1020, kActorVoiceOver);
 			Actor_Voice_Over(1030, kActorVoiceOver);
@@ -376,7 +384,8 @@ void SceneScriptHF06::steelInterruption() {
 					// This line will only be said if your companion is a replicant.
 					Actor_Says(kActorSteele, 290, 58); //01-0290.AUD	Thanks for bringing her here. Makes my end a hell of a lot easier.
 				}
-				if (Player_Query_Agenda() == kPlayerAgendaPolite) { 
+				if (Player_Query_Agenda() != kPlayerAgendaSurly 
+				|| Player_Query_Agenda() != kPlayerAgendaErratic) {
 					Actor_Says(kActorMcCoy, 2130, -1); //00-2130.AUD	You’re the coldest person I’ve ever seen when it comes to killing.
 					Actor_Says(kActorSteele, 300, 59); //01-0300.AUD	I’ll take that as a compliment.
 				}
@@ -437,7 +446,8 @@ void SceneScriptHF06::steelInterruption() {
 				if (Game_Flag_Query(kFlagLucyIsReplicant)) {
 					Actor_Says(kActorSteele, 290, 58); ////01-0290.AUD	Thanks for bringing her here. Makes my end a hell of a lot easier.
 				}
-				if (Player_Query_Agenda() == kPlayerAgendaPolite) {
+				if (Player_Query_Agenda() != kPlayerAgendaSurly 
+				|| Player_Query_Agenda() != kPlayerAgendaErratic) {
 					Actor_Says(kActorMcCoy, 2130, -1); //00-2130.AUD	You’re the coldest person I’ve ever seen when it comes to killing.
 					Actor_Says(kActorSteele, 300, 59); //01-0300.AUD	I’ll take that as a compliment.
 				}

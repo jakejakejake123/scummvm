@@ -191,69 +191,70 @@ bool AIScriptGeneralDoll::ShotAtAndHit() {
 	}
 	// Made it so when you shoot the general doll and Sebastian is in the room he reacts to this and so does McCoy.
 	// If you shoot the general doll in front of Sebastian the McCoy is a blade runner clue will be added to Sebastians database and Sebastian will tell you to leave.
-	if (Game_Flag_Query(kFlagGeneralDollShot)) {
-		if (Actor_Query_Is_In_Current_Set(kActorSebastian)) {		
-			Actor_Face_Actor(kActorMcCoy, kActorGeneralDoll, true);
-			Actor_Face_Actor(kActorSebastian, kActorMcCoy, true);
-			Actor_Modify_Friendliness_To_Other(kActorSebastian, kActorMcCoy, -10);
-			Actor_Says(kActorSebastian, 710, 21); //56-0710.AUD	Stop! Please! Why are you doing all these terrible things?
-			Actor_Face_Actor(kActorMcCoy, kActorSebastian, true);
-			if (Player_Query_Agenda() == kPlayerAgendaSurly 
-			|| Player_Query_Agenda() == kPlayerAgendaErratic) {
-				Actor_Says(kActorMcCoy, 7275, -1); //  00-7275.AUD	Sometimes I just can't help myself.
-			} else {
-				Actor_Says(kActorMcCoy, 8519, -1);//00-8519.AUD	What do you say we dish each other the straight goods.
-			}
-			// Added in an animation where Sebastian tries to run away from McCoy but accidentally hits his head on the vase knocking himself out.
-			Actor_Face_Heading(kActorSebastian, 310, true);
-			Actor_Change_Animation_Mode(kActorSebastian, 48);
-			Delay (500);
-			Sound_Play(kSfxBIGPOT4, 50, 0, 0, 50);
-			if (Player_Query_Agenda() == kPlayerAgendaSurly 
-			|| Player_Query_Agenda() == kPlayerAgendaErratic) {
-				Delay(2000);
-				Player_Loses_Control();
-				Loop_Actor_Walk_To_Actor(kActorMcCoy, kActorSebastian, 24, true, false);
-				Player_Gains_Control();
-				Delay(1000);
+	if (_vm->_cutContent) {
+		if (Game_Flag_Query(kFlagGeneralDollShot)) {
+			if (Actor_Query_Is_In_Current_Set(kActorSebastian)) {		
+				Actor_Face_Actor(kActorMcCoy, kActorGeneralDoll, true);
+				Actor_Face_Actor(kActorSebastian, kActorMcCoy, true);
+				Actor_Modify_Friendliness_To_Other(kActorSebastian, kActorMcCoy, -10);
+				Actor_Says(kActorSebastian, 710, 21); //56-0710.AUD	Stop! Please! Why are you doing all these terrible things?
 				Actor_Face_Actor(kActorMcCoy, kActorSebastian, true);
-				Actor_Says(kActorMcCoy, 8600, 18); //00-8600.AUD	You keeping busy, pal?
-			} else {
-				Delay(2000);
+				if (Player_Query_Agenda() == kPlayerAgendaSurly 
+				|| Player_Query_Agenda() == kPlayerAgendaErratic) {
+					Actor_Says(kActorMcCoy, 7275, -1); //  00-7275.AUD	Sometimes I just can't help myself.
+				} else {
+					Actor_Says(kActorMcCoy, 8519, -1);//00-8519.AUD	What do you say we dish each other the straight goods.
+				}
+				// Added in an animation where Sebastian tries to run away from McCoy but accidentally hits his head on the vase knocking himself out.
+				Actor_Face_Heading(kActorSebastian, 310, true);
+				Actor_Change_Animation_Mode(kActorSebastian, 48);
+				Delay (500);
+				Sound_Play(kSfxBIGPOT4, 50, 0, 0, 50);
+				if (Player_Query_Agenda() == kPlayerAgendaSurly 
+				|| Player_Query_Agenda() == kPlayerAgendaErratic) {
+					Delay(2000);
+					Player_Loses_Control();
+					Loop_Actor_Walk_To_Actor(kActorMcCoy, kActorSebastian, 24, true, false);
+					Player_Gains_Control();
+					Delay(1000);
+					Actor_Face_Actor(kActorMcCoy, kActorSebastian, true);
+					Actor_Says(kActorMcCoy, 8600, 18); //00-8600.AUD	You keeping busy, pal?
+				} else {
+					Delay(2000);
+				}
+				Actor_Set_Targetable(kActorGeneralDoll, false);
+				Game_Flag_Set(kFlagSebastianKnockedOut);
+				Player_Gains_Control();
+			} else {	
+				Delay (2000);
+				Player_Loses_Control();
+				Loop_Actor_Walk_To_Actor(kActorMcCoy, kActorGeneralDoll, 24, true, false);
+				Player_Gains_Control();
+				Actor_Face_Actor(kActorMcCoy, kActorGeneralDoll, true);
+				Actor_Voice_Over(60, kActorVoiceOver); //99-0060.AUD	Plastic and wires. Not human and not a Replicant.
+				if (Player_Query_Agenda() == kPlayerAgendaSurly 
+				|| Player_Query_Agenda() == kPlayerAgendaErratic) {
+					Actor_Voice_Over(70, kActorVoiceOver); //99-0070.AUD	And I wasted another bullet.
+				} else {
+					Actor_Says(kActorMcCoy, 8508, -1); //00-8508.AUD	No retirement swag.
+				}
+				Delay(500);
+				Actor_Set_Targetable(kActorGeneralDoll, false);
 			}
-			Actor_Set_Targetable(kActorGeneralDoll, false);
-			Game_Flag_Set(kFlagSebastianKnockedOut);
-			Player_Gains_Control();
-		} else {	
-			Delay (2000);
-			Player_Loses_Control();
-			Loop_Actor_Walk_To_Actor(kActorMcCoy, kActorGeneralDoll, 24, true, false);
-			Player_Gains_Control();
-			Actor_Face_Actor(kActorMcCoy, kActorGeneralDoll, true);
-			Actor_Voice_Over(60, kActorVoiceOver); //99-0060.AUD	Plastic and wires. Not human and not a Replicant.
-			if (Player_Query_Agenda() == kPlayerAgendaSurly 
-			|| Player_Query_Agenda() == kPlayerAgendaErratic) {
-				Actor_Voice_Over(70, kActorVoiceOver); //99-0070.AUD	And I wasted another bullet.
-			} else {
-				Actor_Says(kActorMcCoy, 8508, -1); //00-8508.AUD	No retirement swag.
+			if (Actor_Query_In_Set(kActorMcCoy, kSetBB05)) {
+				Actor_Set_Targetable(kActorGeneralDoll, false);
+				Player_Loses_Control();
+				Loop_Actor_Walk_To_XYZ(kActorMcCoy, 271.0f, -60.31f, 203.0f, 0, true, false, false);
+				Player_Gains_Control();
+				Ambient_Sounds_Remove_All_Non_Looping_Sounds(true);
+				Ambient_Sounds_Remove_All_Looping_Sounds(1u);
+				Actor_Put_In_Set(kActorGeneralDoll, kSetBB10);
+				Actor_Set_At_XYZ(kActorGeneralDoll, 500.77f, 4.4f, -600.67f, 126);
+				Game_Flag_Set(kFlagBB05toBB07);
+				Set_Enter(kSetBB07, kSceneBB07);
 			}
-			Delay(500);
-			Actor_Set_Targetable(kActorGeneralDoll, false);
-		}
-		if (Actor_Query_In_Set(kActorMcCoy, kSetBB05)) {
-			Actor_Set_Targetable(kActorGeneralDoll, false);
-			Player_Loses_Control();
-			Loop_Actor_Walk_To_XYZ(kActorMcCoy, 271.0f, -60.31f, 203.0f, 0, true, false, false);
-			Player_Gains_Control();
-			Ambient_Sounds_Remove_All_Non_Looping_Sounds(true);
-			Ambient_Sounds_Remove_All_Looping_Sounds(1u);
-			Actor_Put_In_Set(kActorGeneralDoll, kSetBB10);
-			Actor_Set_At_XYZ(kActorGeneralDoll, 500.77f, 4.4f, -600.67f, 126);
-			Game_Flag_Set(kFlagBB05toBB07);
-			Set_Enter(kSetBB07, kSceneBB07);
 		}
 	}
-
 
 	return false;
 }

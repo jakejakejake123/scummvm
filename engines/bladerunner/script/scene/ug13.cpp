@@ -234,7 +234,11 @@ bool SceneScriptUG13::ClickedOnActor(int actorId) {
 									if (Player_Query_Agenda() == kPlayerAgendaSurly 
 									|| Player_Query_Agenda() == kPlayerAgendaErratic) {
 										Actor_Says(kActorMcCoy, 8665, 13); //00-8665.AUD	Disgusting.
-									} else {	
+									} else if (Player_Query_Agenda() == kPlayerAgendaPolite) {
+										Delay(1000);
+										Actor_Says(kActorMcCoy, 2305, 13); //00-2305.AUD	I’m sorry.
+										Delay(1000);
+									} else {
 										Actor_Says(kActorMcCoy, 8630, 12);  // What a waste
 									}
 								} else {
@@ -418,10 +422,11 @@ void SceneScriptUG13::PlayerWalkedIn() {
 				Player_Loses_Control();
 				Loop_Actor_Walk_To_XYZ(kActorMcCoy, -248.0f, 44.0f, -390.0f, 12, true, false, false);
 				Actor_Face_Actor(kActorMcCoy, kActorTransient, true);
-				if (Player_Query_Agenda() == kPlayerAgendaPolite) {
+				if (Player_Query_Agenda() != kPlayerAgendaSurly 
+				&& Player_Query_Agenda() != kPlayerAgendaErratic) {
 					Actor_Says(kActorMcCoy, 2175, 13); //00-2175.AUD	Hold on, I’ll get an ambulance out here.
-					Music_Play(kMusicBRBlues, 52, 0, 2, -1, kMusicLoopPlayOnce, 1);
 				}
+				Music_Play(kMusicBRBlues, 52, 0, 2, -1, kMusicLoopPlayOnce, 1);
 				Delay(1000);
 				Actor_Says(kActorMcCoy, 3970, 14); //00-3970.AUD	Hey.
 				Delay(2000);
@@ -440,7 +445,7 @@ void SceneScriptUG13::PlayerWalkedIn() {
 				}
 				Actor_Change_Animation_Mode(kActorMcCoy, 23);
 				Delay(3000);
-				Item_Pickup_Spin_Effect(kModelAnimationOriginalRequisitionForm, 129, 344);
+				Item_Pickup_Spin_Effect_From_Actor(kModelAnimationOriginalRequisitionForm, kActorTransient, 0, 0);
 				Actor_Says(kActorMcCoy, 8805, 13); //00-8805.AUD	A requisition form.
 				Actor_Voice_Over(3950, kActorVoiceOver);
 				Actor_Voice_Over(3960, kActorVoiceOver);
@@ -623,10 +628,8 @@ void SceneScriptUG13::dialogueWithHomeless1() {
 		} else {
 			Actor_Says(kActorMcCoy, 5615, 18); // Describe them...
 		}
-		if (!_vm->_cutContent) {
-			Actor_Says(kActorTransient, 160, 33); // Sure you don't got that drink?
-			Actor_Says(kActorMcCoy, 5620, 9); // Maybe later
-		}
+		Actor_Says(kActorTransient, 160, 33); // Sure you don't got that drink?
+		Actor_Says(kActorMcCoy, 5620, 9); // Maybe later
 		Actor_Says(kActorTransient, 170, 30); //Well, there's the Japanese guy with the coat and the glasses.
 		Actor_Says(kActorMcCoy, 5625, 12); // Skinny...?
 		Actor_Says(kActorTransient, 180, 32); // Yeah! And the guy with the muscles and the funny hair.
@@ -634,10 +637,10 @@ void SceneScriptUG13::dialogueWithHomeless1() {
 		Actor_Says(kActorTransient, 190, 32); // Right! Seen them twice. And a two headed guy and a fat man.
 		// Made it so if McCoy never interacted with the homeless man in act 1 he doesn't mention chasing Zuben since the homeless man wouldn't know. McCoy now simply asks if he knows him.
 		if (_vm->_cutContent) {
-			if (!Game_Flag_Query(kFlagCT04HomelessTalk)) {
-				Actor_Says(kActorMcCoy, 3230, 15); //00-3230.AUD	You know the chef at Howie’s?
-			} else {
+			if (Actor_Clue_Query(kActorTransient, kClueBigManLimping)) {
 				Actor_Says(kActorMcCoy, 5635, 15); //00-5635.AUD	Fat man? The one I was chasing from the sushi bar.
+			} else {
+				Actor_Says(kActorMcCoy, 3230, 15); //00-3230.AUD	You know the chef at Howie’s?
 			}
 		} else {
 			Actor_Says(kActorMcCoy, 5635, 15); //00-5635.AUD	Fat man? The one I was chasing from the sushi bar.
@@ -673,18 +676,16 @@ void SceneScriptUG13::dialogueWithHomeless1() {
 		Actor_Clue_Acquire(kActorTransient, kClueFlaskOfAbsinthe, false, kActorMcCoy);
 		Actor_Says_With_Pause(kActorMcCoy, 5595, 1.0f, 23); // You still thirsty, pal?
 		if (_vm->_cutContent) {
+			Actor_Change_Animation_Mode(kActorMcCoy, 23);
+			Delay(2000);
 			Item_Pickup_Spin_Effect_From_Actor(kModelAnimationFlaskOfAbsinthe, kActorTransient, 0, 0);
+			Actor_Says(kActorTransient, 290, 32); // Mucho obligado, senor.
 		} else {
 			Item_Pickup_Spin_Effect(kModelAnimationFlaskOfAbsinthe, 193, 325);
+			Actor_Says(kActorTransient, 290, 33); // Mucho obligado, senor.
 		}
-		Actor_Says(kActorTransient, 290, 33); // Mucho obligado, senor.
-		if (_vm->_cutContent) {
-			if (Player_Query_Agenda() == kPlayerAgendaPolite) {
-				Actor_Says(kActorMcCoy, 5660, 13); // Stay with me for a minute, pal.
-			}
-		} else {
-			Actor_Says(kActorMcCoy, 5660, 13); // Stay with me for a minute, pal.
-		}
+		
+		Actor_Says(kActorMcCoy, 5660, 13); // Stay with me for a minute, pal.
 		Player_Gains_Control();
 		Actor_Clue_Lose(kActorMcCoy, kClueFlaskOfAbsinthe);
 		dialogueWithHomeless2();
@@ -695,11 +696,32 @@ void SceneScriptUG13::dialogueWithHomeless1() {
 
 	default:
 		Actor_Face_Actor(kActorMcCoy, kActorTransient, true);
-		Actor_Says(kActorMcCoy, 5600, 14);               // Let me ask you
-		Actor_Says(kActorTransient, 100, 53);            // sleeping, mumbling
-		Actor_Says(kActorMcCoy, 5605, 18);               // I'm talking to you...
-		Actor_Start_Speech_Sample(kActorTransient, 110); // sleeping, mumbling
-		Actor_Set_Goal_Number(kActorTransient, 395);
+		if (_vm->_cutContent) {
+			if (Game_Flag_Query(kFlagTransientDead)) {
+				if (Player_Query_Agenda() == kPlayerAgendaSurly 
+				|| Player_Query_Agenda() == kPlayerAgendaErratic) {
+					Actor_Says(kActorMcCoy, 8665, 13); //00-8665.AUD	Disgusting.
+				} else if (Player_Query_Agenda() == kPlayerAgendaPolite) {
+					Delay(1000);
+					Actor_Says(kActorMcCoy, 2305, 13); //00-2305.AUD	I’m sorry.
+					Delay(1000);
+				} else {
+					Actor_Says(kActorMcCoy, 8630, 12);  // What a waste
+				}
+			} else {
+				Actor_Says(kActorMcCoy, 5600, 14);               // Let me ask you
+				Actor_Says(kActorTransient, 100, 53);            // sleeping, mumbling
+				Actor_Says(kActorMcCoy, 5605, 18);               // I'm talking to you...
+				Actor_Start_Speech_Sample(kActorTransient, 110); // sleeping, mumbling
+				Actor_Set_Goal_Number(kActorTransient, 395);
+			}
+		} else {
+			Actor_Says(kActorMcCoy, 5600, 14);               // Let me ask you
+			Actor_Says(kActorTransient, 100, 53);            // sleeping, mumbling
+			Actor_Says(kActorMcCoy, 5605, 18);               // I'm talking to you...
+			Actor_Start_Speech_Sample(kActorTransient, 110); // sleeping, mumbling
+			Actor_Set_Goal_Number(kActorTransient, 395);
+		}
 		break;
 	}
 }
@@ -711,8 +733,7 @@ void SceneScriptUG13::dialogueWithHomeless2() {
 	Dialogue_Menu_Clear_List();
 	if (_vm->_cutContent) {
 		DM_Add_To_List_Never_Repeat_Once_Selected(1370, 6, 1, 1); // DIRECTIONS
-		if (!Actor_Clue_Query(kActorMcCoy, kClueFolder) 
-		&& !Actor_Clue_Query(kActorMcCoy, kClueGuzzaFramedMcCoy)) {
+		if (!Actor_Clue_Query(kActorMcCoy, kClueFolder)) {
 			DM_Add_To_List_Never_Repeat_Once_Selected(1380, 9, 8, 7); // FAT MAN
 		}
 	} else {
@@ -768,6 +789,23 @@ void SceneScriptUG13::dialogueWithHomeless2() {
 				Actor_Says(kActorMcCoy, 5680, 19); // So what? I just follow my nose?
 				Actor_Says(kActorTransient, 310, 33); // Noses get a little overworked down here.
 				Actor_Says(kActorTransient, 330, 30); // You can get to it all from down here.
+				Actor_Says(kActorMcCoy, 4130, 18); //00-4130.AUD	Anything else?
+				Delay(1000);
+				Actor_Says(kActorMcCoy, 8990, 13); //00-8990.AUD	What have you got there?
+				Actor_Change_Animation_Mode(kActorMcCoy, 23);
+				Delay(2000);
+				Actor_Clue_Acquire(kActorMcCoy, kClueOriginalRequisitionForm, true, kActorTransient);
+				Item_Remove_From_World(kItemWeaponsOrderForm);
+				Item_Pickup_Spin_Effect_From_Actor(kModelAnimationOriginalRequisitionForm, kActorMcCoy, 0, 0);
+				Actor_Says(kActorMcCoy, 8805, 19); //00-8805.AUD	A requisition form.
+				Actor_Voice_Over(3950, kActorVoiceOver);
+				Actor_Voice_Over(3960, kActorVoiceOver);
+				Actor_Voice_Over(3970, kActorVoiceOver);
+				Actor_Voice_Over(3980, kActorVoiceOver);
+				Actor_Voice_Over(3990, kActorVoiceOver);
+				Actor_Voice_Over(4000, kActorVoiceOver);
+				Delay(1000);
+				Player_Gains_Control();
 				Actor_Says(kActorMcCoy, 5600, 14);               // Let me ask you
 				Actor_Says(kActorTransient, 100, 30); // sleeping, mumbling
 				Actor_Says(kActorMcCoy, 5605, 18);               // I'm talking to you...
@@ -786,35 +824,10 @@ void SceneScriptUG13::dialogueWithHomeless2() {
 			Actor_Says(kActorMcCoy, 5680, 19); // So what? I just follow my nose?
 			Actor_Says(kActorTransient, 310, 33); // Noses get a little overworked down here.
 			Actor_Says(kActorTransient, 330, 30); // You can get to it all from down here.
-			Actor_Says(kActorMcCoy, 4130, 18); //00-4130.AUD	Anything else?
-			Delay(1000);
-			Actor_Says(kActorMcCoy, 8990, 13); //00-8990.AUD	What have you got there?
-			Actor_Change_Animation_Mode(kActorMcCoy, 23);
-			Delay(2000);
-			Actor_Clue_Acquire(kActorMcCoy, kClueOriginalRequisitionForm, true, kActorTransient);
-			Item_Remove_From_World(kItemWeaponsOrderForm);
-			Item_Pickup_Spin_Effect(kModelAnimationOriginalRequisitionForm, 129, 344);
-			Actor_Says(kActorMcCoy, 8805, 19); //00-8805.AUD	A requisition form.
-			Actor_Voice_Over(3950, kActorVoiceOver);
-			Actor_Voice_Over(3960, kActorVoiceOver);
-			Actor_Voice_Over(3970, kActorVoiceOver);
-			Actor_Voice_Over(3980, kActorVoiceOver);
-			Actor_Voice_Over(3990, kActorVoiceOver);
-			Actor_Voice_Over(4000, kActorVoiceOver);
-			Delay(1000);
-			Player_Gains_Control();
-			Player_Gains_Control();
-			Actor_Says(kActorMcCoy, 5600, 14);               // Let me ask you
-			Actor_Says(kActorTransient, 100, 30); // sleeping, mumbling
-			Actor_Says(kActorMcCoy, 5605, 18);               // I'm talking to you...
 			Actor_Start_Speech_Sample(kActorTransient, 110); // sleeping, mumbling
 			Actor_Set_Goal_Number(kActorTransient, 395);
-			if (Player_Query_Agenda() == kPlayerAgendaSurly 
-			|| Player_Query_Agenda() == kPlayerAgendaErratic) {
-				Actor_Voice_Over(3760, kActorVoiceOver); //99-3760.AUD	Sloth was practically a new religion around here.
-				Actor_Says(kActorMcCoy, 5685, 18); // Triple-A...
-				Actor_Says(kActorTransient, 420, 30); //12-0420.AUD	Don’t care what you think.
-			}
+			Actor_Says(kActorMcCoy, 5685, 18); // Triple-A...
+			Actor_Says(kActorTransient, 420, 30); //12-0420.AUD	Don’t care what you think.
 		}
 		break;
 
@@ -854,8 +867,7 @@ void SceneScriptUG13::dialogueWithHomeless2() {
 				Actor_Says(kActorMcCoy, 5690, 19); // Huh?
 				Actor_Says(kActorTransient, 350, 32); // No, you're his kid. That's what it is.
 				Actor_Says(kActorMcCoy, 5695, 14); // How's that?
-				if (Player_Query_Agenda() == kPlayerAgendaSurly 
-				|| Player_Query_Agenda() == kPlayerAgendaErratic) {
+				if (Player_Query_Agenda() != kPlayerAgendaPolite) {
 					Delay (1000);
 					Actor_Says(kActorMcCoy, 3910, 9); //00-3910.AUD	You’re lying.
 					Actor_Says(kActorTransient, 430, 31); //12-0430.AUD	Half truth is all, eh, half truth. Here’s the real deal. Plain truth, okay?
@@ -873,7 +885,7 @@ void SceneScriptUG13::dialogueWithHomeless2() {
 				Delay(2000);
 				Actor_Clue_Acquire(kActorMcCoy, kClueOriginalRequisitionForm, true, kActorTransient);
 				Item_Remove_From_World(kItemWeaponsOrderForm);
-				Item_Pickup_Spin_Effect(kModelAnimationOriginalRequisitionForm, 129, 344);
+				Item_Pickup_Spin_Effect_From_Actor(kModelAnimationOriginalRequisitionForm, kActorMcCoy, 0, 0);
 				Actor_Says(kActorMcCoy, 8805, 19); //00-8805.AUD	A requisition form.
 				Actor_Voice_Over(3950, kActorVoiceOver);
 				Actor_Voice_Over(3960, kActorVoiceOver);
@@ -959,7 +971,7 @@ void SceneScriptUG13::dialogueWithHomeless2() {
 				Delay(2000);
 				Actor_Clue_Acquire(kActorMcCoy, kClueOriginalRequisitionForm, true, kActorTransient);
 				Item_Remove_From_World(kItemWeaponsOrderForm);
-				Item_Pickup_Spin_Effect(kModelAnimationOriginalRequisitionForm, 129, 344);
+				Item_Pickup_Spin_Effect_From_Actor(kModelAnimationOriginalRequisitionForm, kActorMcCoy, 0, 0);
 				Actor_Says(kActorMcCoy, 8805, 19); //00-8805.AUD	A requisition form.
 				Actor_Voice_Over(3950, kActorVoiceOver);
 				Actor_Voice_Over(3960, kActorVoiceOver);

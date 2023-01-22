@@ -189,8 +189,7 @@ void SceneScriptUG09::PlayerWalkedIn() {
 					Actor_Says(kActorMcCoy, 6775, 15); //00-6775.AUD	I don’t know. Why don’t you tell me?
 				}
 				Actor_Says(kActorIzo, 960, 15); //07-0960.AUD	I’m sorry to say you and I are on the same boat. Beholden to the same person.
-				if (Player_Query_Agenda() == kPlayerAgendaSurly 
-				|| Player_Query_Agenda() == kPlayerAgendaErratic) {
+				if (Player_Query_Agenda() != kPlayerAgendaPolite) {
 					Actor_Says(kActorMcCoy, 3910, 16); //00-3910.AUD	You’re lying.
 				} else {
 					Actor_Says(kActorMcCoy, 6780, 18); //00-6780.AUD	Don’t jump to any conclusions.
@@ -198,16 +197,13 @@ void SceneScriptUG09::PlayerWalkedIn() {
 				Delay(1000);
 			}
 		}
-		if (Actor_Clue_Query(kActorClovis, kClueMcCoyRetiredLucy) 
-		|| Actor_Clue_Query(kActorClovis, kClueMcCoyRetiredDektora)
-		|| Actor_Clue_Query(kActorClovis, kClueMcCoyRetiredZuben)
-		|| Game_Flag_Query(kFlagZubenRetired)
-		|| Actor_Query_Friendliness_To_Other(kActorClovis, kActorMcCoy) < 51) {
+		if (Actor_Query_Friendliness_To_Other(kActorClovis, kActorMcCoy) < 51
+		|| Game_Flag_Query(kFlagMcCoyRetiredReplicant)) {
 			Actor_Says(kActorIzo, 750, 13); //07-0750.AUD	Clovis is looking for you, McCoy.
 			Actor_Says(kActorMcCoy, 6755, 13); //00-6755.AUD	He wants to talk to me?!
 			Actor_Says(kActorIzo, 910, 12); //07-0910.AUD	He would have made that clear.
 			Actor_Clue_Acquire(kActorMcCoy, kClueIzosWarning, true, kActorIzo);
-			if (Game_Flag_Query(kFlagZubenRetired)) {
+			if (Actor_Clue_Query(kActorMcCoy, kClueMcCoyRetiredZuben)) {
 				Actor_Says(kActorIzo, 760, 14); //07-0760.AUD	He knows all about you. Knows what happened with Zuben.
 			}
 			if (!Actor_Clue_Query(kActorMcCoy, kClueAmateurBomber)) {
@@ -219,14 +215,14 @@ void SceneScriptUG09::PlayerWalkedIn() {
 		Actor_Says(kActorMcCoy, 5505, 13); //00-5505.AUD	I need to talk to Clovis.
 		if (Game_Flag_Query(kFlagIzoWarned)) {
 			Actor_Says(kActorIzo, 790, 16); //07-0790.AUD	I’ll tell him you helped me. That’s as much as I can do.
-			Actor_Says(kActorMcCoy, 4880, 13); //00-4880.AUD	Is that right?
-		} 
-		Actor_Says(kActorIzo, 870, 17); //07-0870.AUD	I’ve been warned not to waste any more words with you.
+		} else {
+			Actor_Says(kActorIzo, 870, 17); //07-0870.AUD	I’ve been warned not to waste any more words with you.
+		}
 		if (Player_Query_Agenda() == kPlayerAgendaPolite) {
 			Actor_Says(kActorMcCoy, 6730, 15); //00-6730.AUD	I’ll do you a good turn, if you hook me up with Clovis.
 			Actor_Says(kActorIzo, 880, 14); //07-0880.AUD	Good turns are meaningless to me, if I go against Clovis’ wishes.
+			Actor_Says(kActorMcCoy, 6750, 18); //00-6750.AUD	You’re afraid of him?
 		}
-		Actor_Says(kActorMcCoy, 6750, 18); //00-6750.AUD	You’re afraid of him?
 		Actor_Says(kActorIzo, 890, 13); //07-0890.AUD	People must prove themselves to me before I make any judgments
 		Actor_Says(kActorIzo, 900, 15); //07-0900.AUD	Clovis has done that. A thousand times over. He’s not to be taken lightly.
 		if (Player_Query_Agenda() != kPlayerAgendaPolite) {

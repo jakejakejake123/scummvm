@@ -121,12 +121,10 @@ bool SceneScriptBB03::ClickedOnExit(int exitId) {
 				} else if (Actor_Clue_Query(kActorSebastian, kClueMcCoyIsABladeRunner)) {
 					Actor_Says(kActorMcCoy, 6985, 16);
 					Actor_Says(kActorSebastian, 610, 14);
-				} else {
-					if (Actor_Query_Goal_Number(kActorSebastian) != 200) {
-						Ambient_Sounds_Remove_All_Non_Looping_Sounds(true);
-						Ambient_Sounds_Remove_All_Looping_Sounds(1u);
-						Set_Enter(kSetBB05, kSceneBB05);
-					}
+				} else if (Actor_Query_Goal_Number(kActorSebastian) != 200) {
+					Ambient_Sounds_Remove_All_Non_Looping_Sounds(true);
+					Ambient_Sounds_Remove_All_Looping_Sounds(1u);
+					Set_Enter(kSetBB05, kSceneBB05);
 				}
 			} else {
 				Ambient_Sounds_Remove_All_Non_Looping_Sounds(true);
@@ -150,11 +148,14 @@ bool SceneScriptBB03::ClickedOnExit(int exitId) {
 					} else {
 						Player_Set_Combat_Mode(true);
 						Actor_Says(kActorSebastian, 680, 12); //56-0680.AUD	Hey, you don't need to do that.
+						Delay(500);
+						Actor_Says(kActorSebastian, 700, 15); //56-0700.AUD	Please! You don't have to pull your gun in here.
 						Actor_Says_With_Pause(kActorMcCoy, 7265, 0.0f, -1); //00-7265.AUD	Think real hard JF. You got anything here that someone would want?
 						Actor_Says(kActorSebastian, 690, 16);//56-0690.AUD	There's nothing in here. People don't even like to come inside my building.
 						Actor_Says(kActorMcCoy, 8519, -1);//00-8519.AUD	What do you say we dish each other the straight goods.
 						Actor_Modify_Friendliness_To_Other(kActorSebastian, kActorMcCoy, -2);
 						Delay(2000);
+						Player_Set_Combat_Mode(false);
 					}
 				} else {
 					Actor_Says(kActorMcCoy, 7025, 15); //00-7025.AUD	You may think you can but believe me you can't. Better if I check it out.

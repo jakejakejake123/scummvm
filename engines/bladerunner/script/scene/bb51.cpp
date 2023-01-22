@@ -72,11 +72,22 @@ bool SceneScriptBB51::ClickedOn3DObject(const char *objectName, bool a2) {
 #else
 		// acquire chess clue
 		if (!Actor_Clue_Query(kActorMcCoy, kClueChessTable)) {
-			Actor_Clue_Acquire(kActorMcCoy, kClueChessTable, true, -1);
+			if (_vm->_cutContent) {
+				Game_Flag_Set(kFlagChessTableChecked);
+			} else {
+				Actor_Clue_Acquire(kActorMcCoy, kClueChessTable, true, -1);
+			}
 		}
 #endif // BLADERUNNER_ORIGINAL_BUGS
 		Actor_Face_Object(kActorMcCoy, "V2CHESSTBL01", true);
-		Actor_Voice_Over(80, kActorVoiceOver);
+		if (_vm->_cutContent) {
+			if (Player_Query_Agenda() == kPlayerAgendaSurly 
+			|| Player_Query_Agenda() == kPlayerAgendaErratic) {
+				Actor_Voice_Over(80, kActorVoiceOver);
+			}
+		} else {
+			Actor_Voice_Over(80, kActorVoiceOver);
+		}
 		Actor_Voice_Over(90, kActorVoiceOver); 
 	}
 

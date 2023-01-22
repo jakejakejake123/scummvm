@@ -68,6 +68,7 @@ bool AIScriptHasan::Update() {
 		&& !Game_Flag_Query(kFlagBulletBobArrested)
 		&& !Actor_Clue_Query(kActorMcCoy, kClueBobShotInSelfDefense)
 		&& !Actor_Clue_Query(kActorMcCoy, kClueBobShotInColdBlood)
+		&& !Actor_Clue_Query(kActorMcCoy, kClueCrystalRetiredBob)
 		&& Global_Variable_Query(kVariableChapter) > 2) {
 			// use this goal to put Hasan in a FreeSlot set for Act 1
 			Actor_Set_Goal_Number(kActorHasan, kGoalHasanIsAway);

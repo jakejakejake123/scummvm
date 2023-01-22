@@ -82,8 +82,11 @@ void SceneScriptCT05::SceneLoaded() {
 	Unclickable_Object("LFTDOOR");
 	Unclickable_Object("LFTDOORFRM");
 	//Added in the Zuben incept clue. He dropped it while running away and it is near the staircase.
-	if (_vm->_cutContent && !Actor_Clue_Query(kActorMcCoy, kClueZubenIncept)) {
-		Item_Add_To_World(kItemNote, kModelAnimationPhoto, kSetCT05, -74.94, -109.42, 358.92, 0, 12, 12, false, true, false, true);
+	if (_vm->_cutContent) { 
+		if (!Actor_Clue_Query(kActorMcCoy, kClueZubenIncept)
+		&& Game_Flag_Query(kFlagZubenIsReplicant)) {
+			Item_Add_To_World(kItemNote, kModelAnimationPhoto, kSetCT05, -74.94, -109.42, 358.92, 0, 12, 12, false, true, false, true);
+		}
 	}
 }
 

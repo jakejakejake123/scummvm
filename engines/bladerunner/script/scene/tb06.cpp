@@ -76,9 +76,19 @@ bool SceneScriptTB06::ClickedOn3DObject(const char *objectName, bool a2) {
 bool SceneScriptTB06::ClickedOnActor(int actorId) {
 	if (actorId == kActorMarcus) {
 		if (!Loop_Actor_Walk_To_Actor(kActorMcCoy, kActorMarcus, 24, true, false)) {
+			if (_vm->_cutContent) {
+				Actor_Face_Actor(kActorMcCoy, kActorMarcus, true);
+			}
 			if (!Actor_Clue_Query(kActorMcCoy, kClueDetonatorWire)) {
 				Actor_Voice_Over(2300, kActorVoiceOver);
-				Actor_Voice_Over(2310, kActorVoiceOver); //99-2310.AUD	And not just because he'd been plastered on the wall with a thousand strokes.				
+				if (_vm->_cutContent) {
+					if (Player_Query_Agenda() == kPlayerAgendaSurly
+					|| Player_Query_Agenda() == kPlayerAgendaErratic) {
+						Actor_Voice_Over(2310, kActorVoiceOver); //99-2310.AUD	And not just because he'd been plastered on the wall with a thousand strokes.			
+					}
+				} else {
+					Actor_Voice_Over(2310, kActorVoiceOver); //99-2310.AUD	And not just because he'd been plastered on the wall with a thousand strokes.			
+				}	
 				Item_Pickup_Spin_Effect(kModelAnimationDetonatorWire, 66, 397);
 				Actor_Voice_Over(2320, kActorVoiceOver);
 				if (Game_Flag_Query(kFlagSadikIsReplicant)) {
@@ -103,7 +113,11 @@ bool SceneScriptTB06::ClickedOnActor(int actorId) {
 					if (Player_Query_Agenda() == kPlayerAgendaSurly 
 					|| Player_Query_Agenda() == kPlayerAgendaErratic) {
 						Actor_Says(kActorMcCoy, 8665, 13); //00-8665.AUD	Disgusting.
-					} else {	
+					} else if (Player_Query_Agenda() == kPlayerAgendaPolite) {
+						Delay(1000);
+						Actor_Says(kActorMcCoy, 2305, 13); //00-2305.AUD	I’m sorry.
+						Delay(1000);
+					} else {
 						Actor_Says(kActorMcCoy, 8630, 12);  // What a waste
 					}
 				} else {
@@ -295,9 +309,9 @@ void SceneScriptTB06::PlayerWalkedIn() {
 					Loop_Actor_Walk_To_Actor(kActorMcCoy, kActorPhotographer, 24, true, false);
 					Player_Gains_Control();
 					Actor_Change_Animation_Mode(kActorMcCoy, 23);
-					Delay(1200);
+					Actor_Change_Animation_Mode(kActorPhotographer, 23);
+					Delay(2000);
 					Item_Pickup_Spin_Effect_From_Actor(kModelAnimationAmmoType00, kActorMcCoy, 0, 0);
-					Delay(1000);
 					Actor_Face_Heading(kActorMcCoy, 240, true);
 					Actor_Voice_Over(4190, kActorVoiceOver); //99-4190.AUD	Where have I seen that before?
 					Actor_Change_Animation_Mode(kActorMcCoy, 23);
@@ -306,7 +320,7 @@ void SceneScriptTB06::PlayerWalkedIn() {
 					Delay(1000);
 					Actor_Says(kActorMcCoy, 8705, 19); //00-8705.AUD	That's damn strange.
 					Actor_Clue_Acquire(kActorMcCoy, kCluePoliceWeaponUsed, true, kActorPhotographer);	
-					Delay(1000);
+					Delay(2000);
 					Actor_Face_Actor(kActorMcCoy, kActorPhotographer, true);
 					Actor_Face_Actor(kActorPhotographer, kActorMcCoy, true);
 					Actor_Says(kActorMcCoy, 4130, 18); //00-4130.AUD	Anything else?

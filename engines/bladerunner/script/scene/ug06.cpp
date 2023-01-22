@@ -161,6 +161,15 @@ void SceneScriptUG06::PlayerWalkedIn() {
 		}
 		Actor_Voice_Over(2690, kActorVoiceOver); //99-2690.AUD	Maybe there was a lot more than what met my eye.
 		Actor_Voice_Over(2700, kActorVoiceOver); //99-2700.AUD	All I had to do was stay alive long enough to find out.
+		if (_vm->_cutContent) {
+			Delay(2000);
+			Actor_Says(kActorMcCoy, 115, -1); //00-0115.AUD	Maggie.
+			Delay(1000);
+			Actor_Says(kActorMcCoy, 170, -1);
+			Delay(2000);
+			Actor_Says(kActorMcCoy, 6875, -1); //00-6875.AUD	I gotta go.
+			Delay(1000);
+		}
 		Player_Gains_Control();
 		Game_Flag_Set(kFlagUG06Chapter4Started);
 		Autosave_Game(2);

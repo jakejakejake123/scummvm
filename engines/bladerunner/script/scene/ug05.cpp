@@ -104,12 +104,22 @@ bool SceneScriptUG05::ClickedOnActor(int actorId) {
 				}
 				Actor_Says(kActorMcCoy, 5540, 14); //00-5540.AUD	Your friends will be coming soon. You’ll live.
 				Actor_Says(kActorOfficerGrayford, 230, -1); //24-0230.AUD	What do you care?
-				if (Player_Query_Agenda() != kPlayerAgendaSurly 
-				&& Player_Query_Agenda() != kPlayerAgendaErratic) {
-					if (!Game_Flag_Query(kFlagMcCoyIsInnocent)) {
-						Actor_Says(kActorMcCoy, 5545, 17); //00-5545.AUD	I feel sorry for you. Who knows? Maybe I’m not a Rep after all.
-						Actor_Says(kActorOfficerGrayford, 240, -1);
-						Actor_Says(kActorMcCoy, 5550, 3); //00-5550.AUD	They gotta find me first.
+				if (!Game_Flag_Query(kFlagMcCoyIsInnocent)) {
+					if (Player_Query_Agenda() != kPlayerAgendaSurly 
+					&& Player_Query_Agenda() != kPlayerAgendaErratic) {
+						Actor_Says(kActorMcCoy, 5545, 17); //00-5545.AUD	I feel sorry for you. Who knows? Maybe I’m not a Rep after all.	
+						if (Game_Flag_Query(kFlagMcCoyRetiredHuman)) {	
+							Actor_Says(kActorOfficerGrayford, 240, -1);
+							Actor_Says(kActorMcCoy, 5550, 3); //00-5550.AUD	They gotta find me first.
+						} else if (Global_Variable_Query(kVariableAffectionTowards) == kAffectionTowardsDektora 
+						&& Game_Flag_Query(kFlagDektoraIsReplicant)) {	
+							Actor_Says(kActorOfficerGrayford, 240, -1);
+							Actor_Says(kActorMcCoy, 5550, 3); //00-5550.AUD	They gotta find me first.
+						} else if (Global_Variable_Query(kVariableAffectionTowards) == kAffectionTowardsLucy 
+						&& Game_Flag_Query(kFlagLucyIsReplicant)) {	
+							Actor_Says(kActorOfficerGrayford, 240, -1);
+							Actor_Says(kActorMcCoy, 5550, 3); //00-5550.AUD	They gotta find me first.
+						}
 					}
 				}
 			} else {
@@ -207,10 +217,34 @@ void SceneScriptUG05::PlayerWalkedIn() {
 			if (_vm->_cutContent) {
 				Music_Play(kMusicBRBlues, 52, 0, 3, -1, kMusicLoopPlayOnceRandomStart, 0);
 			}
-			Actor_Put_In_Set(kActorOfficerGrayford, kSetUG05);
-			Actor_Set_At_XYZ(kActorOfficerGrayford, 4.22f, -1.37f, -925.0f, 750);
-			Actor_Set_Goal_Number(kActorOfficerGrayford, kGoalOfficerGrayfordDead);
-			Actor_Retired_Here(kActorOfficerGrayford, 70, 36, true, -1);
+			if (_vm->_cutContent) {
+				if (Global_Variable_Query(kVariableAffectionTowards) == kAffectionTowardsDektora) {
+					if (Game_Flag_Query(kFlagDektoraIsReplicant)
+					|| !Game_Flag_Query(kFlagMcCoyIsInnocent)
+					|| Game_Flag_Query(kFlagMcCoyRetiredHuman)
+					|| Actor_Query_Friendliness_To_Other(kActorCrazylegs, kActorMcCoy) < 50) {
+						Actor_Put_In_Set(kActorOfficerGrayford, kSetUG05);
+						Actor_Set_At_XYZ(kActorOfficerGrayford, 4.22f, -1.37f, -925.0f, 750);
+						Actor_Set_Goal_Number(kActorOfficerGrayford, kGoalOfficerGrayfordDead);
+						Actor_Retired_Here(kActorOfficerGrayford, 70, 36, true, -1);
+					}
+				} else if (Global_Variable_Query(kVariableAffectionTowards) == kAffectionTowardsLucy) {
+					if (Game_Flag_Query(kFlagLucyIsReplicant)
+					|| !Game_Flag_Query(kFlagMcCoyIsInnocent)
+					|| Game_Flag_Query(kFlagMcCoyRetiredHuman)
+					|| Actor_Query_Friendliness_To_Other(kActorCrazylegs, kActorMcCoy) < 50) {
+						Actor_Put_In_Set(kActorOfficerGrayford, kSetUG05);
+						Actor_Set_At_XYZ(kActorOfficerGrayford, 4.22f, -1.37f, -925.0f, 750);
+						Actor_Set_Goal_Number(kActorOfficerGrayford, kGoalOfficerGrayfordDead);
+						Actor_Retired_Here(kActorOfficerGrayford, 70, 36, true, -1);
+					}
+				}
+			} else {
+				Actor_Put_In_Set(kActorOfficerGrayford, kSetUG05);
+				Actor_Set_At_XYZ(kActorOfficerGrayford, 4.22f, -1.37f, -925.0f, 750);
+				Actor_Set_Goal_Number(kActorOfficerGrayford, kGoalOfficerGrayfordDead);
+				Actor_Retired_Here(kActorOfficerGrayford, 70, 36, true, -1);
+			}
 
 			int affectionTowardsActor = getAffectionTowardsActor();
 			if (affectionTowardsActor == kActorDektora) {
@@ -223,16 +257,54 @@ void SceneScriptUG05::PlayerWalkedIn() {
 				Actor_Force_Stop_Walking(kActorLucy);
 			}
 		} else {
-			if (!Actor_Query_In_Set(kActorOfficerLeary, kSetUG05)) {
-				Actor_Put_In_Set(kActorOfficerLeary, kSetUG05);
-				Actor_Set_At_XYZ(kActorOfficerLeary, 0.0f, -1.37f, -1400.0f, 768);
-			}
+			if (_vm->_cutContent) {
+				if (Global_Variable_Query(kVariableAffectionTowards) == kAffectionTowardsDektora) {
+					if (Game_Flag_Query(kFlagDektoraIsReplicant)
+					|| !Game_Flag_Query(kFlagMcCoyIsInnocent)
+					|| Game_Flag_Query(kFlagMcCoyRetiredHuman)
+					|| Actor_Query_Friendliness_To_Other(kActorCrazylegs, kActorMcCoy) < 50) {
+						if (!Actor_Query_In_Set(kActorOfficerLeary, kSetUG05)) {
+							Actor_Put_In_Set(kActorOfficerLeary, kSetUG05);
+							Actor_Set_At_XYZ(kActorOfficerLeary, 0.0f, -1.37f, -1400.0f, 768);
+						}
 
-			if (!Actor_Query_In_Set(kActorOfficerGrayford, kSetUG05)) {
-				ADQ_Flush();
-				ADQ_Add(kActorOfficerGrayford, 280, kAnimationModeTalk);
-				Actor_Put_In_Set(kActorOfficerGrayford, kSetUG05);
-				Actor_Set_At_XYZ(kActorOfficerGrayford, -16.0f, -1.37f, -960.0f, 768);
+						if (!Actor_Query_In_Set(kActorOfficerGrayford, kSetUG05)) {
+							ADQ_Flush();
+							ADQ_Add(kActorOfficerGrayford, 280, kAnimationModeTalk);
+							Actor_Put_In_Set(kActorOfficerGrayford, kSetUG05);
+							Actor_Set_At_XYZ(kActorOfficerGrayford, -16.0f, -1.37f, -960.0f, 768);
+						}
+					}
+				} else if (Global_Variable_Query(kVariableAffectionTowards) == kAffectionTowardsLucy) {
+					if (Game_Flag_Query(kFlagLucyIsReplicant)
+					|| !Game_Flag_Query(kFlagMcCoyIsInnocent)
+					|| Game_Flag_Query(kFlagMcCoyRetiredHuman)
+					|| Actor_Query_Friendliness_To_Other(kActorCrazylegs, kActorMcCoy) < 50) {
+						if (!Actor_Query_In_Set(kActorOfficerLeary, kSetUG05)) {
+							Actor_Put_In_Set(kActorOfficerLeary, kSetUG05);
+							Actor_Set_At_XYZ(kActorOfficerLeary, 0.0f, -1.37f, -1400.0f, 768);
+						}
+						
+						if (!Actor_Query_In_Set(kActorOfficerGrayford, kSetUG05)) {
+							ADQ_Flush();
+							ADQ_Add(kActorOfficerGrayford, 280, kAnimationModeTalk);
+							Actor_Put_In_Set(kActorOfficerGrayford, kSetUG05);
+							Actor_Set_At_XYZ(kActorOfficerGrayford, -16.0f, -1.37f, -960.0f, 768);
+						}
+					}
+				}
+			} else {
+				if (!Actor_Query_In_Set(kActorOfficerLeary, kSetUG05)) {
+					Actor_Put_In_Set(kActorOfficerLeary, kSetUG05);
+					Actor_Set_At_XYZ(kActorOfficerLeary, 0.0f, -1.37f, -1400.0f, 768);
+				}
+
+				if (!Actor_Query_In_Set(kActorOfficerGrayford, kSetUG05)) {
+					ADQ_Flush();
+					ADQ_Add(kActorOfficerGrayford, 280, kAnimationModeTalk);
+					Actor_Put_In_Set(kActorOfficerGrayford, kSetUG05);
+					Actor_Set_At_XYZ(kActorOfficerGrayford, -16.0f, -1.37f, -960.0f, 768);
+				}
 			}
 		}
 	}
@@ -293,7 +365,7 @@ void SceneScriptUG05::endGame() {
 			}
 		}
 		if (_vm->_cutContent) {
-			if (!Actor_Clue_Query(kActorMcCoy, kClueCrystalsCigarette)) { 
+			if (Actor_Query_Goal_Number(kActorMaggie) < kGoalMaggieDead) {
 				Actor_Put_In_Set(kActorMaggie, kSetUG05);
 				Actor_Set_At_XYZ(kActorMaggie, 4.0f, -11.67f, -4.0f, 0);
 				Delay(1000);

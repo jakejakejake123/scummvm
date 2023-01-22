@@ -56,7 +56,7 @@ bool AIScriptLuther::Update() {
 		Actor_Says(kActorLuther, 80, 13);
 		Actor_Says(kActorLance, 40, 12); //13-0040.AUD	Just give it up. You got no jurisdiction down here.
 		if (_vm->_cutContent) {
-			Actor_Modify_Friendliness_To_Other(kActorLuther, kActorMcCoy, -5);
+			Actor_Modify_Friendliness_To_Other(kActorLuther, kActorMcCoy, -2);
 		}
 		Game_Flag_Set(kFlagUG16PulledGun);
 		return false;
@@ -109,6 +109,7 @@ bool AIScriptLuther::Update() {
 				}
 				Delay(1000);
 				Actor_Says(kActorMcCoy, 8508, 12); //00-8508.AUD	No retirement swag.
+				Game_Flag_Set(kFlagMcCoyRetiredReplicant);
 				Game_Flag_Reset(kFlagMcCoyIsHelpingReplicants);
 				Actor_Modify_Friendliness_To_Other(kActorClovis, kActorMcCoy, -4);
 				Actor_Modify_Friendliness_To_Other(kActorSteele, kActorMcCoy, 4);
@@ -269,18 +270,21 @@ void AIScriptLuther::Retired(int byActorId) {
 					if (Actor_Query_Goal_Number(kActorRunciter) < kGoalRunciterDead) {
 						Delay(1000);
 						Sound_Play(kSfxSMCAL3, 100, 0, 0, 50);
+						Actor_Set_Goal_Number(kActorRunciter, kGoalRunciterDead);
 					}
 				}
 				if (Game_Flag_Query(kFlagCrazylegsIsReplicant)) {
 					if (!Game_Flag_Query(kFlagCrazylegsDead)) {
 						Delay(1000);
 						Sound_Play(kSfxSMCAL3, 100, 0, 0, 50);
+						Game_Flag_Set(kFlagCrazylegsDead);
 					}
 				}
 				if (Game_Flag_Query(kFlagGrigorianIsReplicant)) {
 					if (!Game_Flag_Query(kFlagGrigorianDead)) {
 						Delay(1000);
 						Sound_Play(kSfxSMCAL3, 100, 0, 0, 50);
+						Game_Flag_Set(kFlagGrigorianDead);
 					}
 				}
 				Delay(2000);

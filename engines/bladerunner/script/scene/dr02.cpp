@@ -185,12 +185,15 @@ bool SceneScriptDR02::ClickedOnActor(int actorId) {
 					Player_Loses_Control();
 					Loop_Actor_Walk_To_XYZ(kActorMcCoy, -921.11f, 0.44f, -155.89f, 0, true, false, false);
 					Player_Gains_Control();
-					Delay(1000);
-					Actor_Face_Actor(kActorMcCoy, kActorShoeshineMan, true);
-					Actor_Face_Actor(kActorShoeshineMan, kActorMcCoy, true);
-					Delay(2000);
-					Actor_Says(kActorMcCoy, 740, 15); //00-0740.AUD	I thought I told you to take a hike.
-					Delay(2000);
+					if (Player_Query_Agenda() == kPlayerAgendaSurly 
+					|| Player_Query_Agenda() == kPlayerAgendaErratic) { 
+						Delay(1000);
+						Actor_Face_Actor(kActorMcCoy, kActorShoeshineMan, true);
+						Actor_Face_Actor(kActorShoeshineMan, kActorMcCoy, true);
+						Delay(2000);
+						Actor_Says(kActorMcCoy, 740, 15); //00-0740.AUD	I thought I told you to take a hike.
+						Delay(2000);
+					}
 					Actor_Face_Heading(kActorShoeshineMan, 524, false);	
 				}
 			} else {
@@ -201,38 +204,49 @@ bool SceneScriptDR02::ClickedOnActor(int actorId) {
 					Delay(1000);
 					if (!Actor_Clue_Query(kActorMcCoy, kClueOriginalShippingForm)) {
 						Actor_Says(kActorMcCoy, 8990, 17);//00-8990.AUD	What have you got there?
+						Actor_Change_Animation_Mode(kActorMcCoy, 23);
 						Delay(2000);
-						Item_Pickup_Spin_Effect(kModelAnimationOriginalShippingForm, 123, 291);
+						Item_Pickup_Spin_Effect_From_Actor(kModelAnimationOriginalShippingForm, kActorMcCoy, 0, 0);
 						Actor_Clue_Acquire(kActorMcCoy, kClueOriginalShippingForm, true, kActorShoeshineMan);
 						Actor_Says(kActorMcCoy, 8805, 13); //00-8805.AUD	A requisition form.
-						Actor_Says(kActorMcCoy, 3935, kAnimationModeTalk); //00-3935.AUD	Thanks.
+						Delay(1000);
+						if (Player_Query_Agenda() == kPlayerAgendaPolite) {
+							Actor_Says(kActorMcCoy, 3935, kAnimationModeTalk); //00-3935.AUD	Thanks.
+						}
 						Actor_Face_Heading(kActorShoeshineMan, 524, false);
 					} else if (Game_Flag_Query(kFlagChewTalkGiveData) 
 					&& !Actor_Clue_Query(kActorMcCoy, kClueDNAChew)) {
 						Actor_Says(kActorMcCoy, 8990, 17);//00-8990.AUD	What have you got there?
+						Actor_Change_Animation_Mode(kActorMcCoy, 23);
 						Delay(2000);
-						Item_Pickup_Spin_Effect(kModelAnimationDNADataDisc, 123, 291);
+						Item_Pickup_Spin_Effect_From_Actor(kModelAnimationDNADataDisc, kActorMcCoy, 0, 0);
 						Actor_Clue_Acquire(kActorMcCoy, kClueDNAChew, true, kActorShoeshineMan);
 						Actor_Says(kActorMcCoy, 8501, 17); //00-8501.AUD	DNA information?
 						Delay(1000);
-						Actor_Says(kActorMcCoy, 3935, kAnimationModeTalk); //00-3935.AUD	Thanks.
+						if (Player_Query_Agenda() == kPlayerAgendaPolite) {
+							Actor_Says(kActorMcCoy, 3935, kAnimationModeTalk); //00-3935.AUD	Thanks.
+						}
 						Actor_Face_Heading(kActorShoeshineMan, 524, false);
 					} else if (Game_Flag_Query(kFlagGordoIsReplicant) 
 					&& Game_Flag_Query(kFlagGordoRanAway)
 					&& !Actor_Clue_Query(kActorMcCoy, kClueGordoIncept)) {
 						Actor_Says(kActorMcCoy, 8990, 17);//00-8990.AUD	What have you got there?
+						Actor_Change_Animation_Mode(kActorMcCoy, 23);
 						Delay(2000);
-						Item_Pickup_Spin_Effect(kModelAnimationPhoto, 123, 291);
+						Item_Pickup_Spin_Effect_From_Actor(kModelAnimationPhoto, kActorMcCoy, 0, 0);
 						Actor_Clue_Acquire(kActorMcCoy, kClueGordoIncept, true, kActorShoeshineMan);
 						Actor_Voice_Over(4080, kActorVoiceOver);
 						Delay(1000);
-						Actor_Says(kActorMcCoy, 3935, kAnimationModeTalk); //00-3935.AUD	Thanks.
+						if (Player_Query_Agenda() == kPlayerAgendaPolite) {
+							Actor_Says(kActorMcCoy, 3935, kAnimationModeTalk); //00-3935.AUD	Thanks.
+						}
 						Actor_Face_Heading(kActorShoeshineMan, 524, false);
 					} else if (!Actor_Clue_Query(kActorMcCoy, kClueMcCoyIncept)
 					&& Global_Variable_Query(kVariableChapter) > 3) {
 						Actor_Says(kActorMcCoy, 8990, 17);//00-8990.AUD	What have you got there?
+						Actor_Change_Animation_Mode(kActorMcCoy, 23);
 						Delay(2000);
-						Item_Pickup_Spin_Effect(kModelAnimationPhoto, 123, 291);
+						Item_Pickup_Spin_Effect_From_Actor(kModelAnimationPhoto, kActorMcCoy, 0, 0);
 						Actor_Clue_Acquire(kActorMcCoy, kClueMcCoyIncept, true, kActorShoeshineMan);
 						Actor_Voice_Over(4240, kActorVoiceOver); //99-4240.AUD	That can't be me.
 						Actor_Says(kActorMcCoy, 5850, 14); //00-5850.AUD	Where did you get this?
@@ -242,8 +256,9 @@ bool SceneScriptDR02::ClickedOnActor(int actorId) {
 					} else if (Actor_Clue_Query(kActorMcCoy, kCluePartialLicenseNumber)
 					&& !Actor_Clue_Query(kActorMcCoy, kClueLicensePlate)) {
 						Actor_Says(kActorMcCoy, 8990, 17);//00-8990.AUD	What have you got there?
+						Actor_Change_Animation_Mode(kActorMcCoy, 23);
 						Delay(2000);
-						Item_Pickup_Spin_Effect(kModelAnimationLicensePlate, 123, 291);
+						Item_Pickup_Spin_Effect_From_Actor(kModelAnimationLicensePlate, kActorMcCoy, 0, 0);
 						Actor_Clue_Acquire(kActorMcCoy, kClueLicensePlate, true, kActorShoeshineMan);
 						Actor_Says(kActorMcCoy, 8760, 13);//00-8760.AUD	A license plate.
 						Delay(2000);
@@ -256,10 +271,9 @@ bool SceneScriptDR02::ClickedOnActor(int actorId) {
 						Actor_Says(kActorAnsweringMachine, 470, kAnimationModeTalk); //39-0470.AUD	End test.
 						Actor_Says(kActorMcCoy, 7200, 13); //00-7200.AUD	Bingo.
 						Actor_Clue_Acquire(kActorMcCoy, kClueLicensePlateMatch, true, -1); 
-						Actor_Says(kActorMcCoy, 3935, kAnimationModeTalk); //00-3935.AUD	Thanks.
+						Delay(1000);
 						Actor_Face_Heading(kActorShoeshineMan, 524, false);
 					}
-					Actor_Face_Heading(kActorShoeshineMan, 524, false);
 				} else {
 					Actor_Face_Actor(kActorMcCoy, kActorShoeshineMan, true);
 					Actor_Face_Actor(kActorShoeshineMan, kActorMcCoy, true);

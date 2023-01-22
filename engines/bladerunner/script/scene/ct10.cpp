@@ -76,10 +76,15 @@ void SceneScriptCT10::checkCabinet() {
 	if (!Loop_Actor_Walk_To_XYZ(kActorMcCoy, 10.6f, 0.0f, -50.5f, 0, true, false, false)) {
 		Player_Loses_Control();
 		Actor_Face_Heading(kActorMcCoy, 0, false);
-		Sound_Play(kSfxDRAWER1, 100, 0, 0, 50);
-		Delay(1000);
+		if (!_vm->_cutContent) {
+			Sound_Play(kSfxDRAWER1, 100, 0, 0, 50);
+			Delay(1000);
+		}
 		// Made it so if you click on the chest of drawers after you found Holdens badge you receive the Leon incept shots clue.
 		if (_vm->_cutContent) {
+			Actor_Change_Animation_Mode(kActorMcCoy, 23);
+			Sound_Play(kSfxDRAWER1, 100, 0, 0, 50);
+			Delay(2000);
 			if (Actor_Clue_Query(kActorMcCoy, kClueHoldensBadge)
 			&& Actor_Clue_Query(kActorMcCoy, kClueInceptShotsLeon)) { 
 				Actor_Voice_Over(3700, kActorVoiceOver);
@@ -89,9 +94,9 @@ void SceneScriptCT10::checkCabinet() {
 				Actor_Clue_Acquire(kActorMcCoy, kClueHoldensBadge, true, kActorLeon);	
 			} else if (Actor_Clue_Query(kActorMcCoy, kClueHoldensBadge)) {
 				Actor_Clue_Acquire(kActorMcCoy, kClueInceptShotsLeon, true, kActorLeon);
-				Item_Pickup_Spin_Effect(kModelAnimationPhoto, 435, 258);
+				Item_Pickup_Spin_Effect(kModelAnimationPhoto, 435, 320);
 				Delay (2000);
-				Item_Pickup_Spin_Effect(kModelAnimationPhoto, 435, 258);
+				Item_Pickup_Spin_Effect(kModelAnimationPhoto, 435, 320);
 				Actor_Voice_Over(4170, kActorVoiceOver); //99-4170.AUD	I've seen that guy around town.
 			}
 		} else if (Actor_Clue_Query(kActorMcCoy, kClueHoldensBadge)) {

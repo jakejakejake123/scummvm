@@ -103,8 +103,8 @@ void AIScriptCrazylegs::OtherAgentEnteredCombatMode(int otherActorId, int combat
 			// on this. This leads to Crazylegs trying to flee and the player will have a brief window of time to shoot Crazylegs before he gets away. 
 			if (_vm->_cutContent) {
 				if (!Game_Flag_Query(kFlagCrazylegsIsReplicant)) {
-					Actor_Says(kActorCrazylegs, 430, 3);
-					Actor_Says_With_Pause(kActorCrazylegs, 440, 0.0f, 3);
+					Actor_Says(kActorCrazylegs, 430, 3); //09-0430.AUD	If this is a hold up, Ray, I don’t have any cash in the house.
+					Actor_Says_With_Pause(kActorCrazylegs, 440, 0.0f, 3); //09-0440.AUD	Honest. You can pat me down if you want.
 					if (Actor_Clue_Query(kActorMcCoy, kClueGrigoriansResources) 
 	   				&& Actor_Clue_Query(kActorMcCoy, kClueGrigoriansNote)
 					&& Global_Variable_Query(kVariableChapter) == 3) {
@@ -117,6 +117,13 @@ void AIScriptCrazylegs::OtherAgentEnteredCombatMode(int otherActorId, int combat
 							Actor_Says(kActorMcCoy, 7835, -1); //00-7835.AUD	Is that so?
 							Actor_Says(kActorCrazylegs, 790, 14); //09-0790.AUD	Gotta be a thousand dealers in the city and you’re picking on me.
 							Actor_Set_Targetable(kActorCrazylegs, true);
+							Actor_Set_Goal_Number(kActorCrazylegs, kGoalCrazyLegsMcCoyDrewHisGun);
+							Player_Gains_Control();
+						} else {
+							if (Global_Variable_Query(kVariableChapter) == 3) {
+								Actor_Says(kActorMcCoy, 1870, -1); //00-1870.AUD	I’m a cop.
+							}
+							Actor_Says(kActorCrazylegs, 450, 3); //09-0450.AUD	Heck, if you wanted a better deal on the Caddy, all you had to do was say so.
 							Actor_Set_Goal_Number(kActorCrazylegs, kGoalCrazyLegsMcCoyDrewHisGun);
 							Player_Gains_Control();
 						}
@@ -133,9 +140,9 @@ void AIScriptCrazylegs::OtherAgentEnteredCombatMode(int otherActorId, int combat
 						Player_Gains_Control();
 					} else {
 					 	if (Global_Variable_Query(kVariableChapter) == 3) {
-							Actor_Says(kActorMcCoy, 1870, -1);
+							Actor_Says(kActorMcCoy, 1870, -1); //00-1870.AUD	I’m a cop.
 						}
-						Actor_Says(kActorCrazylegs, 450, 3);
+						Actor_Says(kActorCrazylegs, 450, 3); //09-0450.AUD	Heck, if you wanted a better deal on the Caddy, all you had to do was say so.
 						Actor_Set_Goal_Number(kActorCrazylegs, kGoalCrazyLegsMcCoyDrewHisGun);
 						Player_Gains_Control();
 					}
@@ -180,12 +187,19 @@ void AIScriptCrazylegs::OtherAgentEnteredCombatMode(int otherActorId, int combat
 							Actor_Clue_Acquire(kActorMcCoy, kClueMcCoyPulledAGun, false, kActorCrazylegs);
 							Actor_Set_Targetable(kActorCrazylegs, true);
 							Player_Gains_Control();
+						} else {
+							if (Global_Variable_Query(kVariableChapter) == 3) {
+								Actor_Says(kActorMcCoy, 1870, -1); //00-1870.AUD	I’m a cop.
+							}
+							Actor_Says(kActorCrazylegs, 450, 3); //09-0450.AUD	Heck, if you wanted a better deal on the Caddy, all you had to do was say so.
+							Actor_Set_Goal_Number(kActorCrazylegs, kGoalCrazyLegsMcCoyDrewHisGun);
+							Player_Gains_Control();
 						}
 					} else {
 						if (Global_Variable_Query(kVariableChapter) == 3) {
-							Actor_Says(kActorMcCoy, 1870, -1);
+							Actor_Says(kActorMcCoy, 1870, -1); //00-1870.AUD	I’m a cop.
 						}
-						Actor_Says(kActorCrazylegs, 450, 3);
+						Actor_Says(kActorCrazylegs, 450, 3); //09-0450.AUD	Heck, if you wanted a better deal on the Caddy, all you had to do was say so.
 						Actor_Set_Goal_Number(kActorCrazylegs, kGoalCrazyLegsMcCoyDrewHisGun);
 						Player_Gains_Control();
 					}
@@ -218,11 +232,16 @@ bool AIScriptCrazylegs::ShotAtAndHit() {
 		Actor_Set_Goal_Number(kActorCrazylegs, kGoalCrazyLegsShotAndHit);
 		// Made it so when you shoot Crazylegs McCoy immediately appears outside the shop. This is because Crazylegs has no death animation.
 		// McCoy will say a couple of things and the player will receive 200 chinyen, the code for this will be in the HF01.cpp sheet.
-		Game_Flag_Set(kFlagCrazylegsDead);
-		Game_Flag_Set(kFlagCrazylegsShot);
-		Player_Set_Combat_Mode(false);
-		Game_Flag_Set(kFlagHF05toHF01);
-		Set_Enter(kSetHF01, kSceneHF01);
+		if (_vm->_cutContent) {
+			Game_Flag_Set(kFlagCrazylegsDead);
+			Game_Flag_Set(kFlagCrazylegsShot);
+			Game_Flag_Set(kFlagMcCoyRetiredReplicant);
+			Player_Set_Combat_Mode(false);
+			Game_Flag_Set(kFlagHF05toHF01);
+			Set_Enter(kSetHF01, kSceneHF01);
+		} else {
+			Actor_Says(kActorMcCoy, 1875, 4);  // I wouldn't drag that bucket of bolts if you paid me.
+		}
 	}
 	return false;
 }

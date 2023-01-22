@@ -138,6 +138,9 @@ void AIScriptGuzza::ClickedByPlayer() {
 	 && Game_Flag_Query(kFlagGuzzaIsMovingAround)
 	) {
 		Actor_Face_Actor(kActorMcCoy, kActorGuzza, true);
+		if (_vm->_cutContent) {
+			Actor_Face_Actor(kActorGuzza, kActorMcCoy, true);
+		}
 
 #if BLADERUNNER_ORIGINAL_BUGS
 		if (Actor_Query_Friendliness_To_Other(kActorGordo, kActorMcCoy) < 48) { // a bug? shouldn't this be Gordo?
@@ -163,34 +166,47 @@ void AIScriptGuzza::ClickedByPlayer() {
 			Actor_Says(kActorMcCoy, 3970, 13);
 		}
 #else
-		if (Actor_Query_Friendliness_To_Other(kActorGuzza, kActorMcCoy) < 48) {
+		if (Actor_Query_Friendliness_To_Other(kActorGuzza, kActorMcCoy) < 51) {
+			AI_Movement_Track_Pause(kActorGuzza);
 			Actor_Says(kActorMcCoy, 3970, 13);	// Hey
 			Actor_Says(kActorGuzza, 780, -1);   // Get lost
+			AI_Movement_Track_Unpause(kActorGuzza);
 		} else {
 			// At the very least Random_Query(1, 4) should only be calculated once
 			switch (Random_Query(1, 4)) {
 			case 1:
 				AI_Movement_Track_Pause(kActorGuzza);
-				Actor_Says(kActorMcCoy, 4005, 15);
-				Actor_Says(kActorGuzza, 780, -1);
+				Actor_Says(kActorMcCoy, 4005, 15); //00-4005.AUD	I got some new leads, Lieutenant.
+				Actor_Says(kActorGuzza, 570, -1); //04-0570.AUD	You know the procedure. Dump it all in the mainframe upstairs and I'll read it later.
 				AI_Movement_Track_Unpause(kActorGuzza);
 				break;
 
 			case 2:
 				AI_Movement_Track_Pause(kActorGuzza);
-				Actor_Says(kActorMcCoy, 3970, 14);
-				Actor_Says(kActorGuzza, 780, -1);
+				Actor_Says(kActorMcCoy, 3970, 14); //00-3970.AUD	Hey.
+				Actor_Says(kActorGuzza, 420, -1); //04-0420.AUD	Keeping out of trouble, kid?
 				AI_Movement_Track_Unpause(kActorGuzza);
 				break;
 
 			case 3:
-				Actor_Says(kActorMcCoy, 3970, 16);
+				AI_Movement_Track_Pause(kActorGuzza);
+				Actor_Says(kActorMcCoy, 4005, 15); //00-4005.AUD	I got some new leads, Lieutenant.
+				Actor_Says(kActorGuzza, 570, -1); //04-0570.AUD	You know the procedure. Dump it all in the mainframe upstairs and I'll read it later.
+				AI_Movement_Track_Unpause(kActorGuzza);
 				break;
 
 			case 4:
-				// fall through
+				AI_Movement_Track_Pause(kActorGuzza);
+				Actor_Says(kActorMcCoy, 3970, 14); //00-3970.AUD	Hey.
+				Actor_Says(kActorGuzza, 420, -1); //04-0420.AUD	Keeping out of trouble, kid?
+				AI_Movement_Track_Unpause(kActorGuzza);
+				break;
+				
 			default:
-				Actor_Says(kActorMcCoy, 3970, 13);
+				AI_Movement_Track_Pause(kActorGuzza);
+				Actor_Says(kActorMcCoy, 3970, 14); //00-3970.AUD	Hey.
+				Actor_Says(kActorGuzza, 420, -1); //04-0420.AUD	Keeping out of trouble, kid?
+				AI_Movement_Track_Unpause(kActorGuzza);
 				break;
 			}
 		}

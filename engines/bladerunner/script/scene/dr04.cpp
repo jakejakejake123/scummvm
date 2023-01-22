@@ -140,17 +140,23 @@ bool SceneScriptDR04::ClickedOnActor(int actorId) {
 				Actor_Says(kActorMcCoy, 955, 13);
 				Actor_Says_With_Pause(kActorMoraji, 40, 0.0f, kAnimationModeTalk);
 				Actor_Says(kActorMoraji, 50, kAnimationModeTalk);
-				if (!_vm->_cutContent) {
+				if (_vm->_cutContent) {
+					if (Actor_Clue_Query(kActorMcCoy, kClueChewInterview)) {
+						Actor_Clue_Acquire(kActorMcCoy, kClueMorajiInterview, true, kActorMoraji);
+					}
+				} else {
 					Actor_Clue_Acquire(kActorMcCoy, kClueMorajiInterview, true, kActorMoraji);
 				}
 				// Code which determines whether or not Moraji survives depending on whether you talked to Chew.
 				if (_vm->_cutContent) {
 					Game_Flag_Set(kFlagMorajiTalk);
-					if (Game_Flag_Query(kFlagDR03ChewTalk1)) {
-						Actor_Set_Goal_Number(kActorMoraji, kGoalMorajiDie);
+					if (Game_Flag_Query(kFlagDR03ChewTalk1)
+					|| Game_Flag_Query(kFlagDR06Entered)) {
 						Game_Flag_Set(kFlagMorajiDead);
+						Actor_Set_Goal_Number(kActorMoraji, kGoalMorajiDie);
 						CDB_Set_Crime(kClueMorajiInterview, kCrimeMorajiMurder);
 					} else {
+						Game_Flag_Set(kFlagMorajiAlive);
 						Actor_Set_Goal_Number(kActorMoraji, kGoalMorajiLives);
 					}
 				} else {

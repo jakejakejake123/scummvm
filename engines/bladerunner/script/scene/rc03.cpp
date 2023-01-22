@@ -341,7 +341,8 @@ void SceneScriptRC03::PlayerWalkedIn() {
 						&& Actor_Query_Goal_Number(kActorSteele) != kGoalSteeleLeaveRC03
 						&& Actor_Query_Goal_Number(kActorSteele) != kGoalSteeleGoToPoliceStation
 					) {
-						if (Game_Flag_Query(kFlagMcCoyIsHelpingReplicants)) {
+						if (Player_Query_Agenda() != kPlayerAgendaSurly
+						&& Player_Query_Agenda() != kPlayerAgendaErratic) {
 							AI_Movement_Track_Flush(kActorSteele);
 							AI_Movement_Track_Append_Run(kActorSteele, 202, 0);
 							AI_Movement_Track_Append_Run(kActorSteele, 203, 0);
@@ -356,7 +357,6 @@ void SceneScriptRC03::PlayerWalkedIn() {
 						} else {
 							Actor_Set_Goal_Number(kActorSteele, kGoalSteeleApprehendIzo);
 							Player_Gains_Control();
-							Sound_Play(kSfxSHOTCOK1, 75, 0, 0, 50);
 							Actor_Change_Animation_Mode(kActorMcCoy, kAnimationModeDodge);
 							Loop_Actor_Walk_To_XYZ(kActorIzo, 180.0f, -4.0f, 184.0f, 0, false, false, false);
 							Actor_Change_Animation_Mode(kActorIzo, kAnimationModeCombatAttack);
@@ -490,31 +490,21 @@ void SceneScriptRC03::PlayerWalkedIn() {
 					Actor_Says(kActorMcCoy, 4835, 13); //00-4835.AUD	Sorry, I bet you can still catch him if you want.
 					Actor_Says(kActorSteele, 1960, 60); //01-1960.AUD	Crawl down that hole and ruin a twenty thousand chinyen Yamamoto suit? I don't think so.
 					Actor_Says(kActorMcCoy, 2305, 13); //00-2305.AUD	I’m sorry.
-					if (Actor_Query_Friendliness_To_Other(kActorSteele, kActorMcCoy) > 50) {
+					if (Actor_Query_Friendliness_To_Other(kActorSteele, kActorMcCoy) > 52) {
 						Delay(2000);
 						Actor_Says(kActorSteele, 2110, 15); //01-2110.AUD	That's okay.
 					} else {
-						Actor_Says(kActorSteele, 1980, 60); //01-1980.AUD	If I didn't know any better, I'd think you wanted him to get away.
-						if (Player_Query_Agenda() == kPlayerAgendaSurly 
-						|| Player_Query_Agenda() == kPlayerAgendaErratic) { 
-							Actor_Says(kActorMcCoy, 4840, 15); //00-4840.AUD	You crazy? I've been tailing him myself.
-						} else {
-							Actor_Says(kActorMcCoy, 7815, 13); //00-7815.AUD	No.
-						}
+						Actor_Says(kActorSteele, 1980, 60); //01-1980.AUD	If I didn't know any better, I'd think you wanted him to get away. 
+						Actor_Says(kActorMcCoy, 4840, 15); //00-4840.AUD	You crazy? I've been tailing him myself.
 						Actor_Says(kActorSteele, 1990, 60); //01-1990.AUD	A little word of advice, Slim. Stay out of my way.
 						Actor_Modify_Friendliness_To_Other(kActorSteele, kActorMcCoy, -2);
 						Actor_Modify_Friendliness_To_Other(kActorGuzza, kActorMcCoy, -2);
 					}
 				} else {
 					Actor_Says(kActorMcCoy, 7835, 18); //00-7835.AUD	Is that so?
-					if (Actor_Query_Friendliness_To_Other(kActorSteele, kActorMcCoy) < 51) {
+					if (Actor_Query_Friendliness_To_Other(kActorSteele, kActorMcCoy) < 53) {
 						Actor_Says(kActorSteele, 1980, 60); //01-1980.AUD	If I didn't know any better, I'd think you wanted him to get away.
-						if (Player_Query_Agenda() == kPlayerAgendaSurly 
-						|| Player_Query_Agenda() == kPlayerAgendaErratic) { 
-							Actor_Says(kActorMcCoy, 4840, 15); //00-4840.AUD	You crazy? I've been tailing him myself.
-						} else {
-							Actor_Says(kActorMcCoy, 7815, 13); //00-7815.AUD	No.
-						}
+						Actor_Says(kActorMcCoy, 4840, 15); //00-4840.AUD	You crazy? I've been tailing him myself.
 					}
 					Actor_Says(kActorSteele, 1990, 60); //01-1990.AUD	A little word of advice, Slim. Stay out of my way.
 					Actor_Modify_Friendliness_To_Other(kActorSteele, kActorMcCoy, -2);
@@ -524,7 +514,7 @@ void SceneScriptRC03::PlayerWalkedIn() {
 				Actor_Set_Goal_Number(kActorSteele, kGoalSteeleLeaveRC03);
 			} else {
 				Actor_Says(kActorMcCoy, 8565, 15); //00-8565.AUD	Really?
-				if (Actor_Query_Friendliness_To_Other(kActorSteele, kActorMcCoy) < 51) {
+				if (Actor_Query_Friendliness_To_Other(kActorSteele, kActorMcCoy) < 53) {
 					Actor_Says(kActorSteele, 1980, 60); //01-1980.AUD	If I didn't know any better, I'd think you wanted him to get away.
 					Actor_Says(kActorMcCoy, 4840, 16); //00-4840.AUD	You crazy? I've been tailing him myself.
 				}

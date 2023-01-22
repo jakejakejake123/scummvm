@@ -256,8 +256,7 @@ bool SceneScriptRC01::ClickedOn3DObject(const char *objectName, bool a2) {
 				Actor_Says(kActorMcCoy, 6975, kAnimationModeTalk);
 			} else {		
 				if (_vm->_cutContent) {
-					if (!Actor_Clue_Query(kActorMcCoy, kClueCrowdInterviewB)
-					&& !Actor_Clue_Query(kActorMcCoy, kClueChromeDebris)) {
+					if (!Actor_Clue_Query(kActorMcCoy, kClueCrowdInterviewB)) {
 						Actor_Says(kActorMcCoy, 8525, 13); // 00-8525.AUD	Hmph.
 						Game_Flag_Set(kFlagHydrantChecked);	
 					} else {
@@ -274,45 +273,39 @@ bool SceneScriptRC01::ClickedOn3DObject(const char *objectName, bool a2) {
 				}
 				if (_vm->_cutContent) {
 					if (Game_Flag_Query(kFlagChromeChecked)
-					&& Actor_Clue_Query(kActorMcCoy, kCluePaintTransfer)
 					&& Actor_Clue_Query(kActorMcCoy, kClueCrowdInterviewB)) {
 						Delay(1000);
 						Player_Loses_Control();
 						Loop_Actor_Walk_To_Item(kActorMcCoy, kItemChromeDebris, 36, true, false);
 						Player_Gains_Control();
+						Actor_Face_Item(kActorMcCoy, kItemChromeDebris, true);
+						Player_Gains_Control();
 						Actor_Face_Actor(kActorOfficerLeary, kActorMcCoy, true);
 						Actor_Says(kActorMcCoy, 8525, 13); // 00-8525.AUD	Hmph.
-						if (Actor_Query_Friendliness_To_Other(kActorOfficerLeary, kActorMcCoy) > 49) {
-							Loop_Actor_Walk_To_Actor(kActorOfficerLeary, kActorMcCoy, 36, false, false);
-							Actor_Says(kActorOfficerLeary, 20, 12);
-							Game_Flag_Set(kFlagRC01ChromeDebrisTaken);
-							Item_Remove_From_World(kItemChromeDebris);
-							Item_Pickup_Spin_Effect(kModelAnimationChromeDebris, 426, 316);
+						Loop_Actor_Walk_To_Actor(kActorOfficerLeary, kActorMcCoy, 36, false, false);
+						Actor_Says(kActorOfficerLeary, 20, 12);
+						Game_Flag_Set(kFlagRC01ChromeDebrisTaken);
+						Item_Remove_From_World(kItemChromeDebris);
+						Item_Pickup_Spin_Effect(kModelAnimationChromeDebris, 426, 316);
+						Actor_Clue_Acquire(kActorMcCoy, kClueChromeDebris, true, -1);
+						I_Sez("JM: Chrome...is that what that is?");
+						Actor_Says(kActorMcCoy, 4505, 13);
+						// Jake - Added in a line where Leary is annoyed at McCoy for him being condescending towards him. 
+						Actor_Says(kActorOfficerLeary, 30, 14);
+						Actor_Face_Actor(kActorMcCoy, kActorOfficerLeary, true);
+						if (Player_Query_Agenda() == kPlayerAgendaSurly 
+						|| Player_Query_Agenda() == kPlayerAgendaErratic) {
+							Actor_Says(kActorMcCoy, 4510, 14); //00-4510.AUD	No, I think it's horse chrome. Bag it and tag it.
+							Actor_Says(kActorOfficerLeary, 170, 13); //23-0170.AUD	You ain't talking to some flunky, McCoy.
+							Actor_Modify_Friendliness_To_Other(kActorOfficerLeary, kActorMcCoy, -2);
 							Actor_Clue_Acquire(kActorMcCoy, kClueChromeDebris, true, -1);
-							I_Sez("JM: Chrome...is that what that is?");
-							Actor_Says(kActorMcCoy, 4505, 13);
-							// Jake - Added in a line where Leary is annoyed at McCoy for him being condescending towards him. 
-							Actor_Says(kActorOfficerLeary, 30, 14);
-							Actor_Face_Actor(kActorMcCoy, kActorOfficerLeary, true);
-							if (Player_Query_Agenda() == kPlayerAgendaSurly 
-							|| Player_Query_Agenda() == kPlayerAgendaErratic) {
-								Actor_Says(kActorMcCoy, 4510, 14); //00-4510.AUD	No, I think it's horse chrome. Bag it and tag it.
-								Actor_Says(kActorOfficerLeary, 170, 13); //23-0170.AUD	You ain't talking to some flunky, McCoy.
-								Actor_Modify_Friendliness_To_Other(kActorOfficerLeary, kActorMcCoy, -2);
-								Actor_Clue_Acquire(kActorMcCoy, kClueChromeDebris, true, -1);
-							} else {
-								Actor_Says(kActorMcCoy, 1025, 13); //00-1025.AUD	Absolutely.
-								Delay (500);
-								Actor_Says(kActorMcCoy, 5310, 11); //00-5310.AUD	You spot anything you think I ought to know about, tell me.
-								Actor_Clue_Acquire(kActorMcCoy, kClueChromeDebris, true, -1);
-							}
 						} else {
-							Game_Flag_Set(kFlagRC01ChromeDebrisTaken);
-							Item_Remove_From_World(kItemChromeDebris);
-							Item_Pickup_Spin_Effect(kModelAnimationChromeDebris, 426, 316);
+							Actor_Says(kActorMcCoy, 1025, 13); //00-1025.AUD	Absolutely.
+							Delay (500);
+							Actor_Says(kActorMcCoy, 5310, 11); //00-5310.AUD	You spot anything you think I ought to know about, tell me.
 							Actor_Clue_Acquire(kActorMcCoy, kClueChromeDebris, true, -1);
-							Actor_Says(kActorMcCoy, 8755, 15); //00-8755.AUD	A piece of chrome.
 						}
+						Delay(1000);
 						ADQ_Add(kActorDispatcher, 70, kAnimationModeTalk); //38-0070.AUD	BR-61661, report to precinct Headquarters. Code 3, repeat, code 3.
 					}
 				}
@@ -448,10 +441,8 @@ bool SceneScriptRC01::ClickedOnActor(int actorId) {
 				Game_Flag_Set(kFlagRC01McCoyAndOfficerLearyTalking);
 				if (Actor_Clue_Query(kActorOfficerLeary, kClueCrowdInterviewA) && !Actor_Clue_Query(kActorMcCoy, kClueCrowdInterviewA)) {
 					if (_vm->_cutContent) {
-						if (Actor_Clue_Query(kActorOfficerLeary, kClueCrowdInterviewB) && !Actor_Clue_Query(kActorMcCoy, kClueCrowdInterviewB)) {
-							Actor_Face_Actor(kActorOfficerLeary, kActorMcCoy, true);
-							Actor_Says(kActorOfficerLeary, 140, 15); //	23-0140.AUD	Yeah, I dug up a couple of leads. Let me clue you in
-						}
+						Actor_Face_Actor(kActorOfficerLeary, kActorMcCoy, true);
+						Actor_Says(kActorOfficerLeary, 140, 15); //	23-0140.AUD	Yeah, I dug up a couple of leads. Let me clue you in
 					}
 					Actor_Face_Object(kActorOfficerLeary, "70_1", true);
 					if (_vm->_cutContent
@@ -484,6 +475,7 @@ bool SceneScriptRC01::ClickedOnActor(int actorId) {
 					Game_Flag_Reset(kFlagRC01McCoyAndOfficerLearyTalking);
 					if (_vm->_cutContent) {
 						if (Game_Flag_Query(kFlagHydrantChecked)) {
+							Delay(1000);
 							Actor_Face_Object(kActorMcCoy, "HYDRANT02", true);
 							Delay(1000);
 							Actor_Says(kActorMcCoy, 8525, kAnimationModeTalk);
@@ -497,45 +489,38 @@ bool SceneScriptRC01::ClickedOnActor(int actorId) {
 							Actor_Clue_Acquire(kActorMcCoy, kCluePaintTransfer, true, -1);
 						}
 						if (Game_Flag_Query(kFlagChromeChecked)) {
+							Actor_Face_Item(kActorMcCoy, kItemChromeDebris, true);
 							Delay(1000);
 							Player_Loses_Control();
-							Loop_Actor_Walk_To_XYZ(kActorMcCoy, -147.77f, 0.27f, 206.31f, 0, false, false, false); 
+							Loop_Actor_Walk_To_Item(kActorMcCoy, kItemChromeDebris, 36, true, false);
 							Player_Gains_Control();
+							Actor_Face_Item(kActorMcCoy, kItemChromeDebris, true);
 							Actor_Face_Actor(kActorOfficerLeary, kActorMcCoy, true);
 							Actor_Says(kActorMcCoy, 8525, 13); // 00-8525.AUD	Hmph.
-							if (Actor_Query_Friendliness_To_Other(kActorOfficerLeary, kActorMcCoy) > 49) {
-								Loop_Actor_Walk_To_Actor(kActorOfficerLeary, kActorMcCoy, 36, false, false);
-								Actor_Says(kActorOfficerLeary, 20, 12);
-								Game_Flag_Set(kFlagRC01ChromeDebrisTaken);
-								Item_Remove_From_World(kItemChromeDebris);
-								Item_Pickup_Spin_Effect(kModelAnimationChromeDebris, 426, 316);
-								Actor_Clue_Acquire(kActorMcCoy, kClueChromeDebris, true, -1);
-								I_Sez("JM: Chrome...is that what that is?");
-								Actor_Says(kActorMcCoy, 4505, 13);
-								// Jake - Added in a line where Leary is annoyed at McCoy for him being condescending towards him. 
-								Actor_Says(kActorOfficerLeary, 30, 14);
-								Actor_Face_Actor(kActorMcCoy, kActorOfficerLeary, true);
-								if (Player_Query_Agenda() == kPlayerAgendaSurly 
-								|| Player_Query_Agenda() == kPlayerAgendaErratic) {
-									Actor_Says(kActorMcCoy, 4510, 14); //00-4510.AUD	No, I think it's horse chrome. Bag it and tag it.
-									Actor_Says(kActorOfficerLeary, 170, 13); //23-0170.AUD	You ain't talking to some flunky, McCoy.
-									Actor_Modify_Friendliness_To_Other(kActorOfficerLeary, kActorMcCoy, -2);
-									Actor_Clue_Acquire(kActorMcCoy, kClueChromeDebris, true, -1);
-								} else {
-									Actor_Says(kActorMcCoy, 1025, 13); //00-1025.AUD	Absolutely.
-									Delay (500);
-									Actor_Says(kActorMcCoy, 5310, 11); //00-5310.AUD	You spot anything you think I ought to know about, tell me.
-									Actor_Clue_Acquire(kActorMcCoy, kClueChromeDebris, true, -1);
-								}
+							Loop_Actor_Walk_To_Actor(kActorOfficerLeary, kActorMcCoy, 36, false, false);
+							Actor_Says(kActorOfficerLeary, 20, 12);
+							Game_Flag_Set(kFlagRC01ChromeDebrisTaken);
+							Item_Remove_From_World(kItemChromeDebris);
+							Item_Pickup_Spin_Effect(kModelAnimationChromeDebris, 426, 316);
+							Actor_Clue_Acquire(kActorMcCoy, kClueChromeDebris, true, -1);
+							I_Sez("JM: Chrome...is that what that is?");
+							Actor_Says(kActorMcCoy, 4505, 13);
+							// Jake - Added in a line where Leary is annoyed at McCoy for him being condescending towards him. 
+							Actor_Says(kActorOfficerLeary, 30, 14);
+							Actor_Face_Actor(kActorMcCoy, kActorOfficerLeary, true);
+							if (Player_Query_Agenda() == kPlayerAgendaSurly 
+							|| Player_Query_Agenda() == kPlayerAgendaErratic) {
+								Actor_Says(kActorMcCoy, 4510, 14); //00-4510.AUD	No, I think it's horse chrome. Bag it and tag it.
+								Actor_Says(kActorOfficerLeary, 170, 13); //23-0170.AUD	You ain't talking to some flunky, McCoy.
+								Actor_Modify_Friendliness_To_Other(kActorOfficerLeary, kActorMcCoy, -2);
 							} else {
-								Game_Flag_Set(kFlagRC01ChromeDebrisTaken);
-								Item_Remove_From_World(kItemChromeDebris);
-								Item_Pickup_Spin_Effect(kModelAnimationChromeDebris, 426, 316);
-								Actor_Clue_Acquire(kActorMcCoy, kClueChromeDebris, true, -1);
-								Actor_Says(kActorMcCoy, 8755, 15); //00-8755.AUD	A piece of chrome.
+								Actor_Says(kActorMcCoy, 1025, 13); //00-1025.AUD	Absolutely.
+								Delay (500);
+								Actor_Says(kActorMcCoy, 5310, 11); //00-5310.AUD	You spot anything you think I ought to know about, tell me.
 							}
+							Delay(1000);
+							ADQ_Add(kActorDispatcher, 70, kAnimationModeTalk); //38-0070.AUD	BR-61661, report to precinct Headquarters. Code 3, repeat, code 3.
 						}
-						ADQ_Add(kActorDispatcher, 70, kAnimationModeTalk); //38-0070.AUD	BR-61661, report to precinct Headquarters. Code 3, repeat, code 3.
 					}
 				} else {
 					if (_vm->_cutContent) {
@@ -576,29 +561,19 @@ bool SceneScriptRC01::ClickedOnActor(int actorId) {
 				Actor_Says(kActorMcCoy, 4515, 13);
 				Game_Flag_Set(kFlagRC01McCoyAndOfficerLearyTalking);
 				if (_vm->_cutContent) { 
-					if (Actor_Query_Friendliness_To_Other(kActorOfficerLeary, kActorMcCoy) < 50) {
-						Actor_Says(kActorOfficerLeary, 160, 19); //23-0160.AUD	Zero that would interest you, detective.
-						Actor_Says(kActorMcCoy, 4180, 14); //00-4180.AUD	You sure?
-						Actor_Says(kActorOfficerLeary, 150, 16); //23-0150.AUD	I've hit a brick, McCoy. You're running this investigation, right?
-					} else {
-						Actor_Says(kActorOfficerLeary, 40, 13);
-						Actor_Says(kActorOfficerLeary, 50, 14);
-						Actor_Says(kActorOfficerLeary, 60, 15);
-						Actor_Clue_Acquire(kActorMcCoy, kClueOfficersStatement, true, kActorOfficerLeary);
-						if (!Game_Flag_Query(kFlagRC02Entered)) {	
-							I_Sez("MG: It's all fun and games until someone loses a tiger cub.");
-							if (Player_Query_Agenda() == kPlayerAgendaPolite) { 
-								Actor_Says(kActorMcCoy, 4520, 18);
-								Actor_Says(kActorOfficerLeary, 70, 16);
-								Actor_Says(kActorMcCoy, 4525, 14);
-								Actor_Says(kActorOfficerLeary, 80, 18);
-							} else if (Player_Query_Agenda() == kPlayerAgendaSurly
-							|| Player_Query_Agenda() == kPlayerAgendaErratic) {
-								Actor_Says(kActorMcCoy, 4530, 15);
-							}
-							if (!_vm->_cutContent) {
-								Actor_Clue_Acquire(kActorMcCoy, kClueOfficersStatement, true, kActorOfficerLeary);
-							}
+					Actor_Says(kActorOfficerLeary, 40, 13);
+					Actor_Says(kActorOfficerLeary, 50, 14);
+					Actor_Says(kActorOfficerLeary, 60, 15);
+					Actor_Clue_Acquire(kActorMcCoy, kClueOfficersStatement, true, kActorOfficerLeary);
+					if (!Game_Flag_Query(kFlagRC02Entered)) {	
+						I_Sez("MG: It's all fun and games until someone loses a tiger cub.");
+						if (Player_Query_Agenda() == kPlayerAgendaPolite) { 
+							Actor_Says(kActorMcCoy, 4520, 18);
+							Actor_Says(kActorOfficerLeary, 70, 16);
+							Actor_Says(kActorMcCoy, 4525, 14);
+							Actor_Says(kActorOfficerLeary, 80, 18);
+						} else {
+							Actor_Says(kActorMcCoy, 4530, 15);
 						}
 					}
 				} else { 
@@ -640,45 +615,48 @@ bool SceneScriptRC01::ClickedOnItem(int itemId, bool a2) {
 		if (!Loop_Actor_Walk_To_Item(kActorMcCoy, kItemChromeDebris, 36, true, false)) {
 			Actor_Face_Item(kActorMcCoy, kItemChromeDebris, true);
 			if (_vm->_cutContent) {		
-				if (!Actor_Clue_Query(kActorMcCoy, kCluePaintTransfer)
-				&& !Actor_Clue_Query(kActorMcCoy, kClueCrowdInterviewB)) {
+				if (!Actor_Clue_Query(kActorMcCoy, kClueCrowdInterviewB)) {
 					Actor_Says(kActorMcCoy, 8755, 15); //00-8755.AUD	A piece of chrome.
 					Actor_Says(kActorMcCoy, 8525, 13); // 00-8525.AUD	Hmph.
 					Game_Flag_Set(kFlagChromeChecked);
 				} else {
+					Actor_Face_Actor(kActorOfficerLeary, kActorMcCoy, true);
 					Actor_Says(kActorMcCoy, 8755, 15); //00-8755.AUD	A piece of chrome.
-					if (Actor_Query_Friendliness_To_Other(kActorOfficerLeary, kActorMcCoy) > 49) {
-						Loop_Actor_Walk_To_Actor(kActorOfficerLeary, kActorMcCoy, 36, false, false);
-						Actor_Says(kActorOfficerLeary, 20, 12);
-						Game_Flag_Set(kFlagRC01ChromeDebrisTaken);
-						Item_Remove_From_World(kItemChromeDebris);
-						Item_Pickup_Spin_Effect(kModelAnimationChromeDebris, 426, 316);
-						Actor_Clue_Acquire(kActorMcCoy, kClueChromeDebris, true, -1);
-						I_Sez("JM: Chrome...is that what that is?");
-						Actor_Says(kActorMcCoy, 4505, 13);
-						// Jake - Added in a line where Leary is annoyed at McCoy for him being condescending towards him. 
-						Actor_Face_Actor(kActorOfficerLeary, kActorMcCoy, true);
-						Actor_Says(kActorOfficerLeary, 30, 14);
-						Actor_Face_Actor(kActorMcCoy, kActorOfficerLeary, true);
-						if (Player_Query_Agenda() == kPlayerAgendaSurly 
-						|| Player_Query_Agenda() == kPlayerAgendaErratic) {
-							Actor_Says(kActorMcCoy, 4510, 14); //00-4510.AUD	No, I think it's horse chrome. Bag it and tag it.
-							Actor_Says(kActorOfficerLeary, 170, 13); //23-0170.AUD	You ain't talking to some flunky, McCoy.
-							Actor_Modify_Friendliness_To_Other(kActorOfficerLeary, kActorMcCoy, -2);
-							Actor_Clue_Acquire(kActorMcCoy, kClueChromeDebris, true, -1);
-						} else {
-							Actor_Says(kActorMcCoy, 1025, 13);
-							Delay (500);
-							Actor_Says(kActorMcCoy, 5310, 11); //00-5310.AUD	You spot anything you think I ought to know about, tell me.
-							Actor_Clue_Acquire(kActorMcCoy, kClueChromeDebris, true, -1);
-						}
+					Loop_Actor_Walk_To_Actor(kActorOfficerLeary, kActorMcCoy, 36, false, false);
+					Actor_Says(kActorOfficerLeary, 20, 12);
+					Game_Flag_Set(kFlagRC01ChromeDebrisTaken);
+					Item_Remove_From_World(kItemChromeDebris);
+					Item_Pickup_Spin_Effect(kModelAnimationChromeDebris, 426, 316);
+					Actor_Clue_Acquire(kActorMcCoy, kClueChromeDebris, true, -1);
+					I_Sez("JM: Chrome...is that what that is?");
+					Actor_Says(kActorMcCoy, 4505, 13);
+					// Jake - Added in a line where Leary is annoyed at McCoy for him being condescending towards him. 
+					Actor_Face_Actor(kActorOfficerLeary, kActorMcCoy, true);
+					Actor_Says(kActorOfficerLeary, 30, 14);
+					Actor_Face_Actor(kActorMcCoy, kActorOfficerLeary, true);
+					if (Player_Query_Agenda() == kPlayerAgendaSurly 
+					|| Player_Query_Agenda() == kPlayerAgendaErratic) {
+						Actor_Says(kActorMcCoy, 4510, 14); //00-4510.AUD	No, I think it's horse chrome. Bag it and tag it.
+						Actor_Says(kActorOfficerLeary, 170, 13); //23-0170.AUD	You ain't talking to some flunky, McCoy.
+						Actor_Modify_Friendliness_To_Other(kActorOfficerLeary, kActorMcCoy, -2);
 					} else {
-						Game_Flag_Set(kFlagRC01ChromeDebrisTaken);
-						Item_Remove_From_World(kItemChromeDebris);
-						Item_Pickup_Spin_Effect(kModelAnimationChromeDebris, 426, 316);
-						Actor_Clue_Acquire(kActorMcCoy, kClueChromeDebris, true, -1);
-						Actor_Says(kActorMcCoy, 8755, 15); //00-8755.AUD	A piece of chrome.
+						Actor_Says(kActorMcCoy, 1025, 13);
+						Delay (500);
+						Actor_Says(kActorMcCoy, 5310, 11); //00-5310.AUD	You spot anything you think I ought to know about, tell me.
 					}
+					if (!Actor_Clue_Query(kActorMcCoy, kCluePaintTransfer)) {
+						Delay(1000);
+						Actor_Face_Object(kActorMcCoy, "HYDRANT02", true);
+						Delay(1000);
+						Actor_Says(kActorMcCoy, 8525, 13); // 00-8525.AUD	Hmph.
+						Loop_Actor_Walk_To_XYZ(kActorMcCoy, -121.45f, 0.32f, 158.04f, 0, false, false, false); 
+						Actor_Face_Object(kActorMcCoy, "HYDRANT02", true);
+						Actor_Voice_Over(1880, kActorVoiceOver);
+						Actor_Voice_Over(1890, kActorVoiceOver);
+						I_Sez("JM: That McCoy--he's one funny guy! Jet-black fire truck, hehehehe...");
+						Actor_Clue_Acquire(kActorMcCoy, kCluePaintTransfer, true, -1);
+					}
+					Delay(1000);
 					ADQ_Add(kActorDispatcher, 70, kAnimationModeTalk); //38-0070.AUD	BR-61661, report to precinct Headquarters. Code 3, repeat, code 3.
 				}
 			} else {
@@ -774,13 +752,50 @@ bool SceneScriptRC01::ClickedOnExit(int exitId) {
 			if ( Game_Flag_Query(kFlagDNARowAvailable)
 			 && !Game_Flag_Query(kFlagDNARowAvailableTalk)
 			) {
-				Actor_Voice_Over(4310, kActorVoiceOver);
-				Actor_Voice_Over(4320, kActorVoiceOver);
-				Actor_Voice_Over(4330, kActorVoiceOver);
-				Actor_Voice_Over(4340, kActorVoiceOver);
+				if (_vm->_cutContent) {
+					if (Actor_Clue_Query(kActorMcCoy, kClueWeaponsCache)) {
+						Actor_Voice_Over(3480, kActorVoiceOver); //99-3480.AUD	Yeah, what a difference a day makes.
+						Delay(1000);
+						Actor_Voice_Over(3510, kActorVoiceOver); //99-3510.AUD	The picture was still a little blurry.
+					} else {
+						Actor_Voice_Over(4310, kActorVoiceOver); // 99-4310.AUD	I was fresh out of leads.	
+					}
+				} else {
+					Actor_Voice_Over(4310, kActorVoiceOver); // 99-4310.AUD	I was fresh out of leads.	
+				}
+				if (_vm->_cutContent) {
+					if (!Actor_Clue_Query(kActorMcCoy, kClueWeaponsCache)
+					&& !Actor_Clue_Query(kActorMcCoy, kClueBobShotInSelfDefense)
+					&& !Game_Flag_Query(kFlagMcCoyShotIzo)) {
+						Actor_Voice_Over(4320, kActorVoiceOver); //99-4320.AUD	Poking around Hawker's Circle had been a waste of time.
+					}
+				} else {
+					Actor_Voice_Over(4320, kActorVoiceOver); //99-4320.AUD	Poking around Hawker's Circle had been a waste of time.
+				}
+				if (_vm->_cutContent) {
+					if (!Actor_Clue_Query(kActorMcCoy, kClueWeaponsCache)) {
+						Actor_Voice_Over(4330, kActorVoiceOver); //99-4330.AUD	I had nothing to connect this Izo character to the Eisenduller murder.
+					}
+				} else {
+					Actor_Voice_Over(4330, kActorVoiceOver);
+				}
+				Actor_Voice_Over(4340, kActorVoiceOver); //99-4340.AUD	But if the Replicants had done in one Tyrell scientist, maybe they'd go after another.
 				Actor_Voice_Over(4350, kActorVoiceOver);
+				if (_vm->_cutContent) {
+					if (Player_Query_Agenda() == kPlayerAgendaPolite) {
+						Delay(500);
+						Actor_Says(kActorMcCoy, 170, 14); //00-0170.AUD	Damn.
+						Delay(1000);
+						Actor_Says(kActorMcCoy, 6875, 13); //00-6875.AUD	I gotta go.
+					}
+				}	
+				if (_vm->_cutContent) {	
+					Game_Flag_Reset(kFlagIzoGotAway);
+					Game_Flag_Reset(kFlagIzoOnTheRun);
+					Game_Flag_Reset(kFlagIzoWarnedAboutCrystal);
+				}
 				Game_Flag_Set(kFlagDNARowAvailableTalk);
-			}
+			}		
 			Actor_Set_Immunity_To_Obstacles(kActorMcCoy, false);
 			Player_Gains_Control();
 			Game_Flag_Reset(kFlagMcCoyInChinaTown);
@@ -936,19 +951,9 @@ void SceneScriptRC01::interrogateCrowd() {
 			Loop_Actor_Walk_To_Actor(kActorOfficerLeary, kActorMcCoy, 36, true, false);
 			Actor_Face_Actor(kActorOfficerLeary, kActorMcCoy, true);
 			Actor_Says(kActorMcCoy, 4500, 14);
-			if (_vm->_cutContent) { 
-				if (Actor_Query_Friendliness_To_Other(kActorOfficerLeary, kActorMcCoy) < 50) {
-					Actor_Says(kActorOfficerLeary, 170, 13); //23-0170.AUD	You ain't talking to some flunky, McCoy.
-				} else {
-					I_Sez("MG: We don't want any of that abstract art oozing out onto the street.");
-					Actor_Says(kActorOfficerLeary, 10, 14);
-					Actor_Set_Goal_Number(kActorOfficerLeary, kGoalOfficerLearyRC01WalkToCrowd);
-				}
-			} else {
-				I_Sez("MG: We don't want any of that abstract art oozing out onto the street.");
-				Actor_Says(kActorOfficerLeary, 10, 14);
-				Actor_Set_Goal_Number(kActorOfficerLeary, kGoalOfficerLearyRC01WalkToCrowd);
-			}
+			I_Sez("MG: We don't want any of that abstract art oozing out onto the street.");
+			Actor_Says(kActorOfficerLeary, 10, 14);
+			Actor_Set_Goal_Number(kActorOfficerLeary, kGoalOfficerLearyRC01WalkToCrowd);
 		}
 	}
 }
