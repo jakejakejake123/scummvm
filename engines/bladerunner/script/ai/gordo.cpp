@@ -48,21 +48,19 @@ void AIScriptGordo::Initialize() {
 }
 
 bool AIScriptGordo::Update() {
-	if (!_vm->_cutContent) {
-		if (Global_Variable_Query(kVariableChapter) == 1) {
-			if (Actor_Query_Goal_Number(kActorGordo) == kGoalGordoDefault
-			&& Actor_Query_Friendliness_To_Other(kActorGordo, kActorMcCoy) < 48
-			&& Actor_Query_Is_In_Current_Set(kActorGordo)
-			) {
-				Actor_Set_Goal_Number(kActorGordo, kGoalGordoCT01StandUp);
-				return true;
-			}
-			if (Actor_Query_Which_Set_In(kActorMcCoy) == kSetCT03_CT04
-			&& Actor_Query_Which_Set_In(kActorGordo) == kSetCT01_CT12
-			) {
-				Actor_Set_Goal_Number(kActorGordo, kGoalGordoCT01WalkAway);
-				return true;
-			}
+	if (Global_Variable_Query(kVariableChapter) == 1) {
+		if (Actor_Query_Goal_Number(kActorGordo) == kGoalGordoDefault
+		&& Actor_Query_Friendliness_To_Other(kActorGordo, kActorMcCoy) < 48
+		&& Actor_Query_Is_In_Current_Set(kActorGordo)
+		) {
+			Actor_Set_Goal_Number(kActorGordo, kGoalGordoCT01StandUp);
+			return true;
+		}
+		if (Actor_Query_Which_Set_In(kActorMcCoy) == kSetCT03_CT04
+		&& Actor_Query_Which_Set_In(kActorGordo) == kSetCT01_CT12
+		) {
+			Actor_Set_Goal_Number(kActorGordo, kGoalGordoCT01WalkAway);
+			return true;
 		}
 	}
 
@@ -2134,7 +2132,7 @@ void AIScriptGordo::talkToMcCoyInCity() {
 						Delay(2000);
 						Actor_Says(kActorMcCoy, 8170, 15); //00-8170.AUD	There you go.
 						Delay(1000);
-						Actor_Modify_Friendliness_To_Other(kActorGordo, kActorMcCoy, 2);
+						Actor_Modify_Friendliness_To_Other(kActorGordo, kActorMcCoy, 10);
 						if (Query_Difficulty_Level() != kGameDifficultyEasy) {
 							Global_Variable_Decrement(kVariableChinyen, 10);
 						}
@@ -2164,7 +2162,7 @@ void AIScriptGordo::talkToMcCoyInCity() {
 						Delay(2000);
 						Actor_Says(kActorMcCoy, 8170, 15); //00-8170.AUD	There you go.
 						Delay(1000);
-						Actor_Modify_Friendliness_To_Other(kActorGordo, kActorMcCoy, 2);
+						Actor_Modify_Friendliness_To_Other(kActorGordo, kActorMcCoy, 10);
 						if (Query_Difficulty_Level() != kGameDifficultyEasy) {
 							Global_Variable_Decrement(kVariableChinyen, 10);
 						}

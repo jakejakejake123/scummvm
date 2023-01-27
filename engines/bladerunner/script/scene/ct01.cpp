@@ -381,9 +381,7 @@ bool SceneScriptCT01::ClickedOnActor(int actorId) {
 #else
 			Actor_Clue_Acquire(kActorGordo, kClueMcCoyIsABladeRunner, true, kActorMcCoy);
 #endif // BLADERUNNER_ORIGINAL_BUGS
-			if (!_vm->_cutContent) {
-				Actor_Modify_Friendliness_To_Other(kActorGordo, kActorMcCoy, -1);
-			}
+			Actor_Modify_Friendliness_To_Other(kActorGordo, kActorMcCoy, -1);
 		} else {
 			if (Actor_Query_Goal_Number(kActorGordo) == kGoalGordoDefault) {
 				// Made it so Gordo now offers his autograph to McCoy when they first meet. This was done because when Gordo does this he mentions his name and this fixes a minor plot hole later on where you can talk to Gordo in act 2
@@ -409,7 +407,6 @@ bool SceneScriptCT01::ClickedOnActor(int actorId) {
 						Actor_Says(kActorGordo, 40, 30); //02-0040.AUD	Unfortunately, my man, I got to book.
 						Actor_Modify_Friendliness_To_Other(kActorGordo, kActorMcCoy, -2);
 						Player_Loses_Control();
-						Actor_Set_Goal_Number(kActorGordo, kGoalGordoCT01WalkAway);
 					} else {
 						Actor_Says(kActorMcCoy, 4940, 13); //00-4940.AUD	Okay, let's have it.
 						Game_Flag_Set(kFlagGordoReceivedAutograph);
@@ -441,8 +438,8 @@ bool SceneScriptCT01::ClickedOnActor(int actorId) {
 						Actor_Says(kActorGordo, 40, 30); //02-0040.AUD	Unfortunately, my man, I got to book.
 						// McCoy will now receive the Gordo interview 3 clue regardless of Gordos replicant status. I have added in several new scenes involving Gordo and one of
 						// them can only occur if he is human and you have this clue.
+						Actor_Modify_Friendliness_To_Other(kActorGordo, kActorMcCoy, -2);
 						Player_Loses_Control();
-						Actor_Set_Goal_Number(kActorGordo, kGoalGordoCT01WalkAway);
 					}
 				} else {
 					Actor_Says(kActorMcCoy, 340, 13);
