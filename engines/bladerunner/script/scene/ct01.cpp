@@ -412,7 +412,6 @@ bool SceneScriptCT01::ClickedOnActor(int actorId) {
 						Game_Flag_Set(kFlagGordoReceivedAutograph);
 						Actor_Change_Animation_Mode(kActorMcCoy, 23);
 						Delay(2000);
-						Actor_Modify_Friendliness_To_Other(kActorGordo, kActorMcCoy, 2);
 						Actor_Says(kActorMcCoy, 5600, 14);               // Let me ask you.
 						Actor_Says(kActorMcCoy, 385, 18); //00-0385.AUD	I'm looking for a girl about 14 years old with pink hair. You seen her?
 						if (Game_Flag_Query(kFlagGordoIsReplicant)) {
