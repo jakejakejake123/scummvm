@@ -321,7 +321,7 @@ void SceneScriptHF06::steelInterruption() {
 					Actor_Face_Actor(kActorDektora, kActorMcCoy, true);
 					Actor_Says(kActorDektora, 210, 12); //03-0210.AUD	Can you get it working?
 					Actor_Face_Actor(kActorMcCoy, kActorDektora, true);
-					Actor_Says(kActorMcCoy, 2125, 12); //00-2125.AUD	Ah, we’ll have to find something else. Maybe a ground car.
+					Actor_Says(kActorMcCoy, 7815, 16); //00-7815.AUD	No.
 					Game_Flag_Set(kFlagHF06SteelInterruption);
 				}			
 			}
@@ -342,7 +342,7 @@ void SceneScriptHF06::steelInterruption() {
 					Actor_Face_Actor(kActorLucy, kActorMcCoy, true);
 					Actor_Says(kActorLucy, 490, 18); //06-0490.AUD	Can you get it working?
 					Actor_Face_Actor(kActorMcCoy, kActorLucy, true);
-					Actor_Says(kActorMcCoy, 2125, 12); //00-2125.AUD	Ah, we’ll have to find something else. Maybe a ground car.
+					Actor_Says(kActorMcCoy, 7815, 16); //00-7815.AUD	No.
 					Game_Flag_Set(kFlagHF06SteelInterruption);
 				}
 			}
@@ -360,16 +360,8 @@ void SceneScriptHF06::steelInterruption() {
 				Actor_Set_Targetable(kActorSteele, true);
 				Actor_Face_Actor(actorId, kActorSteele, true);
 				Actor_Face_Actor(kActorMcCoy, kActorDektora, true);
-				// If Dektora is a human she will say Ray in a terrified tone. If she is a rep she is shocked into silence.
-				if (actorId == kActorDektora) {
-					if (!Game_Flag_Query(kFlagDektoraIsReplicant)) {
-						Actor_Says(kActorDektora, 90, 13);
-						Actor_Says(kActorMcCoy, 6230, 0);
-					} else {
-						Delay (1000);
-						Actor_Says(kActorMcCoy, 2755, 13); //00-2755.AUD	You all right? You look a little pale.
-					}
-				}
+				Actor_Says(kActorDektora, 90, 13);
+				Actor_Says(kActorMcCoy, 6230, 0);
 				Actor_Says(kActorSteele, 280, 58);
 				Actor_Face_Actor(kActorMcCoy, kActorSteele, true);
 				Player_Set_Combat_Mode(true);

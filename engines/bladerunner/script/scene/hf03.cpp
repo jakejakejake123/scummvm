@@ -150,7 +150,11 @@ void SceneScriptHF03::dialogueWithLucy() {
 						} else {
 							Actor_Says(kActorMcCoy, 5065, 18); //00-5065.AUD	Is that right?
 						}
-						Actor_Says(kActorLucy, 1000, 12); //06-1000.AUD	I’ve seen death before. But the other day…
+						if (Game_Flag_Query(kFlagDektoraIsReplicant)
+						&& Game_Flag_Query(kFlagLucyIsReplicant)
+						) {
+							Actor_Says(kActorLucy, 1000, 12); //06-1000.AUD	I’ve seen death before. But the other day…
+						}
 						Actor_Says(kActorLucy, 1010, 17);
 						Actor_Says(kActorLucy, 1020, 18);
 						if (Player_Query_Agenda() == kPlayerAgendaPolite) {

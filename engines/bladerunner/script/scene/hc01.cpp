@@ -796,7 +796,10 @@ void SceneScriptHC01::takePhotoAndRunAway() {
 			Actor_Clue_Acquire(kActorMcCoy, kCluePhotoOfMcCoy2, true, kActorIzo);
 		}
 		Actor_Clue_Acquire(kActorMcCoy, kClueChinaBar, true, kActorIzo);
-		Player_Set_Combat_Mode(true);
+		if (Player_Query_Agenda() == kPlayerAgendaSurly 
+		|| Player_Query_Agenda() == kPlayerAgendaErratic) {	
+			Player_Set_Combat_Mode(true);
+		}
 	}
 }
 

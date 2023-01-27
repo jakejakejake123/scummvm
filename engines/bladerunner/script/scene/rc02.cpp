@@ -311,7 +311,6 @@ void SceneScriptRC02::dialogueWithRunciter() {
 				Actor_Says(kActorRunciter, 300, 16); // 15-0300.AUD	Do you have any idea how much this is going to cost me? I'm ruined!			
 				Actor_Says(kActorRunciter, 90, 17); // 15-0090.AUD	That snow tiger alone was worth more than most people will ever see in a lifetime. 
 				Actor_Says(kActorRunciter, 540, 19); // 15-0540.AUD	I sacrificed everything to get that tiger. And now she's dead.
-				Actor_Clue_Acquire(kActorMcCoy, kClueRunciterConfession1, true, kActorRunciter);
 				Game_Flag_Set(kFlagRunciterTalkMotives);
 				if (Player_Query_Agenda() == kPlayerAgendaSurly 
 				|| Player_Query_Agenda() == kPlayerAgendaErratic) {
@@ -629,15 +628,10 @@ bool SceneScriptRC02::ClickedOnActor(int actorId) {
 					Actor_Says(kActorMcCoy, 4715, 11);
 					Delay(2000);
 					if (_vm->_cutContent) {
-						if (Player_Query_Agenda() == kPlayerAgendaSurly 
-						|| Player_Query_Agenda() == kPlayerAgendaErratic) {
-							Actor_Says(kActorMcCoy, 4720, 16);
-							Actor_Says(kActorMcCoy, 4725, 17);
-							Actor_Says(kActorRunciter, 430, 16);
-						} else {
-							Actor_Says(kActorMcCoy, 8395, 18); //00-8395.AUD	You don't have anything to say?
-							Delay(2000);
-						}
+						Actor_Says(kActorMcCoy, 4720, 16); //00-4720.AUD	Bone marrow tests are getting cheaper every day.
+						Delay(2000);
+						Actor_Says(kActorMcCoy, 6985, 16);
+						Actor_Says(kActorRunciter, 430, 16);
 					} else {
 						Actor_Says(kActorMcCoy, 4720, 16);
 						Actor_Says(kActorMcCoy, 4725, 17);

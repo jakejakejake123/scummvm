@@ -118,7 +118,11 @@ void AIScriptPhotographer::ClickedByPlayer() {
 				Actor_Says(kActorPhotographer, 80, kAnimationModeTalk); //37-0080.AUD	You ain't talking to some flunky, McCoy.	
 			} else {
 				Actor_Says(kActorMcCoy, 5310, 11); //00-5310.AUD	You spot anything you think I ought to know about, tell me.
-				Actor_Says(kActorPhotographer, 40, kAnimationModeTalk); // 37-0040.AUD	Absolutely.
+				if (Actor_Clue_Query(kActorMcCoy, kCluePoliceWeaponUsed)) {
+					Actor_Says(kActorPhotographer, 40, kAnimationModeTalk); // 37-0040.AUD	Absolutely.
+				} else {
+					Actor_Says(kActorPhotographer, 80, kAnimationModeTalk); //37-0080.AUD	You ain't talking to some flunky, McCoy.	
+				}
 			}
 		} else {
 			Actor_Says(kActorMcCoy, 5310, 11); //00-5310.AUD	You spot anything you think I ought to know about, tell me.

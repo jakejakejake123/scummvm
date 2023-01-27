@@ -903,6 +903,40 @@ void SceneScriptHF01::PlayerWalkedIn() {
 
 					Game_Over();
 				}
+			} else if (Game_Flag_Query(kFlagParkedSpinner)) {
+				Actor_Set_At_XYZ(kActorMcCoy, -202.0f, 8.0f, -620.0f, 603);
+				Async_Actor_Walk_To_XYZ(kActorMcCoy, 138.86f, 0.40f, -360.23f, 0, true);
+				Delay(1000);
+				if (Global_Variable_Query(kVariableAffectionTowards) == kAffectionTowardsDektora) {
+					Actor_Put_In_Set(kActorDektora, kSetHF01);
+					Actor_Set_At_XYZ(kActorDektora, -202.0f, 8.0f, -610.0f, 603);
+					Async_Actor_Walk_To_XYZ(kActorDektora, 163.27f, 0.39f, -371.59f, 0, true);
+				} else if (Global_Variable_Query(kVariableAffectionTowards) == kAffectionTowardsLucy) {
+					Actor_Put_In_Set(kActorLucy, kSetHF01);
+					Actor_Set_At_XYZ(kActorLucy, -202.0f, 8.0f, -610.0f, 603);
+					Async_Actor_Walk_To_XYZ(kActorLucy, 163.27f, 0.39f, -371.59f, 0, true);
+				}
+				Actor_Face_Heading(kActorMcCoy, 486, true);
+				Actor_Change_Animation_Mode(kActorMcCoy, 23);
+				Delay(2000);
+				Actor_Says(kActorMcCoy, 8522, 13); // Locked
+				Delay(1000);
+				Actor_Says(kActorMcCoy, 170, 14); //00-0170.AUD	Damn.
+				Delay(1000);
+				if (Actor_Query_Is_In_Current_Set(kActorDektora)) {
+					Actor_Face_Actor(kActorDektora, kActorMcCoy, true);
+					Actor_Face_Actor(kActorMcCoy, kActorDektora, true);
+				} else if (Actor_Query_Is_In_Current_Set(kActorLucy)) {
+					Actor_Face_Actor(kActorLucy, kActorMcCoy, true);
+					Actor_Face_Actor(kActorMcCoy, kActorLucy, true);
+				}
+				Actor_Says(kActorMcCoy, 2125, 19); //00-2125.AUD	Ah, we’ll have to find something else. Maybe a ground car.
+				Delay(1000);
+				Game_Flag_Set(kFlagHF05toHF01);
+				Player_Loses_Control();
+				Game_Flag_Reset(kFlagParkedSpinner);
+				Game_Flag_Set(kFlagParkedSpinnerChecked);
+				Set_Enter(kSetHF05, kSceneHF05);
 			}
 		}
 	}
@@ -1035,9 +1069,6 @@ void SceneScriptHF01::PlayerWalkedIn() {
 			Game_Flag_Set(kFlagHF01MurrayMiaIntro);	
 		}
 	}
-
-	
-
 	Game_Flag_Reset(kFlagHF03toHF01);
 	Game_Flag_Reset(kFlagHF02toHF01);
 	Game_Flag_Reset(kFlagHF05toHF01);

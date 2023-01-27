@@ -97,6 +97,21 @@ void AIScriptDeskClerk::OtherAgentExitedThisSet(int otherActorId) {
 }
 
 void AIScriptDeskClerk::OtherAgentEnteredCombatMode(int otherActorId, int combatMode) {
+	if (_vm->_cutContent) {
+		if (otherActorId == kActorMcCoy
+		&& combatMode
+		&& (!Actor_Query_Is_In_Current_Set(kActorLeon))) {
+			Actor_Face_Actor(kActorMcCoy, kActorDeskClerk, true);
+			Actor_Says(kActorMcCoy, 5720, -1); //00-5720.AUD	Just a moment of your time, please.
+			Delay(2000);
+			Actor_Says(kActorMcCoy, 3970, -1); //00-3970.AUD	Hey.
+			Delay(2000);
+			Actor_Says(kActorMcCoy, 815, -1); //00-0815.AUD	Listen to me!
+			Delay(2000);
+			Actor_Says(kActorMcCoy, 8525, -1); // 00-8525.AUD	Hmph.
+			Game_Flag_Set(kFlagBellRung);
+		}
+	}
 	// return false;
 }
 

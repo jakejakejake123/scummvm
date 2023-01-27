@@ -217,22 +217,14 @@ void AIScriptZuben::ClickedByPlayer() {
 				Loop_Actor_Walk_To_Actor(kActorMcCoy, kActorZuben, 24, false, false);
 				Actor_Face_Actor(kActorMcCoy, kActorZuben, true);
 				Actor_Face_Actor(kActorZuben, kActorMcCoy, true);
-				if (Player_Query_Agenda() == kPlayerAgendaPolite) {
-					Actor_Says(kActorMcCoy, 3970, 13); //00-3970.AUD	Hey.
-				} else {
-					Actor_Says(kActorMcCoy, 355, 18);
-				}
+				Actor_Says(kActorMcCoy, 355, 18);
 				Actor_Says(kActorZuben, 120, 18); //19-0120.AUD	Aah, police...
 			}
 		} else if (Actor_Query_In_Set(kActorZuben, kSetPS09)) {
 			Loop_Actor_Walk_To_XYZ(kActorMcCoy, -381.11f, 0.0f, -135.55f, 0, false, false, false);
 			Actor_Face_Actor(kActorMcCoy, kActorZuben, true);
 			Actor_Face_Actor(kActorZuben, kActorMcCoy, true);
-			if (Player_Query_Agenda() == kPlayerAgendaPolite) {
-				Actor_Says(kActorMcCoy, 3970, 13); //00-3970.AUD	Hey.
-			} else {
-				Actor_Says(kActorMcCoy, 355, 18);
-			}
+			Actor_Says(kActorMcCoy, 355, 18);
 			Actor_Says(kActorZuben, 120, 18); //19-0120.AUD	Aah, police...
 			if (!Actor_Clue_Query(kActorMcCoy, kClueZubenTalksAboutLucy1)
 			&& !Actor_Clue_Query(kActorMcCoy, kClueZubenTalksAboutLucy2)) {
@@ -376,12 +368,13 @@ void AIScriptZuben::ClickedByPlayer() {
 		} else {
 			if (_vm->_cutContent) {
 				Actor_Face_Actor(kActorMcCoy, kActorZuben, true);
-				if (Player_Query_Agenda() != kPlayerAgendaSurly 
-				&& Player_Query_Agenda() != kPlayerAgendaErratic) {
+				if (Player_Query_Agenda() == kPlayerAgendaSurly 
+				|| Player_Query_Agenda() == kPlayerAgendaErratic) {
+					Actor_Says(kActorMcCoy, 8590, 18); //00-8590.AUD	Not the talkative type
+				} else if (Player_Query_Agenda() == kPlayerAgendaPolite) {	
 					Actor_Says(kActorMcCoy, 8630, 12);  // What a waste
 				} else {
-					Actor_Face_Actor(kActorMcCoy, kActorZuben, true);
-					Actor_Says(kActorMcCoy, 8529, 13);
+					Actor_Says(kActorMcCoy, 8665, 13); //00-8665.AUD	Disgusting.	
 				}
 			} else {
 				Actor_Face_Actor(kActorMcCoy, kActorZuben, true);
@@ -605,6 +598,7 @@ bool AIScriptZuben::GoalChanged(int currentGoalNumber, int newGoalNumber) {
 					Actor_Modify_Friendliness_To_Other(kActorSteele, kActorMcCoy, 1);
 					Actor_Modify_Friendliness_To_Other(kActorGuzza, kActorMcCoy, 1);
 					Actor_Modify_Friendliness_To_Other(kActorClovis, kActorMcCoy, -1);
+					Actor_Modify_Friendliness_To_Other(kActorHowieLee, kActorMcCoy, -1);
 					Actor_Clue_Acquire(kActorZuben, kClueMcCoyShotZubenInTheBack, true, -1);
 					Actor_Clue_Lose(kActorZuben, kClueMcCoyLetZubenEscape);
 					Actor_Clue_Acquire(kActorMcCoy, kClueMcCoyShotZubenInTheBack, true, kActorZuben);
@@ -621,6 +615,7 @@ bool AIScriptZuben::GoalChanged(int currentGoalNumber, int newGoalNumber) {
 					Actor_Modify_Friendliness_To_Other(kActorSteele, kActorMcCoy, -2);
 					Actor_Modify_Friendliness_To_Other(kActorGuzza, kActorMcCoy, -2);
 					Actor_Modify_Friendliness_To_Other(kActorClovis, kActorMcCoy, 2);
+					Actor_Modify_Friendliness_To_Other(kActorHowieLee, kActorMcCoy, 2);
 				}
 				if (Random_Query(1, 3) < 3) {
 					Actor_Clue_Acquire(kActorZuben, kClueMcCoysDescription, true, -1);

@@ -243,6 +243,10 @@ bool AIScriptGeneralDoll::ShotAtAndHit() {
 			}
 			if (Actor_Query_In_Set(kActorMcCoy, kSetBB05)) {
 				Actor_Set_Targetable(kActorGeneralDoll, false);
+				Sound_Play(kSfxBANGDOOR, 50, 0, 0, 50);
+				Actor_Face_Heading(kActorMcCoy, 300, false);
+				Delay (2000);
+				Actor_Says(kActorMcCoy, 8525, -1); //00-8525.AUD	Hmph.
 				Player_Loses_Control();
 				Loop_Actor_Walk_To_XYZ(kActorMcCoy, 271.0f, -60.31f, 203.0f, 0, true, false, false);
 				Player_Gains_Control();

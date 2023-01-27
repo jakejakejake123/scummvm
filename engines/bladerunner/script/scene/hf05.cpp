@@ -451,14 +451,40 @@ void SceneScriptHF05::PlayerWalkedIn() {
 					&& !Game_Flag_Query(kFlagMcCoyRetiredHuman)
 					&& Actor_Query_Friendliness_To_Other(kActorCrazylegs, kActorMcCoy) > 49) {
 						Game_Flag_Set(kFlagHF05PoliceArrived);
-						talkWithDektora();
+						Game_Flag_Set(kFlagParkedSpinner);
+						Delay(1000);
+						Actor_Face_Heading(kActorMcCoy, 100, true);
+						Delay(1000);
+						Actor_Says(kActorMcCoy, 2005, kAnimationModeIdle); //00-2005.AUD	A Spinner?
+						Delay(2000);
+						Actor_Says(kActorMcCoy, 8525, 13); // 00-8525.AUD	Hmph.
+						Async_Actor_Walk_To_XYZ(kActorMcCoy, 483.0f, 40.63f, -189.0f, 0, true);
+						Actor_Says(kActorDektora, 90, -1); //03-0090.AUD	Ray!?
+						Delay(2000);
+						Async_Actor_Walk_To_XYZ(kActorDektora, 483.0f, 40.63f, -189.0f, 0, true);
+						Game_Flag_Reset(kFlagHF05toHF01);
+						Game_Flag_Set(kFlagHF01toHF05);
+						Set_Enter(kSetHF01, kSceneHF01);
 					} else if (Actor_Query_Is_In_Current_Set(kActorLucy) 
 					&& !Game_Flag_Query(kFlagLucyIsReplicant)
 					&& Game_Flag_Query(kFlagMcCoyIsInnocent)
 					&& !Game_Flag_Query(kFlagMcCoyRetiredHuman)
 					&& Actor_Query_Friendliness_To_Other(kActorCrazylegs, kActorMcCoy) > 49) {
 						Game_Flag_Set(kFlagHF05PoliceArrived);
-						talkWithLucy();
+						Game_Flag_Set(kFlagParkedSpinner);
+						Delay(1000);
+						Actor_Face_Heading(kActorMcCoy, 100, true);
+						Delay(1000);
+						Actor_Says(kActorMcCoy, 2005, kAnimationModeIdle); //00-2005.AUD	A Spinner?
+						Delay(2000);
+						Actor_Says(kActorMcCoy, 8525, 13); // 00-8525.AUD	Hmph.
+						Async_Actor_Walk_To_XYZ(kActorMcCoy, 483.0f, 40.63f, -189.0f, 0, true);
+						Actor_Says(kActorLucy, 380, -1); //06-0380.AUD	Ray.
+						Delay(1000);
+						Async_Actor_Walk_To_XYZ(kActorDektora, 483.0f, 40.63f, -189.0f, 0, true);
+						Game_Flag_Reset(kFlagHF05toHF01);
+						Game_Flag_Set(kFlagHF01toHF05);
+						Set_Enter(kSetHF01, kSceneHF01);
 					} else {
 						Game_Flag_Set(kFlagHF05PoliceArrived);
 						Music_Play(kMusicBatl226M, 40, 0, 2, -1, kMusicLoopPlayOnce, 0);
@@ -532,10 +558,43 @@ void SceneScriptHF05::PlayerWalkedIn() {
 		}
 	}
 
-	Game_Flag_Reset(kFlagHF01toHF05);
-	Game_Flag_Reset(kFlagHF06toHF05);
-	Game_Flag_Reset(kFlagHF07toHF05);
-
+	if (_vm->_cutContent) {
+		if (Game_Flag_Query(kFlagParkedSpinnerChecked)) {
+			Actor_Set_At_XYZ(kActorMcCoy, 399.0f, 40.63f, -85.0f, 603);
+			Loop_Actor_Walk_To_XYZ(kActorMcCoy, 302.89f, 40.92f, 273.85f, 0, false, true, false);
+			if (Actor_Query_Is_In_Current_Set(kActorDektora)) {
+				Loop_Actor_Walk_To_XYZ(kActorDektora, 278.18f, 40.94f, 250.58f, 0, false, true, false);
+			} else if (Actor_Query_Is_In_Current_Set(kActorLucy)) {
+				Loop_Actor_Walk_To_XYZ(kActorLucy, 278.18f, 40.94f, 250.58f, 0, false, true, false);
+			}
+			Game_Flag_Reset(kFlagHF02toHF01);
+			Game_Flag_Set(kFlagHF01toHF05);
+			Actor_Face_Object(kActorMcCoy, "MONTE CARLO DRY", true);
+			if (Actor_Query_Is_In_Current_Set(kActorDektora)) {
+				Actor_Face_Actor(kActorDektora, kActorMcCoy, true);
+			} else if (Actor_Query_Is_In_Current_Set(kActorLucy)) {
+				Actor_Face_Actor(kActorLucy, kActorMcCoy, true);
+			}
+			Delay(2000);
+			Actor_Says(kActorMcCoy, 8525, 13); // 00-8525.AUD	Hmph.
+			Delay(1000);
+			Actor_Says(kActorMcCoy, 8495, 15); //00-8495.AUD	This might work.
+			Delay(1000);
+			Player_Gains_Control();
+			Game_Flag_Reset(kFlagParkedSpinnerChecked);
+			if (getCompanionActor() ==  kActorDektora) {
+				Actor_Face_Actor(kActorMcCoy, kActorDektora, true);
+				Actor_Face_Actor(kActorDektora, kActorMcCoy, true);
+				Actor_Says(kActorDektora, 90, 13); //03-0090.AUD	Ray!?
+				talkWithDektora();
+			} else if (getCompanionActor() == kActorLucy) {
+				Actor_Face_Actor(kActorMcCoy, kActorLucy, true);
+				Actor_Face_Actor(kActorLucy, kActorMcCoy, true);
+				Actor_Says(kActorLucy, 380, 13); //06-0380.AUD	Ray.
+				talkWithLucy();
+			}
+		}
+	}
 	//return false;
 }
 

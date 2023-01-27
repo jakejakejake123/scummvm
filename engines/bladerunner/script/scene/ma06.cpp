@@ -134,6 +134,10 @@ void SceneScriptMA06::PlayerWalkedIn() {
 			Actor_Says(kActorMcCoy, 2710, 14);             // Excuse me
 			Actor_Face_Object(kActorMcCoy, "panel", true);
 			Delay(1000);
+			if (_vm->_cutContent) {
+				Actor_Says(kActorMcCoy, 2865, 17);   // Lobby
+				Delay(1000);
+			}
 			Actor_Face_Actor(kActorMcCoy, kActorRachael, true);
 			Delay(1000);
 			Actor_Says(kActorMcCoy, 2730, 12);             // RachaelRight

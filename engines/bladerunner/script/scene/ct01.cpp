@@ -381,7 +381,9 @@ bool SceneScriptCT01::ClickedOnActor(int actorId) {
 #else
 			Actor_Clue_Acquire(kActorGordo, kClueMcCoyIsABladeRunner, true, kActorMcCoy);
 #endif // BLADERUNNER_ORIGINAL_BUGS
-			Actor_Modify_Friendliness_To_Other(kActorGordo, kActorMcCoy, -1);
+			if (!_vm->_cutContent) {
+				Actor_Modify_Friendliness_To_Other(kActorGordo, kActorMcCoy, -1);
+			}
 		} else {
 			if (Actor_Query_Goal_Number(kActorGordo) == kGoalGordoDefault) {
 				// Made it so Gordo now offers his autograph to McCoy when they first meet. This was done because when Gordo does this he mentions his name and this fixes a minor plot hole later on where you can talk to Gordo in act 2
@@ -407,11 +409,13 @@ bool SceneScriptCT01::ClickedOnActor(int actorId) {
 						Actor_Says(kActorGordo, 40, 30); //02-0040.AUD	Unfortunately, my man, I got to book.
 						Actor_Modify_Friendliness_To_Other(kActorGordo, kActorMcCoy, -2);
 						Player_Loses_Control();
+						Actor_Set_Goal_Number(kActorGordo, kGoalGordoCT01WalkAway);
 					} else {
 						Actor_Says(kActorMcCoy, 4940, 13); //00-4940.AUD	Okay, let's have it.
 						Game_Flag_Set(kFlagGordoReceivedAutograph);
 						Actor_Change_Animation_Mode(kActorMcCoy, 23);
 						Delay(2000);
+						Actor_Modify_Friendliness_To_Other(kActorGordo, kActorMcCoy, 2);
 						Actor_Says(kActorMcCoy, 5600, 14);               // Let me ask you.
 						Actor_Says(kActorMcCoy, 385, 18); //00-0385.AUD	I'm looking for a girl about 14 years old with pink hair. You seen her?
 						if (Game_Flag_Query(kFlagGordoIsReplicant)) {
@@ -426,6 +430,7 @@ bool SceneScriptCT01::ClickedOnActor(int actorId) {
 							Actor_Says(kActorGordo, 450, 30); //02-0450.AUD	You ought to call in a few more of the hunters to clear the place out.
 							Actor_Says(kActorMcCoy, 3280, 15); //00-3280.AUD	Hunter? Ain’t too often I hear ‘em called that.
 							Actor_Clue_Acquire(kActorMcCoy, kClueGordoInterview3, false, kActorGordo);
+							Actor_Modify_Friendliness_To_Other(kActorGordo, kActorMcCoy, -2);
 							Delay(1000);
 						} else {
 							Actor_Says(kActorGordo, 430, 30);  //02-0430.AUD	She was one of those skin-jobs?
@@ -436,8 +441,8 @@ bool SceneScriptCT01::ClickedOnActor(int actorId) {
 						Actor_Says(kActorGordo, 40, 30); //02-0040.AUD	Unfortunately, my man, I got to book.
 						// McCoy will now receive the Gordo interview 3 clue regardless of Gordos replicant status. I have added in several new scenes involving Gordo and one of
 						// them can only occur if he is human and you have this clue.
-						Actor_Modify_Friendliness_To_Other(kActorGordo, kActorMcCoy, -2);
 						Player_Loses_Control();
+						Actor_Set_Goal_Number(kActorGordo, kGoalGordoCT01WalkAway);
 					}
 				} else {
 					Actor_Says(kActorMcCoy, 340, 13);

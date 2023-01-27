@@ -577,9 +577,10 @@ bool AIScriptOfficerGrayford::GoalChanged(int currentGoalNumber, int newGoalNumb
 		if (_vm->_cutContent) {
 			if (!Game_Flag_Query(kFlagMorajiAlive)) {
 				Actor_Says_With_Pause(kActorMcCoy, 970, 0.2f, 13); // Got a dead man here. Victim of an explosion.
-				Actor_Clue_Acquire(kActorMcCoy, kClueMorajiInterview, true, kActorMoraji);
-				Actor_Says(kActorMcCoy, 975, 12); // TODO - a bug? McCoy may not know Moraji's name here(?)
-				if (Actor_Clue_Query(kActorMcCoy, kClueMorajiInterview) == 1) {
+				if (Actor_Clue_Query(kActorMcCoy, kClueChewInterview)) {
+					Actor_Says(kActorMcCoy, 975, 12); //00-0975.AUD	His name is, er, was Moraji.
+				}
+				if (Game_Flag_Query(kFlagMorajiTalkSuspects)) {
 					Actor_Says(kActorMcCoy, 980, 16);
 					Actor_Says_With_Pause(kActorOfficerGrayford, 130, 0.1f, 13);
 					if (!Game_Flag_Query(kFlagMcCoyIsHelpingReplicants)) {
@@ -595,9 +596,14 @@ bool AIScriptOfficerGrayford::GoalChanged(int currentGoalNumber, int newGoalNumb
 			if (!Game_Flag_Query(kFlagMcCoyIsHelpingReplicants)) {
 				Actor_Says_With_Pause(kActorMcCoy, 995, 0.3f, 14); //00-0995.AUD	Appreciate it.
 			}
-			// If Moraji survives McCoy depending on his agenda, comforts Moraji or tries to question him. If he comforts him Moraji gives McCoy the DNA data and if
-			// McCoy questions him Moraji doesn't give him the data. Also made it so the scene eits enable.
-			if (Game_Flag_Query(kFlagMorajiAlive)) {
+			if (!Game_Flag_Query(kFlagMorajiAlive)) {
+				Actor_Face_Actor(kActorOfficerGrayford, kActorMoraji, true);
+				Actor_Change_Animation_Mode(kActorOfficerGrayford, 43);
+				Actor_Says(kActorOfficerGrayford, 170, kAnimationModeTalk); // This is 32, Sector 3. Reporting a homicide. Possible act of terrorism.
+				// If Moraji survives McCoy depending on his agenda, comforts Moraji or tries to question him. If he comforts him Moraji gives McCoy the DNA data and if
+				// McCoy questions him Moraji doesn't give him the data. Also made it so the scene eits enable.
+			} else {
+				Delay(1000);
 				Actor_Face_Actor(kActorMcCoy, kActorMoraji, true);
 				if (Player_Query_Agenda() == kPlayerAgendaSurly 
 				|| Player_Query_Agenda() == kPlayerAgendaErratic) {
@@ -635,25 +641,20 @@ bool AIScriptOfficerGrayford::GoalChanged(int currentGoalNumber, int newGoalNumb
 		}
 
 		Player_Gains_Control();
-
-		if (Actor_Query_Goal_Number(kActorMoraji) == kGoalMorajiDead) {
-			Actor_Face_Actor(kActorOfficerGrayford, kActorMoraji, true);
-		} else {
-			Actor_Face_Waypoint(kActorOfficerGrayford, 97, true);
-		}
-
-		Actor_Change_Animation_Mode(kActorOfficerGrayford, 43);
-
-		if (Player_Query_Current_Scene() == kSceneDR04) {
-			if (_vm->_cutContent) {
-				if (!Game_Flag_Query(kFlagMorajiAlive)) {
-					Actor_Says(kActorOfficerGrayford, 170, kAnimationModeTalk); // This is 32, Sector 3. Reporting a homicide. Possible act of terrorism.
-				}
+		if (!_vm->_cutContent) {
+			if (Actor_Query_Goal_Number(kActorMoraji) == kGoalMorajiDead) {
+				Actor_Face_Actor(kActorOfficerGrayford, kActorMoraji, true);
 			} else {
+				Actor_Face_Waypoint(kActorOfficerGrayford, 97, true);
+			}
+
+			Actor_Change_Animation_Mode(kActorOfficerGrayford, 43);
+
+			if (Player_Query_Current_Scene() == kSceneDR04) {
 				Actor_Says(kActorOfficerGrayford, 170, kAnimationModeTalk); // This is 32, Sector 3. Reporting a homicide. Possible act of terrorism.
 			}
-			Scene_Exits_Enable();
 		}
+		Scene_Exits_Enable();
 		return true;
 
 	case kGoalOfficerGrayfordPatrolsAtDR04a:

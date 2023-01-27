@@ -69,9 +69,9 @@ bool AIScriptBulletBob::Update() {
 		} else {
 			AI_Countdown_Timer_Reset(kActorBulletBob, kActorTimerAIScriptCustomTask2);
 			AI_Countdown_Timer_Start(kActorBulletBob, kActorTimerAIScriptCustomTask2, 10);
+			Actor_Modify_Friendliness_To_Other(kActorBulletBob, kActorMcCoy, -15);
 		}
 		Actor_Set_Goal_Number(kActorBulletBob, kGoalBulletBobWarningMcCoy);
-		Actor_Modify_Friendliness_To_Other(kActorBulletBob, kActorMcCoy, -15);
 		Game_Flag_Set(kFlagRC04McCoyCombatMode);
 	} else if ( Actor_Query_Goal_Number(kActorBulletBob) == kGoalBulletBobWarningMcCoy
 	        && !Player_Query_Combat_Mode()
@@ -150,9 +150,14 @@ void AIScriptBulletBob::ClickedByPlayer() {
 			if (Actor_Query_Goal_Number(kActorBulletBob) < kGoalBulletBobGone) {
 				Loop_Actor_Walk_To_Actor(kActorMcCoy, kActorBulletBob, 24, false, false);
 				Actor_Face_Actor(kActorMcCoy, kActorBulletBob, true);
-				Actor_Says(kActorMcCoy, 8915, 16); //00-8915.AUD	You got a minute, pal?
-				Actor_Says(kActorBulletBob, 1920, 36); //14-1920.AUD	Hey, Ray, relax! I'm your pal, ain't I?
-				Actor_Says(kActorBulletBob, 1930, 33); //14-1930.AUD	You don't have to step soft around me.
+				Actor_Says(kActorMcCoy, 3970, 13); //00-3970.AUD	Hey.
+				Actor_Says(kActorBulletBob, 0, 31); //14-0000.AUD	That a .45 blaster under your coat or you're just happy to be here?
+				if (Player_Query_Agenda() != kPlayerAgendaSurly 
+				&& Player_Query_Agenda() != kPlayerAgendaErratic) {
+					Actor_Says(kActorMcCoy, 2685, 13); //00-2685.AUD	Hmph. Very funny.
+				} else {
+					Actor_Says(kActorMcCoy, 665, 16); //00-0665.AUD	Real funny, pal.
+				}
 			}
 		}
 	}
@@ -314,11 +319,10 @@ bool AIScriptBulletBob::GoalChanged(int currentGoalNumber, int newGoalNumber) {
 						Actor_Says(kActorMcCoy, 4915, -1); //00-4915.AUD	I'm gonna put something away, but it ain't gonna be my gun.
 					} else {
 						Actor_Says(kActorMcCoy, 7860, -1); //00-7860.AUD	Stay right where you are.
-					}
-					Actor_Clue_Acquire(kActorMcCoy, kClueBobShotInSelfDefense, true, kActorBulletBob);
-					Actor_Set_Targetable(kActorBulletBob, true);
+					}	
 					// If Bullet Bob is a replicant and McCoy has discovered this when McCoy pulls his gun out this exchange will happen.
 					if (Game_Flag_Query(kFlagBulletBobIsReplicant)) {
+						Actor_Clue_Acquire(kActorMcCoy, kClueBobShotInSelfDefense, true, kActorBulletBob);
 						Actor_Says(kActorBulletBob, 1610, 33); //14-1610.AUD	I've had enough McCoy.
 						Actor_Face_Heading(kActorBulletBob, 240, true);
 						Delay(500);
@@ -401,6 +405,7 @@ bool AIScriptBulletBob::GoalChanged(int currentGoalNumber, int newGoalNumber) {
 						}
 						// If Bob is not a replicant he doesn't attack McCoy and the player will have the option to shoot him.
 					} else {
+						Actor_Set_Targetable(kActorBulletBob, true);
 						Actor_Says(kActorBulletBob, 1840, 34); //14-1840.AUD	Okay, okay, look.
 						Actor_Says(kActorBulletBob, 1850, 35); //14-1850.AUD	I didn't want to get you riled up for no reason but here's the real skinny.
 						Actor_Says(kActorMcCoy, 4320, -1); //00-4320.AUD	Save the pitch for someone who gives a shit.

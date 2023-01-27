@@ -243,6 +243,7 @@ void AIScriptHanoi::OtherAgentEnteredCombatMode(int otherActorId, int combatMode
 	} else if (Player_Query_Current_Scene() == kSceneNR08
 	&& otherActorId == kActorMcCoy
 	&& combatMode
+	&& _vm->_cutContent
 	) {
 		Actor_Face_Actor(kActorHanoi, kActorMcCoy, true);
 		Actor_Face_Actor(kActorMcCoy, kActorHanoi, true);
@@ -261,6 +262,7 @@ void AIScriptHanoi::OtherAgentEnteredCombatMode(int otherActorId, int combatMode
 	} else if (Player_Query_Current_Scene() == kSceneKP07
 	&& otherActorId == kActorMcCoy
 	&& combatMode
+	&& _vm->_cutContent
 	) {
 		Actor_Face_Actor(kActorHanoi, kActorMcCoy, true);
 		Actor_Change_Animation_Mode(kActorHanoi, kAnimationModeCombatAttack);

@@ -81,7 +81,7 @@ bool SceneScriptHF02::ClickedOn3DObject(const char *objectName, bool a2) {
 		if (Object_Query_Click("BARD_NEON", objectName)) {
 			if (!Loop_Actor_Walk_To_Scene_Object(kActorMcCoy, "BARD_NEON", 24, true, false)) {
 				Actor_Face_Object(kActorMcCoy, "BARD_NEON", true);
-				if (Global_Variable_Query(kVariableChinyen) >= 2
+				if (Global_Variable_Query(kVariableChinyen) >= 5
 				|| Query_Difficulty_Level() == kGameDifficultyEasy) {
 					Actor_Change_Animation_Mode(kActorMcCoy, 23);
 					Delay(2000);
@@ -89,6 +89,7 @@ bool SceneScriptHF02::ClickedOn3DObject(const char *objectName, bool a2) {
 					Delay(1000);
 					Actor_Change_Animation_Mode(kActorMcCoy, 23);
 					Delay(2000);
+					Item_Pickup_Spin_Effect(kModelAnimationDektorasCard, 115, 282);
 					if (Random_Query(1, 2) == 1) {
 						Actor_Voice_Over(1690, kActorVoiceOver); //99-1690.AUD	“Never seek to tell thy love, love that never told can be.
 						if (Player_Query_Agenda() == kPlayerAgendaSurly 
@@ -98,7 +99,7 @@ bool SceneScriptHF02::ClickedOn3DObject(const char *objectName, bool a2) {
 							Actor_Says(kActorMcCoy, 2340, kAnimationModeTalk); // 00-2340.AUD	I never did like poetry.
 						}
 						if (Query_Difficulty_Level() != kGameDifficultyEasy) {
-							Global_Variable_Decrement(kVariableChinyen, 2);
+							Global_Variable_Decrement(kVariableChinyen, 5);
 						}
 					} else {
 						Actor_Says(kActorMcCoy, 8525, 13); //00-8525.AUD	Hmph.
@@ -112,7 +113,7 @@ bool SceneScriptHF02::ClickedOn3DObject(const char *objectName, bool a2) {
 							Actor_Says(kActorMcCoy, 2340, kAnimationModeTalk); // 00-2340.AUD	I never did like poetry.
 						}
 						if (Query_Difficulty_Level() != kGameDifficultyEasy) {
-							Global_Variable_Decrement(kVariableChinyen, 2);
+							Global_Variable_Decrement(kVariableChinyen, 5);
 						}
 					}
 				} else {

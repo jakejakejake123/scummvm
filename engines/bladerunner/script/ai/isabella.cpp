@@ -170,6 +170,8 @@ void AIScriptIsabella::ClickedByPlayer() {
 								Actor_Says(kActorGordo, 1340, 12); //02-1340.AUD	She couldn’t keep anything down.
 								Actor_Says(kActorGordo, 1350, 11); //02-1350.AUD	So, I thought… maybe something different to eat would help.
 								Delay (2000);
+								Actor_Face_Actor(kActorIsabella, kActorMcCoy, true);
+								Actor_Face_Actor(kActorMcCoy, kActorIsabella, true);
 								Actor_Says(kActorMcCoy, 1970, 13); //00-1970.AUD	You should start thinking about the company you keep.
 								Actor_Says(kActorIsabella, 330, kAnimationModeTalk); //59-0330.AUD	You bet, mon. That cheese’s been nothing but trouble for Mama Isabella.
 							} else {

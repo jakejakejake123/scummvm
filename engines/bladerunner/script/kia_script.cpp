@@ -2516,14 +2516,20 @@ void KIAScript::SCRIPT_KIA_DLL_Play_Clue_Asset_Script(int notUsed, int clueId) {
 		// This is of some dialogue that I slightly modified where Runciters tells McCoy what the the suspects motives were and Runcitter confesses that he wsihed they killed him because
 		// his life is now ruined.
 	case kClueRunciterConfession1:
-		KIA_Play_Actor_Dialogue(kActorMcCoy, 4605); //00-4605.AUD	Could they have been Replicants?
-		KIA_Play_Actor_Dialogue(kActorRunciter, 140); // 15-0140.AUD	Who else would be capable of such barbaric acts?
-		KIA_Play_Actor_Dialogue(kActorRunciter, 310);  // 15-0310.AUD	They should have just killed me!
-		KIA_Play_Actor_Dialogue(kActorMcCoy, 8190); //00-8190.AUD	Why?
-		KIA_Play_Actor_Dialogue(kActorRunciter, 300); // 15-0300.AUD	Do you have any idea how much this is going to cost me? I'm ruined!		
-		KIA_Play_Actor_Dialogue(kActorRunciter, 90); // 15-0090.AUD	That snow tiger alone was worth more than most people will ever see in a lifetime. 
-		KIA_Play_Actor_Dialogue(kActorRunciter, 540); // 15-0540.AUD	I sacrificed everything to get that tiger. And now she's dead.
-		KIA_Play_Actor_Dialogue(kActorRunciter, 530); //15-0530.AUD	My precious one. She was my baby.
+		KIA_Play_Actor_Dialogue(kActorMcCoy, 5760);
+		if (!Game_Flag_Query(kFlagLutherLanceIsReplicant)) {
+			KIA_Play_Actor_Dialogue(kActorLuther, 370);
+		}
+		KIA_Play_Actor_Dialogue(kActorLance, 340); //13-0340.AUD	We just wanted to make some extra cash on the side.
+		KIA_Play_Actor_Dialogue(kActorLance, 350); //13-0350.AUD	So, I sold Runciter some of Tyrell’s state of the art animals.
+		KIA_Play_Actor_Dialogue(kActorLance, 360);  //13-0360.AUD	He was going to pawn them off as real.
+		if (Game_Flag_Query(kFlagLutherLanceIsReplicant)) {
+			KIA_Play_Actor_Dialogue(kActorLance, 370); //13-0370.AUD	Since Eldon is such a pain in the ass control freak…
+			KIA_Play_Actor_Dialogue(kActorLuther, 380); //10-0380.AUD	I’m sure he wasn’t too pleased.
+		}
+		KIA_Play_Actor_Dialogue(kActorMcCoy, 5840); 
+		KIA_Play_Actor_Dialogue(kActorLance, 380); //13-0380.AUD	It was all just a coincidence.
+		KIA_Play_Actor_Dialogue(kActorLance, 390); //13-0390.AUD	We just happened to be doing business with the same scumbag.
 		break;
 		// This the dialogue where Runciter confesses that he has a couple of friends who are genetic designers.
 	case kClueRunciterConfession2:

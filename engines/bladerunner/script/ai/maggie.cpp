@@ -668,7 +668,9 @@ bool AIScriptMaggie::GoalChanged(int currentGoalNumber, int newGoalNumber) {
 					Actor_Says(kActorClovis, 120, kAnimationModeTalk); //05-0120.AUD	Can’t see it yet? You came down to Terra with us, McCoy.
 					Actor_Says(kActorClovis, 130, kAnimationModeTalk); //05-0130.AUD	The police got a hold of you and Tyrell created your past.
 					Actor_Says(kActorClovis, 140, kAnimationModeTalk);
-					Actor_Says(kActorMcCoy, 2260, kAnimationModeTalk);
+					if (Actor_Clue_Query(kActorMcCoy, kCluePhoneCallClovis)) {
+						Actor_Says(kActorMcCoy, 2260, kAnimationModeTalk); //00-2260.AUD	That line almost worked before, Clovis.
+					}
 					Actor_Says(kActorClovis, 150, kAnimationModeTalk); //05-0150.AUD	Come join me. Our final party before returning to the heavens.
 					Actor_Says(kActorClovis, 1330, kAnimationModeTalk); //05-1330.AUD	To the Heavens, brother. Off-World.
 					Loop_Actor_Walk_To_XYZ(kActorClovis, -731.0f, 8.26f, -657.0f, 0, false, false, false);

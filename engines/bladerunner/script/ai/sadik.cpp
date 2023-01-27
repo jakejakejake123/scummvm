@@ -255,9 +255,9 @@ void AIScriptSadik::Retired(int byActorId) {
 	 && Actor_Query_Which_Set_In(kActorSadik) != kSetKP07
 	) {
 		if (_vm->_cutContent) {
+			Game_Flag_Reset(kFlagMcCoyIsHelpingReplicants);
 			if (Game_Flag_Query(kFlagSadikIsReplicant)) {
 				Actor_Modify_Friendliness_To_Other(kActorSteele, kActorMcCoy, 2);
-				Game_Flag_Reset(kFlagMcCoyIsHelpingReplicants);
 				if (Query_Difficulty_Level() != kGameDifficultyEasy) {
 					Global_Variable_Increment(kVariableChinyen, 200);		
 				}	
@@ -282,8 +282,7 @@ void AIScriptSadik::Retired(int byActorId) {
 
 		if (Global_Variable_Query(kVariableReplicantsSurvivorsAtMoonbus) == 0) {
 			Player_Loses_Control();
-			if (_vm->_cutContent) {
-				
+			if (_vm->_cutContent) {		
 				if (Actor_Query_In_Set(kActorRunciter, kSetKP07)) {
 					Loop_Actor_Walk_To_XYZ(kActorRunciter, -12.0f, -41.58f, 72.0f, 0, true, false, false);
 					Actor_Put_In_Set(kActorRunciter, kSceneKP06);
@@ -563,8 +562,7 @@ bool AIScriptSadik::GoalChanged(int currentGoalNumber, int newGoalNumber) {
 				|| Actor_Clue_Query(kActorMcCoy, kClueMcCoyShotGuzza)) { 
 					Actor_Says(kActorSadik, 180, kAnimationModeTalk); //08-0180.AUD	My woman? She be killed by a Blade Runner. Revenge all I got left.
 					Actor_Says(kActorSadik, 190, kAnimationModeTalk);
-					if (Player_Query_Agenda() == kPlayerAgendaSurly 
-					|| Player_Query_Agenda() == kPlayerAgendaErratic) {
+					if (Player_Query_Agenda() != kPlayerAgendaPolite) {
 						Actor_Says(kActorMcCoy, 2310, kAnimationModeTalk); //00-2310.AUD	I understand.
 					} else {
 						Actor_Says(kActorMcCoy, 4880, 13); //00-4880.AUD	Is that right?

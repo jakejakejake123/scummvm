@@ -213,6 +213,9 @@ bool AIScriptClovis::ShotAtAndHit() {
 			Actor_Set_Goal_Number(kActorClovis, kGoalClovisGone);
 			shotAnim();
 			Actor_Set_Targetable(kActorClovis, false);
+			if (_vm->_cutContent) {
+				Game_Flag_Set(kFlagMcCoyRetiredClovis);
+			}
 			Music_Stop(3u);
 			if (_vm->_cutContent) {
 				if (Query_Difficulty_Level() != kGameDifficultyEasy) {
@@ -563,7 +566,13 @@ bool AIScriptClovis::GoalChanged(int currentGoalNumber, int newGoalNumber) {
 			Actor_Says(kActorClovis, 120, kAnimationModeTalk); //05-0120.AUD	Can’t see it yet? You came down to Terra with us, McCoy.
 			Actor_Says(kActorClovis, 130, kAnimationModeTalk); //05-0130.AUD	The police got a hold of you and Tyrell created your past.
 			Actor_Says(kActorClovis, 140, kAnimationModeTalk); //05-0140.AUD	They made you the experiment.
-			Actor_Says(kActorMcCoy, 2260, kAnimationModeTalk); //00-2260.AUD	That line almost worked before, Clovis.
+			if (_vm->_cutContent) {
+				if (Actor_Clue_Query(kActorMcCoy, kCluePhoneCallClovis)) {
+					Actor_Says(kActorMcCoy, 2260, kAnimationModeTalk); //00-2260.AUD	That line almost worked before, Clovis.
+				}
+			} else {
+				Actor_Says(kActorMcCoy, 2260, kAnimationModeTalk); //00-2260.AUD	That line almost worked before, Clovis.
+			}
 			Actor_Says(kActorClovis, 150, kAnimationModeTalk); //05-0150.AUD	Come join me. Our final party before returning to the heavens.
 			if (_vm->_cutContent) {
 				Actor_Says(kActorClovis, 1330, kAnimationModeTalk); //05-1330.AUD	To the Heavens, brother. Off-World.

@@ -68,6 +68,7 @@ void SceneScriptRC51::SceneLoaded() {
 	}
 	if (!Game_Flag_Query(kFlagRC51ToyDogTaken)) {
 		if (_vm->_cutContent) {
+			Item_Add_To_World(kItemNote, kModelAnimationDektorasCard, kSetRC02_RC51, 49.59f, -1194.42f, 107997.89f, 0, 6, 6, false, true, false, true);
 			Item_Add_To_World(kItemToyDog, kModelAnimationToyDog, kSetRC02_RC51, 17.43f, -1238.71f, 108002.29f, 256, 18, 18, false, true, false, true);
 		} else {
 			Item_Add_To_World(kItemToyDog, kModelAnimationToyDog, kSetRC02_RC51, -69.65f, -1238.89f, 107995.24f, 256, 18, 18, false, true, false, true);
@@ -83,13 +84,6 @@ bool SceneScriptRC51::ClickedOn3DObject(const char *objectName, bool a2) {
 	if (Object_Query_Click("POSTER_2", objectName)) {
 		Actor_Face_Object(kActorMcCoy, "POSTER_2", true);
 		Actor_Says(kActorMcCoy, 8620, 3);
-		// Jake - Added in the frog and toad are friends line. From our conversations we came to the conclusion that this line
-		// was related to Lucy. So I figured the best place to put it was on the poster above Lucys desk. She wrote the message
-		// on the poster of the cute monkeys and it gives us a view into her innocent nature.
-		if (_vm->_cutContent) {
-			Actor_Says(kActorMcCoy, 8525, 3); //00-8525.AUD	Hmph.
-			Actor_Says(kActorMcCoy, 250, 3); //00-0250.AUD	Frog and toad are friends. What the hell is that?
-		}
 		return true;
 	}
 	return false;
@@ -155,6 +149,23 @@ bool SceneScriptRC51::ClickedOnItem(int itemId, bool a2) {
 			Actor_Says(kActorMcCoy, 8740, 3);
 			Game_Flag_Set(kFlagRC51ToyDogTaken);
 			return true;
+		}
+	}
+
+	if (_vm->_cutContent) {
+		if (itemId == kItemNote) {
+			if (!Loop_Actor_Walk_To_Item(kActorMcCoy, kItemNote, 36, true, false)) {
+				Actor_Face_Item(kActorMcCoy, kItemNote, true);
+				Actor_Change_Animation_Mode(kActorMcCoy, 23);
+				Delay(2000);
+				Item_Remove_From_World(kItemNote);
+				Item_Pickup_Spin_Effect(kModelAnimationDektorasCard, 386, 232);
+				Actor_Says(kActorMcCoy, 8835, 13);	//00-8835.AUD	A card.
+				Delay(1000);
+				Actor_Says(kActorMcCoy, 250, 3); //00-0250.AUD	Frog and toad are friends. What the hell is that?
+				Actor_Says(kActorMcCoy, 8525, 3); //00-8525.AUD	Hmph.
+				return true;
+			}
 		}
 	}
 	return false;

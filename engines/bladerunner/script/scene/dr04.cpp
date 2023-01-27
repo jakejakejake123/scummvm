@@ -141,6 +141,7 @@ bool SceneScriptDR04::ClickedOnActor(int actorId) {
 				Actor_Says_With_Pause(kActorMoraji, 40, 0.0f, kAnimationModeTalk);
 				Actor_Says(kActorMoraji, 50, kAnimationModeTalk);
 				if (_vm->_cutContent) {
+					Game_Flag_Set(kFlagMorajiTalkSuspects);
 					if (Actor_Clue_Query(kActorMcCoy, kClueChewInterview)) {
 						Actor_Clue_Acquire(kActorMcCoy, kClueMorajiInterview, true, kActorMoraji);
 					}

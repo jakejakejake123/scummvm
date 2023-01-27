@@ -551,7 +551,6 @@ bool AIScriptMcCoy::GoalChanged(int currentGoalNumber, int newGoalNumber) {
 	case kGoalMcCoyNR01GetUp:
 		Actor_Face_Heading(kActorMcCoy, 512, false);
 		Actor_Face_Heading(kActorMcCoy, 768, true);
-		// Added in some dialogue for McCoy when he is thrown out of Early Qs club.
 		if (_vm->_cutContent) {
 			Player_Set_Combat_Mode(false);
 		}
@@ -707,40 +706,42 @@ bool AIScriptMcCoy::GoalChanged(int currentGoalNumber, int newGoalNumber) {
 	case 400:
 		Actor_Set_Health(kActorMcCoy, 50, 50);
 		Game_Flag_Set(kFlagKP02Available);
-		affectionTowards = Global_Variable_Query(kVariableAffectionTowards);
-		if (affectionTowards == kAffectionTowardsSteele) {
-			Actor_Modify_Friendliness_To_Other(kActorSteele, kActorMcCoy, 3);
-		} else if (affectionTowards == kAffectionTowardsDektora) {
-			Actor_Modify_Friendliness_To_Other(kActorSteele, kActorMcCoy, -5);
-			Actor_Modify_Friendliness_To_Other(kActorClovis, kActorMcCoy, 3);
-		} else if (affectionTowards == kAffectionTowardsLucy) {
-			Actor_Modify_Friendliness_To_Other(kActorSteele, kActorMcCoy, -5);
-			Actor_Modify_Friendliness_To_Other(kActorClovis, kActorMcCoy, 5);
-		}
-
-		if (Game_Flag_Query(kFlagMcCoyFreedOfAccusations)) {
-			Actor_Modify_Friendliness_To_Other(kActorSteele, kActorMcCoy, 3);
-		}
-
-		if (Actor_Query_Friendliness_To_Other(kActorSteele, kActorMcCoy) < Actor_Query_Friendliness_To_Other(kActorClovis, kActorMcCoy)) {
-			Game_Flag_Set(kFlagMcCoyIsHelpingReplicants);
-		}
-
-		affectionTowards = Global_Variable_Query(kVariableAffectionTowards);
-		if (affectionTowards == kAffectionTowardsSteele) {
-			if (Game_Flag_Query(kFlagMcCoyIsHelpingReplicants)) {
-				Global_Variable_Set(kVariableAffectionTowards, kAffectionTowardsNone);
+		if (!_vm->_cutContent) {
+			affectionTowards = Global_Variable_Query(kVariableAffectionTowards);
+			if (affectionTowards == kAffectionTowardsSteele) {
+				Actor_Modify_Friendliness_To_Other(kActorSteele, kActorMcCoy, 3);
+			} else if (affectionTowards == kAffectionTowardsDektora) {
+				Actor_Modify_Friendliness_To_Other(kActorSteele, kActorMcCoy, -5);
+				Actor_Modify_Friendliness_To_Other(kActorClovis, kActorMcCoy, 3);
+			} else if (affectionTowards == kAffectionTowardsLucy) {
+				Actor_Modify_Friendliness_To_Other(kActorSteele, kActorMcCoy, -5);
+				Actor_Modify_Friendliness_To_Other(kActorClovis, kActorMcCoy, 5);
 			}
-		} else if (affectionTowards == kAffectionTowardsDektora
-		        || affectionTowards == kAffectionTowardsLucy
-		) {
+
+			if (Game_Flag_Query(kFlagMcCoyFreedOfAccusations)) {
+				Actor_Modify_Friendliness_To_Other(kActorSteele, kActorMcCoy, 3);
+			}
+
+			if (Actor_Query_Friendliness_To_Other(kActorSteele, kActorMcCoy) < Actor_Query_Friendliness_To_Other(kActorClovis, kActorMcCoy)) {
+				Game_Flag_Set(kFlagMcCoyIsHelpingReplicants);
+			}
+
+			affectionTowards = Global_Variable_Query(kVariableAffectionTowards);
+			if (affectionTowards == kAffectionTowardsSteele) {
+				if (Game_Flag_Query(kFlagMcCoyIsHelpingReplicants)) {
+					Global_Variable_Set(kVariableAffectionTowards, kAffectionTowardsNone);
+				}
+			} else if (affectionTowards == kAffectionTowardsDektora
+					|| affectionTowards == kAffectionTowardsLucy
+			) {
+				if (!Game_Flag_Query(kFlagMcCoyIsHelpingReplicants)) {
+					Global_Variable_Set(kVariableAffectionTowards, kAffectionTowardsNone);
+				}
+			}
+
 			if (!Game_Flag_Query(kFlagMcCoyIsHelpingReplicants)) {
-				Global_Variable_Set(kVariableAffectionTowards, kAffectionTowardsNone);
+				Game_Flag_Set(kFlagMaggieHasBomb);
 			}
-		}
-
-		if (!Game_Flag_Query(kFlagMcCoyIsHelpingReplicants)) {
-			Game_Flag_Set(kFlagMaggieHasBomb);
 		}
 
 		Ambient_Sounds_Remove_All_Non_Looping_Sounds(true);

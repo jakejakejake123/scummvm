@@ -700,6 +700,7 @@ void SceneScriptUG16::dialogueWithLuther() {
 		Actor_Says(kActorLance, 380, 13); //13-0380.AUD	It was all just a coincidence.
 		if (_vm->_cutContent) {
 			Actor_Says(kActorLance, 390, 6); //13-0390.AUD	We just happened to be doing business with the same scumbag.
+			Actor_Clue_Acquire(kActorMcCoy, kClueRunciterConfession1, true, kActorLance);
 		}
 		break;
 

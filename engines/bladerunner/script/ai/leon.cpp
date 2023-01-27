@@ -293,7 +293,6 @@ bool AIScriptLeon::GoalChanged(int currentGoalNumber, int newGoalNumber) {
 		Actor_Says(kActorMcCoy, 510, kAnimationModeTalk); //00-0510.AUD	I'm thinking of changing jobs.
 		Actor_Says(kActorLeon, 50, kAnimationModeTalk); //62-0050.AUD	You should have done it long ago. Now you're out of time, LPD. Good night!
 		Actor_Start_Speech_Sample(kActorMcCoy, 8509); //00-8509.AUD	Wait a minute.
-		Delay (500);
 		Actor_Change_Animation_Mode(kActorLeon, kAnimationModeCombatAttack);
 		Delay (500);
 		Ambient_Sounds_Play_Sound(kSfxKICK2, 90, 99, 0, 0);

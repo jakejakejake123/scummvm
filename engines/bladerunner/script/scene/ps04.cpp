@@ -319,13 +319,7 @@ void SceneScriptPS04::dialogueWithGuzza() {
 
 	switch (answer) {
 	case 110: // REQUEST TYRELL MEETING
-		if (_vm->_cutContent) {
-			if (Actor_Query_Friendliness_To_Other(kActorGuzza, kActorMcCoy) < 51) {
-				Actor_Says(kActorGuzza, 420, 31);
-			} 
-		} else {
-			Actor_Says(kActorGuzza, 420, 31);
-		}
+		Actor_Says(kActorGuzza, 420, 31);
 		Actor_Says(kActorMcCoy, 3990, 19);
 		Actor_Says(kActorMcCoy, 3995, 17); 
 		if (_vm->_cutContent) {

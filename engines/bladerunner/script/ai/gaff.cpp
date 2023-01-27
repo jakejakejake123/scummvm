@@ -494,6 +494,12 @@ bool AIScriptGaff::GoalChanged(int currentGoalNumber, int newGoalNumber) {
 			if (_vm->_cutContent) {
 				if (Actor_Query_Friendliness_To_Other(kActorGaff, kActorMcCoy) < 50) {
 					Actor_Says_With_Pause(kActorGaff, 180, 1.0f, 12); //53-0180.AUD	You killed anyone yet?
+					if (!Game_Flag_Query(kFlagMcCoyRetiredHuman)) {
+						Actor_Says(kActorMcCoy, 7815, 16); //00-7815.AUD	No.
+						Delay(1000);
+					} else {
+						Delay(2000);
+					}
 				}
 			} else {
 				Actor_Says_With_Pause(kActorGaff, 180, 1.0f, 12); //53-0180.AUD	You killed anyone yet?
