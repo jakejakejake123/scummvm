@@ -112,10 +112,10 @@ bool SceneScriptTB05::ClickedOn3DObject(const char *objectName, bool a2) {
 						Actor_Change_Animation_Mode(kActorMcCoy, 23);
 						Delay(2000);
 						Ambient_Sounds_Play_Sound(kSfxBEEPNEAT, 80, 0, 0, 99);
-						Delay(2000);
+						Delay(1000);
 						Actor_Voice_Over(2230, kActorVoiceOver);;
 						Actor_Change_Animation_Mode(kActorMcCoy, 23);
-						Delay(2000);
+						Delay(800);
 					} else {
 						Actor_Voice_Over(2230, kActorVoiceOver); //99-2230.AUD	Eisenduller had used his dog's name as a password.
 					}		
@@ -127,7 +127,6 @@ bool SceneScriptTB05::ClickedOn3DObject(const char *objectName, bool a2) {
 							Actor_Voice_Over(2250, kActorVoiceOver);
 							Actor_Voice_Over(2260, kActorVoiceOver);
 						} else {
-							Delay(500);
 							Actor_Voice_Over(130, kActorVoiceOver); //99-0130.AUD	DNA research, incept dates.
 						}
 					} else {
@@ -141,6 +140,8 @@ bool SceneScriptTB05::ClickedOn3DObject(const char *objectName, bool a2) {
 					if (_vm->_cutContent) {
 						Actor_Change_Animation_Mode(kActorMcCoy, 23);
 						Delay(2000);
+						Sound_Play(kSfxELEBAD1, 100, 0, 0, 50);
+						Delay(1000);
 					}
 					Actor_Voice_Over(2270, kActorVoiceOver);
 					Game_Flag_Set(kFlagTB05MonitorUnlockAttempt);
@@ -163,10 +164,10 @@ bool SceneScriptTB05::ClickedOn3DObject(const char *objectName, bool a2) {
 						Actor_Change_Animation_Mode(kActorMcCoy, 23);
 						Delay(2000);
 						Ambient_Sounds_Play_Sound(kSfxBEEPNEAT, 80, 0, 0, 99);
-						Delay(2000);
+						Delay(1000);
 						Actor_Voice_Over(2230, kActorVoiceOver);
 						Actor_Change_Animation_Mode(kActorMcCoy, 23);
-						Delay(2000);
+						Delay(800);
 					} else {
 						Actor_Voice_Over(2230, kActorVoiceOver); //99-2230.AUD	Eisenduller had used his dog's name as a password.
 					}				
@@ -177,7 +178,6 @@ bool SceneScriptTB05::ClickedOn3DObject(const char *objectName, bool a2) {
 							Actor_Voice_Over(2250, kActorVoiceOver);
 							Actor_Voice_Over(2260, kActorVoiceOver);
 						} else {
-							Delay(500);
 							Actor_Voice_Over(130, kActorVoiceOver); //99-0130.AUD	DNA research, incept dates.
 						}
 					} else {
@@ -190,6 +190,8 @@ bool SceneScriptTB05::ClickedOn3DObject(const char *objectName, bool a2) {
 					if (_vm->_cutContent) {
 						Actor_Change_Animation_Mode(kActorMcCoy, 23);
 						Delay(2000);
+						Sound_Play(kSfxELEBAD1, 100, 0, 0, 50);
+						Delay(1000);
 					}
 					Actor_Voice_Over(2280, kActorVoiceOver);
 					Actor_Voice_Over(2290, kActorVoiceOver);
@@ -255,6 +257,7 @@ bool SceneScriptTB05::ClickedOnExit(int exitId) {
 		if (!Loop_Actor_Walk_To_XYZ(kActorMcCoy, 23.0f, 151.53f, -205.0f, 12, true, false, false)) {
 			// Added in some dialogue for when McCoy first enters the grav lab. The smell of charred flesh and burnt walls is still quite pungent.
 			if (_vm->_cutContent) {
+				Actor_Face_Heading(kActorMcCoy, 10, false);
 				if (!Game_Flag_Query(kFlagTB05toTB06)) {
 					Actor_Says(kActorMcCoy, 8650, kAnimationModeTalk); //00-8650.AUD	What smells in there?
 					Actor_Says(kActorMcCoy, 8660, kAnimationModeTalk);  //00-8660.AUD	I think something's burning.

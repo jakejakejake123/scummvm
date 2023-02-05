@@ -137,6 +137,10 @@ bool SceneScriptMA02::ClickedOn3DObject(const char *objectName, bool a2) {
 			} else if (Global_Variable_Query(kVariableChapter) == 5) {
 				Actor_Says(kActorMcCoy, 7815, 13); //00-7815.AUD	No.
 			} else {
+				Loop_Actor_Walk_To_XYZ(kActorMcCoy, -128.29f, -143.71f, 466.25f, 0, true, false, false);
+				Actor_Face_Object(kActorMcCoy, "E-ESPER", true);
+				Actor_Change_Animation_Mode(kActorMcCoy, 23);
+				Delay(800);
 				ESPER_Flag_To_Activate();
 			}
 		} else {
@@ -255,19 +259,16 @@ void SceneScriptMA02::PlayerWalkedIn() {
 				Player_Loses_Control();
 				Loop_Actor_Walk_To_XYZ(kActorMcCoy, -29.0f, -140.4f, 298.0f, 36, true, false, false);
 				Actor_Change_Animation_Mode(kActorMcCoy, 23);
-				Delay(2000);
+				Delay(800);
 				Overlay_Remove("MA02OVER");
 				Item_Pickup_Spin_Effect(kModelAnimationCrystalsCigarette, 480, 240);
 				Actor_Clue_Acquire(kActorMcCoy, kClueCrystalsCigarette, true, kActorSteele);
+				Delay(800);
 				Player_Gains_Control();
 				Actor_Voice_Over(1770, kActorVoiceOver);
 				Actor_Voice_Over(1150, kActorVoiceOver); //99-1150.AUD	It wasn’t any mystery.
 				Actor_Voice_Over(1160, kActorVoiceOver); //99-1160.AUD	And if I’d gotten home a few minutes earlier…
 				Actor_Voice_Over(1170, kActorVoiceOver); //99-1170.AUD	it would have been me down there on the killing floor.
-				if (Player_Query_Agenda() == kPlayerAgendaSurly 
-				|| Player_Query_Agenda() == kPlayerAgendaErratic) {
-					Actor_Voice_Over(1200, kActorVoiceOver); //99-1200.AUD	But now I had a little message of my own to deliver.
-				}
 			} else if (Global_Variable_Query(kVariableAffectionTowards) == kAffectionTowardsDektora
 			|| Global_Variable_Query(kVariableAffectionTowards) == kAffectionTowardsLucy) {
 				if (Game_Flag_Query(kFlagDektoraIsReplicant)) {
@@ -280,15 +281,14 @@ void SceneScriptMA02::PlayerWalkedIn() {
 					Delay(2000);
 					Player_Loses_Control();
 					Loop_Actor_Walk_To_XYZ(kActorMcCoy, -29.0f, -140.4f, 298.0f, 36, true, false, false);
-					Delay(1000);
+					Delay(800);
 					Overlay_Remove("MA02OVER");
 					Item_Pickup_Spin_Effect(kModelAnimationCrystalsCigarette, 480, 240);
 					Actor_Clue_Acquire(kActorMcCoy, kClueCrystalsCigarette, true, kActorSteele);
+					Delay(800);
 					Player_Gains_Control();
 					Actor_Voice_Over(1770, kActorVoiceOver);
 					Actor_Voice_Over(1150, kActorVoiceOver); //99-1150.AUD	It wasn’t any mystery.
-					Actor_Voice_Over(1160, kActorVoiceOver); //99-1160.AUD	And if I’d gotten home a few minutes earlier…
-					Actor_Voice_Over(1170, kActorVoiceOver); //99-1170.AUD	it would have been me down there on the killing floor.
 					Actor_Voice_Over(1180, kActorVoiceOver); //99-1180.AUD	No, it was a message. Plain and simple.
 					Actor_Voice_Over(1190, kActorVoiceOver); //99-1190.AUD	Crystal was giving me one last chance to disappear.
 					if (Player_Query_Agenda() == kPlayerAgendaSurly 
@@ -305,15 +305,14 @@ void SceneScriptMA02::PlayerWalkedIn() {
 					Delay(2000);
 					Player_Loses_Control();
 					Loop_Actor_Walk_To_XYZ(kActorMcCoy, -29.0f, -140.4f, 298.0f, 36, true, false, false);
-					Delay(1000);
+					Delay(800);
 					Overlay_Remove("MA02OVER");
 					Item_Pickup_Spin_Effect(kModelAnimationCrystalsCigarette, 480, 240);
 					Actor_Clue_Acquire(kActorMcCoy, kClueCrystalsCigarette, true, kActorSteele);
+					Delay(800);
 					Player_Gains_Control();
 					Actor_Voice_Over(1770, kActorVoiceOver);
 					Actor_Voice_Over(1150, kActorVoiceOver); //99-1150.AUD	It wasn’t any mystery.
-					Actor_Voice_Over(1160, kActorVoiceOver); //99-1160.AUD	And if I’d gotten home a few minutes earlier…
-					Actor_Voice_Over(1170, kActorVoiceOver); //99-1170.AUD	it would have been me down there on the killing floor.
 					Actor_Voice_Over(1180, kActorVoiceOver); //99-1180.AUD	No, it was a message. Plain and simple.
 					Actor_Voice_Over(1190, kActorVoiceOver); //99-1190.AUD	Crystal was giving me one last chance to disappear.
 					if (Player_Query_Agenda() == kPlayerAgendaSurly 

@@ -162,7 +162,6 @@ bool SceneScriptMA01::ClickedOnExit(int exitId) {
 							Game_Flag_Set(kFlagCT01ZubenGone);
 							AI_Movement_Track_Flush(kActorZuben);
 							Actor_Face_Actor(kActorZuben, kActorMcCoy, true);
-							Music_Stop(3u);
 							Player_Set_Combat_Mode(false);
 							Actor_Face_Actor(kActorMcCoy, kActorZuben, true);
 							Actor_Face_Actor(kActorZuben, kActorMcCoy, true);
@@ -170,19 +169,40 @@ bool SceneScriptMA01::ClickedOnExit(int exitId) {
 							Actor_Says(kActorZuben, 100, 19);
 							Actor_Says(kActorMcCoy, 470, 12); //00-0470.AUD	Just talk. That's all.
 							Actor_Says(kActorZuben, 110, 18);
+							Music_Stop(1u);
 							Actor_Says(kActorMcCoy, 475, 12);
 							Actor_Says(kActorZuben, 120, 15);
 							Actor_Says(kActorMcCoy, 480, 16);
 							Actor_Says(kActorZuben, 130, 17);
 							Actor_Says(kActorMcCoy, 485, 14);
 							Loop_Actor_Walk_To_XYZ(kActorZuben, 950.09f, 0.93f, 170.97f, 0, false, true, false);
-							Game_Flag_Set(kFlagZubenSpared);
-							Game_Flag_Set(kFlagZubenEncounter);
-							Actor_Clue_Acquire(kActorZuben, kClueMcCoyLetZubenEscape, true, -1);
-							Actor_Clue_Acquire(kActorLucy, kClueMcCoyLetZubenEscape, true, -1);
-							Actor_Modify_Friendliness_To_Other(kActorSteele, kActorMcCoy, -1);
-							Actor_Modify_Friendliness_To_Other(kActorGuzza, kActorMcCoy, -1);
-							Actor_Modify_Friendliness_To_Other(kActorClovis, kActorMcCoy, 1);
+							if (Player_Query_Agenda() == kPlayerAgendaSurly 
+							|| Player_Query_Agenda() == kPlayerAgendaErratic) {
+								Player_Set_Combat_Mode(true);
+								Delay(1500);
+								Actor_Face_Actor(kActorMcCoy, kActorZuben, true);
+								Actor_Start_Speech_Sample(kActorMcCoy, 490); //00-0490.AUD	Suck on this, skin-job!
+								Sound_Play(kSfxGUNH1A, 100, 0, 0, 50);
+								Actor_Change_Animation_Mode(kActorMcCoy, 6);
+								Actor_Modify_Friendliness_To_Other(kActorSteele, kActorMcCoy, 1);
+								Actor_Modify_Friendliness_To_Other(kActorGuzza, kActorMcCoy, 1);
+								Actor_Modify_Friendliness_To_Other(kActorClovis, kActorMcCoy, -1);
+								Actor_Modify_Friendliness_To_Other(kActorHowieLee, kActorMcCoy, -1);
+								Actor_Clue_Acquire(kActorZuben, kClueMcCoyShotZubenInTheBack, true, -1);
+								Actor_Clue_Lose(kActorZuben, kClueMcCoyLetZubenEscape);
+								Actor_Clue_Acquire(kActorMcCoy, kClueMcCoyShotZubenInTheBack, true, kActorZuben);
+								Game_Flag_Reset(kFlagMcCoyIsHelpingReplicants);
+								Game_Flag_Set(kFlagZubenEncounter);
+							} else {
+								Game_Flag_Set(kFlagZubenSpared);
+								Game_Flag_Set(kFlagZubenEncounter);
+								Actor_Clue_Acquire(kActorZuben, kClueMcCoyLetZubenEscape, true, -1);
+								Actor_Clue_Acquire(kActorLucy, kClueMcCoyLetZubenEscape, true, -1);
+								Actor_Modify_Friendliness_To_Other(kActorSteele, kActorMcCoy, -2);
+								Actor_Modify_Friendliness_To_Other(kActorGuzza, kActorMcCoy, -2);
+								Actor_Modify_Friendliness_To_Other(kActorClovis, kActorMcCoy, 2);
+								Actor_Modify_Friendliness_To_Other(kActorHowieLee, kActorMcCoy, 2);
+							}
 							if (Random_Query(1, 3) < 3) {
 								Actor_Clue_Acquire(kActorZuben, kClueMcCoysDescription, true, -1);
 							}
@@ -193,7 +213,6 @@ bool SceneScriptMA01::ClickedOnExit(int exitId) {
 						}
 					}
 				}
-			// Made it so if McCoy retired Zuben and exited the warehouse through the back skipping the conversation with McCoy Gaff will meet McCoy on the roof.
 			} else if (Game_Flag_Query(kFlagCT01TalkToHowieAfterZubenMissing)
 			&& !Actor_Clue_Query(kActorMcCoy, kClueGaffsInformation)
 			&& !Loop_Actor_Walk_To_XYZ(kActorMcCoy, 1446.0f, 0.0f, -725.0f, 72, true, false, false)) {

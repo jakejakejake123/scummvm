@@ -205,6 +205,29 @@ void AIScriptEarlyQ::ClickedByPlayer() {
 				Actor_Face_Actor(kActorEarlyQ, kActorMcCoy, true);
 				Actor_Says(kActorMcCoy, 8513, 18); //00-8513.AUD	Early, how's it hanging?
 				Actor_Says(kActorEarlyQ, 360, kAnimationModeTalk); //18-0360.AUD	Thick, slick and hard as a brick. How’s yours, General?
+				if (Player_Query_Agenda() != kPlayerAgendaSurly 
+				&& Player_Query_Agenda() != kPlayerAgendaErratic) {
+					if (Actor_Clue_Query(kActorMcCoy, kClueCollectionReceipt) 
+					||  Actor_Clue_Query(kActorMcCoy, kClueEarlyQsClub)) {
+						Actor_Says(kActorMcCoy, 5150, 18); //00-5150.AUD	One more thing.
+						Actor_Change_Animation_Mode(kActorMcCoy, 23);
+						Actor_Change_Animation_Mode(kActorEarlyQ, 23);
+						Delay(800);
+						if (Actor_Clue_Query(kActorMcCoy, kClueCollectionReceipt)) {
+							Actor_Clue_Lose(kActorMcCoy, kClueCollectionReceipt);
+							Actor_Clue_Acquire(kActorEarlyQ, kClueCollectionReceipt, true, -1);
+							Item_Pickup_Spin_Effect_From_Actor(kModelAnimationCollectionReceipt, kActorEarlyQ, 0, 0);
+							Delay(1500);
+						} 
+						if (Actor_Clue_Query(kActorMcCoy, kClueEarlyQsClub)) {
+							Actor_Clue_Lose(kActorMcCoy, kClueEarlyQsClub);
+							Actor_Clue_Acquire(kActorEarlyQ, kClueEarlyQsClub, true, -1);
+							Item_Pickup_Spin_Effect_From_Actor(kModelAnimationVideoDisc, kActorEarlyQ, 0, 0);
+							Delay(1500);
+						}
+						Actor_Says(kActorMcCoy, 8170, 13); //00-8170.AUD	There you go.
+					}
+				}
 			}
 		}
 		if (Game_Flag_Query(kFlagEarlyQDead)) {

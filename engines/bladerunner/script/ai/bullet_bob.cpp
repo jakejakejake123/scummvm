@@ -155,6 +155,35 @@ void AIScriptBulletBob::ClickedByPlayer() {
 				if (Player_Query_Agenda() != kPlayerAgendaSurly 
 				&& Player_Query_Agenda() != kPlayerAgendaErratic) {
 					Actor_Says(kActorMcCoy, 2685, 13); //00-2685.AUD	Hmph. Very funny.
+					if (Actor_Clue_Query(kActorMcCoy, kClueBobRobbed)) {
+						if (Actor_Clue_Query(kActorMcCoy, kClueGoldfish) 
+						||  Actor_Clue_Query(kActorMcCoy, kClueGarterSnake)
+						||	Actor_Clue_Query(kActorMcCoy, kClueSlug)) {
+							Actor_Says(kActorMcCoy, 5150, 18); //00-5150.AUD	One more thing.
+							Actor_Change_Animation_Mode(kActorMcCoy, 23);
+							Actor_Change_Animation_Mode(kActorBulletBob, 23);
+							Delay(800);
+							if (Actor_Clue_Query(kActorMcCoy, kClueGoldfish)) {
+								Actor_Clue_Lose(kActorMcCoy, kClueGoldfish);
+								Actor_Clue_Acquire(kActorBulletBob, kClueGoldfish, true, -1);
+								Item_Pickup_Spin_Effect_From_Actor(kModelAnimationGoldfish, kActorBulletBob, 0, 0);
+								Delay(1500);
+							} 
+							if (Actor_Clue_Query(kActorMcCoy, kClueGarterSnake)) {
+								Actor_Clue_Lose(kActorMcCoy, kClueGarterSnake);
+								Actor_Clue_Acquire(kActorBulletBob, kClueGarterSnake, true, -1);
+								Item_Pickup_Spin_Effect_From_Actor(kModelAnimationGarterSnake, kActorBulletBob, 0, 0);
+								Delay(1500);
+							} 
+							if (Actor_Clue_Query(kActorMcCoy, kClueSlug)) {
+								Actor_Clue_Lose(kActorMcCoy, kClueSlug);
+								Actor_Clue_Acquire(kActorBulletBob, kClueSlug, true, -1);
+								Item_Pickup_Spin_Effect_From_Actor(kModelAnimationSlug, kActorBulletBob, 0, 0);
+								Delay(1500);
+							} 
+							Actor_Says(kActorMcCoy, 8170, 13); //00-8170.AUD	There you go.
+						}
+					}
 				} else {
 					Actor_Says(kActorMcCoy, 665, 16); //00-0665.AUD	Real funny, pal.
 				}

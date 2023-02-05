@@ -80,7 +80,15 @@ bool SceneScriptKP06::ClickedOnActor(int actorId) {
 	) {
 		if (Actor_Clue_Query(kActorSadik, kCluePowerSource)) {
 			Actor_Face_Actor(kActorMcCoy, kActorSadik, true);
-			Actor_Says(kActorMcCoy, 8610, 15);
+			if (_vm->_cutContent) {
+				if (Player_Query_Agenda() == kPlayerAgendaPolite) {
+					Actor_Says(kActorMcCoy, 8610, 15);
+				} else {
+					Actor_Says(kActorMcCoy, 8514, 14); //00-8514.AUD	Got anything new to tell me?
+				}
+			} else {
+				Actor_Says(kActorMcCoy, 8610, 15);
+			}
 			Actor_Says(kActorSadik, 290, kAnimationModeTalk);
 		} else if (Actor_Clue_Query(kActorMcCoy, kCluePowerSource)) {
 			if (_vm->_cutContent) {
@@ -90,18 +98,56 @@ bool SceneScriptKP06::ClickedOnActor(int actorId) {
 				Actor_Face_Actor(kActorMcCoy, kActorSadik, true);
 				Actor_Change_Animation_Mode(kActorMcCoy, 23);
 				Actor_Change_Animation_Mode(kActorSadik, 23);
-				Delay(2000);
+				Delay(800);
 				Item_Pickup_Spin_Effect_From_Actor(kModelAnimationPowerSource, kActorSadik, 0, 0);
 				Game_Flag_Set(kFlagMcCoyIsHelpingReplicants);
 				Actor_Set_Goal_Number(kActorClovis, kGoalClovisKP07Wait);
 				Actor_Clue_Lose(kActorMcCoy, kCluePowerSource);
+				Delay(800);
 				Actor_Says(kActorMcCoy, 8170, 11); //00-8170.AUD	There you go.
 			}
-			Actor_Says(kActorSadik, 280, kAnimationModeTalk); //08-0280.AUD	You for real I’m thinking.
-			// Removed some lines that didn't belong here.
+			if (_vm->_cutContent) {
+				if (Actor_Query_Friendliness_To_Other(kActorClovis, kActorMcCoy) > 50
+				&& !Game_Flag_Query(kFlagMcCoyRetiredReplicant)) { 
+					Actor_Says(kActorSadik, 280, kAnimationModeTalk); //08-0280.AUD	You for real I’m thinking.
+				}
+			} else {
+				Actor_Says(kActorSadik, 280, kAnimationModeTalk); //08-0280.AUD	You for real I’m thinking.
+			}
 			Actor_Says(kActorSadik, 290, kAnimationModeTalk); //08-0290.AUD	Go in. You see Clovis. He not got too much time left.
 			Actor_Clue_Acquire(kActorSadik, kCluePowerSource, true, kActorMcCoy);
 			if (_vm->_cutContent) {
+				if (Player_Query_Agenda() != kPlayerAgendaSurly 
+				&& Player_Query_Agenda() != kPlayerAgendaErratic) {
+					if (Actor_Clue_Query(kActorMcCoy, kClueDragonflyEarring)
+					|| Actor_Clue_Query(kActorMcCoy, kClueLabAnalysisGoldChain)) {
+						Actor_Says(kActorMcCoy, 5150, 18); //00-5150.AUD	One more thing.
+						Actor_Change_Animation_Mode(kActorMcCoy, 23);
+						Actor_Change_Animation_Mode(kActorSadik, 23);
+						Delay(800);
+						if (Actor_Clue_Query(kActorMcCoy, kClueDragonflyEarring)) {
+							Actor_Clue_Lose(kActorMcCoy, kClueDragonflyEarring);
+							Actor_Clue_Acquire(kActorSadik, kClueDragonflyEarring, true, -1);
+							Item_Pickup_Spin_Effect_From_Actor(kModelAnimationDragonflyEarring, kActorSadik, 0, 0);
+							Delay(1500);
+						} 
+						if (Actor_Clue_Query(kActorMcCoy, kClueLabAnalysisGoldChain)) {
+							Actor_Clue_Lose(kActorMcCoy, kClueLabAnalysisGoldChain);
+							Actor_Clue_Acquire(kActorSadik, kClueLabAnalysisGoldChain, true, -1);
+							Item_Pickup_Spin_Effect_From_Actor(kModelAnimationMaggieBracelet, kActorSadik, 0, 0);
+							Delay(1500);
+							if (Actor_Query_Friendliness_To_Other(kActorClovis, kActorMcCoy) > 50
+							&& !Game_Flag_Query(kFlagMcCoyRetiredReplicant)) { 
+								Actor_Says(kActorMcCoy, 115, -1); //00-0115.AUD	Maggie.
+								Delay(1000);
+								Actor_Says(kActorMcCoy, 700, kAnimationModeTalk); //00-0700.AUD	I'm starting to understand.
+								Delay(2000);
+								Actor_Says(kActorMcCoy, 2305, 13); //00-2305.AUD	I’m sorry.		
+							}				
+						}
+					}
+				}
+				Delay(1000);
 				Loop_Actor_Walk_To_XYZ(kActorMcCoy, -731.0f, 8.26f, -657.0f, 0, false, false, false);
 				Player_Set_Combat_Mode(false);
 				Ambient_Sounds_Remove_All_Non_Looping_Sounds(true);
@@ -113,7 +159,14 @@ bool SceneScriptKP06::ClickedOnActor(int actorId) {
 			Actor_Says(kActorMcCoy, 2320, kAnimationModeTalk);
 			Actor_Says(kActorMcCoy, 2325, kAnimationModeTalk);
 			Actor_Says(kActorSadik, 300, kAnimationModeTalk);
-			Actor_Says(kActorSadik, 310, kAnimationModeTalk);
+			if (_vm->_cutContent) {
+				if (Actor_Query_Friendliness_To_Other(kActorClovis, kActorMcCoy) > 50
+				&& !Game_Flag_Query(kFlagMcCoyRetiredReplicant)) { 
+					Actor_Says(kActorSadik, 310, kAnimationModeTalk);
+				}
+			} else {
+				Actor_Says(kActorSadik, 310, kAnimationModeTalk);
+			}
 		}
 	}
 	return false;
@@ -161,17 +214,56 @@ bool SceneScriptKP06::ClickedOnExit(int exitId) {
 				Actor_Face_Actor(kActorMcCoy, kActorSadik, true);
 				Actor_Change_Animation_Mode(kActorMcCoy, 23);
 				Actor_Change_Animation_Mode(kActorSadik, 23);
-				Delay(2000);
+				Delay(800);
 				Item_Pickup_Spin_Effect_From_Actor(kModelAnimationPowerSource, kActorSadik, 0, 0);
 				Game_Flag_Set(kFlagMcCoyIsHelpingReplicants);
 				Actor_Set_Goal_Number(kActorClovis, kGoalClovisKP07Wait);
 				Actor_Clue_Lose(kActorMcCoy, kCluePowerSource);
+				Delay(800);
 				Actor_Says(kActorMcCoy, 8170, 11); //00-8170.AUD	There you go.
 			}
-			Actor_Says(kActorSadik, 280, kAnimationModeTalk); //08-0280.AUD	You for real I’m thinking.
+			if (_vm->_cutContent) {
+				if (Actor_Query_Friendliness_To_Other(kActorClovis, kActorMcCoy) > 50
+				&& !Game_Flag_Query(kFlagMcCoyRetiredReplicant)) { 
+					Actor_Says(kActorSadik, 280, kAnimationModeTalk); //08-0280.AUD	You for real I’m thinking.
+				}
+			} else {
+				Actor_Says(kActorSadik, 280, kAnimationModeTalk); //08-0280.AUD	You for real I’m thinking.
+			}
 			Actor_Says(kActorSadik, 290, kAnimationModeTalk);
 			Actor_Clue_Acquire(kActorSadik, kCluePowerSource, true, kActorMcCoy);
 			if (_vm->_cutContent) {
+				if (Player_Query_Agenda() != kPlayerAgendaSurly 
+				&& Player_Query_Agenda() != kPlayerAgendaErratic) {
+					if (Actor_Clue_Query(kActorMcCoy, kClueDragonflyEarring)
+					|| Actor_Clue_Query(kActorMcCoy, kClueLabAnalysisGoldChain)) {
+						Actor_Says(kActorMcCoy, 5150, 18); //00-5150.AUD	One more thing.
+						Actor_Change_Animation_Mode(kActorMcCoy, 23);
+						Actor_Change_Animation_Mode(kActorSadik, 23);
+						Delay(800);
+						if (Actor_Clue_Query(kActorMcCoy, kClueDragonflyEarring)) {
+							Actor_Clue_Lose(kActorMcCoy, kClueDragonflyEarring);
+							Actor_Clue_Acquire(kActorSadik, kClueDragonflyEarring, true, -1);
+							Item_Pickup_Spin_Effect_From_Actor(kModelAnimationDragonflyEarring, kActorSadik, 0, 0);
+							Delay(1500);
+						}
+						if (Actor_Clue_Query(kActorMcCoy, kClueLabAnalysisGoldChain)) {
+							Actor_Clue_Lose(kActorMcCoy, kClueLabAnalysisGoldChain);
+							Actor_Clue_Acquire(kActorSadik, kClueLabAnalysisGoldChain, true, -1);
+							Item_Pickup_Spin_Effect_From_Actor(kModelAnimationMaggieBracelet, kActorSadik, 0, 0);
+							Delay(1500);
+							if (Actor_Query_Friendliness_To_Other(kActorClovis, kActorMcCoy) > 50
+							&& !Game_Flag_Query(kFlagMcCoyRetiredReplicant)) { 
+								Actor_Says(kActorMcCoy, 115, -1); //00-0115.AUD	Maggie.
+								Delay(1000);
+								Actor_Says(kActorMcCoy, 700, kAnimationModeTalk); //00-0700.AUD	I'm starting to understand.
+								Delay(2000);
+								Actor_Says(kActorMcCoy, 2305, 13); //00-2305.AUD	I’m sorry.
+							}
+						}				
+					}
+				}
+				Delay(1000);
 				Loop_Actor_Walk_To_XYZ(kActorMcCoy, -731.0f, 8.26f, -657.0f, 0, false, false, false);
 			} else {
 				Loop_Actor_Walk_To_XYZ(kActorMcCoy, -731.0f, 8.26f, -657.0f, 0, false, true, false);
@@ -250,16 +342,30 @@ void SceneScriptKP06::PlayerWalkedIn() {
 				}
 				if (Game_Flag_Query(kFlagMcCoyRetiredHuman)) {
 					Actor_Says(kActorSteele, 1330, 12); //01-1330.AUD	We got a problem, though. There’s an APB out for you.
+					if (Game_Flag_Query(kFlagGuzzaSaved)
+					&& !Game_Flag_Query(kFlagGuzzaArrested)
+					&& Actor_Query_Friendliness_To_Other(kActorGuzza, kActorMcCoy) < 51) {
+						Actor_Says(kActorSteele, 1340, 12); //01-1340.AUD	You’ve been shooting civilians? Because that’s what Guzza's saying.
+						Actor_Says(kActorSteele, 1350, 12); //01-1350.AUD	He wants to put you on the Machine.
+						Delay(1000);
+						Actor_Says(kActorMcCoy, 3120, 15); //00-3120.AUD	You’re gonna retire me, Steele?
+						Actor_Says(kActorSteele, 640, 12); //01-0640.AUD	No chance.
+						Delay(1000);
+					}
 					Actor_Says(kActorSteele, 1380, 12); //01-1380.AUD	Is it true, Slim? Did you kill somebody?
-					if (Player_Query_Agenda() == kPlayerAgendaPolite) {
-						Delay(1500);
+					if (Player_Query_Agenda() != kPlayerAgendaSurly 
+					&& Player_Query_Agenda() != kPlayerAgendaErratic) {
+						Delay(1000);
 						Actor_Says(kActorMcCoy, 7980, 19); //00-7980.AUD	Yeah. Maybe.
+						Delay(1000);
 					} else {
 						Actor_Says(kActorMcCoy, 3130, 15); //00-3130.AUD	What do you think?
+						Actor_Says(kActorSteele, 1390, 12); //01-1390.AUD	I ain’t sure yet. I like to be sure.
+						Delay(1000);
 					}
 					Actor_Change_Animation_Mode(kActorSteele, 4);
 					Delay(1500);
-					Actor_Says(kActorSteele, 2210, 12); //01-2210.AUD	I guess I gotta take you in. They'll probably have to run a couple of tests, too.
+					Actor_Says(kActorSteele, 2210, -1); //01-2210.AUD	I guess I gotta take you in. They'll probably have to run a couple of tests, too.
 					Delay(2000);
 					Actor_Set_Goal_Number(kActorMcCoy, kGoalMcCoyArrested);
 					Delay(2000);
@@ -309,11 +415,11 @@ void SceneScriptKP06::PlayerWalkedIn() {
 					Game_Over();
 				} else {
 					Actor_Says(kActorGaff, 220, 13);
-					if (Actor_Query_Friendliness_To_Other(kActorSteele, kActorMcCoy) > 57) {
+					if (Actor_Query_Friendliness_To_Other(kActorSteele, kActorMcCoy) > 59) {
 						Actor_Says(kActorMcCoy, 6245, 11); //00-6245.AUD	I could have used you about ten minutes ago.
 						Actor_Says(kActorGaff, 230, 14);
 					} else {
-						Actor_Says(kActorMcCoy, 5705, 13); //00-5705.AUD	Uh-huh.
+						Actor_Says(kActorMcCoy, 5705, 18); //00-5705.AUD	Uh-huh.
 						Delay(1000);
 					}
 					if (Game_Flag_Query(kFlagMcCoyAttackedReplicants)) {
@@ -350,8 +456,7 @@ void SceneScriptKP06::PlayerWalkedIn() {
 						Async_Actor_Walk_To_Waypoint(kActorGaff, 551, 0, false);
 						Actor_Says(kActorGaff, 310, -1); //53-0310.AUD	Whatever you want to believe, McCoy.
 					} else { 
-						if (Global_Variable_Query(kVariableChinyen) >= 1000
-						|| Query_Difficulty_Level() == kGameDifficultyEasy) { 
+						if (Actor_Query_Friendliness_To_Other(kActorGaff, kActorMcCoy) > 59) {
 							Actor_Says(kActorGaff, 300, 15); //53-0300.AUD	Buy yourself another animal maybe. A real one, not a Tyrell fake.
 							Actor_Says(kActorMcCoy, 6270, 11);
 							Async_Actor_Walk_To_Waypoint(kActorMcCoy, 550, 0, false);

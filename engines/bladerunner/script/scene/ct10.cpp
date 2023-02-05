@@ -83,8 +83,9 @@ void SceneScriptCT10::checkCabinet() {
 		// Made it so if you click on the chest of drawers after you found Holdens badge you receive the Leon incept shots clue.
 		if (_vm->_cutContent) {
 			Actor_Change_Animation_Mode(kActorMcCoy, 23);
+			Delay(800);
 			Sound_Play(kSfxDRAWER1, 100, 0, 0, 50);
-			Delay(2000);
+			Delay(800);
 			if (Actor_Clue_Query(kActorMcCoy, kClueHoldensBadge)
 			&& Actor_Clue_Query(kActorMcCoy, kClueInceptShotsLeon)) { 
 				Actor_Voice_Over(3700, kActorVoiceOver);

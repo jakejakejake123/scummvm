@@ -221,6 +221,7 @@ void SceneScriptHF06::ActorChangedGoal(int actorId, int newGoal, int oldGoal, bo
 			Actor_Voice_Over(1010, kActorVoiceOver);
 			Loop_Actor_Walk_To_Actor(kActorMcCoy, otherActorId, 24, false, false);
 			if (_vm->_cutContent) {
+				Delay(1000);
 				Item_Pickup_Spin_Effect_From_Actor(kModelAnimationBomb, kActorMcCoy, 0, 0);
 				Actor_Says(kActorMcCoy, 8890, 13); //00-8890.AUD	A bomb.
 			} else {
@@ -309,10 +310,11 @@ void SceneScriptHF06::steelInterruption() {
 			if (!Game_Flag_Query(kFlagDektoraIsReplicant)
 			&& Game_Flag_Query(kFlagMcCoyIsInnocent)) {
 				Actor_Change_Animation_Mode(kActorMcCoy, 23);
-				Delay(2000);
+				Delay(800);
 				Scene_Loop_Set_Default(3);
 				Scene_Loop_Start_Special(kSceneLoopModeOnce, 2, true);
 				Sound_Play(kSfxBOMBFAIL, 50, 0, 0, 50);
+				Delay(800);
 				Actor_Says(kActorMcCoy, 170, 14); //00-0170.AUD	Damn.
 				Actor_Face_Heading(kActorMcCoy, 486, true);
 				if (Actor_Query_In_Set(kActorDektora, kSetHF06)
@@ -330,10 +332,11 @@ void SceneScriptHF06::steelInterruption() {
 			if (!Game_Flag_Query(kFlagLucyIsReplicant)
 			&& Game_Flag_Query(kFlagMcCoyIsInnocent)) {
 				Actor_Change_Animation_Mode(kActorMcCoy, 23);
-				Delay(2000);
+				Delay(800);
 				Scene_Loop_Set_Default(3);
 				Scene_Loop_Start_Special(kSceneLoopModeOnce, 2, true);
 				Sound_Play(kSfxBOMBFAIL, 50, 0, 0, 50);
+				Delay(800);
 				Actor_Says(kActorMcCoy, 170, 14); //00-0170.AUD	Damn.
 				Actor_Face_Heading(kActorMcCoy, 486, true);
 				if (Actor_Query_In_Set(kActorLucy, kSetHF06)

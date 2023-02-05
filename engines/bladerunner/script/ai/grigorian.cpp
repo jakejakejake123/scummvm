@@ -61,6 +61,31 @@ void AIScriptGrigorian::ReceivedClue(int clueId, int fromActorId) {
 }
 
 void AIScriptGrigorian::ClickedByPlayer() {
+	if (_vm->_cutContent) {
+		if (Actor_Query_In_Set(kActorGrigorian, kSetKP07)) {
+			if (!Game_Flag_Query(kFlagGrigorianDead)) {
+				Loop_Actor_Walk_To_Actor(kActorMcCoy, kActorGrigorian, 24, false, false);
+				Actor_Face_Actor(kActorMcCoy, kActorGrigorian, true);
+				Actor_Face_Actor(kActorGrigorian, kActorMcCoy, true);
+				Actor_Says(kActorMcCoy, 3970, 14);
+				Actor_Says(kActorGrigorian, 20, 15);
+				if (Player_Query_Agenda() != kPlayerAgendaSurly 
+				&& Player_Query_Agenda() != kPlayerAgendaErratic) {
+					if (Actor_Clue_Query(kActorMcCoy, kClueGrigoriansNote)) {
+						Actor_Says(kActorMcCoy, 5150, 18); //00-5150.AUD	One more thing.
+						Actor_Change_Animation_Mode(kActorMcCoy, 23);
+						Actor_Change_Animation_Mode(kActorGrigorian, 23);
+						Delay(800);
+						Actor_Clue_Lose(kActorMcCoy, kClueGrigoriansNote);
+						Actor_Clue_Acquire(kActorGrigorian, kClueGrigoriansNote, true, -1);
+						Item_Pickup_Spin_Effect_From_Actor(kModelAnimationGrigoriansNote, kActorGrigorian, 0, 0);
+						Delay(1500);
+						Actor_Says(kActorMcCoy, 8170, 13); //00-8170.AUD	There you go.
+					}
+				}
+			}
+		}
+	}
 	//return false;
 }
 

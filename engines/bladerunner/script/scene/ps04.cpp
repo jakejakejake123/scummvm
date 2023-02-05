@@ -131,7 +131,10 @@ bool SceneScriptPS04::ClickedOnItem(int itemId, bool a2) {
 		} else if (!Actor_Clue_Query(kActorMcCoy, kClueWeaponsOrderForm)) {
 			Item_Remove_From_World(kItemWeaponsOrderForm);
 			if (_vm->_cutContent) {
+				Actor_Change_Animation_Mode(kActorMcCoy, 23);
+				Delay(800);
 				Item_Pickup_Spin_Effect(kModelAnimationWeaponsOrderForm, 464, 362);
+				Delay(800);
 			} else {
 				Item_Pickup_Spin_Effect(kModelAnimationOriginalRequisitionForm, 464, 362);
 			}
@@ -765,10 +768,13 @@ void SceneScriptPS04::dialogueWithGuzza() {
 		Actor_Says(kActorMcCoy, 4095, 17); 
 		Actor_Says(kActorGuzza, 680, 32);
 		if (_vm->_cutContent) {
+			Loop_Actor_Walk_To_XYZ(kActorMcCoy, -716.0f, -354.85f, 1042.0f, 0, false, false, true);
+			Actor_Face_Actor(kActorMcCoy, kActorGuzza, true);
 			Actor_Change_Animation_Mode(kActorMcCoy, 23);
-			Delay(1000);
+			Delay(800);
 			Item_Pickup_Spin_Effect_From_Actor(kModelAnimationBadge, kActorGuzza, 0, 0);
-			Actor_Start_Speech_Sample(kActorMcCoy, 8170); //00-8170.AUD	There you go.
+			Delay(800);
+			Actor_Says(kActorMcCoy, 8170, 13); //00-8170.AUD	There you go.
 		}
 		Actor_Says(kActorGuzza, 690, 31);
 		if (_vm->_cutContent) {	

@@ -84,8 +84,9 @@ bool SceneScriptPS15::ClickedOnActor(int actorId) {
 					if (!Game_Flag_Query(kFlagWallsUpset)) {
 						Actor_Says(kActorSergeantWalls, 180, 23); // 34-0180.AUD	Yeah, dig this. It's been doing the circuits around the station
 						Actor_Change_Animation_Mode(kActorMcCoy, 23);
-						Delay (2000);
+						Delay(800);
 						Item_Pickup_Spin_Effect_From_Actor(kModelAnimationWeaponsOrderForm, kActorMcCoy, 0, 0);
+						Delay(800);
 						Actor_Clue_Acquire(kActorMcCoy, kClueWeaponsOrderForm, true, kActorSergeantWalls);
 						if (Game_Flag_Query(kFlagPS04WeaponsOrderForm)) {
 							Item_Remove_From_World(kItemWeaponsOrderForm);
@@ -309,8 +310,9 @@ void SceneScriptPS15::PlayerWalkedIn() {
 			}
 			Actor_Says(kActorSergeantWalls, 180, 23); //34-0180.AUD	Yeah, dig this. It's been doing the circuits around the station
 			Actor_Change_Animation_Mode(kActorMcCoy, 23);
-			Delay(2000);
+			Delay(800);
 			Item_Pickup_Spin_Effect_From_Actor(kModelAnimationRequisitionForm, kActorMcCoy, 0, 0);
+			Delay(800);
 			Actor_Says(kActorMcCoy, 8805, 13); //00-8805.AUD	A requisition form.
 			Actor_Voice_Over(3930, kActorVoiceOver);
 			Actor_Voice_Over(3940, kActorVoiceOver);

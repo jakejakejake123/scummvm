@@ -233,6 +233,44 @@ void AIScriptLucy::ClickedByPlayer() {
 				Actor_Face_Actor(kActorLucy, kActorMcCoy, true);
 				Actor_Says(kActorMcCoy, 4775, kAnimationModeTalk); //00-4775.AUD	Lucy.
 				Actor_Says(kActorLucy, 0, 17); //06-0000.AUD	I knew you’d come.
+				if (Player_Query_Agenda() != kPlayerAgendaSurly 
+				&& Player_Query_Agenda() != kPlayerAgendaErratic) {
+					if (Actor_Clue_Query(kActorMcCoy, kClueToyDog)
+					|| Actor_Clue_Query(kActorMcCoy, kClueRagDoll)
+					|| Actor_Clue_Query(kActorMcCoy, kClueCandy)
+					|| Actor_Clue_Query(kActorMcCoy, kClueHysteriaToken)) {
+						Actor_Says(kActorMcCoy, 5150, 18); //00-5150.AUD	One more thing.	
+						Actor_Change_Animation_Mode(kActorMcCoy, 23);
+						Actor_Change_Animation_Mode(kActorLucy, 23);
+						Delay(800);
+						if (Actor_Clue_Query(kActorMcCoy, kClueToyDog)) {
+							Actor_Clue_Lose(kActorMcCoy, kClueToyDog);
+							Actor_Clue_Acquire(kActorLucy, kClueToyDog, true, -1);
+							Item_Pickup_Spin_Effect_From_Actor(kModelAnimationToyDog, kActorLucy, 0, 0);
+							Delay(1500);
+						}
+						if (Actor_Clue_Query(kActorMcCoy, kClueRagDoll)) {
+							Actor_Clue_Lose(kActorMcCoy, kClueRagDoll);
+							Actor_Clue_Acquire(kActorLucy, kClueRagDoll, true, -1);
+							Item_Pickup_Spin_Effect_From_Actor(kModelAnimationRagDoll, kActorLucy, 0, 0);
+							Delay(1500);
+						}
+						if (Actor_Clue_Query(kActorMcCoy, kClueCandy)) {
+							Actor_Clue_Lose(kActorMcCoy, kClueCandy);
+							Actor_Clue_Acquire(kActorLucy, kClueCandy, true, -1);
+							Item_Pickup_Spin_Effect_From_Actor(kModelAnimationCandy, kActorLucy, 0, 0);
+							Delay(1500);
+						}
+						if (Actor_Clue_Query(kActorMcCoy, kClueHysteriaToken)) {
+							Actor_Clue_Lose(kActorMcCoy, kClueHysteriaToken);
+							Actor_Clue_Acquire(kActorLucy, kClueHysteriaToken, true, -1);
+							Item_Pickup_Spin_Effect_From_Actor(kModelAnimationHysteriaToken, kActorLucy, 0, 0);
+							Delay(1500);
+						}
+						Actor_Says(kActorMcCoy, 8170, 13); //00-8170.AUD	There you go.
+						Actor_Says(kActorLucy, 230, 14); //06-0230.AUD	Thank you.
+					}
+				}
 			}
 		}
 	}
@@ -619,6 +657,7 @@ bool AIScriptLucy::GoalChanged(int currentGoalNumber, int newGoalNumber) {
 			Actor_Says(kActorLucy, 1030, 17);
 			Actor_Says(kActorMcCoy, 6800, 14); //00-6800.AUD	You’ll see them with your own eyes one day.
 			if (_vm->_cutContent) {
+				Actor_Clue_Acquire(kActorMcCoy, kClueMcCoyIsKind, true, kActorLucy);
 				Actor_Says(kActorLucy, 1040, 18); //06-1040.AUD	Will I?
 				Actor_Says(kActorMcCoy, 6805, 13); //00-6805.AUD	I-- I promise you. But for now we gotta be careful. You should stay hidden for a while.
 				Actor_Says(kActorMcCoy, 6810, 14); //00-6810.AUD	Go. I’ll find you when it’s safe.

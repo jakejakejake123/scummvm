@@ -79,8 +79,11 @@ bool SceneScriptNR07::ClickedOnActor(int actorId) {
 		Dialogue_Menu_Clear_List();
 		if (Game_Flag_Query(kFlagNR07McCoyIsCop)) {
 			if (_vm->_cutContent) {
-				DM_Add_To_List_Never_Repeat_Once_Selected(1100, -1, 3, 4); // VOIGT-KAMPFF
-				DM_Add_To_List_Never_Repeat_Once_Selected(1110, 3, 2, -1); // CRYSTAL	
+				if (Player_Query_Agenda() == kPlayerAgendaPolite) { 
+					DM_Add_To_List_Never_Repeat_Once_Selected(1110, 3, 2, -1); // CRYSTAL	
+				} else {
+					DM_Add_To_List_Never_Repeat_Once_Selected(1100, -1, 3, 4); // VOIGT-KAMPFF
+				}
 			} else {
 				DM_Add_To_List_Never_Repeat_Once_Selected(1100, -1, 3, 8); // VOIGT-KAMPFF
 				DM_Add_To_List_Never_Repeat_Once_Selected(1110, 8, 2, -1); // CRYSTAL	
@@ -356,10 +359,11 @@ bool SceneScriptNR07::ClickedOnItem(int itemId, bool a2) {
 					Loop_Actor_Walk_To_Item(kActorMcCoy, kItemDragonflyBelt, 12, true, false);
 					Actor_Face_Item(kActorMcCoy, kItemDragonflyBelt, true);
 					Actor_Change_Animation_Mode(kActorMcCoy, 23);
-					Delay(2000);
+					Delay(800);
 					Actor_Clue_Acquire(kActorMcCoy, kClueDragonflyBelt, true, kActorDektora);
 					Item_Pickup_Spin_Effect(kModelAnimationDragonflyBelt, 542, 350);
 					Item_Remove_From_World(kItemDragonflyBelt);
+					Delay(800);
 					Actor_Says(kActorMcCoy, 8825, 13);
 				}	
 			}
@@ -389,7 +393,7 @@ bool SceneScriptNR07::ClickedOn2DRegion(int region) {
 			Actor_Face_Object(kActorMcCoy, "VANITY", true);
 			if (Actor_Query_Is_In_Current_Set(kActorDektora)) {
 				Actor_Change_Animation_Mode(kActorMcCoy, 23);
-				Delay(1000);
+				Delay(800);
 				Actor_Face_Object(kActorDektora, "VANITY", true);
 				Actor_Modify_Friendliness_To_Other(kActorDektora, kActorMcCoy, -2);
 				Actor_Says(kActorDektora, 560, 31); // Please don't touch that. It's private.
@@ -405,20 +409,22 @@ bool SceneScriptNR07::ClickedOn2DRegion(int region) {
 					} else {
 						Sound_Play(kSfxDRAWER1, 90, 85, 85, 50);
 						Actor_Change_Animation_Mode(kActorMcCoy, 23);
-						Delay(2000);
+						Delay(800);
 						Actor_Clue_Acquire(kActorMcCoy, kClueCrazysInvolvement, false, kActorDektora);
 						// McCoy picks up a sales brochure (it's CrazyLeg's -- but the model is the same as the Tyrell's Pamphlet)
 						Item_Pickup_Spin_Effect(kModelAnimationTyrellSalesPamphlet, 508, 401);
 						// McCoy finds something inside the brochure - CrazyLeg's note to the Replicants
 						// Logic is similar to HC03 (finding photos inside Izo's camera)
+						Delay(800);
 						Actor_Voice_Over(3690, kActorVoiceOver);
 						Delay(1200);
 						Item_Pickup_Spin_Effect(kModelAnimationLetter, 508, 401);
 						Delay(1000);
 						// Added in code so you receive the Dektora incept clue when you are searching her desk.
 						Actor_Change_Animation_Mode(kActorMcCoy, 23);
-						Delay (2000);
+						Delay(800);
 						Item_Pickup_Spin_Effect(kModelAnimationPhoto, 508, 401);
+						Delay(800);
 						Actor_Clue_Acquire(kActorMcCoy, kClueDektoraIncept, false, kActorDektora);
 						Actor_Says(kActorMcCoy, 7960, 12); //00-7960.AUD	Dektora? 
 						Delay(1000);
@@ -811,7 +817,7 @@ void SceneScriptNR07::clickedOnVase() {
 			} else {
 				if (_vm->_cutContent) {
 					Actor_Change_Animation_Mode(kActorMcCoy, 23);
-					Delay(1000);
+					Delay(800);
 					Actor_Says(kActorDektora, 560, 31); // Please don't touch that. It's private.
 				} else {
 					Actor_Says(kActorDektora, 560, 31); // Please don't touch that. It's private.
@@ -850,10 +856,11 @@ void SceneScriptNR07::clickedOnVase() {
 		Loop_Actor_Walk_To_Scene_Object(kActorMcCoy, "VASE", 100, true, false);
 		if (_vm->_cutContent) {
 			Actor_Change_Animation_Mode(kActorMcCoy, 23);
-			Delay(1000);
+			Delay(800);
 		}
 		Item_Pickup_Spin_Effect(kModelAnimationDektorasCard, 526, 268);
 		if (_vm->_cutContent) {
+			Delay(800);
 			Actor_Says(kActorMcCoy, 8835, 13);	//00-8835.AUD	A card.
 		}
 		Actor_Voice_Over(1690, kActorVoiceOver);

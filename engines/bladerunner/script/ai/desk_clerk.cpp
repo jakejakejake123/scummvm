@@ -109,7 +109,6 @@ void AIScriptDeskClerk::OtherAgentEnteredCombatMode(int otherActorId, int combat
 			Actor_Says(kActorMcCoy, 815, -1); //00-0815.AUD	Listen to me!
 			Delay(2000);
 			Actor_Says(kActorMcCoy, 8525, -1); // 00-8525.AUD	Hmph.
-			Game_Flag_Set(kFlagBellRung);
 		}
 	}
 	// return false;

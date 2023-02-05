@@ -60,6 +60,12 @@ void SceneScriptDR01::InitializeScene() {
 		Scene_Exit_Add_2D_Exit(3, 0, 45, 142, 201, 0);
 	}
 
+	if (_vm->_cutContent) {
+		// Code for inserting the shoeshine man into the set.
+		Actor_Put_In_Set(kActorShoeshineMan, kSetDR01_DR02_DR04);
+		Actor_Set_At_XYZ(kActorShoeshineMan, -1160.0f, -0.04f, -235.0f, 524);
+	}
+
 	Ambient_Sounds_Remove_All_Non_Looping_Sounds(false);
 	// Replaced China town rain with DNA row rain.
 	if (_vm->_cutContent) {

@@ -103,8 +103,9 @@ bool SceneScriptNR04::ClickedOn3DObject(const char *objectName, bool a2) {
 							if (!Actor_Clue_Query(kActorMcCoy, kClueCollectionReceipt)) {
 								Actor_Clue_Acquire(kActorMcCoy, kClueCollectionReceipt, false, kActorEarlyQ);
 								Actor_Change_Animation_Mode(kActorMcCoy, 23);
-								Delay(2000);
+								Delay(800);
 								Item_Pickup_Spin_Effect(kModelAnimationCollectionReceipt, 247, 141);
+								Delay(800);
 								Actor_Says(kActorMcCoy, 8845, kAnimationModeTalk); //00-8845.AUD	A receipt.
 								Actor_Voice_Over(1560, kActorVoiceOver);
 								Actor_Voice_Over(1570, kActorVoiceOver);
@@ -157,9 +158,10 @@ bool SceneScriptNR04::ClickedOn3DObject(const char *objectName, bool a2) {
 		Actor_Face_Object(kActorMcCoy, "TORUS01", true);
 		if (_vm->_cutContent) {
 			Actor_Change_Animation_Mode(kActorMcCoy, 23);
-			Delay(1000);
+			Delay(800);
 			Item_Pickup_Spin_Effect(kModelAnimationVideoDisc, 358, 160);
-			Actor_Start_Speech_Sample(kActorVoiceOver, 1620);
+			Delay(800);
+			Actor_Voice_Over(1620, kActorVoiceOver);
 		} else {
 			Item_Pickup_Spin_Effect(kModelAnimationVideoDisc, 358, 160);
 			Actor_Voice_Over(1620, kActorVoiceOver);
@@ -195,7 +197,6 @@ bool SceneScriptNR04::ClickedOnActor(int actorId) {
 		if (_vm->_cutContent) {
 			 if (!Game_Flag_Query(kFlagEarlyQIsReplicant)) {
 				if (!Actor_Clue_Query(kActorMcCoy, kClueDektorasDressingRoom)) {
-					Actor_Change_Animation_Mode(kActorMcCoy, 23);
 					Delay(1000);
 					Actor_Clue_Acquire(kActorMcCoy, kClueDektorasDressingRoom, true, kActorEarlyQ);
 					Item_Pickup_Spin_Effect_From_Actor(kModelAnimationPhoto, kActorEarlyQ, 0, 0);

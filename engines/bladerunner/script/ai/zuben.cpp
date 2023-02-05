@@ -276,46 +276,32 @@ void AIScriptZuben::ClickedByPlayer() {
 							Actor_Face_Actor(kActorMcCoy, kActorRunciter, true);
 						}
 						Actor_Says(kActorMcCoy, 7355, 14); //00-7355.AUD	All those animals died.
+						Music_Play(kMusicCrysDie1, 25, 0, 1, -1, kMusicLoopPlayOnce, 1);
 						Actor_Says(kActorZuben, 290, 15); //19-0290.AUD	He made Lucy do bad things. Lucy hurt. Clovis more angry.
 						if (Actor_Query_Is_In_Current_Set(kActorRunciter)) {
 							Actor_Face_Actor(kActorRunciter, kActorZuben, true);
 							Actor_Face_Actor(kActorZuben, kActorRunciter, true);
 							Actor_Face_Actor(kActorMcCoy, kActorRunciter, true);
-							Actor_Says(kActorRunciter, 600, 15);  //15-0600.AUD	That's ridiculous. I--
-							Actor_Face_Actor(kActorZuben, kActorRunciter, true);
-							Actor_Face_Actor(kActorMcCoy, kActorRunciter, true);
-						}
-						Actor_Says(kActorZuben, 300, 14); //19-0300.AUD	Girl was forced to do bad things Off-World. Clovis thought Terra better.
-						Actor_Says(kActorZuben, 310, 13); //19-0310.AUD	But Terra's no better for young girls. Runciter bad to Lucy.
-						if (Actor_Query_Is_In_Current_Set(kActorRunciter)) {
-							Actor_Face_Actor(kActorRunciter, kActorZuben, true);
-							Actor_Face_Actor(kActorZuben, kActorRunciter, true);
-							Actor_Face_Actor(kActorMcCoy, kActorRunciter, true);
 							Actor_Says(kActorRunciter, 1350, 15); //15-1350.AUD	That's insane.
-							Actor_Face_Actor(kActorRunciter, kActorZuben, true);
 							Actor_Face_Actor(kActorZuben, kActorRunciter, true);
 							Actor_Face_Actor(kActorMcCoy, kActorRunciter, true);
 						}
+						if (Game_Flag_Query(kFlagLucyIsReplicant)) {
+							Actor_Says(kActorZuben, 300, 14); //19-0300.AUD	Girl was forced to do bad things Off-World. Clovis thought Terra better.
+							Actor_Says(kActorZuben, 310, 13); //19-0310.AUD	But Terra's no better for young girls. Runciter bad to Lucy.
+						}
+						Actor_Says(kActorMcCoy, 7360, 11); //00-7360.AUD	Did he do things to Lucy?
+						Delay(2000);
+						Actor_Says(kActorMcCoy, 2390, kAnimationModeIdle); //00-2390.AUD	Oh, God. No.
 						Delay(1000);
 						if (Player_Query_Agenda() != kPlayerAgendaPolite) {
+							Delay(1000);
 							Actor_Says(kActorMcCoy, 7365, 12);	//00-7365.AUD	You should have killed him.
 							if (Actor_Query_Is_In_Current_Set(kActorRunciter)) {
 								Actor_Face_Actor(kActorRunciter, kActorMcCoy, true);
 								Actor_Face_Actor(kActorZuben, kActorRunciter, true);
 								Actor_Face_Actor(kActorMcCoy, kActorRunciter, true);
-								Actor_Says(kActorRunciter, 900, 15); //15-9000.AUD	No!
-								Delay(1000);
-								Actor_Face_Actor(kActorRunciter, kActorZuben, true);
-								Actor_Face_Actor(kActorZuben, kActorRunciter, true);
-								Actor_Face_Actor(kActorMcCoy, kActorRunciter, true);
-							}
-						} else {
-							Actor_Says(kActorMcCoy, 7360, 11); //00-7360.AUD	Did he do things to Lucy?
-							if (Actor_Query_Is_In_Current_Set(kActorRunciter)) {
-								Actor_Face_Actor(kActorRunciter, kActorMcCoy, true);
-								Actor_Face_Actor(kActorZuben, kActorRunciter, true);
-								Actor_Face_Actor(kActorMcCoy, kActorRunciter, true);
-								Actor_Says(kActorRunciter, 900, 15); //15-9000.AUD	No!
+								Actor_Says(kActorRunciter, 1580, 15); //15-1580.AUD	You're a sick man.
 								Delay(1000);
 								Actor_Face_Actor(kActorRunciter, kActorZuben, true);
 								Actor_Face_Actor(kActorZuben, kActorRunciter, true);
@@ -324,12 +310,6 @@ void AIScriptZuben::ClickedByPlayer() {
 						}
 						Actor_Says(kActorZuben, 320, 12); //19-0320.AUD	Clovis say Runciter love animals. Runciter still alive so he hurt now. Know what pain is.
 						Actor_Says(kActorZuben, 330, 12); //19-0330.AUD	Kill him, he not hurt. Just dead.
-						if (Actor_Query_Is_In_Current_Set(kActorRunciter)) {
-							Actor_Face_Actor(kActorRunciter, kActorZuben, true);
-							Actor_Face_Actor(kActorZuben, kActorRunciter, true);
-							Actor_Face_Actor(kActorMcCoy, kActorRunciter, true);
-							Actor_Says(kActorRunciter, 1580, 15); //15-1580.AUD	You're a sick man.
-						}
 						Actor_Clue_Acquire(kActorMcCoy, kClueZubensMotive, false, kActorZuben);
 						Delay(2000);
 						Actor_Face_Actor(kActorRunciter, kActorMcCoy, true);
@@ -577,10 +557,10 @@ bool AIScriptZuben::GoalChanged(int currentGoalNumber, int newGoalNumber) {
 			if (!Game_Flag_Query(kFlagMcCoyIsHelpingReplicants)) {
 				AI_Movement_Track_Flush(kActorZuben);
 				Actor_Face_Actor(kActorZuben, kActorMcCoy, true);
-				Music_Stop(3u);
 				Actor_Says(kActorZuben, 100, 19);
 				Actor_Says(kActorMcCoy, 470, 12);
 				Actor_Says(kActorZuben, 110, 18);
+				Music_Stop(1u);
 				Actor_Says(kActorMcCoy, 475, 12);
 				Actor_Says(kActorZuben, 120, 15);
 				Actor_Says(kActorMcCoy, 480, 16);

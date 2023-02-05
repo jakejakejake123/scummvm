@@ -311,15 +311,7 @@ bool SceneScriptCT01::ClickedOnActor(int actorId) {
 	if (actorId == kActorZuben) {
 		if (!Loop_Actor_Walk_To_XYZ(kActorMcCoy, -335.23f, -6.5f, 578.97f, 12, true, false, false)) {
 			Actor_Face_Actor(kActorMcCoy, kActorZuben, true);
-			if (_vm->_cutContent) {
-				if (Player_Query_Agenda() == kPlayerAgendaPolite) {
-					Actor_Says(kActorMcCoy, 3970, 13); //00-3970.AUD	Hey.
-				} else {
-					Actor_Says(kActorMcCoy, 355, 18);
-				}
-			} else {
-				Actor_Says(kActorMcCoy, 3970, 13); //00-3970.AUD	Hey.
-			}
+			Actor_Says(kActorMcCoy, 3970, 13); //00-3970.AUD	Hey.
 			if (Actor_Query_Goal_Number(kActorZuben) == kGoalZubenDefault) {
 				if (_vm->_cutContent) {
 					if (Game_Flag_Query(kFlagZubenIsReplicant)) {
@@ -401,6 +393,7 @@ bool SceneScriptCT01::ClickedOnActor(int actorId) {
 						Delay(1000);
 						Actor_Says(kActorMcCoy, 8920, 14); //00-8920.AUD	I gotta ask you a question.
 						Actor_Says(kActorGordo, 20, 30); //02-0020.AUD	Sorry, my man. I just don't got the time.
+						Delay(1000);
 						Actor_Says(kActorMcCoy, 345, 11); //00-0345.AUD	Wanna make some money?
 						Actor_Says(kActorGordo, 30, 30); //02-0030.AUD	Pay me large, you got my rapt attention.
 						Actor_Says(kActorMcCoy, 350, 13); //00-0350.AUD	Depends on how much the information is worth.
@@ -411,7 +404,9 @@ bool SceneScriptCT01::ClickedOnActor(int actorId) {
 						Actor_Says(kActorMcCoy, 4940, 13); //00-4940.AUD	Okay, let's have it.
 						Game_Flag_Set(kFlagGordoReceivedAutograph);
 						Actor_Change_Animation_Mode(kActorMcCoy, 23);
-						Delay(2000);
+						Delay(800);
+						Item_Pickup_Spin_Effect_From_Actor(kModelAnimationOriginalShippingForm, kActorMcCoy, 0, 0);
+						Delay(800);
 						Actor_Says(kActorMcCoy, 5600, 14);               // Let me ask you.
 						Actor_Says(kActorMcCoy, 385, 18); //00-0385.AUD	I'm looking for a girl about 14 years old with pink hair. You seen her?
 						if (Game_Flag_Query(kFlagGordoIsReplicant)) {
@@ -426,7 +421,6 @@ bool SceneScriptCT01::ClickedOnActor(int actorId) {
 							Actor_Says(kActorGordo, 450, 30); //02-0450.AUD	You ought to call in a few more of the hunters to clear the place out.
 							Actor_Says(kActorMcCoy, 3280, 15); //00-3280.AUD	Hunter? Ain’t too often I hear ‘em called that.
 							Actor_Clue_Acquire(kActorMcCoy, kClueGordoInterview3, false, kActorGordo);
-							Actor_Modify_Friendliness_To_Other(kActorGordo, kActorMcCoy, -2);
 							Delay(1000);
 						} else {
 							Actor_Says(kActorGordo, 430, 30);  //02-0430.AUD	She was one of those skin-jobs?
@@ -706,8 +700,7 @@ void SceneScriptCT01::PlayerWalkedIn() {
 		// Also I made it so McCoy will only store this dispatch message as a clue within the KIA if he has enough clues tthat tell him of its relevance.
 		if (_vm->_cutContent) {
 			if (!Game_Flag_Query(kFlagCT01Visit)) {
-				if (Actor_Clue_Query(kActorMcCoy, kClueCrowdInterviewB)
-				|| Actor_Clue_Query(kActorMcCoy, kClueCarColorAndMake)) {
+				if (Actor_Clue_Query(kActorMcCoy, kClueCrowdInterviewB)) {
 					Actor_Clue_Acquire(kActorMcCoy, kClueDispatchHitAndRun, false, kActorDispatcher);
 				}
 				Delay (1000);
@@ -772,7 +765,11 @@ void SceneScriptCT01::DialogueQueueFlushed(int a1) {
 void SceneScriptCT01::dialogueWithHowieLee() {
 	Dialogue_Menu_Clear_List();
 	if (Actor_Clue_Query(kActorMcCoy, kClueLucy)) {
-		DM_Add_To_List_Never_Repeat_Once_Selected(40, 4, 5, 6); // LUCY PHOTO
+		if (_vm->_cutContent) { 
+			DM_Add_To_List_Never_Repeat_Once_Selected(40, 7, 6, 8); // LUCY PHOTO
+		} else {
+			DM_Add_To_List_Never_Repeat_Once_Selected(40, 4, 5, 6); // LUCY PHOTO
+		}
 	}
 
 	if (
@@ -781,7 +778,11 @@ void SceneScriptCT01::dialogueWithHowieLee() {
 	 )
 	 && !Game_Flag_Query(kFlagCT01Evidence1Linked)
 	) {
-		DM_Add_To_List_Never_Repeat_Once_Selected(50, 5, 5, 4); // RUNCITER CLUES
+		if (_vm->_cutContent) {
+			DM_Add_To_List_Never_Repeat_Once_Selected(50, 4, 5, 6); // RUNCITER CLUES
+		} else {
+			DM_Add_To_List_Never_Repeat_Once_Selected(50, 5, 5, 4); // RUNCITER CLUES
+		}
 	}
 
 	if ( Actor_Clue_Query(kActorMcCoy, kClueChopstickWrapper)
@@ -795,15 +796,20 @@ void SceneScriptCT01::dialogueWithHowieLee() {
 	if (Game_Flag_Query(kFlagCT02PotTipped)) {
 		DM_Add_To_List_Never_Repeat_Once_Selected(80, 9, 9, 9); // EMPLOYEE
 	} else if (Game_Flag_Query(kFlagCT01ZubenLeft)) {
-		DM_Add_To_List_Never_Repeat_Once_Selected(80, 3, 4, 8); // EMPLOYEE
+		if (_vm->_cutContent) {
+			if (Actor_Clue_Query(kActorMcCoy, kClueLabCorpses)
+			|| Actor_Clue_Query(kActorMcCoy, kClueCrowdInterviewA)
+			|| Actor_Clue_Query(kActorMcCoy, kClueSightingMcCoyRuncitersShop)) {
+				DM_Add_To_List_Never_Repeat_Once_Selected(80, 7, 8, 9); // EMPLOYEE
+			}
+		} else {
+			DM_Add_To_List_Never_Repeat_Once_Selected(80, 3, 4, 8); // EMPLOYEE
+		}
 	}
 
 	if (_vm->_cutContent) { 
-		if (Actor_Clue_Query(kActorMcCoy, kClueCrowdInterviewB)
-		|| Actor_Clue_Query(kActorMcCoy, kClueCarColorAndMake)) {
-			if (Actor_Clue_Query(kActorMcCoy, kClueDispatchHitAndRun)) {
-				DM_Add_To_List_Never_Repeat_Once_Selected(90, 5, 4, 5); // HIT AND RUN
-			}
+		if (Actor_Clue_Query(kActorMcCoy, kClueDispatchHitAndRun)) {
+			DM_Add_To_List_Never_Repeat_Once_Selected(90, 3, 4, 2); // HIT AND RUN
 		}
 	}
 	if (_vm->_cutContent) {
@@ -970,8 +976,9 @@ void SceneScriptCT01::dialogueWithHowieLee() {
 					//this confusion.
 					Actor_Change_Animation_Mode(kActorMcCoy, 23);
 					Actor_Change_Animation_Mode(kActorHowieLee, 23);
-					Delay(2000);
+					Delay(800);
 					Item_Pickup_Spin_Effect_From_Actor(kModelAnimationKingstonKitchenBox, kActorMcCoy, 0, 0);
+					Delay(800);
 					if (Player_Query_Agenda() == kPlayerAgendaPolite) {
 						Actor_Says(kActorMcCoy, 325, 13); //00-0325.AUD	You're a prince, Howie.
 						Actor_Modify_Friendliness_To_Other(kActorHowieLee, kActorMcCoy, 2);
@@ -1017,14 +1024,20 @@ void SceneScriptCT01::dialogueWithHowieLee() {
 
 	case 90: // HIT AND RUN
 		Actor_Says(kActorMcCoy, 300, 13);
-		Actor_Says(kActorHowieLee, 110, 16);
-		//Added dialogue that plays if McCoys agenda is surly or erratic.
 		if (_vm->_cutContent) {
-			if (Player_Query_Agenda() != kPlayerAgendaPolite) {  
-				Actor_Says(kActorMcCoy, 2485, 19); //00-2485.AUD	I’ve a hard time believing that.
-				Actor_Says(kActorHowieLee, 200, 16); //28-0200.AUD	You call Howie liar? You find another place to eat lunch now [speaks Japanese]
-				Actor_Modify_Friendliness_To_Other(kActorHowieLee, kActorMcCoy, -2);
+			if (Actor_Query_Friendliness_To_Other(kActorHowieLee, kActorMcCoy) < 60) {
+				Actor_Says(kActorHowieLee, 190, 14);	//28-0190.AUD	I look like I got time for chit-er chat-er?
+			} else {
+				Actor_Says(kActorHowieLee, 110, 16);
+				//Added dialogue that plays if McCoys agenda is surly or erratic.
+				if (Player_Query_Agenda() != kPlayerAgendaPolite) {  
+					Actor_Says(kActorMcCoy, 2485, 19); //00-2485.AUD	I’ve a hard time believing that.
+					Actor_Says(kActorHowieLee, 200, 16); //28-0200.AUD	You call Howie liar? You find another place to eat lunch now [speaks Japanese]
+					Actor_Modify_Friendliness_To_Other(kActorHowieLee, kActorMcCoy, -2);
+				}
 			}
+		} else {
+			Actor_Says(kActorHowieLee, 110, 16);
 		}
 		break;
 

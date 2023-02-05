@@ -68,10 +68,14 @@ void SceneScriptRC51::SceneLoaded() {
 	}
 	if (!Game_Flag_Query(kFlagRC51ToyDogTaken)) {
 		if (_vm->_cutContent) {
-			Item_Add_To_World(kItemNote, kModelAnimationDektorasCard, kSetRC02_RC51, 49.59f, -1194.42f, 107997.89f, 0, 6, 6, false, true, false, true);
 			Item_Add_To_World(kItemToyDog, kModelAnimationToyDog, kSetRC02_RC51, 17.43f, -1238.71f, 108002.29f, 256, 18, 18, false, true, false, true);
 		} else {
 			Item_Add_To_World(kItemToyDog, kModelAnimationToyDog, kSetRC02_RC51, -69.65f, -1238.89f, 107995.24f, 256, 18, 18, false, true, false, true);
+		}
+	}	
+	if (_vm->_cutContent) {	
+		if (!Game_Flag_Query(kFlagCardTaken)) {
+			Item_Add_To_World(kItemNote, kModelAnimationDektorasCard, kSetRC02_RC51, 49.59f, -1194.42f, 107997.89f, 0, 6, 6, false, true, false, true);
 		}
 	}
 }
@@ -119,12 +123,15 @@ bool SceneScriptRC51::ClickedOnItem(int itemId, bool a2) {
 			if (_vm->_cutContent) {
 				Actor_Clue_Acquire(kActorMcCoy, kClueCandy, true, kActorLucy);
 				Actor_Change_Animation_Mode(kActorMcCoy, 23);
-				Delay(2000);
+				Delay(800);
 			} else {
 				Actor_Clue_Acquire(kActorMcCoy, kClueCandy, true, -1);
 			}
 			Item_Remove_From_World(kItemCandy);
 			Item_Pickup_Spin_Effect(kModelAnimationCandy, 445, 230);
+			if (_vm->_cutContent) {
+				Delay(800);
+			}
 			Actor_Says(kActorMcCoy, 8735, 3);
 			Actor_Says(kActorMcCoy, 8529, 3);
 			Game_Flag_Set(kFlagRC51CandyTaken);
@@ -157,13 +164,16 @@ bool SceneScriptRC51::ClickedOnItem(int itemId, bool a2) {
 			if (!Loop_Actor_Walk_To_Item(kActorMcCoy, kItemNote, 36, true, false)) {
 				Actor_Face_Item(kActorMcCoy, kItemNote, true);
 				Actor_Change_Animation_Mode(kActorMcCoy, 23);
-				Delay(2000);
+				Delay(800);
 				Item_Remove_From_World(kItemNote);
 				Item_Pickup_Spin_Effect(kModelAnimationDektorasCard, 386, 232);
+				Delay(800);
 				Actor_Says(kActorMcCoy, 8835, 13);	//00-8835.AUD	A card.
 				Delay(1000);
 				Actor_Says(kActorMcCoy, 250, 3); //00-0250.AUD	Frog and toad are friends. What the hell is that?
+				Delay(500);
 				Actor_Says(kActorMcCoy, 8525, 3); //00-8525.AUD	Hmph.
+				Game_Flag_Set(kFlagCardTaken);
 				return true;
 			}
 		}

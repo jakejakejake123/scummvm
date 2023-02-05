@@ -141,19 +141,9 @@ void AIScriptIsabella::ClickedByPlayer() {
 								Actor_Face_Actor(kActorIsabella, kActorMcCoy, true);
 								Actor_Says(kActorMcCoy, 3250, kAnimationModeTalk);
 								Actor_Face_Actor(kActorIsabella, kActorGordo, true);
-								Actor_Says(kActorGordo, 530, 18);
-								Actor_Face_Actor(kActorIsabella, kActorMcCoy, true);
-								Actor_Says(kActorMcCoy, 3300, 15);
-								Actor_Face_Actor(kActorIsabella, kActorGordo, true);
-								Actor_Says(kActorGordo, 540, 13);
-								Actor_Face_Actor(kActorIsabella, kActorMcCoy, true);
-								Actor_Says(kActorMcCoy, 3305, kAnimationModeTalk);
-								Actor_Face_Actor(kActorIsabella, kActorGordo, true);
 								Actor_Says(kActorGordo, 550, 16); //02-0550.AUD	For crying out loud. Can’t a guy make a living in this fakakta place without being hassled?
 								Actor_Face_Actor(kActorIsabella, kActorMcCoy, true);
-								Actor_Says(kActorMcCoy, 7815, 13); //00-7815.AUD	No.
-								Actor_Clue_Acquire(kActorMcCoy, kClueGordoConfession, true, kActorGordo);
-								Delay(1000);	
+								Actor_Says(kActorMcCoy, 7815, 13); //00-7815.AUD	No.	
 							}
 							Actor_Face_Actor(kActorIsabella, kActorGordo, true);
 							Actor_Says(kActorMcCoy, 6600, 13); //00-6600.AUD	Why the big deal over food?

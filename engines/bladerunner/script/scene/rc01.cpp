@@ -753,7 +753,10 @@ bool SceneScriptRC01::ClickedOnExit(int exitId) {
 			 && !Game_Flag_Query(kFlagDNARowAvailableTalk)
 			) {
 				if (_vm->_cutContent) {
-					if (Actor_Clue_Query(kActorMcCoy, kClueWeaponsCache)) {
+					if (Actor_Clue_Query(kActorMcCoy, kClueWeaponsCache)
+					&& (Actor_Clue_Query(kActorMcCoy, kClueDetonatorWire)
+					|| Actor_Clue_Query(kActorMcCoy, kCluePoliceWeaponUsed)
+					|| Actor_Clue_Query(kActorMcCoy, kCluePlasticExplosive))) {
 						Actor_Voice_Over(3480, kActorVoiceOver); //99-3480.AUD	Yeah, what a difference a day makes.
 						Delay(1000);
 						Actor_Voice_Over(3510, kActorVoiceOver); //99-3510.AUD	The picture was still a little blurry.
@@ -774,6 +777,11 @@ bool SceneScriptRC01::ClickedOnExit(int exitId) {
 				}
 				if (_vm->_cutContent) {
 					if (!Actor_Clue_Query(kActorMcCoy, kClueWeaponsCache)) {
+						Actor_Voice_Over(4330, kActorVoiceOver); //99-4330.AUD	I had nothing to connect this Izo character to the Eisenduller murder.
+					} else if (Actor_Clue_Query(kActorMcCoy, kClueWeaponsCache)
+					&& (!Actor_Clue_Query(kActorMcCoy, kClueDetonatorWire)
+					&& !Actor_Clue_Query(kActorMcCoy, kCluePoliceWeaponUsed)
+					&& !Actor_Clue_Query(kActorMcCoy, kCluePlasticExplosive))) {
 						Actor_Voice_Over(4330, kActorVoiceOver); //99-4330.AUD	I had nothing to connect this Izo character to the Eisenduller murder.
 					}
 				} else {

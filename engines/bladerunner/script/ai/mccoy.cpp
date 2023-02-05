@@ -192,7 +192,6 @@ void AIScriptMcCoy::ReceivedClue(int clueId, int fromActorId) {
 	case kClueCarRegistration1:
 		if (_vm->_cutContent) {
 			Spinner_Set_Selectable_Destination_Flag(kSpinnerDestinationHysteriaHall, true);
-			Spinner_Set_Selectable_Destination_Flag(kSpinnerDestinationNightclubRow, true);
 		}
 		break;
 
@@ -202,7 +201,6 @@ void AIScriptMcCoy::ReceivedClue(int clueId, int fromActorId) {
 	case kClueCarRegistration3:
 		if (_vm->_cutContent) {
 			Spinner_Set_Selectable_Destination_Flag(kSpinnerDestinationHysteriaHall, true);
-			Spinner_Set_Selectable_Destination_Flag(kSpinnerDestinationNightclubRow, true);
 		}
 		break;
 
@@ -682,10 +680,14 @@ bool AIScriptMcCoy::GoalChanged(int currentGoalNumber, int newGoalNumber) {
 #endif // BLADERUNNER_ORIGINAL_BUGS
 		Actor_Says(kActorGuzza, 1480, kAnimationModeTalk);
 		Actor_Says(kActorMcCoy, 6705, 11);
-		Sound_Play(kSfxSPNBEEP9, 50, 0, 0, 50);
-		// Added in a clue.
 		if (_vm->_cutContent) {
+			Actor_Change_Animation_Mode(kActorMcCoy, 23);
+			Delay(800);
+			Sound_Play(kSfxSPNBEEP9, 50, 0, 0, 50);
+			Delay(800);
 			Actor_Clue_Acquire(kActorMcCoy, kClueGuzzaAgreesToMeet, true, kActorGuzza);
+		} else {
+			Sound_Play(kSfxSPNBEEP9, 50, 0, 0, 50);
 		}
 		return true;
 
@@ -704,7 +706,15 @@ bool AIScriptMcCoy::GoalChanged(int currentGoalNumber, int newGoalNumber) {
 		return true;
 
 	case 400:
-		Actor_Set_Health(kActorMcCoy, 50, 50);
+		if (_vm->_cutContent) {
+			if (Game_Flag_Query(kFlagMcCoyHasVest)) {
+				Actor_Set_Health(kActorMcCoy, 90, 90);
+			} else {
+				Actor_Set_Health(kActorMcCoy, 50, 50);
+			}
+		} else {
+			Actor_Set_Health(kActorMcCoy, 50, 50);
+		}
 		Game_Flag_Set(kFlagKP02Available);
 		if (!_vm->_cutContent) {
 			affectionTowards = Global_Variable_Query(kVariableAffectionTowards);

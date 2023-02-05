@@ -75,7 +75,8 @@ bool AIScriptOfficerLeary::Update() {
 		// Made it so the police do not leave Runciters until McCoy has the necessary clues to continue the investigation.
 		if (!Game_Flag_Query(kFlagMcCoyInRunciters)
 		&&  Game_Flag_Query(kFlagRC51ChopstickWrapperTaken)
-		&&  Actor_Clue_Query(kActorMcCoy, kClueCrowdInterviewB)
+		&&  Actor_Clue_Query(kActorMcCoy, kClueCrowdInterviewA)
+		&&  Actor_Clue_Query(kActorMcCoy, kClueSightingMcCoyRuncitersShop)
 		&&  Actor_Clue_Query(kActorMcCoy, kClueRuncitersVideo)
 		&&  Player_Query_Current_Scene() != kSceneRC01
 		&&  !Game_Flag_Query(kFlagRC01PoliceDone)          // otherwise this clause keeps repeating

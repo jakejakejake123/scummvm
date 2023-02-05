@@ -155,11 +155,7 @@ bool AIScriptMoraji::GoalChanged(int currentGoalNumber, int newGoalNumber) {
 	case kGoalMorajiShot:
 		// applies only when shot inside the Dermo Design Lab
 		Actor_Set_Targetable(kActorMoraji, false);
-#if BLADERUNNER_ORIGINAL_BUGS
-		Sound_Play(kSfxFEMHURT2, 100, 0, 0, 50);	// Original code has female scream here (FEMHURT2)
-#else
-		Sound_Play_Speech_Line(kActorMoraji, 9020, 50, 0, 50); // fix: Use Moraji's death SPCHSFX, also lower volume
-#endif // BLADERUNNER_ORIGINAL_BUGS
+		Sound_Play(kSfxFEMHURT2, 100, 0, 0, 50);	
 		_animationState = 10;
 		_animationFrame = 0;
 		Actor_Retired_Here(kActorMoraji, 60, 16, true, -1);

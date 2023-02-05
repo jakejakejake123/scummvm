@@ -119,9 +119,6 @@ void KIAScript::SCRIPT_KIA_DLL_Play_Clue_Asset_Script(int notUsed, int clueId) {
 			KIA_Play_Actor_Dialogue(kActorMcCoy, 4145); //00-4145.AUD	Bone marrow?
 			KIA_Play_Actor_Dialogue(kActorKlein, 110); //30-0110.AUD	About 50% were real. The rest were fakes.
 			KIA_Play_Actor_Dialogue(kActorMcCoy, 4150); //00-4150.AUD	So, Runciter was ripping his customers off.
-			KIA_Play_Actor_Dialogue(kActorKlein, 120); 
-			KIA_Play_Actor_Dialogue(kActorMcCoy, 4155); 
-			KIA_Play_Actor_Dialogue(kActorKlein, 130); 
 			KIA_Play_Actor_Dialogue(kActorMcCoy, 4160); //00-4160.AUD	What about the wounds?
 		}
 		KIA_Play_Actor_Dialogue(kActorKlein, 140); //30-0140.AUD	Most of them were shot point-blank but we're looking at some others… pteh, sloppy cuts with a knife. Like the perp was really pissed off at something.
@@ -1157,7 +1154,13 @@ void KIAScript::SCRIPT_KIA_DLL_Play_Clue_Asset_Script(int notUsed, int clueId) {
 		KIA_Play_Actor_Dialogue(kActorTransient, 230);
 		KIA_Play_Actor_Dialogue(kActorMcCoy, 5645);
 		KIA_Play_Actor_Dialogue(kActorTransient, 240);
-		KIA_Play_Actor_Dialogue(kActorTransient, 250);
+		if (_vm->_cutContent) {
+			if (!Actor_Clue_Query(kActorMcCoy, kClueBigManLimping)) {
+				KIA_Play_Actor_Dialogue(kActorTransient, 250); //12-0250.AUD	Dumped them in a sewer. They’re gone now. You sure you ain’t got nothing to drink?
+			}
+		} else {
+			KIA_Play_Actor_Dialogue(kActorTransient, 250);
+		}
 		KIA_Play_Actor_Dialogue(kActorMcCoy, 5650);
 		KIA_Play_Actor_Dialogue(kActorTransient, 260);
 		break;
@@ -2237,7 +2240,6 @@ void KIAScript::SCRIPT_KIA_DLL_Play_Clue_Asset_Script(int notUsed, int clueId) {
 		break;
 	case kClueCrystalTestedRunciter:
 		KIA_Play_Actor_Dialogue(kActorSteele, 3190); //01-3190.AUD	Runciter read as human when I re-tested him.
-		
 		break;
 	case kClueCrystalTestedBulletBob:
 		KIA_Play_Actor_Dialogue(kActorSteele, 3000); //01-3000.AUD	Bullet Bob may be a grade A psycho but he ain’t no Replicant.
@@ -2424,6 +2426,9 @@ void KIAScript::SCRIPT_KIA_DLL_Play_Clue_Asset_Script(int notUsed, int clueId) {
 		break;
 	case kClueLabAnalysisGoldChain:
 		KIA_Play_Slice_Model(kModelAnimationMaggieBracelet);
+		KIA_Play_Actor_Dialogue(kActorMcCoy, 115); //00-0115.AUD	Maggie.
+		KIA_Play_Actor_Dialogue(kActorMcCoy, 8525); //00-8525.AUD	Hmph.
+		KIA_Play_Actor_Dialogue(kActorMcCoy, 5270); //00-5270.AUD	Hell of a coincidence.
 		break;
 	case kClueWantedPoster:
 		KIA_Play_Slice_Model(kModelAnimationGrigoriansNote);

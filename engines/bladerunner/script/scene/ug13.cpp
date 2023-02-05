@@ -208,12 +208,14 @@ bool SceneScriptUG13::ClickedOnActor(int actorId) {
 					dialogueWithHomeless1();
 				} else {
 					Actor_Set_Goal_Number(kActorTransient, 391);
-					if (Actor_Clue_Query(kActorMcCoy, kClueFlaskOfAbsinthe)) {
+					if (Actor_Clue_Query(kActorMcCoy, kClueFlaskOfAbsinthe)
+					&& !Actor_Clue_Query(kActorMcCoy, kClueBigManLimping)) {
 						dialogueWithHomeless1();
 					} else {
 						Actor_Face_Actor(kActorMcCoy, kActorTransient, true);
 						if (_vm->_cutContent) {
-							if (!Actor_Clue_Query(kActorTransient, kClueFlaskOfAbsinthe)) {
+							if (!Actor_Clue_Query(kActorTransient, kClueFlaskOfAbsinthe)
+							&& !Actor_Clue_Query(kActorMcCoy, kClueBigManLimping)) {
 								Actor_Says(kActorTransient, 130, 53); //12-0130.AUD	You got something so's I can wet my whistle?
 								Actor_Says(kActorMcCoy, 7815, 13); //00-7815.AUD	No.
 								if (Player_Query_Agenda() == kPlayerAgendaPolite) {
@@ -561,7 +563,7 @@ void SceneScriptUG13::talkAboutGuzza() {
 #if BLADERUNNER_ORIGINAL_BUGS
 	Actor_Says(kActorTransient, 250, 33); // Dumped them it a sewer. They're gone now. You sure you ain't got nothing to drink?
 #else
-	if (!Actor_Clue_Query(kActorTransient, kClueFlaskOfAbsinthe)) {
+	if (!Actor_Clue_Query(kActorMcCoy, kClueBigManLimping)) {
 		Actor_Says(kActorTransient, 250, 33); // Dumped them it a sewer. They're gone now. You sure you ain't got nothing to drink?
 	}
 #endif // BLADERUNNER_ORIGINAL_BUGS
@@ -578,14 +580,15 @@ void SceneScriptUG13::dialogueWithHomeless1() {
 		DM_Add_To_List_Never_Repeat_Once_Selected(1330, 5, 8, 5); // FAT MAN
 	}
 	if (_vm->_cutContent) {
-		DM_Add_To_List_Never_Repeat_Once_Selected(1340, 8, 4, 6); // SEWERS
+		DM_Add_To_List_Never_Repeat_Once_Selected(1340, 8, 7, 6); // SEWERS
 	} else {
 		DM_Add_To_List_Never_Repeat_Once_Selected(1340, 2, 4, 6); // SEWERS
 	}
 	if (_vm->_cutContent) {
 		if (Actor_Clue_Query(kActorMcCoy, kClueFlaskOfAbsinthe)
-		&& Actor_Clue_Query(kActorMcCoy, kClueHomelessManInterview2)) {
-			DM_Add_To_List_Never_Repeat_Once_Selected(1350, 1, 3, 7); // GIVE FLASK
+		&& Actor_Clue_Query(kActorMcCoy, kClueHomelessManInterview2)
+		&& !Actor_Clue_Query(kActorMcCoy, kClueBigManLimping)) {
+			DM_Add_To_List_Never_Repeat_Once_Selected(1350, 1, 2, 3); // GIVE FLASK
 		}
 	} else {
 		if (Actor_Clue_Query(kActorMcCoy, kClueFlaskOfAbsinthe)) {
@@ -628,8 +631,15 @@ void SceneScriptUG13::dialogueWithHomeless1() {
 		} else {
 			Actor_Says(kActorMcCoy, 5615, 18); // Describe them...
 		}
-		Actor_Says(kActorTransient, 160, 33); // Sure you don't got that drink?
-		Actor_Says(kActorMcCoy, 5620, 9); // Maybe later
+		if (_vm->_cutContent) {
+			if (!Actor_Clue_Query(kActorMcCoy, kClueBigManLimping)) {
+				Actor_Says(kActorTransient, 160, 33); // Sure you don't got that drink?
+				Actor_Says(kActorMcCoy, 5620, 9); // Maybe later
+			} 
+		} else {
+			Actor_Says(kActorTransient, 160, 33); // Sure you don't got that drink?
+			Actor_Says(kActorMcCoy, 5620, 9); // Maybe later
+		}
 		Actor_Says(kActorTransient, 170, 30); //Well, there's the Japanese guy with the coat and the glasses.
 		Actor_Says(kActorMcCoy, 5625, 12); // Skinny...?
 		Actor_Says(kActorTransient, 180, 32); // Yeah! And the guy with the muscles and the funny hair.
@@ -637,7 +647,7 @@ void SceneScriptUG13::dialogueWithHomeless1() {
 		Actor_Says(kActorTransient, 190, 32); // Right! Seen them twice. And a two headed guy and a fat man.
 		// Made it so if McCoy never interacted with the homeless man in act 1 he doesn't mention chasing Zuben since the homeless man wouldn't know. McCoy now simply asks if he knows him.
 		if (_vm->_cutContent) {
-			if (Actor_Clue_Query(kActorTransient, kClueBigManLimping)) {
+			if (Actor_Clue_Query(kActorMcCoy, kClueBigManLimping)) {
 				Actor_Says(kActorMcCoy, 5635, 15); //00-5635.AUD	Fat man? The one I was chasing from the sushi bar.
 			} else {
 				Actor_Says(kActorMcCoy, 3230, 15); //00-3230.AUD	You know the chef at Howie’s?
@@ -648,6 +658,16 @@ void SceneScriptUG13::dialogueWithHomeless1() {
 		Actor_Says(kActorTransient, 200, 31); // Nah, the other fat man. You know him.
 		if (_vm->_cutContent) {
 			Actor_Says(kActorTransient, 210, 31); // Saw him wail...
+			if (Actor_Clue_Query(kActorMcCoy, kClueBigManLimping)) {
+				Delay(2000);
+				Actor_Says(kActorMcCoy, 3970, 14); //00-3970.AUD	Hey.
+				Delay(1000);
+				Loop_Actor_Walk_To_Actor(kActorMcCoy, kActorTransient, 36, false, true);
+				Actor_Face_Actor(kActorMcCoy, kActorTransient, true);
+				Delay(1000);
+				Actor_Says(kActorMcCoy, 5660, 13); // Stay with me for a minute, pal.
+				dialogueWithHomeless2();
+			}
 		}
 		break;
 
@@ -663,7 +683,16 @@ void SceneScriptUG13::dialogueWithHomeless1() {
 		Actor_Says(kActorMcCoy, 5590, 15); // This is where...?
 		Actor_Says(kActorTransient, 270, 31); // You could call it that.
 		Actor_Says(kActorMcCoy, 5655, 16); // You know your way...?
-		Actor_Says(kActorTransient, 280, 32); // You got anything to drink? My throat's awful dry.
+		if (_vm->_cutContent) {
+			if (!Actor_Clue_Query(kActorMcCoy, kClueBigManLimping)) {
+				Actor_Says(kActorTransient, 280, 32); // You got anything to drink? My throat's awful dry.
+			} else {
+				Delay(2000);
+				Actor_Says(kActorMcCoy, 5660, 13); // Stay with me for a minute, pal.
+			}
+		} else {
+			Actor_Says(kActorTransient, 280, 32); // You got anything to drink? My throat's awful dry.
+		}
 		break;
 
 	case 1350: // GIVE FLASK
@@ -674,17 +703,20 @@ void SceneScriptUG13::dialogueWithHomeless1() {
 			Actor_Face_Actor(kActorMcCoy, kActorTransient, true);
 		}
 		Actor_Clue_Acquire(kActorTransient, kClueFlaskOfAbsinthe, false, kActorMcCoy);
-		Actor_Says_With_Pause(kActorMcCoy, 5595, 1.0f, 23); // You still thirsty, pal?
+		if (_vm->_cutContent) {
+			Actor_Says_With_Pause(kActorMcCoy, 5595, 1.0f, 13); // You still thirsty, pal?
+		} else {
+			Actor_Says_With_Pause(kActorMcCoy, 5595, 1.0f, 23); // You still thirsty, pal?
+		}
 		if (_vm->_cutContent) {
 			Actor_Change_Animation_Mode(kActorMcCoy, 23);
-			Delay(2000);
+			Delay(800);
 			Item_Pickup_Spin_Effect_From_Actor(kModelAnimationFlaskOfAbsinthe, kActorTransient, 0, 0);
 			Actor_Says(kActorTransient, 290, 32); // Mucho obligado, senor.
 		} else {
 			Item_Pickup_Spin_Effect(kModelAnimationFlaskOfAbsinthe, 193, 325);
 			Actor_Says(kActorTransient, 290, 33); // Mucho obligado, senor.
 		}
-		
 		Actor_Says(kActorMcCoy, 5660, 13); // Stay with me for a minute, pal.
 		Player_Gains_Control();
 		Actor_Clue_Lose(kActorMcCoy, kClueFlaskOfAbsinthe);
@@ -793,10 +825,11 @@ void SceneScriptUG13::dialogueWithHomeless2() {
 				Delay(1000);
 				Actor_Says(kActorMcCoy, 8990, 13); //00-8990.AUD	What have you got there?
 				Actor_Change_Animation_Mode(kActorMcCoy, 23);
-				Delay(2000);
+				Delay(800);
 				Actor_Clue_Acquire(kActorMcCoy, kClueOriginalRequisitionForm, true, kActorTransient);
 				Item_Remove_From_World(kItemWeaponsOrderForm);
 				Item_Pickup_Spin_Effect_From_Actor(kModelAnimationOriginalRequisitionForm, kActorMcCoy, 0, 0);
+				Delay(800);
 				Actor_Says(kActorMcCoy, 8805, 19); //00-8805.AUD	A requisition form.
 				Actor_Voice_Over(3950, kActorVoiceOver);
 				Actor_Voice_Over(3960, kActorVoiceOver);
@@ -882,10 +915,11 @@ void SceneScriptUG13::dialogueWithHomeless2() {
 				Delay(1000);
 				Actor_Says(kActorMcCoy, 8990, 13); //00-8990.AUD	What have you got there?
 				Actor_Change_Animation_Mode(kActorMcCoy, 23);
-				Delay(2000);
+				Delay(800);
 				Actor_Clue_Acquire(kActorMcCoy, kClueOriginalRequisitionForm, true, kActorTransient);
 				Item_Remove_From_World(kItemWeaponsOrderForm);
 				Item_Pickup_Spin_Effect_From_Actor(kModelAnimationOriginalRequisitionForm, kActorMcCoy, 0, 0);
+				Delay(800);
 				Actor_Says(kActorMcCoy, 8805, 19); //00-8805.AUD	A requisition form.
 				Actor_Voice_Over(3950, kActorVoiceOver);
 				Actor_Voice_Over(3960, kActorVoiceOver);
@@ -968,10 +1002,11 @@ void SceneScriptUG13::dialogueWithHomeless2() {
 				Delay(1000);
 				Actor_Says(kActorMcCoy, 8990, 13); //00-8990.AUD	What have you got there?
 				Actor_Change_Animation_Mode(kActorMcCoy, 23);
-				Delay(2000);
+				Delay(800);
 				Actor_Clue_Acquire(kActorMcCoy, kClueOriginalRequisitionForm, true, kActorTransient);
 				Item_Remove_From_World(kItemWeaponsOrderForm);
 				Item_Pickup_Spin_Effect_From_Actor(kModelAnimationOriginalRequisitionForm, kActorMcCoy, 0, 0);
+				Delay(800);
 				Actor_Says(kActorMcCoy, 8805, 19); //00-8805.AUD	A requisition form.
 				Actor_Voice_Over(3950, kActorVoiceOver);
 				Actor_Voice_Over(3960, kActorVoiceOver);

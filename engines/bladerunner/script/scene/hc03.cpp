@@ -157,9 +157,10 @@ bool SceneScriptHC03::ClickedOnItem(int itemId, bool combatMode) {
 				if (!Loop_Actor_Walk_To_Item(kActorMcCoy, kItemDragonflyEarring, 12, true, false)) {
 					Actor_Face_Item(kActorMcCoy, kItemDragonflyEarring, true);
 					Actor_Change_Animation_Mode(kActorMcCoy, 23);
-					Delay(2000);
+					Delay(800);
 					Item_Remove_From_World(kItemDragonflyEarring);
 					Item_Pickup_Spin_Effect(kModelAnimationDragonflyEarring, 330, 239);
+					Delay(800);
 					Actor_Says(kActorMcCoy, 8765, 13); //00-8765.AUD	An earring.
 					Delay(1000);
 					Actor_Voice_Over(4190, kActorVoiceOver); //99-4190.AUD	Where have I seen that before?

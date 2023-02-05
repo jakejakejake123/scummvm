@@ -639,6 +639,9 @@ bool AIScriptClovis::GoalChanged(int currentGoalNumber, int newGoalNumber) {
 			if (Game_Flag_Query(kFlagZubenIsReplicant)) {
 				Global_Variable_Increment(kVariableReplicantsSurvivorsAtMoonbus, 1);
 			}
+			if (Game_Flag_Query(kFlagRunciterIsReplicant)) {
+				Global_Variable_Increment(kVariableReplicantsSurvivorsAtMoonbus, 1);
+			}
 			if (Game_Flag_Query(kFlagGrigorianDead)) {
 				Global_Variable_Decrement(kVariableReplicantsSurvivorsAtMoonbus, 1);
 			}
@@ -670,6 +673,9 @@ bool AIScriptClovis::GoalChanged(int currentGoalNumber, int newGoalNumber) {
 				Global_Variable_Decrement(kVariableReplicantsSurvivorsAtMoonbus, 1);
 			}
 			if (Actor_Query_Goal_Number(kActorZuben) > kGoalZubenGone) {
+				Global_Variable_Decrement(kVariableReplicantsSurvivorsAtMoonbus, 1);
+			}
+			if (Actor_Query_Goal_Number(kActorRunciter) > kGoalRunciterDead) {
 				Global_Variable_Decrement(kVariableReplicantsSurvivorsAtMoonbus, 1);
 			}
 			if (Global_Variable_Query(kVariableReplicantsSurvivorsAtMoonbus) == 0) {
@@ -816,8 +822,9 @@ bool AIScriptClovis::GoalChanged(int currentGoalNumber, int newGoalNumber) {
 				} else {
 					Actor_Change_Animation_Mode(kActorMcCoy, 23);
 					Actor_Change_Animation_Mode(kActorClovis, 23);
-					Delay(2000);
+					Delay(800);
 					Item_Pickup_Spin_Effect_From_Actor(kModelAnimationDNADataDisc, kActorClovis, 0, 0);
+					Delay(800);
 					Actor_Says(kActorMcCoy, 8170, kAnimationModeTalk); //00-8170.AUD	There you go.
 					Delay(1000);
 				}

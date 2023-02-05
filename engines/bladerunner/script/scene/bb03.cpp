@@ -119,8 +119,8 @@ bool SceneScriptBB03::ClickedOnExit(int exitId) {
 					Ambient_Sounds_Remove_All_Looping_Sounds(1u);
 					Set_Enter(kSetBB05, kSceneBB05);;
 				} else if (Actor_Clue_Query(kActorSebastian, kClueMcCoyIsABladeRunner)) {
-					Actor_Says(kActorMcCoy, 6985, 16);
-					Actor_Says(kActorSebastian, 610, 14);
+					Actor_Says(kActorMcCoy, 6985, 16); //00-6985.AUD	Got the straight scoop for me or what?
+					Actor_Says(kActorSebastian, 610, 14); //56-0610.AUD	I think you should leave now, Mr. McCoy.
 				} else if (Actor_Query_Goal_Number(kActorSebastian) != 200) {
 					Ambient_Sounds_Remove_All_Non_Looping_Sounds(true);
 					Ambient_Sounds_Remove_All_Looping_Sounds(1u);
@@ -137,7 +137,11 @@ bool SceneScriptBB03::ClickedOnExit(int exitId) {
 				Actor_Says(kActorSebastian, 70, kAnimationModeTalk);
 				Actor_Says(kActorMcCoy, 7010, 13);
 				Actor_Says(kActorSebastian, 80, kAnimationModeTalk);
-				Actor_Says(kActorMcCoy, 7015, 12);
+				if (_vm->_cutContent) {
+					Actor_Says(kActorMcCoy, 7015, 23);
+				} else {
+					Actor_Says(kActorMcCoy, 7015, 12);
+				}
 				Actor_Says(kActorSebastian, 90, kAnimationModeTalk);
 				Actor_Says(kActorMcCoy, 7020, 14);
 				Actor_Says(kActorSebastian, 100, kAnimationModeTalk); //56-0100.AUD	Well, everything's all right now. I'm pretty sure I can handle it.

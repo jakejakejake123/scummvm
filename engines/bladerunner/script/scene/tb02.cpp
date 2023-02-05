@@ -208,10 +208,23 @@ bool SceneScriptTB02::ClickedOnActor(int actorId) {
 					} else {
 						Actor_Says(kActorMcCoy, 8514, 18); //00-8514.AUD	Got anything new to tell me?
 						Actor_Says(kActorTyrellGuard, 420, 12); //17-0420.AUD	Ah-- Oh, yeah, that's right. What I've said before, that's old information.
-						Actor_Says(kActorMcCoy, 4880, 18); //00-4880.AUD	Is that right?
-						Delay(1000);
-						Actor_Says(kActorMcCoy, 6985, 16); //00-6985.AUD	Got the straight scoop for me or what?
+						Actor_Says(kActorMcCoy, 4940, 13); //00-4940.AUD	Okay, let's have it.
 						Actor_Says(kActorTyrellGuard, 400, 12); //17-0400.AUD	I'm a little busy for this, sir.
+					}
+					if (Player_Query_Agenda() == kPlayerAgendaPolite) {
+						if (Actor_Clue_Query(kActorMcCoy, kClueTyrellSecurity)
+						&& Actor_Clue_Query(kActorMcCoy, kClueTyrellSecurityPhoto)) {
+							Delay(1000);
+							Actor_Says(kActorMcCoy, 5150, 18); //00-5150.AUD	One more thing.
+							Actor_Change_Animation_Mode(kActorMcCoy, 23);
+							Actor_Change_Animation_Mode(kActorTyrellGuard, 23);
+							Delay(800);
+							Item_Pickup_Spin_Effect_From_Actor(kModelAnimationVideoDisc, kActorTyrellGuard, 0, 0);		
+							Delay(800);
+							Actor_Clue_Lose(kActorMcCoy, kClueTyrellSecurity);
+							Actor_Clue_Acquire(kActorTyrellGuard, kClueTyrellSecurity, true, -1);
+							Actor_Says(kActorMcCoy, 8170, 13); //00-8170.AUD	There you go.	
+						}
 					}
 				} else {
 					Actor_Says(kActorTyrellGuard, 290, 12); //17-0290.AUD	I'm gonna have to ask you to leave, sir.
@@ -486,11 +499,9 @@ void SceneScriptTB02::PlayerWalkedIn() {
 				Actor_Says(kActorTyrellGuard, 10, 15); //17-0010.AUD	Grav Test on the East Wing. 66th floor.
 			}
 			if (_vm->_cutContent) {	
-				Actor_Change_Animation_Mode(kActorMcCoy, 23);
-				Actor_Change_Animation_Mode(kActorMcCoy, 23);
-				Delay(2000);
 				Item_Pickup_Spin_Effect_From_Actor(kModelAnimationVideoDisc, kActorMcCoy, 0, 0);
-				Actor_Says(kActorTyrellGuard, 20, 10); //17-0020.AUD	Ah-- here's the footage from the security cameras. You get a pretty good look at the man's face.
+				Actor_Says(kActorTyrellGuard, 20, 23); //17-0020.AUD	Ah-- here's the footage from the security cameras. You get a pretty good look at the man's face.
+				Actor_Change_Animation_Mode(kActorMcCoy, 23);
 			} else {
 				Item_Pickup_Spin_Effect(kModelAnimationVideoDisc, 351, 315);
 				Actor_Says(kActorTyrellGuard, 20, 23); //17-0020.AUD	Ah-- here's the footage from the security cameras. You get a pretty good look at the man's face.
@@ -726,12 +737,28 @@ void SceneScriptTB02::dialogueWithTyrellGuard() {
 
 	switch (answer) {
 	case 100: // DONE
-		Actor_Says(kActorMcCoy, 5145, 13);
 		if (_vm->_cutContent) {
+			Actor_Says(kActorMcCoy, 5145, 13);
 			if (Actor_Query_Friendliness_To_Other(kActorTyrellGuard, kActorMcCoy) > 49) {
 				Actor_Says(kActorTyrellGuard, 50, 15);
 			}
+			if (Player_Query_Agenda() == kPlayerAgendaPolite) {
+				if (Actor_Clue_Query(kActorMcCoy, kClueTyrellSecurity)
+				&& Actor_Clue_Query(kActorMcCoy, kClueTyrellSecurityPhoto)) {
+					Delay(1000);
+					Actor_Says(kActorMcCoy, 5150, 18); //00-5150.AUD	One more thing.
+					Actor_Change_Animation_Mode(kActorMcCoy, 23);
+					Actor_Change_Animation_Mode(kActorTyrellGuard, 23);
+					Delay(800);
+					Item_Pickup_Spin_Effect_From_Actor(kModelAnimationVideoDisc, kActorTyrellGuard, 0, 0);		
+					Delay(800);
+					Actor_Clue_Lose(kActorMcCoy, kClueTyrellSecurity);
+					Actor_Clue_Acquire(kActorTyrellGuard, kClueTyrellSecurity, true, -1);
+					Actor_Says(kActorMcCoy, 8170, 13); //00-8170.AUD	There you go.	
+				}
+			}
 		} else {
+			Actor_Says(kActorMcCoy, 5145, 13);
 			Actor_Says(kActorTyrellGuard, 50, 15);
 		}
 		break;
@@ -776,8 +803,9 @@ void SceneScriptTB02::dialogueWithTyrellGuard() {
 				Actor_Says(kActorMcCoy, 8000, 16); //00-8000.AUD	Yes.
 				Actor_Change_Animation_Mode(kActorTyrellGuard, 23);
 				Actor_Change_Animation_Mode(kActorMcCoy, 23);
-				Delay (1000);
+				Delay(800);
 				Item_Pickup_Spin_Effect_From_Actor(kModelAnimationDragonflyEarring, kActorTyrellGuard, 0, 0);
+				Delay(800);
 				Actor_Clue_Lose(kActorMcCoy, kClueDragonflyEarring);
 			} else {
 				Actor_Says(kActorMcCoy, 7815, 16); //00-7815.AUD	No.

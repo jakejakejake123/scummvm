@@ -238,8 +238,11 @@ void SceneScriptCT02::dialogueWithZuben() {
 	if (_vm->_cutContent) {
 		if (evidenceCount > 2
 		&& (Actor_Clue_Query(kActorMcCoy, kClueSushiMenu))) { 
-			DM_Add_To_List_Never_Repeat_Once_Selected(290, 1, 3, 4); // VOIGT-KAMPFF
-			DM_Add_To_List(1110, 3, 2, 1); // CRYSTAL
+			if (Player_Query_Agenda() != kPlayerAgendaPolite) {
+				DM_Add_To_List_Never_Repeat_Once_Selected(290, 1, 3, 4); // VOIGT-KAMPFF
+			} else {
+				DM_Add_To_List(1110, 3, 2, 1); // CRYSTAL
+			}
 		}			
 	} else {
 		if (evidenceCount > 3) {
@@ -335,16 +338,7 @@ void SceneScriptCT02::dialogueWithZuben() {
 		break;
 
 	case 300: // DONE
-		if (_vm->_cutContent) {
-			if (Player_Query_Agenda() == kPlayerAgendaSurly 
-			|| Player_Query_Agenda() == kPlayerAgendaErratic) {
-				Actor_Says(kActorMcCoy, 745, 14); //00-0745.AUD	I'm watching you, pal.
-			} else {
-				Actor_Says(kActorMcCoy, 405, 11);
-			}
-		} else {
-			Actor_Says(kActorMcCoy, 405, 11);
-		}
+		Actor_Says(kActorMcCoy, 405, 11);
 		break;
 	}
 
@@ -388,15 +382,11 @@ bool SceneScriptCT02::ClickedOnActor(int actorId) {
 					if (Actor_Clue_Query(kActorMcCoy, kClueHowieLeeInterview)) { 
 						Actor_Says(kActorMcCoy, 370, 10); //00-0370.AUD	 Howie says you're a master chef.
 					} else {
-						if (Player_Query_Agenda() == kPlayerAgendaPolite) {
-							Actor_Says(kActorMcCoy, 3970, 13); //00-3970.AUD	Hey.
-						} else {
-							Actor_Says(kActorMcCoy, 355, 10); //00-0355.AUD	Hey, big guy.
-						}
+						Actor_Says(kActorMcCoy, 355, 10); //00-0355.AUD	Hey, big guy.
 					}
 					// Made it Zuben mentions his name when McCoy firsts talks to him. In the original game it was possible for McCoy to mis the Howie Lee interview clue
 					// where he mentions Zuben by name yet somehow McCoy would still know Zubens name anyway. This change fixes that.
-					if (Game_Flag_Query(kFlagZubenIsReplicant)) {
+					if (!Game_Flag_Query(kFlagZubenIsReplicant)) {
 						Actor_Says(kActorZuben, 20, 19); //19-0020.AUD	You not come back here. Air bad.
 						Actor_Says(kActorMcCoy, 4880, 18); // 00-4880.AUD	Is that right?
 					}

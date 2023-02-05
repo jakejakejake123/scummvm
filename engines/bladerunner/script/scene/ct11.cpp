@@ -295,15 +295,15 @@ bool SceneScriptCT11::ClickedOn2DRegion(int region) {
 					++cluesFound;
 				}
 				if (Actor_Clue_Query(kActorMcCoy, kClueLicensePlate)) {
-					cluesFound += 2;
+					++cluesFound;
 				}
 				if (Actor_Clue_Query(kActorMcCoy, kClueCarColorAndMake)) {
-					cluesFound += 2;
+					++cluesFound;
 				}
 				if (Actor_Clue_Query(kActorMcCoy, kCluePartialLicenseNumber)) {
-					cluesFound += 2;
+					++cluesFound;
 				}
-				if ( cluesFound > 5
+				if (cluesFound > 4
 				&& !Actor_Clue_Query(kActorMcCoy, kClueCar)
 				) {
 					Actor_Voice_Over(510, kActorVoiceOver);

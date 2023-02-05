@@ -573,8 +573,7 @@ void SceneScriptNR01::PlayerWalkedIn() {
 			// Made it so Crystal also says that Guzza mentioned that McCoy retired a human if you told him about killing the homeless man.
 			// Guzza lied and did not cover it up like he said he would and instead used it against McCoy to get him out of the way.
 			if (Game_Flag_Query(kFlagSteeleKnowsBulletBobIsDead)
-			|| Game_Flag_Query(kFlagGuzzaInformed)
-			|| Game_Flag_Query(kFlagMcCoyRetiredHuman)) {
+			&& !_vm->_cutContent) {
 				Actor_Says(kActorSteele, 1330, 12); //01-1330.AUD	We got a problem, though. There’s an APB out for you.
 				if (Game_Flag_Query(kFlagGuzzaInformed)) {
 					Actor_Says(kActorSteele, 1340, 12); //01-1340.AUD	You’ve been shooting civilians? Because that’s what Guzza's saying.

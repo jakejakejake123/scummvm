@@ -196,6 +196,38 @@ void AIScriptIzo::ClickedByPlayer() {
 				Actor_Face_Actor(kActorIzo, kActorMcCoy, true);
 				Actor_Says(kActorMcCoy, 3210, kAnimationModeTalk); //00-3210.AUD	Hey, man.
 				Actor_Says(kActorIzo, 710, 17); //07-0710.AUD	You’re a better man than I imagined.
+				if (Player_Query_Agenda() != kPlayerAgendaSurly 
+				&& Player_Query_Agenda() != kPlayerAgendaErratic) {
+					if (Actor_Clue_Query(kActorMcCoy, kClueRadiationGoggles)
+					|| Actor_Clue_Query(kActorMcCoy, kClueChinaBar)
+					|| Actor_Clue_Query(kActorMcCoy, kClueMoonbus1)) {
+						Actor_Says(kActorMcCoy, 5150, 18); //00-5150.AUD	One more thing.
+						Actor_Change_Animation_Mode(kActorMcCoy, 23);
+						Actor_Change_Animation_Mode(kActorIzo, 23);
+						Delay(800);
+						if (Actor_Clue_Query(kActorMcCoy, kClueChinaBar)) {
+							Item_Pickup_Spin_Effect_From_Actor(kModelAnimationIzoCamera, kActorIzo, 0, 0);		
+							Delay(1500);
+							Actor_Clue_Lose(kActorMcCoy, kClueChinaBar);
+							Actor_Clue_Acquire(kActorIzo, kClueChinaBar, true, -1);
+							Item_Pickup_Spin_Effect_From_Actor(kModelAnimationPhoto, kActorIzo, 0, 0);
+							Delay(1500);
+						}
+						if (Actor_Clue_Query(kActorMcCoy, kClueMoonbus1)) {
+							Actor_Clue_Lose(kActorMcCoy, kClueMoonbus1);
+							Actor_Clue_Acquire(kActorIzo, kClueMoonbus1, true, -1);
+							Item_Pickup_Spin_Effect_From_Actor(kModelAnimationPhoto, kActorIzo, 0, 0);
+							Delay(1500);
+						}
+						if (Actor_Clue_Query(kActorMcCoy, kClueRadiationGoggles)) {
+							Actor_Clue_Lose(kActorMcCoy, kClueRadiationGoggles);
+							Actor_Clue_Acquire(kActorIzo, kClueRadiationGoggles, true, -1);
+							Item_Pickup_Spin_Effect_From_Actor(kModelAnimationRadiationGoggles, kActorIzo, 0, 0);
+							Delay(1500);
+						}
+						Actor_Says(kActorMcCoy, 8170, 13); //00-8170.AUD	There you go.
+					}
+				}
 			}
 		}
 	}

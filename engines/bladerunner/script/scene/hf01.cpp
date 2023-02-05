@@ -143,8 +143,9 @@ bool SceneScriptHF01::ClickedOnActor(int actorId) {
 					Actor_Face_Actor(kActorMurray, kActorMcCoy, true);
 					Actor_Change_Animation_Mode(kActorMcCoy, 23);
 					Actor_Change_Animation_Mode(kActorMurray, 23);
-					Delay(2000);
+					Delay(800);
 					Item_Pickup_Spin_Effect_From_Actor(kModelAnimationLichenDogWrapper, kActorMcCoy, 0, 0);
+					Delay(800);
 					Actor_Says(kActorMurray, 60, 13); //31-0060.AUD	You know anything about politics, Ray? Famous quotes, things like that?
 				} else {
 					Item_Pickup_Spin_Effect(kModelAnimationLichenDogWrapper, 396, 359);
@@ -192,7 +193,8 @@ bool SceneScriptHF01::ClickedOnActor(int actorId) {
 							|| Actor_Clue_Query(kActorMcCoy, kClueLichenDogWrapper)
 							|| Actor_Clue_Query(kActorMcCoy, kClueCarRegistration1)
 							|| Actor_Clue_Query(kActorMcCoy, kClueCarRegistration3)
-							|| Global_Variable_Query(kVariableAffectionTowards) != kAffectionTowardsLucy) {
+							|| (Actor_Clue_Query(kActorMcCoy, kClueHysteriaToken)
+							&& Global_Variable_Query(kVariableAffectionTowards) != kAffectionTowardsLucy)) {
 								Actor_Face_Actor(kActorMcCoy, kActorMurray, true);
 								Actor_Says(kActorMcCoy, 8920, 14); //00-8920.AUD	I gotta ask you a question.
 							}
@@ -201,7 +203,8 @@ bool SceneScriptHF01::ClickedOnActor(int actorId) {
 							|| Actor_Clue_Query(kActorMcCoy, kClueLichenDogWrapper)
 							|| Actor_Clue_Query(kActorMcCoy, kClueCarRegistration1)
 							|| Actor_Clue_Query(kActorMcCoy, kClueCarRegistration3)
-							|| Global_Variable_Query(kVariableAffectionTowards) != kAffectionTowardsLucy) {
+							|| (Actor_Clue_Query(kActorMcCoy, kClueHysteriaToken)
+							&& Global_Variable_Query(kVariableAffectionTowards) != kAffectionTowardsLucy)) {
 								Actor_Says(kActorMcCoy, 1475, 18); //00-1475.AUD	No thanks. But I got a question for you guys.
 							} else {
 								Actor_Says(kActorMcCoy, 140, 18);
@@ -212,14 +215,16 @@ bool SceneScriptHF01::ClickedOnActor(int actorId) {
 						Actor_Says(kActorMcCoy, 4940, 13); //00-4940.AUD	Okay, let's have it.
 						Actor_Change_Animation_Mode(kActorMcCoy, 23);
 						Actor_Change_Animation_Mode(kActorMurray, 23);
-						Delay(2000);
+						Delay(800);
 						Item_Pickup_Spin_Effect_From_Actor(kModelAnimationLichenDogWrapper, kActorMcCoy, 0, 0);
+						Delay(800);
 						Actor_Says(kActorMurray, 3935, 13); // 00-3935.AUD	Thanks.
 						if (Actor_Clue_Query(kActorMcCoy, kClueCheese)
 						|| Actor_Clue_Query(kActorMcCoy, kClueLichenDogWrapper)
 						|| Actor_Clue_Query(kActorMcCoy, kClueCarRegistration1)
 						|| Actor_Clue_Query(kActorMcCoy, kClueCarRegistration3)
-						|| Global_Variable_Query(kVariableAffectionTowards) != kAffectionTowardsLucy) {
+						|| (Actor_Clue_Query(kActorMcCoy, kClueHysteriaToken)
+						&& Global_Variable_Query(kVariableAffectionTowards) != kAffectionTowardsLucy)) {
 							Delay(1000);
 							Actor_Says(kActorMcCoy, 8920, 14); //00-8920.AUD	I gotta ask you a question.
 						}
@@ -458,7 +463,6 @@ void SceneScriptHF01::PlayerWalkedIn() {
 	if (_vm->_cutContent) {
 		if (!Game_Flag_Query(kFlagZubenTalkAct4)
 		&& Actor_Query_Goal_Number(kActorZuben) < kGoalZubenGone
-		&& !Game_Flag_Query(kFlagUG18GuzzaScene)
 		&& !Game_Flag_Query(kFlagZubenArrested)
 		&& !Actor_Clue_Query(kActorMcCoy, kClueZubensMotive) 
 		&& Global_Variable_Query(kVariableChapter) == 4) {
@@ -498,8 +502,7 @@ void SceneScriptHF01::PlayerWalkedIn() {
 					Delay(1000);
 				}
 				if (!Actor_Clue_Query(kActorMcCoy, kClueVKLucyHuman)
-				&& !Actor_Clue_Query(kActorMcCoy, kClueVKLucyReplicant)
-				&& !Actor_Clue_Query(kActorMcCoy, kClueLucyIncept)) {
+				&& !Actor_Clue_Query(kActorMcCoy, kClueVKLucyReplicant)) {
 					Actor_Says(kActorMcCoy, 7320, 17); //00-7320.AUD	Is she a Replicant?
 					if (Game_Flag_Query(kFlagLucyIsReplicant)) {
 						if (Game_Flag_Query(kFlagZubenIsReplicant)) {
@@ -542,22 +545,27 @@ void SceneScriptHF01::PlayerWalkedIn() {
 			Actor_Says(kActorZuben, 270, 15); //19-0270.AUD	Because he bad.
 			Actor_Says(kActorMcCoy, 7350, 14);	//00-7350.AUD	Runciter?
 			Actor_Says(kActorZuben, 280, 12); //19-0280.AUD	He not pay. Bad to Lucy. Bad to everybody. Make people starve.
-			Actor_Says(kActorMcCoy, 7355, 14); //00-7355.AUD	All those animals died.
+			if (!Actor_Clue_Query(kActorMcCoy, kClueLucyInterview)) {
+				Actor_Says(kActorMcCoy, 7355, 14); //00-7355.AUD	All those animals died.
+			}
+			Music_Play(kMusicCrysDie1, 25, 0, 1, -1, kMusicLoopPlayOnce, 1);
 			Actor_Says(kActorZuben, 290, 15); //19-0290.AUD	He made Lucy do bad things. Lucy hurt. Clovis more angry.
-			Actor_Says(kActorZuben, 300, 14); //19-0300.AUD	Girl was forced to do bad things Off-World. Clovis thought Terra better.
-			Actor_Says(kActorZuben, 310, 13); //19-0310.AUD	But Terra's no better for young girls. Runciter bad to Lucy.
+			if (Game_Flag_Query(kFlagLucyIsReplicant)) {
+				Actor_Says(kActorZuben, 300, 14); //19-0300.AUD	Girl was forced to do bad things Off-World. Clovis thought Terra better.
+				Actor_Says(kActorZuben, 310, 13); //19-0310.AUD	But Terra's no better for young girls. Runciter bad to Lucy.
+			}
 			Delay(2000);
-			if (Actor_Query_Goal_Number(kActorLucy) != kGoalLucyGone) {
-				if (Player_Query_Agenda() == kPlayerAgendaSurly 
-				|| Player_Query_Agenda() == kPlayerAgendaErratic) {
-					Actor_Says(kActorMcCoy, 7365, 12);	//00-7365.AUD	You should have killed him.
-				} else {
-					Actor_Says(kActorMcCoy, 7360, 11); //00-7360.AUD	Did he do things to Lucy?
-				}
+			Actor_Says(kActorMcCoy, 7360, 11); //00-7360.AUD	Did he do things to Lucy?
+			Delay(2000);
+			Actor_Says(kActorMcCoy, 2390, kAnimationModeIdle); //00-2390.AUD	Oh, God. No.
+			Delay(1000);
+			if (Player_Query_Agenda() != kPlayerAgendaPolite) {
+				Actor_Says(kActorMcCoy, 7365, 12);	//00-7365.AUD	You should have killed him.
 			}
 			Actor_Says(kActorZuben, 320, 12); //19-0320.AUD	Clovis say Runciter love animals. Runciter still alive so he hurt now. Know what pain is.
 			Actor_Says(kActorZuben, 330, 12); //19-0330.AUD	Kill him, he not hurt. Just dead.
 			Actor_Clue_Acquire(kActorMcCoy, kClueZubensMotive, false, kActorZuben);
+			Delay(2000);
 			Actor_Says(kActorMcCoy, 7290, 12); //00-7290.AUD	Listen it's very important I talked to Clovis.
 			Actor_Says(kActorZuben, 180, 15); //19-0180.AUD	No way. You enemy of Clovis.
 			if (Game_Flag_Query(kFlagMcCoyIsHelpingReplicants)) {
@@ -565,6 +573,7 @@ void SceneScriptHF01::PlayerWalkedIn() {
 				if (Game_Flag_Query(kFlagZubenIsReplicant)) {
 					Actor_Says(kActorZuben, 190, 15); //19-0190.AUD	We do good without you. Do good without anybody.
 					Actor_Says(kActorMcCoy, 5065, 18); //00-5065.AUD	Is that right?
+					Delay(1000);
 				} else {
 					Delay(2000);
 				}
@@ -675,6 +684,8 @@ void SceneScriptHF01::PlayerWalkedIn() {
 							Outtake_Play(kOuttakeEnd2, false, -1);
 							Game_Over();
 						} else {
+							Actor_Says(kActorOfficerGrayford, 280, -1); //24-0280.AUD	It’s McCoy! Get him!
+							Actor_Says(kActorMcCoy, 5460, 18); //00-5460.AUD	Hold it a second! I just want to talk!
 							Actor_Says(kActorOfficerGrayford, 40, kAnimationModeTalk); //24-0040.AUD	Drop your gun, put your hands in the air and then we’ll talk.
 							Actor_Change_Animation_Mode(kActorMcCoy, 4);
 							Delay(400);
@@ -691,6 +702,9 @@ void SceneScriptHF01::PlayerWalkedIn() {
 							Game_Over();
 						}
 					} else {
+						Actor_Says(kActorOfficerGrayford, 280, -1); //24-0280.AUD	It’s McCoy! Get him!
+						Actor_Says(kActorMcCoy, 5460, 18); //00-5460.AUD	Hold it a second! I just want to talk!
+						Delay(1000);
 						Actor_Says(kActorOfficerGrayford, 40, kAnimationModeTalk); //24-0040.AUD	Drop your gun, put your hands in the air and then we’ll talk.
 						Actor_Change_Animation_Mode(kActorMcCoy, 4);
 						Delay(400);
@@ -707,6 +721,7 @@ void SceneScriptHF01::PlayerWalkedIn() {
 						Game_Over();
 					}
 				} else {
+					Actor_Says(kActorOfficerGrayford, 280, -1); //24-0280.AUD	It’s McCoy! Get him!
 					Player_Set_Combat_Mode(true);
 					Delay(1000);
 					Music_Play(kMusicMoraji, 71, 0, 0, -1, kMusicLoopPlayOnce, 2);
@@ -831,6 +846,8 @@ void SceneScriptHF01::PlayerWalkedIn() {
 							Outtake_Play(kOuttakeEnd2, false, -1);
 							Game_Over();
 						} else {
+							Actor_Says(kActorOfficerGrayford, 280, -1);
+							Actor_Says(kActorMcCoy, 5460, 18); //00-5460.AUD	Hold it a second! I just want to talk!
 							Actor_Says(kActorOfficerGrayford, 40, kAnimationModeTalk); //24-0040.AUD	Drop your gun, put your hands in the air and then we’ll talk.
 							Actor_Change_Animation_Mode(kActorMcCoy, 4);
 							Delay(400);
@@ -847,6 +864,9 @@ void SceneScriptHF01::PlayerWalkedIn() {
 							Game_Over();
 						}
 					} else {
+						Actor_Says(kActorOfficerGrayford, 280, -1);
+						Actor_Says(kActorMcCoy, 5460, 18); //00-5460.AUD	Hold it a second! I just want to talk!
+						Delay(1000);
 						Actor_Says(kActorOfficerGrayford, 40, kAnimationModeTalk); //24-0040.AUD	Drop your gun, put your hands in the air and then we’ll talk.
 						Actor_Change_Animation_Mode(kActorMcCoy, 4);
 						Delay(400);
@@ -863,6 +883,7 @@ void SceneScriptHF01::PlayerWalkedIn() {
 						Game_Over();
 					}
 				} else {
+					Actor_Says(kActorOfficerGrayford, 280, -1);
 					Player_Set_Combat_Mode(true);
 					Delay(1000);
 					Music_Play(kMusicMoraji, 71, 0, 0, -1, kMusicLoopPlayOnce, 2);
@@ -995,7 +1016,7 @@ void SceneScriptHF01::PlayerWalkedIn() {
 				&& Player_Query_Agenda() != kPlayerAgendaErratic) {
 					Actor_Voice_Over(2410, kActorVoiceOver); //99-2410.AUD	He went down too easy. Just one shot.
 					Actor_Voice_Over(2420, kActorVoiceOver);
-					Delay(1000);
+					Delay(2000);
 					Outtake_Play(kOuttakeAway1, true, -1);
 					Actor_Set_Goal_Number(kActorMcCoy, kGoalMcCoyArrested);
 				} else {
@@ -1120,9 +1141,11 @@ void SceneScriptHF01::dialogueWithMiaAndMurray() {
 		if (Actor_Query_Friendliness_To_Other(kActorMurray, kActorMcCoy) > 49) {
 			if (Actor_Clue_Query(kActorMcCoy, kClueLucy)
 			|| Actor_Clue_Query(kActorMcCoy, kClueLucyWithDektora)) {
-				if (Actor_Query_Goal_Number(kActorLucy) != kGoalLucyGone
-				&& Global_Variable_Query(kVariableAffectionTowards) != kAffectionTowardsLucy) {
-					DM_Add_To_List_Never_Repeat_Once_Selected(440, 8, 6, 7); // LUCY PHOTO
+				if (Actor_Clue_Query(kActorMcCoy, kClueHysteriaToken)) {
+					if (Actor_Query_Goal_Number(kActorLucy) != kGoalLucyGone
+					&& Global_Variable_Query(kVariableAffectionTowards) != kAffectionTowardsLucy) {
+						DM_Add_To_List_Never_Repeat_Once_Selected(440, 8, 6, 7); // LUCY PHOTO
+					}
 				}
 			}
 		}
@@ -1133,6 +1156,7 @@ void SceneScriptHF01::dialogueWithMiaAndMurray() {
 		if (Actor_Query_Friendliness_To_Other(kActorMurray, kActorMcCoy) > 49) {
 			if (!Actor_Clue_Query(kActorMcCoy, kClueLucy)
 			&& !Actor_Clue_Query(kActorMcCoy, kClueLucyWithDektora)
+			&& Actor_Clue_Query(kActorMcCoy, kClueHysteriaToken)
 			&& Actor_Query_Goal_Number(kActorLucy) != kGoalLucyGone
 			&& Global_Variable_Query(kVariableAffectionTowards) != kAffectionTowardsLucy) {
 				 DM_Add_To_List_Never_Repeat_Once_Selected(450, 7, 6, 7); // LUCY
@@ -1182,11 +1206,7 @@ void SceneScriptHF01::dialogueWithMiaAndMurray() {
 			Actor_Face_Actor(kActorMia, kActorMcCoy, true);
 		}
 		if (_vm->_cutContent) {
-			if (Actor_Clue_Query(kActorMcCoy, kClueHysteriaToken)) {
-				Actor_Says(kActorMcCoy, 1480, 23); //00-1480.AUD	You ever seen this girl around here, maybe in the arcade?
-			} else {
-				Actor_Says(kActorMcCoy, 3245, 23); //00-3245.AUD	This girl look familiar?
-			}
+			Actor_Says(kActorMcCoy, 1480, 23); //00-1480.AUD	You ever seen this girl around here, maybe in the arcade?
 		} else {
 			Actor_Says(kActorMcCoy, 1480, 15);
 		}
@@ -1225,11 +1245,7 @@ void SceneScriptHF01::dialogueWithMiaAndMurray() {
 			Actor_Face_Actor(kActorMia, kActorMcCoy, true);
 		}
 		if (_vm->_cutContent) {
-			if (Actor_Clue_Query(kActorMcCoy, kClueHysteriaToken)) {
-				Actor_Says(kActorMcCoy, 1485, 16); //00-1485.AUD	You seen a girl around here? About fourteen with pink hair... Maybe in the arcade?
-			} else {
-				Actor_Says(kActorMcCoy, 385, 13); //00-0385.AUD	I'm looking for a girl about 14 years old with pink hair. You seen her?
-			}
+			Actor_Says(kActorMcCoy, 1485, 16); //00-1485.AUD	You seen a girl around here? About fourteen with pink hair... Maybe in the arcade?
 		} else {
 			Actor_Says(kActorMcCoy, 385, 13); //00-0385.AUD	I'm looking for a girl about 14 years old with pink hair. You seen her?
 		}
@@ -1398,7 +1414,7 @@ void SceneScriptHF01::dialogueWithMiaAndMurray() {
 					Actor_Face_Actor(kActorMurray, kActorMia, true);
 					Actor_Face_Heading(kActorMia, 511, false);
 					Actor_Says(kActorMcCoy, 3970, 14); //00-3970.AUD	Hey.
-					Delay(1000);
+					Delay(2000);
 					Actor_Says(kActorMcCoy, 815, 14); //00-0815.AUD	Listen to me!
 					Actor_Face_Actor(kActorMia, kActorMurray, true);
 					Actor_Says(kActorMia, 210, 12); //22-0210.AUD	Hmph! Is that rude boy talking to us?
@@ -1491,11 +1507,26 @@ void SceneScriptHF01::talkWithDektora() {
 		Actor_Says(kActorDektora, 60, kAnimationModeTalk); //03-0060.AUD	I felt it from the start.
 		Actor_Says(kActorDektora, 70, kAnimationModeTalk); //03-0070.AUD	That’s one of the reasons I was so drawn to you.
 	}
-	Actor_Says(kActorMcCoy, 1420, kAnimationModeTalk); //00-1420.AUD	Are you ready?
-	Actor_Says(kActorDektora, 80, kAnimationModeTalk); //03-0080.AUD	Like I’m beginning a whole new life.
 	if (_vm->_cutContent) {
 		Actor_Set_Targetable(kActorDektora, false);
+		if (Player_Query_Agenda() != kPlayerAgendaSurly 
+		&& Player_Query_Agenda() != kPlayerAgendaErratic) {
+			if (Actor_Clue_Query(kActorMcCoy, kClueDragonflyBelt)) {
+				Actor_Says(kActorMcCoy, 5150, 18); //00-5150.AUD	One more thing.
+				Actor_Change_Animation_Mode(kActorMcCoy, 23);
+				Actor_Change_Animation_Mode(kActorDektora, 23);
+				Delay(800);
+				Actor_Clue_Lose(kActorMcCoy, kClueDragonflyBelt);
+				Actor_Clue_Acquire(kActorDektora, kClueDragonflyBelt, true, -1);
+				Item_Pickup_Spin_Effect_From_Actor(kModelAnimationDragonflyBelt, kActorDektora, 0, 0);
+				Delay(1500);
+				Actor_Says(kActorMcCoy, 8170, 13); //00-8170.AUD	There you go.
+				Delay(1000);
+			}
+		}
 	}
+	Actor_Says(kActorMcCoy, 1420, kAnimationModeTalk); //00-1420.AUD	Are you ready?
+	Actor_Says(kActorDektora, 80, kAnimationModeTalk); //03-0080.AUD	Like I’m beginning a whole new life.
 }
 
 void SceneScriptHF01::talkWithLucy() {
@@ -1553,6 +1584,53 @@ void SceneScriptHF01::talkWithLucy() {
 		Actor_Says(kActorMcCoy, 1445, kAnimationModeTalk); //00-1445.AUD	It exists somewhere.
 		Actor_Says(kActorLucy, 80, kAnimationModeTalk); //06-0080.AUD	It’s so much more than a dream, isn’t it?
 		Actor_Says(kActorLucy, 3030, kAnimationModeTalk);
+	}
+	if (_vm->_cutContent) {
+		Actor_Set_Targetable(kActorLucy, false);
+		if (Player_Query_Agenda() != kPlayerAgendaSurly 
+		&& Player_Query_Agenda() != kPlayerAgendaErratic) {
+			if (Actor_Clue_Query(kActorMcCoy, kClueToyDog)
+			|| Actor_Clue_Query(kActorMcCoy, kClueRagDoll)
+			|| Actor_Clue_Query(kActorMcCoy, kClueCandy)
+			|| Actor_Clue_Query(kActorMcCoy, kClueHysteriaToken)) {
+				Actor_Says(kActorMcCoy, 5150, 18); //00-5150.AUD	One more thing.	
+				Actor_Change_Animation_Mode(kActorMcCoy, 23);
+				Actor_Change_Animation_Mode(kActorLucy, 23);
+				Delay(800);
+				if (Actor_Clue_Query(kActorMcCoy, kClueToyDog)) {
+					Actor_Clue_Lose(kActorMcCoy, kClueToyDog);
+					Actor_Clue_Acquire(kActorLucy, kClueToyDog, true, -1);
+					Item_Pickup_Spin_Effect_From_Actor(kModelAnimationToyDog, kActorLucy, 0, 0);
+					Delay(1500);
+				}
+				if (Actor_Clue_Query(kActorMcCoy, kClueRagDoll)) {
+					Actor_Clue_Lose(kActorMcCoy, kClueRagDoll);
+					Actor_Clue_Acquire(kActorLucy, kClueRagDoll, true, -1);
+					Item_Pickup_Spin_Effect_From_Actor(kModelAnimationRagDoll, kActorLucy, 0, 0);
+					Delay(1500);
+				}
+				if (Actor_Clue_Query(kActorMcCoy, kClueCandy)) {
+					Actor_Clue_Lose(kActorMcCoy, kClueCandy);
+					Actor_Clue_Acquire(kActorLucy, kClueCandy, true, -1);
+					Item_Pickup_Spin_Effect_From_Actor(kModelAnimationCandy, kActorLucy, 0, 0);
+					Delay(1500);
+				}
+				if (Actor_Clue_Query(kActorMcCoy, kClueHysteriaToken)) {
+					Actor_Clue_Lose(kActorMcCoy, kClueHysteriaToken);
+					Actor_Clue_Acquire(kActorLucy, kClueHysteriaToken, true, -1);
+					Item_Pickup_Spin_Effect_From_Actor(kModelAnimationHysteriaToken, kActorLucy, 0, 0);
+					Delay(1500);
+				}
+				Actor_Says(kActorMcCoy, 8170, 13); //00-8170.AUD	There you go.
+				if (!Game_Flag_Query(kFlagLucyIsReplicant)
+				&& (Player_Query_Agenda() == kPlayerAgendaSurly 
+				|| Player_Query_Agenda() == kPlayerAgendaErratic)) {
+					Actor_Says(kActorLucy, 1050, 17); //06-1050.AUD	Oh, thank you. Thank you for everything.
+				} else {
+					Actor_Says(kActorLucy, 230, 14); //06-0230.AUD	Thank you.
+				}
+			}
+		}
 	}
 }
 

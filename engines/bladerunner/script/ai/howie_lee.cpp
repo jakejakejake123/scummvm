@@ -363,20 +363,48 @@ bool AIScriptHowieLee::UpdateAnimation(int *animation, int *frame) {
 		++_animationFrame;
 		// _varIdleStatesToggle can be 0 or 1.
 		// Determines whether kModelAnimationHowieLeePutsIngredientsCooking or kModelAnimationHowieLeeGathersOfTidiesUp is used.
-		if (_varIdleStatesToggle > 0) {
-			*animation = kModelAnimationHowieLeePutsIngredientsCooking;
-			if (_animationFrame >= Slice_Animation_Query_Number_Of_Frames(kModelAnimationHowieLeePutsIngredientsCooking)) {
-				_animationFrame = 0;
-				if (Random_Query(0, 2) > 0) {
-					_varIdleStatesToggle ^= 1;
+		if (_vm->_cutContent) {
+			if (!Game_Flag_Query(kFlagHowieLeeArrested)) {
+				if (_varIdleStatesToggle > 0) {
+					*animation = kModelAnimationHowieLeePutsIngredientsCooking;
+					if (_animationFrame >= Slice_Animation_Query_Number_Of_Frames(kModelAnimationHowieLeePutsIngredientsCooking)) {
+						_animationFrame = 0;
+						if (Random_Query(0, 2) > 0) {
+							_varIdleStatesToggle ^= 1;
+						}
+					}
+				} else {
+					*animation = kModelAnimationHowieLeeGathersOfTidiesUp;
+					if (_animationFrame >= Slice_Animation_Query_Number_Of_Frames(kModelAnimationHowieLeeGathersOfTidiesUp)) {
+						_animationFrame = 0;
+						if (Random_Query(0, 1) > 0) {
+							_varIdleStatesToggle ^= 1;
+						}
+					}
+				}
+			} else {
+				if (_animationFrame >= Slice_Animation_Query_Number_Of_Frames(kModelAnimationHowieLeeExplainTalk)) {
+					_animationState = 3;
+					_animationFrame = 0;
+					*animation = kModelAnimationHowieLeeCalmTalk;
 				}
 			}
 		} else {
-			*animation = kModelAnimationHowieLeeGathersOfTidiesUp;
-			if (_animationFrame >= Slice_Animation_Query_Number_Of_Frames(kModelAnimationHowieLeeGathersOfTidiesUp)) {
-				_animationFrame = 0;
-				if (Random_Query(0, 1) > 0) {
-					_varIdleStatesToggle ^= 1;
+			if (_varIdleStatesToggle > 0) {
+				*animation = kModelAnimationHowieLeePutsIngredientsCooking;
+				if (_animationFrame >= Slice_Animation_Query_Number_Of_Frames(kModelAnimationHowieLeePutsIngredientsCooking)) {
+					_animationFrame = 0;
+					if (Random_Query(0, 2) > 0) {
+						_varIdleStatesToggle ^= 1;
+					}
+				}
+			} else {
+				*animation = kModelAnimationHowieLeeGathersOfTidiesUp;
+				if (_animationFrame >= Slice_Animation_Query_Number_Of_Frames(kModelAnimationHowieLeeGathersOfTidiesUp)) {
+					_animationFrame = 0;
+					if (Random_Query(0, 1) > 0) {
+						_varIdleStatesToggle ^= 1;
+					}
 				}
 			}
 		}

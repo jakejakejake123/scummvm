@@ -437,7 +437,10 @@ bool SceneScriptAR01::ClickedOnExit(int exitId) {
 			&& !Game_Flag_Query(kFlagDNARowAvailableTalk)
 			) {
 				if (_vm->_cutContent) {
-					if (Actor_Clue_Query(kActorMcCoy, kClueWeaponsCache)) {
+					if (Actor_Clue_Query(kActorMcCoy, kClueWeaponsCache)
+					&& (Actor_Clue_Query(kActorMcCoy, kClueDetonatorWire)
+					|| Actor_Clue_Query(kActorMcCoy, kCluePoliceWeaponUsed)
+					|| Actor_Clue_Query(kActorMcCoy, kCluePlasticExplosive))) {
 						Actor_Voice_Over(3480, kActorVoiceOver); //99-3480.AUD	Yeah, what a difference a day makes.
 						Delay(1000);
 						Actor_Voice_Over(3510, kActorVoiceOver); //99-3510.AUD	The picture was still a little blurry.
@@ -458,6 +461,11 @@ bool SceneScriptAR01::ClickedOnExit(int exitId) {
 				}
 				if (_vm->_cutContent) {
 					if (!Actor_Clue_Query(kActorMcCoy, kClueWeaponsCache)) {
+						Actor_Voice_Over(4330, kActorVoiceOver); //99-4330.AUD	I had nothing to connect this Izo character to the Eisenduller murder.
+					} else if (Actor_Clue_Query(kActorMcCoy, kClueWeaponsCache)
+					&& (!Actor_Clue_Query(kActorMcCoy, kClueDetonatorWire)
+					&& !Actor_Clue_Query(kActorMcCoy, kCluePoliceWeaponUsed)
+					&& !Actor_Clue_Query(kActorMcCoy, kCluePlasticExplosive))) {
 						Actor_Voice_Over(4330, kActorVoiceOver); //99-4330.AUD	I had nothing to connect this Izo character to the Eisenduller murder.
 					}
 				} else {
@@ -632,6 +640,7 @@ void SceneScriptAR01::PlayerWalkedIn() {
 			Actor_Says(kActorMcCoy, 660, 14); //00-0660.AUD	You seen any suspicious types around here lately?
 			Delay (2000);
 			Actor_Says(kActorMcCoy, 1885, kAnimationModeTalk); //00-1885.AUD	I’ll take that as a yes.
+			Delay (500);
 			Actor_Says(kActorMcCoy, 875, 17); //00-0875.AUD	Where do I find him?
 			Delay (1000);
 			Actor_Face_Actor(kActorMcCoy, kActorHasan, true);
@@ -653,7 +662,7 @@ void SceneScriptAR01::PlayerWalkedIn() {
 			Actor_Says(kActorMcCoy, 1535, 19); //00-1535.AUD	Ah, never mind.
 			Delay (2000);
 			Actor_Says(kActorFishDealer, 230, -1); // 29-0230.AUD	You buy fish? Highest quality.
-			Delay (2000);	
+			Delay (3000);	
 			Game_Flag_Set(kFlagAR01Entered);
 			ADQ_Add(kActorOfficerLeary, 300, kAnimationModeTalk); //23-0300.AUD	LA, 38 Metro 3. Subject check.
 			ADQ_Add(kActorDispatcher, 480, kAnimationModeTalk); //38-0480.AUD	Sector 3 unit was under check. Go ahead.
@@ -703,12 +712,26 @@ void SceneScriptAR01::dialogueWithFishDealerBuyGoldfish() {
 	Dialogue_Menu_Clear_Never_Repeat_Was_Selected_Flag(530);
 	Dialogue_Menu_Clear_Never_Repeat_Was_Selected_Flag(540);
 
-	if (Global_Variable_Query(kVariableChinyen) >= 105
-	    || Query_Difficulty_Level() == kGameDifficultyEasy
-	) {
-		DM_Add_To_List_Never_Repeat_Once_Selected(530, 7, 5, 3); // BUY
+	if (_vm->_cutContent) {
+		if (Global_Variable_Query(kVariableChinyen) >= 105
+		|| Query_Difficulty_Level() == kGameDifficultyEasy
+		) {
+			if (Player_Query_Agenda() == kPlayerAgendaPolite) {
+				DM_Add_To_List_Never_Repeat_Once_Selected(530, 7, 3, 2); // BUY
+			} else {
+				DM_Add_To_List_Never_Repeat_Once_Selected(540, 1, 5, 7); // NO THANKS
+			}
+		} else {
+			DM_Add_To_List_Never_Repeat_Once_Selected(540, 1, 5, 7); // NO THANKS
+		}
+	} else {
+		if (Global_Variable_Query(kVariableChinyen) >= 105
+		|| Query_Difficulty_Level() == kGameDifficultyEasy
+		) {
+			DM_Add_To_List_Never_Repeat_Once_Selected(530, 7, 5, 3); // BUY
+		}
+		DM_Add_To_List_Never_Repeat_Once_Selected(540, 3, 5, 7); // NO THANKS
 	}
-	DM_Add_To_List_Never_Repeat_Once_Selected(540, 3, 5, 7); // NO THANKS
 
 	Dialogue_Menu_Appear(320, 240);
 	int answerValue = Dialogue_Menu_Query_Input();
@@ -719,9 +742,10 @@ void SceneScriptAR01::dialogueWithFishDealerBuyGoldfish() {
 		Actor_Says(kActorMcCoy, 7000, 23);
 		if (_vm->_cutContent) {
 			Actor_Change_Animation_Mode(kActorMcCoy, 23);
-			Delay(1000);
+			Actor_Change_Animation_Mode(kActorFishDealer, 23);
+			Delay(800);
 			Item_Pickup_Spin_Effect_From_Actor(kModelAnimationGoldfish, kActorMcCoy, 0, 0);
-			Delay(1000);
+			Delay(800);
 		}
 		Game_Flag_Set(kFlagBoughtFish);
 		if (Query_Difficulty_Level() != kGameDifficultyEasy) {

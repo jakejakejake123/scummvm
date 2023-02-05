@@ -168,24 +168,30 @@ void SceneScriptUG19::PlayerWalkedIn() {
 				// It would make no sense for McCoy to ask if Gordo stole the cheese if he already confessed.
 				if (Actor_Clue_Query(kActorMcCoy, kClueStolenCheese)) {
 					if (!Actor_Clue_Query(kActorMcCoy, kClueGordoConfession)) {
-						Actor_Says(kActorMcCoy, 6540, 23); //00-6540.AUD	Did you steal this cheese from Kingston Kitchen?	
-						Actor_Says(kActorGordo, 1280, 13); //02-1280.AUD	Hey, baby. I may steal a line or two. But I’d never steal some cheese. I don’t do dairy.
-						if (Player_Query_Agenda() == kPlayerAgendaSurly 
-						|| Player_Query_Agenda() == kPlayerAgendaErratic) {
-							Actor_Says(kActorMcCoy, 6590, 15); //00-6590.AUD	The owner described you to a tee. Even down to that rotten bow tie you always wear. 
+						if (Actor_Clue_Query(kActorMcCoy, kClueCheese)) {
+							Actor_Says(kActorMcCoy, 6540, 23); //00-6540.AUD	Did you steal this cheese from Kingston Kitchen?	
+							Actor_Says(kActorGordo, 1280, 13); //02-1280.AUD	Hey, baby. I may steal a line or two. But I’d never steal some cheese. I don’t do dairy.
+							if (Player_Query_Agenda() == kPlayerAgendaSurly 
+							|| Player_Query_Agenda() == kPlayerAgendaErratic) {
+								Actor_Says(kActorMcCoy, 6590, 15); //00-6590.AUD	The owner described you to a tee. Even down to that rotten bow tie you always wear. 
+							} else {
+								Actor_Says(kActorMcCoy, 6995, 18); //00-6995.AUD	That's not what I heard. You wanna set the record straight?
+							}
 						} else {
-							Actor_Says(kActorMcCoy, 6995, 18); //00-6995.AUD	That's not what I heard. You wanna set the record straight?
+							Actor_Says(kActorMcCoy, 3250, kAnimationModeTalk);
+							Actor_Says(kActorGordo, 530, 18);
+							Actor_Says(kActorMcCoy, 3300, 15);
+							Actor_Says(kActorGordo, 540, 13);
+							Actor_Says(kActorMcCoy, 3305, kAnimationModeTalk);
+							Actor_Says(kActorGordo, 550, 16); //02-0550.AUD	For crying out loud. Can’t a guy make a living in this fakakta place without being hassled?
+							Actor_Says(kActorMcCoy, 7815, 13); //00-7815.AUD	No.
+							Actor_Clue_Acquire(kActorMcCoy, kClueGordoConfession, true, kActorGordo);
+							Delay(1000);	
 						}
 					} else {
 						Actor_Says(kActorMcCoy, 3250, kAnimationModeTalk);
-						Actor_Says(kActorGordo, 530, 18);
-						Actor_Says(kActorMcCoy, 3300, 15);
-						Actor_Says(kActorGordo, 540, 13);
-						Actor_Says(kActorMcCoy, 3305, kAnimationModeTalk);
 						Actor_Says(kActorGordo, 550, 16); //02-0550.AUD	For crying out loud. Can’t a guy make a living in this fakakta place without being hassled?
 						Actor_Says(kActorMcCoy, 7815, 13); //00-7815.AUD	No.
-						Actor_Clue_Acquire(kActorMcCoy, kClueGordoConfession, true, kActorGordo);
-						Delay(1000);	
 					}
 					Actor_Clue_Acquire(kActorMcCoy, kClueGordoInterview2, true, kActorGordo);	
 					Actor_Says(kActorMcCoy, 6600, 13); //00-6600.AUD	Why the big deal over food?

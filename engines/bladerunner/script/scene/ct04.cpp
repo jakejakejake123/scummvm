@@ -45,6 +45,14 @@ void SceneScriptCT04::InitializeScene() {
 		Scene_Exit_Add_2D_Exit(2, 0, 440, 590, 479, 2);
 	}
 
+	if (_vm->_cutContent) {
+		if (Actor_Query_Is_In_Current_Set(kActorTransient)) {
+			if (Game_Flag_Query(kFlagMcCoyIsHelpingReplicants)) {
+				Actor_Set_Targetable(kActorTransient, false);
+			}
+		}
+	}
+
 	Ambient_Sounds_Add_Looping_Sound(kSfxCTRAIN1,  50,    1, 1);
 	Ambient_Sounds_Add_Looping_Sound(kSfxCTAMBR1,  15, -100, 1);
 	Ambient_Sounds_Add_Looping_Sound(kSfxCTRUNOFF, 34,  100, 1);
@@ -112,7 +120,7 @@ bool SceneScriptCT04::ClickedOn3DObject(const char *objectName, bool a2) {
 					Actor_Voice_Over(340, kActorVoiceOver);
 				}
 				Game_Flag_Set(kFlagCT04HomelessBodyInDumpster);
-				if (_vm->_cutContent) {
+				if (!Actor_Clue_Query(kActorMcCoy, kClueGaffsInformation)) {
 					Actor_Set_Goal_Number(kActorZuben, kGoalZubenFled);
 				}
 			}
@@ -168,6 +176,8 @@ bool SceneScriptCT04::ClickedOn3DObject(const char *objectName, bool a2) {
 							Actor_Says(kActorMcCoy, 8760, -1);//00-8760.AUD	A license plate.
 							Delay(2000);
 							Actor_Says(kActorMcCoy, 8525, 9); //00-8525.AUD	Hmph.
+							Actor_Change_Animation_Mode(kActorMcCoy, 23);
+							Delay(800);
 							Actor_Says(kActorAnsweringMachine, 390, kAnimationModeTalk); // 39-0390.AUD	Begin test.
 							Ambient_Sounds_Play_Sound(kSfxDATALOAD, 50, 0, 0, 99);
 							Delay(2000);
@@ -176,6 +186,9 @@ bool SceneScriptCT04::ClickedOn3DObject(const char *objectName, bool a2) {
 							Actor_Says(kActorAnsweringMachine, 470, kAnimationModeTalk); //39-0470.AUD	End test.
 							Actor_Says(kActorMcCoy, 7200, 13); //00-7200.AUD	Bingo.
 							Actor_Clue_Acquire(kActorMcCoy, kClueLicensePlateMatch, true, -1); 
+							if (!Actor_Clue_Query(kActorMcCoy, kClueGaffsInformation)) {
+								Actor_Set_Goal_Number(kActorZuben, kGoalZubenFled);
+							}
 						}
 			  		} else {
 						Ambient_Sounds_Play_Sound(kSfxGARBAGE, 45, 30, 30, 0);
@@ -207,15 +220,15 @@ void SceneScriptCT04::dialogueWithHomeless() {
 	Dialogue_Menu_Clear_List();
 	// Made it so McCoy only gives the homeless man money if he is not surly or erratic and he has enough money.
 	if (_vm->_cutContent) { 
-		if (Player_Query_Agenda() == kPlayerAgendaPolite) {
-			if (Global_Variable_Query(kVariableChinyen) >= 10
-			|| Query_Difficulty_Level() == kGameDifficultyEasy) {
-				DM_Add_To_List_Never_Repeat_Once_Selected(410, 8, 4, -1); // YES
+		if (Global_Variable_Query(kVariableChinyen) >= 10
+		|| Query_Difficulty_Level() == kGameDifficultyEasy) {
+			if (Player_Query_Agenda() == kPlayerAgendaPolite) { 
+				DM_Add_To_List_Never_Repeat_Once_Selected(410, 8, 2, 1); // YES
 			} else {
-				DM_Add_To_List_Never_Repeat_Once_Selected(420, -1, 6, 8); // NO
+				DM_Add_To_List_Never_Repeat_Once_Selected(420, 1, 6, 8); // NO
 			}
 		} else {
-			DM_Add_To_List_Never_Repeat_Once_Selected(420, -1, 6, 8); // NO
+			DM_Add_To_List_Never_Repeat_Once_Selected(420, 1, 6, 8); // NO
 		}
 	} else {
 		if (Global_Variable_Query(kVariableChinyen) > 10
@@ -246,6 +259,17 @@ void SceneScriptCT04::dialogueWithHomeless() {
 		//Restored the big man limping clue.
 		if (_vm->_cutContent) {
 			Actor_Clue_Acquire(kActorMcCoy, kClueBigManLimping, true, kActorTransient);
+			Actor_Says(kActorMcCoy, 3935, 13);	// Thanks.
+			if (Game_Flag_Query(kFlagCT01BoughtHowieLeeFood)) {	
+				Actor_Says(kActorMcCoy, 5150, 18); //00-5150.AUD	One more thing.
+				Actor_Change_Animation_Mode(kActorMcCoy, 23);
+				Delay(800);
+				Item_Pickup_Spin_Effect_From_Actor(kModelAnimationKingstonKitchenBox, kActorTransient, 0, 0);
+				Delay(800);
+				Actor_Says(kActorMcCoy, 8502, kAnimationModeTalk); //00-8502.AUD	I hope it's enough.
+				Delay(1000);
+				Actor_Says(kActorMcCoy, 2860, 14); //00-2860.AUD	You take care of yourself.
+			}
 		}
 		Actor_Modify_Friendliness_To_Other(kActorTransient, kActorMcCoy, 5);
 		if (Query_Difficulty_Level() != kGameDifficultyEasy) {

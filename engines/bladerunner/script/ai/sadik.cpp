@@ -527,64 +527,99 @@ bool AIScriptSadik::GoalChanged(int currentGoalNumber, int newGoalNumber) {
 	// Added in some extra dialogue for Sadik and McCoy. If McCoy betrayed Crystal this will be mentioned in the conversation.
 		if (_vm->_cutContent) {
 			Actor_Face_Actor(kActorMcCoy, kActorSadik, true);
-			Actor_Says(kActorMcCoy, 8480, kAnimationModeTalk); //00-8480.AUD	Anyone there?
+			if (Actor_Query_Friendliness_To_Other(kActorClovis, kActorMcCoy) > 50
+			&& !Game_Flag_Query(kFlagMcCoyRetiredReplicant)) { 
+				Actor_Says(kActorMcCoy, 8480, kAnimationModeTalk); //00-8480.AUD	Anyone there?
+			} else {
+				Actor_Says(kActorMcCoy, 3970, 14); //00-3970.AUD	Hey.
+			}
 			Loop_Actor_Walk_To_XYZ(kActorSadik, -857.0f, 0.0f, -703.0f, 0, false, true, false);
 			Actor_Face_Actor(kActorSadik, kActorMcCoy, true);
 			Actor_Face_Actor(kActorMcCoy, kActorSadik, true);
-		}
-		Actor_Says(kActorSadik, 110, kAnimationModeTalk); //08-0110.AUD	Brother mon. Wondering when you’d make it out here.
-		if (_vm->_cutContent) {
-			if (Game_Flag_Query(kFlagMcCoyIsHelpingReplicants)) {
-				Actor_Says(kActorMcCoy, 2290, kAnimationModeTalk); //00-2290.AUD	Took a little while to realize where I belonged.
-				Actor_Says(kActorSadik, 310, kAnimationModeTalk); //08-0310.AUD	The Maker built you right.
+			if (Actor_Query_Friendliness_To_Other(kActorClovis, kActorMcCoy) > 50
+			&& !Game_Flag_Query(kFlagMcCoyRetiredReplicant)) { 		
+				Actor_Says(kActorSadik, 110, kAnimationModeTalk); //08-0110.AUD	Brother mon. Wondering when you’d make it out here.
+				if (Game_Flag_Query(kFlagMcCoyIsHelpingReplicants)) {
+					Actor_Says(kActorMcCoy, 2290, kAnimationModeTalk); //00-2290.AUD	Took a little while to realize where I belonged.
+					Actor_Says(kActorSadik, 310, kAnimationModeTalk); //08-0310.AUD	The Maker built you right.
+				}
+				if (Actor_Clue_Query(kActorSadik, kClueMcCoyBetrayal)) {
+					Actor_Says(kActorSadik, 120, kAnimationModeTalk); //08-0120.AUD	Heard one of the traps go off. Was afraid you was blown to bits.
+					Actor_Says(kActorMcCoy, 2295, kAnimationModeTalk); //00-2295.AUD	Steele was on the receiving end of that baby.
+					Actor_Says(kActorSadik, 130, kAnimationModeTalk); //08-0130.AUD	Heh, she was a killer. She richly deserved it.
+					if (Player_Query_Agenda() == kPlayerAgendaSurly 
+					|| Player_Query_Agenda() == kPlayerAgendaErratic) {
+						Actor_Says(kActorMcCoy, 8485, kAnimationModeTalk); //00-8485.AUD	One is a start.
+						Delay(500);
+					}
+					Actor_Says(kActorMcCoy, 2300, kAnimationModeTalk); //00-2300.AUD	What about you, Sadik? Aren’t you a killer?
+					if (Game_Flag_Query(kFlagSadikIsReplicant)) {
+						Actor_Says(kActorSadik, 180, kAnimationModeTalk); //08-0180.AUD	My woman? She be killed by a Blade Runner. Revenge all I got left.
+						Actor_Says(kActorSadik, 190, kAnimationModeTalk);
+						if (Player_Query_Agenda() != kPlayerAgendaPolite) {
+							Actor_Says(kActorMcCoy, 2310, kAnimationModeTalk); //00-2310.AUD	I understand.
+						} else {
+							Actor_Says(kActorMcCoy, 4880, 13); //00-4880.AUD	Is that right?
+						}
+					} else {
+						Actor_Says(kActorSadik, 140, kAnimationModeTalk); //08-0140.AUD	You bet, mon. Human too. My woman, she be Replicant.
+						Actor_Says(kActorSadik, 150, kAnimationModeTalk);
+						if (Player_Query_Agenda() == kPlayerAgendaPolite) {
+							Actor_Says(kActorMcCoy, 2305, kAnimationModeTalk); //00-2305.AUD	I’m sorry.
+						} else {
+							Actor_Says(kActorMcCoy, 4880, 13); //00-4880.AUD	Is that right?
+						}
+						Actor_Says(kActorSadik, 160, kAnimationModeTalk);
+						Actor_Says(kActorSadik, 170, kAnimationModeTalk);
+					}
+					Actor_Says(kActorSadik, 200, kAnimationModeTalk); //08-0200.AUD	Truth be told killing don’t help much.
+				} else if (Actor_Query_Goal_Number(kActorSteele) > kGoalSteeleGone) {
+					Actor_Says(kActorMcCoy, 6250, 15); //00-6250.AUD	I thought it was all over, when Steele showed up.
+					Actor_Says(kActorSadik, 130, kAnimationModeTalk); //08-0130.AUD	Heh, she was a killer. She richly deserved it.
+					if (Player_Query_Agenda() == kPlayerAgendaSurly 
+					|| Player_Query_Agenda() == kPlayerAgendaErratic) {
+						Actor_Says(kActorMcCoy, 8485, kAnimationModeTalk); //00-8485.AUD	One is a start.
+						Delay(500);
+					}
+					Actor_Says(kActorMcCoy, 2300, kAnimationModeTalk); //00-2300.AUD	What about you, Sadik? Aren’t you a killer?
+					if (Game_Flag_Query(kFlagSadikIsReplicant)) {
+						Actor_Says(kActorSadik, 180, kAnimationModeTalk); //08-0180.AUD	My woman? She be killed by a Blade Runner. Revenge all I got left.
+						Actor_Says(kActorSadik, 190, kAnimationModeTalk);
+						if (Player_Query_Agenda() != kPlayerAgendaPolite) {
+							Actor_Says(kActorMcCoy, 2310, kAnimationModeTalk); //00-2310.AUD	I understand.
+						} else {
+							Actor_Says(kActorMcCoy, 4880, 13); //00-4880.AUD	Is that right?
+						}
+					} else {
+						Actor_Says(kActorSadik, 140, kAnimationModeTalk); //08-0140.AUD	You bet, mon. Human too. My woman, she be Replicant.
+						Actor_Says(kActorSadik, 150, kAnimationModeTalk);
+						if (Player_Query_Agenda() == kPlayerAgendaPolite) {
+							Actor_Says(kActorMcCoy, 2305, kAnimationModeTalk); //00-2305.AUD	I’m sorry.
+						} else {
+							Actor_Says(kActorMcCoy, 4880, 13); //00-4880.AUD	Is that right?
+						}
+						Actor_Says(kActorSadik, 160, kAnimationModeTalk);
+						Actor_Says(kActorSadik, 170, kAnimationModeTalk);
+					}
+					Actor_Says(kActorSadik, 200, kAnimationModeTalk); //08-0200.AUD	Truth be told killing don’t help much.
+				}
 			}
+			Actor_Says(kActorMcCoy, 2315, kAnimationModeTalk); //00-2315.AUD	The moonbus up and running yet?
+			Actor_Says(kActorSadik, 210, kAnimationModeTalk); //08-0210.AUD	All it needs is fuel.
+			if (Actor_Query_Friendliness_To_Other(kActorClovis, kActorMcCoy) > 50
+			&& !Game_Flag_Query(kFlagMcCoyRetiredReplicant)) { 
+				Actor_Says(kActorSadik, 220, kAnimationModeTalk); //08-0220.AUD	Clovis wants to see you. Bring you back into family.
+				Actor_Says(kActorSadik, 230, kAnimationModeTalk); //08-0230.AUD	I say: he prove himself, welcome back. One happy family.
+			}
+			Actor_Says(kActorSadik, 240, kAnimationModeTalk); //08-0240.AUD	There got to be something around here, mon.
+			Actor_Says(kActorSadik, 250, kAnimationModeTalk); //08-0250.AUD	Old reactor cores. Anything still got a glow.
+			Actor_Says(kActorSadik, 260, kAnimationModeTalk); //08-0260.AUD	The generator? It take almost anything.
+			Actor_Says(kActorMcCoy, 2750, kAnimationModeTalk); //00-2750.AUD	Okay, I get the picture.	
 		} else {
+			Actor_Says(kActorSadik, 110, kAnimationModeTalk); //08-0110.AUD	Brother mon. Wondering when you’d make it out here.
 			Actor_Says(kActorMcCoy, 2290, kAnimationModeTalk); //00-2290.AUD	Took a little while to realize where I belonged.
 			Actor_Says(kActorSadik, 310, kAnimationModeTalk); //08-0310.AUD	The Maker built you right.
-		}
-		if (_vm->_cutContent) {
-			if (Actor_Clue_Query(kActorSadik, kClueMcCoyBetrayal)) {
-				Actor_Says(kActorSadik, 120, kAnimationModeTalk); //08-0120.AUD	Heard one of the traps go off. Was afraid you was blown to bits.
-				Actor_Says(kActorMcCoy, 2295, kAnimationModeTalk); //00-2295.AUD	Steele was on the receiving end of that baby.
-				Actor_Says(kActorSadik, 130, kAnimationModeTalk); //08-0130.AUD	Heh, she was a killer. She richly deserved it.
-				if (Player_Query_Agenda() == kPlayerAgendaSurly 
-				|| Player_Query_Agenda() == kPlayerAgendaErratic) {
-					Actor_Says(kActorMcCoy, 8485, kAnimationModeTalk); //00-8485.AUD	One is a start.
-					Delay(1000);
-				}
-			} else if (Actor_Query_Goal_Number(kActorSteele) > kGoalSteeleGone) {
-				Actor_Says(kActorMcCoy, 6250, 15); //00-6250.AUD	I thought it was all over, when Steele showed up.
-				Actor_Says(kActorSadik, 130, kAnimationModeTalk); //08-0130.AUD	Heh, she was a killer. She richly deserved it.
-			}
-			Actor_Says(kActorMcCoy, 2300, kAnimationModeTalk); 
-			if (Game_Flag_Query(kFlagSadikIsReplicant)) {
-				if (Actor_Query_Friendliness_To_Other(kActorSadik, kActorMcCoy) > 50
-				|| Actor_Clue_Query(kActorMcCoy, kClueMcCoyShotGuzza)) { 
-					Actor_Says(kActorSadik, 180, kAnimationModeTalk); //08-0180.AUD	My woman? She be killed by a Blade Runner. Revenge all I got left.
-					Actor_Says(kActorSadik, 190, kAnimationModeTalk);
-					if (Player_Query_Agenda() != kPlayerAgendaPolite) {
-						Actor_Says(kActorMcCoy, 2310, kAnimationModeTalk); //00-2310.AUD	I understand.
-					} else {
-						Actor_Says(kActorMcCoy, 4880, 13); //00-4880.AUD	Is that right?
-					}
-				}
-			} else {
-				if (Actor_Query_Friendliness_To_Other(kActorSadik, kActorMcCoy) > 50
-				|| Actor_Clue_Query(kActorMcCoy, kClueMcCoyShotGuzza)) { 
-					Actor_Says(kActorSadik, 140, kAnimationModeTalk); //08-0140.AUD	You bet, mon. Human too. My woman, she be Replicant.
-					Actor_Says(kActorSadik, 150, kAnimationModeTalk);
-					if (Player_Query_Agenda() == kPlayerAgendaPolite) {
-						Actor_Says(kActorMcCoy, 2305, kAnimationModeTalk); //00-2305.AUD	I’m sorry.
-					} else {
-						Actor_Says(kActorMcCoy, 4880, 13); //00-4880.AUD	Is that right?
-					}
-					Actor_Says(kActorSadik, 160, kAnimationModeTalk);
-					Actor_Says(kActorSadik, 170, kAnimationModeTalk);
-				}
-			}
-			Actor_Says(kActorSadik, 200, kAnimationModeTalk); //08-0200.AUD	Truth be told killing don’t help much.
-		} else {
-			Actor_Says(kActorMcCoy, 2300, kAnimationModeTalk);
+			Actor_Says(kActorMcCoy, 2300, kAnimationModeTalk); //00-2300.AUD	What about you, Sadik? Aren’t you a killer?
 			if (Game_Flag_Query(kFlagSadikIsReplicant)) {
 				Actor_Says(kActorSadik, 180, kAnimationModeTalk);
 				Actor_Says(kActorSadik, 190, kAnimationModeTalk);
@@ -597,17 +632,14 @@ bool AIScriptSadik::GoalChanged(int currentGoalNumber, int newGoalNumber) {
 				Actor_Says(kActorSadik, 160, kAnimationModeTalk);
 				Actor_Says(kActorSadik, 170, kAnimationModeTalk);
 			}
-		}
-		Actor_Says(kActorMcCoy, 2315, kAnimationModeTalk);
-		Actor_Says(kActorSadik, 210, kAnimationModeTalk);
-		Actor_Says(kActorSadik, 220, kAnimationModeTalk);
-		Actor_Says(kActorSadik, 230, kAnimationModeTalk);
-		Actor_Says(kActorSadik, 240, kAnimationModeTalk);
-		Actor_Says(kActorSadik, 250, kAnimationModeTalk); //08-0250.AUD	Old reactor cores. Anything still got a glow.
-		Actor_Says(kActorSadik, 260, kAnimationModeTalk); //08-0260.AUD	The generator? It take almost anything.
-		if (_vm->_cutContent) {
-			Actor_Says(kActorMcCoy, 2750, kAnimationModeTalk); //00-2750.AUD	Okay, I get the picture.
-		}
+			Actor_Says(kActorMcCoy, 2315, kAnimationModeTalk); //00-2315.AUD	The moonbus up and running yet?
+			Actor_Says(kActorSadik, 210, kAnimationModeTalk);
+			Actor_Says(kActorSadik, 220, kAnimationModeTalk);
+			Actor_Says(kActorSadik, 230, kAnimationModeTalk);
+			Actor_Says(kActorSadik, 240, kAnimationModeTalk);
+			Actor_Says(kActorSadik, 250, kAnimationModeTalk); //08-0250.AUD	Old reactor cores. Anything still got a glow.
+			Actor_Says(kActorSadik, 260, kAnimationModeTalk); //08-0260.AUD	The generator? It take almost anything.
+		}	
 		Actor_Set_Goal_Number(kActorSadik, kGoalSadikKP06NeedsReactorCoreFromMcCoy);
 		// Made it so you can't shoot Sadik when he is preparing the moonbus. This is to prevent several narrative inconsistencies such as all the replicants waiting for you on the
 		// moonbus disappearing because Sadik was killed.
@@ -630,9 +662,17 @@ bool AIScriptSadik::GoalChanged(int currentGoalNumber, int newGoalNumber) {
 		Actor_Says(kActorSadik, 320, kAnimationModeTalk);
 		Loop_Actor_Walk_To_XYZ(kActorSadik, -857.0f, 0.0f, -703.0f, 0, false, true, false);
 		Actor_Says(kActorMcCoy, 2330, kAnimationModeTalk);
-		Actor_Says(kActorSadik, 330, kAnimationModeTalk);
-		Actor_Says(kActorMcCoy, 2335, kAnimationModeTalk);
-		Actor_Says(kActorSadik, 340, kAnimationModeTalk);
+		Actor_Says(kActorSadik, 330, kAnimationModeTalk); //08-0330.AUD	Keep looking.
+		if (_vm->_cutContent) {
+			if (Actor_Query_Friendliness_To_Other(kActorClovis, kActorMcCoy) < 51
+			|| Game_Flag_Query(kFlagMcCoyRetiredReplicant)) { 
+				Actor_Says(kActorMcCoy, 2335, kAnimationModeTalk); //00-2335.AUD	You said yourself Clovis wants to see me.
+				Actor_Says(kActorSadik, 340, kAnimationModeTalk); //08-0340.AUD	You’re not getting by me till I be sure.
+			}
+		} else {
+			Actor_Says(kActorMcCoy, 2335, kAnimationModeTalk); //00-2335.AUD	You said yourself Clovis wants to see me.
+			Actor_Says(kActorSadik, 340, kAnimationModeTalk); //08-0340.AUD	You’re not getting by me till I be sure.
+		}
 		Actor_Set_Goal_Number(kActorSadik, kGoalSadikKP06NeedsReactorCoreFromMcCoy);
 		return true;
 

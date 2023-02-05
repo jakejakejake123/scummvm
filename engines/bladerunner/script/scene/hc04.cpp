@@ -124,7 +124,6 @@ bool SceneScriptHC04::ClickedOnActor(int actorId) {
 								Actor_Says(kActorMcCoy, 1280, 23); //00-1280.AUD	McCoy, LPD. Mind if I ask you a couple of questions?
 								Actor_Says(kActorIsabella, 20, kAnimationModeTalk);
 							}
-							
 						}
 					}
 				} else {
@@ -312,6 +311,11 @@ void SceneScriptHC04::dialogueWithIsabella() {
 				Actor_Says(kActorIsabella, 130, kAnimationModeTalk);
 				if (Player_Query_Agenda() == kPlayerAgendaPolite) {
 					Actor_Says(kActorMcCoy, 1360, kAnimationModeTalk); //00-1360.AUD	You may have a little trouble collecting. He's dead.
+					Delay(2000);
+					Actor_Says(kActorMcCoy, 2305, 13); //00-2305.AUD	I’m sorry.
+					Actor_Modify_Friendliness_To_Other(kActorIsabella, kActorMcCoy, 2);
+				} else {
+					Actor_Says(kActorMcCoy, 4880, 13); //00-4880.AUD	Is that right?
 				}
 			} else {
 				Actor_Says(kActorMcCoy, 1295, kAnimationModeTalk);
@@ -358,8 +362,7 @@ void SceneScriptHC04::dialogueWithIsabella() {
 		}
 		Actor_Says(kActorIsabella, 160, kAnimationModeTalk);
 		if (_vm->_cutContent) {
-			if (Player_Query_Agenda() == kPlayerAgendaSurly
-			|| (Player_Query_Agenda() == kPlayerAgendaErratic)) {
+			if (Player_Query_Agenda() != kPlayerAgendaPolite) {
 				Actor_Says(kActorMcCoy, 1370, kAnimationModeTalk);
 				Actor_Says(kActorIsabella, 170, kAnimationModeTalk); //59-0170.AUD	Why you pick on Mama Isabella? I never do you no harm.
 				Actor_Modify_Friendliness_To_Other(kActorIsabella, kActorMcCoy, -2);
@@ -393,6 +396,7 @@ void SceneScriptHC04::dialogueWithIsabella() {
 				Set_Enter(kSetPS09, kScenePS09);
 			} else {
 				Actor_Says(kActorMcCoy, 1375, kAnimationModeTalk); //00-1375.AUD	Where did you get it?
+				Delay(1000);
 				Actor_Says(kActorIsabella, 180, kAnimationModeTalk); //59-0180.AUD	My sister. She got connections.
 				Actor_Says(kActorMcCoy, 1380, kAnimationModeTalk);
 				Actor_Says(kActorIsabella, 190, kAnimationModeTalk);
@@ -404,14 +408,31 @@ void SceneScriptHC04::dialogueWithIsabella() {
 				Actor_Says(kActorIsabella, 300, kAnimationModeTalk);
 				Actor_Says(kActorIsabella, 310, kAnimationModeTalk);
 				Actor_Says(kActorIsabella, 320, kAnimationModeTalk); 
+				Actor_Clue_Acquire(kActorMcCoy, kClueStolenCheese, false, kActorIsabella);
 				if (Player_Query_Agenda() == kPlayerAgendaPolite) {
 					Actor_Says(kActorMcCoy, 1395, kAnimationModeTalk); //00-1395.AUD	You're right. But I still think you ought to get yourself a different secret ingredient.
 					Actor_Says(kActorIsabella, 330, kAnimationModeTalk); //59-0330.AUD	You bet, mon. That cheese’s been nothing but trouble for Mama Isabella.
+					Actor_Says(kActorMcCoy, 5150, 18); //00-5150.AUD	One more thing.	
+					Actor_Change_Animation_Mode(kActorMcCoy, 23);
+					Actor_Change_Animation_Mode(kActorIsabella, 23);
+					Delay(800);
+					Actor_Clue_Lose(kActorMcCoy, kClueCheese);
+					Actor_Clue_Acquire(kActorLucy, kClueCheese, true, -1);
+					Item_Pickup_Spin_Effect_From_Actor(kModelAnimationCheese, kActorIsabella, 0, 0);
+					Delay(1500);
+					if (Actor_Clue_Query(kActorMcCoy, kClueKingstonKitchenBox1)) {
+						Actor_Clue_Lose(kActorMcCoy, kClueKingstonKitchenBox1);
+						Actor_Clue_Acquire(kActorLucy, kClueKingstonKitchenBox1, true, -1);
+						Item_Pickup_Spin_Effect_From_Actor(kModelAnimationKingstonKitchenBox, kActorIsabella, 0, 0);
+						Delay(1500);
+					}
+					Actor_Says(kActorMcCoy, 8170, 13); //00-8170.AUD	There you go.
+					Delay(1000);
+					Actor_Says(kActorMcCoy, 2860, 14); //00-2860.AUD	You take care of yourself.
 					Actor_Modify_Friendliness_To_Other(kActorIsabella, kActorMcCoy, 2);
 				} else {
 					Actor_Says(kActorMcCoy, 7815, 13); //00-7815.AUD	No.
-				}
-				Actor_Clue_Acquire(kActorMcCoy, kClueStolenCheese, false, kActorIsabella);
+				}		
 			}
 		} else {
 			Actor_Says(kActorMcCoy, 1375, kAnimationModeTalk); //00-1375.AUD	Where did you get it?
@@ -474,8 +495,9 @@ void SceneScriptHC04::dialogueWithIsabella() {
 					}
 					Actor_Change_Animation_Mode(kActorMcCoy, 23);
 					Actor_Change_Animation_Mode(kActorIsabella, 23);
-					Delay(1000);
+					Delay(800);
 					Item_Pickup_Spin_Effect_From_Actor(kModelAnimationKingstonKitchenBox, kActorMcCoy, 0, 0);
+					Delay(800);
 					Actor_Modify_Friendliness_To_Other(kActorIsabella, kActorMcCoy, 2);
 					Actor_Says(kActorMcCoy, 1345, 13); //00-1345.AUD	Thanks.		
 				} else {

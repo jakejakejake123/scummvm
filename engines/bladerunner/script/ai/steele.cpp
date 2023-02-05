@@ -1800,16 +1800,7 @@ bool AIScriptSteele::GoalChanged(int currentGoalNumber, int newGoalNumber) {
 			Actor_Says(kActorMcCoy, 2985, 13); //00-2985.AUD	I didn’t kill Izo.
 		}
 		Actor_Says(kActorSteele, 870, 15); //01-0870.AUD	Hm, maybe they... think you’re not what you think you are.
-		if (_vm->_cutContent) {
-			if (Player_Query_Agenda() == kPlayerAgendaSurly 
-			|| Player_Query_Agenda() == kPlayerAgendaErratic) {
-				Actor_Says(kActorMcCoy, 2925, 15);   //  NotAReplicantGoddamnit
-			} else {
-				Actor_Says(kActorMcCoy, 2990, 16);
-			}
-		} else {
-			Actor_Says(kActorMcCoy, 2990, 16);
-		}
+		Actor_Says(kActorMcCoy, 2990, 16);
 		if (_vm->_cutContent) {
 			Delay(2000);
 			if (Game_Flag_Query(kFlagMcCoyIsHelpingReplicants)) {
@@ -1827,6 +1818,11 @@ bool AIScriptSteele::GoalChanged(int currentGoalNumber, int newGoalNumber) {
 			Actor_Says(kActorSteele, 890, 18);
 			Actor_Says(kActorMcCoy, 2995, 12);
 			Actor_Says(kActorSteele, 900, 13);
+		}
+		if (_vm->_cutContent) {
+			Actor_Says(kActorSteele, 1370, 12); //01-1370.AUD	The uniforms know you’re down here. They already towed your Spinner.
+			Actor_Says(kActorMcCoy, 3125, 15); //00-3125.AUD	I was wondering where it went.
+			Delay(1000);
 		}
 		Actor_Says(kActorMcCoy, 3000, 13); //00-3000.AUD	You wanna put me on the Machine?
 		if (_vm->_cutContent) {

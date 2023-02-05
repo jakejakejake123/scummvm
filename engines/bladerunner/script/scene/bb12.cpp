@@ -121,6 +121,8 @@ bool SceneScriptBB12::ClickedOnActor(int actorId) {
 				if (Player_Query_Agenda() != kPlayerAgendaSurly 
 				&& Player_Query_Agenda() != kPlayerAgendaErratic) {
 					Actor_Says(kActorMcCoy, 7240, 18); //00-7240.AUD	Easy boy, I'm not gonna take her away from ya.
+				} else {
+					Delay(1000);
 				}
 			}
 			Actor_Face_Actor(kActorMcCoy, kActorDektora, true);
@@ -134,7 +136,10 @@ bool SceneScriptBB12::ClickedOnActor(int actorId) {
 			}
 			Delay(1000);
 			Actor_Says(kActorMcCoy, 7250, 13); //00-7250.AUD	She almost looks real.
-			Actor_Says(kActorSebastian, 660, 14); //56-0660.AUD	She isn't. Believe you me.
+			if (Actor_Query_Friendliness_To_Other(kActorSebastian, kActorMcCoy) < 50) {
+				Actor_Says(kActorSebastian, 660, 14); //56-0660.AUD	She isn't. Believe you me.
+			} 
+			Delay(1000);
 			Actor_Says(kActorMcCoy, 7255, 15); //00-7255.AUD	You know, I can't place her for sure but she looks familiar.
 			Actor_Face_Actor(kActorSebastian, kActorMcCoy, true);
 			Actor_Says(kActorSebastian, 670, 14); //56-0670.AUD	Familiar to what?

@@ -932,9 +932,10 @@ void SceneScriptRC04::dialogueWithBulletBob() {
 					}
 					Actor_Change_Animation_Mode(kActorMcCoy, 23);
 					Actor_Change_Animation_Mode(kActorBulletBob, 23);
-					Delay(2000);
+					Delay(800);
 					Item_Pickup_Spin_Effect_From_Actor(kModelAnimationAmmoType01, kActorMcCoy, 0, 0);
 					Give_McCoy_Ammo(1, 24);
+					Delay(800);
 				} else {
 					Actor_Says(kActorMcCoy, 125, 13); ////00-0125.AUD	I'm a little strapped for cash right now.
 				}
@@ -955,7 +956,7 @@ void SceneScriptRC04::dialogueWithBulletBob() {
 					}
 					Actor_Change_Animation_Mode(kActorMcCoy, 23);
 					Actor_Change_Animation_Mode(kActorBulletBob, 23);
-					Delay(1000);
+					Delay(800);
 					Item_Pickup_Spin_Effect_From_Actor(kModelAnimationAmmoType01, kActorMcCoy, 0, 0);
 					Give_McCoy_Ammo(1, 24);
 				} else {
@@ -1107,9 +1108,10 @@ bool SceneScriptRC04::ClickedOnActor(int actorId) {
 								Delay(3000);
 								Actor_Change_Animation_Mode(kActorMcCoy, 23);
 								Actor_Change_Animation_Mode(kActorBulletBob, 23);
-								Delay(2000);
+								Delay(800);
 								Item_Pickup_Spin_Effect_From_Actor(kModelAnimationDNADataDisc, kActorMcCoy, 0, 0);
 								Game_Flag_Set(kFlagKIAPrivacyAddon);
+								Delay(800);
 							} else {
 								Actor_Says(kActorMcCoy, 8980, 16); //00-8980.AUD	No, thanks, I'm saving for a rainy day.
 							}
@@ -1202,7 +1204,7 @@ bool SceneScriptRC04::ClickedOnActor(int actorId) {
 								Delay(3000);
 								Actor_Change_Animation_Mode(kActorMcCoy, 23);
 								Actor_Change_Animation_Mode(kActorBulletBob, 23);
-								Delay(2000);
+								Delay(800);
 								Item_Pickup_Spin_Effect_From_Actor(kModelAnimationDNADataDisc, kActorMcCoy, 0, 0);
 								if (Actor_Query_Friendliness_To_Other(kActorBulletBob, kActorMcCoy) > 49) { 
 									Actor_Says(kActorBulletBob, 2030, 30); //14-2030.AUD	There you go better than new.

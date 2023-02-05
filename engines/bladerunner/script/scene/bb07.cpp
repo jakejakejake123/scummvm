@@ -81,8 +81,9 @@ bool SceneScriptBB07::ClickedOn3DObject(const char *objectName, bool a2) {
 				Actor_Voice_Over(130, kActorVoiceOver); //99-0130.AUD	DNA research, incept dates.
 				if (_vm->_cutContent) {
 					Actor_Change_Animation_Mode(kActorMcCoy, 23);
-					Delay(2000);
+					Delay(800);
 					Item_Pickup_Spin_Effect_From_Actor(kModelAnimationDNADataDisc, kActorMcCoy, 0, 0);
+					Delay(800);
 					Actor_Voice_Over(kActorVoiceOver, 140); //99-0140.AUD	A lot of jargon but I bet my spinner it was valuable to somebody.
 				} else {
 					Item_Pickup_Spin_Effect(kModelAnimationDNADataDisc, 439, 242);

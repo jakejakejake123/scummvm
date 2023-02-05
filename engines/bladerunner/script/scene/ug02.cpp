@@ -151,8 +151,9 @@ bool SceneScriptUG02::ClickedOn3DObject(const char *objectName, bool a2) {
 						}
 					} else if (!Game_Flag_Query(kFlagUG02AmmoTaken)) {
 						Actor_Change_Animation_Mode(kActorMcCoy, 23);
-						Delay(2000);
+						Delay(800);
 						Item_Pickup_Spin_Effect(kModelAnimationAmmoType02, 360, 440);
+						Delay(800);
 						Actor_Says(kActorMcCoy, 8525, 13);
 						Give_McCoy_Ammo(2, 18);
 						Game_Flag_Set(kFlagUG02AmmoTaken);

@@ -47,12 +47,22 @@ bool SceneScriptPS06::MouseClick(int x, int y) {
 
 bool SceneScriptPS06::ClickedOn3DObject(const char *objectName, bool a2) {
 	if (Object_Query_Click("E.MONITOR1", objectName)) {
+		if (_vm->_cutContent) {
+			Actor_Face_Object(kActorMcCoy, "E.MONITOR1", true);
+			Actor_Change_Animation_Mode(kActorMcCoy, 23);
+			Delay(800);
+		}
 		ESPER_Flag_To_Activate();
 		return true;
 	}
 	if (Object_Query_Click("E.SCREEN03", objectName)
 	 || Object_Query_Click("E.MONITOR3", objectName)
 	) {
+		if (_vm->_cutContent) {
+			Actor_Face_Object(kActorMcCoy, "E.MONITOR3", true);
+			Actor_Change_Animation_Mode(kActorMcCoy, 23);
+			Delay(800);
+		}
 		Actor_Says(kActorAnsweringMachine, 330, kAnimationModeTalk); // uploading clues
 		if (_vm->_cutContent) {
 			if (Global_Variable_Query(kVariableChapter) > 1) {
@@ -65,21 +75,21 @@ bool SceneScriptPS06::ClickedOn3DObject(const char *objectName, bool a2) {
 				}
 			}
 			if (!Game_Flag_Query(kFlagCrazylegsIsReplicant)) {
-				if (Actor_Clue_Query(kActorMcCoy, kClueCrazylegsInterview1)
-				|| Actor_Clue_Query(kActorMcCoy, kClueCrazylegsInterview2)) {
-					if (Random_Query(1, 3) == 1) {	
-						Actor_Clue_Acquire(kActorMcCoy, kClueVKCrazylegsHuman,  true, kActorSteele);
-						Actor_Clue_Acquire(kActorMcCoy, kClueCrystalTestedCrazylegs, true, kActorSteele);
-					}
-				} else if (Actor_Clue_Query(kActorMcCoy, kClueCrazysInvolvement)) {
-					if (Random_Query(1, 3) == 1) {
-						Actor_Clue_Acquire(kActorMcCoy, kClueVKCrazylegsHuman,  true, kActorSteele);
-						Actor_Clue_Acquire(kActorMcCoy, kClueCrystalTestedCrazylegs, true, kActorSteele);
-						Actor_Clue_Acquire(kActorMcCoy, kClueCrystalArrestedCrazylegs, true, kActorSteele);
-						Game_Flag_Set(kFlagCrazylegsArrested);
-						Actor_Put_In_Set(kActorCrazylegs, kSetPS09);
-						Actor_Set_At_XYZ(kActorCrazylegs, -315.15f, 0.0f, 241.06f, 512);
-						Actor_Set_Goal_Number(kActorCrazylegs, kGoalCrazyLegsIsArrested);
+				if (Random_Query(1, 3) == 1) {
+					if (!Game_Flag_Query(kFlagCrazylegsDead)) {
+						if (Actor_Clue_Query(kActorMcCoy, kClueCrazylegsInterview1)
+						|| Actor_Clue_Query(kActorMcCoy, kClueCrazylegsInterview2)) {	
+							Actor_Clue_Acquire(kActorMcCoy, kClueVKCrazylegsHuman,  true, kActorSteele);
+							Actor_Clue_Acquire(kActorMcCoy, kClueCrystalTestedCrazylegs, true, kActorSteele);
+						} else if (Actor_Clue_Query(kActorMcCoy, kClueCrazysInvolvement)) {
+							Actor_Clue_Acquire(kActorMcCoy, kClueVKCrazylegsHuman,  true, kActorSteele);
+							Actor_Clue_Acquire(kActorMcCoy, kClueCrystalTestedCrazylegs, true, kActorSteele);
+							Actor_Clue_Acquire(kActorMcCoy, kClueCrystalArrestedCrazylegs, true, kActorSteele);
+							Game_Flag_Set(kFlagCrazylegsArrested);
+							Actor_Put_In_Set(kActorCrazylegs, kSetPS09);
+							Actor_Set_At_XYZ(kActorCrazylegs, -315.15f, 0.0f, 241.06f, 512);
+							Actor_Set_Goal_Number(kActorCrazylegs, kGoalCrazyLegsIsArrested);
+						}
 					}
 				}
 			} else {
@@ -99,21 +109,21 @@ bool SceneScriptPS06::ClickedOn3DObject(const char *objectName, bool a2) {
 			// Added in code so if Steele receives the Runciter is replicant Vk result and Runciter is a replicant and alive she retires him
 			// and receives the Crystal retired Runciter clue. Also did the same for Bob.
 			if (Actor_Clue_Query(kActorMcCoy, kClueVKRunciterReplicant)
-			|| Actor_Clue_Query(kActorMcCoy, kClueLabCorpses)) {
+			|| Actor_Clue_Query(kActorMcCoy, kClueLabCorpses)
+			|| Actor_Clue_Query(kActorMcCoy, kClueLucyInterview)) {
 				if (Actor_Clue_Query(kActorMcCoy, kClueRuncitersVideo)) {
 					if (Actor_Query_Goal_Number(kActorRunciter) < kGoalRunciterDead) {
-						if (Game_Flag_Query(kFlagRunciterIsReplicant)) {
-							if (Random_Query(1, 5) == 1) {
+						if (Random_Query(1, 5) == 1) {
+							if (Game_Flag_Query(kFlagRunciterIsReplicant)) {
 								Actor_Clue_Acquire(kActorMcCoy, kClueCrystalRetiredRunciter1, true, kActorSteele);
 								Actor_Clue_Acquire(kActorMcCoy, kClueCrystalRetiredRunciter2, true, kActorSteele);
 								Actor_Clue_Acquire(kActorMcCoy, kClueVKRunciterReplicant, true, kActorSteele);
 								Actor_Set_Goal_Number(kActorRunciter, kGoalRunciterDead);
-							}
-						} else {
-							if (Random_Query(1, 5) == 1) {
+							} else {
 								Actor_Clue_Acquire(kActorMcCoy, kClueCrystalTestedRunciter, true, kActorSteele);
 								Actor_Clue_Acquire(kActorMcCoy, kClueVKRunciterHuman, true, kActorSteele);
-								if (Actor_Clue_Query(kActorMcCoy, kClueLabCorpses)) {
+								if (Actor_Clue_Query(kActorMcCoy, kClueLabCorpses)
+								|| Actor_Clue_Query(kActorMcCoy, kClueLucyInterview)) {
 									Game_Flag_Set(kFlagRunciterArrested);
 									Actor_Put_In_Set(kActorRunciter, kSetPS09);
 									Actor_Set_At_XYZ(kActorRunciter, -389.43f, 2.06f, -200.77f, 512);
@@ -126,14 +136,12 @@ bool SceneScriptPS06::ClickedOn3DObject(const char *objectName, bool a2) {
 			if (Actor_Clue_Query(kActorMcCoy, kClueVKBobGorskyReplicant)
 			|| Actor_Clue_Query(kActorMcCoy, kClueHasanInterview)) {
 				if (Actor_Query_Goal_Number(kActorBulletBob) < kGoalBulletBobGone) {
-					if (Game_Flag_Query(kFlagBulletBobIsReplicant)) {
-						if (Random_Query(1, 4) == 1) {
+					if (Random_Query(1, 4) == 1) {
+						if (Game_Flag_Query(kFlagBulletBobIsReplicant)) {
 							Actor_Clue_Acquire(kActorMcCoy, kClueCrystalRetiredBob, true, kActorSteele);
 							Actor_Clue_Acquire(kActorMcCoy, kClueVKBobGorskyReplicant, true, kActorSteele);
 							Actor_Set_Goal_Number(kActorBulletBob, kGoalBulletBobGone);
-						}
-					} else {
-						if (Random_Query(1, 4) == 1) {
+						} else {
 							Actor_Clue_Acquire(kActorMcCoy, kClueCrystalTestedBulletBob, true, kActorSteele);
 							Actor_Clue_Acquire(kActorMcCoy, kClueVKBobGorskyHuman, true, kActorSteele);
 							if (Actor_Clue_Query(kActorMcCoy, kClueHasanInterview)) {
@@ -172,18 +180,16 @@ bool SceneScriptPS06::ClickedOn3DObject(const char *objectName, bool a2) {
 			|| Actor_Clue_Query(kActorMcCoy, kClueEarlyInterviewB2)
 			|| Actor_Clue_Query(kActorMcCoy, kClueEarlyQAndLucy)
 			|| Actor_Clue_Query(kActorMcCoy, kClueDektorasDressingRoom)) {
-				if (!Game_Flag_Query(kFlagEarlyQDead)
-				&& !Game_Flag_Query(kFlagNR04EarlyQStungByScorpions)) {
-					if (Game_Flag_Query(kFlagEarlyQIsReplicant)) {
-						if (Random_Query(1, 3) == 1) {
+				if (Random_Query(1, 3) == 1) {
+					if (!Game_Flag_Query(kFlagEarlyQDead)
+					&& !Game_Flag_Query(kFlagNR04EarlyQStungByScorpions)) {
+						if (Game_Flag_Query(kFlagEarlyQIsReplicant)) {
 							Actor_Clue_Acquire(kActorMcCoy, kClueVKEarlyQReplicant, true, kActorSteele);
 							Game_Flag_Set(kFlagEarlyQDead);
 							if (Game_Flag_Query(kFlagHanoiIsReplicant)) {
 								Game_Flag_Set(kFlagHanoiDead);
 							}
-						}
-					} else {
-						if (Random_Query(1, 3) == 1) {
+						} else {
 							Actor_Clue_Acquire(kActorMcCoy, kClueVKEarlyQHuman, true, kActorSteele);
 							Actor_Put_In_Set(kActorEarlyQ, kSetPS09);
 							Actor_Set_At_XYZ(kActorEarlyQ, -425.88f, 0.15f, -220.74f, 512);

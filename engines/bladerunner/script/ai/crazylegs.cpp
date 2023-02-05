@@ -76,6 +76,22 @@ void AIScriptCrazylegs::ClickedByPlayer() {
 			Actor_Face_Actor(kActorCrazylegs, kActorMcCoy, true);
 			Actor_Says(kActorMcCoy, 1730, kAnimationModeTalk); //00-1730.AUD	You’re a stand up guy, Crazy.
 			Actor_Says(kActorCrazylegs, 80, 23); //09-0080.AUD	That I am.
+			if (Player_Query_Agenda() != kPlayerAgendaSurly 
+			&& Player_Query_Agenda() != kPlayerAgendaErratic) {
+				if (Actor_Clue_Query(kActorMcCoy, kClueCrazysInvolvement)) {
+					Actor_Says(kActorMcCoy, 5150, 18); //00-5150.AUD	One more thing.	
+					Actor_Change_Animation_Mode(kActorMcCoy, 23);
+					Actor_Change_Animation_Mode(kActorCrazylegs, 23);
+					Delay(800);
+					Actor_Clue_Lose(kActorMcCoy, kClueCrazysInvolvement);
+					Actor_Clue_Acquire(kActorCrazylegs, kClueCrazysInvolvement, true, -1);
+					Item_Pickup_Spin_Effect_From_Actor(kItemTyrellSalesPamphlet, kActorCrazylegs, 0, 0);
+					Delay(1500);
+					Item_Pickup_Spin_Effect_From_Actor(kModelAnimationLetter, kActorCrazylegs, 0, 0);
+					Delay(1500);
+					Actor_Says(kActorMcCoy, 8170, 13); //00-8170.AUD	There you go.
+				}
+			}
 		}
 	}
 }

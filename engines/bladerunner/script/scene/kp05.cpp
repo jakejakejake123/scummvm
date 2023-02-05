@@ -198,15 +198,12 @@ void SceneScriptKP05::PlayerWalkedIn() {
 				Actor_Says(kActorMcCoy, 2200, 3); //00-2200.AUD	Why did you have to kill her?
 				if (!Game_Flag_Query(kFlagMcCoyIsInnocent)) {
 					Actor_Says(kActorSteele, 550, 17); //01-0550.AUD	Who, the mutt? The artificial pet of a Replicant? What'd you think I’d do?
-					if (Player_Query_Agenda() == kPlayerAgendaPolite) {
-						Actor_Says(kActorMcCoy, 2205, 3); //00-2205.AUD	Show some mercy?
-						Actor_Says(kActorSteele, 560, 15); //01-0560.AUD	Well, I guess that’s why you’re there and I’m here.
-					} else {
-						Delay(2000);
-					}
+					Actor_Says(kActorMcCoy, 2205, 3); //00-2205.AUD	Show some mercy?
+					Actor_Says(kActorSteele, 560, 15); //01-0560.AUD	Well, I guess that’s why you’re there and I’m here.
 				} else {
 					Actor_Says(kActorSteele, 330, 15); //01-0330.AUD	Nobody gives a damn.
 				}
+				Delay(1000);
 				Actor_Says(kActorSteele, 570, 16); //01-0570.AUD	Now, why don’t you explain to me what you’re doing out here, Slim.
 				Actor_Says(kActorSteele, 580, 13); //01-0580.AUD	Maybe you can ease my suspicious mind.
 				if (Player_Query_Agenda() != kPlayerAgendaPolite) {
@@ -250,15 +247,12 @@ void SceneScriptKP05::PlayerWalkedIn() {
 					Actor_Says(kActorMcCoy, 2200, 3); //00-2200.AUD	Why did you have to kill her?
 					if (!Game_Flag_Query(kFlagMcCoyIsInnocent)) {
 						Actor_Says(kActorSteele, 550, 17); //01-0550.AUD	Who, the mutt? The artificial pet of a Replicant? What'd you think I’d do?
-						if (Player_Query_Agenda() == kPlayerAgendaPolite) {
-							Actor_Says(kActorMcCoy, 2205, 3); //00-2205.AUD	Show some mercy?
-							Actor_Says(kActorSteele, 560, 15); //01-0560.AUD	Well, I guess that’s why you’re there and I’m here.
-						} else { 
-							Delay(2000);
-						}
+						Actor_Says(kActorMcCoy, 2205, 3); //00-2205.AUD	Show some mercy?
+						Actor_Says(kActorSteele, 560, 15); //01-0560.AUD	Well, I guess that’s why you’re there and I’m here.
 					} else {
 						Actor_Says(kActorSteele, 330, 15); //01-0330.AUD	Nobody gives a damn.
 					}
+					Delay(1000);
 					Actor_Says(kActorSteele, 570, 16); //01-0570.AUD	Now, why don’t you explain to me what you’re doing out here, Slim.
 					Actor_Says(kActorSteele, 580, 13); //01-0580.AUD	Maybe you can ease my suspicious mind.
 					if (Player_Query_Agenda() != kPlayerAgendaPolite) {
@@ -300,15 +294,12 @@ void SceneScriptKP05::PlayerWalkedIn() {
 					Actor_Says(kActorMcCoy, 2200, 3); //00-2200.AUD	Why did you have to kill her?
 					if (!Game_Flag_Query(kFlagMcCoyIsInnocent)) {
 						Actor_Says(kActorSteele, 550, 17); //01-0550.AUD	Who, the mutt? The artificial pet of a Replicant? What'd you think I’d do?
-						if (Player_Query_Agenda() == kPlayerAgendaPolite) {
-							Actor_Says(kActorMcCoy, 2205, 3); //00-2205.AUD	Show some mercy?
-							Actor_Says(kActorSteele, 560, 15); //01-0560.AUD	Well, I guess that’s why you’re there and I’m here.
-						} else {
-							Delay(2000);
-						}
+						Actor_Says(kActorMcCoy, 2205, 3); //00-2205.AUD	Show some mercy?
+						Actor_Says(kActorSteele, 560, 15); //01-0560.AUD	Well, I guess that’s why you’re there and I’m here.
 					} else {
 						Actor_Says(kActorSteele, 330, 15); //01-0330.AUD	Nobody gives a damn.
 					}
+					Delay(1000);
 					Actor_Says(kActorSteele, 570, 16); //01-0570.AUD	Now, why don’t you explain to me what you’re doing out here, Slim.
 					Actor_Says(kActorSteele, 580, 13); //01-0580.AUD	Maybe you can ease my suspicious mind.
 					if (Player_Query_Agenda() != kPlayerAgendaPolite) {

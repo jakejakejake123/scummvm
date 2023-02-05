@@ -129,6 +129,20 @@ void SceneScriptRC02::SceneLoaded() {
 		Item_Add_To_World(kItemShellCasingB, kModelAnimationShellCasings, kSetRC02_RC51, -37.16f, -1238.89f, 108456.59f, 512, 6, 6, false, true, false, true);
 		Item_Add_To_World(kItemShellCasingC, kModelAnimationShellCasings, kSetRC02_RC51, -62.86f, -1238.89f, 108437.52f, 625, 6, 6, false, true, false, true);
 	}
+	if (_vm->_cutContent) {
+		if (!Game_Flag_Query(kFlagRC51ChopstickWrapperTaken)) {
+			Item_Add_To_World(kItemChopstickWrapper, kModelAnimationChopstickWrapper, kSetRC02_RC51, 47.56f, -1238.89f, 108048.61f, 0, 6, 18, false, true, false, true);
+		}
+		if (!Game_Flag_Query(kFlagRC51CandyTaken)) {
+			Item_Add_To_World(kItemCandy, kModelAnimationCandy, kSetRC02_RC51, 67.28f, -1193.38f, 108011.27f, 0, 6, 6, false, true, false, true);
+		}
+		if (!Game_Flag_Query(kFlagRC51ToyDogTaken)) {
+			Item_Add_To_World(kItemToyDog, kModelAnimationToyDog, kSetRC02_RC51, 17.43f, -1238.71f, 108002.29f, 256, 18, 18, false, true, false, true);
+		}
+		if (!Game_Flag_Query(kFlagCardTaken)) {
+			Item_Add_To_World(kItemNote, kModelAnimationDektorasCard, kSetRC02_RC51, 49.59f, -1194.42f, 107997.89f, 0, 6, 6, false, true, false, true);
+		}
+	}
 }
 
 bool SceneScriptRC02::MouseClick(int x, int y) {
@@ -178,14 +192,19 @@ bool SceneScriptRC02::ClickedOn3DObject(const char *objectName, bool a2) {
 			}
 			Actor_Face_Actor(kActorMcCoy, kActorRunciter, true);
 			Actor_Face_Actor(kActorRunciter, kActorMcCoy, true);
+			if (_vm->_cutContent) {
+				Actor_Says(kActorRunciter, 30, 13);
+			} else {
+				Actor_Says(kActorRunciter, 30, 23);
+			}
 			// McCoys give animation now plays when he receives the disc.
 			if (_vm->_cutContent) {
 				Actor_Change_Animation_Mode(kActorMcCoy, 23);
 				Actor_Change_Animation_Mode(kActorRunciter, 23);
-				Delay(2000);
+				Delay(800);
 				Item_Pickup_Spin_Effect_From_Actor(kModelAnimationVideoDisc, kActorMcCoy, 0, 0);
+				Delay(800);
 			}
-			Actor_Says(kActorRunciter, 30, 23);
 			if (_vm->_cutContent) {
 				if (Player_Query_Agenda() != kPlayerAgendaSurly 
 				&& Player_Query_Agenda() != kPlayerAgendaErratic) {
@@ -413,11 +432,11 @@ void SceneScriptRC02::dialogueWithRunciter() {
 			Actor_Says(kActorRunciter, 1700, 13);
 			Actor_Change_Animation_Mode(kActorMcCoy, 23);
 			Actor_Change_Animation_Mode(kActorRunciter, 23);
-			Delay(2000);
+			Delay(800);
 			Item_Pickup_Spin_Effect_From_Actor(kModelAnimationReferenceLetter, kActorMcCoy, 0, 0);
+			Delay(800);
 			Actor_Clue_Acquire(kActorMcCoy, kClueReferenceLetter, true, kActorRunciter);
 			// If McCoy doesn't have the shell casings yet and Runciter likes him Runciter will show McCoy where the shell casings are and give them to him.
-			Delay (500);
 			Actor_Says(kActorMcCoy, 4130, 13); //00-4130.AUD	Anything else?
 			if (Actor_Clue_Query(kActorMcCoy, kClueShellCasings)) {
 				Actor_Says(kActorRunciter, 960, 14); //15-0960.AUD	No.
@@ -431,13 +450,14 @@ void SceneScriptRC02::dialogueWithRunciter() {
 				Actor_Says(kActorRunciter, 1700, 13);
 				Actor_Change_Animation_Mode(kActorMcCoy, 23);
 				Actor_Change_Animation_Mode(kActorRunciter, 23);
-				Delay(2000);
+				Delay(800);
 				Item_Remove_From_World(kItemShellCasingA);
 				Item_Remove_From_World(kItemShellCasingB);
 				Item_Remove_From_World(kItemShellCasingC);
 				Item_Pickup_Spin_Effect(kModelAnimationShellCasings, 395, 352);
 				Actor_Clue_Acquire(kActorMcCoy, kClueShellCasings, true, kActorRunciter);
 				Game_Flag_Set(kFlagRC02ShellCasingsTaken);
+				Delay(800);
 				Actor_Says(kActorMcCoy, 8730, 13); //00-8730.AUD	Shell casings.
 				Actor_Voice_Over(1960, kActorVoiceOver); //99-1960.AUD	Big caliber. Possibly Off-World combat weaponry. Ballistics might give me a fix on it.
 				Player_Gains_Control();				
@@ -536,6 +556,24 @@ void SceneScriptRC02::dialogueWithRunciter() {
 					}
 				} else {
 					Actor_Says(kActorRunciter, 730, 13); //15-0730.AUD	Please. Just leave me alone.
+				}
+				if (Player_Query_Agenda() == kPlayerAgendaPolite) {
+					if (Actor_Clue_Query(kActorMcCoy, kClueRuncitersVideo)
+					&& Actor_Clue_Query(kActorMcCoy, kClueRuncitersViewA)
+					&& Actor_Clue_Query(kActorMcCoy, kClueRuncitersViewB)
+					&& !Actor_Clue_Query(kActorMcCoy, kClueZubensMotive)
+					&& !Actor_Clue_Query(kActorMcCoy, kClueLabCorpses)
+					&& !Actor_Clue_Query(kActorMcCoy, kClueLucyInterview)) {
+						Actor_Says(kActorMcCoy, 5150, 18); //00-5150.AUD	One more thing.
+						Actor_Change_Animation_Mode(kActorMcCoy, 23);
+						Actor_Change_Animation_Mode(kActorRunciter, 23);
+						Delay(800);
+						Item_Pickup_Spin_Effect_From_Actor(kModelAnimationVideoDisc, kActorRunciter, 0, 0);		
+						Delay(800);
+						Actor_Clue_Lose(kActorMcCoy, kClueRuncitersVideo);
+						Actor_Clue_Acquire(kActorRunciter, kClueRuncitersVideo, true, -1);
+						Actor_Says(kActorMcCoy, 8170, 13); //00-8170.AUD	There you go.	
+					}
 				}
 			}
 		} else if (Actor_Query_Goal_Number(kActorRunciter) != kGoalRunciterDead) {
@@ -1187,6 +1225,24 @@ void SceneScriptRC02::PlayerWalkedIn() {
 			if (_vm->_cutContent) {
 				if (Actor_Query_Friendliness_To_Other(kActorRunciter, kActorMcCoy) > 49) {
 					Actor_Says(kActorRunciter, 410, 12);
+				}
+				if (Player_Query_Agenda() == kPlayerAgendaPolite) {
+					if (Actor_Clue_Query(kActorMcCoy, kClueRuncitersVideo)
+					&& Actor_Clue_Query(kActorMcCoy, kClueRuncitersViewA)
+					&& Actor_Clue_Query(kActorMcCoy, kClueRuncitersViewB)
+					&& !Actor_Clue_Query(kActorMcCoy, kClueZubensMotive)
+					&& !Actor_Clue_Query(kActorMcCoy, kClueLabCorpses)
+					&& !Actor_Clue_Query(kActorMcCoy, kClueLucyInterview)) {
+						Actor_Says(kActorMcCoy, 5150, 18); //00-5150.AUD	One more thing.
+						Actor_Change_Animation_Mode(kActorMcCoy, 23);
+						Actor_Change_Animation_Mode(kActorRunciter, 23);
+						Delay(800);
+						Item_Pickup_Spin_Effect_From_Actor(kModelAnimationVideoDisc, kActorRunciter, 0, 0);		
+						Delay(800);
+						Actor_Clue_Lose(kActorMcCoy, kClueRuncitersVideo);
+						Actor_Clue_Acquire(kActorRunciter, kClueRuncitersVideo, true, -1);
+						Actor_Says(kActorMcCoy, 8170, 13); //00-8170.AUD	There you go.	
+					}
 				}
 			} else {
 				Actor_Says(kActorRunciter, 410, 12);

@@ -183,6 +183,19 @@ void AIScriptLuther::ClickedByPlayer() {
 				Actor_Says(kActorMcCoy, 3970, 14);
 				Actor_Says(kActorLance, 0, 17); //13-0000.AUD	Hey, it’s about time you showed up.
 				Actor_Says(kActorLuther, 320, 6); //10-0320.AUD	No question.
+				if (Player_Query_Agenda() != kPlayerAgendaSurly 
+				&& Player_Query_Agenda() != kPlayerAgendaErratic) {
+					if (Actor_Clue_Query(kActorMcCoy, kClueEnvelope)) {
+						Actor_Says(kActorMcCoy, 5150, 18); //00-5150.AUD	One more thing.	
+						Actor_Change_Animation_Mode(kActorMcCoy, 23);
+						Delay(800);
+						Actor_Clue_Lose(kActorMcCoy, kClueEnvelope);
+						Actor_Clue_Acquire(kActorLance, kClueEnvelope, true, -1);
+						Item_Pickup_Spin_Effect_From_Actor(kModelAnimationEnvelope, kActorLuther, 0, 0);
+						Delay(1500);
+						Actor_Says(kActorMcCoy, 8170, 13); //00-8170.AUD	There you go.
+					}
+				}
 			}
 		}
 	}

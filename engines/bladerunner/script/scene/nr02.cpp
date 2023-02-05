@@ -125,9 +125,10 @@ bool SceneScriptNR02::ClickedOnItem(int itemId, bool a2) {
 				|| Actor_Clue_Query(kActorMcCoy, kClueGordoInterview3)) {
 					if (itemId == kItemGordosLighterReplicant) {
 						Actor_Change_Animation_Mode(kActorMcCoy, 23);
-						Delay(2000);
+						Delay(800);
 						Item_Remove_From_World(kItemGordosLighterReplicant);
 						Item_Pickup_Spin_Effect(kModelAnimationGordosLighterReplicant, 214, 380);
+						Delay(800);
 						Actor_Clue_Acquire(kActorMcCoy, kClueGordosLighterReplicant, true, kActorGordo);
 						Actor_Says(kActorMcCoy, 8850, 13); //00-8850.AUD	A lighter.
 					} else if (itemId == kItemGordosLighterHuman) {

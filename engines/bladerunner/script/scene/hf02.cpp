@@ -84,12 +84,13 @@ bool SceneScriptHF02::ClickedOn3DObject(const char *objectName, bool a2) {
 				if (Global_Variable_Query(kVariableChinyen) >= 5
 				|| Query_Difficulty_Level() == kGameDifficultyEasy) {
 					Actor_Change_Animation_Mode(kActorMcCoy, 23);
-					Delay(2000);
+					Delay(800);
 					Sound_Play(kSfxFORTUNE1, 47, -80, 0, 50);
-					Delay(1000);
+					Delay(800);
 					Actor_Change_Animation_Mode(kActorMcCoy, 23);
-					Delay(2000);
+					Delay(800);
 					Item_Pickup_Spin_Effect(kModelAnimationDektorasCard, 115, 282);
+					Delay(800);
 					if (Random_Query(1, 2) == 1) {
 						Actor_Voice_Over(1690, kActorVoiceOver); //99-1690.AUD	“Never seek to tell thy love, love that never told can be.
 						if (Player_Query_Agenda() == kPlayerAgendaSurly 

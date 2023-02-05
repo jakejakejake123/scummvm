@@ -82,7 +82,7 @@ bool SceneScriptDR06::ClickedOn3DObject(const char *objectName, bool a2) {
 		Actor_Face_Object(kActorMcCoy, "BOX16", true);
 		if (_vm->_cutContent) {
 			Actor_Change_Animation_Mode(kActorMcCoy, 23);
-			Delay(2000);
+			Delay(800);
 		}
 		if (!Game_Flag_Query(kFlagDR06JesterActive)) {			
 			Overlay_Play("DR06over", 1, true, true, 0);
@@ -109,8 +109,9 @@ bool SceneScriptDR06::ClickedOn3DObject(const char *objectName, bool a2) {
 				if (Game_Flag_Query(kFlagLucyIsReplicant) 
 				&& !Actor_Clue_Query(kActorMcCoy, kClueLucyIncept)) {
 					Actor_Change_Animation_Mode(kActorMcCoy, 23);
-					Delay(2000);
+					Delay(800);
 					Item_Pickup_Spin_Effect(kModelAnimationPhoto, 365, 344);
+					Delay(800);
 					Actor_Voice_Over(4040, kActorVoiceOver);
 					Actor_Clue_Acquire(kActorMcCoy, kClueLucyIncept, true, -1);
 				} else {
@@ -129,9 +130,9 @@ bool SceneScriptDR06::ClickedOn3DObject(const char *objectName, bool a2) {
 				Actor_Face_Object(kActorMcCoy, "X2_MON01A04", true);
 				if (_vm->_cutContent) {
 					Actor_Change_Animation_Mode(kActorMcCoy, 23);
-					Delay(1000);
+					Delay(800);
 					Sound_Play(kSfxSPNBEEP9, 50, 0, 0, 50);
-					Delay(1000);
+					Delay(800);
 				}
 				Actor_Says(kActorAnsweringMachine, 10, kAnimationModeTalk);
 				Actor_Says(kActorAnsweringMachine, 20, kAnimationModeTalk);
@@ -154,6 +155,12 @@ bool SceneScriptDR06::ClickedOn3DObject(const char *objectName, bool a2) {
 					Actor_Says(kActorMcCoy, 1030, 13);
 				}
 				Actor_Says(kActorAnsweringMachine, 50, kAnimationModeTalk);
+				if (_vm->_cutContent) {
+					Actor_Change_Animation_Mode(kActorMcCoy, 23);
+					Delay(800);
+					Sound_Play(kSfxSPNBEEP9, 50, 0, 0, 50);
+					Delay(800);
+				}
 				Actor_Clue_Acquire(kActorMcCoy, kClueAnsweringMachineMessage, true, kActorSebastian);
 			}
 		}
@@ -169,23 +176,25 @@ bool SceneScriptDR06::ClickedOn3DObject(const char *objectName, bool a2) {
 			if (_vm->_cutContent) { 
 				if (Global_Variable_Query(kVariableAffectionTowards) == kAffectionTowardsDektora) {
 					Actor_Change_Animation_Mode(kActorMcCoy, 23);
-					Delay(1000);
+					Delay(800);
 					Sound_Play(kSfxSPNBEEP9, 50, 0, 0, 50);
 					Delay(2000);
 					Actor_Says(kActorMcCoy, 170, 13); //00-0170.AUD	Damn.
-					Actor_Says(kActorMcCoy, 8640, 13); //00-8640.AUD	That's useless.
+					Actor_Says(kActorMcCoy, 8575, 14); // More useless junk.
 				} else if ( Actor_Clue_Query(kActorMcCoy, kClueFolder)
 				&&  Actor_Clue_Query(kActorMcCoy, kClueGuzzaFramedMcCoy)
 				&& !Game_Flag_Query(kFlagCallWithGuzza)) {
 					Actor_Change_Animation_Mode(kActorMcCoy, 23);
-					Delay(1000);
+					Delay(800);
 					Actor_Set_Goal_Number(kActorMcCoy, kGoalMcCoyCallWithGuzza);
 					Game_Flag_Set(kFlagCallWithGuzza);
 				} else if (!Game_Flag_Query(kFlagDR06VidphoneChecked)) {
 					Actor_Voice_Over(770, kActorVoiceOver);
 					Actor_Voice_Over(780, kActorVoiceOver);
 					Actor_Voice_Over(790, kActorVoiceOver);
-					Actor_Voice_Over(800, kActorVoiceOver); //99-0800.AUD	No wonder this sucker was on the blink.
+					if (Player_Query_Agenda() != kPlayerAgendaPolite) {
+						Actor_Voice_Over(800, kActorVoiceOver); //99-0800.AUD	No wonder this sucker was on the blink.
+					}
 					Game_Flag_Set(kFlagDR06VidphoneChecked);
 				} else {
 					Actor_Says(kActorMcCoy, 8570, 13);
@@ -224,7 +233,13 @@ bool SceneScriptDR06::ClickedOn3DObject(const char *objectName, bool a2) {
 		Loop_Actor_Walk_To_XYZ(kActorMcCoy, -655.57f, 136.6f, -1092.64f, 0, true, false, false);
 		Actor_Face_Object(kActorMcCoy, "X2KEYBRD02", true);
 		Actor_Voice_Over(830, kActorVoiceOver);
-		Actor_Voice_Over(840, kActorVoiceOver);
+		if (_vm->_cutContent) {
+			if (Player_Query_Agenda() != kPlayerAgendaPolite) {
+				Actor_Voice_Over(840, kActorVoiceOver);
+			}
+		} else {
+			Actor_Voice_Over(840, kActorVoiceOver);
+		}
 		Game_Flag_Set(kFlagDR06KeyboardChecked);
 		return true;
 	}
@@ -240,31 +255,55 @@ bool SceneScriptDR06::ClickedOn3DObject(const char *objectName, bool a2) {
 			if (!Game_Flag_Query(kFlagDR06MannequinHeadOpen)) {
 				if (_vm->_cutContent) {
 					Actor_Change_Animation_Mode(kActorMcCoy, 23);
-					Delay(2000);
+					Delay(800);
+					Overlay_Play("DR06ovr2", 0, true, false, 0);
+					Game_Flag_Set(kFlagDR06MannequinHeadOpen);
+					Sound_Play(kSfxCEMENTL1, 100, 0, 0, 50);
+					Delay(800);
+				} else {
+					Overlay_Play("DR06ovr2", 0, true, false, 0);
+					Game_Flag_Set(kFlagDR06MannequinHeadOpen);
+					Sound_Play(kSfxCEMENTL1, 100, 0, 0, 50);
 				}
-				Overlay_Play("DR06ovr2", 0, true, false, 0);
-				Game_Flag_Set(kFlagDR06MannequinHeadOpen);
-				Sound_Play(kSfxCEMENTL1, 100, 0, 0, 50);
 				if (!Actor_Clue_Query(kActorMcCoy, kClueEnvelope)) {
 					if (_vm->_cutContent) {
 						Item_Pickup_Spin_Effect(kModelAnimationEnvelope, 171, 280);
 						Actor_Says(kActorMcCoy, 8800, 13); //00-8800.AUD	An envelope full of money.
+						Delay(800);
+						Overlay_Remove("DR06ovr2");
+						Game_Flag_Reset(kFlagDR06MannequinHeadOpen);
+						Sound_Play(kSfxCEMENTL1, 100, 0, 0, 50);
+						Delay(800);
 						Actor_Voice_Over(850, kActorVoiceOver);
 						Actor_Voice_Over(860, kActorVoiceOver);
-						if (Actor_Clue_Query(kActorMcCoy, kClueAnsweringMachineMessage)
-						&& (Actor_Clue_Query(kActorMcCoy, kClueLabCorpses)
-						|| 	Actor_Clue_Query(kActorMcCoy, kClueLucyInterview))) {	
-							Actor_Voice_Over(870, kActorVoiceOver); //99-0870.AUD	But I didn't expect to find hundreds of chinyen inside.
-						} else {
-							Actor_Voice_Over(870, kActorVoiceOver); //99-0870.AUD	But I didn't expect to find hundreds of chinyen inside.
-							Actor_Voice_Over(880, kActorVoiceOver); //99-0880.AUD	I didn't know what it was for but I'd bet the farm it wasn't on Runciter's books.
-						}
 						Actor_Clue_Acquire(kActorMcCoy, kClueEnvelope, true, kActorLance);
+						Actor_Voice_Over(870, kActorVoiceOver); //99-0870.AUD	But I didn't expect to find hundreds of chinyen inside.
 						if (Player_Query_Agenda() == kPlayerAgendaSurly 
 						|| Player_Query_Agenda() == kPlayerAgendaErratic) {
+							Delay(1000);
+							Actor_Says(kActorMcCoy, 8525, 13); // 00-8525.AUD	Hmph.
+							Actor_Change_Animation_Mode(kActorMcCoy, 23);
+							Delay(2000);
+							Actor_Voice_Over(3480, kActorVoiceOver); //99-3480.AUD	Yeah, what a difference a day makes.
 							if (Query_Difficulty_Level() != kGameDifficultyEasy) {
 								Global_Variable_Increment(kVariableChinyen, 200);
 							}
+							Delay(1000);
+							Actor_Change_Animation_Mode(kActorMcCoy, 23);
+							Delay(800);
+							Overlay_Play("DR06ovr2", 0, true, false, 0);
+							Game_Flag_Set(kFlagDR06MannequinHeadOpen);	
+							Sound_Play(kSfxBIGPOT3, 100, 0, 0, 50);
+							Unclickable_Object("X2_TORSO04HIRES");
+							Delay(1500);
+							Actor_Says(kActorMcCoy, 7275, 14); //  00-7275.AUD	Sometimes I just can't help myself.
+						} else {
+							if (Actor_Clue_Query(kActorMcCoy, kClueAnsweringMachineMessage)
+							&& (Actor_Clue_Query(kActorMcCoy, kClueLabCorpses)
+							|| 	Actor_Clue_Query(kActorMcCoy, kClueLucyInterview)
+							|| 	Actor_Clue_Query(kActorMcCoy, kClueRunciterConfession1))) {	
+								Actor_Voice_Over(880, kActorVoiceOver); //99-0880.AUD	I didn't know what it was for but I'd bet the farm it wasn't on Runciter's books.
+							}	
 						}
 					} else {
 						Actor_Voice_Over(850, kActorVoiceOver);
@@ -279,9 +318,18 @@ bool SceneScriptDR06::ClickedOn3DObject(const char *objectName, bool a2) {
 					}
 				}
 			} else {
-				Overlay_Remove("DR06ovr2");
-				Game_Flag_Reset(kFlagDR06MannequinHeadOpen);
-				Sound_Play(kSfxCEMENTL2, 100, 0, 0, 50);
+				if (_vm->_cutContent) {
+					Actor_Change_Animation_Mode(kActorMcCoy, 23);
+					Delay(800);
+					Overlay_Remove("DR06ovr2");
+					Game_Flag_Reset(kFlagDR06MannequinHeadOpen);
+					Sound_Play(kSfxCEMENTL1, 100, 0, 0, 50);
+					Delay(800);
+				} else {
+					Overlay_Remove("DR06ovr2");
+					Game_Flag_Reset(kFlagDR06MannequinHeadOpen);
+					Sound_Play(kSfxCEMENTL2, 100, 0, 0, 50);
+				}
 			}
 
 			Global_Variable_Increment(kVariableDR06MannequinHeadOpened, 1);
@@ -330,8 +378,11 @@ if (_vm->_cutContent) {
 		if (!Game_Flag_Query(kFlagMcCoyCommentsOnStatues) && (region == 0 || region == 1 || region == 2) ) {
 			Game_Flag_Set(kFlagMcCoyCommentsOnStatues);
 			Actor_Face_Heading(kActorMcCoy, 88, true);
-			Actor_Voice_Over(810, kActorVoiceOver);
-			Actor_Voice_Over(820, kActorVoiceOver);
+			if (Player_Query_Agenda() != kPlayerAgendaPolite) {
+				Actor_Voice_Over(820, kActorVoiceOver); //99-0820.AUD	I didn't know art from Kipple but I did know that real people were never that perfect.
+			} else {
+				Actor_Voice_Over(810, kActorVoiceOver); //99-0810.AUD	They certainly looked good.
+			}
 			Scene_2D_Region_Remove(0);
 			Scene_2D_Region_Remove(1);
 			Scene_2D_Region_Remove(2);

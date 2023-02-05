@@ -166,6 +166,9 @@ bool AIScriptTransient::ShotAtAndHit() {
 	}
 
 	Game_Flag_Set(kFlagCT04HomelessKilledByMcCoy);
+	if (_vm->_cutContent) {
+		Game_Flag_Set(kFlagMcCoyRetiredHuman);
+	} 
 
 	return false;
 }

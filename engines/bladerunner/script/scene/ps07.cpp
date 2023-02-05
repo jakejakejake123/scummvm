@@ -170,9 +170,19 @@ bool SceneScriptPS07::ClickedOnActor(int actorId) {
 				}
 				Actor_Says(kActorKlein, 110, 12); //-	30-0110.AUD	About 50% were real. The rest were fakes.
 				Actor_Says(kActorMcCoy, 4150, 15);
-				Actor_Says(kActorKlein, 120, 14);
-				Actor_Says(kActorMcCoy, 4155, 17);
-				Actor_Says(kActorKlein, 130, 15);
+				if (_vm->_cutContent) {
+					if (Actor_Query_Friendliness_To_Other(kActorKlein, kActorMcCoy) > 49) {
+						Actor_Says(kActorKlein, 120, 14);
+						Actor_Says(kActorMcCoy, 4155, 17);
+						Actor_Says(kActorKlein, 130, 15);
+					} else {
+						Delay(1000);
+					}
+				} else {
+					Actor_Says(kActorKlein, 120, 14);
+					Actor_Says(kActorMcCoy, 4155, 17);
+					Actor_Says(kActorKlein, 130, 15);
+				}
 				Actor_Says(kActorMcCoy, 4160, 13); //-	00-4160.AUD	What about the wounds?
 				Actor_Says(kActorKlein, 140, 16); 
 				// quote 150 is *boop* in ENG version
@@ -329,8 +339,9 @@ bool SceneScriptPS07::ClickedOnActor(int actorId) {
 				Actor_Says(kActorKlein, 260, 12); //30-0260.AUD Yeah, dig this. It's been doing the circuits throughout the station.
 				Actor_Change_Animation_Mode(kActorMcCoy, 23);
 				Actor_Change_Animation_Mode(kActorKlein, 23);
-				Delay(2000);
+				Delay(800);
 				Item_Pickup_Spin_Effect_From_Actor(kModelAnimationMaggieBracelet, kActorMcCoy, 0, 0);
+				Delay(800);
 				Actor_Says(kActorMcCoy, 4190, 13); //99-4190.AUD	Where have I seen that before?
 				Actor_Clue_Acquire(kActorMcCoy, kClueLabAnalysisGoldChain, false, kActorKlein);
 				Actor_Set_Goal_Number(kActorKlein, kGoalKleinMovingInLab01);

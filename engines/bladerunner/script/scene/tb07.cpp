@@ -81,7 +81,7 @@ bool SceneScriptTB07::ClickedOnItem(int itemId, bool a2) {
 		if (itemId == kItemDNATyrell) {
 			if (_vm->_cutContent) {
 				Actor_Change_Animation_Mode(kActorMcCoy, 23);
-				Delay(2000);
+				Delay(800);
 			}
 			Item_Pickup_Spin_Effect(kModelAnimationDNADataDisc, 331, 296);
 			if (_vm->_cutContent) {
@@ -93,7 +93,7 @@ bool SceneScriptTB07::ClickedOnItem(int itemId, bool a2) {
 			if (_vm->_cutContent) {
 				Delay(1000);
 				Actor_Change_Animation_Mode(kActorMcCoy, 23);
-				Delay(2000);
+				Delay(800);
 				Item_Pickup_Spin_Effect(kModelAnimationPhoto, 331, 296);
 				Actor_Voice_Over(4080, kActorVoiceOver);
 				Actor_Clue_Acquire(kActorMcCoy, kClueInceptShotRoy, true, kActorTyrell);

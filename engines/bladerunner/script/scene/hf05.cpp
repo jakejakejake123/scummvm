@@ -86,7 +86,7 @@ bool SceneScriptHF05::ClickedOn3DObject(const char *objectName, bool a2) {
 				Actor_Face_Actor(kActorCrazylegs, kActorMcCoy, true);
 				if (_vm->_cutContent) {
 					Actor_Change_Animation_Mode(kActorMcCoy, 23);
-					Delay(1000);
+					Delay(800);
 				}
 				Actor_Says(kActorCrazylegs, 480, 13);
 				return true;
@@ -102,32 +102,10 @@ bool SceneScriptHF05::ClickedOn3DObject(const char *objectName, bool a2) {
 
 			Player_Loses_Control();
 			if (_vm->_cutContent) {
-				if (Actor_Query_Is_In_Current_Set(kActorDektora)) {
-					if (Game_Flag_Query(kFlagDektoraIsReplicant)
-					|| !Game_Flag_Query(kFlagMcCoyIsInnocent)
-					|| Game_Flag_Query(kFlagMcCoyRetiredHuman)
-					|| Actor_Query_Friendliness_To_Other(kActorCrazylegs, kActorMcCoy) < 50) {
-						Actor_Set_Goal_Number(kActorOfficerLeary, kGoalOfficerLearyPoliceWait60SecondsToAttackHF05);
-					}
-				} else if (Actor_Query_Is_In_Current_Set(kActorLucy)) {
-					if (Game_Flag_Query(kFlagLucyIsReplicant)
-					|| !Game_Flag_Query(kFlagMcCoyIsInnocent)
-					|| Game_Flag_Query(kFlagMcCoyRetiredHuman)
-					|| Actor_Query_Friendliness_To_Other(kActorCrazylegs, kActorMcCoy) < 50) {
-						Actor_Set_Goal_Number(kActorOfficerLeary, kGoalOfficerLearyPoliceWait60SecondsToAttackHF05);
-					}
-				} else {
-					if (Game_Flag_Query(kFlagDektoraIsReplicant)
-					|| !Game_Flag_Query(kFlagMcCoyIsInnocent)
-					|| Game_Flag_Query(kFlagMcCoyRetiredHuman)
-					|| Actor_Query_Friendliness_To_Other(kActorCrazylegs, kActorMcCoy) < 50) {
-						Actor_Set_Goal_Number(kActorOfficerLeary, kGoalOfficerLearyPoliceWait60SecondsToAttackHF05);
-					} else if (Game_Flag_Query(kFlagLucyIsReplicant)
-					|| !Game_Flag_Query(kFlagMcCoyIsInnocent)
-					|| Game_Flag_Query(kFlagMcCoyRetiredHuman)
-					|| Actor_Query_Friendliness_To_Other(kActorCrazylegs, kActorMcCoy) < 50) {
-						Actor_Set_Goal_Number(kActorOfficerLeary, kGoalOfficerLearyPoliceWait60SecondsToAttackHF05);
-					}
+				if (!Game_Flag_Query(kFlagMcCoyIsInnocent)
+				|| Player_Query_Agenda() == kPlayerAgendaSurly 
+				|| Player_Query_Agenda() == kPlayerAgendaErratic) {
+					Actor_Set_Goal_Number(kActorOfficerLeary, kGoalOfficerLearyPoliceWait60SecondsToAttackHF05);
 				}
 			} else {
 				Actor_Set_Goal_Number(kActorOfficerLeary, kGoalOfficerLearyPoliceWait60SecondsToAttackHF05);
@@ -186,10 +164,9 @@ bool SceneScriptHF05::ClickedOn3DObject(const char *objectName, bool a2) {
 					Delay (6000);
 					if (getCompanionActor() == kActorDektora) {
 						if (!Game_Flag_Query(kFlagDektoraIsReplicant)) {
-							if (Game_Flag_Query(kFlagDektoraIsReplicant)
-							|| !Game_Flag_Query(kFlagMcCoyIsInnocent)
-							|| Game_Flag_Query(kFlagMcCoyRetiredHuman)
-							|| Actor_Query_Friendliness_To_Other(kActorCrazylegs, kActorMcCoy) < 50) {
+							if (!Game_Flag_Query(kFlagMcCoyIsInnocent)
+							|| Player_Query_Agenda() == kPlayerAgendaSurly 
+							|| Player_Query_Agenda() == kPlayerAgendaErratic) {
 								Actor_Face_Actor(kActorMcCoy, getCompanionActor(), true);
 								Actor_Face_Actor(getCompanionActor(), kActorMcCoy, true);
 								Actor_Says(kActorDektora, 180, kAnimationModeTalk); //03-0180.AUD	What are you waiting for?
@@ -197,10 +174,9 @@ bool SceneScriptHF05::ClickedOn3DObject(const char *objectName, bool a2) {
 							}
 						}
 					} else if (getCompanionActor() == kActorLucy) {
-						if (Game_Flag_Query(kFlagDektoraIsReplicant)
-						|| !Game_Flag_Query(kFlagMcCoyIsInnocent)
-						|| Game_Flag_Query(kFlagMcCoyRetiredHuman)
-						|| Actor_Query_Friendliness_To_Other(kActorCrazylegs, kActorMcCoy) < 50) {
+						if (!Game_Flag_Query(kFlagMcCoyIsInnocent)
+						|| Player_Query_Agenda() == kPlayerAgendaSurly 
+						|| Player_Query_Agenda() == kPlayerAgendaErratic) {
 							Actor_Face_Actor(kActorMcCoy, getCompanionActor(), true);
 							Actor_Face_Actor(getCompanionActor(), kActorMcCoy, true);
 							Actor_Says(kActorLucy, 460, kAnimationModeTalk); //06-0460.AUD	What are you waiting for?
@@ -271,18 +247,16 @@ bool SceneScriptHF05::ClickedOnExit(int exitId) {
 				) {
 					if (_vm->_cutContent) {
 						if (Actor_Query_Is_In_Current_Set(kActorDektora)) {
-							if (Game_Flag_Query(kFlagDektoraIsReplicant)
-							|| !Game_Flag_Query(kFlagMcCoyIsInnocent)
-							|| Game_Flag_Query(kFlagMcCoyRetiredHuman)
-							|| Actor_Query_Friendliness_To_Other(kActorCrazylegs, kActorMcCoy) < 50) {
+							if (!Game_Flag_Query(kFlagMcCoyIsInnocent)
+							|| Player_Query_Agenda() == kPlayerAgendaSurly 
+							|| Player_Query_Agenda() == kPlayerAgendaErratic) {
 								Actor_Face_Actor(kActorMcCoy, kActorDektora, true);
 								Actor_Says(kActorMcCoy, 1810, 16); //00-1810.AUD	Come on, they’ll be coming through the door any second!
 							}
 						} else if (Actor_Query_Is_In_Current_Set(kActorLucy)) {
-							if (Game_Flag_Query(kFlagLucyIsReplicant)
-							|| !Game_Flag_Query(kFlagMcCoyIsInnocent)
-							|| Game_Flag_Query(kFlagMcCoyRetiredHuman)
-							|| Actor_Query_Friendliness_To_Other(kActorCrazylegs, kActorMcCoy) < 50) {
+							if (!Game_Flag_Query(kFlagMcCoyIsInnocent)
+							|| Player_Query_Agenda() == kPlayerAgendaSurly 
+							|| Player_Query_Agenda() == kPlayerAgendaErratic) {
 								Actor_Face_Actor(kActorMcCoy, kActorLucy, true);
 								Actor_Says(kActorMcCoy, 1810, 16); //00-1810.AUD	Come on, they’ll be coming through the door any second!
 							}	
@@ -489,15 +463,16 @@ void SceneScriptHF05::PlayerWalkedIn() {
 						Game_Flag_Set(kFlagHF05PoliceArrived);
 						Music_Play(kMusicBatl226M, 40, 0, 2, -1, kMusicLoopPlayOnce, 0);
 						Actor_Says(kActorOfficerGrayford, 200, kAnimationModeTalk);
-						Actor_Says(kActorOfficerGrayford, 210, kAnimationModeTalk);
 						if (Player_Query_Agenda() == kPlayerAgendaSurly 
 						|| Player_Query_Agenda() == kPlayerAgendaErratic) {
 							Actor_Face_Heading(kActorMcCoy, 100, true);
-							Actor_Says(kActorMcCoy, 2250, -1); //00-2250.AUD	Come out and show yourself, you coward!
-							if (Game_Flag_Query(kFlagMcCoyIsInnocent)) {
-								Actor_Says(kActorOfficerGrayford, 290, kAnimationModeTalk); //24-0290.AUD	There’s the son of a bitch! Kill it!
-							} else {
-								Actor_Says(kActorOfficerGrayford, 270, kAnimationModeTalk); //24-0270.AUD	There it is! Take it out!
+							Actor_Says(kActorMcCoy, 2250, 14); //00-2250.AUD	Come out and show yourself, you coward!
+							if (!Game_Flag_Query(kFlagMcCoyIsInnocent)) {
+								if (Random_Query(1, 2) == 1) {
+									Actor_Says(kActorOfficerGrayford, 290, kAnimationModeTalk); //24-0290.AUD	There’s the son of a bitch! Kill it!
+								} else {
+									Actor_Says(kActorOfficerGrayford, 270, kAnimationModeTalk); //24-0270.AUD	There it is! Take it out!
+								}
 							}
 							Player_Set_Combat_Mode(true);
 							Delay(1000);
@@ -515,6 +490,12 @@ void SceneScriptHF05::PlayerWalkedIn() {
 							Delay(1000);
 							Actor_Says(kActorOfficerGrayford, 250, kAnimationModeTalk); //24-0250.AUD	Ah, I’m hit!
 							Player_Set_Combat_Mode(false);
+							Delay(2000);
+						}
+						if (!Game_Flag_Query(kFlagMcCoyIsInnocent) 
+						|| Player_Query_Agenda() == kPlayerAgendaSurly 
+						|| Player_Query_Agenda() == kPlayerAgendaErratic) {
+							Actor_Says(kActorOfficerGrayford, 210, kAnimationModeTalk);
 							Delay(1000);
 						}
 						if (getCompanionActor() ==  kActorDektora) {
@@ -743,10 +724,12 @@ void SceneScriptHF05::dialogueWithCrazylegs1() {
 	if (_vm->_cutContent) {
 		if (Actor_Clue_Query(kActorMcCoy, kClueLucy)
 		|| Actor_Clue_Query(kActorMcCoy, kClueLucyWithDektora)) {
-			if (Actor_Query_Goal_Number(kActorLucy) != kGoalLucyGone
-			&& Global_Variable_Query(kVariableChapter) == 3 
-			&& Global_Variable_Query(kVariableAffectionTowards) != kAffectionTowardsLucy) {
-				DM_Add_To_List_Never_Repeat_Once_Selected(1210, 4, 3, 5); // LUCY'S PHOTO
+			if (Actor_Clue_Query(kActorMcCoy, kClueHysteriaToken)) {
+				if (Actor_Query_Goal_Number(kActorLucy) != kGoalLucyGone
+				&& Global_Variable_Query(kVariableChapter) == 3 
+				&& Global_Variable_Query(kVariableAffectionTowards) != kAffectionTowardsLucy) {
+					DM_Add_To_List_Never_Repeat_Once_Selected(1210, 4, 3, 5); // LUCY'S PHOTO
+				}
 			}
 		}
 	} else if (Actor_Clue_Query(kActorMcCoy, kClueLucy)
@@ -961,7 +944,7 @@ void SceneScriptHF05::dialogueWithCrazylegs1() {
 					Delay(1000);
 				}
 				Actor_Says(kActorCrazylegs, 760, 16); //09-0760.AUD	Maybe you should try that arcade next door. 
-				Actor_Says(kActorCrazylegs, 770, kAnimationModeTalk); //09-0770.AUD	She looks like the kind of girl you see there all the time.
+				Actor_Says(kActorCrazylegs, 770, kAnimationModeTalk); //09-0770.AUD	She looks like the kind of girl you see there all the time.		
 				Actor_Says(kActorMcCoy, 2040, kAnimationModeIdle); //00-2040.AUD	I’ll do that.
 			}
 		} else {
@@ -986,10 +969,14 @@ void SceneScriptHF05::dialogueWithCrazylegs1() {
 		}
 		Actor_Says(kActorCrazylegs, 790, 14); //09-0790.AUD	Gotta be a thousand dealers in the city and you’re picking on me.
 		Actor_Says(kActorMcCoy, 2050, kAnimationModeTalk); //00-2050.AUD	I know you know about CARS.
-		Actor_Change_Animation_Mode(kActorMcCoy, 23);
-		Delay(2000);
-		Item_Pickup_Spin_Effect_From_Actor(kModelAnimationGrigoriansNote, kActorMcCoy, 0, 0);
-		Actor_Says(kActorMcCoy, 1890, 13); //00-1890.AUD	You recognize this?
+		if (_vm->_cutContent) {
+			Actor_Says(kActorMcCoy, 1890, 23); //00-1890.AUD	You recognize this?
+		} else {
+			Actor_Change_Animation_Mode(kActorMcCoy, 23);
+			Delay(2000);
+			Item_Pickup_Spin_Effect_From_Actor(kModelAnimationGrigoriansNote, kActorMcCoy, 0, 0);
+			Actor_Says(kActorMcCoy, 1890, 13); //00-1890.AUD	You recognize this?
+		}
 		Actor_Says(kActorMcCoy, 4385, 15); //00-4385.AUD	"Help these lost souls." Isn't that what it said?
 		Delay(1000);
 #if BLADERUNNER_ORIGINAL_BUGS
@@ -1010,7 +997,7 @@ void SceneScriptHF05::dialogueWithCrazylegs1() {
 			if (!Game_Flag_Query(kFlagCrazylegsIsReplicant)) {
 				Actor_Says(kActorCrazylegs, 810, 16); //09-0810.AUD	I know, I know!
 			} else {
-				Delay(1000);
+				Delay(2000);
 				Actor_Says(kActorCrazylegs, 1030, 16); //09-1030.AUD	I don’t care whether they’re Reps or humans as long as the chinyen is real.
 			}
 		}
@@ -1104,7 +1091,7 @@ void SceneScriptHF05::dialogueWithCrazylegs1() {
 						if (Actor_Clue_Query(kActorMcCoy, kClueMorajiInterview)
 						|| Actor_Clue_Query(kActorMcCoy, kClueAnimalMurderSuspect)
 						|| Actor_Clue_Query(kActorMcCoy, kClueClovisAtMoonbus)
-						|| Actor_Clue_Query(kActorMcCoy, kClueClovisFlowers)) {	
+						|| Actor_Clue_Query(kActorMcCoy, kClueDektorasDressingRoom)) {	
 							Actor_Says(kActorMcCoy, 2110, kAnimationModeIdle); //00-2110.AUD	Piercing?	
 						} else {
 							Actor_Says(kActorMcCoy, 2750, kAnimationModeTalk); //00-2750.AUD	Okay, I get the picture.
@@ -1117,8 +1104,7 @@ void SceneScriptHF05::dialogueWithCrazylegs1() {
 					Actor_Says(kActorCrazylegs, 830, 12); //09-0830.AUD	Oh-- Ooh, that Sedan.
 					Actor_Says(kActorMcCoy, 2090, 19); //00-2090.AUD	Blake Williams is a fake name.
 					Actor_Says(kActorCrazylegs, 910, 16); //09-0910.AUD	You just never know about some people.
-					if (Player_Query_Agenda() == kPlayerAgendaSurly 
-					|| Player_Query_Agenda() == kPlayerAgendaErratic) {
+					if (Player_Query_Agenda() != kPlayerAgendaPolite) {
 						Actor_Says(kActorMcCoy, 2095, 14); //00-2095.AUD	Did you forget to run a credit check?
 						Actor_Says(kActorCrazylegs, 920, kAnimationModeTalk); //09-0920.AUD	He paid cash.
 						Actor_Says(kActorMcCoy, 2100, 15); //00-2100.AUD	And people come in here and buy cars with cash every day!
@@ -1131,7 +1117,7 @@ void SceneScriptHF05::dialogueWithCrazylegs1() {
 					if (Actor_Clue_Query(kActorMcCoy, kClueMorajiInterview)
 					|| Actor_Clue_Query(kActorMcCoy, kClueAnimalMurderSuspect)
 					|| Actor_Clue_Query(kActorMcCoy, kClueClovisAtMoonbus)
-					|| Actor_Clue_Query(kActorMcCoy, kClueClovisFlowers)) {	
+					|| Actor_Clue_Query(kActorMcCoy, kClueDektorasDressingRoom)) {	
 						Actor_Says(kActorMcCoy, 2110, kAnimationModeIdle); //00-2110.AUD	Piercing?	
 					} else {
 						Actor_Says(kActorMcCoy, 2750, kAnimationModeTalk); //00-2750.AUD	Okay, I get the picture.
@@ -1194,6 +1180,9 @@ void SceneScriptHF05::dialogueWithCrazylegs2() { // Restored feature - Original:
 				Player_Gains_Control();
 			} else {
 				Actor_Says(kActorMcCoy, 1980, 23); //00-1980.AUD	Give me your phone.
+				Actor_Change_Animation_Mode(kActorMcCoy, 23);
+				Actor_Change_Animation_Mode(kActorCrazylegs, 23);
+				Delay(2000);
 				if (Player_Query_Agenda() != kPlayerAgendaSurly 
 				|| Player_Query_Agenda() != kPlayerAgendaErratic) {
 					Actor_Says(kActorMcCoy, 1985, kAnimationModeTalk); //00-1985.AUD	I’ll try to clear it so you aren’t stuck in a cell with fifty mutant speed loaders
@@ -1207,17 +1196,17 @@ void SceneScriptHF05::dialogueWithCrazylegs2() { // Restored feature - Original:
 					Actor_Says(kActorMcCoy, 7000, 13); //00-7000.AUD	Yeah, okay. I'll take it.
 					Actor_Says(kActorCrazylegs, 540, 12); //09-0540.AUD	Huh, what--?
 					Actor_Says(kActorMcCoy, 120, 12); //00-0120.AUD	It's kind of ugly but you talked me into it.
-					Delay(500);
+					Delay(1000);
 					Actor_Says(kActorCrazylegs, 330, 12); //09-0330.AUD	And, honestly… No, frankly, I gotta tell you it’s got your name written all over it: Ray McCovey.
 					Actor_Says(kActorMcCoy, 1840, kAnimationModeTalk); //00-1840.AUD	McCoy.
 					Actor_Change_Animation_Mode(kActorMcCoy, 23);
 					Actor_Change_Animation_Mode(kActorCrazylegs, 23);
-					Delay(2000);
+					Delay(800);
 					Item_Pickup_Spin_Effect_From_Actor(kModelAnimationSpinnerKeys, kActorMcCoy, 0, 0);
 					Actor_Modify_Friendliness_To_Other(kActorClovis, kActorMcCoy, 1);
 					Actor_Modify_Friendliness_To_Other(kActorSteele, kActorMcCoy, -1);
 					Actor_Modify_Friendliness_To_Other(kActorGuzza, kActorMcCoy, -1);
-					Actor_Modify_Friendliness_To_Other(kActorCrazylegs, kActorMcCoy, 20);
+					Actor_Modify_Friendliness_To_Other(kActorCrazylegs, kActorMcCoy, 10);
 					Delay(1000);
 				} else {
 					Actor_Says(kActorMcCoy, 1995, kAnimationModeTalk); //00-1995.AUD	We ain’t friends, Crazy.
@@ -1225,7 +1214,7 @@ void SceneScriptHF05::dialogueWithCrazylegs2() { // Restored feature - Original:
 					Actor_Says(kActorMcCoy, 1960, 23); //00-1960.AUD	Give me your wheelchair’s ignition key and put your hands on top of your head.
 					Actor_Change_Animation_Mode(kActorMcCoy, 23);
 					Actor_Change_Animation_Mode(kActorCrazylegs, 23);
-					Delay(1000);
+					Delay(800);
 					Item_Pickup_Spin_Effect_From_Actor(kModelAnimationSpinnerKeys, kActorMcCoy, 0, 0);
 					Delay(1000);
 					// Made it so you receive the Crazylegs grovels clue.
@@ -1294,7 +1283,7 @@ void SceneScriptHF05::dialogueWithCrazylegs2() { // Restored feature - Original:
 		Actor_Says(kActorMcCoy, 1975, kAnimationModeTalk);
 		Actor_Says(kActorCrazylegs, 610, 16);
 		if (_vm->_cutContent) {
-			Actor_Modify_Friendliness_To_Other(kActorCrazylegs, kActorMcCoy, 20);
+			Actor_Modify_Friendliness_To_Other(kActorCrazylegs, kActorMcCoy, 10);
 			Actor_Modify_Friendliness_To_Other(kActorClovis, kActorMcCoy, 1);
 			Actor_Modify_Friendliness_To_Other(kActorSteele, kActorMcCoy, -1);
 			Actor_Modify_Friendliness_To_Other(kActorGuzza, kActorMcCoy, -1);
@@ -1319,65 +1308,20 @@ int SceneScriptHF05::getAffectionTowardsActor() {
 
 void SceneScriptHF05::policeAttack() {
 	if (_vm->_cutContent) {
-		if (Actor_Query_Is_In_Current_Set(kActorDektora)) {
-			if (Game_Flag_Query(kFlagDektoraIsReplicant)
-			|| !Game_Flag_Query(kFlagMcCoyIsInnocent)
-			|| Actor_Query_Friendliness_To_Other(kActorCrazylegs, kActorMcCoy) < 50) {
-				Actor_Force_Stop_Walking(kActorMcCoy);
-				Actor_Put_In_Set(kActorOfficerLeary, kSetHF05);
-				Actor_Set_At_XYZ(kActorOfficerLeary, 430.4f, 40.63f, -258.18f, 300);
-				Actor_Put_In_Set(kActorOfficerGrayford, kSetHF05);
-				Actor_Set_At_XYZ(kActorOfficerGrayford, 526.4f, 37.18f, -138.18f, 300);
-				ADQ_Flush();
-				ADQ_Add(kActorOfficerGrayford, 260, -1);
-				Player_Loses_Control();
-				Non_Player_Actor_Combat_Mode_On(kActorOfficerLeary, kActorCombatStateUncover, true, kActorMcCoy, 4, kAnimationModeCombatIdle, kAnimationModeCombatWalk, kAnimationModeCombatRun, 0, 0, 100, 100, 1200, true);
-				Non_Player_Actor_Combat_Mode_On(kActorOfficerGrayford, kActorCombatStateUncover, true, kActorMcCoy, 4, kAnimationModeCombatIdle, kAnimationModeCombatWalk, kAnimationModeCombatRun, 0, 0, 100, 100, 300, true);
-			}
-		} else if (Actor_Query_Is_In_Current_Set(kActorLucy)) {
-			if (Game_Flag_Query(kFlagLucyIsReplicant)
-			|| !Game_Flag_Query(kFlagMcCoyIsInnocent)
-			|| Actor_Query_Friendliness_To_Other(kActorCrazylegs, kActorMcCoy) < 50) {
-				Actor_Force_Stop_Walking(kActorMcCoy);
-				Actor_Put_In_Set(kActorOfficerLeary, kSetHF05);
-				Actor_Set_At_XYZ(kActorOfficerLeary, 430.4f, 40.63f, -258.18f, 300);
-				Actor_Put_In_Set(kActorOfficerGrayford, kSetHF05);
-				Actor_Set_At_XYZ(kActorOfficerGrayford, 526.4f, 37.18f, -138.18f, 300);
-				ADQ_Flush();
-				ADQ_Add(kActorOfficerGrayford, 260, -1);
-				Player_Loses_Control();
-				Non_Player_Actor_Combat_Mode_On(kActorOfficerLeary, kActorCombatStateUncover, true, kActorMcCoy, 4, kAnimationModeCombatIdle, kAnimationModeCombatWalk, kAnimationModeCombatRun, 0, 0, 100, 100, 1200, true);
-				Non_Player_Actor_Combat_Mode_On(kActorOfficerGrayford, kActorCombatStateUncover, true, kActorMcCoy, 4, kAnimationModeCombatIdle, kAnimationModeCombatWalk, kAnimationModeCombatRun, 0, 0, 100, 100, 300, true);
-			}
-		} else {
-			if (Game_Flag_Query(kFlagDektoraIsReplicant)
-			|| !Game_Flag_Query(kFlagMcCoyIsInnocent)
-			|| Actor_Query_Friendliness_To_Other(kActorCrazylegs, kActorMcCoy) < 50) {
-				Actor_Force_Stop_Walking(kActorMcCoy);
-				Actor_Put_In_Set(kActorOfficerLeary, kSetHF05);
-				Actor_Set_At_XYZ(kActorOfficerLeary, 430.4f, 40.63f, -258.18f, 300);
-				Actor_Put_In_Set(kActorOfficerGrayford, kSetHF05);
-				Actor_Set_At_XYZ(kActorOfficerGrayford, 526.4f, 37.18f, -138.18f, 300);
-				ADQ_Flush();
-				ADQ_Add(kActorOfficerGrayford, 260, -1);
-				Player_Loses_Control();
-				Non_Player_Actor_Combat_Mode_On(kActorOfficerLeary, kActorCombatStateUncover, true, kActorMcCoy, 4, kAnimationModeCombatIdle, kAnimationModeCombatWalk, kAnimationModeCombatRun, 0, 0, 100, 100, 1200, true);
-				Non_Player_Actor_Combat_Mode_On(kActorOfficerGrayford, kActorCombatStateUncover, true, kActorMcCoy, 4, kAnimationModeCombatIdle, kAnimationModeCombatWalk, kAnimationModeCombatRun, 0, 0, 100, 100, 300, true);
-			} else if (Game_Flag_Query(kFlagLucyIsReplicant)
-			|| !Game_Flag_Query(kFlagMcCoyIsInnocent)
-			|| Actor_Query_Friendliness_To_Other(kActorCrazylegs, kActorMcCoy) < 50) {
-				Actor_Force_Stop_Walking(kActorMcCoy);
-				Actor_Put_In_Set(kActorOfficerLeary, kSetHF05);
-				Actor_Set_At_XYZ(kActorOfficerLeary, 430.4f, 40.63f, -258.18f, 300);
-				Actor_Put_In_Set(kActorOfficerGrayford, kSetHF05);
-				Actor_Set_At_XYZ(kActorOfficerGrayford, 526.4f, 37.18f, -138.18f, 300);
-				ADQ_Flush();
-				ADQ_Add(kActorOfficerGrayford, 260, -1);
-				Player_Loses_Control();
-				Non_Player_Actor_Combat_Mode_On(kActorOfficerLeary, kActorCombatStateUncover, true, kActorMcCoy, 4, kAnimationModeCombatIdle, kAnimationModeCombatWalk, kAnimationModeCombatRun, 0, 0, 100, 100, 1200, true);
-				Non_Player_Actor_Combat_Mode_On(kActorOfficerGrayford, kActorCombatStateUncover, true, kActorMcCoy, 4, kAnimationModeCombatIdle, kAnimationModeCombatWalk, kAnimationModeCombatRun, 0, 0, 100, 100, 300, true);
-			}
-		} 
+		if (!Game_Flag_Query(kFlagMcCoyIsInnocent)
+		|| Player_Query_Agenda() == kPlayerAgendaSurly 
+		|| Player_Query_Agenda() == kPlayerAgendaErratic) {
+			Actor_Force_Stop_Walking(kActorMcCoy);
+			Actor_Put_In_Set(kActorOfficerLeary, kSetHF05);
+			Actor_Set_At_XYZ(kActorOfficerLeary, 430.4f, 40.63f, -258.18f, 300);
+			Actor_Put_In_Set(kActorOfficerGrayford, kSetHF05);
+			Actor_Set_At_XYZ(kActorOfficerGrayford, 526.4f, 37.18f, -138.18f, 300);
+			ADQ_Flush();
+			ADQ_Add(kActorOfficerGrayford, 260, -1);
+			Player_Loses_Control();
+			Non_Player_Actor_Combat_Mode_On(kActorOfficerLeary, kActorCombatStateUncover, true, kActorMcCoy, 4, kAnimationModeCombatIdle, kAnimationModeCombatWalk, kAnimationModeCombatRun, 0, 0, 100, 100, 1200, true);
+			Non_Player_Actor_Combat_Mode_On(kActorOfficerGrayford, kActorCombatStateUncover, true, kActorMcCoy, 4, kAnimationModeCombatIdle, kAnimationModeCombatWalk, kAnimationModeCombatRun, 0, 0, 100, 100, 300, true);
+		}
 	} else {
 		Actor_Force_Stop_Walking(kActorMcCoy);
 		Actor_Put_In_Set(kActorOfficerLeary, kSetHF05);
@@ -1403,10 +1347,16 @@ void SceneScriptHF05::talkWithDektora() {
 		|| !Game_Flag_Query(kFlagMcCoyIsInnocent)
 		|| Game_Flag_Query(kFlagMcCoyRetiredHuman)
 		|| Actor_Query_Friendliness_To_Other(kActorCrazylegs, kActorMcCoy) < 50) {
-			if (!Game_Flag_Query(kFlagDektoraIsReplicant)) {
-				Actor_Says(kActorDektora, 120, 12); //03-0120.AUD	I won’t let them shoot us down like that.
+			if (!Game_Flag_Query(kFlagMcCoyIsInnocent)
+			|| Player_Query_Agenda() == kPlayerAgendaSurly 
+			|| Player_Query_Agenda() == kPlayerAgendaErratic) {
+				if (!Game_Flag_Query(kFlagDektoraIsReplicant)) {
+					Actor_Says(kActorDektora, 120, 12); //03-0120.AUD	I won’t let them shoot us down like that.
+				} else {
+					Actor_Says(kActorDektora, 2660, 12); //03-2660.AUD	I’ll be right back.
+				}
 			} else {
-				Actor_Says(kActorDektora, 2660, 12); //03-2660.AUD	I’ll be right back.
+				Actor_Says(kActorDektora, 90, -1); //03-0090.AUD	Ray!?
 			}
 			Delay(1000);
 			Actor_Says(kActorMcCoy, 8990, kAnimationModeTalk);
@@ -1498,10 +1448,9 @@ void SceneScriptHF05::talkWithLucy() {
 	Actor_Face_Actor(kActorMcCoy, kActorLucy, true);
 	Actor_Face_Actor(kActorLucy, kActorMcCoy, true);
 	if (_vm->_cutContent) {
-		if (Game_Flag_Query(kFlagLucyIsReplicant)
-		|| !Game_Flag_Query(kFlagMcCoyIsInnocent)
-		|| Game_Flag_Query(kFlagMcCoyRetiredHuman)
-		|| Actor_Query_Friendliness_To_Other(kActorCrazylegs, kActorMcCoy) < 50) {
+		if (!Game_Flag_Query(kFlagMcCoyIsInnocent)
+		|| Player_Query_Agenda() == kPlayerAgendaSurly 
+		|| Player_Query_Agenda() == kPlayerAgendaErratic) {
 			if (Game_Flag_Query(kFlagLucyIsReplicant)) {
 				Actor_Says(kActorLucy, 400, 16);
 			} else {
@@ -1521,28 +1470,28 @@ void SceneScriptHF05::talkWithLucy() {
 	Actor_Says(kActorMcCoy, 1750, 14);
 	Actor_Says(kActorLucy, 410, 12); //06-0410.AUD	I stole it from Sadik.
 	if (_vm->_cutContent) {
-		if (Game_Flag_Query(kFlagLucyIsReplicant)
-		|| !Game_Flag_Query(kFlagMcCoyIsInnocent)
-		|| Game_Flag_Query(kFlagMcCoyRetiredHuman)
-		|| Actor_Query_Friendliness_To_Other(kActorCrazylegs, kActorMcCoy) < 50) {
+		if (!Game_Flag_Query(kFlagMcCoyIsInnocent)
+		|| Player_Query_Agenda() == kPlayerAgendaSurly 
+		|| Player_Query_Agenda() == kPlayerAgendaErratic) {
 			if (Game_Flag_Query(kFlagLucyIsReplicant)) {
 				Actor_Says(kActorLucy, 420, 14); //06-0420.AUD	We can die together! The only thing we’ll feel is the love we have for each other.
-				if (Player_Query_Agenda() != kPlayerAgendaSurly 
-				&& Player_Query_Agenda() != kPlayerAgendaErratic) {
+				if (Player_Query_Agenda() == kPlayerAgendaSurly 
+				&& Player_Query_Agenda() == kPlayerAgendaErratic) {
 					Actor_Says(kActorMcCoy, 1755, 16); //00-1755.AUD	I refuse to go out that way!
 					Actor_Says(kActorLucy, 430, 18); //06-0430.AUD	We have no other choice!
 					Actor_Says_With_Pause(kActorMcCoy, 1760, 1.0f, 15); //00-1760.AUD	We’ve got to!
+					Delay(1000);
 				} else {
-					Delay(2000);
+					Actor_Says(kActorMcCoy, 8995, 14); //00-8995.AUD	No.
+					Actor_Says(kActorLucy, 430, 18); //06-0430.AUD	We have no other choice!
+					Actor_Says_With_Pause(kActorMcCoy, 9000, 1.0f, 16); //00-9000.AUD	No!
+					Actor_Says_With_Pause(kActorMcCoy, 9005, 1.0f, 19); //00-9005.AUD	We'll find another way.
 				}
 			} else {
-				Delay(2000);
-				if (Player_Query_Agenda() != kPlayerAgendaSurly 
-				&& Player_Query_Agenda() != kPlayerAgendaErratic) {
-					Actor_Says(kActorMcCoy, 8995, 14); //00-8995.AUD	No.
-					Actor_Says(kActorMcCoy, 1755, 16); //00-1755.AUD	I refuse to go out that way!
-				}
+				Delay(1000);
 			}
+		} else {
+			Delay(1000);
 		}
 	} else {
 		Actor_Says(kActorLucy, 420, 14); //06-0420.AUD	We can die together! The only thing we’ll feel is the love we have for each other.
@@ -1554,6 +1503,7 @@ void SceneScriptHF05::talkWithLucy() {
 	if (_vm->_cutContent) {
 		if (Game_Flag_Query(kFlagLucyIsReplicant)
 		|| !Game_Flag_Query(kFlagMcCoyIsInnocent)
+		|| Game_Flag_Query(kFlagMcCoyRetiredHuman)
 		|| Actor_Query_Friendliness_To_Other(kActorCrazylegs, kActorMcCoy) < 50) {
 			Actor_Says(kActorLucy, 440, kAnimationModeTalk);
 			Actor_Says(kActorMcCoy, 1770, 15); //00-1770.AUD	Not if we can get a ground car down there.
@@ -1611,13 +1561,19 @@ void SceneScriptHF05::talkWithCrazylegs3(int affectionTowardsActor) {
 				Actor_Says(kActorCrazylegs, 50, kAnimationModeTalk); //09-0050.AUD	True, I hardly know you. You seem like a stand up guy.
 				Actor_Says(kActorCrazylegs, 60, 12); //09-0060.AUD	Eventually, when this fiasco is all over and done with I--
 				Actor_Says(kActorCrazylegs, 70, 13); //09-0070.AUD	I know you’ll get me on the com, right?
-				Actor_Says(kActorMcCoy, 1730, kAnimationModeTalk); //00-1730.AUD	You’re a stand up guy, Crazy.
+				if (Player_Query_Agenda() != kPlayerAgendaSurly 
+				&& Player_Query_Agenda() != kPlayerAgendaErratic) {
+					Actor_Says(kActorMcCoy, 1730, kAnimationModeTalk); //00-1730.AUD	You’re a stand up guy, Crazy.
+				} else {
+					Actor_Says(kActorMcCoy, 5705, 18); //00-5705.AUD	Uh-huh.
+				}
 				Loop_Actor_Walk_To_Actor(kActorCrazylegs, kActorMcCoy, 28, false, false);
 				Actor_Change_Animation_Mode(kActorMcCoy, 23);
 				Actor_Change_Animation_Mode(kActorCrazylegs, 23);
 				Delay(2000);
 				Item_Pickup_Spin_Effect_From_Actor(kModelAnimationSpinnerKeys, kActorMcCoy, 0, 0);
-				if (Player_Query_Agenda() == kPlayerAgendaPolite) {
+				if (Player_Query_Agenda() != kPlayerAgendaSurly 
+				&& Player_Query_Agenda() != kPlayerAgendaErratic) {
 					Actor_Start_Speech_Sample(kActorCrazylegs, 80); //09-0080.AUD	That I am.
 				}
 				Actor_Clue_Acquire(kActorMcCoy, kClueSpinnerKeys, true, kActorCrazylegs);
@@ -1628,6 +1584,7 @@ void SceneScriptHF05::talkWithCrazylegs3(int affectionTowardsActor) {
 				if (Player_Query_Agenda() == kPlayerAgendaSurly 
 				|| Player_Query_Agenda() == kPlayerAgendaErratic) {
 					Actor_Change_Animation_Mode(kActorMcCoy, 5);
+					Actor_Start_Speech_Sample(kActorMcCoy, 460); //00-0460.AUD	Hold it right there!
 					Delay(1000);
 					if (Actor_Query_Is_In_Current_Set(kActorDektora)) {
 						if (!Game_Flag_Query(kFlagDektoraIsReplicant)) {
@@ -1652,8 +1609,9 @@ void SceneScriptHF05::talkWithCrazylegs3(int affectionTowardsActor) {
 					Player_Gains_Control();
 					Actor_Change_Animation_Mode(kActorMcCoy, 23);
 					Actor_Change_Animation_Mode(kActorCrazylegs, 23);
-					Delay(2000);
+					Delay(800);
 					Item_Pickup_Spin_Effect_From_Actor(kModelAnimationSpinnerKeys, kActorMcCoy, 0, 0);
+					Delay(1000);
 					Actor_Clue_Acquire(kActorMcCoy, kClueSpinnerKeys, true, kActorCrazylegs);
 					Delay(1000);
 				} else {
@@ -1667,10 +1625,10 @@ void SceneScriptHF05::talkWithCrazylegs3(int affectionTowardsActor) {
 					Player_Gains_Control();
 					Actor_Change_Animation_Mode(kActorMcCoy, 23);
 					Actor_Change_Animation_Mode(kActorCrazylegs, 23);
-					Delay(2000);
+					Delay(800);
 					Item_Pickup_Spin_Effect_From_Actor(kModelAnimationSpinnerKeys, kActorMcCoy, 0, 0);
-					Actor_Clue_Acquire(kActorMcCoy, kClueSpinnerKeys, true, kActorCrazylegs);
 					Delay(1000);
+					Actor_Clue_Acquire(kActorMcCoy, kClueSpinnerKeys, true, kActorCrazylegs);
 				}
 			}
 		} else {
@@ -1715,10 +1673,11 @@ void SceneScriptHF05::talkWithCrazylegs3(int affectionTowardsActor) {
 						}
 					}
 					// Dektora is only afraid is he is a human.
+					Actor_Face_Actor(affectionTowardsActor, kActorMcCoy, true);
+					Actor_Face_Actor(kActorMcCoy, affectionTowardsActor, true);
 					if (!Game_Flag_Query(kFlagDektoraIsReplicant)) {
 						Actor_Says(kActorDektora, 100, kAnimationModeTalk); //03-0100.AUD	I’m afraid, Ray.
 					}
-					Actor_Face_Actor(kActorMcCoy, affectionTowardsActor, true);
 					Actor_Says(kActorMcCoy, 1745, kAnimationModeTalk);
 					Actor_Says(kActorDektora, 200, 12); //03-0200.AUD	I love you, Ray. Remember that.
 					Actor_Change_Animation_Mode(kActorMcCoy, 23);
@@ -1773,8 +1732,9 @@ void SceneScriptHF05::talkWithCrazylegs3(int affectionTowardsActor) {
 							Actor_Set_Goal_Number(kActorCrazylegs, kGoalCrazyLegsLeavesShowroom);
 						}
 					}
-					Actor_Says(kActorLucy, 390, kAnimationModeTalk);
 					Actor_Face_Actor(kActorMcCoy, affectionTowardsActor, true);
+					Actor_Face_Actor(affectionTowardsActor, kActorMcCoy, true);
+					Actor_Says(kActorLucy, 390, kAnimationModeTalk);
 					Actor_Says(kActorMcCoy, 1745, kAnimationModeTalk);
 					Actor_Says(kActorLucy, 480, kAnimationModeTalk); //06-0480.AUD	I love you, Ray. Remember that.
 					Async_Actor_Walk_To_XYZ(affectionTowardsActor, 309.0f, 40.63f, 402.0f, 0, false);
@@ -1792,6 +1752,7 @@ void SceneScriptHF05::talkWithCrazylegs3(int affectionTowardsActor) {
 					}
 					Actor_Set_Goal_Number(kActorCrazylegs, kGoalCrazyLegsLeavesShowroom);
 					Actor_Face_Actor(kActorMcCoy, affectionTowardsActor, true);
+					Actor_Face_Actor(affectionTowardsActor, kActorMcCoy, true);
 					Actor_Says(kActorMcCoy, 2115, kAnimationModeTalk); //00-2115.AUD	Let’s go. There’s nothing here for us anymore.
 					Async_Actor_Walk_To_XYZ(affectionTowardsActor, 309.0f, 40.63f, 402.0f, 0, false);
 					Loop_Actor_Walk_To_XYZ(kActorMcCoy, 277.0f, 40.63f, 410.0f, 0, false, false, false);
@@ -1868,7 +1829,7 @@ void SceneScriptHF05::talkWithCrazyLegs1() {
 			Actor_Says(kActorMcCoy, 8920, 14); //00-8920.AUD	I gotta ask you a question.
 			Actor_Says(kActorCrazylegs, 1000, 12); //09-1000.AUD	I got customers on the line, so I ain’t got time to chit chat.
 			Actor_Says(kActorMcCoy, 400, 14); //00-0400.AUD	It won't take too long.
-			Delay(1000);
+			Delay(2000);
 			Actor_Says(kActorMcCoy, 8930, 14);
 			Actor_Says(kActorCrazylegs, 1120, 15); //09-1120.AUD	I don’t know what you’re talking about.
 			Delay(1000);
@@ -1896,6 +1857,8 @@ void SceneScriptHF05::talkWithCrazyLegs1() {
 			Actor_Says(kActorCrazylegs, 310, 16); //09-0310.AUD	It’s completely legal and everything. Beautiful ain’t it?
 			if (Player_Query_Agenda() == kPlayerAgendaSurly 
 			|| Player_Query_Agenda() == kPlayerAgendaErratic) {
+				Actor_Face_Actor(kActorCrazylegs, kActorMcCoy, true);
+				Actor_Face_Actor(kActorMcCoy, kActorCrazylegs, true);
 				Actor_Says(kActorMcCoy, 1875, kAnimationModeTalk); //00-1875.AUD	I wouldn’t drag that bucket of bolts if you paid me.
 				Actor_Modify_Friendliness_To_Other(kActorCrazylegs, kActorMcCoy, -2);
 				Delay(2000);
@@ -1909,8 +1872,8 @@ void SceneScriptHF05::talkWithCrazyLegs1() {
 				Actor_Says(kActorMcCoy, 4190, 13); //00-4190.AUD	Nice set of wheels.
 				Actor_Modify_Friendliness_To_Other(kActorCrazylegs, kActorMcCoy, 2);
 				Actor_Face_Actor(kActorCrazylegs, kActorMcCoy, true);
-				Actor_Says(kActorCrazylegs, 320, kAnimationModeTalk); //09-0320.AUD	And you probably won’t ever see it again unless you steal this puppy.
 				Actor_Face_Actor(kActorMcCoy, kActorCrazylegs, true);
+				Actor_Says(kActorCrazylegs, 320, kAnimationModeTalk); //09-0320.AUD	And you probably won’t ever see it again unless you steal this puppy.
 				Actor_Says(kActorCrazylegs, 330, 12); //09-0330.AUD	And, honestly… No, frankly, I gotta tell you it’s got your name written all over it: Ray McCovey.
 				Actor_Says(kActorMcCoy, 1840, kAnimationModeTalk); //00-1840.AUD	McCoy.
 				Actor_Says(kActorCrazylegs, 340, 14); //09-0340.AUD	Uh, give or take a couple of letters.
@@ -1925,6 +1888,7 @@ void SceneScriptHF05::talkWithCrazyLegs1() {
 				Actor_Says(kActorCrazylegs, 330, 12); //09-0330.AUD	And, honestly… No, frankly, I gotta tell you it’s got your name written all over it: Ray McCovey.
 				Actor_Says(kActorMcCoy, 1840, kAnimationModeTalk); //00-1840.AUD	McCoy.
 				Actor_Says(kActorCrazylegs, 340, 14); //09-0340.AUD	Uh, give or take a couple of letters.
+				Delay(1000);
 				Actor_Says(kActorMcCoy, 4945, 16); //00-4945.AUD	I think I'll pass.
 			}
 		}

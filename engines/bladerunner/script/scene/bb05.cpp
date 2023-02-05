@@ -173,17 +173,25 @@ void SceneScriptBB05::PlayerWalkedIn() {
 		Actor_Face_Actor(kActorMcCoy, kActorSebastian, true);
 		Actor_Says(kActorSebastian, 120, 13);
 		Actor_Says(kActorMcCoy, 7030, 15);
-		Actor_Says(kActorSebastian, 130, 17);
+		Actor_Says(kActorSebastian, 130, 17); //56-0130.AUD	Yes, sir. I'm one of the principal design engineers for Dr. Tyrell.
 		if (_vm->_cutContent) {
 			if (Actor_Query_Friendliness_To_Other(kActorSebastian, kActorMcCoy) > 49) {
 				Actor_Says(kActorSebastian, 140, 16); //56-0140.AUD	He's a very nice man. You know he even fronted me the money to buy this building.
 				Actor_Says(kActorSebastian, 150, 14); //56-0150.AUD	It's a landmark, you know.
 				Actor_Says(kActorSebastian, 160, 15); //56-0160.AUD	You really should see the front edifice. They put some amazing detail into it.
-				if (Player_Query_Agenda() == kPlayerAgendaPolite) {
-					Actor_Says(kActorMcCoy, 7035, 14);  //00-7035.AUD	You feeling all right?
+			}
+			if (Player_Query_Agenda() != kPlayerAgendaSurly 
+			&& Player_Query_Agenda() != kPlayerAgendaErratic) {
+				Delay(1000);
+				Actor_Says(kActorMcCoy, 7035, 14);  //00-7035.AUD	You feeling all right?
+				if (Actor_Query_Friendliness_To_Other(kActorSebastian, kActorMcCoy) > 49) {
 					Actor_Says(kActorSebastian, 170, 12);
+				} else {
+					Delay(1000);
 				}
-			} 
+			} else {
+				Delay(1000);
+			}
 		} else {
 			Actor_Says(kActorSebastian, 140, 16); //56-0140.AUD	He's a very nice man. You know he even fronted me the money to buy this building.
 			Actor_Says(kActorSebastian, 150, 14); //56-0150.AUD	It's a landmark, you know.
@@ -202,7 +210,8 @@ void SceneScriptBB05::PlayerWalkedIn() {
 					Actor_Says(kActorMcCoy, 7050, 17); 
 					Actor_Says(kActorSebastian, 200, 16);
 					Actor_Says_With_Pause(kActorSebastian, 210, 1.5f, 14); //56-0210.AUD	It won't be easy to put him right again. I'm sure there was some permanent damage.
-					if (Player_Query_Agenda() == kPlayerAgendaPolite) {
+					if (Player_Query_Agenda() != kPlayerAgendaSurly 
+					&& Player_Query_Agenda() != kPlayerAgendaErratic) {
 						Actor_Says(kActorMcCoy, 7055, 15); //00-7055.AUD	Uh, I'm sorry to hear that.
 					} else {
 						Actor_Says(kActorMcCoy, 7835, 18); //00-7835.AUD	Is that so?
@@ -223,19 +232,15 @@ void SceneScriptBB05::PlayerWalkedIn() {
 					Actor_Says(kActorSebastian, 240, 12);
 				}
 			} else {
-				Delay(2000);
+				Delay(1000);
 			}
 			Actor_Says(kActorMcCoy, 7065, 16); //00-7065.AUD	Look, I gotta check the premises again. Maybe they left something behind.
 			Actor_Says(kActorSebastian, 250, 16); //56-0250.AUD	Well, if you want to take a look, go on ahead. I can't stop you. But please be careful in my lab.
-			if (_vm->_cutContent) {
-				if (Player_Query_Agenda() == kPlayerAgendaPolite) {
-					Actor_Says(kActorMcCoy, 7070, 18); //00-7070.AUD	You got it.
-					Actor_Set_Targetable(kActorGeneralDoll, false);
-				} else {
-					Actor_Set_Targetable(kActorGeneralDoll, true);
-				}
+			if (Player_Query_Agenda() == kPlayerAgendaPolite) {
+				Actor_Says(kActorMcCoy, 7070, 18); //00-7070.AUD	You got it.
+				Actor_Set_Targetable(kActorGeneralDoll, false);
 			} else {
-				Actor_Says(kActorMcCoy, 7070, 18); 
+				Actor_Set_Targetable(kActorGeneralDoll, true);
 			}
 			Actor_Set_Goal_Number(kActorSebastian, 205);
 			Actor_Set_Goal_Number(kActorGeneralDoll, 201);

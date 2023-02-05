@@ -435,9 +435,11 @@ void SceneScriptNR05::talkToEarlyQ() {
 		}
 		// Made it you can now ask Early Q about Lucy even if you don't have her photo.
 		if (_vm->_cutContent) {
-			if (Actor_Query_Goal_Number(kActorLucy) != kGoalLucyGone
-			&& Global_Variable_Query(kVariableAffectionTowards) != kAffectionTowardsLucy)  {
-				DM_Add_To_List_Never_Repeat_Once_Selected(900, 5, 6, 5); // LUCY
+			if (Actor_Clue_Query(kActorMcCoy, kClueHysteriaToken)) {
+				if (Actor_Query_Goal_Number(kActorLucy) != kGoalLucyGone
+				&& Global_Variable_Query(kVariableAffectionTowards) != kAffectionTowardsLucy)  {
+					DM_Add_To_List_Never_Repeat_Once_Selected(900, 5, 6, 5); // LUCY
+				}
 			}
 		} else if (Actor_Clue_Query(kActorMcCoy, kClueLucy)
 		&& Actor_Query_Goal_Number(kActorLucy) != kGoalLucyGone) {

@@ -150,9 +150,12 @@ bool SceneScriptDR04::ClickedOnActor(int actorId) {
 				}
 				// Code which determines whether or not Moraji survives depending on whether you talked to Chew.
 				if (_vm->_cutContent) {
-					Game_Flag_Set(kFlagMorajiTalk);
 					if (Game_Flag_Query(kFlagDR03ChewTalk1)
-					|| Game_Flag_Query(kFlagDR06Entered)) {
+					|| Game_Flag_Query(kFlagDR06Entered)
+					|| Game_Flag_Query(kFlagShoeshineManTalk)
+					|| Game_Flag_Query(kFlagGaffTalk)
+					|| Game_Flag_Query(kFlagGordoTalk1)
+					) {
 						Game_Flag_Set(kFlagMorajiDead);
 						Actor_Set_Goal_Number(kActorMoraji, kGoalMorajiDie);
 						CDB_Set_Crime(kClueMorajiInterview, kCrimeMorajiMurder);

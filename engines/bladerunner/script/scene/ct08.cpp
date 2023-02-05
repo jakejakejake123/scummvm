@@ -94,6 +94,11 @@ void SceneScriptCT08::SceneLoaded() {
 	if (!Actor_Clue_Query(kActorMcCoy, kClueCheese)) {
 		Item_Add_To_World(kItemCheese, kModelAnimationCheese, kSetCT08_CT51_UG12, -102.0f, 2.0f, 41.0f, 432, 6, 6, false, true, false, true);
 	}
+	if (_vm->_cutContent) {
+		if (!Actor_Clue_Query(kActorMcCoy, kClueMoonbus1)) {
+			Item_Add_To_World(kItemMoonbusPhoto, kModelAnimationPhoto, kSetCT08_CT51_UG12, 44.0f, 0.0f, -22.0f, 0, 12, 12, false, true, false, true);
+		}
+	}
 }
 
 bool SceneScriptCT08::MouseClick(int x, int y) {

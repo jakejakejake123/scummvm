@@ -67,14 +67,19 @@ void SceneScriptHF03::dialogueWithLucy() {
 	Dialogue_Menu_Clear_List();
 	if (_vm->_cutContent) {
 		DM_Add_To_List_Never_Repeat_Once_Selected(850, 6, 5, 9); // FATHER
-		DM_Add_To_List_Never_Repeat_Once_Selected(870, 7, 8, 10); // RUNCITER
+		if (!Actor_Clue_Query(kActorMcCoy, kClueZubensMotive)) {
+			DM_Add_To_List_Never_Repeat_Once_Selected(870, 7, 8, 10); // RUNCITER
+		}
 	} else {
 		DM_Add_To_List_Never_Repeat_Once_Selected(850, 6, 5, 2); // FATHER
 		DM_Add_To_List_Never_Repeat_Once_Selected(870, 2, 8, 6); // RUNCITER
 	}
 	if (_vm->_cutContent) {
-		DM_Add_To_List_Never_Repeat_Once_Selected(840, -1, 3, 4); // VOIGT-KAMPFF
-		DM_Add_To_List_Never_Repeat_Once_Selected(860, 3, 2, -1); // CRYSTAL
+		if (Player_Query_Agenda() == kPlayerAgendaPolite) {
+			DM_Add_To_List_Never_Repeat_Once_Selected(860, 3, 2, -1); // CRYSTAL
+		} else {
+			DM_Add_To_List_Never_Repeat_Once_Selected(840, -1, 3, 4); // VOIGT-KAMPFF
+		}
 	} else {
 		DM_Add_To_List_Never_Repeat_Once_Selected(840, -1, 3, 8); // VOIGT-KAMPFF
 		DM_Add_To_List_Never_Repeat_Once_Selected(860, 8, -1, -1); // CRYSTAL
@@ -145,11 +150,7 @@ void SceneScriptHF03::dialogueWithLucy() {
 						if (Game_Flag_Query(kFlagDektoraIsReplicant)) {
 							Actor_Says(kActorLucy, 990, 17);
 						}
-						if (Player_Query_Agenda() == kPlayerAgendaPolite) {
-							Actor_Says(kActorMcCoy, 6790, 15); //00-6790.AUD	That must be tough on you.
-						} else {
-							Actor_Says(kActorMcCoy, 5065, 18); //00-5065.AUD	Is that right?
-						}
+						Actor_Says(kActorMcCoy, 6790, 15); //00-6790.AUD	That must be tough on you.
 						if (Game_Flag_Query(kFlagDektoraIsReplicant)
 						&& Game_Flag_Query(kFlagLucyIsReplicant)
 						) {
@@ -157,9 +158,7 @@ void SceneScriptHF03::dialogueWithLucy() {
 						}
 						Actor_Says(kActorLucy, 1010, 17);
 						Actor_Says(kActorLucy, 1020, 18);
-						if (Player_Query_Agenda() == kPlayerAgendaPolite) {
-							Actor_Says(kActorMcCoy, 6795, 13); //00-6795.AUD	I agree.
-						}		
+						Actor_Says(kActorMcCoy, 6795, 13); //00-6795.AUD	I agree.	
 						Actor_Says(kActorLucy, 1030, 17);
 						Actor_Says(kActorMcCoy, 6800, 14); //00-6800.AUD	You’ll see them with your own eyes one day.
 						Actor_Says(kActorLucy, 1040, 18); //06-1040.AUD	Will I?
@@ -198,9 +197,7 @@ void SceneScriptHF03::dialogueWithLucy() {
 				} else {
 					Actor_Says(kActorLucy, 1050, 17); //06-1050.AUD	Oh, thank you. Thank you for everything.
 				}
-				if (Player_Query_Agenda() == kPlayerAgendaPolite) {
-					Actor_Says(kActorMcCoy, 1650, 13); //00-1650.AUD	Take care of yourself, kid.
-				}
+				Actor_Says(kActorMcCoy, 1650, 13); //00-1650.AUD	Take care of yourself, kid.
 				Actor_Modify_Friendliness_To_Other(kActorSteele, kActorMcCoy, -2);
 				Actor_Modify_Friendliness_To_Other(kActorClovis, kActorMcCoy, 2);
 				Actor_Modify_Friendliness_To_Other(kActorGuzza, kActorMcCoy, -2);
@@ -226,32 +223,28 @@ void SceneScriptHF03::dialogueWithLucy() {
 
 	case 870: // RUNCITER
 		if (_vm->_cutContent) {
-			if (!Actor_Clue_Query(kActorMcCoy, kClueZubensMotive)) {
-				Actor_Says(kActorMcCoy, 1645, 18);
-				if (Actor_Query_Friendliness_To_Other(kActorClovis, kActorMcCoy) < 51) { 
-					if (Game_Flag_Query(kFlagLucyIsReplicant)) {
-						Actor_Says(kActorLucy, 90, 13); //06-0090.AUD	Leave me alone.
-					} else {
-						Actor_Says(kActorLucy, 110, 13); //06-0110.AUD	Please, leave me alone.
-					}
+			Actor_Says(kActorMcCoy, 1645, 18);
+			if (Actor_Query_Friendliness_To_Other(kActorClovis, kActorMcCoy) < 51) { 
+				if (Game_Flag_Query(kFlagLucyIsReplicant)) {
+					Actor_Says(kActorLucy, 90, 13); //06-0090.AUD	Leave me alone.		
 				} else {
-					Actor_Says(kActorLucy, 240, 14);
-					Actor_Says(kActorLucy, 250, 12);
-					Actor_Says(kActorLucy, 260, 13);
-					Actor_Says(kActorLucy, 270, 19);
-					if (!Actor_Clue_Query(kActorMcCoy, kClueLabCorpses)) {
-						Actor_Says(kActorMcCoy, 1665, 18); //00-1665.AUD	So, all the animals were real?
-						Actor_Says(kActorLucy, 280, 13); //06-0280.AUD	Mr. Runciter also used to buy some of the… others.
-						Actor_Says(kActorMcCoy, 1670, 12); //00-1670.AUD	Artificial?
-						Actor_Says(kActorLucy, 290, 14); //06-0290.AUD	He used to tell me that he was protected.
-						Actor_Says(kActorLucy, 300, 16); //06-0300.AUD	That they came from somebody close to the source.
-					}
-					Actor_Says(kActorMcCoy, 1675, 12); 
-					Actor_Says(kActorLucy, 310, 13);//06-0310.AUD	Father and uncle Zuben.
-					Actor_Clue_Acquire(kActorMcCoy, kClueLucyInterview, false, kActorLucy);
+					Actor_Says(kActorLucy, 110, 13); //06-0110.AUD	Please, leave me alone.
 				}
 			} else {
-				Delay(1000);
+				Actor_Says(kActorLucy, 240, 14);
+				Actor_Says(kActorLucy, 250, 12);
+				Actor_Says(kActorLucy, 260, 13);
+				Actor_Says(kActorLucy, 270, 19);
+				if (!Actor_Clue_Query(kActorMcCoy, kClueLabCorpses)) {
+					Actor_Says(kActorMcCoy, 1665, 18); //00-1665.AUD	So, all the animals were real?
+					Actor_Says(kActorLucy, 280, 13); //06-0280.AUD	Mr. Runciter also used to buy some of the… others.
+					Actor_Says(kActorMcCoy, 1670, 12); //00-1670.AUD	Artificial?
+					Actor_Says(kActorLucy, 290, 14); //06-0290.AUD	He used to tell me that he was protected.
+					Actor_Says(kActorLucy, 300, 16); //06-0300.AUD	That they came from somebody close to the source.
+				}
+				Actor_Says(kActorMcCoy, 1675, 12); 
+				Actor_Says(kActorLucy, 310, 13);//06-0310.AUD	Father and uncle Zuben.
+				Actor_Clue_Acquire(kActorMcCoy, kClueLucyInterview, false, kActorLucy);
 			}
 		} else {
 			Actor_Says(kActorMcCoy, 1645, 18);
@@ -287,12 +280,12 @@ bool SceneScriptHF03::ClickedOnActor(int actorId) {
 			Actor_Face_Actor(kActorMcCoy, kActorLucy, true);
 			if (!Game_Flag_Query(kFlagHF03LucyTalk)) {
 				Game_Flag_Set(kFlagHF03LucyTalk);
-				// Made it so McCoy will only point out that Lucy is a replicant by saying she's sick if he found her incept photo at the twins place.
 				if (_vm->_cutContent) {
 					if (Game_Flag_Query(kFlagLucyIsReplicant)) {
 						Actor_Says(kActorMcCoy, 1605, 15); //00-1605.AUD	You’re sick, Lucy.
 						Actor_Says(kActorLucy, 100, 12);
-						if (Player_Query_Agenda() == kPlayerAgendaPolite) {
+						if (Game_Flag_Query(kFlagMcCoyIsHelpingReplicants)
+						|| Player_Query_Agenda() == kPlayerAgendaPolite) {
 							Delay(1000);
 							Actor_Says(kActorMcCoy, 7330, 16); //00-7330.AUD	Let's hope so.
 						} else {

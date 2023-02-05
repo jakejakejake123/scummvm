@@ -109,12 +109,12 @@ void SceneScriptCT07::PlayerWalkedIn() {
 				Game_Flag_Set(kFlagCT01ZubenGone);
 				AI_Movement_Track_Flush(kActorZuben);
 				Actor_Face_Actor(kActorZuben, kActorMcCoy, true);
-				Music_Stop(3u);
 				Player_Set_Combat_Mode(false);
 				Actor_Start_Speech_Sample(kActorMcCoy, 455); //00-0455.AUD	Relax. Nobody's gonna get retired. Okay?
 				Actor_Says(kActorZuben, 100, 19);
 				Actor_Says(kActorMcCoy, 470, 12); //00-0470.AUD	Just talk. That's all.
 				Actor_Says(kActorZuben, 110, 18);
+				Music_Stop(1u);
 				Actor_Says(kActorMcCoy, 475, 12);
 				Actor_Says(kActorZuben, 120, 15);
 				Actor_Says(kActorMcCoy, 480, 16);
@@ -162,6 +162,7 @@ void SceneScriptCT07::PlayerWalkedIn() {
 			Actor_Says(kActorZuben, 100, 19);
 			Actor_Says(kActorMcCoy, 470, 12); //00-0470.AUD	Just talk. That's all.
 			Actor_Says(kActorZuben, 110, 18);
+			Music_Stop(1u);
 			Actor_Says(kActorMcCoy, 475, 12);
 			Actor_Says(kActorZuben, 120, 15);
 			Actor_Says(kActorMcCoy, 480, 16);
@@ -193,14 +194,19 @@ void SceneScriptCT07::PlayerWalkedIn() {
 				Actor_Says(kActorMcCoy, 7350, 14);	//00-7350.AUD	Runciter?
 				Actor_Says(kActorZuben, 280, 12); //19-0280.AUD	He not pay. Bad to Lucy. Bad to everybody. Make people starve.
 				Actor_Says(kActorMcCoy, 7355, 14); //00-7355.AUD	All those animals died.
+				Music_Play(kMusicCrysDie1, 25, 0, 1, -1, kMusicLoopPlayOnce, 1);
 				Actor_Says(kActorZuben, 290, 15); //19-0290.AUD	He made Lucy do bad things. Lucy hurt. Clovis more angry.
-				Actor_Says(kActorZuben, 300, 14); //19-0300.AUD	Girl was forced to do bad things Off-World. Clovis thought Terra better.
-				Actor_Says(kActorZuben, 310, 13); //19-0310.AUD	But Terra's no better for young girls. Runciter bad to Lucy.
+				if (Game_Flag_Query(kFlagLucyIsReplicant)) {
+					Actor_Says(kActorZuben, 300, 14); //19-0300.AUD	Girl was forced to do bad things Off-World. Clovis thought Terra better.
+					Actor_Says(kActorZuben, 310, 13); //19-0310.AUD	But Terra's no better for young girls. Runciter bad to Lucy.
+				}
 				Delay(2000);
+				Actor_Says(kActorMcCoy, 7360, 11); //00-7360.AUD	Did he do things to Lucy?
+				Delay(2000);
+				Actor_Says(kActorMcCoy, 2390, kAnimationModeIdle); //00-2390.AUD	Oh, God. No.
+				Delay(1000);
 				if (Player_Query_Agenda() != kPlayerAgendaPolite) {
 					Actor_Says(kActorMcCoy, 7365, 12);	//00-7365.AUD	You should have killed him.
-				} else {
-					Actor_Says(kActorMcCoy, 7360, 11); //00-7360.AUD	Did he do things to Lucy?
 				}
 				Actor_Says(kActorZuben, 320, 12); //19-0320.AUD	Clovis say Runciter love animals. Runciter still alive so he hurt now. Know what pain is.
 				Actor_Says(kActorZuben, 330, 12); //19-0330.AUD	Kill him, he not hurt. Just dead.

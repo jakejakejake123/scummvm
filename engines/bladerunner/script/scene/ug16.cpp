@@ -166,12 +166,12 @@ bool SceneScriptUG16::ClickedOn3DObject(const char *objectName, bool a2) {
 				Delay(1000);
 				if (_vm->_cutContent) {
 					Actor_Change_Animation_Mode(kActorMcCoy, 23);
-					Delay(2000);
+					Delay(800);
 				}
 				Item_Pickup_Spin_Effect(kModelAnimationDNADataDisc, 418, 305);
 				if (_vm->_cutContent) {
+					Delay(800);
 					Actor_Clue_Acquire(kActorMcCoy, kClueDNALutherLance, true, kActorLuther);
-					Delay(1000);
 				} else {
 					Actor_Clue_Acquire(kActorMcCoy, kClueDNALutherLance, true, -1);
 				}
@@ -741,8 +741,9 @@ void SceneScriptUG16::dialogueWithLuther() {
 			Loop_Actor_Walk_To_Actor(kActorMcCoy, kActorLuther, 24, true, false);
 			Player_Gains_Control();
 			Actor_Change_Animation_Mode(kActorMcCoy, 23);
-			Delay(2000);
+			Delay(800);
 			Item_Pickup_Spin_Effect_From_Actor(kModelAnimationFolder, kActorMcCoy, 0, 0);
+			Delay(800);
 			Actor_Voice_Over(2740, kActorVoiceOver);
 		}
 #if BLADERUNNER_ORIGINAL_BUGS

@@ -253,6 +253,30 @@ void AIScriptDektora::ClickedByPlayer() {
 				Actor_Face_Actor(kActorDektora, kActorMcCoy, true);
 				Actor_Says(kActorMcCoy, 6860, 13); //00-6860.AUD	Are you ready?
 				Actor_Says(kActorDektora, 1110, kAnimationModeTalk); //03-1110.AUD	Yes, I am.
+				if (Player_Query_Agenda() != kPlayerAgendaSurly 
+				&& Player_Query_Agenda() != kPlayerAgendaErratic) {
+					if (Actor_Clue_Query(kActorMcCoy, kClueDragonflyBelt)
+					|| Actor_Clue_Query(kActorMcCoy, kClueDektorasCard)) {
+						Actor_Says(kActorMcCoy, 5150, 18); //00-5150.AUD	One more thing.
+						Actor_Change_Animation_Mode(kActorMcCoy, 23);
+						Actor_Change_Animation_Mode(kActorDektora, 23);
+						Delay(800);
+						if (Actor_Clue_Query(kActorMcCoy, kClueDragonflyBelt)) {
+							Actor_Clue_Lose(kActorMcCoy, kClueDragonflyBelt);
+							Actor_Clue_Acquire(kActorDektora, kClueDragonflyBelt, true, -1);
+							Item_Pickup_Spin_Effect_From_Actor(kModelAnimationDragonflyBelt, kActorDektora, 0, 0);
+							Delay(1500);
+						} 
+						if (Actor_Clue_Query(kActorMcCoy, kClueDektorasCard)
+						&& Global_Variable_Query(kVariableAffectionTowards) != kAffectionTowardsDektora) {
+							Actor_Clue_Lose(kActorMcCoy, kClueDektorasCard);
+							Actor_Clue_Acquire(kActorDektora, kClueDektorasCard, true, -1);
+							Item_Pickup_Spin_Effect_From_Actor(kModelAnimationDektorasCard, kActorDektora, 0, 0);
+							Delay(1500);
+						}
+						Actor_Says(kActorMcCoy, 8170, 13); //00-8170.AUD	There you go.
+					}
+				}
 			}
 		}
 	}
