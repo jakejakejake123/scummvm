@@ -750,6 +750,7 @@ bool SceneScriptRC02::ClickedOnActor(int actorId) {
 				Actor_Says(kActorMcCoy, 4665, 18); //00-4665.AUD	She got a desk or some place where she worked?
 				Actor_Face_Object(kActorRunciter, "CURTAIN", true);
 				Actor_Says(kActorRunciter, 350, 13); //15-0350.AUD	She used to eat over there.
+				Actor_Face_Actor(kActorRunciter, kActorMcCoy, true);
 				Actor_Says(kActorMcCoy, 4130, 13); //00-4130.AUD	Anything else?
 				Delay(500);
 				Actor_Says(kActorMcCoy, 8990, 14); //00-8990.AUD	What have you got there?
