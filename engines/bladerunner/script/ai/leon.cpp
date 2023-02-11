@@ -94,12 +94,30 @@ void AIScriptLeon::ReceivedClue(int clueId, int fromActorId) {}
 
 void AIScriptLeon::ClickedByPlayer() {
 	if (Actor_Query_Goal_Number(kActorLeon) == kGoalLeonHoldingDeskClerk) {
-		Game_Flag_Set(kFlagCT09LeonInterrupted);
-		Player_Loses_Control();
-		Actor_Face_Actor(kActorMcCoy, kActorLeon, true);
-		ADQ_Flush();
-		Actor_Says(kActorMcCoy, 495, kAnimationModeTalk);
-		Actor_Set_Goal_Number(kActorLeon, kGoalLeonReleaseDeskClerk);
+		if (_vm->_cutContent) {
+			if (Player_Query_Agenda() == kPlayerAgendaSurly 
+			|| Player_Query_Agenda() == kPlayerAgendaErratic) {
+				Player_Loses_Control();
+				Actor_Face_Actor(kActorMcCoy, kActorLeon, true);
+				ADQ_Flush();
+				Actor_Says(kActorMcCoy, 495, kAnimationModeTalk); //00-0495.AUD	Excuse me, fellas.
+				Actor_Set_Goal_Number(kActorLeon, kGoalLeonReleaseDeskClerk);
+			} else {
+				Game_Flag_Set(kFlagCT09LeonInterrupted);
+				Player_Loses_Control();
+				Actor_Face_Actor(kActorMcCoy, kActorLeon, true);
+				ADQ_Flush();
+				Actor_Says(kActorMcCoy, 500, 14);
+				Actor_Set_Goal_Number(kActorLeon, kGoalLeonReleaseDeskClerk);
+			}
+		} else {
+			Game_Flag_Set(kFlagCT09LeonInterrupted);
+			Player_Loses_Control();
+			Actor_Face_Actor(kActorMcCoy, kActorLeon, true);
+			ADQ_Flush();
+			Actor_Says(kActorMcCoy, 495, kAnimationModeTalk); //00-0495.AUD	Excuse me, fellas.
+			Actor_Set_Goal_Number(kActorLeon, kGoalLeonReleaseDeskClerk);
+		}
 		//return true;
 	}
 	//return false;
@@ -191,6 +209,9 @@ bool AIScriptLeon::GoalChanged(int currentGoalNumber, int newGoalNumber) {
 	case kGoalLeonTalkToMcCoy:
 		Actor_Face_Actor(kActorLeon, kActorMcCoy, true);
 		Player_Set_Combat_Mode(false);
+		if (_vm->_cutContent) {
+			Player_Gains_Control();
+		}
 		Actor_Says(kActorLeon, 30, 12);
 		Actor_Face_Actor(kActorMcCoy, kActorLeon, true);
 		if (Player_Query_Combat_Mode()) {

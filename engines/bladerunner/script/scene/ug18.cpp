@@ -303,6 +303,7 @@ void SceneScriptUG18::ActorChangedGoal(int actorId, int newGoal, int oldGoal, bo
 			Scene_Exits_Enable();
 			Music_Play(kMusicBeating1, 71, 0, 0, -1, kMusicLoopPlayOnce, 2);
 			Actor_Change_Animation_Mode(kActorClovis, kAnimationModeCombatHit);
+			Actor_Set_Friendliness_To_Other(kActorClovis, kActorMcCoy, 40);
 			Delay(1000);
 			Loop_Actor_Walk_To_XYZ(kActorSadik, -157.44, 0.46, 418.53, 2, false, true, false);
 			Actor_Face_Actor(kActorSadik, kActorMcCoy, true);
@@ -386,7 +387,6 @@ void SceneScriptUG18::ActorChangedGoal(int actorId, int newGoal, int oldGoal, bo
 			Game_Flag_Set(kFlagGuzzaSaved);
 			Global_Variable_Set(kVariableAffectionTowards, kAffectionTowardsNone);
 			Game_Flag_Reset(kFlagMcCoyIsHelpingReplicants);
-			Actor_Modify_Friendliness_To_Other(kActorClovis, kActorMcCoy, -20);
 			Actor_Face_Actor(kActorMcCoy, kActorClovis, true);
 			Actor_Face_Actor(kActorClovis, kActorMcCoy, true);
 			Delay(2000);

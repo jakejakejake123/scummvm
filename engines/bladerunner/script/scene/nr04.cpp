@@ -111,6 +111,15 @@ bool SceneScriptNR04::ClickedOn3DObject(const char *objectName, bool a2) {
 								Actor_Voice_Over(1570, kActorVoiceOver);
 								Actor_Voice_Over(1580, kActorVoiceOver);
 								Actor_Voice_Over(1590, kActorVoiceOver); //99-1590.AUD	for more money than I’d see, if I retired a dozen Reps.
+								Delay(1000);
+								Actor_Change_Animation_Mode(kActorMcCoy, 23);
+								Delay(800);
+								Item_Pickup_Spin_Effect(kModelAnimationPhoto, 247, 141);
+								Delay(800);
+								Actor_Says(kActorMcCoy, 1600, 11); //00-1600.AUD	Lucy?
+								Delay(1000);
+								Actor_Says(kActorMcCoy, 8525, kAnimationModeTalk); //00-8525.AUD	Hmph.
+								Actor_Clue_Acquire(kActorMcCoy, kClueDragonflyAnklet, false, kActorEarlyQ);
 							} else {
 								Actor_Says(kActorMcCoy, 8580, 13); //00-8580.AUD	Nothing else there.
 							}
@@ -327,6 +336,8 @@ void SceneScriptNR04::ActorChangedGoal(int actorId, int newGoal, int oldGoal, bo
 				Actor_Says(kActorMcCoy, 3390, 3); //00-3390.AUD	Not interested.
 			}
 			if (_vm->_cutContent) {
+				Actor_Says(kActorEarlyQ, 140, 16); //18-0140.AUD	You want Dektora? Is that it? The girl with the Rep friends?
+				Actor_Clue_Acquire(kActorMcCoy, kClueEarlyQInterview, true, kActorEarlyQ);
 				Delay(1000);
 				if (Game_Flag_Query(kFlagEarlyQIsReplicant)) {
 					Player_Loses_Control();

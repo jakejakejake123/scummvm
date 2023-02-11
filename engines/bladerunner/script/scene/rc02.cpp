@@ -750,11 +750,25 @@ bool SceneScriptRC02::ClickedOnActor(int actorId) {
 				Actor_Says(kActorMcCoy, 4665, 18); //00-4665.AUD	She got a desk or some place where she worked?
 				Actor_Face_Object(kActorRunciter, "CURTAIN", true);
 				Actor_Says(kActorRunciter, 350, 13); //15-0350.AUD	She used to eat over there.
+				Actor_Says(kActorMcCoy, 4130, 13); //00-4130.AUD	Anything else?
+				Delay(500);
+				Actor_Says(kActorMcCoy, 8990, 14); //00-8990.AUD	What have you got there?
+				Actor_Change_Animation_Mode(kActorMcCoy, 23);
+				Actor_Change_Animation_Mode(kActorRunciter, 23);
+				Delay(800);
+				Item_Pickup_Spin_Effect_From_Actor(kModelAnimationPhoto, kActorMcCoy, 0, 0);
+				Actor_Voice_Over(4040, kActorVoiceOver); //99-4040.AUD	Hello there Lucy.
+				Delay(800);
+				if (Player_Query_Agenda() == kPlayerAgendaPolite) { 
+					Actor_Says(kActorMcCoy, 3935, 13); // 00-3935.AUD	Thanks.
+				}
+				Actor_Says(kActorMcCoy, 4595, 14); //00-4595.AUD	Stick around. I may not be finished with you.
+				Actor_Clue_Acquire(kActorMcCoy, kClueLucy, true, kActorMcCoy);
 				Actor_Face_Actor(kActorRunciter, kActorMcCoy, true);
 				Scene_Exit_Add_2D_Exit(kRC02ExitRC51, 265, 58, 346, 154, 0);
 				Game_Flag_Set(kFlagRC51Available);
 				Game_Flag_Set(kFlagRC02RunciterInterview);
-				Actor_Clue_Acquire(kActorMcCoy, kClueRunciterInterviewA, true, kActorRunciter);
+				Actor_Clue_Acquire(kActorMcCoy, kClueRunciterInterviewA, true, kActorMcCoy);
 				AI_Movement_Track_Unpause(kActorRunciter);
 				Player_Loses_Control();
 				Loop_Actor_Walk_To_XYZ(kActorMcCoy, -20.2f, -1238.73f, 108152.73f, 0, false, false, true);

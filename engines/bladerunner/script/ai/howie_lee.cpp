@@ -52,18 +52,14 @@ void AIScriptHowieLee::Initialize() {
 bool AIScriptHowieLee::Update() {
 
 	if (_vm->_cutContent) {
-		// keep Howie in Acts 2 and 3
-		// Howie in Acts 2 and 3 will have a routine with existing waypoints/goals,
-		// so no need to add new goals (> 100) for those Acts
-		if (!Game_Flag_Query(kFlagHowieLeeArrested)
-		&& Global_Variable_Query(kVariableChapter) < 2) {
+		if (!Game_Flag_Query(kFlagHowieLeeArrested)) {
 			if (Actor_Query_Goal_Number(kActorHowieLee) < 100
-			&& Global_Variable_Query(kVariableChapter) == 4
+			&& Global_Variable_Query(kVariableChapter) == 2
 			) {
 				Actor_Set_Goal_Number(kActorHowieLee, kGoalHowieLeeGoesToFreeSlotC);
 			}
 		}
-		if (Global_Variable_Query(kVariableChapter) > 3) {
+		if (Global_Variable_Query(kVariableChapter) > 1) {
 			return true;
 		}
 	} else {

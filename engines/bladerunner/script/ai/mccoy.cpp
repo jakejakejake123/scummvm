@@ -150,7 +150,7 @@ void AIScriptMcCoy::ReceivedClue(int clueId, int fromActorId) {
 	case kClueDispatchHitAndRun: // added case for cut content
 		// fall through
 	case kClueChopstickWrapper:
-		if (_vm->_cutContent) {
+		if (!_vm->_cutContent) {
 			Spinner_Set_Selectable_Destination_Flag(kSpinnerDestinationChinatown, true);
 		}
 		break;
@@ -1101,6 +1101,19 @@ bool AIScriptMcCoy::UpdateAnimation(int *animation, int *frame) {
 				Actor_Set_Goal_Number(kActorMcCoy, kGoalMcCoyNR04PassOut);
 			}
 		}
+		if (_vm->_cutContent) {
+			if (Game_Flag_Query(kFlagKP07ReplicantsAttackMcCoy)
+			|| Game_Flag_Query(kFlagMcCoyAttackedReplicants)) {
+				if (Actor_Query_Goal_Number(kActorClovis) < kGoalClovisGone) {
+					Delay(2000);
+					Outtake_Play(kOuttakeEnd4D, false, -1);
+					Game_Over();
+				} else {
+					Delay(2000);
+					Game_Over();
+				}
+			}
+		}
 		break;
 
 	case 28:
@@ -1124,6 +1137,19 @@ bool AIScriptMcCoy::UpdateAnimation(int *animation, int *frame) {
 			*animation = kModelAnimationMcCoyFallsOnHisBack;
 			_animationState = 27;
 			_animationFrame = Slice_Animation_Query_Number_Of_Frames(*animation) - 1;
+		}
+		if (_vm->_cutContent) {
+			if (Game_Flag_Query(kFlagKP07ReplicantsAttackMcCoy)
+			|| Game_Flag_Query(kFlagMcCoyAttackedReplicants)) {
+				if (Actor_Query_Goal_Number(kActorClovis) < kGoalClovisGone) {
+					Delay(2000);
+					Outtake_Play(kOuttakeEnd4D, false, -1);
+					Game_Over();
+				} else {
+					Delay(2000);
+					Game_Over();
+				}
+			}
 		}
 		break;
 
@@ -1366,6 +1392,19 @@ bool AIScriptMcCoy::UpdateAnimation(int *animation, int *frame) {
 	case 50:
 		*animation = kModelAnimationMcCoyFallsOnHisBack;
 		_animationFrame = Slice_Animation_Query_Number_Of_Frames(*animation) - 1;
+		if (_vm->_cutContent) {
+			if (Game_Flag_Query(kFlagKP07ReplicantsAttackMcCoy)
+			|| Game_Flag_Query(kFlagMcCoyAttackedReplicants)) {
+				if (Actor_Query_Goal_Number(kActorClovis) < kGoalClovisGone) {
+					Delay(2000);
+					Outtake_Play(kOuttakeEnd4D, false, -1);
+					Game_Over();
+				} else {
+					Delay(2000);
+					Game_Over();
+				}
+			}
+		}
 		break;
 
 	case 51:
@@ -1402,6 +1441,19 @@ bool AIScriptMcCoy::UpdateAnimation(int *animation, int *frame) {
 			}
 			if (Actor_Query_Goal_Number(kActorMcCoy) == kGoalMcCoyNR01ThrownOut) {
 				Actor_Set_Goal_Number(kActorMcCoy, kGoalMcCoyNR01GetUp);
+			}
+			if (_vm->_cutContent) {
+				if (Game_Flag_Query(kFlagKP07ReplicantsAttackMcCoy)
+				|| Game_Flag_Query(kFlagMcCoyAttackedReplicants)) {
+					if (Actor_Query_Goal_Number(kActorClovis) < kGoalClovisGone) {
+						Delay(2000);
+						Outtake_Play(kOuttakeEnd4D, false, -1);
+						Game_Over();
+					} else {
+						Delay(2000);
+						Game_Over();
+					}
+				}
 			}
 		}
 		break;
@@ -1470,8 +1522,11 @@ bool AIScriptMcCoy::UpdateAnimation(int *animation, int *frame) {
 			Item_Add_To_World(kItemChair, kModelAnimationYukonHotelChair, kSetCT08_CT51_UG12, -110.0, 0.0, -192.0, 0, 48, 32, false, true, false, false);
 			// Added in a couple of lines for McCoy. Since McCoy was beaten up by Sadik these lines fit perfectly here.
 			if (_vm->_cutContent) {
-				Actor_Says(kActorMcCoy, 8680, 12); //00-8680.AUD	I'm in bad shape.
-				Actor_Says(kActorMcCoy, 8685, 15); //00-8685.AUD	I better get some help.
+				if (Actor_Query_Friendliness_To_Other(kActorClovis, kActorMcCoy) < 51
+				|| Game_Flag_Query(kFlagMcCoyRetiredReplicant)) {
+					Actor_Says(kActorMcCoy, 8680, 12); //00-8680.AUD	I'm in bad shape.
+					Actor_Says(kActorMcCoy, 8685, 15); //00-8685.AUD	I better get some help.
+				}
 			}
 		}
 		break;
@@ -1577,6 +1632,19 @@ bool AIScriptMcCoy::UpdateAnimation(int *animation, int *frame) {
 			Scene_Exits_Enable();
 			Player_Set_Combat_Mode_Access(true);
 			Actor_Set_Goal_Number(kActorMcCoy, kGoalMcCoyDefault);
+		}
+		if (_vm->_cutContent) {
+			if (Game_Flag_Query(kFlagKP07ReplicantsAttackMcCoy)
+			|| Game_Flag_Query(kFlagMcCoyAttackedReplicants)) {
+				if (Actor_Query_Goal_Number(kActorClovis) < kGoalClovisGone) {
+					Delay(2000);
+					Outtake_Play(kOuttakeEnd4D, false, -1);
+					Game_Over();
+				} else {
+					Delay(2000);
+					Game_Over();
+				}
+			}
 		}
 		break;
 

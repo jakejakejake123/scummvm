@@ -1206,7 +1206,7 @@ void SceneScriptHF05::dialogueWithCrazylegs2() { // Restored feature - Original:
 					Actor_Modify_Friendliness_To_Other(kActorClovis, kActorMcCoy, 1);
 					Actor_Modify_Friendliness_To_Other(kActorSteele, kActorMcCoy, -1);
 					Actor_Modify_Friendliness_To_Other(kActorGuzza, kActorMcCoy, -1);
-					Actor_Modify_Friendliness_To_Other(kActorCrazylegs, kActorMcCoy, 10);
+					Actor_Set_Friendliness_To_Other(kActorCrazylegs, kActorMcCoy, 60);
 					Delay(1000);
 				} else {
 					Actor_Says(kActorMcCoy, 1995, kAnimationModeTalk); //00-1995.AUD	We ain’t friends, Crazy.

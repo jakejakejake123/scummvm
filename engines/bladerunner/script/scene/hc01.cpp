@@ -739,6 +739,9 @@ void SceneScriptHC01::dialogueWithIzo() {
 							Actor_Says(kActorIzo, 520, 16); //07-0520.AUD	More importantly stay out of my face.
 							Actor_Says(kActorIzo, 530, 15); //07-0530.AUD	All I'd have to do is make one vid-call and you would be shoveling shit Off-World for the rest of your career.
 							Actor_Says(kActorMcCoy, 1210, 16); //00-1210.AUD	Talk to me like that some more and you'll be eating it.
+							Actor_Change_Animation_Mode(kActorMcCoy, 23);
+							Actor_Says(kActorIzo, 980, 15); //07-0980.AUD	(laughs) (grunts)
+							Actor_Says(kActorMcCoy, 7275, 14); //  00-7275.AUD	Sometimes I just can't help myself.
 							Actor_Clue_Acquire(kActorMcCoy, kClueMcCoyWarnedIzo, true, kActorIzo);
 						} else {
 							Delay(1000);	
@@ -813,9 +816,6 @@ void SceneScriptHC01::takePhotoAndRunAway() {
 		Item_Pickup_Spin_Effect(kModelAnimationPhoto, 377, 397);
 		Delay(1500);
 		Item_Pickup_Spin_Effect(kModelAnimationPhoto, 330, 384);
-		if (Game_Flag_Query(kFlagDektoraIsReplicant)) {
-			Actor_Voice_Over(4090, kActorVoiceOver); //99-4090.AUD	She looks familiar.
-		}
 		if (Game_Flag_Query(kFlagAR02DektoraBoughtScorpions)) {
 			Actor_Clue_Acquire(kActorMcCoy, kCluePhotoOfMcCoy1, true, kActorIzo);
 		} else {
@@ -823,7 +823,8 @@ void SceneScriptHC01::takePhotoAndRunAway() {
 		}
 		Actor_Clue_Acquire(kActorMcCoy, kClueChinaBar, true, kActorIzo);
 		if (Player_Query_Agenda() == kPlayerAgendaSurly 
-		|| Player_Query_Agenda() == kPlayerAgendaErratic) {	
+		|| Player_Query_Agenda() == kPlayerAgendaErratic
+		|| !Game_Flag_Query(kFlagMcCoyIsHelpingReplicants)) {	
 			Player_Set_Combat_Mode(true);
 		}
 	}

@@ -437,7 +437,9 @@ void SceneScriptUG05::endGame() {
 	} else {
 		Outtake_Play(kOuttakeEnd3, false, -1);
 	}
-	Outtake_Play(kOuttakeEnd2, false, -1);
+	if (!_vm->_cutContent) {
+		Outtake_Play(kOuttakeEnd2, false, -1);
+	}
 
 	Game_Over();
 }

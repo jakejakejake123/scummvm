@@ -575,59 +575,22 @@ void SceneScriptNR01::PlayerWalkedIn() {
 			if (Game_Flag_Query(kFlagSteeleKnowsBulletBobIsDead)
 			&& !_vm->_cutContent) {
 				Actor_Says(kActorSteele, 1330, 12); //01-1330.AUD	We got a problem, though. There’s an APB out for you.
-				if (Game_Flag_Query(kFlagGuzzaInformed)) {
-					Actor_Says(kActorSteele, 1340, 12); //01-1340.AUD	You’ve been shooting civilians? Because that’s what Guzza's saying.
-					Actor_Says(kActorSteele, 1350, 12); //01-1350.AUD	He wants to put you on the Machine.
-					Actor_Says(kActorMcCoy, 3120, 15); //00-3120.AUD	You’re gonna retire me, Steele?
-					if (Actor_Query_Friendliness_To_Other(kActorSteele, kActorMcCoy) < 60) {
-						Actor_Says(kActorSteele, 1360, 12); //01-1360.AUD	You’re not on my list yet. That means no retirement swag.
-					} else if (Global_Variable_Query(kVariableAffectionTowards) == kAffectionTowardsDektora 
-					|| Global_Variable_Query(kVariableAffectionTowards) == kAffectionTowardsLucy) {
-						if (Game_Flag_Query(kFlagDektoraIsReplicant)) {
-							Actor_Says(kActorSteele, 1360, 12); //01-1360.AUD	You’re not on my list yet. That means no retirement swag.
-						} else if (Game_Flag_Query(kFlagLucyIsReplicant)) {
-							Actor_Says(kActorSteele, 1360, 12); //01-1360.AUD	You’re not on my list yet. That means no retirement swag.
-						} else {
-							Actor_Says(kActorSteele, 640, 12); //01-0640.AUD	No chance.
-						}
-					} else {
-						Actor_Says(kActorSteele, 640, 12); //01-0640.AUD	No chance.
-					}
-				}
+				Actor_Says(kActorSteele, 1340, 12); //01-1340.AUD	You’ve been shooting civilians? Because that’s what Guzza's saying.
+				Actor_Says(kActorSteele, 1350, 12); //01-1350.AUD	He wants to put you on the Machine.
+				Actor_Says(kActorMcCoy, 3120, 15); //00-3120.AUD	You’re gonna retire me, Steele?
+				Actor_Says(kActorSteele, 1360, 12); //01-1360.AUD	You’re not on my list yet. That means no retirement swag.
 				Actor_Says(kActorSteele, 1370, 12); //01-1370.AUD	The uniforms know you’re down here. They already towed your Spinner.
 				Actor_Says(kActorMcCoy, 3125, 15); //00-3125.AUD	I was wondering where it went.
 				Actor_Says(kActorSteele, 1380, 12); //01-1380.AUD	Is it true, Slim? Did you kill somebody?
-				if (_vm->_cutContent) {
-					if (Player_Query_Agenda() != kPlayerAgendaSurly 
-					&& Player_Query_Agenda() != kPlayerAgendaErratic) {
-						Delay(1000);
-						Actor_Says(kActorMcCoy, 7980, 19); //00-7980.AUD	Yeah. Maybe.
-						Delay(1000);
-					} else {
-						Actor_Says(kActorMcCoy, 3130, 15); //00-3130.AUD	What do you think?
-						Actor_Says(kActorSteele, 1390, 12); //01-1390.AUD	I ain’t sure yet. I like to be sure.
-						Delay(1000);
-					}
-				} else {
-					Actor_Says(kActorMcCoy, 3130, 15); //00-3130.AUD	What do you think?
-					Actor_Says(kActorSteele, 1390, 12); //01-1390.AUD	I ain’t sure yet. I like to be sure.
-				}
-				if (!_vm->_cutContent) {
-					Actor_Says(kActorSteele, 1400, 12); //01-1400.AUD	Something ain’t right. That setup underground? I didn’t see a V-K Machine down there.
-					Actor_Says(kActorSteele, 1410, 12); //01-1410.AUD	Baker wasn’t gonna take you downtown and he wasn’t gonna test you.
-					Actor_Says(kActorMcCoy, 3135, 15); //00-3135.AUD	No kidding.
-				}
-				if (_vm->_cutContent) {
-					Actor_Change_Animation_Mode(kActorSteele, 4);
-					Delay(1500);
-					Actor_Says(kActorSteele, 2210, -1); //01-2210.AUD	I guess I gotta take you in. They'll probably have to run a couple of tests, too.
-					Outtake_Play(kOuttakeAway1, true, -1);
-					Actor_Set_Goal_Number(kActorMcCoy, kGoalMcCoyArrested);
-				} else {
-					Actor_Says(kActorMcCoy, 3140, 15); //00-3140.AUD	Thanks.
-					Actor_Says(kActorSteele, 1430, 12); //01-1430.AUD	Don’t thank me yet. The next time you see me... (smacks lips twice) 
-					Actor_Set_Goal_Number(kActorSteele, kGoalSteeleImmediatelyStartChapter4);
-				}
+				Actor_Says(kActorMcCoy, 3130, 15); //00-3130.AUD	What do you think?
+				Actor_Says(kActorSteele, 1390, 12); //01-1390.AUD	I ain’t sure yet. I like to be sure.
+				Actor_Says(kActorSteele, 1400, 12); //01-1400.AUD	Something ain’t right. That setup underground? I didn’t see a V-K Machine down there.
+				Actor_Says(kActorSteele, 1410, 12); //01-1410.AUD	Baker wasn’t gonna take you downtown and he wasn’t gonna test you.
+				Actor_Says(kActorMcCoy, 3135, 15); //00-3135.AUD	No kidding.
+				Actor_Says(kActorSteele, 1420, 12);
+				Actor_Says(kActorMcCoy, 3140, 15); //00-3140.AUD	Thanks.
+				Actor_Says(kActorSteele, 1430, 12); //01-1430.AUD	Don’t thank me yet. The next time you see me... (smacks lips twice) 
+				Actor_Set_Goal_Number(kActorSteele, kGoalSteeleImmediatelyStartChapter4);
 			} else {
 				int v0 = Global_Variable_Query(kVariableHollowayArrest);
 				if (v0 == 1) { // Dektora called the fake cops

@@ -479,7 +479,6 @@ void SceneScriptKP07::PlayerWalkedIn() {
 			}
 			if (_vm->_cutContent) {
 				Actor_Set_Goal_Number(kActorMaggie, kGoalMaggieDead);
-				Scene_Exits_Disable();
 				if (Player_Query_Agenda() != kPlayerAgendaSurly 
 				&& Player_Query_Agenda() != kPlayerAgendaErratic) {
 					Player_Set_Combat_Mode(false);

@@ -59,6 +59,18 @@ void SceneScriptHF01::InitializeScene() {
 		}
 	}
 
+	if (_vm->_cutContent) {
+		if (Actor_Query_Is_In_Current_Set(kActorLucy)) {
+			if (Global_Variable_Query(kVariableAffectionTowards) == kAffectionTowardsLucy) {
+				Actor_Set_Targetable(kActorLucy, false);
+			}
+		} else if (Actor_Query_Is_In_Current_Set(kActorDektora)) {
+			if (Global_Variable_Query(kVariableAffectionTowards) == kAffectionTowardsDektora) {
+				Actor_Set_Targetable(kActorDektora, false);
+			}
+		}
+	}
+
 	Ambient_Sounds_Add_Looping_Sound(kSfxCTRAIN1, 50,   0, 1);
 	Ambient_Sounds_Add_Looping_Sound(kSfxARCBED1, 25,   0, 1);
 	Ambient_Sounds_Add_Looping_Sound(kSfxRCAMBR1, 60, 100, 1);
@@ -1137,32 +1149,21 @@ void SceneScriptHF01::DialogueQueueFlushed(int a1) {
 void SceneScriptHF01::dialogueWithMiaAndMurray() {
 	// Made it so no further option will be available if McCoy threatened Mia and Murray when asking about the cheese.
 	Dialogue_Menu_Clear_List();
-	if (_vm->_cutContent) {
-		if (Actor_Query_Friendliness_To_Other(kActorMurray, kActorMcCoy) > 49) {
-			if (Actor_Clue_Query(kActorMcCoy, kClueLucy)
-			|| Actor_Clue_Query(kActorMcCoy, kClueLucyWithDektora)) {
-				if (Actor_Clue_Query(kActorMcCoy, kClueHysteriaToken)) {
-					if (Actor_Query_Goal_Number(kActorLucy) != kGoalLucyGone
-					&& Global_Variable_Query(kVariableAffectionTowards) != kAffectionTowardsLucy) {
-						DM_Add_To_List_Never_Repeat_Once_Selected(440, 8, 6, 7); // LUCY PHOTO
-					}
-				}
-			}
+	if (!_vm->_cutContent) {	
+		if (Actor_Clue_Query(kActorMcCoy, kClueLucy)) {
+			DM_Add_To_List_Never_Repeat_Once_Selected(440, 8, 6, 3); // LUCY PHOTO
 		}
-	} else if (Actor_Clue_Query(kActorMcCoy, kClueLucy)) {
-		DM_Add_To_List_Never_Repeat_Once_Selected(440, 8, 6, 3); // LUCY PHOTO
 	}
-	if (_vm->_cutContent) {
-		if (Actor_Query_Friendliness_To_Other(kActorMurray, kActorMcCoy) > 49) {
-			if (!Actor_Clue_Query(kActorMcCoy, kClueLucy)
-			&& !Actor_Clue_Query(kActorMcCoy, kClueLucyWithDektora)
-			&& Actor_Clue_Query(kActorMcCoy, kClueHysteriaToken)
-			&& Actor_Query_Goal_Number(kActorLucy) != kGoalLucyGone
+	if (_vm->_cutContent) {	
+		if (Actor_Query_Friendliness_To_Other(kActorMurray, kActorMcCoy) > 49
+		&& Actor_Clue_Query(kActorMcCoy, kClueLucy)
+		&& Actor_Clue_Query(kActorMcCoy, kClueHysteriaToken)) {
+			if (Actor_Query_Goal_Number(kActorLucy) != kGoalLucyGone
 			&& Global_Variable_Query(kVariableAffectionTowards) != kAffectionTowardsLucy) {
-				 DM_Add_To_List_Never_Repeat_Once_Selected(450, 7, 6, 7); // LUCY
+				DM_Add_To_List_Never_Repeat_Once_Selected(450, 8, 6, 7); // LUCY
 			}
 		}
-	} else { 
+	} else {
 		if (!Actor_Clue_Query(kActorMcCoy, kClueLucy)
 		&&  Actor_Clue_Query(kActorMcCoy, kClueRunciterInterviewA)) {
 			DM_Add_To_List_Never_Repeat_Once_Selected(450, 7, 6, 3); // LUCY
@@ -1201,70 +1202,56 @@ void SceneScriptHF01::dialogueWithMiaAndMurray() {
 
 	switch (answer) {
 	case 440: // LUCY PHOTO
-		if (_vm->_cutContent) {
-			Actor_Face_Actor(kActorMurray, kActorMcCoy, true);
-			Actor_Face_Actor(kActorMia, kActorMcCoy, true);
-		}
-		if (_vm->_cutContent) {
-			Actor_Says(kActorMcCoy, 1480, 23); //00-1480.AUD	You ever seen this girl around here, maybe in the arcade?
-		} else {
-			Actor_Says(kActorMcCoy, 1480, 15);
-		}
+		Actor_Says(kActorMcCoy, 1480, 15);
 		Actor_Says(kActorMia, 70, kAnimationModeTalk);
-		if (_vm->_cutContent) {
-			Actor_Face_Actor(kActorMurray, kActorMia, true);
-			Actor_Face_Actor(kActorMia, kActorMurray, true);
-		}
 		Actor_Says(kActorMurray, 120, kAnimationModeTalk);
-		if (_vm->_cutContent) {
-			Actor_Face_Actor(kActorMurray, kActorMcCoy, true);
-			Actor_Face_Actor(kActorMia, kActorMcCoy, true);
-		}
 		Actor_Says(kActorMcCoy, 1505, 14);
 		Actor_Says(kActorMia, 80, kAnimationModeTalk);
-		if (_vm->_cutContent) {
-			Actor_Face_Actor(kActorMurray, kActorMia, true);
-			Actor_Face_Actor(kActorMia, kActorMurray, true);
-		}
 		Actor_Says(kActorMurray, 130, kAnimationModeTalk);
 		Actor_Says(kActorMia, 90, kAnimationModeTalk);
-		if (_vm->_cutContent) {
-			Actor_Face_Actor(kActorMurray, kActorMcCoy, true);
-			Actor_Face_Actor(kActorMia, kActorMcCoy, true);
-		}
 		Actor_Says(kActorMcCoy, 1510, 12);
-		if (_vm->_cutContent) {
-			Actor_Face_Actor(kActorMurray, kActorMia, true);
-			Actor_Face_Heading(kActorMia, 511, false);
-		}
 		break;
 
 	case 450: // LUCY
 		if (_vm->_cutContent) {
 			Actor_Face_Actor(kActorMurray, kActorMcCoy, true);
 			Actor_Face_Actor(kActorMia, kActorMcCoy, true);
-		}
-		if (_vm->_cutContent) {
-			Actor_Says(kActorMcCoy, 1485, 16); //00-1485.AUD	You seen a girl around here? About fourteen with pink hair... Maybe in the arcade?
-		} else {
 			Actor_Says(kActorMcCoy, 385, 13); //00-0385.AUD	I'm looking for a girl about 14 years old with pink hair. You seen her?
-		}
-		Actor_Says(kActorMia, 100, kAnimationModeTalk);
-		if (_vm->_cutContent) {
+			Actor_Says(kActorMia, 100, kAnimationModeTalk);
 			Actor_Face_Actor(kActorMurray, kActorMia, true);
 			Actor_Face_Actor(kActorMia, kActorMurray, true);
-		}
-		Actor_Says(kActorMurray, 140, 12);
-		Actor_Says(kActorMia, 110, kAnimationModeTalk);
-		if (_vm->_cutContent) {
+			Actor_Says(kActorMurray, 140, 12); //31-0140.AUD	Don't think he means you.
+			Actor_Says(kActorMia, 110, kAnimationModeTalk); //22-0110.AUD	Of course not, not now. We work outside Hysteria Hall, don't we?
 			Actor_Face_Actor(kActorMurray, kActorMcCoy, true);
 			Actor_Face_Actor(kActorMia, kActorMcCoy, true);
-		}
-		Actor_Says(kActorMia, 120, kAnimationModeTalk);
-		Actor_Says(kActorMurray, 150, 14);
-		if (_vm->_cutContent) {
+			Actor_Says(kActorMia, 120, kAnimationModeTalk); //22-0120.AUD	Well, we must see twenty, thirty girls a day with pink hair.
+			Actor_Says(kActorMurray, 150, 14); //31-0150.AUD	And every other color in the rainbow.
+			Delay(1000);
+			Actor_Says(kActorMcCoy, 1480, 23); //00-1480.AUD	You ever seen this girl around here, maybe in the arcade?
+			Actor_Says(kActorMia, 70, kAnimationModeTalk);
+			Actor_Face_Actor(kActorMurray, kActorMia, true);
+			Actor_Face_Actor(kActorMia, kActorMurray, true);
+			Actor_Says(kActorMurray, 120, kAnimationModeTalk);
+			Actor_Face_Actor(kActorMurray, kActorMcCoy, true);
+			Actor_Face_Actor(kActorMia, kActorMcCoy, true);
+			Actor_Says(kActorMcCoy, 1505, 14);
+			Actor_Says(kActorMia, 80, kAnimationModeTalk);
+			Actor_Face_Actor(kActorMurray, kActorMia, true);
+			Actor_Face_Actor(kActorMia, kActorMurray, true);
+			Actor_Says(kActorMurray, 130, kAnimationModeTalk); //31-0130.AUD	You're positively wrong. It was two days ago, sure as God made little green apples.
+			Actor_Says(kActorMia, 90, kAnimationModeTalk); 
+			Actor_Face_Actor(kActorMurray, kActorMcCoy, true);
+			Actor_Face_Actor(kActorMia, kActorMcCoy, true);
+			Actor_Says(kActorMcCoy, 1510, 12); //00-1510.AUD	Okay, okay. Just forget it.
 			Actor_Face_Actor(kActorMurray, kActorMia, true);
 			Actor_Face_Heading(kActorMia, 511, false);
+		} else {
+			Actor_Says(kActorMcCoy, 1485, 16); //00-1485.AUD	You seen a girl around here? About fourteen with pink hair... Maybe in the arcade?
+			Actor_Says(kActorMia, 100, kAnimationModeTalk);
+			Actor_Says(kActorMurray, 140, 12);
+			Actor_Says(kActorMia, 110, kAnimationModeTalk);
+			Actor_Says(kActorMia, 120, kAnimationModeTalk);
+			Actor_Says(kActorMurray, 150, 14);
 		}
 		break;
 

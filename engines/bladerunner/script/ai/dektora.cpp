@@ -251,8 +251,13 @@ void AIScriptDektora::ClickedByPlayer() {
 				Loop_Actor_Walk_To_Actor(kActorMcCoy, kActorDektora, 24, false, false);
 				Actor_Face_Actor(kActorMcCoy, kActorDektora, true);
 				Actor_Face_Actor(kActorDektora, kActorMcCoy, true);
-				Actor_Says(kActorMcCoy, 6860, 13); //00-6860.AUD	Are you ready?
-				Actor_Says(kActorDektora, 1110, kAnimationModeTalk); //03-1110.AUD	Yes, I am.
+				Actor_Says(kActorMcCoy, 7960, 13); //00-7960.AUD	Dektora?
+				Actor_Says(kActorDektora, 2620, kAnimationModeTalk); //03-2620.AUD	Hmm?
+				Actor_Says(kActorMcCoy, 2755, 4);                  // AreYouAlrightALittlePale
+				Actor_Says(kActorDektora, 2090, kAnimationModeTalk); //03-2090.AUD	Oh.
+				Delay(1000);
+				Actor_Says(kActorMcCoy, 8225, 13); //00-8225.AUD	Just relax.
+				Delay(1000);
 				if (Player_Query_Agenda() != kPlayerAgendaSurly 
 				&& Player_Query_Agenda() != kPlayerAgendaErratic) {
 					if (Actor_Clue_Query(kActorMcCoy, kClueDragonflyBelt)
@@ -626,7 +631,9 @@ bool AIScriptDektora::GoalChanged(int currentGoalNumber, int newGoalNumber) {
 		}
 
 		if (Player_Query_Current_Scene() == kSceneNR08) {
-			Actor_Set_Goal_Number(kActorHanoi, kGoalHanoiNR08Leave);
+			if (!_vm->_cutContent) {
+				Actor_Set_Goal_Number(kActorHanoi, kGoalHanoiNR08Leave);
+			}
 		} else {
 			Game_Flag_Reset(kFlagNR08McCoyWatchingShow);
 		}

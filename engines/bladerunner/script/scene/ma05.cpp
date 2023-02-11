@@ -129,20 +129,18 @@ void SceneScriptMA05::PlayerWalkedIn() {
 		Sound_Play(kSfxSPIN3A, 100, 0, 0, 50);
 	}
 	if (Game_Flag_Query(kFlagChapter1Ending) && !Game_Flag_Query(kFlagChapter1Ended)) {
-		if (!Game_Flag_Query(kFlagDirectorsCut)) {
-			if (_vm->_cutContent) {
-				if (Game_Flag_Query(kFlagZubenIsReplicant)) {
-					Actor_Voice_Over(1260, kActorVoiceOver);
-					Actor_Voice_Over(1270, kActorVoiceOver);
-					Actor_Voice_Over(1280, kActorVoiceOver);
-					Actor_Voice_Over(1290, kActorVoiceOver);
-				}
-			} else {
+		if (_vm->_cutContent) {
+			if (Game_Flag_Query(kFlagZubenIsReplicant)) {
 				Actor_Voice_Over(1260, kActorVoiceOver);
 				Actor_Voice_Over(1270, kActorVoiceOver);
 				Actor_Voice_Over(1280, kActorVoiceOver);
 				Actor_Voice_Over(1290, kActorVoiceOver);
 			}
+		} else if (!Game_Flag_Query(kFlagDirectorsCut)) {
+			Actor_Voice_Over(1260, kActorVoiceOver);
+			Actor_Voice_Over(1270, kActorVoiceOver);
+			Actor_Voice_Over(1280, kActorVoiceOver);
+			Actor_Voice_Over(1290, kActorVoiceOver);
 		}
 		Game_Flag_Set(kFlagChapter1Ended);
 		Player_Gains_Control();

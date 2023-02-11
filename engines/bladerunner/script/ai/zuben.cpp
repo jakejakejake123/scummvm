@@ -217,14 +217,22 @@ void AIScriptZuben::ClickedByPlayer() {
 				Loop_Actor_Walk_To_Actor(kActorMcCoy, kActorZuben, 24, false, false);
 				Actor_Face_Actor(kActorMcCoy, kActorZuben, true);
 				Actor_Face_Actor(kActorZuben, kActorMcCoy, true);
-				Actor_Says(kActorMcCoy, 355, 18);
+				if (Player_Query_Agenda() == kPlayerAgendaPolite) {
+					Actor_Says(kActorMcCoy, 3970, 13); //00-3970.AUD	Hey.
+				} else {
+					Actor_Says(kActorMcCoy, 355, 10); //00-0355.AUD	Hey, big guy.
+				}
 				Actor_Says(kActorZuben, 120, 18); //19-0120.AUD	Aah, police...
 			}
 		} else if (Actor_Query_In_Set(kActorZuben, kSetPS09)) {
 			Loop_Actor_Walk_To_XYZ(kActorMcCoy, -381.11f, 0.0f, -135.55f, 0, false, false, false);
 			Actor_Face_Actor(kActorMcCoy, kActorZuben, true);
 			Actor_Face_Actor(kActorZuben, kActorMcCoy, true);
-			Actor_Says(kActorMcCoy, 355, 18);
+			if (Player_Query_Agenda() == kPlayerAgendaPolite) {
+				Actor_Says(kActorMcCoy, 3970, 13); //00-3970.AUD	Hey.
+			} else {
+				Actor_Says(kActorMcCoy, 355, 10); //00-0355.AUD	Hey, big guy.
+			}
 			Actor_Says(kActorZuben, 120, 18); //19-0120.AUD	Aah, police...
 			if (!Actor_Clue_Query(kActorMcCoy, kClueZubenTalksAboutLucy1)
 			&& !Actor_Clue_Query(kActorMcCoy, kClueZubenTalksAboutLucy2)) {
@@ -560,7 +568,6 @@ bool AIScriptZuben::GoalChanged(int currentGoalNumber, int newGoalNumber) {
 				Actor_Says(kActorZuben, 100, 19);
 				Actor_Says(kActorMcCoy, 470, 12);
 				Actor_Says(kActorZuben, 110, 18);
-				Music_Stop(1u);
 				Actor_Says(kActorMcCoy, 475, 12);
 				Actor_Says(kActorZuben, 120, 15);
 				Actor_Says(kActorMcCoy, 480, 16);

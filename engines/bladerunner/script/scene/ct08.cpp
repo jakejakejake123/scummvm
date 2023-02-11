@@ -94,11 +94,6 @@ void SceneScriptCT08::SceneLoaded() {
 	if (!Actor_Clue_Query(kActorMcCoy, kClueCheese)) {
 		Item_Add_To_World(kItemCheese, kModelAnimationCheese, kSetCT08_CT51_UG12, -102.0f, 2.0f, 41.0f, 432, 6, 6, false, true, false, true);
 	}
-	if (_vm->_cutContent) {
-		if (!Actor_Clue_Query(kActorMcCoy, kClueMoonbus1)) {
-			Item_Add_To_World(kItemMoonbusPhoto, kModelAnimationPhoto, kSetCT08_CT51_UG12, 44.0f, 0.0f, -22.0f, 0, 12, 12, false, true, false, true);
-		}
-	}
 }
 
 bool SceneScriptCT08::MouseClick(int x, int y) {
@@ -200,8 +195,14 @@ void SceneScriptCT08::PlayerWalkedIn() {
 		// in the KIA even though McCoy was unconcious the whole time, this should help rectify that. Also if Sadik is not a replicant McCoy will make the reps being like boy scout comment instead.
 		// Also you will receive the Sadik sighting Bradbury clue regardless of Sadiks status. It will be the conversation between Clovis and Sadik at the end of act 2. 
 		if (_vm->_cutContent) {
-			if (!Game_Flag_Query(kFlagSadikIsReplicant)) {
+			if (Actor_Query_Friendliness_To_Other(kActorClovis, kActorMcCoy) > 50
+			&& !Game_Flag_Query(kFlagMcCoyRetiredReplicant)) { 
+				Actor_Voice_Over(3560, kActorVoiceOver); //99-3560.AUD	Ugh. This was all too familiar territory. Jackhammers were drilling through my brain and my stomach felt like it had been bathed in battery acid.
+			} else {
+				Actor_Voice_Over(3560, kActorVoiceOver); //99-3560.AUD	Ugh. This was all too familiar territory. Jackhammers were drilling through my brain and my stomach felt like it had been bathed in battery acid.
 				Actor_Voice_Over(4370, kActorVoiceOver); //99-4370.AUD	My ribs still hurt and at least two teeth were loose.
+			}
+			if (!Game_Flag_Query(kFlagSadikIsReplicant)) {
 				Actor_Voice_Over(4380, kActorVoiceOver); //99-4380.AUD	Sadik was a tough customer but he just didn't act like a Rep.
 				Actor_Voice_Over(4390, kActorVoiceOver); //99-4390.AUD	I got in at least one good shot and he definitely felt it.
 				Actor_Voice_Over(4400, kActorVoiceOver); //99-4400.AUD	A Nexus-6 wouldn't have even blinked.

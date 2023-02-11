@@ -390,7 +390,14 @@ bool AIScriptSadik::GoalChanged(int currentGoalNumber, int newGoalNumber) {
 
 	case kGoalSadikBB11KickMcCoy:
 		Actor_Face_Heading(kActorSadik, 100, false);
-		Actor_Change_Animation_Mode(kActorSadik, 63);
+		if (_vm->_cutContent) {
+			if (Actor_Query_Friendliness_To_Other(kActorClovis, kActorMcCoy) < 51 
+			|| Game_Flag_Query(kFlagMcCoyRetiredReplicant)) { 	
+				Actor_Change_Animation_Mode(kActorSadik, 63);
+			}
+		} else {
+			Actor_Change_Animation_Mode(kActorSadik, 63);
+		}
 		Actor_Set_Goal_Number(kActorClovis, kGoalClovisBB11WalkToMcCoy);
 		Actor_Set_Immunity_To_Obstacles(kActorSadik, false);
 		return true;
@@ -527,12 +534,7 @@ bool AIScriptSadik::GoalChanged(int currentGoalNumber, int newGoalNumber) {
 	// Added in some extra dialogue for Sadik and McCoy. If McCoy betrayed Crystal this will be mentioned in the conversation.
 		if (_vm->_cutContent) {
 			Actor_Face_Actor(kActorMcCoy, kActorSadik, true);
-			if (Actor_Query_Friendliness_To_Other(kActorClovis, kActorMcCoy) > 50
-			&& !Game_Flag_Query(kFlagMcCoyRetiredReplicant)) { 
-				Actor_Says(kActorMcCoy, 8480, kAnimationModeTalk); //00-8480.AUD	Anyone there?
-			} else {
-				Actor_Says(kActorMcCoy, 3970, 14); //00-3970.AUD	Hey.
-			}
+			Actor_Says(kActorMcCoy, 8480, kAnimationModeTalk); //00-8480.AUD	Anyone there?
 			Loop_Actor_Walk_To_XYZ(kActorSadik, -857.0f, 0.0f, -703.0f, 0, false, true, false);
 			Actor_Face_Actor(kActorSadik, kActorMcCoy, true);
 			Actor_Face_Actor(kActorMcCoy, kActorSadik, true);
@@ -603,8 +605,18 @@ bool AIScriptSadik::GoalChanged(int currentGoalNumber, int newGoalNumber) {
 					}
 					Actor_Says(kActorSadik, 200, kAnimationModeTalk); //08-0200.AUD	Truth be told killing don’t help much.
 				}
+			} else {
+				Delay(1000);
+				Actor_Says(kActorMcCoy, 3970, 13); //00-3970.AUD	Hey.
+				Delay(2000);
+				Actor_Says(kActorMcCoy, 8590, 18); //00-8590.AUD	Not the talkative type
+				Delay(2000);
 			}
 			Actor_Says(kActorMcCoy, 2315, kAnimationModeTalk); //00-2315.AUD	The moonbus up and running yet?
+			if (Actor_Query_Friendliness_To_Other(kActorClovis, kActorMcCoy) > 50
+			&& !Game_Flag_Query(kFlagMcCoyRetiredReplicant)) { 
+				Delay(1000);
+			}
 			Actor_Says(kActorSadik, 210, kAnimationModeTalk); //08-0210.AUD	All it needs is fuel.
 			if (Actor_Query_Friendliness_To_Other(kActorClovis, kActorMcCoy) > 50
 			&& !Game_Flag_Query(kFlagMcCoyRetiredReplicant)) { 
@@ -636,9 +648,10 @@ bool AIScriptSadik::GoalChanged(int currentGoalNumber, int newGoalNumber) {
 			Actor_Says(kActorSadik, 210, kAnimationModeTalk);
 			Actor_Says(kActorSadik, 220, kAnimationModeTalk);
 			Actor_Says(kActorSadik, 230, kAnimationModeTalk);
-			Actor_Says(kActorSadik, 240, kAnimationModeTalk);
+			Actor_Says(kActorSadik, 240, kAnimationModeTalk); //08-0240.AUD	There got to be something around here, mon.
+			Actor_Says(kActorMcCoy, 730, kAnimationModeTalk); //00-0730.AUD	What are we talking about?
 			Actor_Says(kActorSadik, 250, kAnimationModeTalk); //08-0250.AUD	Old reactor cores. Anything still got a glow.
-			Actor_Says(kActorSadik, 260, kAnimationModeTalk); //08-0260.AUD	The generator? It take almost anything.
+			Actor_Says(kActorSadik, 260, kAnimationModeTalk); //08-0260.AUD	The generator? It take almost anything.	
 		}	
 		Actor_Set_Goal_Number(kActorSadik, kGoalSadikKP06NeedsReactorCoreFromMcCoy);
 		// Made it so you can't shoot Sadik when he is preparing the moonbus. This is to prevent several narrative inconsistencies such as all the replicants waiting for you on the
@@ -1076,8 +1089,16 @@ bool AIScriptSadik::UpdateAnimation(int *animation, int *frame) {
 				Actor_Change_Animation_Mode(kActorMcCoy, kAnimationModeDie);
 				_nextSoundId = kSfxKICK1;
 			} else {
-				Actor_Change_Animation_Mode(kActorMcCoy, 68);
-				_nextSoundId = kSfxKICK2;
+				if (_vm->_cutContent) {
+					if (Actor_Query_Friendliness_To_Other(kActorClovis, kActorMcCoy) < 51 
+					|| Game_Flag_Query(kFlagMcCoyRetiredReplicant)) {
+						Actor_Change_Animation_Mode(kActorMcCoy, 68);
+						_nextSoundId = kSfxKICK2;
+					}
+				} else {
+					Actor_Change_Animation_Mode(kActorMcCoy, 68);
+					_nextSoundId = kSfxKICK2;
+				}
 			}
 		}
 
@@ -1091,8 +1112,18 @@ bool AIScriptSadik::UpdateAnimation(int *animation, int *frame) {
 				AI_Movement_Track_Append(kActorSadik, 318, 0);
 				AI_Movement_Track_Repeat(kActorSadik);
 			} else {
-				if (Actor_Query_Goal_Number(kActorSadik) == kGoalSadikBB11KickMcCoy) {
-					Actor_Change_Animation_Mode(kActorSadik, 63);
+				if (_vm->_cutContent) {
+					if (Actor_Query_Friendliness_To_Other(kActorClovis, kActorMcCoy) < 51 
+					|| Game_Flag_Query(kFlagMcCoyRetiredReplicant)) { 
+						if (Actor_Query_Goal_Number(kActorSadik) == kGoalSadikBB11KickMcCoy) {
+							Actor_Change_Animation_Mode(kActorSadik, 63);
+						}
+					}
+				} else {
+					if (Actor_Query_Friendliness_To_Other(kActorClovis, kActorMcCoy) < 51
+					|| Game_Flag_Query(kFlagMcCoyRetiredReplicant)) { 
+						Actor_Change_Animation_Mode(kActorSadik, 63);
+					}
 				}
 			}
 		}

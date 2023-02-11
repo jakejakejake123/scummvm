@@ -415,12 +415,12 @@ bool AIScriptClovis::GoalChanged(int currentGoalNumber, int newGoalNumber) {
 		Actor_Face_Actor(kActorSadik, kActorClovis, true);
 		Actor_Says(kActorSadik, 10, kAnimationModeTalk);
 		Actor_Says(kActorClovis, 40, 17);
-		Actor_Says(kActorSadik, 20, kAnimationModeTalk);
+		Actor_Says(kActorSadik, 20, kAnimationModeTalk); //08-0020.AUD	We got problem now, mon.
 		Actor_Face_Actor(kActorClovis, kActorMcCoy, true);
 		Actor_Face_Actor(kActorSadik, kActorMcCoy, true);
 		// Made it so Clovis says that McCoy is not a problem but an opportunity if he has high friendliness with him.
 		if (_vm->_cutContent) {
-			if (Actor_Query_Friendliness_To_Other(kActorClovis, kActorMcCoy) > 50 
+			if (Actor_Query_Friendliness_To_Other(kActorClovis, kActorMcCoy) > 50
 			&& !Game_Flag_Query(kFlagMcCoyRetiredReplicant)) {		
 				Actor_Says(kActorClovis, 50, 14); //05-0050.AUD	This one? He's not a problem. He's an opportunity.
 			}
@@ -436,15 +436,26 @@ bool AIScriptClovis::GoalChanged(int currentGoalNumber, int newGoalNumber) {
 			if (Actor_Query_Friendliness_To_Other(kActorClovis, kActorMcCoy) > 50
 			&& !Game_Flag_Query(kFlagMcCoyRetiredReplicant)) {
 				Actor_Says(kActorClovis, 60, 30); //05-0060.AUD	You're weak my friend. I expected so much more from you.
+				Delay(1000);
 			} else {
 				Actor_Says(kActorClovis, 550, 30); //05-0550.AUD	You’re making me very unhappy, old friend.
+				Delay(1000);
 			}
 		} else {
 			Actor_Says(kActorClovis, 60, 30); //05-0060.AUD	You're weak my friend. I expected so much more from you.
 		}
-		Actor_Says(kActorSadik, 30, kAnimationModeTalk);
-		Actor_Says(kActorClovis, 70, 30);
-		Actor_Says(kActorClovis, 80, 30);
+		if (_vm->_cutContent) {
+			if (Actor_Query_Friendliness_To_Other(kActorClovis, kActorMcCoy) > 50 
+			&& !Game_Flag_Query(kFlagMcCoyRetiredReplicant)) {		
+				Actor_Says(kActorSadik, 30, kAnimationModeTalk); //08-0030.AUD	I'm thinkin' our brother not hearin' too good.
+				Actor_Says(kActorClovis, 70, 30);
+				Actor_Says(kActorClovis, 80, 30);
+			}
+		} else {
+			Actor_Says(kActorSadik, 30, kAnimationModeTalk); //08-0030.AUD	I'm thinkin' our brother not hearin' too good.
+			Actor_Says(kActorClovis, 70, 30);
+			Actor_Says(kActorClovis, 80, 30);
+		}
 		Actor_Change_Animation_Mode(kActorClovis, 29);
 		// Made it so Sadik has a line where he mentions Clovis' name. In the origianl game McCoy somehow knows Clovis' name even though he never hears it mentioned.
 		// Adding in this line here recifies that.
@@ -452,11 +463,22 @@ bool AIScriptClovis::GoalChanged(int currentGoalNumber, int newGoalNumber) {
 			Actor_Says(kActorSadik, 220, kAnimationModeTalk);//08-0220.AUD	Clovis wants to see you. Bring you back into family.
 			Delay (1000);
 		}	
-		Actor_Says(kActorSadik, 40, kAnimationModeTalk); //08-0040.AUD	You ready to give up fruitless nightmare, mon?
-		Actor_Says(kActorSadik, 50, kAnimationModeTalk); //08-0050.AUD	Come back to family?
-		Actor_Says(kActorClovis, 90, 13);
-		Actor_Face_Current_Camera(5, true);
-		Actor_Says(kActorClovis, 100, 17);
+		if (_vm->_cutContent) {
+			if (Actor_Query_Friendliness_To_Other(kActorClovis, kActorMcCoy) > 50 
+			&& !Game_Flag_Query(kFlagMcCoyRetiredReplicant)) {	
+				Actor_Says(kActorSadik, 40, kAnimationModeTalk); //08-0040.AUD	You ready to give up fruitless nightmare, mon?
+				Actor_Says(kActorSadik, 50, kAnimationModeTalk); //08-0050.AUD	Come back to family?
+				Actor_Says(kActorClovis, 90, 13);
+				Actor_Face_Current_Camera(5, true);
+				Actor_Says(kActorClovis, 100, 17);
+			}
+		} else {
+			Actor_Says(kActorSadik, 40, kAnimationModeTalk); //08-0040.AUD	You ready to give up fruitless nightmare, mon?
+			Actor_Says(kActorSadik, 50, kAnimationModeTalk); //08-0050.AUD	Come back to family?
+			Actor_Says(kActorClovis, 90, 13);
+			Actor_Face_Current_Camera(5, true);
+			Actor_Says(kActorClovis, 100, 17);
+		}
 		Delay(1000);
 		if (!Game_Flag_Query(kFlagSadikIsReplicant)) {
 			Actor_Clue_Acquire(kActorMcCoy, kClueStaggeredbyPunches, true, kActorSadik);
@@ -574,9 +596,6 @@ bool AIScriptClovis::GoalChanged(int currentGoalNumber, int newGoalNumber) {
 				Actor_Says(kActorMcCoy, 2260, kAnimationModeTalk); //00-2260.AUD	That line almost worked before, Clovis.
 			}
 			Actor_Says(kActorClovis, 150, kAnimationModeTalk); //05-0150.AUD	Come join me. Our final party before returning to the heavens.
-			if (_vm->_cutContent) {
-				Actor_Says(kActorClovis, 1330, kAnimationModeTalk); //05-1330.AUD	To the Heavens, brother. Off-World.
-			}
 			Actor_Set_Goal_Number(kActorClovis, kGoalClovisKP07Wait);
 		}
 		return true;
@@ -798,7 +817,8 @@ bool AIScriptClovis::GoalChanged(int currentGoalNumber, int newGoalNumber) {
 	case kGoalClovisKP07FlyAway:
 		if (_vm->_cutContent) {
 			Loop_Actor_Walk_To_Actor(kActorMcCoy, kActorClovis, 24, true, false);
-			Actor_Face_Actor(kActorMcCoy, kActorClovis, true);	
+			Actor_Face_Actor(kActorMcCoy, kActorClovis, true);
+			Actor_Face_Actor(kActorClovis, kActorMcCoy, true);
 		}
 		Actor_Says(kActorMcCoy, 8501, kAnimationModeTalk);
 #if BLADERUNNER_ORIGINAL_BUGS
@@ -883,13 +903,39 @@ bool AIScriptClovis::GoalChanged(int currentGoalNumber, int newGoalNumber) {
 		}
 		// Added in a line.
 		if (_vm->_cutContent) {	
-			Actor_Says(kActorMcCoy, 8506, kAnimationModeTalk); //00-8506.AUD	Where are we headed?
+			if (Actor_Query_Friendliness_To_Other(kActorClovis, kActorMcCoy) > 50
+			&& !Game_Flag_Query(kFlagMcCoyRetiredReplicant)) {
+				Actor_Says(kActorMcCoy, 8506, kAnimationModeTalk); //00-8506.AUD	Where are we headed?
+			} else {
+				if (Global_Variable_Query(kVariableAffectionTowards) == kAffectionTowardsLucy
+				&& Game_Flag_Query(kFlagLucyIsReplicant)) {
+					Actor_Face_Actor(kActorMcCoy, kActorLucy, true);
+					Actor_Face_Actor(kActorLucy, kActorMcCoy, true);
+					Actor_Says(kActorMcCoy, 6860, 13); //00-6860.AUD	Are you ready?
+					Actor_Says(kActorLucy, 670, 17);
+			   } else if (Global_Variable_Query(kVariableAffectionTowards) == kAffectionTowardsDektora
+		       && Game_Flag_Query(kFlagDektoraIsReplicant)) {
+				   Actor_Face_Actor(kActorMcCoy, kActorDektora, true);
+				   Actor_Face_Actor(kActorDektora, kActorMcCoy, true);
+				   Actor_Says(kActorMcCoy, 6860, 13); //00-6860.AUD	Are you ready?
+				   Actor_Says(kActorDektora, 1110, 15);
+			   } else {
+				   Actor_Says(kActorMcCoy, 2115, kAnimationModeTalk); //00-2115.AUD	Let’s go. There’s nothing here for us anymore.
+			   }
+			}
 			Music_Stop(1u);
 			Delay(1000);
 		}
 		Ambient_Sounds_Remove_All_Non_Looping_Sounds(true);
 		Ambient_Sounds_Remove_All_Looping_Sounds(1u);
-		Outtake_Play(kOuttakeEnd4A, false, -1);
+		if (_vm->_cutContent) {	
+			if (Actor_Query_Friendliness_To_Other(kActorClovis, kActorMcCoy) > 50
+			&& !Game_Flag_Query(kFlagMcCoyRetiredReplicant)) {
+				Outtake_Play(kOuttakeEnd4A, false, -1);
+			}
+		} else {
+			Outtake_Play(kOuttakeEnd4A, false, -1);
+		}
 		if (Global_Variable_Query(kVariableAffectionTowards) == kAffectionTowardsLucy
 		 && Game_Flag_Query(kFlagLucyIsReplicant)
 		) {

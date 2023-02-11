@@ -80,7 +80,7 @@ bool AIScriptHasan::Update() {
 			return true;
 		} else if (Global_Variable_Query(kVariableChapter) > 3
 		           && Actor_Query_Goal_Number(kActorHasan) < kGoalHasanIsWalkingAroundIsAtAR02) {
-			Actor_Set_Goal_Number(kActorHasan, kGoalHasanIsWalkingAroundIsAtAR02);
+			Actor_Set_Goal_Number(kActorHasan, kGoalHasanIsAway);
 			return true;
 		}
 		return false;

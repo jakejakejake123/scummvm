@@ -339,17 +339,19 @@ bool SceneScriptHC02::ClickedOnActor(int actorId) {
 					Delay(1500);
 					if (_vm->_cutContent) {
 						if (Player_Query_Agenda() == kPlayerAgendaPolite) {
-							if (Actor_Clue_Query(kActorMcCoy, kClueChinaBarSecurityDisc)
-							&& Actor_Clue_Query(kActorMcCoy, kClueChinaBarSecurityPhoto)) {
-								Actor_Says(kActorMcCoy, 5150, 18); //00-5150.AUD	One more thing.
-								Actor_Change_Animation_Mode(kActorMcCoy, 23);
-								Actor_Change_Animation_Mode(kActorHawkersBarkeep, 23);
-								Delay(800);
-								Item_Pickup_Spin_Effect_From_Actor(kModelAnimationVideoDisc, kActorHawkersBarkeep, 0, 0);		
-								Delay(800);
-								Actor_Clue_Lose(kActorMcCoy, kClueChinaBarSecurityDisc);
-								Actor_Clue_Acquire(kActorHawkersBarkeep, kClueChinaBarSecurityDisc, true, -1);
-								Actor_Says(kActorMcCoy, 8170, 13); //00-8170.AUD	There you go.	
+							if (Global_Variable_Query(kVariableChapter) < 4) {
+								if (Actor_Clue_Query(kActorMcCoy, kClueChinaBarSecurityDisc)
+								&& Actor_Clue_Query(kActorMcCoy, kClueChinaBarSecurityPhoto)) {
+									Actor_Says(kActorMcCoy, 5150, 18); //00-5150.AUD	One more thing.
+									Actor_Change_Animation_Mode(kActorMcCoy, 23);
+									Actor_Change_Animation_Mode(kActorHawkersBarkeep, 23);
+									Delay(800);
+									Item_Pickup_Spin_Effect_From_Actor(kModelAnimationVideoDisc, kActorHawkersBarkeep, 0, 0);		
+									Delay(800);
+									Actor_Clue_Lose(kActorMcCoy, kClueChinaBarSecurityDisc);
+									Actor_Clue_Acquire(kActorHawkersBarkeep, kClueChinaBarSecurityDisc, true, -1);
+									Actor_Says(kActorMcCoy, 8170, 13); //00-8170.AUD	There you go.	
+								}
 							}
 						}
 					}

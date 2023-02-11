@@ -298,12 +298,7 @@ bool SceneScriptDR06::ClickedOn3DObject(const char *objectName, bool a2) {
 							Delay(1500);
 							Actor_Says(kActorMcCoy, 7275, 14); //  00-7275.AUD	Sometimes I just can't help myself.
 						} else {
-							if (Actor_Clue_Query(kActorMcCoy, kClueAnsweringMachineMessage)
-							&& (Actor_Clue_Query(kActorMcCoy, kClueLabCorpses)
-							|| 	Actor_Clue_Query(kActorMcCoy, kClueLucyInterview)
-							|| 	Actor_Clue_Query(kActorMcCoy, kClueRunciterConfession1))) {	
-								Actor_Voice_Over(880, kActorVoiceOver); //99-0880.AUD	I didn't know what it was for but I'd bet the farm it wasn't on Runciter's books.
-							}	
+							Actor_Voice_Over(880, kActorVoiceOver); //99-0880.AUD	I didn't know what it was for but I'd bet the farm it wasn't on Runciter's books.
 						}
 					} else {
 						Actor_Voice_Over(850, kActorVoiceOver);

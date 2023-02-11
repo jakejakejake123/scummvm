@@ -665,7 +665,11 @@ void SceneScriptPS04::dialogueWithGuzza() {
 			Actor_Says(kActorGuzza, 600, 31);
 			if (Player_Query_Agenda() != kPlayerAgendaSurly 
 			&& Player_Query_Agenda() != kPlayerAgendaErratic) {
-				Actor_Says(kActorMcCoy, 4080, 18); //00-4080.AUD	Hey, I'm trying to do the right thing here. I could have left the guy to rot.
+				if (!Game_Flag_Query(kFlagCT04HomelessBodyFound)) {
+					Actor_Says(kActorMcCoy, 4080, 18); //00-4080.AUD	Hey, I'm trying to do the right thing here. I could have left the guy to rot.
+				} else {
+					Actor_Says(kActorMcCoy, 2305, 16); //00-2305.AUD	I’m sorry.
+				}
 			} else {
 				Actor_Says(kActorMcCoy, 8085, 14); //00-8085.AUD	Me either.
 			}

@@ -232,7 +232,11 @@ bool SceneScriptMA04::ClickedOn2DRegion(int region) {
 				}	
 				Actor_Says(kActorClovis, 310, 3);
 				Actor_Says(kActorClovis, 320, 3);
-				if (!Game_Flag_Query(kFlagDirectorsCut) && Global_Variable_Query(kVariableChapter) < 3) {
+				if (_vm->_cutContent && Global_Variable_Query(kVariableChapter) < 3) {
+					Actor_Voice_Over(1300, kActorVoiceOver); //99-1300.AUD	Crank calls were a dime a dozen in this city and I'd had my share.
+					Actor_Voice_Over(1310, kActorVoiceOver); //99-1310.AUD	Still, this guy sounded more like an English teacher than the average scumbag.
+					Actor_Voice_Over(1320, kActorVoiceOver); //99-1320.AUD	If I'd been more awake, the message might have spooked me.
+				} else if (!Game_Flag_Query(kFlagDirectorsCut) && Global_Variable_Query(kVariableChapter) < 3) {
 					Actor_Voice_Over(1300, kActorVoiceOver); //99-1300.AUD	Crank calls were a dime a dozen in this city and I'd had my share.
 					Actor_Voice_Over(1310, kActorVoiceOver); //99-1310.AUD	Still, this guy sounded more like an English teacher than the average scumbag.
 					Actor_Voice_Over(1320, kActorVoiceOver); //99-1320.AUD	If I'd been more awake, the message might have spooked me.
@@ -259,16 +263,19 @@ bool SceneScriptMA04::ClickedOn2DRegion(int region) {
 				//Added in an extra line
 				if (_vm->_cutContent) {
 					Actor_Says(kActorLucy, 520, 3); //-	06-0520.AUD	Sorry I missed you. Goodbye.
-				}
-				if (!Game_Flag_Query(kFlagDirectorsCut) && Global_Variable_Query(kVariableChapter) < 3) {
-					Actor_Voice_Over(1330, kActorVoiceOver); //99-1330.AUD	The message could have come from any of a dozen people.
-					if (_vm->_cutContent) {
+					if (Global_Variable_Query(kVariableChapter) < 3) {
+						Actor_Voice_Over(1330, kActorVoiceOver); //99-1330.AUD	The message could have come from any of a dozen people.
 						if (Player_Query_Agenda() == kPlayerAgendaPolite) { 
 							Actor_Voice_Over(1340, kActorVoiceOver); //99-1340.AUD	I'd done my share of favors when I was in uniform.
 						}
+						Actor_Voice_Over(1350, kActorVoiceOver); //99-1350.AUD	Something about the voice was familiar but I was too tired to place it for sure.
 					} else {
-						Actor_Voice_Over(1340, kActorVoiceOver); //99-1340.AUD	I'd done my share of favors when I was in uniform.
+						Delay(1000);
+						Actor_Says(kActorMcCoy, 1600, 11); //00-1600.AUD	Lucy?
 					}
+				} else if (!Game_Flag_Query(kFlagDirectorsCut) && Global_Variable_Query(kVariableChapter) < 3) {
+					Actor_Voice_Over(1330, kActorVoiceOver); //99-1330.AUD	The message could have come from any of a dozen people.
+					Actor_Voice_Over(1340, kActorVoiceOver); //99-1340.AUD	I'd done my share of favors when I was in uniform.
 					Actor_Voice_Over(1350, kActorVoiceOver); //99-1350.AUD	Something about the voice was familiar but I was too tired to place it for sure.
 				}
 				Actor_Says(kActorMcCoy, 2445, 13);
@@ -277,7 +284,9 @@ bool SceneScriptMA04::ClickedOn2DRegion(int region) {
 				return true;
 			}
 			Actor_Says(kActorMcCoy, 2670, 13);
-			if (!Game_Flag_Query(kFlagDirectorsCut)) {
+			if (_vm->_cutContent) {
+				Actor_Says(kActorMcCoy, 2675, 17);
+			} else if (!Game_Flag_Query(kFlagDirectorsCut)) {
 				Actor_Says(kActorMcCoy, 2675, 17);
 			}
 		}
@@ -687,9 +696,7 @@ void SceneScriptMA04::phoneCallWithLucy() {
 		|| Actor_Query_Goal_Number(kActorCrazylegs) == kGoalCrazyLegsLeavesShowroom 
 		|| Player_Query_Agenda() == kPlayerAgendaPolite) {
 			Actor_Says(kActorMcCoy, 6805, 13); //00-6805.AUD	I-- I promise you. But for now we gotta be careful. You should stay hidden for a while.
-			if (!Game_Flag_Query(kFlagDirectorsCut)) {
-				Actor_Says(kActorLucy, 640, 3);
-			}
+			Actor_Says(kActorLucy, 640, 3);
 			Actor_Says_With_Pause(kActorMcCoy, 2570, 0.0f, 13); // Lucy, there's a good chance--
 			Sound_Play(kSfxSPNBEEP9, 100, 0, 0, 50); // (Lucy hangs up)
 			Actor_Says(kActorMcCoy, 2575, 15); // Wait, Lucy!

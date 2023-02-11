@@ -45,14 +45,6 @@ void SceneScriptCT04::InitializeScene() {
 		Scene_Exit_Add_2D_Exit(2, 0, 440, 590, 479, 2);
 	}
 
-	if (_vm->_cutContent) {
-		if (Actor_Query_Is_In_Current_Set(kActorTransient)) {
-			if (Game_Flag_Query(kFlagMcCoyIsHelpingReplicants)) {
-				Actor_Set_Targetable(kActorTransient, false);
-			}
-		}
-	}
-
 	Ambient_Sounds_Add_Looping_Sound(kSfxCTRAIN1,  50,    1, 1);
 	Ambient_Sounds_Add_Looping_Sound(kSfxCTAMBR1,  15, -100, 1);
 	Ambient_Sounds_Add_Looping_Sound(kSfxCTRUNOFF, 34,  100, 1);
@@ -142,7 +134,9 @@ bool SceneScriptCT04::ClickedOn3DObject(const char *objectName, bool a2) {
 				if (_vm->_cutContent) { 
 					if (Player_Query_Agenda() != kPlayerAgendaSurly 
 					&& Player_Query_Agenda() != kPlayerAgendaErratic) {
-						Actor_Voice_Over(260, kActorVoiceOver); //99-0260.AUD	I'd screwed up and screwed up bad. But maybe there was still a way to make it right.
+						if (!Game_Flag_Query(kFlagGuzzaInformed)) {
+							Actor_Voice_Over(260, kActorVoiceOver); //99-0260.AUD	I'd screwed up and screwed up bad. But maybe there was still a way to make it right.
+						}
 					}
 				} else {
 					Actor_Voice_Over(260, kActorVoiceOver); //99-0260.AUD	I'd screwed up and screwed up bad. But maybe there was still a way to make it right.
@@ -160,47 +154,16 @@ bool SceneScriptCT04::ClickedOn3DObject(const char *objectName, bool a2) {
 			}
 			return true;
 		}
-
-		if (!Actor_Clue_Query(kActorMcCoy, kClueLicensePlate)) {
-			if (!Loop_Actor_Walk_To_Waypoint(kActorMcCoy, 75, 0, true, false)) {
-				Actor_Face_Heading(kActorMcCoy, 707, false);
-				Actor_Change_Animation_Mode(kActorMcCoy, 38);
-				if (_vm->_cutContent) { 
-					if (Actor_Clue_Query(kActorMcCoy, kCluePartialLicenseNumber)) {
-						if (!Actor_Clue_Query(kActorMcCoy, kClueLicensePlate)) {
-							Actor_Clue_Acquire(kActorMcCoy, kClueLicensePlate, true, kActorZuben);
-							Item_Pickup_Spin_Effect(kModelAnimationLicensePlate, 392, 225);
-							Game_Flag_Set(kFlagCT04LicensePlaceFound); 
-							//Restored the license plate match clue. When McCoy finds the license plate in the dumpster and he has the partial license plate photo clue
-							//he runs a test on the KIA and it is a positive match. Also added in code to the esper script so the same happens if it is the other way around.
-							Actor_Says(kActorMcCoy, 8760, -1);//00-8760.AUD	A license plate.
-							Delay(2000);
-							Actor_Says(kActorMcCoy, 8525, 9); //00-8525.AUD	Hmph.
-							Actor_Change_Animation_Mode(kActorMcCoy, 23);
-							Delay(800);
-							Actor_Says(kActorAnsweringMachine, 390, kAnimationModeTalk); // 39-0390.AUD	Begin test.
-							Ambient_Sounds_Play_Sound(kSfxDATALOAD, 50, 0, 0, 99);
-							Delay(2000);
-							Ambient_Sounds_Play_Sound(kSfxBEEPNEAT, 80, 0, 0, 99);
-							Actor_Says(kActorAnsweringMachine, 420, 19); //39-0420.AUD	Positive result.
-							Actor_Says(kActorAnsweringMachine, 470, kAnimationModeTalk); //39-0470.AUD	End test.
-							Actor_Says(kActorMcCoy, 7200, 13); //00-7200.AUD	Bingo.
-							Actor_Clue_Acquire(kActorMcCoy, kClueLicensePlateMatch, true, -1); 
-							if (!Actor_Clue_Query(kActorMcCoy, kClueGaffsInformation)) {
-								Actor_Set_Goal_Number(kActorZuben, kGoalZubenFled);
-							}
-						}
-			  		} else {
-						Ambient_Sounds_Play_Sound(kSfxGARBAGE, 45, 30, 30, 0);
-						Actor_Voice_Over(1810, kActorVoiceOver);
-						Actor_Voice_Over(1820, kActorVoiceOver);
-					}
-				} else {
+		if (!_vm->_cutContent) {
+			if (!Game_Flag_Query(kFlagCT04LicensePlaceFound)) {
+				if (!Loop_Actor_Walk_To_Waypoint(kActorMcCoy, 75, 0, true, false)) {
+					Actor_Face_Heading(kActorMcCoy, 707, false);
+					Actor_Change_Animation_Mode(kActorMcCoy, 38);
 					Actor_Clue_Acquire(kActorMcCoy, kClueLicensePlate, true, -1);
 					Item_Pickup_Spin_Effect(kModelAnimationLicensePlate, 392, 225);
-					Game_Flag_Set(kFlagCT04LicensePlaceFound); 
+					Game_Flag_Set(kFlagCT04LicensePlaceFound);
+					return true;
 				}
-				return true;
 			}
 		}
 
@@ -247,7 +210,7 @@ void SceneScriptCT04::dialogueWithHomeless() {
 		if (_vm->_cutContent) {
 			Actor_Change_Animation_Mode(kActorMcCoy, 23);
 			Delay(2000);
-			Actor_Says(kActorMcCoy, 8170, 13); //00-8170.AUD	There you go.
+			Actor_Says(kActorMcCoy, 8502, kAnimationModeTalk); //00-8502.AUD	I hope it's enough.		
 		}
 		Actor_Says(kActorTransient, 10, 13); // Thanks. The big man. He kind of limping.
 		if (_vm->_cutContent) {
@@ -266,7 +229,7 @@ void SceneScriptCT04::dialogueWithHomeless() {
 				Delay(800);
 				Item_Pickup_Spin_Effect_From_Actor(kModelAnimationKingstonKitchenBox, kActorTransient, 0, 0);
 				Delay(800);
-				Actor_Says(kActorMcCoy, 8502, kAnimationModeTalk); //00-8502.AUD	I hope it's enough.
+				Actor_Says(kActorMcCoy, 8170, 13); //00-8170.AUD	There you go.
 				Delay(1000);
 				Actor_Says(kActorMcCoy, 2860, 14); //00-2860.AUD	You take care of yourself.
 			}

@@ -568,19 +568,12 @@ void SceneScriptDR03::dialogueWithChew() {
 				Actor_Says(kActorChew, 250, 14); //52-0250.AUD	I waste no more time. You think I nose around everybody's business, huh?
 			} else {
 				Actor_Says(kActorChew, 220, 14);
-				if (Actor_Clue_Query(kActorMcCoy, kClueEnvelope)
-				&& Actor_Clue_Query(kActorMcCoy, kClueAnsweringMachineMessage)
-				&& Actor_Clue_Query(kActorMcCoy, kClueLabCorpses)) {	
-					Actor_Says(kActorMcCoy, 6975, 13); //00-6975.AUD	Interesting.
-				} else {
-					Actor_Says(kActorMcCoy, 860, 11); //00-0860.AUD	They're genetic designers?
-					Actor_Says(kActorChew, 230, 14);
-					Actor_Says(kActorMcCoy, 865, 11);
-					Actor_Says(kActorChew, 240, 14);
-				}
+				Actor_Says(kActorMcCoy, 860, 11); //00-0860.AUD	They're genetic designers?
+				Actor_Says(kActorChew, 230, 14);
+				Actor_Says(kActorMcCoy, 865, 11);
+				Actor_Says(kActorChew, 240, 14);
 			}
 		} else {
-			Actor_Says(kActorChew, 220, 14);
 			Actor_Says(kActorChew, 220, 14);
 			Actor_Says(kActorMcCoy, 860, 11);
 			Actor_Says(kActorChew, 230, 14);

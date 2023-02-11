@@ -208,8 +208,16 @@ void SceneScriptCT02::dialogueWithZuben() {
 	if (Actor_Clue_Query(kActorMcCoy, kClueHowieLeeInterview)) {
 		++evidenceCount;
 	}
-	if (Actor_Clue_Query(kActorMcCoy, kClueSightingMcCoyRuncitersShop)) {
-		++evidenceCount;
+	if (_vm->_cutContent) {
+		if (Actor_Clue_Query(kActorMcCoy, kClueSightingMcCoyRuncitersShop)) {
+			++evidenceCount;
+		}
+		if (Actor_Clue_Query(kActorMcCoy, kClueCandyWrapper)) {
+			++evidenceCount;
+		}
+		if (Actor_Clue_Query(kActorMcCoy, kClueZubenInterview)) {
+			++evidenceCount;
+		}
 	}
 #if BLADERUNNER_ORIGINAL_BUGS
 	if (evidenceCount > 3) {
@@ -236,8 +244,7 @@ void SceneScriptCT02::dialogueWithZuben() {
 	// -. Make McCoy able to VK Zuben even in Polite mode
 	//
 	if (_vm->_cutContent) {
-		if (evidenceCount > 2
-		&& (Actor_Clue_Query(kActorMcCoy, kClueSushiMenu))) { 
+		if (evidenceCount > 3) { 
 			if (Player_Query_Agenda() != kPlayerAgendaPolite) {
 				DM_Add_To_List_Never_Repeat_Once_Selected(290, 1, 3, 4); // VOIGT-KAMPFF
 			} else {
@@ -382,7 +389,11 @@ bool SceneScriptCT02::ClickedOnActor(int actorId) {
 					if (Actor_Clue_Query(kActorMcCoy, kClueHowieLeeInterview)) { 
 						Actor_Says(kActorMcCoy, 370, 10); //00-0370.AUD	 Howie says you're a master chef.
 					} else {
-						Actor_Says(kActorMcCoy, 355, 10); //00-0355.AUD	Hey, big guy.
+						if (Player_Query_Agenda() == kPlayerAgendaPolite) {
+							Actor_Says(kActorMcCoy, 3970, 13); //00-3970.AUD	Hey.
+						} else {
+							Actor_Says(kActorMcCoy, 355, 10); //00-0355.AUD	Hey, big guy.
+						}
 					}
 					// Made it Zuben mentions his name when McCoy firsts talks to him. In the original game it was possible for McCoy to mis the Howie Lee interview clue
 					// where he mentions Zuben by name yet somehow McCoy would still know Zubens name anyway. This change fixes that.

@@ -368,7 +368,10 @@ void SceneScriptKP06::PlayerWalkedIn() {
 					Actor_Says(kActorSteele, 2210, -1); //01-2210.AUD	I guess I gotta take you in. They'll probably have to run a couple of tests, too.
 					Delay(2000);
 					Actor_Set_Goal_Number(kActorMcCoy, kGoalMcCoyArrested);
-					Delay(2000);
+					Delay(1000);
+					if (Actor_Query_Goal_Number(kActorClovis) < kGoalClovisGone) {
+						Outtake_Play(kOuttakeEnd2, false, -1);
+					}
 					Game_Over();
 				} else {		
 					// Made it so Crystal or Gaff only mentions McCoy getting a promotion and having a lot of bonuses if he retires enough reps to earn 1500 chinyen.
@@ -386,7 +389,9 @@ void SceneScriptKP06::PlayerWalkedIn() {
 					Music_Stop(1u);
 					Ambient_Sounds_Remove_All_Non_Looping_Sounds(true);
 					Ambient_Sounds_Remove_All_Looping_Sounds(1u);
-					Outtake_Play(kOuttakeEnd6, false, -1);
+					if (Actor_Query_Friendliness_To_Other(kActorSteele, kActorMcCoy) > 59) {
+						Outtake_Play(kOuttakeEnd6, false, -1);
+					}
 					Game_Over();	
 				}
 			} else { // Ending - talk with Gaff and leaving alone
@@ -411,7 +416,10 @@ void SceneScriptKP06::PlayerWalkedIn() {
 					Actor_Says(kActorGaff, 200, 15); //53-0200.AUD	Your life too, maybe.
 					Delay(2000);
 					Actor_Set_Goal_Number(kActorMcCoy, kGoalMcCoyArrested);
-					Delay(2000);
+					Delay(1000);
+					if (Actor_Query_Goal_Number(kActorClovis) < kGoalClovisGone) {
+						Outtake_Play(kOuttakeEnd2, false, -1);
+					}
 					Game_Over();
 				} else {
 					Actor_Says(kActorGaff, 220, 13);
@@ -473,7 +481,9 @@ void SceneScriptKP06::PlayerWalkedIn() {
 						}
 					}
 					Delay(3000);
-					Outtake_Play(kOuttakeEnd7, false, -1);
+					if	(Actor_Query_Goal_Number(kActorMaggie) > kGoalMaggieDead) {
+						Outtake_Play(kOuttakeEnd7, false, -1);
+					}
 					Game_Over();
 				}
 			}

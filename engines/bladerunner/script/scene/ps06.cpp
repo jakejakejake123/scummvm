@@ -234,19 +234,63 @@ bool SceneScriptPS06::ClickedOn3DObject(const char *objectName, bool a2) {
 		 && !Actor_Clue_Query(kActorMcCoy, kClueCarRegistration1)
 		 && !Actor_Clue_Query(kActorMcCoy, kClueCarRegistration2)
 		 && !Actor_Clue_Query(kActorMcCoy, kClueCarRegistration3)
+		 && !_vm->_cutContent
 		) {
 			Delay(2000);
 			Actor_Voice_Over(3780, kActorVoiceOver);
-			if (_vm->_cutContent) {
-				Delay(500);
-				// Made it so McCoy only says this line if he found the black paint on the hydrant at Runciters.
-				if (Actor_Clue_Query(kActorMcCoy, kClueLabPaintTransfer)) {
-					Actor_Voice_Over(3790, kActorVoiceOver); //99-3790.AUD	The car from Chinatown was the same vehicle that had smacked the hydrant at Runciter's. 
-				} else {
-					Actor_Says(kActorMcCoy, 690, -1); //00-0690.AUD	Gotcha.
-				}
+			Actor_Voice_Over(3790, kActorVoiceOver); //99-3790.AUD	The car from Chinatown was the same vehicle that had smacked the hydrant at Runciter's.
+			if (Game_Flag_Query(kFlagDektoraIsReplicant)) {
+				Actor_Voice_Over(3800, kActorVoiceOver);
+				Actor_Voice_Over(3810, kActorVoiceOver);
+				Actor_Voice_Over(3820, kActorVoiceOver);
+				Actor_Voice_Over(3830, kActorVoiceOver);
+				Actor_Clue_Acquire(kActorMcCoy, kClueCarRegistration1, true, -1);
+			} else if (Game_Flag_Query(kFlagGordoIsReplicant)) {
+				Actor_Voice_Over(3840, kActorVoiceOver);
+				Actor_Voice_Over(3850, kActorVoiceOver);
+				Actor_Voice_Over(3860, kActorVoiceOver);
+				Actor_Voice_Over(3870, kActorVoiceOver);
+				Actor_Clue_Acquire(kActorMcCoy, kClueCarRegistration2, true, -1);
 			} else {
-				Actor_Voice_Over(3790, kActorVoiceOver); //99-3790.AUD	The car from Chinatown was the same vehicle that had smacked the hydrant at Runciter's. {	
+				Actor_Voice_Over(3880, kActorVoiceOver);
+				Actor_Voice_Over(3890, kActorVoiceOver);
+				Actor_Voice_Over(3900, kActorVoiceOver);
+				Actor_Voice_Over(3910, kActorVoiceOver);
+				Actor_Clue_Acquire(kActorMcCoy, kClueCarRegistration3, true, -1);
+			}
+			Actor_Clues_Transfer_New_To_Mainframe(kActorMcCoy);
+			Actor_Clues_Transfer_New_From_Mainframe(kActorMcCoy);
+			Actor_Clues_Transfer_New_From_Mainframe(kActorKlein);
+			// Made it so Crystal receives the clues that McCoy uploads to the mainframe. This is so the unused Crystal clues can now be received by McCoy.
+			// Also did it for the other members of the police department because why would they not receive the clues from the mainframe.
+			Actor_Clues_Transfer_New_From_Mainframe(kActorSteele);
+			Actor_Clues_Transfer_New_From_Mainframe(kActorGuzza);
+			Actor_Clues_Transfer_New_From_Mainframe(kActorSergeantWalls);
+			Actor_Clues_Transfer_New_From_Mainframe(kActorGaff);
+			Actor_Clues_Transfer_New_From_Mainframe(kActorOfficerLeary);
+			Actor_Clues_Transfer_New_From_Mainframe(kActorOfficerGrayford);
+			Actor_Clues_Transfer_New_From_Mainframe(kActorDispatcher);
+			// also play "new clues added" cue, since McCoy gets the registrations clues
+			Actor_Says(kActorAnsweringMachine, 360, kAnimationModeTalk);
+			return true;
+		} else if (Game_Flag_Query(kFlagKleinCarIdentityTalk)
+		 && !Actor_Clue_Query(kActorMcCoy, kClueCarRegistration1)
+		 && !Actor_Clue_Query(kActorMcCoy, kClueCarRegistration2)
+		 && !Actor_Clue_Query(kActorMcCoy, kClueCarRegistration3)
+		 && _vm->_cutContent
+		 && (Actor_Clue_Query(kActorMcCoy, kClueLicensePlateMatch)
+		 || Actor_Clue_Query(kActorMcCoy, kClueCar))) {
+			Delay(2000);
+			Actor_Voice_Over(3780, kActorVoiceOver);
+			Delay(500);
+			// Made it so McCoy only says this line if he found the black paint on the hydrant at Runciters.
+			if (Actor_Clue_Query(kActorMcCoy, kClueLabPaintTransfer)
+			&& Actor_Clue_Query(kActorMcCoy, kClueCar)) {
+				Actor_Voice_Over(3790, kActorVoiceOver); //99-3790.AUD	The car from Chinatown was the same vehicle that had smacked the hydrant at Runciter's. 
+			} else {
+				Delay(500);
+				Actor_Says(kActorMcCoy, 690, -1); //00-0690.AUD	Gotcha.
+				Delay(500);
 			}
 			if (Game_Flag_Query(kFlagDektoraIsReplicant)) {
 				Actor_Voice_Over(3800, kActorVoiceOver);
@@ -269,22 +313,20 @@ bool SceneScriptPS06::ClickedOn3DObject(const char *objectName, bool a2) {
 			}
 			Actor_Clues_Transfer_New_To_Mainframe(kActorMcCoy);
 			Actor_Clues_Transfer_New_From_Mainframe(kActorMcCoy);
-			if (_vm->_cutContent) {
-				Actor_Clues_Transfer_New_From_Mainframe(kActorKlein);
-				// Made it so Crystal receives the clues that McCoy uploads to the mainframe. This is so the unused Crystal clues can now be received by McCoy.
-				// Also did it for the other members of the police department because why would they not receive the clues from the mainframe.
-				Actor_Clues_Transfer_New_From_Mainframe(kActorSteele);
-				Actor_Clues_Transfer_New_From_Mainframe(kActorGuzza);
-				Actor_Clues_Transfer_New_From_Mainframe(kActorSergeantWalls);
-				Actor_Clues_Transfer_New_From_Mainframe(kActorGaff);
-				Actor_Clues_Transfer_New_From_Mainframe(kActorOfficerLeary);
-				Actor_Clues_Transfer_New_From_Mainframe(kActorOfficerGrayford);
-				Actor_Clues_Transfer_New_From_Mainframe(kActorDispatcher);
-				// also play "new clues added" cue, since McCoy gets the registrations clues
-				Actor_Says(kActorAnsweringMachine, 360, kAnimationModeTalk);
-			}
+			Actor_Clues_Transfer_New_From_Mainframe(kActorKlein);
+			// Made it so Crystal receives the clues that McCoy uploads to the mainframe. This is so the unused Crystal clues can now be received by McCoy.
+			// Also did it for the other members of the police department because why would they not receive the clues from the mainframe.
+			Actor_Clues_Transfer_New_From_Mainframe(kActorSteele);
+			Actor_Clues_Transfer_New_From_Mainframe(kActorGuzza);
+			Actor_Clues_Transfer_New_From_Mainframe(kActorSergeantWalls);
+			Actor_Clues_Transfer_New_From_Mainframe(kActorGaff);
+			Actor_Clues_Transfer_New_From_Mainframe(kActorOfficerLeary);
+			Actor_Clues_Transfer_New_From_Mainframe(kActorOfficerGrayford);
+			Actor_Clues_Transfer_New_From_Mainframe(kActorDispatcher);
+			// also play "new clues added" cue, since McCoy gets the registrations clues
+			Actor_Says(kActorAnsweringMachine, 360, kAnimationModeTalk);
 			return true;
-		} else {
+		 } else {
 			bool uploadedClues = Actor_Clues_Transfer_New_To_Mainframe(kActorMcCoy);
 			if (uploadedClues) {
 				if (_vm->_cutContent) {

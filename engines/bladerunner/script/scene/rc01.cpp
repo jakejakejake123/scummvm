@@ -961,7 +961,11 @@ void SceneScriptRC01::interrogateCrowd() {
 			Actor_Says(kActorMcCoy, 4500, 14);
 			I_Sez("MG: We don't want any of that abstract art oozing out onto the street.");
 			Actor_Says(kActorOfficerLeary, 10, 14);
-			Actor_Set_Goal_Number(kActorOfficerLeary, kGoalOfficerLearyRC01WalkToCrowd);
+			if (_vm->_cutContent) {
+				Actor_Clue_Acquire(kActorOfficerLeary, kClueCrowdInterviewA, true, -1);
+				Actor_Clue_Acquire(kActorOfficerLeary, kClueCrowdInterviewB, true, -1);
+			}
+			Actor_Set_Goal_Number(kActorOfficerLeary, kGoalOfficerLearyRC01WalkToCrowd);	
 		}
 	}
 }
@@ -1037,21 +1041,21 @@ void SceneScriptRC01::PlayerWalkedIn() {
 					Actor_Voice_Over(1910, kActorVoiceOver); //99-1910.AUD	It didn't add up. Animal murders, the lack of any theft.
 					Actor_Voice_Over(1920, kActorVoiceOver); //99-1920.AUD	The small animals alone were worth a good chunk of change on the street.
 					Actor_Voice_Over(1930, kActorVoiceOver); //99-1930.AUD	It seemed more like an act of vengeance.
-				} else {
-					Actor_Voice_Over(1940, kActorVoiceOver); //99-1940.AUD	I'd never seen so many authentic animals under the same roof. It was beautiful... and horrendous.
-					// Note: Quote 1950 is *boop* in ENG version
-					//       However it is voiced in FRA, DEU, ESP and ITA versions
-					//       In ESP and FRA this quote roughly translates to:
-					//       "Seeing them slaughtered was worse than any of my nightmares."
-					//       In DEU and ITA it seems to be the second (missing) half of the previous quote (1940)
-					//       and it is required for those.
-					if (_vm->_language == Common::FR_FRA
-						|| _vm->_language == Common::DE_DEU
-						|| _vm->_language == Common::ES_ESP
-						|| _vm->_language == Common::IT_ITA
-					) {
-						Actor_Voice_Over(1950, kActorVoiceOver);
-					}
+					Delay(500);
+				} 
+				Actor_Voice_Over(1940, kActorVoiceOver); //99-1940.AUD	I'd never seen so many authentic animals under the same roof. It was beautiful... and horrendous.
+				// Note: Quote 1950 is *boop* in ENG version
+				//       However it is voiced in FRA, DEU, ESP and ITA versions
+				//       In ESP and FRA this quote roughly translates to:
+				//       "Seeing them slaughtered was worse than any of my nightmares."
+				//       In DEU and ITA it seems to be the second (missing) half of the previous quote (1940)
+				//       and it is required for those.
+				if (_vm->_language == Common::FR_FRA
+					|| _vm->_language == Common::DE_DEU
+					|| _vm->_language == Common::ES_ESP
+					|| _vm->_language == Common::IT_ITA
+				) {
+					Actor_Voice_Over(1950, kActorVoiceOver);
 				}
 			} else {
 				Actor_Voice_Over(1910, kActorVoiceOver);

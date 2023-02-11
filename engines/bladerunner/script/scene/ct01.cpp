@@ -194,20 +194,30 @@ bool SceneScriptCT01::ClickedOnActor(int actorId) {
 						if (Player_Query_Agenda() == kPlayerAgendaPolite) {
 							Actor_Says(kActorMcCoy, 260, 18);
 							Actor_Says(kActorHowieLee, 0, 14); //28-0000.AUD	When business thriving, night always beautiful.
-							Actor_Modify_Friendliness_To_Other(kActorHowieLee, kActorMcCoy, 2);
-						} else {
-							Actor_Says(kActorMcCoy, 3970, 14); //00-3970.AUD	Hey.
-						}	
-						if (Actor_Query_Friendliness_To_Other(kActorHowieLee, kActorMcCoy) < 60) {
-							Actor_Says(kActorMcCoy, 8514, 13);//00-8514.AUD	Got anything new to tell me?
-							Actor_Says(kActorHowieLee, 180, 13); //28-0180.AUD	Nothing, nothing. Customer here to eat.
-							Game_Flag_Set(kFlagCT01McCoyTalkedToHowieLee);
-							Actor_Set_Goal_Number(kActorHowieLee, kGoalHowieLeeDefault);
-						} else {
 							Actor_Says(kActorMcCoy, 8514, 13);//00-8514.AUD	Got anything new to tell me?
 							Actor_Says(kActorHowieLee, 170, 13);//28-0170.AUD	Sure, McCoy. I hear something. Maybe it surprise you even.
 							Actor_Says(kActorMcCoy, 2635, 18); //00-2635.AUD	I’m all ears.. 
 							Actor_Says(kActorHowieLee, 160, 14); //28-0160.AUD	I take care of you soon, McCoy. Real busy tonight.
+							Actor_Modify_Friendliness_To_Other(kActorHowieLee, kActorMcCoy, 2);
+							Game_Flag_Set(kFlagCT01McCoyTalkedToHowieLee);
+							Actor_Set_Goal_Number(kActorHowieLee, kGoalHowieLeeDefault);
+						} else if (Player_Query_Agenda() == kPlayerAgendaSurly
+						|| Player_Query_Agenda() == kPlayerAgendaErratic) {
+							Actor_Says(kActorMcCoy, 8650, 14); //00-8650.AUD	What smells in there?
+							Actor_Says(kActorHowieLee, 50, kAnimationModeTalk); //28-0050.AUD	Special shipment of Toro just arrived.
+							Actor_Says(kActorHowieLee, 60, kAnimationModeTalk); //28-0060.AUD	I fix you right up. No one else.
+							Actor_Says(kActorMcCoy, 2485, 19); //00-2485.AUD	I’ve a hard time believing that.
+							Actor_Says(kActorHowieLee, 200, 16); //28-0200.AUD	You call Howie liar? You find another place to eat lunch now [speaks Japanese]
+							Actor_Says(kActorMcCoy, 100, 16); //00-0100.AUD	I'll do that.
+							Delay(500);
+							Actor_Says(kActorMcCoy, 5685, 15); //00-5685.AUD	Triple-A you ain’t.
+							Actor_Modify_Friendliness_To_Other(kActorHowieLee, kActorMcCoy, -2);
+							Game_Flag_Set(kFlagCT01McCoyTalkedToHowieLee);
+							Actor_Set_Goal_Number(kActorHowieLee, kGoalHowieLeeDefault);
+						} else {
+							Actor_Says(kActorMcCoy, 3970, 14); //00-3970.AUD	Hey.
+							Actor_Says(kActorMcCoy, 8514, 13);//00-8514.AUD	Got anything new to tell me?
+							Actor_Says(kActorHowieLee, 180, 13); //28-0180.AUD	Nothing, nothing. Customer here to eat.
 							Game_Flag_Set(kFlagCT01McCoyTalkedToHowieLee);
 							Actor_Set_Goal_Number(kActorHowieLee, kGoalHowieLeeDefault);
 						}
@@ -311,7 +321,15 @@ bool SceneScriptCT01::ClickedOnActor(int actorId) {
 	if (actorId == kActorZuben) {
 		if (!Loop_Actor_Walk_To_XYZ(kActorMcCoy, -335.23f, -6.5f, 578.97f, 12, true, false, false)) {
 			Actor_Face_Actor(kActorMcCoy, kActorZuben, true);
-			Actor_Says(kActorMcCoy, 3970, 13); //00-3970.AUD	Hey.
+			if (_vm->_cutContent) {
+				if (Player_Query_Agenda() == kPlayerAgendaPolite) {
+					Actor_Says(kActorMcCoy, 3970, 13); //00-3970.AUD	Hey.
+				} else {
+					Actor_Says(kActorMcCoy, 355, 10); //00-0355.AUD	Hey, big guy.
+				}
+			} else {
+				Actor_Says(kActorMcCoy, 355, 10); //00-0355.AUD	Hey, big guy.
+			}
 			if (Actor_Query_Goal_Number(kActorZuben) == kGoalZubenDefault) {
 				if (_vm->_cutContent) {
 					if (Game_Flag_Query(kFlagZubenIsReplicant)) {
@@ -332,7 +350,9 @@ bool SceneScriptCT01::ClickedOnActor(int actorId) {
 				} else {
 					Actor_Says(kActorMcCoy, 360, 13);
 				}
-				Actor_Modify_Friendliness_To_Other(kActorHowieLee, kActorMcCoy, -2);
+				if (!_vm->_cutContent) {
+					Actor_Modify_Friendliness_To_Other(kActorHowieLee, kActorMcCoy, -2);
+				}
 				//Removed code that lessens Zubens friendlisness towards McCoy. Did this because later on in the game when McCoy talks to Gordo about Zuben he mentions both Gordo 
 				//and Zuben leaving Howie Lees at the same time. Zuben leaves depending on your friendliness rating with him and this can also be lowered by talking to him behind the counter.
 				//The other way is by talking to Gordo which for the sake of narrative consistency should be the only circumstance in which Zuben leaves so McCoys later conversation with Gordo makes sense. 
@@ -799,7 +819,9 @@ void SceneScriptCT01::dialogueWithHowieLee() {
 		if (_vm->_cutContent) {
 			if (Actor_Clue_Query(kActorMcCoy, kClueLabCorpses)
 			|| Actor_Clue_Query(kActorMcCoy, kClueCrowdInterviewA)
-			|| Actor_Clue_Query(kActorMcCoy, kClueSightingMcCoyRuncitersShop)) {
+			|| Actor_Clue_Query(kActorMcCoy, kClueSightingMcCoyRuncitersShop)
+			|| Actor_Clue_Query(kActorMcCoy, kClueCandyWrapper)
+			|| Actor_Clue_Query(kActorMcCoy, kClueZubenInterview)) {
 				DM_Add_To_List_Never_Repeat_Once_Selected(80, 7, 8, 9); // EMPLOYEE
 			}
 		} else {
@@ -832,7 +854,7 @@ void SceneScriptCT01::dialogueWithHowieLee() {
 		}
 		if (_vm->_cutContent) {
 			if (Actor_Query_Friendliness_To_Other(kActorHowieLee, kActorMcCoy) < 60) {
-				Actor_Says(kActorHowieLee, 160, 14); //28-0160.AUD	I take care of you soon, McCoy. Real busy tonight.
+				Actor_Says(kActorHowieLee, 190, 13); // I look like I got time for chit-er chat-er?
 			} else {
 				Actor_Says(kActorHowieLee, 20, 14); //28-0020.AUD	Nah. All gaijin look alike to old man.
 				if (Actor_Query_Is_In_Current_Set(kActorZuben)) {
@@ -894,7 +916,7 @@ void SceneScriptCT01::dialogueWithHowieLee() {
 			}
 			if (_vm->_cutContent) {
 				if (Actor_Query_Friendliness_To_Other(kActorHowieLee, kActorMcCoy) < 60) {
-					Actor_Says(kActorHowieLee, 160, 14); //28-0160.AUD	I take care of you soon, McCoy. Real busy tonight.
+					Actor_Says(kActorHowieLee, 190, 13); // I look like I got time for chit-er chat-er?
 				} else {
 					Actor_Says(kActorHowieLee, 40, 14); //28-0040.AUD	Yes sir. You do Howie a favor? Distribute all throughout police station?
 					if (Player_Query_Agenda() != kPlayerAgendaPolite) { 
@@ -989,9 +1011,7 @@ void SceneScriptCT01::dialogueWithHowieLee() {
 					Game_Flag_Set(kFlagCT01BoughtHowieLeeFood);
 				}
 			} else {
-				Actor_Says(kActorHowieLee, 130, 15); // nothing now
-				Actor_Says(kActorMcCoy, 8565, 14); // really?
-				Actor_Says(kActorHowieLee, 80, 16); // No, sir. Any luck...
+				Actor_Says(kActorHowieLee, 190, 13); // I look like I got time for chit-er chat-er?
 			}
 		} else {
 			Actor_Says(kActorHowieLee, 50, kAnimationModeTalk); //28-0050.AUD	Special shipment of Toro just arrived.
@@ -1029,12 +1049,6 @@ void SceneScriptCT01::dialogueWithHowieLee() {
 				Actor_Says(kActorHowieLee, 190, 14);	//28-0190.AUD	I look like I got time for chit-er chat-er?
 			} else {
 				Actor_Says(kActorHowieLee, 110, 16);
-				//Added dialogue that plays if McCoys agenda is surly or erratic.
-				if (Player_Query_Agenda() != kPlayerAgendaPolite) {  
-					Actor_Says(kActorMcCoy, 2485, 19); //00-2485.AUD	I’ve a hard time believing that.
-					Actor_Says(kActorHowieLee, 200, 16); //28-0200.AUD	You call Howie liar? You find another place to eat lunch now [speaks Japanese]
-					Actor_Modify_Friendliness_To_Other(kActorHowieLee, kActorMcCoy, -2);
-				}
 			}
 		} else {
 			Actor_Says(kActorHowieLee, 110, 16);

@@ -42,6 +42,9 @@ void SceneScriptHC04::InitializeScene() {
 		&& Global_Variable_Query(kVariableChapter) < 4) { 
 			Actor_Put_In_Set(kActorIsabella, kSetHC01_HC02_HC03_HC04);
 			Actor_Set_At_XYZ(kActorIsabella, -210.0f, 0.0f, -445.0f, 250);
+		} else {
+			Actor_Put_In_Set(kActorIsabella, kSetRC01);
+			Actor_Set_At_XYZ(kActorIsabella, -210.0f, 0.0f, -445.0f, 250);
 		}
 	} else {
 		Actor_Put_In_Set(kActorIsabella, kSetHC01_HC02_HC03_HC04);
@@ -249,8 +252,10 @@ void SceneScriptHC04::dialogueWithIsabella() {
 	// Made it so McCoy doesn't have the option to buy the stew if he found out about the special ingredient.
 	// It would make no sense for McCoy to ask what's in the stew and then buy some of it knowing it contains illegal ingredients.
 	if (_vm->_cutContent) {
-		if (!Actor_Clue_Query(kActorMcCoy, kClueSpecialIngredient)) {
-			DM_Add_To_List_Never_Repeat_Once_Selected(390, 7, 8, 9); // BUY STEW
+		if (Global_Variable_Query(kVariableChapter) < 4) {
+			if (!Actor_Clue_Query(kActorMcCoy, kClueSpecialIngredient)) {
+				DM_Add_To_List_Never_Repeat_Once_Selected(390, 7, 8, 9); // BUY STEW
+			}
 		}
 	} else {
 		DM_Add_To_List_Never_Repeat_Once_Selected(390, 7, 5, -1); // BUY STEW	

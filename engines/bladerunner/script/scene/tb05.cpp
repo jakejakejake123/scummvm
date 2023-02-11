@@ -128,6 +128,7 @@ bool SceneScriptTB05::ClickedOn3DObject(const char *objectName, bool a2) {
 							Actor_Voice_Over(2260, kActorVoiceOver);
 						} else {
 							Actor_Voice_Over(130, kActorVoiceOver); //99-0130.AUD	DNA research, incept dates.
+							Actor_Voice_Over(140, kActorVoiceOver); //99-0140.AUD	A lot of jargon but I bet my spinner it was valuable to somebody.
 						}
 					} else {
 						Actor_Voice_Over(2240, kActorVoiceOver);
@@ -179,6 +180,7 @@ bool SceneScriptTB05::ClickedOn3DObject(const char *objectName, bool a2) {
 							Actor_Voice_Over(2260, kActorVoiceOver);
 						} else {
 							Actor_Voice_Over(130, kActorVoiceOver); //99-0130.AUD	DNA research, incept dates.
+							Actor_Voice_Over(140, kActorVoiceOver); //99-0140.AUD	A lot of jargon but I bet my spinner it was valuable to somebody.
 						}
 					} else {
 						Actor_Voice_Over(2240, kActorVoiceOver);
@@ -219,8 +221,12 @@ bool SceneScriptTB05::ClickedOnItem(int itemId, bool a2) {
 			Actor_Face_Heading(kActorMcCoy, 126, false);
 			Item_Remove_From_World(kItemDragonflyEarring);
 			Item_Pickup_Spin_Effect(kModelAnimationDragonflyEarring, 295, 408);
-			if (_vm->_cutContent) {
-				Actor_Says(kActorMcCoy, 8765, 13); //00-8765.AUD	An earring.
+			if (_vm->_cutContent) {				
+				Actor_Says(kActorMcCoy, 8765, -1); //00-8765.AUD	An earring.
+				if (!Actor_Clue_Query(kActorMcCoy, kCluePeruvianLadyInterview)) {
+					Delay(1000);
+					Actor_Says(kActorMcCoy, 4050, 13);
+				}
 			} else { 			
 				Actor_Voice_Over(2140, kActorVoiceOver);
 				Actor_Voice_Over(2150, kActorVoiceOver);

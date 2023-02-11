@@ -79,10 +79,14 @@ bool SceneScriptNR07::ClickedOnActor(int actorId) {
 		Dialogue_Menu_Clear_List();
 		if (Game_Flag_Query(kFlagNR07McCoyIsCop)) {
 			if (_vm->_cutContent) {
-				if (Player_Query_Agenda() == kPlayerAgendaPolite) { 
-					DM_Add_To_List_Never_Repeat_Once_Selected(1110, 3, 2, -1); // CRYSTAL	
-				} else {
-					DM_Add_To_List_Never_Repeat_Once_Selected(1100, -1, 3, 4); // VOIGT-KAMPFF
+				if (Actor_Clue_Query(kActorMcCoy, kClueEarlyQInterview)
+				|| Actor_Clue_Query(kActorMcCoy, kClueCarWasStolen)
+				|| Game_Flag_Query(kFlagCrazylegsTalkCarRegistration)) {
+					if (Player_Query_Agenda() == kPlayerAgendaPolite) { 
+						DM_Add_To_List_Never_Repeat_Once_Selected(1110, 3, 2, -1); // CRYSTAL	
+					} else {
+						DM_Add_To_List_Never_Repeat_Once_Selected(1100, -1, 3, 4); // VOIGT-KAMPFF
+					}
 				}
 			} else {
 				DM_Add_To_List_Never_Repeat_Once_Selected(1100, -1, 3, 8); // VOIGT-KAMPFF

@@ -84,15 +84,9 @@ bool SceneScriptBB07::ClickedOn3DObject(const char *objectName, bool a2) {
 					Delay(800);
 					Item_Pickup_Spin_Effect_From_Actor(kModelAnimationDNADataDisc, kActorMcCoy, 0, 0);
 					Delay(800);
-					Actor_Voice_Over(kActorVoiceOver, 140); //99-0140.AUD	A lot of jargon but I bet my spinner it was valuable to somebody.
+					Actor_Voice_Over(4360, kActorVoiceOver); //99-4360.AUD	The suspect was definitely looking for something at the Bradbury.
 				} else {
 					Item_Pickup_Spin_Effect(kModelAnimationDNADataDisc, 439, 242);
-					Actor_Voice_Over(140, kActorVoiceOver); //99-0140.AUD	A lot of jargon but I bet my spinner it was valuable to somebody.
-				}
-				// Added in an extra comment for McCoy.
-				if (_vm->_cutContent) {
-					Delay (1000);
-					Actor_Voice_Over(4360, kActorVoiceOver); //99-4360.AUD	The suspect was definitely looking for something at the Bradbury.
 				}
 				Game_Flag_Set(kFlagBB07PrinterChecked);
 				Actor_Clue_Acquire(kActorMcCoy, kClueDNASebastian, true, kActorSebastian);

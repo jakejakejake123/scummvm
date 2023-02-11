@@ -156,7 +156,9 @@ bool SceneScriptDR02::ClickedOnActor(int actorId) {
 				Actor_Face_Actor(kActorMcCoy, kActorShoeshineMan, true);
 				Actor_Face_Actor(kActorShoeshineMan, kActorMcCoy, true);
 				Game_Flag_Set(kFlagShoeshineManTalk);
-				Actor_Says(kActorMcCoy, 730, 17); //00-0730.AUD	What are we talking about?
+				Actor_Says(kActorMcCoy, 4870, 23);
+				Delay(1000);
+				Actor_Says(kActorMcCoy, 8615, 16); //00-8615.AUD	Heard anything on the street?
 				Delay(2000);
 				Actor_Says(kActorMcCoy, 4515, 13); //00-4515.AUD	What do you know?
 				Delay(3000);
@@ -247,30 +249,7 @@ bool SceneScriptDR02::ClickedOnActor(int actorId) {
 						Delay(2000);
 						Actor_Says(kActorMcCoy, 2750, kAnimationModeTalk); //00-2750.AUD	Okay, I get the picture.
 						Actor_Face_Heading(kActorShoeshineMan, 524, false);
-					} else if (Actor_Clue_Query(kActorMcCoy, kCluePartialLicenseNumber)
-					&& !Actor_Clue_Query(kActorMcCoy, kClueLicensePlate)) {
-						Actor_Says(kActorMcCoy, 8990, 17);//00-8990.AUD	What have you got there?
-						Actor_Change_Animation_Mode(kActorMcCoy, 23);
-						Delay(800);
-						Item_Pickup_Spin_Effect_From_Actor(kModelAnimationLicensePlate, kActorMcCoy, 0, 0);
-						Delay(800);
-						Actor_Clue_Acquire(kActorMcCoy, kClueLicensePlate, true, kActorShoeshineMan);
-						Actor_Says(kActorMcCoy, 8760, 13);//00-8760.AUD	A license plate.
-						Delay(1000);
-						Actor_Says(kActorMcCoy, 8525, 9); //00-8525.AUD	Hmph.
-						Actor_Change_Animation_Mode(kActorMcCoy, 23);
-						Delay(800);
-						Actor_Says(kActorAnsweringMachine, 390, kAnimationModeTalk); // 39-0390.AUD	Begin test.
-						Ambient_Sounds_Play_Sound(kSfxDATALOAD, 50, 0, 0, 99);
-						Delay(2000);
-						Ambient_Sounds_Play_Sound(kSfxBEEPNEAT, 80, 0, 0, 99);
-						Actor_Says(kActorAnsweringMachine, 420, 19); //39-0420.AUD	Positive result.
-						Actor_Says(kActorAnsweringMachine, 470, kAnimationModeTalk); //39-0470.AUD	End test.
-						Actor_Says(kActorMcCoy, 7200, 13); //00-7200.AUD	Bingo.
-						Actor_Clue_Acquire(kActorMcCoy, kClueLicensePlateMatch, true, -1); 
-						Delay(1000);
-						Actor_Face_Heading(kActorShoeshineMan, 524, false);
-					}
+					} 
 				} else {
 					Actor_Face_Actor(kActorMcCoy, kActorShoeshineMan, true);
 					Actor_Face_Actor(kActorShoeshineMan, kActorMcCoy, true);

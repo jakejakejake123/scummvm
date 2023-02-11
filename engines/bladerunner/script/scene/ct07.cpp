@@ -114,7 +114,6 @@ void SceneScriptCT07::PlayerWalkedIn() {
 				Actor_Says(kActorZuben, 100, 19);
 				Actor_Says(kActorMcCoy, 470, 12); //00-0470.AUD	Just talk. That's all.
 				Actor_Says(kActorZuben, 110, 18);
-				Music_Stop(1u);
 				Actor_Says(kActorMcCoy, 475, 12);
 				Actor_Says(kActorZuben, 120, 15);
 				Actor_Says(kActorMcCoy, 480, 16);

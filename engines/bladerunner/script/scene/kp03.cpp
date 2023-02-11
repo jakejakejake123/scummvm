@@ -359,7 +359,13 @@ void SceneScriptKP03::saveSteele() {
 	Scene_Loop_Set_Default(kKP03MainLoopBombNoWire);
 	Scene_Loop_Start_Special(kSceneLoopModeOnce, kKP03MainLoopBombNoWire, false);
 	Actor_Set_Goal_Number(kActorSteele, kGoalSteeleKP03Leave);
-	Actor_Says(kActorMcCoy, 2195, 14);
+	if (_vm->_cutContent) {
+		if (Actor_Query_Friendliness_To_Other(kActorSteele, kActorMcCoy) > 59) {
+			Actor_Says(kActorMcCoy, 2195, 14);
+		}
+	} else {
+		Actor_Says(kActorMcCoy, 2195, 14);
+	}
 	Ambient_Sounds_Play_Sound(kSfxLABMISC6, 40, -60, -60, 0);
 	Loop_Actor_Walk_To_XYZ(kActorMcCoy, 1.0f, -36.55f, 111.0f, 0, false, false, false);
 	Actor_Set_Goal_Number(kActorSteele, kGoalSteeleKP05Enter);

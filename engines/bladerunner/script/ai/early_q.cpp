@@ -467,8 +467,18 @@ bool AIScriptEarlyQ::GoalChanged(int currentGoalNumber, int newGoalNumber) {
 				} else {
 					Actor_Says(kActorMcCoy, 6985, kAnimationModeCombatAim); //00-6985.AUD	Got the straight scoop for me or what?
 				}
-				Actor_Says(kActorEarlyQ, 120, kAnimationModeTalk); //18-0120.AUD	You can have whatever you little heart desires, General.
-				Delay (1000);
+				if (!Actor_Clue_Query(kActorMcCoy, kClueEarlyQInterview)) {
+					Actor_Says(kActorEarlyQ, 140, 16); //18-0140.AUD	You want Dektora? Is that it? The girl with the Rep friends?
+					Actor_Clue_Acquire(kActorMcCoy, kClueEarlyQInterview, true, kActorEarlyQ);
+					if (Player_Query_Agenda() == kPlayerAgendaSurly 
+					|| (Player_Query_Agenda() == kPlayerAgendaErratic)) {
+						Actor_Says(kActorMcCoy, 2215, kAnimationModeCombatAim); //00-2215.AUD	That’s right.
+					}
+					Delay(1000);
+					Actor_Says(kActorEarlyQ, 350, 16); 
+				} else {
+					Actor_Says(kActorEarlyQ, 350, 16); 
+				}
 				Actor_Says(kActorMcCoy, 3405, kAnimationModeCombatAim); //00-3405.AUD	Sit down.
 				Delay (1000);
 				if (Player_Query_Agenda() == kPlayerAgendaSurly 
@@ -488,12 +498,17 @@ bool AIScriptEarlyQ::GoalChanged(int currentGoalNumber, int newGoalNumber) {
 				} else {
 					Actor_Says(kActorMcCoy, 6985, kAnimationModeCombatAim); //00-6985.AUD	Got the straight scoop for me or what?
 				}
-				Actor_Says_With_Pause(kActorEarlyQ, 140, 1.0f, kAnimationModeTalk); //18-0140.AUD	You want Dektora? Is that it? The girl with the Rep friends?
-				Actor_Says_With_Pause(kActorEarlyQ, 150, 1.0f, kAnimationModeTalk);
-				Actor_Says(kActorMcCoy, 3405, kAnimationModeCombatAim);
-				Actor_Says(kActorEarlyQ, 160, kAnimationModeTalk);
+				if (!Actor_Clue_Query(kActorMcCoy, kClueEarlyQInterview)) {
+					Actor_Says_With_Pause(kActorEarlyQ, 140, 1.0f, kAnimationModeTalk); //18-0140.AUD	You want Dektora? Is that it? The girl with the Rep friends?
+					Actor_Clue_Acquire(kActorMcCoy, kClueEarlyQInterview, false, kActorEarlyQ);
+					Actor_Says_With_Pause(kActorEarlyQ, 150, 1.0f, kAnimationModeTalk);
+					Actor_Says(kActorMcCoy, 3405, kAnimationModeCombatAim);
+					Actor_Says(kActorEarlyQ, 160, kAnimationModeTalk);
+				} else {
+					Actor_Says(kActorMcCoy, 3405, kAnimationModeCombatAim);
+					Delay(1000);
+				}							
 				Actor_Says(kActorMcCoy, 3410, kAnimationModeCombatAim); //00-3410.AUD	Sit down!
-				Actor_Clue_Acquire(kActorMcCoy, kClueEarlyQInterview, false, kActorEarlyQ);
 				_vm->_aiScripts->callChangeAnimationMode(kActorMcCoy, kAnimationModeCombatIdle);
 				Player_Loses_Control();
 				Loop_Actor_Walk_To_XYZ(kActorMcCoy, 31.22f, 0.0f, 267.51f, 0, true, false, false);

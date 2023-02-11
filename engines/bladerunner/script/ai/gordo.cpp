@@ -584,6 +584,12 @@ bool AIScriptGordo::GoalChanged(int currentGoalNumber, int newGoalNumber) {
 		Actor_Says(kActorGordo, 0, 13);
 		Actor_Says(kActorGordo, 10, 16);
 		Actor_Set_Goal_Number(kActorGordo, kGoalGordoCT01WalkAway);
+		if (_vm->_cutContent) {
+			Actor_Set_Friendliness_To_Other(kActorGordo, kActorMcCoy, 50);
+			if (Game_Flag_Query(kFlagGordoReceivedAutograph)) {
+				Actor_Modify_Friendliness_To_Other(kActorGordo, kActorMcCoy, 2);
+			}
+		}
 		Player_Gains_Control();
 		break;
 
@@ -781,7 +787,7 @@ bool AIScriptGordo::GoalChanged(int currentGoalNumber, int newGoalNumber) {
 		Actor_Face_Actor(kActorMcCoy, kActorGordo, true);
 		if (_vm->_cutContent) {
 			if (!Game_Flag_Query(kFlagGordoIsReplicant)
-			&& Actor_Query_Friendliness_To_Other(kActorGordo, kActorMcCoy) > 46) {
+			&& Actor_Query_Friendliness_To_Other(kActorGordo, kActorMcCoy) > 50) {
 				Actor_Says(kActorGordo, 740, 17); //02-0740.AUD	One of the LPD's finest. Ray McCoy!
 				Actor_Says(kActorGordo, 750, 16); //02-0750.AUD	Let’s give a big hand for Rep detect McCoy.			
 				Actor_Says(kActorGordo, 770, 14); //02-0770.AUD	He even thinks you’re a Replicant, he can waste you right where you stand.
@@ -944,7 +950,8 @@ bool AIScriptGordo::GoalChanged(int currentGoalNumber, int newGoalNumber) {
 				Actor_Says(kActorGordo, 830, 15);
 				Actor_Says(kActorMcCoy, 3905, 13);
 				if (_vm->_cutContent) {
-					if (Actor_Query_Friendliness_To_Other(kActorGordo, kActorMcCoy) < 47) {
+					if (Game_Flag_Query(kFlagGordoIsReplicant)
+					|| Actor_Query_Friendliness_To_Other(kActorGordo, kActorMcCoy) < 51) {
 						Actor_Says(kActorGordo, 840, 13);
 						Sound_Play(kSfxRIMSHOT4, 50, 0, 0, 50);
 						Sound_Play(kSfxAUDLAFF3, 50, 0, 0, 50);
@@ -2153,7 +2160,7 @@ void AIScriptGordo::talkToMcCoyInCity() {
 						Delay(2000);
 						Actor_Says(kActorMcCoy, 8170, 15); //00-8170.AUD	There you go.
 						Delay(1000);
-						Actor_Modify_Friendliness_To_Other(kActorGordo, kActorMcCoy, 10);
+						Actor_Modify_Friendliness_To_Other(kActorGordo, kActorMcCoy, 2);
 						if (Query_Difficulty_Level() != kGameDifficultyEasy) {
 							Global_Variable_Decrement(kVariableChinyen, 5);
 						}
@@ -2183,7 +2190,7 @@ void AIScriptGordo::talkToMcCoyInCity() {
 						Delay(2000);
 						Actor_Says(kActorMcCoy, 8170, 15); //00-8170.AUD	There you go.
 						Delay(1000);
-						Actor_Modify_Friendliness_To_Other(kActorGordo, kActorMcCoy, 5);
+						Actor_Modify_Friendliness_To_Other(kActorGordo, kActorMcCoy, 2);
 						if (Query_Difficulty_Level() != kGameDifficultyEasy) {
 							Global_Variable_Decrement(kVariableChinyen, 10);
 						}
@@ -2286,7 +2293,7 @@ void AIScriptGordo::talkToMcCoyAtNR02() {
 	// Made it so Gordo will only be annoyed at you if you have low friendliness with him.
 	if (_vm->_cutContent) {
 		if (Game_Flag_Query(kFlagGordoIsReplicant)
-		|| Actor_Query_Friendliness_To_Other(kActorGordo, kActorMcCoy) < 47) {
+		|| Actor_Query_Friendliness_To_Other(kActorGordo, kActorMcCoy) < 51) {
 			Actor_Says(kActorGordo, 330, 17); //02-0330.AUD	Man, don’t you got anything better to do than hassle innocent people at their place of work?
 			Actor_Says(kActorMcCoy, 7815, 16); //00-7815.AUD	No.
 			Delay(1000);
@@ -2389,8 +2396,9 @@ void AIScriptGordo::dialogue1() {
 	DM_Add_To_List_Never_Repeat_Once_Selected(770, 6, 3, 1); // JOB
 	// Made it so the topics for Lucy and blonde woman activate when you have certain photo clues.
 	if (_vm->_cutContent) {
-		if (Actor_Clue_Query(kActorMcCoy, kClueChinaBar)
-		&& Game_Flag_Query(kFlagDektoraIdentified)) {
+		if (Game_Flag_Query(kFlagDektoraIdentified)
+		|| Actor_Clue_Query(kActorMcCoy, kClueEarlyQInterview)
+		|| Actor_Clue_Query(kActorMcCoy, kClueCarWasStolen)) {
 			DM_Add_To_List_Never_Repeat_Once_Selected(780, 5, 5, 5); // BLOND WOMAN
 		}
 	} else if (Actor_Clue_Query(kActorMcCoy, kClueDektorasDressingRoom)
@@ -2432,7 +2440,7 @@ void AIScriptGordo::dialogue1() {
 		Actor_Says(kActorGordo, 380, 12); //02-0380.AUD	You are one hell of a suspicious cat, McCoy.
 		if (_vm->_cutContent) {
 			if (Game_Flag_Query(kFlagGordoIsReplicant)
-			|| Actor_Query_Friendliness_To_Other(kActorGordo, kActorMcCoy) < 47) {
+			|| Actor_Query_Friendliness_To_Other(kActorGordo, kActorMcCoy) < 51) {
 				Actor_Says(kActorGordo, 390, 14); //02-0390.AUD	Kick back, relax. Watch my show. Take a little break from your boring existence.
 				if (Player_Query_Agenda() == kPlayerAgendaSurly
 				|| (Player_Query_Agenda() == kPlayerAgendaErratic)) {
@@ -2600,11 +2608,7 @@ void AIScriptGordo::dialogue1() {
 		// Gordo says the same dialogue about Lucy that he says about Dektora. This is a problem since he calls Lucy 'a woman and a babe' and that he will 'keep her for himself' and it comes off as not only inconsistent but also creepy.
 		// If Clovis heard Gordo say this or there was a hint of it, Gordo would not only not be helping the reps but Clovis would probably kill him so these lines will be removed for consistency  
 		if (_vm->_cutContent) {
-			if (!Actor_Clue_Query(kActorMcCoy, kClueLucy)) {
-				Actor_Says(kActorMcCoy, 385, 13); //00-0385.AUD	I'm looking for a girl about 14 years old with pink hair. You seen her?
-			} else {
-				Actor_Says(kActorMcCoy, 3245, 23); //00-3245.AUD	This girl look familiar?
-			}
+			Actor_Says(kActorMcCoy, 3245, 23); //00-3245.AUD	This girl look familiar?
 		} else {
 			Actor_Says(kActorMcCoy, 3245, kAnimationModeTalk); //00-3245.AUD	This girl look familiar?
 		}

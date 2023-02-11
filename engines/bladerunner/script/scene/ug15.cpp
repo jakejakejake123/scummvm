@@ -146,6 +146,7 @@ bool SceneScriptUG15::ClickedOnExit(int exitId) {
 		) {
 			Loop_Actor_Walk_To_XYZ(kActorMcCoy, -137.61f, 48.07f, 147.12f, 0, true, false, false);
 			if (_vm->_cutContent) {
+				Player_Set_Combat_Mode(true);
 				Sound_Play(kSfxRATTY1, 50, 0, 0, 50);
 			}
 		} else if (!Loop_Actor_Walk_To_XYZ(kActorMcCoy, 18.0f, 52.28f, 46.0f, 0, true, false, false)) {

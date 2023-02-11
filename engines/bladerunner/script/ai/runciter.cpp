@@ -207,14 +207,24 @@ void AIScriptRunciter::ClickedByPlayer() {
 		} else if (Actor_Query_In_Set(kActorRunciter, kSetKP07)) {
 			Actor_Face_Actor(kActorMcCoy, kActorRunciter, true);
 			Actor_Face_Actor(kActorRunciter, kActorMcCoy, true);
-			Actor_Says(kActorMcCoy, 3970, 14); //00-3970.AUD	Hey.
-			if (Actor_Clue_Query(kActorMcCoy, kClueLabCorpses)
-			|| Actor_Clue_Query(kActorMcCoy, kClueLucyInterview)
-			|| Actor_Clue_Query(kActorMcCoy, kClueRunciterConfession1)
-			|| Actor_Clue_Query(kActorMcCoy, kClueZubensMotive)) {
-				Actor_Says(kActorMcCoy, 3970, 18); //00-8605.AUD	You staying out of trouble, buddy?.
+			if (!Actor_Clue_Query(kActorMcCoy, kClueZubensMotive)) {
+				Actor_Says(kActorMcCoy, 3970, 14); //00-3970.AUD	Hey.
+			} else {
+				Actor_Says(kActorMcCoy, 4825, 18); //00-4825.AUD	What are you doing here?
 			}
 			Actor_Says(kActorRunciter, 730, 17); //15-0730.AUD	Please. Just leave me alone.
+			if (Actor_Clue_Query(kActorMcCoy, kClueZubensMotive)) {
+				Actor_Says(kActorMcCoy, 3970, 18); //00-8605.AUD	You staying out of trouble, buddy?
+				Delay(500);
+				Actor_Face_Actor(kActorMcCoy, kActorClovis, true);
+				Actor_Face_Actor(kActorRunciter, kActorClovis, true);
+				Actor_Face_Actor(kActorClovis, kActorMcCoy, true);
+				Actor_Says(kActorClovis, 50, 14); //05-0050.AUD	This one? He's not a problem. He's an opportunity.
+				Delay(1000);
+				Actor_Face_Actor(kActorMcCoy, kActorRunciter, true);
+				Actor_Face_Actor(kActorRunciter, kActorMcCoy, true);
+				Actor_Says(kActorMcCoy, 745, 14); //00-0745.AUD	I'm watching you, pal.
+			}
 		}
 	}
 }
@@ -464,6 +474,7 @@ void AIScriptRunciter::OtherAgentEnteredCombatMode(int otherActorId, int combatM
 			}
 		}
 		Delay(1000);
+		Actor_Face_Actor(kActorRunciter, kActorMcCoy, true);
 		Actor_Says(kActorRunciter, 730, 13); //15-0730.AUD	Please. Just leave me alone.
 		Actor_Set_Targetable(kActorRunciter, false);
 		Game_Flag_Reset(kFlagRunciterConfronted);

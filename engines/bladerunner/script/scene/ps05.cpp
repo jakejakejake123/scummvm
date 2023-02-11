@@ -198,6 +198,7 @@ void SceneScriptPS05::PlayerWalkedIn() {
 			Loop_Actor_Walk_To_Waypoint(kActorMcCoy, 2, 24, true, false);
 			Ambient_Sounds_Remove_All_Non_Looping_Sounds(true);
 			Ambient_Sounds_Remove_All_Looping_Sounds(1u);
+			Game_Flag_Set(kFlagPS05TV1);
 			Game_Flag_Set(kFlagPS05Entered);
 			Set_Enter(kSetPS15, kScenePS15);
 		}
@@ -276,26 +277,38 @@ void SceneScriptPS05::turnOnTV() {
 			Overlay_Play("PS05OVER", 0, true, false, 0);
 			if (_vm->_cutContent) {
 				Game_Flag_Set(kFlagZhoraNewsReport);
-			}
-			if (Actor_Query_Friendliness_To_Other(kActorClovis, kActorMcCoy) > Actor_Query_Friendliness_To_Other(kActorSteele, kActorMcCoy)) {
-				ADQ_Add(kActorNewscaster, 120, kAnimationModeTalk);
-				ADQ_Add(kActorNewscaster, 130, kAnimationModeTalk);
-				ADQ_Add(kActorNewscaster, 140, kAnimationModeTalk);
-				ADQ_Add(kActorNewscaster, 150, kAnimationModeTalk);
-				if (_vm->_cutContent) {
+				if (Actor_Query_Friendliness_To_Other(kActorGuzza, kActorMcCoy) > 50) {
+					ADQ_Add(kActorNewscaster, 120, kAnimationModeTalk);
+					ADQ_Add(kActorNewscaster, 130, kAnimationModeTalk);
+					ADQ_Add(kActorNewscaster, 140, kAnimationModeTalk);
+					ADQ_Add(kActorNewscaster, 150, kAnimationModeTalk);
 					ADQ_Add(kActorGuzza, 1570, kAnimationModeTalk);
 					ADQ_Add(kActorGuzza, 1580, kAnimationModeTalk);
 					ADQ_Add(kActorGuzza, 1590, kAnimationModeTalk);
 					ADQ_Add_Pause(1000);
 					ADQ_Add(kActorGuzza, 1600, kAnimationModeTalk);
+				} else {
+					ADQ_Add(kActorNewscaster, 90, kAnimationModeTalk);
+					ADQ_Add(kActorNewscaster, 100, kAnimationModeTalk);
+					ADQ_Add(kActorNewscaster, 110, kAnimationModeTalk);
+					ADQ_Add(kActorGuzza, 1540, kAnimationModeTalk); //04-1540.AUD	It was a good clean take-down.
+					ADQ_Add(kActorGuzza, 1550, kAnimationModeTalk); //04-1550.AUD	The public should thank us for retiring these skin-jobs before they get into the real trouble.
+					ADQ_Add(kActorGuzza, 1560, kAnimationModeTalk); //04-1560.AUD	You want to get that thing out of my face before it ends up shooting film where the sun don’t shine?
 				}
 			} else {
-				ADQ_Add(kActorNewscaster, 90, kAnimationModeTalk);
-				ADQ_Add(kActorNewscaster, 100, kAnimationModeTalk);
-				ADQ_Add(kActorNewscaster, 110, kAnimationModeTalk);
-				ADQ_Add(kActorGuzza, 1540, kAnimationModeTalk);
-				ADQ_Add(kActorGuzza, 1550, kAnimationModeTalk);
-				ADQ_Add(kActorGuzza, 1560, kAnimationModeTalk);
+				if (Actor_Query_Friendliness_To_Other(kActorClovis, kActorMcCoy) > Actor_Query_Friendliness_To_Other(kActorSteele, kActorMcCoy)) {
+					ADQ_Add(kActorNewscaster, 120, kAnimationModeTalk);
+					ADQ_Add(kActorNewscaster, 130, kAnimationModeTalk);
+					ADQ_Add(kActorNewscaster, 140, kAnimationModeTalk);
+					ADQ_Add(kActorNewscaster, 150, kAnimationModeTalk);
+				} else {
+					ADQ_Add(kActorNewscaster, 90, kAnimationModeTalk);
+					ADQ_Add(kActorNewscaster, 100, kAnimationModeTalk);
+					ADQ_Add(kActorNewscaster, 110, kAnimationModeTalk);
+					ADQ_Add(kActorGuzza, 1540, kAnimationModeTalk);
+					ADQ_Add(kActorGuzza, 1550, kAnimationModeTalk);
+					ADQ_Add(kActorGuzza, 1560, kAnimationModeTalk);
+				}
 			}
 			Game_Flag_Set(kFlagPS05TV2);
 		}

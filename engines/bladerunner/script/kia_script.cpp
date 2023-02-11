@@ -155,7 +155,11 @@ void KIAScript::SCRIPT_KIA_DLL_Play_Clue_Asset_Script(int notUsed, int clueId) {
 		break;
 	case kClueDragonflyAnklet:
 		KIA_Play_Photograph(4);
-		KIA_Play_Actor_Dialogue(kActorVoiceOver, 4050);
+		if (_vm->_cutContent) {
+			KIA_Play_Actor_Dialogue(kActorMcCoy, 1600);//00-1600.AUD	Lucy?
+		} else {
+			KIA_Play_Actor_Dialogue(kActorVoiceOver, 4050);
+		}
 		break;
 	case kClueReferenceLetter:
 		KIA_Play_Slice_Model(kModelAnimationReferenceLetter);
@@ -756,7 +760,11 @@ void KIAScript::SCRIPT_KIA_DLL_Play_Clue_Asset_Script(int notUsed, int clueId) {
 		}
 		break;
 	case kClueStaggeredbyPunches:
-		KIA_Play_Actor_Dialogue(kActorVoiceOver, 4370);
+		if (!_vm->_cutContent) {
+			KIA_Play_Actor_Dialogue(kActorVoiceOver, 4370);
+		} else {
+			KIA_Play_Actor_Dialogue(kActorVoiceOver, 3560); //99-3560.AUD	Ugh. This was all too familiar territory. Jackhammers were drilling through my brain and my stomach felt like it had been bathed in battery acid.
+		}
 		KIA_Play_Actor_Dialogue(kActorVoiceOver, 4380);
 		KIA_Play_Actor_Dialogue(kActorVoiceOver, 4390);
 		KIA_Play_Actor_Dialogue(kActorVoiceOver, 4400);
@@ -764,7 +772,11 @@ void KIAScript::SCRIPT_KIA_DLL_Play_Clue_Asset_Script(int notUsed, int clueId) {
 	case kClueMaggieBracelet:
 		KIA_Play_Slice_Model(kModelAnimationMaggieBracelet);
 		if (_vm->_cutContent) {
-			KIA_Play_Actor_Dialogue(kActorVoiceOver, 4030);
+			if (!Player_Query_Agenda() == kPlayerAgendaPolite) { 
+				KIA_Play_Actor_Dialogue(kActorVoiceOver, 4030);
+			} else {
+				KIA_Play_Actor_Dialogue(kActorMcCoy, 8795); //00-8795.AUD	A bracelet.
+			}
 		}
 		break;
 	case kClueEnvelope:
@@ -879,7 +891,9 @@ void KIAScript::SCRIPT_KIA_DLL_Play_Clue_Asset_Script(int notUsed, int clueId) {
 		break;
 	case kClueEarlyQInterview:
 		KIA_Play_Actor_Dialogue(kActorEarlyQ, 140);
-		KIA_Play_Actor_Dialogue(kActorEarlyQ, 150);
+		if (!_vm->_cutContent) {
+			KIA_Play_Actor_Dialogue(kActorEarlyQ, 150);
+		}
 		break;
 	case kClueStrangeScale1:
 		KIA_Play_Slice_Model(kModelAnimationStrangeScale);
@@ -2342,15 +2356,7 @@ void KIAScript::SCRIPT_KIA_DLL_Play_Clue_Asset_Script(int notUsed, int clueId) {
 		KIA_Play_Actor_Dialogue(kActorClovis, 30); //05-0030.AUD	Unstable personalities to say the least.
 		KIA_Play_Actor_Dialogue(kActorSadik, 10); //08-0010.AUD	I told you we should have blown up the whole block.
 		KIA_Play_Actor_Dialogue(kActorClovis, 40); //05-0040.AUD	It would have created problems down the line.
-		KIA_Play_Actor_Dialogue(kActorSadik, 20); //08-0020.AUD	We got problem now, mon.
-		KIA_Play_Actor_Dialogue(kActorSadik, 30); //08-0030.AUD	I'm thinkin' our brother not hearin' too good.
-		KIA_Play_Actor_Dialogue(kActorClovis, 70); //05-0070.AUD	Oh, he hears us.
-		KIA_Play_Actor_Dialogue(kActorClovis, 80); //05-0080.AUD	Isn't that right, McCoy?
-		KIA_Play_Actor_Dialogue(kActorSadik, 220); ////08-0220.AUD	Clovis wants to see you. Bring you back into family.
-		KIA_Play_Actor_Dialogue(kActorSadik, 40); //08-0040.AUD	You ready to give up fruitless nightmare, mon?
-		KIA_Play_Actor_Dialogue(kActorSadik, 50); //08-0050.AUD	Come back to family?
-		KIA_Play_Actor_Dialogue(kActorClovis, 90); //05-0090.AUD	He doesn't have a choice.
-		KIA_Play_Actor_Dialogue(kActorClovis, 100); //05-0100.AUD	He never did.
+		KIA_Play_Actor_Dialogue(kActorSadik, 220); //08-0220.AUD	Clovis wants to see you. Bring you back into family.
 		break;
 	case kClueCrystalRetiredIzo:
 		KIA_Play_Actor_Dialogue(kActorMcCoy, 4825); //00-4825.AUD	What are you doing here?
