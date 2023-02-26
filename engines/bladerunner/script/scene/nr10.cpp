@@ -189,9 +189,8 @@ void SceneScriptNR10::ActorChangedGoal(int actorId, int newGoal, int oldGoal, bo
 void SceneScriptNR10::PlayerWalkedIn() {
 	if (Actor_Query_Goal_Number(kActorDektora) == kGoalDektoraNR08GoToNR10) {
 		if (_vm->_cutContent) {
-			if (Player_Query_Agenda() != kPlayerAgendaPolite
-			&& !Game_Flag_Query(kFlagMcCoyIsHelpingReplicants)
-			&& !Actor_Clue_Query(kActorDektora, kClueMcCoyHelpedDektora)) {
+			if (Global_Variable_Query(kVariableHollowayArrest) == 1
+			|| !Game_Flag_Query(kFlagMcCoyIsHelpingReplicants)) {
 				Player_Set_Combat_Mode(true);
 			}
 		} else {

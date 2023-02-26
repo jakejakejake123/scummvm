@@ -110,14 +110,14 @@ void SceneScriptCT07::PlayerWalkedIn() {
 				AI_Movement_Track_Flush(kActorZuben);
 				Actor_Face_Actor(kActorZuben, kActorMcCoy, true);
 				Player_Set_Combat_Mode(false);
-				Actor_Start_Speech_Sample(kActorMcCoy, 455); //00-0455.AUD	Relax. Nobody's gonna get retired. Okay?
+				Actor_Says(kActorMcCoy, 455, -1); //00-0455.AUD	Relax. Nobody's gonna get retired. Okay?
 				Actor_Says(kActorZuben, 100, 19);
 				Actor_Says(kActorMcCoy, 470, 12); //00-0470.AUD	Just talk. That's all.
-				Actor_Says(kActorZuben, 110, 18);
+				Actor_Says(kActorZuben, 110, 18); //19-0110.AUD	So talk. 
 				Actor_Says(kActorMcCoy, 475, 12);
-				Actor_Says(kActorZuben, 120, 15);
+				Actor_Says(kActorZuben, 120, 15); //19-0120.AUD	Aah, police…
 				Actor_Says(kActorMcCoy, 480, 16);
-				Actor_Says(kActorZuben, 130, 17);
+				Actor_Says(kActorZuben, 130, 17); //19-0130.AUD	Rep detect?
 				Actor_Says(kActorMcCoy, 485, 14);
 				if (Player_Query_Agenda() == kPlayerAgendaSurly 
 				|| Player_Query_Agenda() == kPlayerAgendaErratic) {
@@ -161,15 +161,12 @@ void SceneScriptCT07::PlayerWalkedIn() {
 			Actor_Says(kActorZuben, 100, 19);
 			Actor_Says(kActorMcCoy, 470, 12); //00-0470.AUD	Just talk. That's all.
 			Actor_Says(kActorZuben, 110, 18);
-			Music_Stop(1u);
 			Actor_Says(kActorMcCoy, 475, 12);
-			Actor_Says(kActorZuben, 120, 15);
 			Actor_Says(kActorMcCoy, 480, 16);
+			Actor_Says(kActorMcCoy, 485, 14);
 			Delay(1000);
 			Actor_Says(kActorMcCoy, 7295, 11); //00-7295.AUD	The girl. I need to know where's the girl.
 			if (Game_Flag_Query(kFlagMcCoyIsHelpingReplicants)) {
-				Actor_Says(kActorZuben, 200, 12); //19-0200.AUD	Girl?
-				Actor_Says(kActorMcCoy, 7315, 16); //00-7315.AUD	Lucy.
 				Actor_Says(kActorZuben, 210, 12); //19-0210.AUD	She daughter. She with Clovis.
 				Actor_Says(kActorZuben, 220, 14); //19-0220.AUD	You not hurt her.
 				Actor_Says(kActorMcCoy, 7940, 13);	//00-7940.AUD	Right.
@@ -203,12 +200,18 @@ void SceneScriptCT07::PlayerWalkedIn() {
 				Actor_Says(kActorMcCoy, 7360, 11); //00-7360.AUD	Did he do things to Lucy?
 				Delay(2000);
 				Actor_Says(kActorMcCoy, 2390, kAnimationModeIdle); //00-2390.AUD	Oh, God. No.
-				Delay(1000);
+				Delay(2000);
 				if (Player_Query_Agenda() != kPlayerAgendaPolite) {
 					Actor_Says(kActorMcCoy, 7365, 12);	//00-7365.AUD	You should have killed him.
 				}
 				Actor_Says(kActorZuben, 320, 12); //19-0320.AUD	Clovis say Runciter love animals. Runciter still alive so he hurt now. Know what pain is.
 				Actor_Says(kActorZuben, 330, 12); //19-0330.AUD	Kill him, he not hurt. Just dead.
+				Delay(1000);
+				Actor_Says(kActorMcCoy, 7290, 12); //00-7290.AUD	Listen it's very important I talked to Clovis.
+				Actor_Says(kActorZuben, 180, 15); //19-0180.AUD	No way. You enemy of Clovis.
+				Actor_Says(kActorMcCoy, 7310, 16); //00-7310.AUD	No, I'm trying to help him and you.
+				Actor_Says(kActorZuben, 190, 15); //19-0190.AUD	We do good without you. Do good without anybody.
+				Actor_Says(kActorMcCoy, 5065, 18); //00-5065.AUD	Is that right?
 				Actor_Clue_Acquire(kActorMcCoy, kClueZubensMotive, false, kActorZuben);
 				Delay(2000);
 				Actor_Says(kActorZuben, 170, 14); //19-0170.AUD	Now I go.

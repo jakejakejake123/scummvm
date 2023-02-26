@@ -40,7 +40,7 @@ void SceneScriptBB07::InitializeScene() {
 
 	Scene_2D_Region_Add(0, 308, 283, 354, 308);
 	//Made it so you can now click on Sebastians computer and McCoy comments on it.
-	if (_vm->_cutContent && !Game_Flag_Query(kFlagSebastiansComputerChecked)) {
+	if (_vm->_cutContent) {
 		Scene_2D_Region_Add(1, 556, 230, 580, 250); 
 	}
 	Ambient_Sounds_Add_Looping_Sound(kSfxUGBED1,   44, 0, 1);
@@ -59,6 +59,13 @@ void SceneScriptBB07::InitializeScene() {
 	Ambient_Sounds_Add_Sound(kSfxHAUNT2,  5,  50, 17, 27, -100, 100, -101, -101, 0, 0);
 
 	Overlay_Play("BB07OVER", 0, true, false, 0);
+	if (_vm->_cutContent) {
+		if (Game_Flag_Query(kFlagSadikIsReplicant)) {
+			Overlay_Play("BB07OVER", 1, false, true, 0);
+			Overlay_Play("BB07OVER", 2, true, false, 0);
+			Game_Flag_Set(kFlagBB07ElectricityOn);
+		}
+	}
 }
 
 void SceneScriptBB07::SceneLoaded() {
@@ -78,23 +85,39 @@ bool SceneScriptBB07::ClickedOn3DObject(const char *objectName, bool a2) {
 			if ( Game_Flag_Query(kFlagBB07ElectricityOn)
 			 && !Game_Flag_Query(kFlagBB07PrinterChecked)
 			) {
-				Actor_Voice_Over(130, kActorVoiceOver); //99-0130.AUD	DNA research, incept dates.
 				if (_vm->_cutContent) {
-					Actor_Change_Animation_Mode(kActorMcCoy, 23);
-					Delay(800);
-					Item_Pickup_Spin_Effect_From_Actor(kModelAnimationDNADataDisc, kActorMcCoy, 0, 0);
-					Delay(800);
-					Actor_Voice_Over(4360, kActorVoiceOver); //99-4360.AUD	The suspect was definitely looking for something at the Bradbury.
+					if (!Game_Flag_Query(kFlagSadikIsReplicant)) {
+						Actor_Voice_Over(130, kActorVoiceOver); //99-0130.AUD	DNA research, incept dates.		
+						Actor_Change_Animation_Mode(kActorMcCoy, 23);
+						Delay(800);
+						Item_Pickup_Spin_Effect_From_Actor(kModelAnimationDNADataDisc, kActorMcCoy, 0, 0);
+						Delay(800);
+						Actor_Voice_Over(4360, kActorVoiceOver); //99-4360.AUD	The suspect was definitely looking for something at the Bradbury.
+						Actor_Clue_Acquire(kActorMcCoy, kClueDNASebastian, true, kActorSebastian);
+					} else {
+						Actor_Voice_Over(3700, kActorVoiceOver);
+					}
 				} else {
-					Item_Pickup_Spin_Effect(kModelAnimationDNADataDisc, 439, 242);
+					Actor_Voice_Over(130, kActorVoiceOver); //99-0130.AUD	DNA research, incept dates.		
+					Item_Pickup_Spin_Effect_From_Actor(kModelAnimationDNADataDisc, kActorMcCoy, 0, 0);
+					Actor_Voice_Over(140, kActorVoiceOver); //99-0140.AUD	A lot of jargon but I bet my spinner it was valuable to somebody.
+					Actor_Clue_Acquire(kActorMcCoy, kClueDNASebastian, true, kActorSebastian);	
 				}
 				Game_Flag_Set(kFlagBB07PrinterChecked);
-				Actor_Clue_Acquire(kActorMcCoy, kClueDNASebastian, true, kActorSebastian);
+				
 			} else if (Game_Flag_Query(kFlagBB07ElectricityOn)
 			        && Game_Flag_Query(kFlagBB07PrinterChecked)
 			) {
 				Actor_Face_Object(kActorMcCoy, "PRINTER", true);
-				Actor_Says(kActorMcCoy, 8570, 13);
+				if (_vm->_cutContent) {
+					if (!Game_Flag_Query(kFlagSadikIsReplicant)) {
+						Actor_Says(kActorMcCoy, 8570, 13);
+					} else {
+						Actor_Voice_Over(3700, kActorVoiceOver);
+					}
+				} else {
+					Actor_Says(kActorMcCoy, 8570, 13);
+				}
 			} else {
 				Actor_Face_Object(kActorMcCoy, "PRINTER", true);
 				Actor_Says(kActorMcCoy, 8575, 13);
@@ -166,7 +189,6 @@ bool SceneScriptBB07::ClickedOn2DRegion(int region) {
 				Ambient_Sounds_Play_Sound(kSfxCOMPON1, 40, 20, 20, 99);
 				Overlay_Play("BB07OVER", 1, false, true, 0);
 				Overlay_Play("BB07OVER", 2, true, false, 0);
-				Scene_2D_Region_Remove(1);
 				Game_Flag_Set(kFlagBB07ElectricityOn);
 				if (!Game_Flag_Query(kFlagBB07PrinterChecked)) {
 					Actor_Says(kActorAnsweringMachine, 0, kAnimationModeTalk);
@@ -183,7 +205,6 @@ bool SceneScriptBB07::ClickedOn2DRegion(int region) {
 			Actor_Voice_Over(150, kActorVoiceOver); //99-0150.AUD	The computer was locked down with what looked like a modified Tyrell security device.
 			Actor_Voice_Over(160, kActorVoiceOver); //99-0160.AUD	Voice recognition, palm print. The works.
 			Actor_Voice_Over(170, kActorVoiceOver); //99-0170.AUD	There's no way I was getting into this guy's files.
-			Game_Flag_Set(kFlagSebastiansComputerChecked);
 			Scene_2D_Region_Remove(1);
 		}
 	}

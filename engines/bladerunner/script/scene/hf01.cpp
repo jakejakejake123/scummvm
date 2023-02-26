@@ -582,13 +582,9 @@ void SceneScriptHF01::PlayerWalkedIn() {
 			Actor_Says(kActorZuben, 180, 15); //19-0180.AUD	No way. You enemy of Clovis.
 			if (Game_Flag_Query(kFlagMcCoyIsHelpingReplicants)) {
 				Actor_Says(kActorMcCoy, 7310, 16); //00-7310.AUD	No, I'm trying to help him and you.
-				if (Game_Flag_Query(kFlagZubenIsReplicant)) {
-					Actor_Says(kActorZuben, 190, 15); //19-0190.AUD	We do good without you. Do good without anybody.
-					Actor_Says(kActorMcCoy, 5065, 18); //00-5065.AUD	Is that right?
-					Delay(1000);
-				} else {
-					Delay(2000);
-				}
+				Actor_Says(kActorZuben, 190, 15); //19-0190.AUD	We do good without you. Do good without anybody.
+				Actor_Says(kActorMcCoy, 5065, 18); //00-5065.AUD	Is that right?
+				Delay(2000);
 			}
 			Actor_Says(kActorZuben, 170, 14); //19-0170.AUD	Now I go.
 			if (Player_Query_Agenda() == kPlayerAgendaPolite) {
@@ -1482,7 +1478,7 @@ void SceneScriptHF01::talkWithDektora() {
 			Actor_Says(kActorDektora, 50, kAnimationModeTalk); //03-0050.AUD	There’s a strange bond that exists between the two of you.
 			Actor_Says(kActorDektora, 60, kAnimationModeTalk); //03-0060.AUD	I felt it from the start.
 			Actor_Says(kActorDektora, 70, kAnimationModeTalk); //03-0070.AUD	That’s one of the reasons I was so drawn to you.
-		} 
+		}
 	} else {
 		Actor_Says(kActorMcCoy, 1405, kAnimationModeTalk); //00-1405.AUD	Where's Clovis?
 		Actor_Says(kActorDektora, 20, kAnimationModeTalk); //03-0020.AUD	He’s not coming with us.
@@ -1496,24 +1492,17 @@ void SceneScriptHF01::talkWithDektora() {
 	}
 	if (_vm->_cutContent) {
 		Actor_Set_Targetable(kActorDektora, false);
-		if (Player_Query_Agenda() != kPlayerAgendaSurly 
-		&& Player_Query_Agenda() != kPlayerAgendaErratic) {
-			if (Actor_Clue_Query(kActorMcCoy, kClueDragonflyBelt)) {
-				Actor_Says(kActorMcCoy, 5150, 18); //00-5150.AUD	One more thing.
-				Actor_Change_Animation_Mode(kActorMcCoy, 23);
-				Actor_Change_Animation_Mode(kActorDektora, 23);
-				Delay(800);
-				Actor_Clue_Lose(kActorMcCoy, kClueDragonflyBelt);
-				Actor_Clue_Acquire(kActorDektora, kClueDragonflyBelt, true, -1);
-				Item_Pickup_Spin_Effect_From_Actor(kModelAnimationDragonflyBelt, kActorDektora, 0, 0);
-				Delay(1500);
-				Actor_Says(kActorMcCoy, 8170, 13); //00-8170.AUD	There you go.
-				Delay(1000);
-			}
-		}
 	}
 	Actor_Says(kActorMcCoy, 1420, kAnimationModeTalk); //00-1420.AUD	Are you ready?
-	Actor_Says(kActorDektora, 80, kAnimationModeTalk); //03-0080.AUD	Like I’m beginning a whole new life.
+	if (_vm->_cutContent) {
+		if (!Game_Flag_Query(kFlagDektoraIsReplicant)) {
+			Actor_Says(kActorDektora, 80, kAnimationModeTalk); //03-0080.AUD	Like I’m beginning a whole new life.
+		} else {
+			Actor_Says(kActorDektora, 1480, kAnimationModeTalk); //03-1480.AUD	Yes.
+		}
+	} else {
+		Actor_Says(kActorDektora, 80, kAnimationModeTalk); //03-0080.AUD	Like I’m beginning a whole new life.
+	}
 }
 
 void SceneScriptHF01::talkWithLucy() {

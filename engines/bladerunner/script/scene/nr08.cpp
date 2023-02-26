@@ -230,36 +230,41 @@ void SceneScriptNR08::PlayerWalkedIn() {
 
 	if (Actor_Query_Goal_Number(kActorSteele) == kGoalSteeleNR01GoToNR08) {
 		Actor_Says(kActorSteele, 1640, 12);
-		if (!Game_Flag_Query(kFlagDirectorsCut)) {
-			if (_vm->_cutContent) {
-				if (Player_Query_Agenda() == kPlayerAgendaPolite) {
-					Delay(1000);
-					Actor_Says(kActorMcCoy, 7815, 13); //00-7815.AUD	No.
-					Delay(1000);
-				} else {
-					Actor_Says(kActorMcCoy, 3790, 13); //00-3790.AUD	Regular folks, Steele. Just like you and me.
-					Actor_Says(kActorSteele, 1650, 14);
-				}
+		if (_vm->_cutContent) {
+			if (Player_Query_Agenda() == kPlayerAgendaPolite) {
+				Actor_Says(kActorMcCoy, 7835, 13); //00-7835.AUD	Is that so?
+				Delay(1000);
 			} else {
 				Actor_Says(kActorMcCoy, 3790, 13); //00-3790.AUD	Regular folks, Steele. Just like you and me.
 				Actor_Says(kActorSteele, 1650, 14);
-			}	
+			}
+		} else if (!Game_Flag_Query(kFlagDirectorsCut)) {
+			Actor_Says(kActorMcCoy, 3790, 13); //00-3790.AUD	Regular folks, Steele. Just like you and me.
+			Actor_Says(kActorSteele, 1650, 14);
+		}	
+		Actor_Says(kActorSteele, 1660, 12); //01-1660.AUD	You see it anywhere?
+		if (_vm->_cutContent) {
+			if (Game_Flag_Query(kFlagMcCoyIsHelpingReplicants)) {
+				Actor_Says(kActorMcCoy, 7815, 13); //00-7815.AUD	No.
+			} else {
+				Actor_Says(kActorMcCoy, 3795, 16); //00-3795.AUD	Not yet. You’re sure she’s in here?
+			}
+		} else {
+			Actor_Says(kActorMcCoy, 3795, 16); //00-3795.AUD	Not yet. You’re sure she’s in here?
 		}
-		Actor_Says(kActorSteele, 1660, 12);
-		Actor_Says(kActorMcCoy, 3795, 16);
-		Actor_Says(kActorSteele, 1670, 13);
-		Actor_Says(kActorSteele, 1680, 14);
+		Actor_Says(kActorSteele, 1670, 13); //01-1670.AUD	I’m gonna look backstage.
+		Actor_Says(kActorSteele, 1680, 14); //01-1680.AUD	Check the balcony and cover the exit.
 		Actor_Says(kActorSteele, 1690, 15); //01-1690.AUD	I don’t want this one giving us the blow-off.
 		// Added in some dialogue for Crystal and McCoy.
 		if (_vm->_cutContent) {
 			Actor_Face_Actor(kActorMcCoy, kActorSteele, true);
-			if (Player_Query_Agenda() == kPlayerAgendaSurly 
-			|| Player_Query_Agenda() == kPlayerAgendaErratic) {
+			if (Actor_Query_Friendliness_To_Other(kActorSteele, kActorMcCoy) < 60) {
 				Actor_Says(kActorMcCoy, 6285, 14); //00-6285.AUD	Who made you Captain?
+				Actor_Says(kActorSteele, 200, 13);  //01-0200.AUD	Don’t even ask me who’d be doing the leading, Rookie.
 			} else {
 				Actor_Says(kActorMcCoy, 690, kAnimationModeTalk); //00-0690.AUD	Gotcha.
+				Actor_Says(kActorSteele, 1530, 15); //01-1530.AUD	Let’s attend to some business.
 			}
-			Actor_Says(kActorSteele, 1530, 15); //01-1530.AUD	Let’s attend to some business.
 			Music_Stop(1u);
 			Music_Play(kMusicBatl226M, 50, 0, 2, -1, kMusicLoopPlayOnce, 0);
 		}

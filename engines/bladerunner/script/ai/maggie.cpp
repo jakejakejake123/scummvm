@@ -643,8 +643,11 @@ bool AIScriptMaggie::GoalChanged(int currentGoalNumber, int newGoalNumber) {
 			Player_Loses_Control();
 			Actor_Change_Animation_Mode(kActorMcCoy, kAnimationModeDie);
 			Actor_Retired_Here(kActorMcCoy, 6, 6, 1, -1);
-		} else {
+		} else {		
 			Delay(3000);
+			if (_vm->_cutContent) { 
+				Music_Play(kMusicCrysDie1, 25, 0, 1, -1, kMusicLoopPlayOnce, 1);
+			}
 			Scene_Exits_Disable();
 			Actor_Says(kActorMcCoy, 2235, 12);
 			if (Actor_Query_Is_In_Current_Set(kActorSteele)) {
@@ -653,6 +656,11 @@ bool AIScriptMaggie::GoalChanged(int currentGoalNumber, int newGoalNumber) {
 			}
 			Delay(2000);
 			Actor_Says(kActorMcCoy, 2390, 13);
+			if (_vm->_cutContent) { 
+				Delay(2000);
+				Actor_Says(kActorMcCoy, 2305, 19); //00-2305.AUD	I’m sorry.
+				Delay(2000);
+			}
 			// Altered code so if Sadik is dead Clovis will be the one who kills Maggie. His dialogue with McCoy is already fixed in Clovis ai sheet and this code this will trigger it. 
 			if (_vm->_cutContent) { 
 				if (Actor_Query_Goal_Number(kActorSadik) == kGoalSadikGone) {
@@ -668,30 +676,66 @@ bool AIScriptMaggie::GoalChanged(int currentGoalNumber, int newGoalNumber) {
 					Actor_Says(kActorClovis, 120, kAnimationModeTalk); //05-0120.AUD	Can’t see it yet? You came down to Terra with us, McCoy.
 					Actor_Says(kActorClovis, 130, kAnimationModeTalk); //05-0130.AUD	The police got a hold of you and Tyrell created your past.
 					Actor_Says(kActorClovis, 140, kAnimationModeTalk);
-					if (Actor_Clue_Query(kActorMcCoy, kCluePhoneCallClovis)) {
-						Actor_Says(kActorMcCoy, 2260, kAnimationModeTalk); //00-2260.AUD	That line almost worked before, Clovis.
-					}
 					Actor_Says(kActorClovis, 150, kAnimationModeTalk); //05-0150.AUD	Come join me. Our final party before returning to the heavens.
-					Actor_Says(kActorClovis, 1330, kAnimationModeTalk); //05-1330.AUD	To the Heavens, brother. Off-World.
 					Loop_Actor_Walk_To_XYZ(kActorClovis, -731.0f, 8.26f, -657.0f, 0, false, false, false);
 					Actor_Put_In_Set(kActorClovis, kSetKP07);
 					Actor_Set_Goal_Number(kActorClovis, kGoalClovisKP07Wait);
+					Actor_Says(kActorMcCoy, 2260, kAnimationModeTalk); //00-2260.AUD	That line almost worked before, Clovis.
 					Scene_Exits_Enable();
 				} else {
-					Actor_Says(kActorSadik, 60, 3);
-					Actor_Says(kActorMcCoy, 2240, kAnimationModeTalk); //00-2240.AUD	You bastard! She was an innocent!
-					Actor_Says(kActorSadik, 70, 3);
-					Actor_Says(kActorSadik, 80, 3);
-					Actor_Says(kActorMcCoy, 2245, 3);
-					Actor_Says(kActorSadik, 90, 3);
-					Actor_Says(kActorSadik, 100, 3);
-					Player_Set_Combat_Mode(true);
-					Actor_Says(kActorMcCoy, 2250, 3);
-					Music_Play(kMusicMoraji, 71, 0, 0, -1, kMusicLoopPlayOnce, 2);
-					Loop_Actor_Walk_To_XYZ(kActorMcCoy, -929.61f, 1.31f, 893.68f, 0, true, true, false);
-					Actor_Face_Actor(kActorMcCoy, kActorSadik, true);
-					Actor_Clue_Acquire(kActorMcCoy, kClueMcCoyRetiredSadik, true, kActorSadik);
-					Actor_Set_Goal_Number(kActorSadik, 413);
+					if (Game_Flag_Query(kFlagSadikIsReplicant)) {
+						Actor_Says(kActorSadik, 60, 3);
+						if (Player_Query_Agenda() == kPlayerAgendaSurly 
+						|| (Player_Query_Agenda() == kPlayerAgendaErratic)) {
+							Actor_Says(kActorMcCoy, 2255, kAnimationModeTalk); //00-2255.AUD	She was innocent, you bastard!
+						} else {
+							Actor_Says(kActorMcCoy, 2240, kAnimationModeTalk); //00-2240.AUD	You bastard! She was an innocent!
+						}
+						Actor_Says(kActorSadik, 70, 3);
+						Actor_Says(kActorSadik, 80, 3);
+						Actor_Says(kActorMcCoy, 2245, 3);
+						Actor_Says(kActorSadik, 90, 3);
+						Actor_Says(kActorSadik, 100, 3);
+						Player_Set_Combat_Mode(true);
+						Actor_Says(kActorMcCoy, 2250, 3);
+						Music_Play(kMusicMoraji, 71, 0, 0, -1, kMusicLoopPlayOnce, 2);
+						Loop_Actor_Walk_To_XYZ(kActorMcCoy, -929.61f, 1.31f, 893.68f, 0, true, true, false);
+						Actor_Face_Actor(kActorMcCoy, kActorSadik, true);
+						Actor_Clue_Acquire(kActorMcCoy, kClueMcCoyRetiredSadik, true, kActorSadik);
+						Actor_Set_Goal_Number(kActorSadik, 413);
+					} else {
+						Actor_Face_Actor(kActorMcCoy, kActorClovis, true);
+						Actor_Face_Actor(kActorClovis, kActorMcCoy, true);
+						Actor_Says(kActorClovis, 110, kAnimationModeTalk);
+						if (Player_Query_Agenda() == kPlayerAgendaSurly 
+						|| (Player_Query_Agenda() == kPlayerAgendaErratic)) {
+							Actor_Says(kActorMcCoy, 2255, kAnimationModeTalk); //00-2255.AUD	She was innocent, you bastard!
+						} else {
+							Actor_Says(kActorMcCoy, 2240, kAnimationModeTalk); //00-2240.AUD	You bastard! She was an innocent!
+						}
+						Actor_Says(kActorClovis, 120, kAnimationModeTalk); //05-0120.AUD	Can’t see it yet? You came down to Terra with us, McCoy.
+						Actor_Says(kActorClovis, 130, kAnimationModeTalk); //05-0130.AUD	The police got a hold of you and Tyrell created your past.
+						Actor_Says(kActorClovis, 140, kAnimationModeTalk);
+						Actor_Says(kActorClovis, 150, kAnimationModeTalk); //05-0150.AUD	Come join me. Our final party before returning to the heavens.	
+						Loop_Actor_Walk_To_XYZ(kActorClovis, -731.0f, 8.26f, -657.0f, 0, false, false, false);
+						Actor_Put_In_Set(kActorClovis, kSetKP07);
+						Actor_Set_Goal_Number(kActorClovis, kGoalClovisKP07Wait);
+						Actor_Says(kActorMcCoy, 2260, kAnimationModeTalk); //00-2260.AUD	That line almost worked before, Clovis.
+						Actor_Says(kActorSadik, 90, 3); //08-0090.AUD	You don’t remember it I’m thinking.
+						Actor_Says(kActorSadik, 100, 3); //08-0100.AUD	None of it. Them false memories. They really worked you good.
+						Actor_Says(kActorMcCoy, 2245, 14); //00-2245.AUD	That-- that’s a lie!
+						Sound_Play(kSfxSHOTGUN1, 90, 0, 0, 50);
+						Actor_Change_Animation_Mode(kActorMcCoy, 21);
+						Delay(2000);
+						Actor_Says(kActorSadik, 60, 3); //08-0060.AUD	You like my present, mon?
+						Player_Set_Combat_Mode(true);
+						Actor_Says(kActorMcCoy, 2250, 3); //00-2250.AUD	Come out and show yourself, you coward!
+						Music_Play(kMusicMoraji, 71, 0, 0, -1, kMusicLoopPlayOnce, 2);
+						Loop_Actor_Walk_To_XYZ(kActorMcCoy, -929.61f, 1.31f, 893.68f, 0, true, true, false);
+						Actor_Face_Actor(kActorMcCoy, kActorSadik, true);
+						Actor_Clue_Acquire(kActorMcCoy, kClueMcCoyRetiredSadik, true, kActorSadik);
+						Actor_Set_Goal_Number(kActorSadik, 413);
+					}
 				}
 				Game_Flag_Reset(kFlagMcCoyIsHelpingReplicants);
 			} else if (Actor_Query_Goal_Number(kActorSadik) == 411) {

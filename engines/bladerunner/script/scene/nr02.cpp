@@ -121,7 +121,7 @@ bool SceneScriptNR02::ClickedOnItem(int itemId, bool a2) {
 		if (!Loop_Actor_Walk_To_XYZ(kActorMcCoy, 109.38f, -24.0f, 420.5f, 0, true, false, false)) {
 			Actor_Face_Heading(kActorMcCoy, 423, false);
 			if (_vm->_cutContent) {
-				if (Actor_Clue_Query(kActorMcCoy, kClueGordoConfession)  
+				if (Actor_Clue_Query(kActorMcCoy, kClueStolenCheese)  
 				|| Actor_Clue_Query(kActorMcCoy, kClueGordoInterview3)) {
 					if (itemId == kItemGordosLighterReplicant) {
 						Actor_Change_Animation_Mode(kActorMcCoy, 23);
@@ -133,9 +133,10 @@ bool SceneScriptNR02::ClickedOnItem(int itemId, bool a2) {
 						Actor_Says(kActorMcCoy, 8850, 13); //00-8850.AUD	A lighter.
 					} else if (itemId == kItemGordosLighterHuman) {
 						Actor_Change_Animation_Mode(kActorMcCoy, 23);
-						Delay(2000);
+						Delay(800);
 						Item_Remove_From_World(kItemGordosLighterHuman);
 						Item_Pickup_Spin_Effect(kModelAnimationGordosLighterHuman, 214, 380);
+						Delay(800);
 						Actor_Clue_Acquire(kActorMcCoy, kClueGordosLighterHuman, true, kActorGordo);
 						Actor_Says(kActorMcCoy, 8850, 13); //00-8850.AUD	A lighter.
 					}
@@ -221,7 +222,10 @@ void SceneScriptNR02::PlayerWalkedIn() {
 	if (_vm->_cutContent) {
 		if (Global_Variable_Query(kVariableChapter) == 4) {
 			if (Global_Variable_Query(kVariableAffectionTowards) == kAffectionTowardsDektora) {
-				if (!Game_Flag_Query(kFlagDektoraTalkAct4)) {
+				if (!Game_Flag_Query(kFlagDektoraTalkAct4)
+				&& !Actor_Clue_Query(kActorDektora, kClueMcCoyRetiredZuben)
+				&& !Actor_Clue_Query(kActorDektora, kClueMcCoyRetiredLucy)
+				&& !Actor_Clue_Query(kActorDektora, kClueMcCoyRetiredGordo)) {
 					Actor_Put_In_Set(kActorDektora, kSetNR02);
 					Actor_Set_At_XYZ(kActorDektora, -141.56, -23.67, 356.49, 0);
 					Actor_Face_Actor(kActorMcCoy, kActorDektora, true);
@@ -233,9 +237,9 @@ void SceneScriptNR02::PlayerWalkedIn() {
 						Actor_Says(kActorDektora, 1290, 13); //03-1290.AUD	I know, I’m in danger too.
 					} else {
 						Actor_Says(kActorMcCoy, 7960, 13); //00-7960.AUD	Dektora?
-						Actor_Says(kActorDektora, 1280, 12); //03-1280.AUD	I had to see you.
-						Actor_Says(kActorMcCoy, 6185, 19); //00-6185.AUD	(sighs) You got any idea how glad I am to see ya?
 						Delay(1000);
+						Actor_Says(kActorMcCoy, 6185, 19); //00-6185.AUD	(sighs) You got any idea how glad I am to see ya?
+						Actor_Says(kActorDektora, 1280, 12); //03-1280.AUD	I had to see you.	
 					}
 					Music_Stop(1u);
 					Delay(1000);
@@ -254,11 +258,9 @@ void SceneScriptNR02::PlayerWalkedIn() {
 						Actor_Says(kActorMcCoy, 6435, 14); //00-6435.AUD	Legally, it can’t be proved unless they put you on the Machine
 						Actor_Says(kActorDektora, 1310, 13); //03-1310.AUD	Crystal Steele won’t bother with formalities.
 						Actor_Says(kActorDektora, 1320, 14); //03-1320.AUD	And they’ve found my incept photo or my records, it won’t matter anyway
-						Actor_Clue_Acquire(kActorMcCoy, kClueDektoraConfession, true, kActorDektora);
 					} else {
 						if (!Actor_Clue_Query(kActorMcCoy, kClueVKDektoraReplicant)) {
-							Actor_Says(kActorMcCoy, 6230, 13); //00-6230.AUD	What?
-							Delay(2000);
+							Delay(1000);
 							Actor_Says(kActorMcCoy, 6865, 14); //00-6865.AUD	You're a Replicant.					
 							Actor_Says(kActorDektora, 1340, 14); //03-1340.AUD	Of course not. I didn’t come down on the moonbus with him.
 							Actor_Says(kActorDektora, 1350, 12); //03-1350.AUD	And I remember growing up back East. My mother, my father.
@@ -267,6 +269,8 @@ void SceneScriptNR02::PlayerWalkedIn() {
 							Actor_Says(kActorDektora, 1370, 12); //03-1370.AUD	Not mine. Mine are real!
 							Actor_Says(kActorDektora, 1380, 13); //03-1380.AUD	God damn Tyrell!
 						} else {
+							Delay(1000);
+							Actor_Says(kActorMcCoy, 2310, kAnimationModeTalk); //00-2310.AUD	I understand.
 							Delay(1000);
 						}
 					}		
@@ -294,8 +298,7 @@ void SceneScriptNR02::PlayerWalkedIn() {
 					Actor_Says(kActorMcCoy, 6390, 16); //00-6390.AUD	They think I’m a Replicant.
 					if (Game_Flag_Query(kFlagDektoraIsReplicant)) {
 						Actor_Says(kActorDektora, 1200, 13); //03-1200.AUD	Do they now?
-						if (Player_Query_Agenda() == kPlayerAgendaSurly 
-						|| Player_Query_Agenda() == kPlayerAgendaErratic) { 
+						if (Player_Query_Agenda() != kPlayerAgendaPolite) { 
 							Actor_Says(kActorMcCoy, 6395, 13); //00-6395.AUD	Glad I amuse you.
 						}
 					} else {

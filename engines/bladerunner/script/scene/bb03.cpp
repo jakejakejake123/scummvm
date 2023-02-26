@@ -110,10 +110,9 @@ bool SceneScriptBB03::ClickedOnExit(int exitId) {
 		if (!Loop_Actor_Walk_To_XYZ(kActorMcCoy, 204.0f, 60.16f, -164.0f, 0, true, false, false)) {
 			if (_vm->_cutContent) {	
 				if (!Game_Flag_Query(kFlagBB05Visited)) {
-					Actor_Voice_Over(0, kActorVoiceOver); // 99-0000.AUD	The lock had been forced.
-					Actor_Voice_Over(10, kActorVoiceOver); // 99-0010.AUD	Tyrell sub-cons might have been a little dingy...
-					Actor_Voice_Over(20, kActorVoiceOver); // 99-0020.AUD	But I didn't think they'd bust down their own doors, if they forgot their keys.
-					Actor_Clue_Acquire(kActorMcCoy, kClueDoorForced1, true, -1);
+					Actor_Voice_Over(1870, kActorVoiceOver); //99-1870.AUD	Whoever did it showed some serious strength. They busted the lock clean off.
+					Actor_Clue_Acquire(kActorMcCoy, kClueDoorForced2, true, -1);
+					Delay(1000);
 					Game_Flag_Set(kFlagBB05Visited);
 					Ambient_Sounds_Remove_All_Non_Looping_Sounds(true);
 					Ambient_Sounds_Remove_All_Looping_Sounds(1u);

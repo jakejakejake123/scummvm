@@ -366,9 +366,7 @@ void SceneScriptKP06::PlayerWalkedIn() {
 					Actor_Change_Animation_Mode(kActorSteele, 4);
 					Delay(1500);
 					Actor_Says(kActorSteele, 2210, -1); //01-2210.AUD	I guess I gotta take you in. They'll probably have to run a couple of tests, too.
-					Delay(2000);
-					Actor_Set_Goal_Number(kActorMcCoy, kGoalMcCoyArrested);
-					Delay(1000);
+					Delay(3000);
 					if (Actor_Query_Goal_Number(kActorClovis) < kGoalClovisGone) {
 						Outtake_Play(kOuttakeEnd2, false, -1);
 					}
@@ -414,9 +412,11 @@ void SceneScriptKP06::PlayerWalkedIn() {
 					Delay(2000);
 					Actor_Says(kActorGaff, 190, 14); //53-0190.AUD	It's like I said before. You retire a human, your career is over.
 					Actor_Says(kActorGaff, 200, 15); //53-0200.AUD	Your life too, maybe.
-					Delay(2000);
-					Actor_Set_Goal_Number(kActorMcCoy, kGoalMcCoyArrested);
 					Delay(1000);
+					Actor_Says(kActorMcCoy, 3005, 13); //00-3005.AUD	What are you gonna do? Take me in?
+					Delay(2000);
+					Actor_Says(kActorMcCoy, 170, 19); //00-0170.AUD	Damn.
+					Delay(3000);
 					if (Actor_Query_Goal_Number(kActorClovis) < kGoalClovisGone) {
 						Outtake_Play(kOuttakeEnd2, false, -1);
 					}

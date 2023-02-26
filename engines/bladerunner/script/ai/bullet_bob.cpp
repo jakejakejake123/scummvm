@@ -106,7 +106,7 @@ bool AIScriptBulletBob::Update() {
 				Actor_Set_Goal_Number(kActorBulletBob, kGoalBulletBobShootMcCoy);
 			} else {
 				Actor_Says(kActorBulletBob, 120, 37); //14-0120.AUD	Hey, put that away!
-				Actor_Modify_Friendliness_To_Other(kActorBulletBob, kActorMcCoy, -2);
+				Actor_Modify_Friendliness_To_Other(kActorBulletBob, kActorMcCoy, -5);
 			}
 		} else {
 			Actor_Set_Goal_Number(kActorBulletBob, kGoalBulletBobShootMcCoy);
@@ -473,11 +473,9 @@ bool AIScriptBulletBob::GoalChanged(int currentGoalNumber, int newGoalNumber) {
 				Outtake_Play(kOuttakeAway1, true, -1);
 				Actor_Set_Goal_Number(kActorMcCoy, kGoalMcCoyArrested);
 			} else {
-				Actor_Voice_Over(2100, kActorVoiceOver);
 				Actor_Voice_Over(2110, kActorVoiceOver);
-				Actor_Voice_Over(2120, kActorVoiceOver);
-				Actor_Voice_Over(2130, kActorVoiceOver);
-				Actor_Clue_Acquire(kActorMcCoy, kClueBobShotInColdBlood, true, kActorBulletBob);
+				Delay(1000);
+				Actor_Voice_Over(2080, kActorVoiceOver); //99-2080.AUD	I’d done the city a favor.
 				Game_Flag_Set(kFlagMcCoyRetiredHuman);
 				Actor_Modify_Friendliness_To_Other(kActorClovis, kActorMcCoy, 2);
 				Actor_Modify_Friendliness_To_Other(kActorSteele, kActorMcCoy, -2);

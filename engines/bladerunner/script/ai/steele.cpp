@@ -234,10 +234,12 @@ void AIScriptSteele::CompletedMovementTrack() {
 			Actor_Clues_Transfer_New_From_Mainframe(kActorSteele);
 		}
 
-		if (Query_Score(kActorMcCoy) > Query_Score(kActorSteele)
-		 && Query_Score(kActorMcCoy) < 75
-		) {
-			Set_Score(kActorSteele, Random_Query(2, 5) + Query_Score(kActorMcCoy));
+		if (!_vm->_cutContent) {
+			if (Query_Score(kActorMcCoy) > Query_Score(kActorSteele)
+			&& Query_Score(kActorMcCoy) < 75
+			) {
+				Set_Score(kActorSteele, Random_Query(2, 5) + Query_Score(kActorMcCoy));
+			}
 		}
 
 		Actor_Set_Goal_Number(kActorSteele, kGoalSteeleGoToFreeSlotG1);
@@ -257,10 +259,12 @@ void AIScriptSteele::CompletedMovementTrack() {
 			Actor_Clues_Transfer_New_From_Mainframe(kActorSteele);
 		}
 
-		if (Query_Score(kActorMcCoy) > Query_Score(kActorSteele)
-		 && Query_Score(kActorMcCoy) < 75
-		) {
-			Set_Score(kActorSteele, Random_Query(2, 5) + Query_Score(kActorMcCoy));
+		if (!_vm->_cutContent) {
+			if (Query_Score(kActorMcCoy) > Query_Score(kActorSteele)
+			&& Query_Score(kActorMcCoy) < 75
+			) {
+				Set_Score(kActorSteele, Random_Query(2, 5) + Query_Score(kActorMcCoy));
+			}
 		}
 
 		Actor_Set_Goal_Number(kActorSteele, kGoalSteeleGoToFreeSlotG2);
@@ -323,7 +327,7 @@ void AIScriptSteele::CompletedMovementTrack() {
 				Actor_Says(kActorSteele, 640, 58); //01-0640.AUD	No chance.
 				if (Player_Query_Agenda() == kPlayerAgendaSurly 
 				|| (Player_Query_Agenda() == kPlayerAgendaErratic)) {
-					if (!Actor_Clue_Query(kActorMcCoy, kClueMcCoyRetiredSadik)) {
+					if (!Game_Flag_Query(kFlagSadikIsReplicant)) {
 						Actor_Says(kActorMcCoy, 2270, 12); //00-2270.AUD	The bastard killed my dog. He tried to convince me I wasn’t human.
 						Actor_Says(kActorSteele, 650, 59); //01-0650.AUD	The job ain’t about revenge, McCoy.
 					}
@@ -406,25 +410,40 @@ void AIScriptSteele::ClickedByPlayer() {
 	Actor_Face_Actor(kActorSteele, kActorMcCoy, true);
 	Actor_Face_Actor(kActorMcCoy, kActorSteele, true);
 
-	switch (Random_Query(1, 3)) {
-	case 1:
-		Actor_Says(kActorMcCoy, 3970, 15);
-		Actor_Says(kActorSteele, 2700, 15);
-		break;
+	if (_vm->_cutContent) {
+		if (Actor_Query_Friendliness_To_Other(kActorSteele, kActorMcCoy) > 50) {
+			Actor_Says(kActorMcCoy, 3970, 15);
+			Actor_Says(kActorSteele, 1750, 15); //01-1750.AUD	Been pretty busy haven’t you, Slim?
+		} else if (Actor_Query_Friendliness_To_Other(kActorSteele, kActorMcCoy) < 50) { 
+			Actor_Says(kActorMcCoy, 3970, 15);
+			Actor_Says(kActorSteele, 2700, 15); //01-2700.AUD	You're horning in on my action, rookie. Take a stroll.
+		} else {
+			Actor_Says(kActorMcCoy, 3970, 15);
+			Actor_Says(kActorSteele, 2060, 15); //01-2060.AUD	What are you doing here, Slim?
+		}
+	} else {
 
-	case 2:
-		Actor_Says(kActorMcCoy, 3970, 15);
-		Actor_Says(kActorSteele, 2060, 15);
-		break;
+		switch (Random_Query(1, 3)) {
+		
+		case 1:
+			Actor_Says(kActorMcCoy, 3970, 15);
+			Actor_Says(kActorSteele, 2700, 15); //01-2700.AUD	You're horning in on my action, rookie. Take a stroll.
+			break;
 
-	case 3:
-		Actor_Says(kActorMcCoy, 3970, 15);
-		Actor_Says(kActorSteele, 1750, 15);
-		break;
+		case 2:
+			Actor_Says(kActorMcCoy, 3970, 15);
+			Actor_Says(kActorSteele, 2060, 15); //01-2060.AUD	What are you doing here, Slim?
+			break;
+
+		case 3:
+			Actor_Says(kActorMcCoy, 3970, 15);
+			Actor_Says(kActorSteele, 1750, 15); //01-1750.AUD	Been pretty busy haven’t you, Slim?
+			break;
+		}
+		AI_Movement_Track_Unpause(kActorSteele);
+
+		return; //false;
 	}
-	AI_Movement_Track_Unpause(kActorSteele);
-
-	return; //false;
 }
 
 void AIScriptSteele::EnteredSet(int setId) {
@@ -443,44 +462,86 @@ void AIScriptSteele::EnteredSet(int setId) {
 #endif // BLADERUNNER_ORIGINAL_BUGS
 	//Added in all the unused Crystal clues. Essentially when McCoy puts a certain clue in the mainframe Crystal will receive it and when she does the correlating clue will appear
 	// in her database and she will then later put it in the mainframe.
-
+	
 	if (Actor_Query_Goal_Number(kActorSteele) == kGoalSteeleGoToRC02) {
-		if (!Game_Flag_Query(kFlagRC51ChopstickWrapperTaken)
-		 &&  Random_Query(1, 3) == 1
-		) {
-			Actor_Clue_Acquire(kActorSteele, kClueChopstickWrapper, true, -1);
-			Game_Flag_Set(kFlagRC51ChopstickWrapperTaken);
+		if (_vm->_cutContent) {
+			if (!Game_Flag_Query(kFlagRC51ChopstickWrapperTaken)
+			) {		
+				if (Game_Flag_Query(kFlagZubenIsReplicant)) {
+					Actor_Clue_Acquire(kActorSteele, kClueChopstickWrapper, true, -1);
+					Game_Flag_Set(kFlagRC51ChopstickWrapperTaken);
 
-			if (Game_Flag_Query(kFlagRC51Discovered)) {
-				Item_Remove_From_World(kItemChopstickWrapper);
+					if (Game_Flag_Query(kFlagRC51Discovered)) {
+						Item_Remove_From_World(kItemChopstickWrapper);
+					}
+
+					Global_Variable_Increment(kVariableMcCoyEvidenceMissed, 1);
+					return;  //true;
+				}
 			}
+		} else {
+			if (!Game_Flag_Query(kFlagRC51ChopstickWrapperTaken)
+			&&  Random_Query(1, 3) == 1
+				) {		
+				Actor_Clue_Acquire(kActorSteele, kClueChopstickWrapper, true, -1);
+				Game_Flag_Set(kFlagRC51ChopstickWrapperTaken);
 
-			Global_Variable_Increment(kVariableMcCoyEvidenceMissed, 1);
-			return;  //true;
+				if (Game_Flag_Query(kFlagRC51Discovered)) {
+					Item_Remove_From_World(kItemChopstickWrapper);
+				}
+
+				Global_Variable_Increment(kVariableMcCoyEvidenceMissed, 1);
+				return;  //true;
+			}
+		}
+		if (_vm->_cutContent) {
+			if (!Game_Flag_Query(kFlagRC51CandyTaken)
+			) {
+				Actor_Clue_Acquire(kActorSteele, kClueCandy, true, -1);
+				Game_Flag_Set(kFlagRC51CandyTaken);
+
+				if (Game_Flag_Query(kFlagRC51Discovered)) {
+					Item_Remove_From_World(kItemCandy);
+				}
+				return;  //true;
+			}		
+		} else {
+			if (!Game_Flag_Query(kFlagRC51CandyTaken)
+			&&  Random_Query(1, 3) == 1
+			) {
+				Actor_Clue_Acquire(kActorSteele, kClueCandy, true, -1);
+				Game_Flag_Set(kFlagRC51CandyTaken);
+
+				if (Game_Flag_Query(kFlagRC51Discovered)) {
+					Item_Remove_From_World(kItemCandy);
+				}
+				return; //true;
+			}
 		}
 
-		if (!Game_Flag_Query(kFlagRC51CandyTaken)
-		 &&  Random_Query(1, 3) == 1
-		) {
-			Actor_Clue_Acquire(kActorSteele, kClueCandy, true, -1);
-			Game_Flag_Set(kFlagRC51CandyTaken);
+		if (_vm->_cutContent) {
+			if (!Game_Flag_Query(kFlagRC51ToyDogTaken)
+			) {
+				Actor_Clue_Acquire(kActorSteele, kClueToyDog, true, -1);
+				Game_Flag_Set(kFlagRC51ToyDogTaken);
 
-			if (Game_Flag_Query(kFlagRC51Discovered)) {
-				Item_Remove_From_World(kItemCandy);
+				if (Game_Flag_Query(kFlagRC51Discovered)) {
+					Item_Remove_From_World(kItemToyDog);
+				}
+				return; //true;
 			}
-			return; //true;
-		}
+		} else {
+			if (!Game_Flag_Query(kFlagRC51ToyDogTaken)
+			&&  Random_Query(1, 20) == 1
+			) {
+				Actor_Clue_Acquire(kActorSteele, kClueToyDog, true, -1);
+				Game_Flag_Set(kFlagRC51ToyDogTaken);
 
-		if (!Game_Flag_Query(kFlagRC51ToyDogTaken)
-		 &&  Random_Query(1, 20) == 1
-		) {
-			Actor_Clue_Acquire(kActorSteele, kClueToyDog, true, -1);
-			Game_Flag_Set(kFlagRC51ToyDogTaken);
-
-			if (Game_Flag_Query(kFlagRC51Discovered)) {
-				Item_Remove_From_World(kItemToyDog);
+				if (Game_Flag_Query(kFlagRC51Discovered)) {
+					Item_Remove_From_World(kItemToyDog);
+				}	
+				return; //true;
 			}
-			return; //true;
 		}
 	}
 
@@ -652,7 +713,7 @@ bool AIScriptSteele::GoalChanged(int currentGoalNumber, int newGoalNumber) {
 	case kGoalSteeleGoToCT01:
 		AI_Movement_Track_Flush(kActorSteele);
 		if (_vm->_cutContent) {
-			if (Random_Query(1, 5) == 1) {
+			if (Random_Query(1, 2) == 1) {
 				AI_Movement_Track_Append(kActorSteele, 63, 20);
 			} else {
 				AI_Movement_Track_Append(kActorSteele, 64, 10);
@@ -864,6 +925,9 @@ bool AIScriptSteele::GoalChanged(int currentGoalNumber, int newGoalNumber) {
 				}
 				Actor_Says(kActorSteele, 1930, kAnimationModeTalk); //01-1930.AUD	Just kidding, Slim.
 				Actor_Clue_Acquire(kActorMcCoy, kClueCrystalRetiredIzo, true, kActorSteele);
+				Actor_Modify_Friendliness_To_Other(kActorSteele, kActorMcCoy, -1);
+				Actor_Modify_Friendliness_To_Other(kActorGuzza, kActorMcCoy, -1);
+				Actor_Modify_Friendliness_To_Other(kActorClovis, kActorMcCoy, -1);
 			}
 			Actor_Set_Goal_Number(kActorSteele, kGoalSteeleLeaveRC03);
 		} else {
@@ -1177,8 +1241,8 @@ bool AIScriptSteele::GoalChanged(int currentGoalNumber, int newGoalNumber) {
 				Delay(1000);
 				Actor_Clue_Acquire(kActorClovis, kClueMcCoyRetiredDektora, true, kActorSteele);
 				Actor_Clue_Acquire(kActorMcCoy, kClueMcCoyRetiredDektora, true, kActorSteele);
+				Actor_Clue_Acquire(kActorLucy, kClueMcCoyRetiredDektora, true, kActorSteele);
 				Game_Flag_Reset(kFlagMcCoyIsHelpingReplicants);
-				Global_Variable_Set(kVariableAffectionTowards, kAffectionTowardsNone);
 				Game_Flag_Set(kFlagMcCoyRetiredReplicant);
 				Actor_Modify_Friendliness_To_Other(kActorSteele, kActorMcCoy, 2);
 				Actor_Modify_Friendliness_To_Other(kActorClovis, kActorMcCoy, -4);
@@ -1367,7 +1431,9 @@ bool AIScriptSteele::GoalChanged(int currentGoalNumber, int newGoalNumber) {
 			Delay(1000);
 			Actor_Says(kActorSteele, 1740, 15); //01-1740.AUD	Come on, let’s blow while the getting's good.
 			Actor_Says(kActorSteele, 140, 14); //01-0140.AUD	Maybe Guzza's got some answers about those guys who grabbed you up.
-			Game_Flag_Reset(kFlagMcCoyIsHelpingReplicants);
+			Actor_Modify_Friendliness_To_Other(kActorSteele, kActorMcCoy, -1);
+			Actor_Modify_Friendliness_To_Other(kActorClovis, kActorMcCoy, -1);
+			Actor_Modify_Friendliness_To_Other(kActorGuzza, kActorMcCoy, -1);
 		}
 		Delay(500);
 		Game_Flag_Set(kFlagSpinnerMissing);
@@ -1553,7 +1619,9 @@ bool AIScriptSteele::GoalChanged(int currentGoalNumber, int newGoalNumber) {
 		Actor_Says(kActorSteele, 1290, 13); 
 		//Added in a clue.
 		if (_vm->_cutContent) {
-			Game_Flag_Reset(kFlagMcCoyIsHelpingReplicants);	
+			Actor_Modify_Friendliness_To_Other(kActorSteele, kActorMcCoy, -1);
+			Actor_Modify_Friendliness_To_Other(kActorClovis, kActorMcCoy, -1);
+			Actor_Modify_Friendliness_To_Other(kActorGuzza, kActorMcCoy, -1);
 			Actor_Clue_Acquire(kActorMcCoy, kClueCrystalRetiredGordo, true, kActorSteele);
 		}
 		Game_Flag_Set(kFlagGordoRanAway);
@@ -1649,6 +1717,8 @@ bool AIScriptSteele::GoalChanged(int currentGoalNumber, int newGoalNumber) {
 			Game_Flag_Set(kFlagMcCoyRetiredReplicant);
 			Game_Flag_Reset(kFlagMcCoyIsHelpingReplicants);
 			Actor_Clue_Acquire(kActorMcCoy, kClueMcCoyRetiredGordo, true, kActorSteele);
+			Actor_Clue_Acquire(kActorLucy, kClueMcCoyRetiredGordo, true, -1);
+			Actor_Clue_Acquire(kActorDektora, kClueMcCoyRetiredGordo, true, -1);
 			Actor_Modify_Friendliness_To_Other(kActorSteele, kActorMcCoy, 2);
 			Actor_Modify_Friendliness_To_Other(kActorClovis, kActorMcCoy, -2);
 			Actor_Modify_Friendliness_To_Other(kActorGuzza, kActorMcCoy, 2);

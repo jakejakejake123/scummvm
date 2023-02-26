@@ -153,7 +153,41 @@ bool SceneScriptUG16::ClickedOn3DObject(const char *objectName, bool a2) {
 
 			Actor_Face_Heading(kActorMcCoy, 870, false);
 
-			if (( Game_Flag_Query(kFlagLutherLanceAreDead)
+			if (_vm->_cutContent) {
+				if (!Actor_Clue_Query(kActorMcCoy, kClueDNALutherLance)) {
+					if (!Game_Flag_Query(kFlagLutherLanceIsReplicant)) {
+						Delay(2000);
+						Actor_Face_Heading(kActorMcCoy, 1016, false);
+						Delay(2000);
+						Actor_Change_Animation_Mode(kActorMcCoy, 23);
+						Delay(800);
+						Item_Pickup_Spin_Effect(kModelAnimationDNADataDisc, 418, 305);
+						Delay(800);
+						Actor_Clue_Acquire(kActorMcCoy, kClueDNALutherLance, true, kActorLuther);
+					} else {
+						if (( Game_Flag_Query(kFlagLutherLanceAreDead)
+						|| !Actor_Query_Is_In_Current_Set(kActorLuther))
+						&& !Actor_Clue_Query(kActorMcCoy, kClueDNALutherLance)
+						&& !Game_Flag_Query(kFlagUG16ComputerOff)) {
+							Delay(2000);
+							Actor_Face_Heading(kActorMcCoy, 1016, false);
+							Delay(2000);
+							Actor_Says(kActorMcCoy, 5725, 14);
+							Delay(1000);
+							Actor_Change_Animation_Mode(kActorMcCoy, 23);
+							Delay(800);
+							Item_Pickup_Spin_Effect(kModelAnimationDNADataDisc, 418, 305);
+							Delay(800);
+							Actor_Clue_Acquire(kActorMcCoy, kClueDNALutherLance, true, kActorLuther);
+						} else {
+							Actor_Says(kActorMcCoy, 8522, 14); // Locked
+						}
+					}
+				} else {
+					Actor_Says(kActorMcCoy, 8525, 12);
+					Actor_Says(kActorMcCoy, 8526, 12);
+				}
+			} else if (( Game_Flag_Query(kFlagLutherLanceAreDead)
 			  || !Actor_Query_Is_In_Current_Set(kActorLuther)
 			 )
 			 && !Actor_Clue_Query(kActorMcCoy, kClueDNALutherLance)
@@ -164,17 +198,8 @@ bool SceneScriptUG16::ClickedOn3DObject(const char *objectName, bool a2) {
 				Delay(2000);
 				Actor_Says(kActorMcCoy, 5725, 14);
 				Delay(1000);
-				if (_vm->_cutContent) {
-					Actor_Change_Animation_Mode(kActorMcCoy, 23);
-					Delay(800);
-				}
 				Item_Pickup_Spin_Effect(kModelAnimationDNADataDisc, 418, 305);
-				if (_vm->_cutContent) {
-					Delay(800);
-					Actor_Clue_Acquire(kActorMcCoy, kClueDNALutherLance, true, kActorLuther);
-				} else {
-					Actor_Clue_Acquire(kActorMcCoy, kClueDNALutherLance, true, -1);
-				}
+				Actor_Clue_Acquire(kActorMcCoy, kClueDNALutherLance, true, -1);
 				return true;
 			}
 
@@ -200,20 +225,42 @@ bool SceneScriptUG16::ClickedOnItem(int itemId, bool a2) {
 bool SceneScriptUG16::ClickedOnExit(int exitId) {
 	if (exitId == 0) {
 		if (!Loop_Actor_Walk_To_XYZ(kActorMcCoy, -322.0f, -34.0f, -216.0f, 0, true, false, false)) {
-			Ambient_Sounds_Remove_All_Non_Looping_Sounds(true);
-			Ambient_Sounds_Remove_All_Looping_Sounds(1u);
-			Game_Flag_Set(kFlagUG16toUG15b);
-			Set_Enter(kSetUG15, kSceneUG15);
+			if (_vm->_cutContent) {
+				if (!Game_Flag_Query(kFlagUG15BridgeBroken)) {
+					Ambient_Sounds_Remove_All_Non_Looping_Sounds(true);
+					Ambient_Sounds_Remove_All_Looping_Sounds(1u);
+					Game_Flag_Set(kFlagUG16toUG15b);
+					Set_Enter(kSetUG15, kSceneUG15);
+				} else {
+					Actor_Says(kActorMcCoy, 7815, 13); //00-7815.AUD	No.
+				}
+			} else {
+				Ambient_Sounds_Remove_All_Non_Looping_Sounds(true);
+				Ambient_Sounds_Remove_All_Looping_Sounds(1u);
+				Game_Flag_Set(kFlagUG16toUG15b);
+				Set_Enter(kSetUG15, kSceneUG15);
+			}
 		}
 		return true;
 	}
 
 	if (exitId == 1) {
 		if (!Loop_Actor_Walk_To_XYZ(kActorMcCoy, -322.0f, -34.0f, -404.0f, 0, true, false, false)) {
-			Ambient_Sounds_Remove_All_Non_Looping_Sounds(true);
-			Ambient_Sounds_Remove_All_Looping_Sounds(1u);
-			Game_Flag_Set(kFlagUG16toUG15a);
-			Set_Enter(kSetUG15, kSceneUG15);
+			if (_vm->_cutContent) {
+				if (!Game_Flag_Query(kFlagUG15BridgeBroken)) {
+					Ambient_Sounds_Remove_All_Non_Looping_Sounds(true);
+					Ambient_Sounds_Remove_All_Looping_Sounds(1u);
+					Game_Flag_Set(kFlagUG16toUG15a);
+					Set_Enter(kSetUG15, kSceneUG15);
+				} else {
+					Actor_Says(kActorMcCoy, 7815, 13); //00-7815.AUD	No.
+				}
+			} else {
+				Ambient_Sounds_Remove_All_Non_Looping_Sounds(true);
+				Ambient_Sounds_Remove_All_Looping_Sounds(1u);
+				Game_Flag_Set(kFlagUG16toUG15a);
+				Set_Enter(kSetUG15, kSceneUG15);
+			}
 		}
 		return true;
 	}
@@ -262,8 +309,15 @@ void SceneScriptUG16::PlayerWalkedIn() {
 		Player_Loses_Control();
 		Loop_Actor_Walk_To_XYZ(kActorMcCoy, 120.29f, -35.67f, 214.8f, 310, false, false, false);
 		Actor_Face_Actor(kActorMcCoy, kActorLuther, true);
-		Actor_Says(kActorLuther, 0, 6);
-		Actor_Says(kActorLuther, 30, 13);
+		if (_vm->_cutContent) {
+			if (Game_Flag_Query(kFlagLutherLanceIsReplicant)) {
+				Actor_Says(kActorLuther, 0, 6);
+				Actor_Says(kActorLuther, 30, 13);
+			}
+		} else {
+			Actor_Says(kActorLuther, 0, 6);
+			Actor_Says(kActorLuther, 30, 13);
+		}
 		Actor_Change_Animation_Mode(kActorLuther, 17);
 		if (_vm->_cutContent) {
 			Actor_Says(kActorMcCoy, 755, 18);
@@ -475,13 +529,19 @@ void SceneScriptUG16::dialogueWithLuther() {
 			}
 		} else {
 			Actor_Says(kActorLuther, 180, 14); //10-0180.AUD	Clovis showed us our incept photos.
-			Actor_Says(kActorMcCoy, 5795, 13); //00-5795.AUD	So what?
-			Actor_Says(kActorLance, 150, 17); //13-0150.AUD	That’s a pretty damn good argument, you gotta admit.
-			Actor_Says(kActorMcCoy, 5800, 14); //00-5800.AUD	Photos can be doctored. It’s not proof.
 			if (_vm->_cutContent) {
-				Delay(2000);
-				Actor_Says(kActorLance, 290, 17); //13-0290.AUD	He’s sharp this one.
+				Actor_Says(kActorMcCoy, 5795, 13); //00-5795.AUD	So what?
+				Actor_Says(kActorLance, 150, 17); //13-0150.AUD	That’s a pretty damn good argument, you gotta admit.
+				if (!Game_Flag_Query(kFlagMcCoyIsHelpingReplicants)) {
+					Actor_Says(kActorMcCoy, 5800, 14); //00-5800.AUD	Photos can be doctored. It’s not proof.
+					Delay(2000);
+					Actor_Says(kActorLance, 290, 17); //13-0290.AUD	He’s sharp this one.
+					Game_Flag_Set(kFlagTwinsConvinced);
+				}
 			} else { 
+				Actor_Says(kActorMcCoy, 5795, 13); //00-5795.AUD	So what?
+				Actor_Says(kActorLance, 150, 17); //13-0150.AUD	That’s a pretty damn good argument, you gotta admit.
+				Actor_Says(kActorMcCoy, 5800, 14); //00-5800.AUD	Photos can be doctored. It’s not proof.
 				Actor_Says(kActorLuther, 190, 15);
 			}
 			Game_Flag_Set(kFlagUG16LutherLanceTalkHumans);
@@ -497,13 +557,7 @@ void SceneScriptUG16::dialogueWithLuther() {
 	case 1410: // WORK
 		Actor_Says(kActorMcCoy, 5735, 13); //00-5735.AUD	What are you doing down here?
 		Actor_Face_Actor(kActorMcCoy, kActorLuther, true);
-		if (_vm->_cutContent) {
-			if (Game_Flag_Query(kFlagLutherLanceIsReplicant)) {
-				Actor_Says(kActorLance, 160, 17); //13-0160.AUD	Eldon shafted us. So, now we’re returning the favor.
-			}
-		} else {
-			Actor_Says(kActorLance, 160, 17); //13-0160.AUD	Eldon shafted us. So, now we’re returning the favor.
-		}
+		Actor_Says(kActorLance, 160, 17); //13-0160.AUD	Eldon shafted us. So, now we’re returning the favor.
 		// Added in a line and a flag which triggers the lifespan option to appear.
 		if (_vm->_cutContent) {
 			Actor_Says(kActorLance, 170, 17); //13-0170.AUD	We’re gonna figure out a way to beat that four year lifespan if it kills us.
@@ -537,10 +591,14 @@ void SceneScriptUG16::dialogueWithLuther() {
 				Actor_Says(kActorLance, 50, 6); //13-0050.AUD	We gotta get this done.
 			} else {
 				Actor_Says(kActorLuther, 240, 13); //10-0240.AUD	Tyrell’s dictate was that every body part would fail. And only the designer’s of each would know exactly how it worked.
-				Actor_Says(kActorLance, 200, 17);
-				Actor_Says(kActorLuther, 260, 13);
-				Actor_Says(kActorLuther, 270, 15);
-				Actor_Says(kActorLance, 210, 14);
+				Actor_Says(kActorLuther, 250, 13); //10-0250.AUD	And only the designers of each would know exactly how it worked.
+				if (Game_Flag_Query(kFlagSadikIsReplicant)) {
+					Actor_Says(kActorLance, 200, 17); //13-0200.AUD	Clovis has already unlocked the secret of the skin. That was Moraji.
+				} else {	
+					Actor_Says(kActorLuther, 260, 13); //10-0260.AUD	Sebastian and Chew, they know about the central nervous system and the eyes.
+					Actor_Says(kActorLuther, 270, 15);
+				}
+				Actor_Says(kActorLance, 210, 14); //13-0210.AUD	And Tyrell, he’s got the basic DNA pattern information but he won’t just give it up.
 				Actor_Says(kActorMcCoy, 5810, 13);
 				Actor_Says(kActorLance, 220, 14);
 				Actor_Says(kActorLance, 230, 17);
@@ -548,6 +606,7 @@ void SceneScriptUG16::dialogueWithLuther() {
 			}
 		} else {
 			Actor_Says(kActorLuther, 240, 13); //10-0240.AUD	Tyrell’s dictate was that every body part would fail. And only the designer’s of each would know exactly how it worked.
+			Actor_Says(kActorLuther, 250, 13); //10-0250.AUD	And only the designers of each would know exactly how it worked.
 			Actor_Says(kActorLance, 200, 17);
 			Actor_Says(kActorLuther, 260, 13);
 			Actor_Says(kActorLuther, 270, 15);

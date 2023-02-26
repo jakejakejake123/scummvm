@@ -216,8 +216,8 @@ bool SceneScriptNR11::ClickedOn3DObject(const char *objectName, bool combatMode)
 								Actor_Says(kActorDektora, 2060, 14);//03-2060.AUD	No.
 								Delay(1000);
 							} else {
-								Actor_Says(kActorDektora, 1070, 14);
-								Actor_Says(kActorDektora, 1080, 14);
+								Actor_Says(kActorDektora, 1070, 14); //03-1070.AUD	I’m afraid that’s impossible right now.
+								Actor_Says(kActorDektora, 1080, 14); //03-1080.AUD	Clovis will find you, when he’s ready.
 								Delay(1000);
 							}
 						}
@@ -244,16 +244,29 @@ bool SceneScriptNR11::ClickedOn3DObject(const char *objectName, bool combatMode)
 							Delay(1000);
 						} 
 						Actor_Says(kActorMcCoy, 3875, 14);
-						Actor_Says(kActorDektora, 1090, 17);     // I... appreciate it, Mr. McCoy.
+						if (_vm->_cutContent) {
+							if (!Actor_Clue_Query(kActorDektora, kClueMcCoyRetiredZuben)
+							&& !Actor_Clue_Query(kActorDektora, kClueMcCoyRetiredLucy)
+							&& !Actor_Clue_Query(kActorDektora, kClueMcCoyRetiredGordo)) {
+								Actor_Says(kActorDektora, 1090, 17);     // I... appreciate it, Mr. McCoy.
+							} else {
+								Delay(2000);
+								Actor_Says(kActorMcCoy, 1660, 15); //00-1660.AUD	Go! Quickly.
+								Delay(1000);
+							}
+						} else {
+							Actor_Says(kActorDektora, 1090, 17);     // I... appreciate it, Mr. McCoy.
+						}
 						Game_Flag_Set(kFlagMcCoyIsHelpingReplicants);
 						Actor_Modify_Friendliness_To_Other(kActorSteele, kActorMcCoy, -2);
 						Actor_Modify_Friendliness_To_Other(kActorClovis, kActorMcCoy, 2);
 						Actor_Modify_Friendliness_To_Other(kActorGuzza, kActorMcCoy, -2);
 						Actor_Modify_Friendliness_To_Other(kActorDektora, kActorMcCoy, 2);
 						if (Actor_Query_Friendliness_To_Other(kActorDektora, kActorMcCoy) > 49
-						&& Actor_Query_Friendliness_To_Other(kActorClovis, kActorMcCoy) > 50
 						&& Global_Variable_Query(kVariableAffectionTowards) == kAffectionTowardsNone
-						&& Actor_Query_Goal_Number(kActorLucy) < kGoalLucyGone) { 
+						&& !Actor_Clue_Query(kActorDektora, kClueMcCoyRetiredZuben)
+						&& !Actor_Clue_Query(kActorDektora, kClueMcCoyRetiredLucy)
+						&& !Actor_Clue_Query(kActorDektora, kClueMcCoyRetiredGordo)) {
 							Global_Variable_Set(kVariableAffectionTowards, kAffectionTowardsDektora);
 						}
 						if (Global_Variable_Query(kVariableAffectionTowards) == kAffectionTowardsDektora) {
@@ -463,9 +476,8 @@ void SceneScriptNR11::PlayerWalkedIn() {
 	}
 	if (Actor_Query_Goal_Number(kActorDektora) == kGoalDektoraNR11Hiding) {
 		if (_vm->_cutContent) {
-			if (Player_Query_Agenda() != kPlayerAgendaPolite
-			&& !Game_Flag_Query(kFlagMcCoyIsHelpingReplicants)
-			&& !Actor_Clue_Query(kActorDektora, kClueMcCoyHelpedDektora)) {
+			if (Global_Variable_Query(kVariableHollowayArrest) == 1
+			|| !Game_Flag_Query(kFlagMcCoyIsHelpingReplicants)) {
 				Player_Set_Combat_Mode(true);
 			}
 		} else {
@@ -522,11 +534,14 @@ void SceneScriptNR11::PlayerWalkedIn() {
 					&& !Game_Flag_Query(kFlagMcCoyIsHelpingReplicants)
 					&& !Actor_Clue_Query(kActorDektora, kClueMcCoyHelpedDektora)) {
 						Actor_Says(kActorMcCoy, 1570, 13); //00-1570.AUD	You sure aired that sucker out.
-						Game_Flag_Reset(kFlagMcCoyIsHelpingReplicants);
+						Actor_Modify_Friendliness_To_Other(kActorClovis, kActorMcCoy, -2);
 						Delay(500);
 					} else {
 						Actor_Says(kActorMcCoy, 3810, 16); //00-3810.AUD	You could have taken her out in a more discrete way.
-						if (Actor_Query_Friendliness_To_Other(kActorSteele, kActorMcCoy) < 58) {
+						Actor_Modify_Friendliness_To_Other(kActorSteele, kActorMcCoy, -1);
+						Actor_Modify_Friendliness_To_Other(kActorClovis, kActorMcCoy, -1);
+						Actor_Modify_Friendliness_To_Other(kActorGuzza, kActorMcCoy, -1);
+						if (Actor_Query_Friendliness_To_Other(kActorSteele, kActorMcCoy) < 60) {
 							Actor_Says_With_Pause(kActorSteele, 1730, 0.2f, 14); //01-1730.AUD	What’s this "her" crap? It’s an "it", remember? A goddamn machine.
 						} else {
 							Delay(1000);
@@ -537,9 +552,6 @@ void SceneScriptNR11::PlayerWalkedIn() {
 					Actor_Says_With_Pause(kActorSteele, 1730, 0.2f, 14); //01-1730.AUD	What’s this "her" crap? It’s an "it", remember? A goddamn machine.
 				}
 				Actor_Says(kActorSteele, 1740, 15); //01-1740.AUD	Come on, let’s blow while the getting's good.
-				if (_vm->_cutContent) {
-					Global_Variable_Set(kVariableAffectionTowards, kAffectionTowardsNone);
-				}
 				Actor_Set_Goal_Number(kActorDektora, kGoalDektoraGone);
 				Actor_Put_In_Set(kActorDektora, kSetFreeSlotI);
 				Actor_Set_At_Waypoint(kActorDektora, 41, 0);
@@ -561,6 +573,7 @@ void SceneScriptNR11::PlayerWalkedIn() {
 					Actor_Voice_Over(2130, kActorVoiceOver); //99-2130.AUD	Stay and face the music or take off and hope I didn't get caught.
 					Game_Flag_Set(kFlagMcCoyRetiredHuman);
 					Game_Flag_Reset(kFlagMcCoyIsHelpingReplicants);
+					Actor_Clue_Acquire(kActorLucy, kClueMcCoyRetiredDektora, true, -1);
 					Actor_Modify_Friendliness_To_Other(kActorClovis, kActorMcCoy, -2);
 					Actor_Modify_Friendliness_To_Other(kActorSteele, kActorMcCoy, -2);
 					Actor_Modify_Friendliness_To_Other(kActorGuzza, kActorMcCoy, -2);

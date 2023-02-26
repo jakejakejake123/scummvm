@@ -385,7 +385,6 @@ void SceneScriptUG18::ActorChangedGoal(int actorId, int newGoal, int oldGoal, bo
 			Player_Set_Combat_Mode(false);
 			Loop_Actor_Walk_To_XYZ(kActorGuzza, -684.71f, 0.0f, 171.59f, 0, false, true, false);
 			Game_Flag_Set(kFlagGuzzaSaved);
-			Global_Variable_Set(kVariableAffectionTowards, kAffectionTowardsNone);
 			Game_Flag_Reset(kFlagMcCoyIsHelpingReplicants);
 			Actor_Face_Actor(kActorMcCoy, kActorClovis, true);
 			Actor_Face_Actor(kActorClovis, kActorMcCoy, true);

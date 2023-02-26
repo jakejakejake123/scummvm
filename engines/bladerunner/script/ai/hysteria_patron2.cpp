@@ -71,14 +71,15 @@ void AIScriptHysteriaPatron2::ClickedByPlayer() {
 				}
 			} else {
 				Actor_Says(kActorMcCoy, 8518, kAnimationModeTalk); // Hey, can I lick...
-				if (!Game_Flag_Query(kFlagHanoiDead)) {
+				if (!Game_Flag_Query(kFlagHanoiDead)
+				&& Game_Flag_Query(kFlagHanoiIsReplicant)) {
 					Actor_Change_Animation_Mode(kActorMcCoy, 23);
 					Game_Flag_Set(kFlagNR08TouchedDektora);
 					Delay(1000);
 					AI_Movement_Track_Flush(kActorHanoi);
 					Actor_Force_Stop_Walking(kActorMcCoy);
 					Actor_Set_Goal_Number(kActorHanoi, kGoalHanoiThrowOutMcCoy);
-				}
+				} 
 			}
 		} else {
 			Actor_Says(kActorMcCoy, 8935, kAnimationModeTalk);

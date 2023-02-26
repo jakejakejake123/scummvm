@@ -221,6 +221,219 @@ void SceneScriptUG15::ActorChangedGoal(int actorId, int newGoal, int oldGoal, bo
 void SceneScriptUG15::PlayerWalkedIn() {
 	if (_vm->_cutContent) {
 		Music_Stop(1u);
+		if (Actor_Clue_Query(kActorMcCoy, kClueFolder)) {
+			if (Game_Flag_Query(kFlagHanoiIsReplicant)
+			&& !Game_Flag_Query(kFlagMcCoyIsHelpingReplicants)) {
+				Loop_Actor_Walk_To_XYZ(kActorMcCoy, -62.0f, 48.07f, 102.0f, 0, false, false, false);
+				Game_Flag_Reset(kFlagUG16toUG15b);
+				Player_Loses_Control();
+				Loop_Actor_Walk_To_XYZ(kActorMcCoy, -141.79f, 48.67f, 155.42f, 0, true, false, true);
+				Actor_Put_In_Set(kActorHanoi, kSetUG15);
+				Actor_Set_At_XYZ(kActorHanoi, -38.07, 48.53, 70.34, 0);
+				Actor_Change_Animation_Mode(kActorHanoi, 1);
+				Loop_Actor_Walk_To_XYZ(kActorHanoi, -62.0f, 48.07f, 102.0f, 0, false, false, false);
+				Actor_Face_Actor(kActorMcCoy, kActorHanoi, true);
+				Actor_Face_Actor(kActorHanoi, kActorMcCoy, true);
+				Actor_Change_Animation_Mode(kActorHanoi, 4);
+				Sound_Play(kSfxSHOTCOK1, 77, 0, 0, 20);
+				Delay(500);
+				if (!Game_Flag_Query(kFlagHanoiDead)) {
+					Actor_Says(kActorHanoi, 160, 4); //25-0160.AUD	Here, what’s this then?
+				}
+				Actor_Change_Animation_Mode(kActorHanoi, 4);
+				if (!Game_Flag_Query(kFlagHanoiDead)) {
+					Actor_Says(kActorMcCoy, 525, 13); //00-0525.AUD	I've seen you before...
+					Actor_Says(kActorMcCoy, 7260, 14); //00-7260.AUD	Didn't I see an incept tape at the—
+				} else {
+					Actor_Says(kActorMcCoy, 5690, -1); //00-5690.AUD	Huh?
+				}	
+				Player_Set_Combat_Mode(true);
+				Actor_Change_Animation_Mode(kActorHanoi, 4);
+				Delay(1000);
+				if (!Game_Flag_Query(kFlagHanoiDead)) {
+					Music_Play(kMusicBeating1, 71, 0, 0, -1, kMusicLoopPlayOnce, 2);
+				} else {
+					Music_Play(kMusicMoraji, 71, 0, 0, -1, kMusicLoopPlayOnce, 2);
+				}
+				Actor_Change_Animation_Mode(kActorMcCoy, 21);
+				Actor_Change_Animation_Mode(kActorHanoi, 6);
+				Ambient_Sounds_Play_Sound(kSfxSHOTGUN1, 97, 0, 0, 20);
+				Delay(1000);
+				Sound_Play(kSfxGUNH1A, 100, 0, 0, 50);
+				Actor_Change_Animation_Mode(kActorMcCoy, 6);
+				Actor_Change_Animation_Mode(kActorHanoi, 21);
+				Delay(1000);
+				Actor_Change_Animation_Mode(kActorHanoi, 6);
+				Ambient_Sounds_Play_Sound(kSfxSHOTGUN1, 97, 0, 0, 20);
+				Loop_Actor_Walk_To_XYZ(kActorMcCoy, -186.41f, 48.54f, 179.28f, 0, false, true, false);
+				Actor_Face_Actor(kActorMcCoy, kActorHanoi, true);
+				Sound_Play(kSfxGUNH1A, 100, 0, 0, 50);
+				Actor_Change_Animation_Mode(kActorMcCoy, 6);
+				Loop_Actor_Walk_To_Actor(kActorHanoi, kActorMcCoy, 24, true, false);
+				Actor_Face_Actor(kActorMcCoy, kActorHanoi, true);
+				Actor_Face_Actor(kActorHanoi, kActorMcCoy, true);
+				Actor_Change_Animation_Mode(kActorHanoi, 71);
+				Delay(500);
+				Actor_Change_Animation_Mode(kActorMcCoy, 21);
+				Ambient_Sounds_Play_Sound(kSfxKICK2, 90, 99, 0, 0);
+				Delay(1000);
+				Loop_Actor_Walk_To_XYZ(kActorMcCoy, -214.64f, 38.21f, 245.40f, 0, false, true, false);
+				Actor_Face_Actor(kActorMcCoy, kActorHanoi, true);
+				Actor_Face_Actor(kActorHanoi, kActorMcCoy, true);
+				Actor_Change_Animation_Mode(kActorMcCoy, 21);
+				Actor_Change_Animation_Mode(kActorHanoi, 6);
+				Ambient_Sounds_Play_Sound(kSfxSHOTGUN1, 97, 0, 0, 20);
+				Delay(1000);
+				Sound_Play(kSfxGUNH1A, 100, 0, 0, 50);
+				Actor_Change_Animation_Mode(kActorMcCoy, 6);
+				Actor_Change_Animation_Mode(kActorHanoi, 21);
+				Delay(1000);
+				Actor_Change_Animation_Mode(kActorHanoi, 6);
+				Delay(500);
+				Game_Flag_Set(kFlagUG15BridgeBreaks);
+				Game_Flag_Set(kFlagUG15BridgeBroken);
+				Scene_Loop_Set_Default(kUG15LoopMainLoopBridgeBroken);
+				Scene_Loop_Start_Special(kSceneLoopModeOnce, kUG15LoopBridgeBreaks, true);
+				Actor_Put_In_Set(kActorHanoi, kSetUG13);
+				Delay(3000);
+				Player_Set_Combat_Mode(false);
+				Delay(2000);
+				Loop_Actor_Walk_To_XYZ(kActorMcCoy, -238.0f, 52.46f, 222.0f, 0, false, true, false);
+				Player_Gains_Control();
+				if (!Game_Flag_Query(kFlagHanoiDead)) {
+					Game_Flag_Set(kFlagHanoiDead);
+					Actor_Modify_Friendliness_To_Other(kActorGaff, kActorMcCoy, 2);
+					Actor_Modify_Friendliness_To_Other(kActorSteele, kActorMcCoy, 2);
+					Actor_Modify_Friendliness_To_Other(kActorGuzza, kActorMcCoy, 2);
+					Actor_Modify_Friendliness_To_Other(kActorClovis, kActorMcCoy, -2);
+					if (Query_Difficulty_Level() != kGameDifficultyEasy) {
+						Global_Variable_Increment (kVariableChinyen, 200);
+					}
+				}
+				Ambient_Sounds_Remove_All_Non_Looping_Sounds(true);
+				Ambient_Sounds_Remove_All_Looping_Sounds(1u);
+				Game_Flag_Set(kFlagUG15toUG13);
+				Set_Enter(kSetUG13, kSceneUG13);
+			} else if (Random_Query(1, 2) == 1) {
+				Loop_Actor_Walk_To_XYZ(kActorMcCoy, -62.0f, 48.07f, 102.0f, 0, false, false, false);
+				Game_Flag_Reset(kFlagUG16toUG15b);
+				Actor_Face_Heading(kActorMcCoy, 400, false);
+				Sound_Play(kSfxYELL1M2, 100, 0, 100, 50);
+				Delay(4000);
+				Actor_Says(kActorMcCoy, 6875, -1); //00-6875.AUD	I gotta go.
+				Player_Loses_Control();
+				Loop_Actor_Walk_To_XYZ(kActorMcCoy, -141.79f, 48.67f, 155.42f, 0, true, true, true);
+				Music_Play(kMusicBeating1, 71, 0, 0, -1, kMusicLoopPlayOnce, 2);
+				Actor_Put_In_Set(kActorMutant1, kSetUG15);
+				Actor_Set_At_XYZ(kActorMutant1, -38.07, 48.53, 70.34, 0);
+				Actor_Face_Actor(kActorMcCoy, kActorMutant1, true);
+				Actor_Face_Actor(kActorMutant1, kActorMcCoy, true);
+				Loop_Actor_Walk_To_XYZ(kActorMutant1, -62.0f, 48.07f, 102.0f, 0, false, false, false);
+				Actor_Says(kActorMcCoy, 2980, 12);
+				Delay(1000);
+				Player_Set_Combat_Mode(true);
+				Delay(1000);
+				Sound_Play(kSfxGUNH1A, 100, 0, 0, 50);
+				Actor_Change_Animation_Mode(kActorMcCoy, 6);
+				Actor_Change_Animation_Mode(kActorMutant1, 21);
+				Delay(1000);
+				Loop_Actor_Walk_To_XYZ(kActorMcCoy, -186.41f, 48.54f, 179.28f, 0, true, true, true);
+				Actor_Face_Actor(kActorMcCoy, kActorMutant1, true);
+				Actor_Face_Actor(kActorMutant1, kActorMcCoy, true);
+				Sound_Play(kSfxGUNH1A, 100, 0, 0, 50);
+				Actor_Change_Animation_Mode(kActorMcCoy, 6);
+				Loop_Actor_Walk_To_Actor(kActorMutant1, kActorMcCoy, 24, true, false);
+				Actor_Face_Actor(kActorMcCoy, kActorMutant1, true);
+				Actor_Face_Actor(kActorMutant1, kActorMcCoy, true);
+				Actor_Change_Animation_Mode(kActorMutant1, 6);
+				Delay(500);
+				Actor_Change_Animation_Mode(kActorMcCoy, 21);
+				Delay(1000);
+				Loop_Actor_Walk_To_XYZ(kActorMcCoy, -214.64f, 38.21f, 245.40f, 0, true, true, true);
+				Actor_Face_Actor(kActorMcCoy, kActorMutant1, true);
+				Actor_Face_Actor(kActorMutant1, kActorMcCoy, true);
+				Sound_Play(kSfxGUNH1A, 100, 0, 0, 50);
+				Actor_Change_Animation_Mode(kActorMcCoy, 6);
+				Actor_Change_Animation_Mode(kActorMutant1, 21);
+				Delay(1000);
+				Game_Flag_Set(kFlagUG15BridgeBreaks);
+				Game_Flag_Set(kFlagUG15BridgeBroken);
+				Scene_Loop_Set_Default(kUG15LoopMainLoopBridgeBroken);
+				Scene_Loop_Start_Special(kSceneLoopModeOnce, kUG15LoopBridgeBreaks, true);
+				Actor_Put_In_Set(kActorMutant1, kSetUG13);
+				Sound_Play(kSfxYELL1M1, 100, 0, 0, 50);
+				Delay(3000);
+				Player_Set_Combat_Mode(false);
+				Delay(5000);
+				Loop_Actor_Walk_To_XYZ(kActorMcCoy, -238.0f, 52.46f, 222.0f, 0, false, true, false);
+				Player_Gains_Control();
+				Ambient_Sounds_Remove_All_Non_Looping_Sounds(true);
+				Ambient_Sounds_Remove_All_Looping_Sounds(1u);
+				Game_Flag_Set(kFlagUG15toUG13);
+				Set_Enter(kSetUG13, kSceneUG13);
+			} else {
+				Loop_Actor_Walk_To_XYZ(kActorMcCoy, -62.0f, 48.07f, 102.0f, 0, false, false, false);
+				Game_Flag_Reset(kFlagUG16toUG15b);
+				Actor_Face_Heading(kActorMcCoy, 400, false);
+				Sound_Play(kSfxYELL1M2, 100, 0, 100, 50);
+				Delay(4000);
+				Actor_Says(kActorMcCoy, 6875, -1); //00-6875.AUD	I gotta go.
+				Player_Loses_Control();
+				Loop_Actor_Walk_To_XYZ(kActorMcCoy, -141.79f, 48.67f, 155.42f, 0, true, true, true);
+				Music_Play(kMusicBeating1, 71, 0, 0, -1, kMusicLoopPlayOnce, 2);
+				Actor_Put_In_Set(kActorMutant2, kSetUG15);
+				Actor_Set_At_XYZ(kActorMutant2, -38.07, 48.53, 70.34, 0);
+				Actor_Face_Actor(kActorMcCoy, kActorMutant2, true);
+				Actor_Face_Actor(kActorMutant2, kActorMcCoy, true);
+				Loop_Actor_Walk_To_XYZ(kActorMutant2, -62.0f, 48.07f, 102.0f, 0, false, false, false);
+				Actor_Says(kActorMcCoy, 2980, 12);
+				Delay(1000);
+				Player_Set_Combat_Mode(true);
+				Delay(1000);
+				Sound_Play(kSfxGUNH1A, 100, 0, 0, 50);
+				Actor_Change_Animation_Mode(kActorMcCoy, 6);
+				Actor_Change_Animation_Mode(kActorMutant2, 21);
+				Delay(1000);
+				Loop_Actor_Walk_To_XYZ(kActorMcCoy, -186.41f, 48.54f, 179.28f, 0, true, true, true);
+				Actor_Face_Actor(kActorMcCoy, kActorMutant2, true);
+				Actor_Face_Actor(kActorMutant2, kActorMcCoy, true);
+				Sound_Play(kSfxGUNH1A, 100, 0, 0, 50);
+				Actor_Change_Animation_Mode(kActorMcCoy, 6);
+				Loop_Actor_Walk_To_Actor(kActorMutant2, kActorMcCoy, 24, true, false);
+				Actor_Face_Actor(kActorMcCoy, kActorMutant2, true);
+				Actor_Face_Actor(kActorMutant2, kActorMcCoy, true);
+				Actor_Change_Animation_Mode(kActorMutant2, 6);
+				Delay(500);
+				Actor_Change_Animation_Mode(kActorMcCoy, 21);
+				Delay(1000);
+				Sound_Play(kSfxGUNH1A, 100, 0, 0, 50);
+				Actor_Change_Animation_Mode(kActorMcCoy, 6);
+				Actor_Change_Animation_Mode(kActorMutant2, 21);
+				Delay(1000);
+				Loop_Actor_Walk_To_XYZ(kActorMcCoy, -214.64f, 38.21f, 245.40f, 0, true, true, true);
+				Actor_Face_Actor(kActorMcCoy, kActorMutant2, true);
+				Actor_Face_Actor(kActorMutant2, kActorMcCoy, true);
+				Sound_Play(kSfxGUNH1A, 100, 0, 0, 50);
+				Actor_Change_Animation_Mode(kActorMcCoy, 6);
+				Actor_Change_Animation_Mode(kActorMutant2, 21);
+				Delay(1000);
+				Game_Flag_Set(kFlagUG15BridgeBreaks);
+				Game_Flag_Set(kFlagUG15BridgeBroken);
+				Scene_Loop_Set_Default(kUG15LoopMainLoopBridgeBroken);
+				Scene_Loop_Start_Special(kSceneLoopModeOnce, kUG15LoopBridgeBreaks, true);
+				Actor_Put_In_Set(kActorMutant2, kSetUG13);
+				Sound_Play(kSfxYELL1M1, 100, 0, 0, 50);
+				Delay(3000);
+				Player_Set_Combat_Mode(false);
+				Delay(5000);
+				Loop_Actor_Walk_To_XYZ(kActorMcCoy, -238.0f, 52.46f, 222.0f, 0, false, true, false);
+				Player_Gains_Control();
+				Ambient_Sounds_Remove_All_Non_Looping_Sounds(true);
+				Ambient_Sounds_Remove_All_Looping_Sounds(1u);
+				Game_Flag_Set(kFlagUG15toUG13);
+				Set_Enter(kSetUG13, kSceneUG13);
+			}
+		}
 	}
 	if (Game_Flag_Query(kFlagUG16toUG15b)) {
 		Loop_Actor_Walk_To_XYZ(kActorMcCoy, -62.0f, 48.07f, 102.0f, 0, false, false, false);

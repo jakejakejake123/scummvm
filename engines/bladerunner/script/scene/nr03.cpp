@@ -141,7 +141,7 @@ bool SceneScriptNR03::ClickedOnActor(int actorId) {
 							Delay(1000);
 							Actor_Says(kActorMcCoy, 1535, 19); //00-1535.AUD	Ah, never mind.
 						} else {
-							Actor_Says(kActorMcCoy, 8265, 16); //00-8265.AUD	Really?
+							Actor_Says(kActorMcCoy, 8320, 16); //00-8320.AUD	Really?
 							Delay(2000);
 							Actor_Says(kActorMcCoy, 1535, 19); //00-1535.AUD	Ah, never mind.
 						}
@@ -237,7 +237,7 @@ bool SceneScriptNR03::ClickedOnExit(int exitId) {
 						if (!Game_Flag_Query(kFlagHanoiIsReplicant)) {	
 							// Human - gentle warning.
 							Actor_Says(kActorHanoi, 80, 13); // 25-0080.AUD	Listen good, boy-o.
-							Actor_Says(kActorMcCoy, 1510, 16); // 00-1510.AUD	Okay, okay. Just forget it.
+							Actor_Says(kActorMcCoy, 725, 16); //00-0725.AUD	Relax! I hear ya.
 						} else {
 							// Replicant - Tells McCoy to get lost
 							Actor_Says(kActorHanoi, 50, 13); //25-0050.AUD	Sod off. You got no appointment and you got no warrant.
@@ -277,7 +277,8 @@ bool SceneScriptNR03::ClickedOnExit(int exitId) {
 #endif
 			} else {
 				if (_vm->_cutContent) {
-					if (Game_Flag_Query(kFlagEarlyQDead)) {
+					if (Game_Flag_Query(kFlagEarlyQDead)
+					|| Game_Flag_Query(kFlagNR04EarlyQStungByScorpions)) {
 						Actor_Says(kActorMcCoy, 7815, 13); //00-7815.AUD	No.
 					} else {
 						Ambient_Sounds_Remove_All_Non_Looping_Sounds(true);
@@ -334,7 +335,18 @@ bool SceneScriptNR03::ClickedOnExit(int exitId) {
 					break;
 				case 1:
 					Actor_Face_Actor(kActorMcCoy, kActorHanoi, true);
-					Actor_Says(kActorHanoi, 210, 12); //25-0210.AUD	Sod off, McCoy. I got no time for you.
+					if (_vm->_cutContent) {
+						if (!Game_Flag_Query(kFlagHanoiIsReplicant)) {	
+							// Human - gentle warning.
+							Actor_Says(kActorHanoi, 80, 13); // 25-0080.AUD	Listen good, boy-o.
+							Actor_Says(kActorMcCoy, 725, 16); //00-0725.AUD	Relax! I hear ya.
+						} else {
+							// Replicant - Tells McCoy to get lost
+							Actor_Says(kActorHanoi, 50, 13); //25-0050.AUD	Sod off. You got no appointment and you got no warrant.
+						}
+					} else {
+						Actor_Says(kActorHanoi, 50, 13); //25-0050.AUD	Sod off. You got no appointment and you got no warrant.
+					}
 					AI_Movement_Track_Unpause(kActorHanoi);
 					if (_vm->_cutContent) {
 						Game_Flag_Set(kFlagHanoiTalk);

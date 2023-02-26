@@ -88,11 +88,21 @@ void SceneScriptCT08::SceneLoaded() {
 #if BLADERUNNER_ORIGINAL_BUGS
 		Item_Add_To_World(kItemRagDoll, kModelAnimationRagDoll, kSetCT08_CT51_UG12, 44.0f, 0.0f, -95.0f, 540, 12, 12, false, true, false, true);
 #else
-		Item_Add_To_World(kItemRagDoll, kModelAnimationRagDoll, kSetCT08_CT51_UG12, 44.0f, 3.0f, -100.0f, 540, 12, 12, false, true, false, true);
+		if (_vm->_cutContent) {
+			if (Game_Flag_Query(kFlagIzoIsReplicant)) {
+				Item_Add_To_World(kItemRagDoll, kModelAnimationRagDoll, kSetCT08_CT51_UG12, 44.0f, 3.0f, -100.0f, 540, 12, 12, false, true, false, true);
+			} else {
+				Item_Add_To_World(kItemRagDoll, kModelAnimationRagDoll, kSetCT08_CT51_UG12, -122.00f, 0.32f, -139.72f, 540, 12, 12, false, true, false, true);
+			}
+		} else {
+			Item_Add_To_World(kItemRagDoll, kModelAnimationRagDoll, kSetCT08_CT51_UG12, 44.0f, 3.0f, -100.0f, 540, 12, 12, false, true, false, true);
+		}
 #endif // BLADERUNNER_ORIGINAL_BUGS
 	}
-	if (!Actor_Clue_Query(kActorMcCoy, kClueCheese)) {
-		Item_Add_To_World(kItemCheese, kModelAnimationCheese, kSetCT08_CT51_UG12, -102.0f, 2.0f, 41.0f, 432, 6, 6, false, true, false, true);
+	if (!_vm->_cutContent) {
+		if (!Actor_Clue_Query(kActorMcCoy, kClueCheese)) {	
+			Item_Add_To_World(kItemCheese, kModelAnimationCheese, kSetCT08_CT51_UG12, -102.0f, 2.0f, 41.0f, 432, 6, 6, false, true, false, true);
+		}
 	}
 }
 
@@ -115,12 +125,21 @@ bool SceneScriptCT08::ClickedOnItem(int itemId, bool a2) {
 				Actor_Clue_Acquire(kActorMcCoy, kClueCheese, true, -1);
 				Item_Pickup_Spin_Effect(kModelAnimationCheese, 266, 328);
 				Item_Remove_From_World(kItemCheese);
-				if (_vm->_cutContent) {
-					Actor_Says(kActorMcCoy, 8820, 14);	//00-8820.AUD	A piece of cheese.
-				}
 				Actor_Voice_Over(480, kActorVoiceOver);
 				Actor_Voice_Over(490, kActorVoiceOver);
 				Actor_Voice_Over(500, kActorVoiceOver);
+			}
+		}	
+		return true;
+	}
+	if (itemId == kItemRagDoll) {
+		if (!Loop_Actor_Walk_To_Item(kActorMcCoy, kItemRagDoll, 36, true, false)) {
+			if (!Game_Flag_Query(kFlagMcCoyTiedDown)) {
+				Actor_Face_Item(kActorMcCoy, kItemRagDoll, true);
+				Actor_Clue_Acquire(kActorMcCoy, kClueRagDoll, true, kActorLucy);
+				Item_Pickup_Spin_Effect(kModelAnimationRagDoll, 191, 240);
+				Item_Remove_From_World(kItemRagDoll);
+				Actor_Says(kActorMcCoy, 8815, kAnimationModeTalk); //00-8815.AUD	A creepy looking doll.
 			}
 		}
 		return true;

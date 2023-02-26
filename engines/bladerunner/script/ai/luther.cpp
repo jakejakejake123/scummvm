@@ -255,14 +255,17 @@ void AIScriptLuther::Retired(int byActorId) {
 		Global_Variable_Decrement(kVariableReplicantsSurvivorsAtMoonbus, 1);
 		Actor_Set_Goal_Number(kActorLuther, kGoalLutherGone);
 		if (_vm->_cutContent) {
-			Actor_Modify_Friendliness_To_Other(kActorSteele, kActorMcCoy, 4);
-			Game_Flag_Reset(kFlagMcCoyIsHelpingReplicants);
-			if (Query_Difficulty_Level() != kGameDifficultyEasy) {
-				Global_Variable_Increment (kVariableChinyen, 400);
+			if (Game_Flag_Query(kFlagLutherLanceIsReplicant)) {
+				Actor_Modify_Friendliness_To_Other(kActorSteele, kActorMcCoy, 4);
+				Game_Flag_Reset(kFlagMcCoyIsHelpingReplicants);
+				if (Query_Difficulty_Level() != kGameDifficultyEasy) {
+					Global_Variable_Increment (kVariableChinyen, 400);
+				}
+				Actor_Modify_Friendliness_To_Other(kActorGaff, kActorMcCoy, 4);
+			} else {
+				Game_Flag_Set(kFlagMcCoyRetiredHuman);
 			}
-			Actor_Modify_Friendliness_To_Other(kActorGaff, kActorMcCoy, 4);
 		}
-
 		if (Global_Variable_Query(kVariableReplicantsSurvivorsAtMoonbus) == 0) {
 			Player_Loses_Control();
 			if (_vm->_cutContent) {

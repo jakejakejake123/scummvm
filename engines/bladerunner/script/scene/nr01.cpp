@@ -460,7 +460,6 @@ void SceneScriptNR01::PlayerWalkedIn() {
 					Delay(2000);
 				}
 				Actor_Says(kActorSteele, 1210, 14); //01-1210.AUD	We’d better call this in. Maybe we can seal off the sewers and get a search team out here. Your vehicle close by?
-				Actor_Clue_Acquire(kActorMcCoy, kClueMcCoyHelpedGordo, true, kActorSteele);
 				Game_Flag_Set(kFlagGordoEscaped);
 				Actor_Modify_Friendliness_To_Other(kActorSteele, kActorMcCoy, -2);
 				Actor_Modify_Friendliness_To_Other(kActorClovis, kActorMcCoy, 2);
@@ -598,6 +597,7 @@ void SceneScriptNR01::PlayerWalkedIn() {
 					if (_vm->_cutContent) {
 						if (Actor_Query_Friendliness_To_Other(kActorSteele, kActorMcCoy) > 59) {
 							Actor_Says(kActorSteele, 1520, 14); //01-1520.AUD	Figure it out! She must have made the call to Baker and that other Bozo.
+							Actor_Says(kActorMcCoy, 8320, 18); //00-8320.AUD	Really?
 							Delay(1000);
 							Actor_Says(kActorSteele, 1400, 12); //01-1400.AUD	Something ain’t right. That setup underground? I didn’t see a V-K Machine down there.
 							Actor_Says(kActorSteele, 1410, 12); //01-1410.AUD	Baker wasn’t gonna take you downtown and he wasn’t gonna test you.
@@ -606,9 +606,13 @@ void SceneScriptNR01::PlayerWalkedIn() {
 						}
 						Delay(1000);
 						Actor_Says(kActorSteele, 1570, 12); //01-1570.AUD	I bet she’s still there, Slim.
-						Actor_Says(kActorSteele, 1580, 14);
-						Actor_Says(kActorMcCoy, 3170, 13);
-						Actor_Says(kActorSteele, 1530, 13); //01-1530.AUD	Let’s attend to some business.
+						Delay(500);
+						if (Actor_Query_Friendliness_To_Other(kActorSteele, kActorMcCoy) < 60) {
+							Actor_Says(kActorSteele, 1580, 14); //01-1580.AUD	You coming or not?
+							Actor_Says(kActorMcCoy, 3170, 13);
+						} else {
+							Actor_Says(kActorSteele, 1530, 13); //01-1530.AUD	Let’s attend to some business.
+						}
 					} else {
 						Actor_Says(kActorSteele, 1520, 14); //01-1520.AUD	Figure it out! She must have made the call to Baker and that other Bozo.
 						Actor_Says(kActorSteele, 1530, 13); //01-1530.AUD	Let’s attend to some business.
@@ -635,29 +639,32 @@ void SceneScriptNR01::PlayerWalkedIn() {
 					if (_vm->_cutContent) {
 						if (Actor_Query_Friendliness_To_Other(kActorSteele, kActorMcCoy) < 60) {
 							Actor_Says(kActorSteele, 1620, 15); //01-1620.AUD	Now, excuse me while I go collect.
+							Actor_Says(kActorSteele, 1630, 14); //01-1630.AUD	You in or out?
+							Actor_Says(kActorMcCoy, 3205, 12); //00-3205.AUD	In.
 						} else {
 							Actor_Says(kActorSteele, 1530, 13); //01-1530.AUD	Let’s attend to some business.
 						}
 					} else {
 						Actor_Says(kActorSteele, 1620, 15); //01-1620.AUD	Now, excuse me while I go collect.
+						Actor_Says(kActorSteele, 1630, 14); //01-1630.AUD	You in or out?
+						Actor_Says(kActorMcCoy, 3205, 12); //00-3205.AUD	In.
 					}
-					Actor_Says(kActorSteele, 1630, 14); //01-1630.AUD	You in or out?
-					Actor_Says(kActorMcCoy, 3205, 12); //00-3205.AUD	In.
 					Actor_Set_Goal_Number(kActorSteele, kGoalSteeleNR01GoToNR02);
 				} else if (v0 == 3) { // Lucy called the fake cops
 					Actor_Says(kActorSteele, 1540, 15); //01-1540.AUD	That girl, the one from the arcade. She’s one of them.
-					if (_vm->_cutContent) {
-						Actor_Says(kActorMcCoy, 3175, 13); //00-3175.AUD	You sure? I didn’t get a chance to put her on the Machine.
-						Actor_Says(kActorSteele, 1550, 13); //01-1550.AUD	I’ve been sure since I’ve heard about all those dead animals in Runciter’s shop.
-					} else {
-						Actor_Says(kActorMcCoy, 3175, 13); //00-3175.AUD	You sure? I didn’t get a chance to put her on the Machine.
-						Actor_Says(kActorSteele, 1550, 13); //01-1550.AUD	I’ve been sure since I’ve heard about all those dead animals in Runciter’s shop.
-					}
+					Actor_Says(kActorMcCoy, 3175, 13); //00-3175.AUD	You sure? I didn’t get a chance to put her on the Machine.
+					Actor_Says(kActorSteele, 1550, 13); //01-1550.AUD	I’ve been sure since I’ve heard about all those dead animals in Runciter’s shop.
 					Actor_Says(kActorSteele, 1560, 16); //01-1560.AUD	You should have whacked her when you had the chance.
 					Actor_Says(kActorMcCoy, 3180, 15); //00-3180.AUD	Yeah, right in front of all the other children in the arcade. That would have been great publicity.
 					Actor_Says(kActorSteele, 1570, 12); //01-1570.AUD	I bet she’s still there, Slim.
-					Actor_Says(kActorSteele, 1580, 14); 
-					Actor_Says(kActorMcCoy, 3190, 12); //00-3190.AUD	Right behind you.
+					if (_vm->_cutContent) {
+						if (Actor_Query_Friendliness_To_Other(kActorSteele, kActorMcCoy) < 60) {
+							Actor_Says(kActorSteele, 1580, 14);  //01-1580.AUD	You coming or not?
+							Actor_Says(kActorMcCoy, 3190, 12); //00-3190.AUD	Right behind you.
+						} else {
+							Actor_Says(kActorSteele, 1530, 13); //01-1530.AUD	Let’s attend to some business.
+						}
+					}
 					Actor_Set_Goal_Number(kActorSteele, kGoalSteeleNR01GoToHF03);
 				}
 			}
@@ -671,7 +678,7 @@ void SceneScriptNR01::PlayerWalkedIn() {
 			// will immediately attack you instead of running away.
 			if (_vm->_cutContent) {
 				if (!Game_Flag_Query(kFlagMcCoyIsHelpingReplicants)) {
-					if (Actor_Clue_Query(kActorMcCoy, kClueGordoConfession)  
+					if (Actor_Clue_Query(kActorMcCoy, kClueStolenCheese)  
 					|| Actor_Clue_Query(kActorMcCoy, kClueGordoInterview3)
 					|| Actor_Clue_Query(kActorMcCoy, kClueGordosLighterReplicant)) {
 						Music_Stop(1u);
@@ -705,7 +712,7 @@ void SceneScriptNR01::PlayerWalkedIn() {
 						Actor_Set_Goal_Number(kActorGordo, kGoalGordoNR01RunAway);
 					}
 				} else {
-					if (Actor_Clue_Query(kActorMcCoy, kClueGordoConfession)  
+					if (Actor_Clue_Query(kActorMcCoy, kClueStolenCheese)  
 					|| Actor_Clue_Query(kActorMcCoy, kClueGordoInterview3)
 					|| Actor_Clue_Query(kActorMcCoy, kClueGordosLighterReplicant)) {
 						Actor_Face_Actor(kActorGordo, kActorMcCoy, true);

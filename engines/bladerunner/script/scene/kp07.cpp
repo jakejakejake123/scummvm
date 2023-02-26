@@ -131,6 +131,14 @@ void SceneScriptKP07::InitializeScene() {
 					Actor_Put_In_Set(kActorLuther, kSetKP07);
 					Actor_Set_At_XYZ(kActorLuther, -47.0f, 0.0f, 151.0f, 531);
 				}
+			} else {
+				if (!Game_Flag_Query(kFlagTwinsConvinced)) {
+					AI_Movement_Track_Flush(kActorLuther);
+					Actor_Set_Goal_Number(kActorLuther, kGoalLutherKP07Wait); // new goal to avoid resuming his walking around routine
+					Global_Variable_Increment(kVariableReplicantsSurvivorsAtMoonbus, 1);
+					Actor_Put_In_Set(kActorLuther, kSetKP07);
+					Actor_Set_At_XYZ(kActorLuther, -47.0f, 0.0f, 151.0f, 531);
+				}
 			}
 		} else {
 			if (Actor_Query_Goal_Number(kActorLuther) < kGoalLutherGone) {
@@ -226,6 +234,19 @@ void SceneScriptKP07::InitializeScene() {
 			// And explicitly switching back to kGoalClovisKP07Wait in order
 			// to trigger the bug-fixed GoalChanged() case in his AI
 			Actor_Set_Goal_Number(kActorClovis, kGoalClovisKP07Wait);
+			if (Global_Variable_Query(kVariableAffectionTowards) == kAffectionTowardsDektora
+			&& Actor_Query_Goal_Number(kActorDektora) < kGoalDektoraGone) {
+				AI_Movement_Track_Flush(kActorDektora);
+				Actor_Set_Goal_Number(kActorDektora, kGoalDektoraKP07Wait); 
+				Actor_Put_In_Set(kActorDektora, kSetKP07);
+				Actor_Set_At_XYZ(kActorDektora, -52.0f, -41.52f, -5.0f, 289);
+			} else if (Global_Variable_Query(kVariableAffectionTowards) == kAffectionTowardsLucy
+			&& Actor_Query_Goal_Number(kActorLucy) < kGoalLucyGone) {
+				AI_Movement_Track_Flush(kActorLucy);
+				Actor_Set_Goal_Number(kActorLucy, kGoalLucyKP07Wait); // new clear goal
+				Actor_Put_In_Set(kActorLucy, kSetKP07);
+				Actor_Set_At_XYZ(kActorLucy, 78.0f, -41.52f, -119.0f, 659);
+			}
 		}
 	}
 #endif // BLADERUNNER_ORIGINAL_BUGS
@@ -469,9 +490,57 @@ void SceneScriptKP07::PlayerWalkedIn() {
 				}
 			}			
 		} else {
-			Actor_Face_Actor(kActorMcCoy, kActorClovis, true);
 			if (_vm->_cutContent) {
-				if (Actor_Clue_Query(kActorMcCoy, kClueMcCoyRetiredSadik)) {
+				if (Actor_Query_Is_In_Current_Set(kActorDektora)) {
+					Actor_Face_Actor(kActorMcCoy, kActorDektora, true);
+					Actor_Face_Actor(kActorDektora, kActorMcCoy, true);
+					Delay(1000);
+					Actor_Says(kActorMcCoy, 7960, 13); //00-7960.AUD	Dektora?
+					Actor_Says(kActorDektora, 1480, kAnimationModeTalk); //03-1480.AUD	Yes.
+					Delay(1000);
+					Actor_Says(kActorMcCoy, 6610, 14); //00-6610.AUD	Been messing with peoples’ lives lately?
+					Delay(2000);
+					Actor_Says(kActorMcCoy, 8395, 18); //00-8395.AUD	You don't have anything to say?
+					Delay(1000);
+					Actor_Says_With_Pause(kActorDektora, 910, 1.0f, 30);
+					Actor_Says(kActorMcCoy, 2660, 18); //00-2660.AUD	That breaks my heart.
+					Delay(2000);
+					Actor_Says(kActorMcCoy, 1655, 14); //0-1655.AUD	You’ve got to get out of here.
+					Actor_Says(kActorDektora, 90, kAnimationModeTalk); //03-0090.AUD	Ray!?
+					Actor_Says(kActorMcCoy, 1660, 15); //00-1660.AUD	Go! Quickly.
+					Delay(1000);
+					Actor_Says(kActorMcCoy, 1805, 14); //00-1805.AUD	Now!
+					Loop_Actor_Walk_To_XYZ(kActorDektora, -102.0f, -73.5f, -233.0f, 0, false, true, false);
+					Actor_Put_In_Set(kActorDektora, kSceneKP06);
+				} else if (Actor_Query_Is_In_Current_Set(kActorLucy)) {
+					Actor_Face_Actor(kActorMcCoy, kActorLucy, true);
+					Actor_Face_Actor(kActorLucy, kActorMcCoy, true);
+					Delay(1000);
+					Actor_Says(kActorMcCoy, 1600, 11); //00-1600.AUD	Lucy? 
+					if (Game_Flag_Query(kFlagLucyIsReplicant)) {
+						Actor_Says(kActorLucy, 90, 13); //06-0090.AUD	Leave me alone.		
+					} else {
+						Actor_Says(kActorLucy, 110, 13); //06-0110.AUD	Please, leave me alone.
+					}
+					Delay(1000);
+					Actor_Says(kActorMcCoy, 6610, 14); //00-6610.AUD	Been messing with peoples’ lives lately?
+					Delay(2000);
+					Actor_Says(kActorMcCoy, 8395, 18); //00-8395.AUD	You don't have anything to say?
+					Delay(1000);
+					Actor_Says(kActorLucy, 2190, 13); //06-2190.AUD	You're cruel.
+					Actor_Says(kActorMcCoy, 4880, 13); //00-4880.AUD	Is that right?
+					Delay(2000);
+					Actor_Says(kActorMcCoy, 1655, 14); //0-1655.AUD	You’ve got to get out of here.
+					Actor_Says(kActorLucy, 380, 13); //06-0380.AUD	Ray.
+					Actor_Says(kActorMcCoy, 1660, 15); //00-1660.AUD	Go! Quickly.
+					Delay(1000);
+					Actor_Says(kActorMcCoy, 1805, 14); //00-1805.AUD	Now!
+					Loop_Actor_Walk_To_XYZ(kActorLucy, -102.0f, -73.5f, -233.0f, 0, false, true, false);
+					Actor_Put_In_Set(kActorLucy, kSceneKP06);
+				}
+				Actor_Face_Actor(kActorMcCoy, kActorClovis, true);
+				if (Game_Flag_Query(kFlagSadikIsReplicant)
+				&& Actor_Clue_Query(kActorMcCoy, kClueMcCoyRetiredSadik)) {
 					Actor_Says(kActorClovis, 160, 3); //05-0160.AUD	I’ve been expecting you.
 				}
 			} else {

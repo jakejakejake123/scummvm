@@ -200,7 +200,18 @@ bool SceneScriptDR04::ClickedOnItem(int itemId, bool a2) {
 bool SceneScriptDR04::ClickedOnExit(int exitId) {
 	if (Actor_Query_Goal_Number(kActorMoraji) == kGoalMorajiLayDown) {
 		Actor_Force_Stop_Walking(kActorMcCoy);
-		Actor_Set_Goal_Number(kActorMoraji, kGoalMorajiDie);
+		if (_vm->_cutContent) {
+			if (Game_Flag_Query(kFlagDR03ChewTalk1)
+			|| Game_Flag_Query(kFlagDR06Entered)
+			|| Game_Flag_Query(kFlagShoeshineManTalk)
+			|| Game_Flag_Query(kFlagGaffTalk)
+			|| Game_Flag_Query(kFlagGordoTalk1)) {
+				Actor_Set_Goal_Number(kActorMoraji, kGoalMorajiDie);
+				CDB_Set_Crime(kClueDoorForced1, kCrimeMorajiMurder);
+			}
+		} else {
+			Actor_Set_Goal_Number(kActorMoraji, kGoalMorajiDie);
+		}
 		Actor_Set_Goal_Number(kActorOfficerGrayford, kGoalOfficerGrayfordArrivesToDR04);
 		return true;
 	}
@@ -227,6 +238,13 @@ bool SceneScriptDR04::ClickedOnExit(int exitId) {
 
 	if (exitId == 1) {
 		if (!Loop_Actor_Walk_To_XYZ(kActorMcCoy, -1067.0f, 7.18f, 421.0f, 0, true, false, false)) {
+			if (!Actor_Clue_Query(kActorMcCoy, kClueDoorForced1)) {
+				Actor_Voice_Over(0, kActorVoiceOver); // 99-0000.AUD	The lock had been forced.
+				Actor_Voice_Over(10, kActorVoiceOver); // 99-0010.AUD	Tyrell sub-cons might have been a little dingy...
+				Actor_Voice_Over(20, kActorVoiceOver); // 99-0020.AUD	But I didn't think they'd bust down their own doors, if they forgot their keys.
+				Actor_Clue_Acquire(kActorMcCoy, kClueDoorForced1, true, -1);
+				Delay(1000);
+			}
 			Set_Enter(kSetDR05, kSceneDR05);
 		}
 		return true;
@@ -272,6 +290,9 @@ void SceneScriptDR04::SceneFrameAdvanced(int frame) {
 		Scene_Loop_Start_Special(kSceneLoopModeOnce, kDR04LoopDR04Explosion, true);
 		Music_Stop(4u);
 		Actor_Set_Goal_Number(kActorMoraji, kGoalMorajiPerished);
+		if (_vm->_cutContent) {
+			Scene_Exits_Enable();
+		}
 	} else {
 		if (Game_Flag_Query(kFlagDR05BombWillExplode)) {
 			Game_Flag_Reset(kFlagDR05BombWillExplode);
@@ -279,6 +300,9 @@ void SceneScriptDR04::SceneFrameAdvanced(int frame) {
 			Scene_Loop_Set_Default(kDR04LoopMainPostExplosion);
 			Scene_Loop_Start_Special(kSceneLoopModeOnce, kDR04LoopDR04Explosion, true);
 			Item_Remove_From_World(kItemBomb);
+			if (_vm->_cutContent) {
+				Scene_Exits_Enable();
+			}
 		}
 
 		switch (frame) {
@@ -292,6 +316,9 @@ void SceneScriptDR04::SceneFrameAdvanced(int frame) {
 					Actor_Change_Animation_Mode(kActorMcCoy, kAnimationModeCombatHit);
 				} else {
 					Actor_Change_Animation_Mode(kActorMcCoy, kAnimationModeHit);
+				}
+				if (_vm->_cutContent) {
+					Scene_Exits_Enable();
 				}
 			} else {
 				Sound_Play_Speech_Line(kActorMcCoy, 9905, 100, 0, 99);

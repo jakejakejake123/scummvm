@@ -266,6 +266,7 @@ void SceneScriptNR05::talkToBartender() {
 			if (Global_Variable_Query(kVariableChinyen) >= 5
 			|| Query_Difficulty_Level() == kGameDifficultyEasy) {
 				Actor_Change_Animation_Mode(kActorMcCoy, 23);
+				Actor_Change_Animation_Mode(kActorEarlyQBartender, 23);
 				Delay(1500);
 				Actor_Change_Animation_Mode(kActorMcCoy, 75);
 				Global_Variable_Increment(kVariableMcCoyDrinks, 1);
@@ -287,6 +288,7 @@ void SceneScriptNR05::talkToBartender() {
 			if (Global_Variable_Query(kVariableChinyen) >= 5
 			|| Query_Difficulty_Level() == kGameDifficultyEasy) {
 				Actor_Change_Animation_Mode(kActorMcCoy, 23);
+				Actor_Change_Animation_Mode(kActorEarlyQBartender, 23);
 				Delay(1500);
 				Actor_Change_Animation_Mode(kActorMcCoy, 75);
 				Global_Variable_Increment(kVariableMcCoyDrinks, 1);
@@ -314,13 +316,13 @@ void SceneScriptNR05::talkToBartender() {
 					Actor_Says(kActorMcCoy, 4940, 18); //00-4940.AUD	Okay, let's have it.
 					Actor_Change_Animation_Mode(kActorEarlyQBartender, 23);
 					Actor_Change_Animation_Mode(kActorMcCoy, 23);
-					Delay(1000);
+					Delay(800);
 					Item_Pickup_Spin_Effect_From_Actor(kModelAnimationFlaskOfAbsinthe, kActorMcCoy, 0, 0);
 					Actor_Clue_Acquire(kActorMcCoy, kClueFlaskOfAbsinthe, true, kActorEarlyQBartender);
 					if (Query_Difficulty_Level() != kGameDifficultyEasy) {
 						Global_Variable_Decrement(kVariableChinyen, 20);
 					}
-					Delay(1000);
+					Delay(800);
 				} else {
 					Actor_Says(kActorMcCoy, 125, 13); //00-0125.AUD	I'm a little strapped for cash right now.
 				}	
@@ -401,8 +403,8 @@ void SceneScriptNR05::talkToEarlyQ() {
 				}
 				Actor_Says(kActorMcCoy, 8615, 16); //00-8615.AUD	Heard anything on the street?
 				Actor_Says(kActorEarlyQ, 700, kAnimationModeTalk); //18-0700.AUD	I heard some things, yeah. I’m the kind of guy people confide in, you know.
-				if (Player_Query_Agenda() == kPlayerAgendaSurly 
-				|| Player_Query_Agenda() == kPlayerAgendaErratic) {
+				if (Player_Query_Agenda() != kPlayerAgendaSurly 
+				&& Player_Query_Agenda() != kPlayerAgendaErratic) {
 					Actor_Says(kActorMcCoy, 4880, 13); //00-4880.AUD	Is that right?
 				} else {
 					Actor_Says(kActorMcCoy, 2485, 18); //00-2485.AUD	I’ve a hard time believing that.
@@ -427,7 +429,7 @@ void SceneScriptNR05::talkToEarlyQ() {
 		|| Actor_Clue_Query(kActorMcCoy, kClueCollectionReceipt)) {
 			if (!Actor_Clue_Query(kActorMcCoy, kClueEarlyInterviewB1)) {
 				if (_vm->_cutContent) {
-					DM_Add_To_List_Never_Repeat_Once_Selected(890, 1, 4, 8); // JEWELRY
+					DM_Add_To_List_Never_Repeat_Once_Selected(890, 6, 7, 8); // JEWELRY
 				} else {
 					DM_Add_To_List_Never_Repeat_Once_Selected(890, -1, 4, 8); // JEWELRY
 				}
@@ -449,18 +451,20 @@ void SceneScriptNR05::talkToEarlyQ() {
 		// Also made it so this option is only available if you also talked to Early Q about the jewelry. This is because Early Q mentions giving the jewelry to 'Hecuba'
 		// in this conversation which is a follow up of the previous conversation where he mentions giving the jewelry to one of his dancers.
 		if (_vm->_cutContent) {
-			if (Actor_Clue_Query(kActorMcCoy, kClueChinaBar)
-			&& Game_Flag_Query(kFlagDektoraIdentified)) {
-				// TODO A bug? kClueDektorasDressingRoom is acquired from EarlyQ
-				// at his office (nr04) while being threatened by McCoy.
-				// At which point EarlyQ already tells McCoy who the people on the photograph are.
-				// It makes no sense that McCoy will next find EarlyQ at the VIP area (this area, nr05)
-				// and casually ask him about who the woman is in this photo.
-				// (McCoy won't be able to even find EarlyQ there again).
-				// Maybe it's another photo of Dektora needed here
-				// --- Animoid Row? Why would McCoy suspect that woman?
-				// --- Hawker's Bar? Can we find a Dektora pic in SHP resources?
-				DM_Add_To_List_Never_Repeat_Once_Selected(910, 5, 5, 5); // BLOND WOMAN
+			if (Game_Flag_Query(kFlagDektoraIdentified)) {
+				if (Actor_Clue_Query(kActorMcCoy, kClueChinaBar)
+				|| Actor_Clue_Query(kActorMcCoy, kClueWomanInAnimoidRow)) {
+					// TODO A bug? kClueDektorasDressingRoom is acquired from EarlyQ
+					// at his office (nr04) while being threatened by McCoy.
+					// At which point EarlyQ already tells McCoy who the people on the photograph are.
+					// It makes no sense that McCoy will next find EarlyQ at the VIP area (this area, nr05)
+					// and casually ask him about who the woman is in this photo.
+					// (McCoy won't be able to even find EarlyQ there again).
+					// Maybe it's another photo of Dektora needed here
+					// --- Animoid Row? Why would McCoy suspect that woman?
+					// --- Hawker's Bar? Can we find a Dektora pic in SHP resources?
+					DM_Add_To_List_Never_Repeat_Once_Selected(910, 5, 5, 5); // BLOND WOMAN
+				}
 			}
 		}
 	}
@@ -557,13 +561,7 @@ void SceneScriptNR05::talkToEarlyQ() {
 		break;
 
 	case 900: // LUCY
-		if (_vm->_cutContent) {
-			if (!Actor_Clue_Query(kActorMcCoy, kClueLucy)) {
-				Actor_Says(kActorMcCoy, 385, 9); //00-0385.AUD	I'm looking for a girl about 14 years old with pink hair. You seen her?
-			} else {
-				Actor_Says(kActorMcCoy, 3510, 15); //00-3510.AUD	This girl one of yours?
-			}
-		} 
+		Actor_Says(kActorMcCoy, 3510, 15); //00-3510.AUD	This girl one of yours?
 		if (!_vm->_cutContent) {
 			Actor_Modify_Friendliness_To_Other(kActorEarlyQ, kActorMcCoy, -1);
 		}
@@ -571,12 +569,10 @@ void SceneScriptNR05::talkToEarlyQ() {
 		// Made it so if Early Q is a rep he doesn't make those creepy comments about Lucy. If Early Q is a rep he actually cares about the reps and would never hurt Lucy
 		// who is someone that the reps really care about.
 		if (_vm->_cutContent) {
-			if (Actor_Clue_Query(kActorMcCoy, kClueLucy)) {
-				if (!Game_Flag_Query(kFlagEarlyQIsReplicant)) {
-					Actor_Says(kActorEarlyQ, 540, 15); //18-0540.AUD	Of course, she ain’t half bad looking. My pappy always used to say ‘if there’s grass on the field, it’s time to play ball’.			
-					Actor_Says(kActorMcCoy, 8665, 13); //00-8665.AUD	Disgusting.	
-					Delay(2000);
-				}
+			if (!Game_Flag_Query(kFlagEarlyQIsReplicant)) {
+				Actor_Says(kActorEarlyQ, 540, 15); //18-0540.AUD	Of course, she ain’t half bad looking. My pappy always used to say ‘if there’s grass on the field, it’s time to play ball’.			
+				Actor_Says(kActorMcCoy, 8665, 13); //00-8665.AUD	Disgusting.	
+				Delay(2000);
 			}
 		} else {
 			Actor_Says(kActorEarlyQ, 540, 15); //18-0540.AUD	Of course, she ain’t half bad looking. My pappy always used to say ‘if there’s grass on the field, it’s time to play ball’.			
@@ -586,10 +582,7 @@ void SceneScriptNR05::talkToEarlyQ() {
 		if (_vm->_cutContent) {
 			if (Game_Flag_Query(kFlagEarlyQIsReplicant)) {
 				Actor_Says(kActorEarlyQ, 570, 13); //18-0570.AUD	Talk to Taffy. He gets most of the peddy business around here.
-				if (Player_Query_Agenda() != kPlayerAgendaSurly
-				&& (Player_Query_Agenda() != kPlayerAgendaErratic)) {
-					Actor_Says(kActorMcCoy, 3555, 12); //00-3555.AUD	It’s men like you that made this country great, Early.
-				}
+				Actor_Says(kActorMcCoy, 3555, 12); //00-3555.AUD	It’s men like you that made this country great, Early.
 			} else {
 				Actor_Says(kActorMcCoy, 2485, 19); //00-2485.AUD	I’ve a hard time believing that.
 				Delay(1000);
@@ -607,7 +600,9 @@ void SceneScriptNR05::talkToEarlyQ() {
 		} else {
 			Actor_Says(kActorMcCoy, 3515, 14); //00-3515.AUD	You ever seen this woman before?
 		}
-		Actor_Modify_Friendliness_To_Other(kActorEarlyQ, kActorMcCoy, -1);
+		if (!_vm->_cutContent) {
+			Actor_Modify_Friendliness_To_Other(kActorEarlyQ, kActorMcCoy, -1);
+		}
 		// Made it so Early Q will only says that he recognises Dektora if he is a human. If he is a rep he will be protecting the reps so he will deny recognising Dektora.
 		if (!Game_Flag_Query(kFlagEarlyQIsReplicant)) { 
 			// A BUG?

@@ -560,25 +560,29 @@ void AIScriptSebastian::dialogue() {
 
 		case 970: // RUNCITER
 			Actor_Says(kActorMcCoy, 7095, 13);
-			Actor_Says(kActorSebastian, 500, 15);
-			Actor_Says(kActorMcCoy, 7170, 17); //00-7170.AUD	Runciter was paying the twins for something. I saw the cash hidden inside a statue.
 			if (_vm->_cutContent) {
 				if (Actor_Query_Friendliness_To_Other(kActorSebastian, kActorMcCoy) > 49) {
 					Actor_Says(kActorSebastian, 520, 14);
 					Actor_Says(kActorMcCoy, 7180, 12);
 					Actor_Says(kActorSebastian, 530, 13);
+					Actor_Clue_Acquire(kActorMcCoy, kClueRunciterConfession2, true, kActorSebastian);
 					if (!Game_Flag_Query(kFlagMcCoyIsHelpingReplicants)) {
 						Actor_Says(kActorMcCoy, 7185, 12); // 00-7185.AUD	So, Tyrell would really be pissed, if he knew Luther and Lance were helping renegade Replicants.
 						setMcCoyIsABladeRunner();
-					}
+					}	
 				} else {
-					Actor_Says(kActorSebastian, 510, 12);
+					Actor_Says(kActorSebastian, 500, 13); //56-0500.AUD	Deal? I don't think I understand.
+					if (Game_Flag_Query(kFlagLutherLanceIsReplicant)) {
+						Actor_Says(kActorMcCoy, 7170, 17); //00-7170.AUD	Runciter was paying the twins for something. I saw the cash hidden inside a statue.
+						Actor_Says(kActorSebastian, 510, 12);
+					}
 					if (Player_Query_Agenda() == kPlayerAgendaSurly 
 					|| Player_Query_Agenda() == kPlayerAgendaErratic) {	
 						Actor_Says(kActorMcCoy, 7175, 18); //00-7175.AUD	Come on, Sebastian, I heard you on the machine. You guys are buddies, right?
 						Actor_Says(kActorSebastian, 520, 14);
 						Actor_Says(kActorMcCoy, 7180, 12);
 						Actor_Says(kActorSebastian, 530, 13);
+						Actor_Clue_Acquire(kActorMcCoy, kClueRunciterConfession2, true, kActorSebastian);
 						if (!Game_Flag_Query(kFlagMcCoyIsHelpingReplicants)) {
 							Actor_Says(kActorMcCoy, 7185, 12); // 00-7185.AUD	So, Tyrell would really be pissed, if he knew Luther and Lance were helping renegade Replicants.
 							setMcCoyIsABladeRunner();

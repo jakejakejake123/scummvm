@@ -206,14 +206,6 @@ void AIScriptIzo::ClickedByPlayer() {
 						Actor_Change_Animation_Mode(kActorMcCoy, 23);
 						Actor_Change_Animation_Mode(kActorIzo, 23);
 						Delay(800);
-						if (Actor_Clue_Query(kActorMcCoy, kClueChinaBar)) {
-							Item_Pickup_Spin_Effect_From_Actor(kModelAnimationIzoCamera, kActorIzo, 0, 0);		
-							Delay(1500);
-							Actor_Clue_Lose(kActorMcCoy, kClueChinaBar);
-							Actor_Clue_Acquire(kActorIzo, kClueChinaBar, true, -1);
-							Item_Pickup_Spin_Effect_From_Actor(kModelAnimationPhoto, kActorIzo, 0, 0);
-							Delay(1500);
-						}
 						if (Actor_Clue_Query(kActorMcCoy, kClueMoonbus1)) {
 							Actor_Clue_Lose(kActorMcCoy, kClueMoonbus1);
 							Actor_Clue_Acquire(kActorIzo, kClueMoonbus1, true, -1);
@@ -224,10 +216,6 @@ void AIScriptIzo::ClickedByPlayer() {
 							Actor_Clue_Lose(kActorMcCoy, kClueRadiationGoggles);
 							Actor_Clue_Acquire(kActorIzo, kClueRadiationGoggles, true, -1);
 							Item_Pickup_Spin_Effect_From_Actor(kModelAnimationRadiationGoggles, kActorIzo, 0, 0);
-							Delay(1500);
-						}
-						if (Game_Flag_Query(kFlagDragonflyEarringTaken)) {
-							Item_Pickup_Spin_Effect_From_Actor(kModelAnimationDragonflyEarring, kActorIzo, 0, 0);
 							Delay(1500);
 						}
 						Actor_Says(kActorMcCoy, 8170, 13); //00-8170.AUD	There you go.
@@ -1028,7 +1016,13 @@ bool AIScriptIzo::UpdateAnimation(int *animation, int *frame) {
 			*animation = kModelAnimationIzoIdle;
 			_animationFrame = 0;
 			_animationState = 0;
-			Item_Add_To_World(kItemCamera, kModelAnimationIzoCamera, kSetHC01_HC02_HC03_HC04, 597.46f, 0.14f, 49.92f, 0, 12, 12, false, true, false, false);
+			if (_vm->_cutContent) {
+				if (!Game_Flag_Query(kFlagIzoIsReplicant)) {
+					Item_Add_To_World(kItemCamera, kModelAnimationIzoCamera, kSetHC01_HC02_HC03_HC04, 597.46f, 0.14f, 49.92f, 0, 12, 12, false, true, false, false);
+				}
+			} else {
+				Item_Add_To_World(kItemCamera, kModelAnimationIzoCamera, kSetHC01_HC02_HC03_HC04, 597.46f, 0.14f, 49.92f, 0, 12, 12, false, true, false, false);
+			}
 			Actor_Set_Goal_Number(kActorIzo, kGoalIzoRunToUG02);
 			if (_vm->_cutContent) {
 				if  (Game_Flag_Query(kFlagIzoGotAway)) {

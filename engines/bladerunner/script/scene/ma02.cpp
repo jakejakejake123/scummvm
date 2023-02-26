@@ -250,12 +250,16 @@ void SceneScriptMA02::PlayerWalkedIn() {
 		if (_vm->_cutContent) {
 			if (!Game_Flag_Query(kFlagMcCoyIsInnocent)) {
 				Actor_Face_Actor(kActorMcCoy, kActorMaggie, true);
+				Delay(1000);
+				Music_Play(kMusicCrysDie1, 25, 0, 1, -1, kMusicLoopPlayOnce, 1);
+				Delay(1000);
 				Actor_Says(kActorMcCoy, 2390, kAnimationModeIdle); //00-2390.AUD	Oh, God. No.
 				Actor_Set_Goal_Number(kActorMaggie, kGoalMaggieDead);
-				Music_Play(kMusicBRBlues, 25, 0, 3, -1, kMusicLoopPlayOnce, 0);
-				Delay(1000);
-				Actor_Face_Object(kActorMcCoy, "BAR-MAIN", true);
 				Delay(2000);
+				Actor_Says(kActorMcCoy, 2305, 19); //00-2305.AUD	I’m sorry.
+				Delay(2000);
+				Actor_Face_Object(kActorMcCoy, "BAR-MAIN", true);
+				Delay(1000);
 				Player_Loses_Control();
 				Loop_Actor_Walk_To_XYZ(kActorMcCoy, -29.0f, -140.4f, 298.0f, 36, true, false, false);
 				Actor_Change_Animation_Mode(kActorMcCoy, 23);
@@ -273,12 +277,16 @@ void SceneScriptMA02::PlayerWalkedIn() {
 			|| Global_Variable_Query(kVariableAffectionTowards) == kAffectionTowardsLucy) {
 				if (Game_Flag_Query(kFlagDektoraIsReplicant)) {
 					Actor_Face_Actor(kActorMcCoy, kActorMaggie, true);
+					Delay(1000);
+					Music_Play(kMusicCrysDie1, 25, 0, 1, -1, kMusicLoopPlayOnce, 1);
+					Delay(1000);
 					Actor_Says(kActorMcCoy, 2390, kAnimationModeIdle); //00-2390.AUD	Oh, God. No.
 					Actor_Set_Goal_Number(kActorMaggie, kGoalMaggieDead);
-					Music_Play(kMusicBRBlues, 25, 0, 3, -1, kMusicLoopPlayOnce, 0);
-					Delay(1000);
-					Actor_Face_Object(kActorMcCoy, "BAR-MAIN", true);
 					Delay(2000);
+					Actor_Says(kActorMcCoy, 2305, 19); //00-2305.AUD	I’m sorry.
+					Delay(2000);
+					Actor_Face_Object(kActorMcCoy, "BAR-MAIN", true);
+					Delay(1000);
 					Player_Loses_Control();
 					Loop_Actor_Walk_To_XYZ(kActorMcCoy, -29.0f, -140.4f, 298.0f, 36, true, false, false);
 					Delay(800);
@@ -297,12 +305,16 @@ void SceneScriptMA02::PlayerWalkedIn() {
 					}
 				} else if (Game_Flag_Query(kFlagLucyIsReplicant)) {
 					Actor_Face_Actor(kActorMcCoy, kActorMaggie, true);
+					Delay(1000);
+					Music_Play(kMusicCrysDie1, 25, 0, 1, -1, kMusicLoopPlayOnce, 1);
+					Delay(1000);
 					Actor_Says(kActorMcCoy, 2390, kAnimationModeIdle); //00-2390.AUD	Oh, God. No.
 					Actor_Set_Goal_Number(kActorMaggie, kGoalMaggieDead);
-					Music_Play(kMusicBRBlues, 25, 0, 3, -1, kMusicLoopPlayOnce, 0);
-					Delay(1000);
-					Actor_Face_Object(kActorMcCoy, "BAR-MAIN", true);
 					Delay(2000);
+					Actor_Says(kActorMcCoy, 2305, 19); //00-2305.AUD	I’m sorry.
+					Delay(2000);
+					Actor_Face_Object(kActorMcCoy, "BAR-MAIN", true);
+					Delay(1000);
 					Player_Loses_Control();
 					Loop_Actor_Walk_To_XYZ(kActorMcCoy, -29.0f, -140.4f, 298.0f, 36, true, false, false);
 					Delay(800);

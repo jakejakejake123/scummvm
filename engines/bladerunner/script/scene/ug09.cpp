@@ -203,7 +203,7 @@ void SceneScriptUG09::PlayerWalkedIn() {
 			Actor_Says(kActorMcCoy, 6755, 13); //00-6755.AUD	He wants to talk to me?!
 			Actor_Says(kActorIzo, 910, 12); //07-0910.AUD	He would have made that clear.
 			Actor_Clue_Acquire(kActorMcCoy, kClueIzosWarning, true, kActorIzo);
-			if (Actor_Clue_Query(kActorMcCoy, kClueMcCoyRetiredZuben)) {
+			if (Actor_Clue_Query(kActorClovis, kClueMcCoyRetiredZuben)) {
 				Actor_Says(kActorIzo, 760, 14); //07-0760.AUD	He knows all about you. Knows what happened with Zuben.
 			}
 			if (!Actor_Clue_Query(kActorMcCoy, kClueAmateurBomber)) {

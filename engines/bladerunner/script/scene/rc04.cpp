@@ -653,7 +653,8 @@ void SceneScriptRC04::dialogueWithBulletBob() {
 				Actor_Says(kActorBulletBob, 810, 30); //14-0810.AUD	So that's it?
 				Actor_Says(kActorMcCoy, 5025, 13); //00-5025.AUD	Yeah?
 				Actor_Says(kActorBulletBob, 820, 31); //14-0820.AUD	Since you didn't shoot me, I must have registered okay.
-				if (!Game_Flag_Query(kFlagBulletBobIsReplicant)) {
+				if (!Game_Flag_Query(kFlagBulletBobIsReplicant)
+				&& Actor_Clue_Query(kActorMcCoy, kClueVKBobGorskyHuman)) {
 					Actor_Says(kActorMcCoy, 5100, 11); //00-5100.AUD	Yeah, it was touch-and-go there for a while.
 					if (Actor_Query_Friendliness_To_Other(kActorBulletBob, kActorMcCoy) > 49) {
 						Actor_Says(kActorBulletBob, 830, 31); //14-0830.AUD	Well, you know, I think about skin-jobs all the time.
@@ -1386,54 +1387,62 @@ bool SceneScriptRC04::ClickedOn2DRegion(int region) {
 			Actor_Face_Actor(kActorMcCoy, kActorBulletBob, true);
 			Actor_Face_Actor(kActorBulletBob, kActorMcCoy, true);
 			Actor_Says(kActorMcCoy, 4930, 13); //00-4930.AUD	How much?
-			if (!Game_Flag_Query(kFlagBulletBobIsReplicant)
-			&& Actor_Query_Friendliness_To_Other(kActorBulletBob, kActorMcCoy) > 49) {
-				Actor_Says(kActorBulletBob, 160, 33); //14-0160.AUD	200 chinyen.				
-				if (Global_Variable_Query(kVariableChinyen) >= 200
-	  			  || Query_Difficulty_Level() == kGameDifficultyEasy
-				) {
-					Actor_Says(kActorMcCoy, 7000, 13); //00-7000.AUD	Yeah, okay. I'll take it.
-					Loop_Actor_Walk_To_Waypoint(kActorMcCoy, 104, 0, false, false);
-					Actor_Face_Actor(kActorMcCoy, kActorBulletBob, true);
-					Actor_Face_Actor(kActorBulletBob, kActorMcCoy, true);
-					Actor_Change_Animation_Mode(kActorMcCoy, 23);
-					Actor_Change_Animation_Mode(kActorBulletBob, 23);
-					Delay(2000);
-					Loop_Actor_Walk_To_XYZ(kActorMcCoy, 77.30, 0.27, -77.67, 0, false, false, true);
-					Actor_Change_Animation_Mode(kActorMcCoy, 23);
-					Delay(2000);
-					Actor_Set_Health(kActorMcCoy, 90, 90);
-					Game_Flag_Set(kFlagMcCoyHasVest);
-					Scene_2D_Region_Remove(0);
-					if (Query_Difficulty_Level() != kGameDifficultyEasy) {
-						Global_Variable_Decrement(kVariableChinyen, 200);
-					}
-				} else {
-					Actor_Says(kActorMcCoy, 4935, 13); //00-4935.AUD	That's a little steep.
-					Actor_Says(kActorBulletBob, 180, 35); //14-0180.AUD	Retire a few skin-jobs and maybe you'll get a discount.
-				}
+			if (Game_Flag_Query(kFlagBulletBobIsReplicant)) {
+				Actor_Says(kActorBulletBob, 150, 31); //14-2100.AUD	Yeah, I know how it is.
+				Actor_Says(kActorBulletBob, 150, 32); //14-0060.AUD	Guys like you get hurt real easy.
+				Actor_Says(kActorBulletBob, 150, 35); //14-0070.AUD	It ain't like you're a real Blade Runner. Not like Steele or Gaff.
+				Actor_Says(kActorMcCoy, 8445, 14); //00-8445.AUD	Cough it up!
+				Actor_Says(kActorBulletBob, 150, 31); //14-1400.AUD	Hmm yeah, sure.
+				Actor_Modify_Friendliness_To_Other(kActorRunciter, kActorMcCoy, -2);
 			} else {
-				Actor_Says(kActorBulletBob, 170, 33); //14-0170.AUD	300 chinyen.
-				if (Global_Variable_Query(kVariableChinyen) >= 300
-	  			 	|| Query_Difficulty_Level() == kGameDifficultyEasy
-				) {
-					Actor_Says(kActorMcCoy, 7000, 13); //00-7000.AUD	Yeah, okay. I'll take it.
-					Loop_Actor_Walk_To_Waypoint(kActorMcCoy, 104, 0, false, false);
-					Actor_Change_Animation_Mode(kActorMcCoy, 23);
-					Actor_Change_Animation_Mode(kActorBulletBob, 23);
-					Delay(2000);
-					Loop_Actor_Walk_To_XYZ(kActorMcCoy, 77.30, 0.27, -77.67, 0, false, false, true);
-					Actor_Change_Animation_Mode(kActorMcCoy, 23);
-					Delay(2000);
-					Actor_Set_Health(kActorMcCoy, 90, 90);
-					Game_Flag_Set(kFlagMcCoyHasVest);
-					Scene_2D_Region_Remove(0);
-					if (Query_Difficulty_Level() != kGameDifficultyEasy) {
-						Global_Variable_Decrement(kVariableChinyen, 300);
+				if (Actor_Query_Friendliness_To_Other(kActorBulletBob, kActorMcCoy) > 49) {
+					Actor_Says(kActorBulletBob, 160, 33); //14-0160.AUD	200 chinyen.				
+					if (Global_Variable_Query(kVariableChinyen) >= 200
+					|| Query_Difficulty_Level() == kGameDifficultyEasy
+					) {
+						Actor_Says(kActorMcCoy, 7000, 13); //00-7000.AUD	Yeah, okay. I'll take it.
+						Loop_Actor_Walk_To_Waypoint(kActorMcCoy, 104, 0, false, false);
+						Actor_Face_Actor(kActorMcCoy, kActorBulletBob, true);
+						Actor_Face_Actor(kActorBulletBob, kActorMcCoy, true);
+						Actor_Change_Animation_Mode(kActorMcCoy, 23);
+						Actor_Change_Animation_Mode(kActorBulletBob, 23);
+						Delay(2000);
+						Loop_Actor_Walk_To_XYZ(kActorMcCoy, 77.30, 0.27, -77.67, 0, false, false, true);
+						Actor_Change_Animation_Mode(kActorMcCoy, 23);
+						Delay(2000);
+						Actor_Set_Health(kActorMcCoy, 90, 90);
+						Game_Flag_Set(kFlagMcCoyHasVest);
+						Scene_2D_Region_Remove(0);
+						if (Query_Difficulty_Level() != kGameDifficultyEasy) {
+							Global_Variable_Decrement(kVariableChinyen, 200);
+						}
+					} else {
+						Actor_Says(kActorMcCoy, 4935, 13); //00-4935.AUD	That's a little steep.
+						Actor_Says(kActorBulletBob, 180, 35); //14-0180.AUD	Retire a few skin-jobs and maybe you'll get a discount.
 					}
 				} else {
-					Actor_Says(kActorMcCoy, 4945, 16); //00-4945.AUD	I think I'll pass.
-					Actor_Says(kActorBulletBob, 190, 30); //14-0190.AUD	You better not come crying to me when you catch a bullet.
+					Actor_Says(kActorBulletBob, 170, 33); //14-0170.AUD	300 chinyen.
+					if (Global_Variable_Query(kVariableChinyen) >= 300
+						|| Query_Difficulty_Level() == kGameDifficultyEasy
+					) {
+						Actor_Says(kActorMcCoy, 7000, 13); //00-7000.AUD	Yeah, okay. I'll take it.
+						Loop_Actor_Walk_To_Waypoint(kActorMcCoy, 104, 0, false, false);
+						Actor_Change_Animation_Mode(kActorMcCoy, 23);
+						Actor_Change_Animation_Mode(kActorBulletBob, 23);
+						Delay(2000);
+						Loop_Actor_Walk_To_XYZ(kActorMcCoy, 77.30, 0.27, -77.67, 0, false, false, true);
+						Actor_Change_Animation_Mode(kActorMcCoy, 23);
+						Delay(2000);
+						Actor_Set_Health(kActorMcCoy, 90, 90);
+						Game_Flag_Set(kFlagMcCoyHasVest);
+						Scene_2D_Region_Remove(0);
+						if (Query_Difficulty_Level() != kGameDifficultyEasy) {
+							Global_Variable_Decrement(kVariableChinyen, 300);
+						}
+					} else {
+						Actor_Says(kActorMcCoy, 4945, 16); //00-4945.AUD	I think I'll pass.
+						Actor_Says(kActorBulletBob, 190, 30); //14-0190.AUD	You better not come crying to me when you catch a bullet.
+					}
 				}
 			}
 		}	
@@ -1491,6 +1500,16 @@ void SceneScriptRC04::PlayerWalkedIn() {
 			Actor_Says(kActorMcCoy, 4870, 16);
 		}
 		Actor_Says(kActorBulletBob, 20, 31);
+		if (_vm->_cutContent) {
+			if (!Game_Flag_Query(kFlagMcCoyIsHelpingReplicants)) {
+				Actor_Says(kActorMcCoy, 1625, 15); //00-1625.AUD	Yes.
+				Delay(500);
+			} else {
+				Delay(1000);
+			}
+			Actor_Says(kActorMcCoy, 7395, 14); //00-7395.AUD	What's your name?
+			Actor_Says(kActorBulletBob, 930, 31); //14-0930.AUD	Bob Gorsky.
+		}
 		Game_Flag_Set(kFlagRC04Entered);
 		return; //true;
 	}
@@ -1579,9 +1598,7 @@ void SceneScriptRC04::PlayerWalkedIn() {
 					Actor_Face_Actor(kActorMcCoy, kActorOfficerLeary, true);
 					Delay(1000);
 					Music_Play(kMusicBRBlues, 52, 0, 2, -1, kMusicLoopPlayOnce, 1);
-					if (Player_Query_Agenda() == kPlayerAgendaPolite) {
-						Actor_Says(kActorMcCoy, 2235, 11); //00-2235.AUD	How could they?
-					}
+					Actor_Says(kActorMcCoy, 2235, 11); //00-2235.AUD	How could they?
 					Loop_Actor_Walk_To_XYZ(kActorMcCoy, 27.12, 0.29, -47.35, 0, false, false, true);
 					if (Player_Query_Agenda() == kPlayerAgendaPolite) {
 						Actor_Face_Actor(kActorMcCoy, kActorOfficerLeary, true);

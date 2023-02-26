@@ -180,18 +180,10 @@ void SceneScriptBB05::PlayerWalkedIn() {
 				Actor_Says(kActorSebastian, 150, 14); //56-0150.AUD	It's a landmark, you know.
 				Actor_Says(kActorSebastian, 160, 15); //56-0160.AUD	You really should see the front edifice. They put some amazing detail into it.
 			}
-			if (Player_Query_Agenda() != kPlayerAgendaSurly 
-			&& Player_Query_Agenda() != kPlayerAgendaErratic) {
-				Delay(1000);
-				Actor_Says(kActorMcCoy, 7035, 14);  //00-7035.AUD	You feeling all right?
-				if (Actor_Query_Friendliness_To_Other(kActorSebastian, kActorMcCoy) > 49) {
-					Actor_Says(kActorSebastian, 170, 12);
-				} else {
-					Delay(1000);
-				}
-			} else {
-				Delay(1000);
-			}
+			Delay(1000);
+			Actor_Says(kActorMcCoy, 7035, 14);  //00-7035.AUD	You feeling all right?
+			Actor_Says(kActorSebastian, 170, 12);
+			Delay(1000);
 		} else {
 			Actor_Says(kActorSebastian, 140, 16); //56-0140.AUD	He's a very nice man. You know he even fronted me the money to buy this building.
 			Actor_Says(kActorSebastian, 150, 14); //56-0150.AUD	It's a landmark, you know.

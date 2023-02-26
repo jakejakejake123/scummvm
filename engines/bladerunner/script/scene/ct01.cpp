@@ -75,7 +75,7 @@ void SceneScriptCT01::InitializeScene() {
 			// Note 2: Gordo sitting at the diner overlaps with the counter bar in front of him
 			//         so the loop will be prevented from playing when he is there.
 			if ( Global_Variable_Query(kVariableChapter) < 4
-			    && !Game_Flag_Query(kFlagCT01GordoTalk)
+			&& !Game_Flag_Query(kFlagCT01Visit)
 			) {
 				// enhancement: don't always play
 				Scene_Loop_Start_Special(kSceneLoopModeLoseControl, kCT01LoopInshot, false);
@@ -132,7 +132,7 @@ void SceneScriptCT01::InitializeScene() {
 #if BLADERUNNER_ORIGINAL_BUGS
 #else
 	if (!Actor_Query_In_Set(kActorHowieLee, kSetCT01_CT12)
-	    && Global_Variable_Query(kVariableChapter) < 4) {
+	&& Global_Variable_Query(kVariableChapter) < 2) {
 		AI_Movement_Track_Flush(kActorHowieLee);
 		AI_Movement_Track_Append(kActorHowieLee, 67, 0); // in kSetCT01_CT12
 		Actor_Set_Goal_Number(kActorHowieLee, kGoalHowieLeeDefault);
@@ -323,7 +323,7 @@ bool SceneScriptCT01::ClickedOnActor(int actorId) {
 			Actor_Face_Actor(kActorMcCoy, kActorZuben, true);
 			if (_vm->_cutContent) {
 				if (Player_Query_Agenda() == kPlayerAgendaPolite) {
-					Actor_Says(kActorMcCoy, 3970, 13); //00-3970.AUD	Hey.
+					Actor_Says(kActorMcCoy, 8910, 13); //00-8910.AUD	Hey you.
 				} else {
 					Actor_Says(kActorMcCoy, 355, 10); //00-0355.AUD	Hey, big guy.
 				}
@@ -375,17 +375,87 @@ bool SceneScriptCT01::ClickedOnActor(int actorId) {
 			}
 		}
 		Actor_Face_Actor(kActorMcCoy, kActorGordo, true);
-		if (!Game_Flag_Query(kFlagCT01GordoTalk)) {
-			if (!_vm->_cutContent) {
-				Actor_Says(kActorMcCoy, 335, 18);
-				Actor_Says(kActorGordo, 20, 30);
+		if (_vm->_cutContent) {
+			Actor_Says(kActorMcCoy, 4870, 23); //00-4870.AUD	Ray McCoy, Rep Detect.		
+			Actor_Says(kActorGordo, 890, 30);//02-0890.AUD	What's shaking baby? Haven't I seen you around these parts before?
+			Actor_Says(kActorMcCoy, 6465, 15); //00-6465.AUD	Could be. I get around.	
+			if (Player_Query_Agenda() == kPlayerAgendaPolite) {
+				Actor_Says(kActorMcCoy, 340, 13); //00-0340.AUD	You're a pretty smart looking cat.
+			}
+			Delay(500);
+			Actor_Says(kActorMcCoy, 940, 13); //00-0940.AUD	I need to ask you--
+			Actor_Says(kActorGordo, 980, 30); //02-0980.AUD	Got any chinyen you can part with? Just so I can grab myself a couple of lichen-dogs.
+			if (Player_Query_Agenda() == kPlayerAgendaPolite) {
+				if (Global_Variable_Query(kVariableChinyen) >= 10) {
+					Actor_Says(kActorMcCoy, 1025, 13); //00-1025.AUD	Absolutely.
+					Actor_Change_Animation_Mode(kActorMcCoy, 23);
+					Delay(2000);
+					Actor_Says(kActorMcCoy, 8170, 15); //00-8170.AUD	There you go.
+					if (Query_Difficulty_Level() != kGameDifficultyEasy) {
+						Global_Variable_Decrement(kVariableChinyen, 10);
+					}
+				} else {
+					Actor_Says(kActorMcCoy, 5620, 9); // Maybe later
+				}
 			} else {
-				Actor_Says(kActorMcCoy, 4870, 23); //00-4870.AUD	Ray McCoy, Rep Detect.
-				Actor_Says(kActorGordo, 890, 30);//02-0890.AUD	What's shaking baby? Haven't I seen you around these parts before?
-				Actor_Says(kActorMcCoy, 6465, 15); //00-6465.AUD	Could be. I get around.
-				Actor_Says(kActorGordo, 980, 30); //02-0980.AUD	Got any chinyen you can part with? Just so I can grab myself a couple of lichen-dogs.
 				Actor_Says(kActorMcCoy, 5620, 9); // Maybe later
 			}
+			Delay(500);
+			Actor_Says(kActorGordo, 300, 30);//02-0300.AUD	You want an autograph?
+			Actor_Says(kActorGordo, 310, 30);//02-0310.AUD	I know you ain’t heard me yet
+			Actor_Says(kActorGordo, 320, 30);//02-0320.AUD	but Gordo Frizz’s autograph’s gonna be worth a pile of chinyen some day.
+			if (Player_Query_Agenda() == kPlayerAgendaSurly 
+			|| Player_Query_Agenda() == kPlayerAgendaErratic) {
+				Actor_Says(kActorMcCoy, 3215, 18); //00-3215.AUD	I’ll hold my breath.
+				Delay(1000);
+				Actor_Says(kActorMcCoy, 8920, 14); //00-8920.AUD	I gotta ask you a question.
+				Actor_Says(kActorGordo, 20, 30); //02-0020.AUD	Sorry, my man. I just don't got the time.	
+				Actor_Says(kActorMcCoy, 2485, 18); //00-2485.AUD	I’ve a hard time believing that.
+				Delay(1000);
+				Actor_Says(kActorMcCoy, 345, 11); //00-0345.AUD	Wanna make some money?
+				Actor_Says(kActorGordo, 30, 30); //02-0030.AUD	Pay me large, you got my rapt attention.
+				Actor_Says(kActorMcCoy, 350, 13); //00-0350.AUD	Depends on how much the information is worth.
+				Actor_Says(kActorGordo, 40, 30); //02-0040.AUD	Unfortunately, my man, I got to book.
+				Actor_Modify_Friendliness_To_Other(kActorGordo, kActorMcCoy, -3);
+				Player_Loses_Control();
+			} else {
+				Delay(500);
+				Actor_Says(kActorMcCoy, 4940, 13); //00-4940.AUD	Okay, let's have it.
+				Game_Flag_Set(kFlagGordoReceivedAutograph);
+				Actor_Change_Animation_Mode(kActorMcCoy, 23);
+				Delay(800);
+				Item_Pickup_Spin_Effect_From_Actor(kModelAnimationOriginalShippingForm, kActorMcCoy, 0, 0);
+				Delay(1000);
+				Actor_Says(kActorMcCoy, 5600, 14);               // Let me ask you.
+				Delay(500);
+				Actor_Says(kActorMcCoy, 265, 23);
+				if (Game_Flag_Query(kFlagGordoIsReplicant)) {
+					Actor_Says(kActorGordo, 820, 30); //02-0820.AUD	How are you sure someone’s a Rep, detective?
+					if (Player_Query_Agenda() == kPlayerAgendaPolite) {
+						Actor_Says(kActorMcCoy, 7380, 13); // M: Just answer the question please.
+					} else {
+						Actor_Says(kActorMcCoy, 7805, 13); //00-7805.AUD	Answer the question.
+					}
+					Actor_Says(kActorGordo, 440, 30);  //02-0440.AUD	Between you and me I hear they are all over the place down here.
+					Actor_Says(kActorGordo, 450, 30); //02-0450.AUD	You ought to call in a few more of the hunters to clear the place out.
+					Actor_Says(kActorMcCoy, 3280, 15); //00-3280.AUD	Hunter? Ain’t too often I hear ‘em called that.
+					Actor_Clue_Acquire(kActorMcCoy, kClueGordoInterview3, false, kActorGordo);
+					Delay(1000);
+				} else {
+					Actor_Says(kActorGordo, 430, 30);  //02-0430.AUD	She was one of those skin-jobs?
+					Actor_Says(kActorMcCoy, 1885, kAnimationModeTalk); //00-1885.AUD	I’ll take that as a yes.
+					Delay(1000);
+					Actor_Says(kActorMcCoy, 5150, 18); //00-5150.AUD	One more thing.
+				}
+				Actor_Says(kActorGordo, 40, 30); //02-0040.AUD	Unfortunately, my man, I got to book.
+				// McCoy will now receive the Gordo interview 3 clue regardless of Gordos replicant status. I have added in several new scenes involving Gordo and one of
+				// them can only occur if he is human and you have this clue.
+				Actor_Modify_Friendliness_To_Other(kActorGordo, kActorMcCoy, -3);
+				Player_Loses_Control();
+			}
+		} else if (!Game_Flag_Query(kFlagCT01GordoTalk)) {
+			Actor_Says(kActorMcCoy, 335, 18);
+			Actor_Says(kActorGordo, 20, 30);
 			Game_Flag_Set(kFlagCT01GordoTalk);
 			Actor_Clue_Acquire(kActorGordo, kClueMcCoysDescription, true, kActorMcCoy);
 #if BLADERUNNER_ORIGINAL_BUGS
@@ -396,73 +466,13 @@ bool SceneScriptCT01::ClickedOnActor(int actorId) {
 			Actor_Modify_Friendliness_To_Other(kActorGordo, kActorMcCoy, -1);
 		} else {
 			if (Actor_Query_Goal_Number(kActorGordo) == kGoalGordoDefault) {
-				// Made it so Gordo now offers his autograph to McCoy when they first meet. This was done because when Gordo does this he mentions his name and this fixes a minor plot hole later on where you can talk to Gordo in act 2
-				// and you can receive the Gordo interview clue even though McCoy does not know Gordos name. Also depending on McCoys agenda he will either accept the autograph allowing him to ask Gordo about Lucy or McCoy will refuse the autograph
-				// and this will lead to the dialogue that usually plays where McCoy tries to bribe Gordo for infoemation.
-				if (_vm->_cutContent) {
-					if (Player_Query_Agenda() == kPlayerAgendaPolite) {
-						Actor_Says(kActorMcCoy, 340, 13); //00-0340.AUD	You're a pretty smart looking cat.
-					}
-					Actor_Says(kActorMcCoy, 940, 13); //00-0940.AUD	I need to ask you--
-					Actor_Says(kActorGordo, 300, 30);//02-0300.AUD	You want an autograph?
-					Actor_Says(kActorGordo, 310, 30);//02-0310.AUD	I know you ain’t heard me yet
-					Actor_Says(kActorGordo, 320, 30);//02-0320.AUD	but Gordo Frizz’s autograph’s gonna be worth a pile of chinyen some day.
-					if (Player_Query_Agenda() == kPlayerAgendaSurly 
-					|| Player_Query_Agenda() == kPlayerAgendaErratic) {
-						Actor_Says(kActorMcCoy, 3215, 18); //00-3215.AUD	I’ll hold my breath.
-						Delay(1000);
-						Actor_Says(kActorMcCoy, 8920, 14); //00-8920.AUD	I gotta ask you a question.
-						Actor_Says(kActorGordo, 20, 30); //02-0020.AUD	Sorry, my man. I just don't got the time.
-						Delay(1000);
-						Actor_Says(kActorMcCoy, 345, 11); //00-0345.AUD	Wanna make some money?
-						Actor_Says(kActorGordo, 30, 30); //02-0030.AUD	Pay me large, you got my rapt attention.
-						Actor_Says(kActorMcCoy, 350, 13); //00-0350.AUD	Depends on how much the information is worth.
-						Actor_Says(kActorGordo, 40, 30); //02-0040.AUD	Unfortunately, my man, I got to book.
-						Actor_Modify_Friendliness_To_Other(kActorGordo, kActorMcCoy, -2);
-						Player_Loses_Control();
-					} else {
-						Actor_Says(kActorMcCoy, 4940, 13); //00-4940.AUD	Okay, let's have it.
-						Game_Flag_Set(kFlagGordoReceivedAutograph);
-						Actor_Change_Animation_Mode(kActorMcCoy, 23);
-						Delay(800);
-						Item_Pickup_Spin_Effect_From_Actor(kModelAnimationOriginalShippingForm, kActorMcCoy, 0, 0);
-						Delay(800);
-						Actor_Says(kActorMcCoy, 5600, 14);               // Let me ask you.
-						Actor_Says(kActorMcCoy, 385, 18); //00-0385.AUD	I'm looking for a girl about 14 years old with pink hair. You seen her?
-						if (Game_Flag_Query(kFlagGordoIsReplicant)) {
-							Delay(1000);
-							Actor_Says(kActorGordo, 820, 30); //02-0820.AUD	How are you sure someone’s a Rep, detective?
-							if (Player_Query_Agenda() == kPlayerAgendaPolite) {
-								Actor_Says(kActorMcCoy, 7380, 13); // M: Just answer the question please.
-							} else {
-								Actor_Says(kActorMcCoy, 7805, 13); //00-7805.AUD	Answer the question.
-							}
-							Actor_Says(kActorGordo, 440, 30);  //02-0440.AUD	Between you and me I hear they are all over the place down here.
-							Actor_Says(kActorGordo, 450, 30); //02-0450.AUD	You ought to call in a few more of the hunters to clear the place out.
-							Actor_Says(kActorMcCoy, 3280, 15); //00-3280.AUD	Hunter? Ain’t too often I hear ‘em called that.
-							Actor_Clue_Acquire(kActorMcCoy, kClueGordoInterview3, false, kActorGordo);
-							Delay(1000);
-						} else {
-							Actor_Says(kActorGordo, 430, 30);  //02-0430.AUD	She was one of those skin-jobs?
-							Actor_Says(kActorMcCoy, 1885, kAnimationModeTalk); //00-1885.AUD	I’ll take that as a yes.
-							Delay(1000);
-							Actor_Says(kActorMcCoy, 5150, 18); //00-5150.AUD	One more thing.
-						}
-						Actor_Says(kActorGordo, 40, 30); //02-0040.AUD	Unfortunately, my man, I got to book.
-						// McCoy will now receive the Gordo interview 3 clue regardless of Gordos replicant status. I have added in several new scenes involving Gordo and one of
-						// them can only occur if he is human and you have this clue.
-						Actor_Modify_Friendliness_To_Other(kActorGordo, kActorMcCoy, -2);
-						Player_Loses_Control();
-					}
-				} else {
-					Actor_Says(kActorMcCoy, 340, 13);
-					Actor_Says(kActorMcCoy, 345, 11);
-					Actor_Says(kActorGordo, 30, 30);
-					Actor_Says(kActorMcCoy, 350, 13);
-					Actor_Says(kActorGordo, 40, 30);
-					Actor_Modify_Friendliness_To_Other(kActorGordo, kActorMcCoy, -5);
-					Player_Loses_Control();
-				}	
+				Actor_Says(kActorMcCoy, 340, 13);
+				Actor_Says(kActorMcCoy, 345, 11);
+				Actor_Says(kActorGordo, 30, 30);
+				Actor_Says(kActorMcCoy, 350, 13);
+				Actor_Says(kActorGordo, 40, 30);
+				Actor_Modify_Friendliness_To_Other(kActorGordo, kActorMcCoy, -2);
+				Player_Loses_Control();
 			} else {
 				Actor_Says(kActorMcCoy, 365, 14);
 			}
@@ -707,7 +717,11 @@ void SceneScriptCT01::PlayerWalkedIn() {
 
 		if (!Game_Flag_Query(kFlagCT01Visited)) {
 			Game_Flag_Set(kFlagCT01Visited);
-			if (!Game_Flag_Query(kFlagDirectorsCut)) {
+			if (_vm->_cutContent) {
+				Actor_Voice_Over(200, kActorVoiceOver);
+				Actor_Voice_Over(210, kActorVoiceOver);
+				Actor_Voice_Over(220, kActorVoiceOver);
+			} else if (!Game_Flag_Query(kFlagDirectorsCut)) {
 				Actor_Voice_Over(200, kActorVoiceOver);
 				Actor_Voice_Over(210, kActorVoiceOver);
 				Actor_Voice_Over(220, kActorVoiceOver);

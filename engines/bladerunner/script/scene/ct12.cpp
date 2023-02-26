@@ -287,25 +287,17 @@ void SceneScriptCT12::PlayerWalkedIn() {
 		if (_vm->_cutContent) {
 			if (!Game_Flag_Query(kFlagMcCoyIsHelpingReplicants)) {
 				Actor_Says(kActorMcCoy, 670, kAnimationModeTalk); //00-0670.AUD	Working on it.
-			} else {
-				Delay(1000);
-			}
-		} else {
-			Actor_Says(kActorMcCoy, 670, kAnimationModeTalk);
-		}
-		Actor_Says(kActorGaff, 10, kAnimationModeTalk);
-		if (_vm->_cutContent) {
-			if (!Game_Flag_Query(kFlagMcCoyIsHelpingReplicants)) {
-				Actor_Says(kActorMcCoy, 675, kAnimationModeTalk); //00-0675.AUD	I understand it's got a hell of a retirement plan.
-			} else {
-				if (Player_Query_Agenda() == kPlayerAgendaPolite) {
-					Actor_Says(kActorMcCoy, 8610, 18); //00-8610.AUD	What's the word, friend?
-				} else {
-					Actor_Says(kActorMcCoy, 8514, 14); //00-8514.AUD	Got anything new to tell me?
+				if (Actor_Query_Friendliness_To_Other(kActorGaff, kActorMcCoy) > 50) {
+					Actor_Says(kActorGaff, 10, kAnimationModeTalk);
+					Actor_Says(kActorMcCoy, 675, kAnimationModeTalk); //00-0675.AUD	I understand it's got a hell of a retirement plan.
 				}
+			} else {
+				Actor_Says(kActorMcCoy, 4880, 13); //00-4880.AUD	Is that right?
 			}
 		} else {
-			Actor_Says(kActorMcCoy, 675, kAnimationModeTalk);
+			Actor_Says(kActorMcCoy, 670, kAnimationModeTalk); //00-0670.AUD	Working on it.
+			Actor_Says(kActorGaff, 10, kAnimationModeTalk);
+			Actor_Says(kActorMcCoy, 675, kAnimationModeTalk); //00-0675.AUD	I understand it's got a hell of a retirement plan.
 		}
 		Actor_Says(kActorGaff, 20, kAnimationModeTalk);
 		Actor_Says(kActorMcCoy, 680, kAnimationModeTalk);
@@ -339,7 +331,7 @@ void SceneScriptCT12::PlayerWalkedIn() {
 					Actor_Says(kActorMcCoy, 695, kAnimationModeTalk);
 					Actor_Says(kActorGaff, 60, kAnimationModeTalk);
 					Actor_Says(kActorMcCoy, 700, kAnimationModeTalk); //00-0700.AUD	I'm starting to understand.
-					if (Actor_Query_Friendliness_To_Other(kActorGaff, kActorMcCoy) > 49) {
+					if (Actor_Query_Friendliness_To_Other(kActorGaff, kActorMcCoy) > 50) {
 						Actor_Says(kActorGaff, 100, kAnimationModeTalk);
 					}
 					Actor_Clue_Acquire(kActorMcCoy, kClueMcCoyRetiredZuben, true, kActorGaff);
@@ -350,11 +342,10 @@ void SceneScriptCT12::PlayerWalkedIn() {
 					Actor_Says(kActorGaff, 80, kAnimationModeTalk);
 					Actor_Says(kActorGaff, 90, kAnimationModeTalk);
 					Actor_Says(kActorMcCoy, 705, kAnimationModeTalk);
-					if (Actor_Query_Friendliness_To_Other(kActorGaff, kActorMcCoy) > 49) {
+					if (Actor_Query_Friendliness_To_Other(kActorGaff, kActorMcCoy) > 50) {
 						Actor_Says(kActorGaff, 100, kAnimationModeTalk);
 					}
 					Actor_Clue_Acquire(kActorGaff, kClueMcCoyLetZubenEscape, true, -1);
-					Actor_Clue_Acquire(kActorMcCoy, kClueMcCoyLetZubenEscape, true, kActorGaff);
 				}
 			}
 		} else if (Game_Flag_Query(kFlagGaffApproachedMcCoyAboutZuben)

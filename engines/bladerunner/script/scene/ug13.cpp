@@ -315,8 +315,17 @@ bool SceneScriptUG13::ClickedOnExit(int exitId) {
 
 	if (exitId == 1) {
 		if (!Loop_Actor_Walk_To_XYZ(kActorMcCoy, 39.0f, 52.94f, -528.0f, 0, true, false, false)) {
-			Game_Flag_Set(kFlagUG13toUG15);
-			Set_Enter(kSetUG15, kSceneUG15);
+			if (_vm->_cutContent) {
+				if (!Game_Flag_Query(kFlagUG15BridgeBroken)) {
+					Game_Flag_Set(kFlagUG13toUG15);
+					Set_Enter(kSetUG15, kSceneUG15);
+				} else {
+					Actor_Says(kActorMcCoy, 7815, 13); //00-7815.AUD	No.
+				}
+			} else {
+				Game_Flag_Set(kFlagUG13toUG15);
+				Set_Enter(kSetUG15, kSceneUG15);
+			}
 		}
 		return true;
 	}

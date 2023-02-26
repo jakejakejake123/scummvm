@@ -48,11 +48,23 @@ void SceneScriptCT51::SceneLoaded() {
 		Item_Add_To_World(kItemRagDoll, kModelAnimationRagDoll, kSetCT08_CT51_UG12, 44.0f, 0.0f, -95.0f, 540, 24, 24, false, true, false, true);
 #else
 		// fix click-box overlap with clickable bed
-		Item_Add_To_World(kItemRagDoll, kModelAnimationRagDoll, kSetCT08_CT51_UG12, 44.0f, 3.0f, -100.0f, 540, 24, 24, false, true, false, true);
+		if (_vm->_cutContent) {
+			if (Game_Flag_Query(kFlagIzoIsReplicant)) {
+				Item_Add_To_World(kItemRagDoll, kModelAnimationRagDoll, kSetCT08_CT51_UG12, 44.0f, 3.0f, -100.0f, 540, 24, 24, false, true, false, true);
+			}
+		}
 #endif
 	}
-	if (!Actor_Clue_Query(kActorMcCoy, kClueMoonbus1)) {
-		Item_Add_To_World(kItemMoonbusPhoto, kModelAnimationPhoto, kSetCT08_CT51_UG12, 44.0f, 0.0f, -22.0f, 0, 12, 12, false, true, false, true);
+	if (_vm->_cutContent) {
+		if (!Actor_Clue_Query(kActorMcCoy, kClueMoonbus1)) {
+			if (Game_Flag_Query(kFlagIzoIsReplicant)) {
+				Item_Add_To_World(kItemMoonbusPhoto, kModelAnimationPhoto, kSetCT08_CT51_UG12, 44.0f, 0.0f, -22.0f, 0, 12, 12, false, true, false, true);
+			}
+		} else {
+			if (!Actor_Clue_Query(kActorMcCoy, kClueMoonbus1)) {
+				Item_Add_To_World(kItemMoonbusPhoto, kModelAnimationPhoto, kSetCT08_CT51_UG12, 44.0f, 0.0f, -22.0f, 0, 12, 12, false, true, false, true);
+			}
+		}
 	}
 }
 
@@ -62,44 +74,14 @@ bool SceneScriptCT51::MouseClick(int x, int y) {
 
 bool SceneScriptCT51::ClickedOn3DObject(const char *objectName, bool a2) {
 	if (Object_Query_Click("BED02", objectName)) {
-		if (_vm->_cutContent) {
-			if (!Actor_Clue_Query(kActorMcCoy, kClueHysteriaToken)) {
-				Item_Pickup_Spin_Effect(kModelAnimationHysteriaToken, 203, 200);
+		if (!Actor_Clue_Query(kActorMcCoy, kClueHysteriaToken)) {
+			Item_Pickup_Spin_Effect(kModelAnimationHysteriaToken, 203, 200);
+			if (_vm->_cutContent) {
 				Actor_Clue_Acquire(kActorMcCoy, kClueHysteriaToken, true, kActorLucy);
 				Actor_Says(kActorMcCoy, 8810, 14);	//00-8810.AUD	An arcade token.
-				Actor_Voice_Over(420, kActorVoiceOver);
-			} else if (!Actor_Clue_Query(kActorMcCoy, kClueLicensePlate)) {
-				Item_Pickup_Spin_Effect(kModelAnimationLicensePlate, 397, 272);
-				Actor_Clue_Acquire(kActorMcCoy, kClueLicensePlate, true, -1);
-				Actor_Says(kActorMcCoy, 8760, -1); //00-8760.AUD	A license plate.
-				if (Actor_Clue_Query(kActorMcCoy, kCluePartialLicenseNumber)) {
-					Delay(500);
-					Actor_Voice_Over(4190, kActorVoiceOver); //99-4190.AUD	Where have I seen that before?
-					Delay(1500);
-					Actor_Says(kActorMcCoy, 8525, 9); //00-8525.AUD	Hmph.
-					Actor_Change_Animation_Mode(kActorMcCoy, 23);
-					Delay(800);
-					Actor_Says(kActorAnsweringMachine, 390, kAnimationModeTalk); // 39-0390.AUD	Begin test.
-					Ambient_Sounds_Play_Sound(kSfxDATALOAD, 50, 0, 0, 99);
-					Delay(2000);
-					Ambient_Sounds_Play_Sound(kSfxBEEPNEAT, 80, 0, 0, 99);
-					Actor_Says(kActorAnsweringMachine, 420, 19); //39-0420.AUD	Positive result.
-					Actor_Says(kActorAnsweringMachine, 470, kAnimationModeTalk); //39-0470.AUD	End test.
-					Actor_Says(kActorMcCoy, 7200, 13); //00-7200.AUD	Bingo.
-					Actor_Clue_Acquire(kActorMcCoy, kClueLicensePlateMatch, true, -1); 
-					if (Game_Flag_Query(kFlagKleinCarIdentityTalk)
-					&& !Actor_Clue_Query(kActorMcCoy, kClueCarRegistration1)
-					&& !Actor_Clue_Query(kActorMcCoy, kClueCarRegistration2)
-					&& !Actor_Clue_Query(kActorMcCoy, kClueCarRegistration3)) {
-						Actor_Voice_Over(540, kActorVoiceOver); //99-0540.AUD	If I ran it through the Mainframe back at the station, I could ID the owner.
-					}
-				}
 			} else {
-				Actor_Says(kActorMcCoy, 8580, 12);
+				Actor_Clue_Acquire(kActorMcCoy, kClueHysteriaToken, true, -1);
 			}
-		} else if (!Actor_Clue_Query(kActorMcCoy, kClueHysteriaToken)) {
-			Item_Pickup_Spin_Effect(kModelAnimationHysteriaToken, 203, 200);
-			Actor_Clue_Acquire(kActorMcCoy, kClueHysteriaToken, true, -1);
 			Actor_Voice_Over(420, kActorVoiceOver);
 			return true;
 		} else {

@@ -192,13 +192,56 @@ void SceneScriptDR05::PlayerWalkedIn() {
 	if (!Game_Flag_Query(kFlagDR05MorajiTalk)
 	 &&  Actor_Query_Goal_Number(kActorMoraji) == kGoalMorajiDefault
 	) {
-		Actor_Face_Actor(kActorMcCoy, kActorMoraji, true);
-		Actor_Says(kActorMcCoy, 1010, 13);
-		Actor_Face_Item(kActorMcCoy, kItemBomb, true);
-		Player_Set_Combat_Mode(true);
-		Actor_Says(kActorMoraji, 60, 12);
-		Actor_Change_Animation_Mode(kActorMcCoy, kAnimationModeIdle);
-		Game_Flag_Set(kFlagDR05MorajiTalk);
+		if (_vm->_cutContent) {
+			Actor_Face_Item(kActorMcCoy, kItemBomb, true);
+			Actor_Says(kActorMcCoy, 8890, -1);
+			Delay(500);
+			Actor_Face_Actor(kActorMcCoy, kActorMoraji, true);
+			if (Player_Query_Agenda() == kPlayerAgendaPolite) {
+				Actor_Face_Actor(kActorMcCoy, kActorMoraji, true);
+				Actor_Says(kActorMcCoy, 1010, 13);	
+				Player_Set_Combat_Mode(true);
+				Actor_Says(kActorMoraji, 60, 12); //35-0060.AUD	Help me, sir. Please, help me. It is going to blow.
+				Game_Flag_Set(kFlagDR05MorajiTalk);
+				Actor_Change_Animation_Mode(kActorMcCoy, 5);
+				Delay(1000);
+				Sound_Play(kSfxGUNH1A, 100, 0, 0, 50);
+				Actor_Change_Animation_Mode(kActorMcCoy, 6);
+				Overlay_Play("DR05OVER", 1, false, true, 0);
+				Item_Remove_From_World(kItemChain);
+				Game_Flag_Set(kFlagDR05ChainShot);
+				Music_Play(kMusicMoraji, 71, 0, 0, -1, kMusicLoopPlayOnce, 2);
+				Delay(1000);
+				Player_Gains_Control();
+				Actor_Set_Goal_Number(kActorMoraji, kGoalMorajiFreed);
+			} else if (Player_Query_Agenda() == kPlayerAgendaSurly 
+			|| Player_Query_Agenda() == kPlayerAgendaErratic) {
+				Actor_Face_Actor(kActorMcCoy, kActorMoraji, true);
+				Actor_Says(kActorMoraji, 60, 12); //35-0060.AUD	Help me, sir. Please, help me. It is going to blow.
+				Delay(1000);
+				Player_Loses_Control();
+				Loop_Actor_Walk_To_XYZ(kActorMcCoy, -22.0f, 0.3f, 221.0f, 0, true, true, false);
+				Player_Gains_Control();
+				Game_Flag_Set(kFlagDR05MorajiTalk);
+				Game_Flag_Set(kFlagDR05toDR04);
+				Set_Enter(kSetDR01_DR02_DR04, kSceneDR04);
+			} else {
+				Actor_Says(kActorMcCoy, 1010, 13);	
+				Actor_Face_Actor(kActorMcCoy, kActorMoraji, true);
+				Player_Set_Combat_Mode(true);
+				Actor_Says(kActorMoraji, 60, 12); //35-0060.AUD	Help me, sir. Please, help me. It is going to blow.
+				Actor_Change_Animation_Mode(kActorMcCoy, kAnimationModeIdle);
+				Game_Flag_Set(kFlagDR05MorajiTalk);
+			}
+		} else {
+			Actor_Face_Actor(kActorMcCoy, kActorMoraji, true);
+			Actor_Says(kActorMcCoy, 1010, 13);
+			Actor_Face_Item(kActorMcCoy, kItemBomb, true);
+			Player_Set_Combat_Mode(true);
+			Actor_Says(kActorMoraji, 60, 12);
+			Actor_Change_Animation_Mode(kActorMcCoy, kAnimationModeIdle);
+			Game_Flag_Set(kFlagDR05MorajiTalk);
+		}
 		//return true;
 	}
 	//return false;

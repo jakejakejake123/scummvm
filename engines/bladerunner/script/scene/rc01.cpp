@@ -160,7 +160,9 @@ void SceneScriptRC01::SceneLoaded() {
 	Obstacle_Object("DOOR LEFT", true);
 	Unobstacle_Object("BOX06", true);
 	Clickable_Object("DOORWAY01");
-	Clickable_Object("DOOR LEFT");
+	if (!_vm->_cutContent) {
+		Clickable_Object("DOOR LEFT");
+	}
 	Clickable_Object("HYDRANT02");
 	Clickable_Object("T-CAN01");
 	Clickable_Object("BARICADE01");
@@ -205,15 +207,25 @@ void SceneScriptRC01::SceneLoaded() {
 		Preload(kModelAnimationOfficerLearyOscillateIdle);
 	}
 
-	if (!Game_Flag_Query(kFlagRC01ChromeDebrisTaken)) {
-		Item_Add_To_World(kItemChromeDebris, kModelAnimationChromeDebris, kSetRC01, -148.60f, -0.30f, 225.15f, 256, 24, 24, false, true, false, true);
+	if (_vm->_cutContent) {
+		if (!Game_Flag_Query(kFlagRC01ChromeDebrisTaken)) {
+			if (Game_Flag_Query(kFlagZubenIsReplicant)) {
+				Item_Add_To_World(kItemChromeDebris, kModelAnimationChromeDebris, kSetRC01, -148.60f, -0.30f, 225.15f, 256, 24, 24, false, true, false, true);
+			}
+		}
+	} else {
+		if (!Game_Flag_Query(kFlagRC01ChromeDebrisTaken)) {
+			Item_Add_To_World(kItemChromeDebris, kModelAnimationChromeDebris, kSetRC01, -148.60f, -0.30f, 225.15f, 256, 24, 24, false, true, false, true);
+		}
 	}
 
 	if (!Game_Flag_Query(kFlagIntroPlayed)) {
 		ADQ_Flush();
 		Actor_Voice_Over(1830, kActorVoiceOver);
 		Actor_Voice_Over(1850, kActorVoiceOver);
-		if (!Game_Flag_Query(kFlagDirectorsCut)) {
+		if (!_vm->_cutContent
+		&& !Game_Flag_Query(kFlagDirectorsCut)) {
+			Actor_Voice_Over(1860, kActorVoiceOver);
 #if BLADERUNNER_ORIGINAL_BUGS
 			Actor_Voice_Over(1860, kActorVoiceOver);
 #else
@@ -257,7 +269,8 @@ bool SceneScriptRC01::ClickedOn3DObject(const char *objectName, bool a2) {
 			} else {		
 				if (_vm->_cutContent) {
 					if (!Actor_Clue_Query(kActorMcCoy, kClueCrowdInterviewB)) {
-						Actor_Says(kActorMcCoy, 8525, 13); // 00-8525.AUD	Hmph.
+						Actor_Says(kActorMcCoy, 8524, 13); //00-8524.AUD	That's a washout.
+						Actor_Says(kActorMcCoy, 8525, -1); // 00-8525.AUD	Hmph.
 						Game_Flag_Set(kFlagHydrantChecked);	
 					} else {
 						Actor_Voice_Over(1880, kActorVoiceOver);
@@ -328,30 +341,10 @@ bool SceneScriptRC01::ClickedOn3DObject(const char *objectName, bool a2) {
 				                                            || Actor_Query_Goal_Number(kActorOfficerLeary) == kGoalOfficerLearyRC01ResumeWalkToCrowd;
 #endif // BLADERUNNER_ORIGINAL_BUGS
 				Actor_Set_Goal_Number(kActorOfficerLeary, kGoalOfficerLearyDefault);
-				if (Actor_Query_Friendliness_To_Other(kActorOfficerLeary, kActorMcCoy) > 49) {
-					Actor_Face_Actor(kActorOfficerLeary, kActorMcCoy, true);
-				}
-				// Jake - Added in some code so you receive the door forced 1 clue even if Leary is there. It doesn't make any sense for McCoy not to provide
-				// his outlook just because there is another officer there. If anything that should give McCoy even more reason to mention what he thinks, especially
-				// with a fellow officer being there. Also added in a couple of extra lines. Also adjusted the clue so McCoys statement along with officer Learys comments 
-				// are now all placed in door forced 2. Door forced 1 will now be the cut lines of McCoy commenting on Sebastians broken door.
-				if (_vm->_cutContent) {
-					Actor_Voice_Over(1870, kActorVoiceOver); //99-1870.AUD	Whoever did it showed some serious strength. They busted the lock clean off.
-					Actor_Clue_Acquire(kActorMcCoy, kClueDoorForced2, true, -1);
-					Delay(500);
-					if (Actor_Query_Friendliness_To_Other(kActorOfficerLeary, kActorMcCoy) > 49) {
-						Actor_Face_Actor(kActorMcCoy, kActorOfficerLeary, true);
-						Actor_Says(kActorOfficerLeary, 180, 14); //23-0180.AUD	Gaff said you didn't need to hear this, but I guess you deserve to know.
-						Actor_Says(kActorMcCoy, 2635, 18); //00-2635.AUD	I’m all ears.. 
-						Actor_Says(kActorOfficerLeary, 0, 12); //23-0000.AUD	I already checked for a crowbar or some kind of tool. No luck but it looks like we've got some latents. 
-						Actor_Says(kActorMcCoy, 4495, 13); //00-4495.AUD	Make sure the lab boys run them through the mainframe. Human and Rep.
-						Game_Flag_Set(kFlagLearyForcedDoorTalk);
-					}
-				} else { 
-					Actor_Says(kActorOfficerLeary, 0, 12);
-					Actor_Says(kActorMcCoy, 4495, 13);
-					Actor_Clue_Acquire(kActorMcCoy, kClueDoorForced2, true, kActorOfficerLeary);
-				}
+				Actor_Face_Actor(kActorOfficerLeary, kActorMcCoy, true);
+				Actor_Says(kActorOfficerLeary, 0, 12);
+				Actor_Says(kActorMcCoy, 4495, 13);
+				Actor_Clue_Acquire(kActorMcCoy, kClueDoorForced2, true, kActorOfficerLeary);
 #if BLADERUNNER_ORIGINAL_BUGS
 #else
 				if (officerLearyWasInterrogatingTheCrowd) {
@@ -396,14 +389,19 @@ bool SceneScriptRC01::ClickedOn3DObject(const char *objectName, bool a2) {
 			if (_vm->_cutContent) {
 				if (Global_Variable_Query(kVariableChapter) == 1) {
 					if (!Actor_Clue_Query(kActorMcCoy, kClueSightingMcCoyRuncitersShop)) {
-						Ambient_Sounds_Play_Sound(kSfxGARBAGE, 45, 30, 30, 0);
-						Actor_Change_Animation_Mode(kActorMcCoy, 23);
-						Delay(2000);
-						Actor_Says(kActorMcCoy, 4165, 13); //00-4165.AUD	Butcher knife?
-						Actor_Change_Animation_Mode(kActorMcCoy, 23);
-						Delay(2000);
-						Actor_Says(kActorMcCoy, 6975, kAnimationModeTalk); //00-6975.AUD	Interesting.
-						Actor_Clue_Acquire(kActorMcCoy, kClueSightingMcCoyRuncitersShop, true, -1);
+						if (Game_Flag_Query(kFlagZubenIsReplicant)) {
+							Ambient_Sounds_Play_Sound(kSfxGARBAGE, 45, 30, 30, 0);
+							Actor_Change_Animation_Mode(kActorMcCoy, 23);
+							Delay(2000);
+							Actor_Says(kActorMcCoy, 4165, 13); //00-4165.AUD	Butcher knife?
+							Actor_Change_Animation_Mode(kActorMcCoy, 23);
+							Delay(2000);
+							Actor_Says(kActorMcCoy, 6975, kAnimationModeTalk); //00-6975.AUD	Interesting.
+							Actor_Clue_Acquire(kActorMcCoy, kClueSightingMcCoyRuncitersShop, true, -1);
+						} else {
+							Actor_Voice_Over(1810, kActorVoiceOver);
+							Actor_Voice_Over(1820, kActorVoiceOver);
+						}
 					} else {
 						Actor_Voice_Over(1810, kActorVoiceOver);
 						Actor_Voice_Over(1820, kActorVoiceOver);
@@ -572,6 +570,15 @@ bool SceneScriptRC01::ClickedOnActor(int actorId) {
 							Actor_Says(kActorOfficerLeary, 70, 16);
 							Actor_Says(kActorMcCoy, 4525, 14);
 							Actor_Says(kActorOfficerLeary, 80, 18);
+							Actor_Says(kActorMcCoy, 4130, 18); //00-4130.AUD	Anything else?
+							if (Game_Flag_Query(kFlagZubenIsReplicant)) {	
+								Actor_Says(kActorOfficerLeary, 180, 14); //23-0180.AUD	Gaff said you didn't need to hear this, but I guess you deserve to know.
+								Actor_Says(kActorMcCoy, 2635, 18); //00-2635.AUD	I’m all ears.. 
+								Actor_Says(kActorOfficerLeary, 0, 12); //23-0000.AUD	I already checked for a crowbar or some kind of tool. No luck but it looks like we've got some latents. 
+								Actor_Says(kActorMcCoy, 4495, 13); //00-4495.AUD	Make sure the lab boys run them through the mainframe. Human and Rep.	
+							} else {
+								Actor_Says(kActorOfficerLeary, 160, 19); //23-0160.AUD	Zero that would interest you, detective.
+							}
 						} else {
 							Actor_Says(kActorMcCoy, 4530, 15);
 						}
@@ -706,7 +713,6 @@ bool SceneScriptRC01::ClickedOnExit(int exitId) {
 #endif // BLADERUNNER_ORIGINAL_BUGS
 		if (!walkToRC02ExitResult) {
 			if (Game_Flag_Query(kFlagRC02RunciterTalkWithGun)
-			|| Game_Flag_Query(kFlagMcCoyRetiredRunciter)
 			|| Game_Flag_Query(kFlagRunciterArrested)
 			|| Actor_Query_Goal_Number(kActorRunciter) > kGoalRunciterDead
 			|| Actor_Clue_Query(kActorMcCoy, kClueCrystalRetiredRunciter1)

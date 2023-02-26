@@ -600,6 +600,7 @@ bool AIScriptOfficerGrayford::GoalChanged(int currentGoalNumber, int newGoalNumb
 				Actor_Face_Actor(kActorOfficerGrayford, kActorMoraji, true);
 				Actor_Change_Animation_Mode(kActorOfficerGrayford, 43);
 				Actor_Says(kActorOfficerGrayford, 170, kAnimationModeTalk); // This is 32, Sector 3. Reporting a homicide. Possible act of terrorism.
+				Scene_Exits_Enable();
 				// If Moraji survives McCoy depending on his agenda, comforts Moraji or tries to question him. If he comforts him Moraji gives McCoy the DNA data and if
 				// McCoy questions him Moraji doesn't give him the data. Also made it so the scene eits enable.
 			} else {
@@ -611,16 +612,19 @@ bool AIScriptOfficerGrayford::GoalChanged(int currentGoalNumber, int newGoalNumb
 					Actor_Says(kActorMoraji, 9020, kAnimationModeTalk); //35-9020.AUD	No.
 					Delay (2000);
 					Actor_Says(kActorMcCoy, 440, 16); //00-0440.AUD	Forget it.
+					Scene_Exits_Enable();
 				} else {
 					Actor_Says(kActorMcCoy, 945, 13); //00-0945.AUD	Hold on. An ambulance will be coming.
-					Delay (1000);
-					Actor_Says(kActorMcCoy, 8990, 15);	//00-8990.AUD	What have you got there?
-					Delay (2000);
-					Item_Pickup_Spin_Effect_From_Actor(kModelAnimationDNADataDisc, kActorMoraji, 0, 0);
-					Actor_Says(kActorMcCoy, 8501, 13); //00-8501.AUD	DNA information?
-					Delay (2000);
-					Actor_Says(kActorMcCoy, 1345, 18); //00-1345.AUD	Thanks.
-					Actor_Clue_Acquire(kActorMcCoy, kClueDNAMoraji, true, kActorMoraji);
+					if (!Game_Flag_Query(kFlagSadikIsReplicant)) {
+						Delay (1000);
+						Actor_Says(kActorMcCoy, 8990, 15);	//00-8990.AUD	What have you got there?
+						Delay (2000);
+						Item_Pickup_Spin_Effect_From_Actor(kModelAnimationDNADataDisc, kActorMoraji, 0, 0);
+						Actor_Says(kActorMcCoy, 8501, 13); //00-8501.AUD	DNA information?
+						Delay (2000);
+						Actor_Says(kActorMcCoy, 1345, 18); //00-1345.AUD	Thanks.
+						Actor_Clue_Acquire(kActorMcCoy, kClueDNAMoraji, true, kActorMoraji);
+					}
 					Scene_Exits_Enable();
 				}
 			}

@@ -174,20 +174,25 @@ bool SceneScriptDR06::ClickedOn3DObject(const char *objectName, bool a2) {
 			// This will get the player to go to Taffys to use the phone the phone there instead and that's when they will meet up with Dektora.
 			// I did this because I would really like the player to see this scene especially after putting a lot of time and effort into restoring it.
 			if (_vm->_cutContent) { 
-				if (Global_Variable_Query(kVariableAffectionTowards) == kAffectionTowardsDektora) {
-					Actor_Change_Animation_Mode(kActorMcCoy, 23);
-					Delay(800);
-					Sound_Play(kSfxSPNBEEP9, 50, 0, 0, 50);
-					Delay(2000);
-					Actor_Says(kActorMcCoy, 170, 13); //00-0170.AUD	Damn.
-					Actor_Says(kActorMcCoy, 8575, 14); // More useless junk.
-				} else if ( Actor_Clue_Query(kActorMcCoy, kClueFolder)
-				&&  Actor_Clue_Query(kActorMcCoy, kClueGuzzaFramedMcCoy)
+				if (Actor_Clue_Query(kActorMcCoy, kClueFolder)
+				&& Actor_Clue_Query(kActorMcCoy, kClueGuzzaFramedMcCoy)
 				&& !Game_Flag_Query(kFlagCallWithGuzza)) {
-					Actor_Change_Animation_Mode(kActorMcCoy, 23);
-					Delay(800);
-					Actor_Set_Goal_Number(kActorMcCoy, kGoalMcCoyCallWithGuzza);
-					Game_Flag_Set(kFlagCallWithGuzza);
+					if (Global_Variable_Query(kVariableAffectionTowards) == kAffectionTowardsDektora
+					&& !Actor_Clue_Query(kActorDektora, kClueMcCoyRetiredZuben)
+					&& !Actor_Clue_Query(kActorDektora, kClueMcCoyRetiredLucy)
+					&& !Actor_Clue_Query(kActorDektora, kClueMcCoyRetiredGordo)) {
+						Actor_Change_Animation_Mode(kActorMcCoy, 23);
+						Delay(800);
+						Sound_Play(kSfxSPNBEEP9, 50, 0, 0, 50);
+						Delay(2000);
+						Actor_Says(kActorMcCoy, 170, 13); //00-0170.AUD	Damn.
+						Actor_Says(kActorMcCoy, 8575, 14); // More useless junk.
+					} else {
+						Actor_Change_Animation_Mode(kActorMcCoy, 23);
+						Delay(800);
+						Actor_Set_Goal_Number(kActorMcCoy, kGoalMcCoyCallWithGuzza);
+						Game_Flag_Set(kFlagCallWithGuzza);
+					}
 				} else if (!Game_Flag_Query(kFlagDR06VidphoneChecked)) {
 					Actor_Voice_Over(770, kActorVoiceOver);
 					Actor_Voice_Over(780, kActorVoiceOver);
@@ -237,6 +242,34 @@ bool SceneScriptDR06::ClickedOn3DObject(const char *objectName, bool a2) {
 			if (Player_Query_Agenda() != kPlayerAgendaPolite) {
 				Actor_Voice_Over(840, kActorVoiceOver);
 			}
+			if (!Actor_Clue_Query(kActorMcCoy, kClueEnvelope)
+			&& !Game_Flag_Query(kFlagLutherLanceIsReplicant)) {
+				Delay(1000);
+				Actor_Says(kActorMcCoy, 8525, 13); // 00-8525.AUD	Hmph.
+				Actor_Change_Animation_Mode(kActorMcCoy, 23);
+				Delay(800);
+				Item_Pickup_Spin_Effect(kModelAnimationEnvelope, 451, 333);
+				Delay(800);
+				Actor_Says(kActorMcCoy, 8800, 13); //00-8800.AUD	An envelope full of money.
+				Actor_Voice_Over(850, kActorVoiceOver);
+				Actor_Voice_Over(860, kActorVoiceOver);
+				Actor_Clue_Acquire(kActorMcCoy, kClueEnvelope, true, kActorLance);
+				Actor_Voice_Over(870, kActorVoiceOver); //99-0870.AUD	But I didn't expect to find hundreds of chinyen inside.
+				if (Player_Query_Agenda() == kPlayerAgendaSurly 
+				|| Player_Query_Agenda() == kPlayerAgendaErratic) {
+					Delay(1000);
+					Actor_Says(kActorMcCoy, 8525, 13); // 00-8525.AUD	Hmph.
+					Actor_Change_Animation_Mode(kActorMcCoy, 23);
+					Delay(2000);
+					Actor_Voice_Over(3480, kActorVoiceOver); //99-3480.AUD	Yeah, what a difference a day makes.
+					if (Query_Difficulty_Level() != kGameDifficultyEasy) {
+						Global_Variable_Increment(kVariableChinyen, 200);
+					}
+					Delay(1000);
+				} else {
+					Actor_Voice_Over(880, kActorVoiceOver); //99-0880.AUD	I didn't know what it was for but I'd bet the farm it wasn't on Runciter's books.
+				}
+			}
 		} else {
 			Actor_Voice_Over(840, kActorVoiceOver);
 		}
@@ -265,30 +298,38 @@ bool SceneScriptDR06::ClickedOn3DObject(const char *objectName, bool a2) {
 					Game_Flag_Set(kFlagDR06MannequinHeadOpen);
 					Sound_Play(kSfxCEMENTL1, 100, 0, 0, 50);
 				}
-				if (!Actor_Clue_Query(kActorMcCoy, kClueEnvelope)) {
-					if (_vm->_cutContent) {
+				if (_vm->_cutContent) {
+					if (!Actor_Clue_Query(kActorMcCoy, kClueEnvelope)
+					&& Game_Flag_Query(kFlagLutherLanceIsReplicant)) {
 						Item_Pickup_Spin_Effect(kModelAnimationEnvelope, 171, 280);
 						Actor_Says(kActorMcCoy, 8800, 13); //00-8800.AUD	An envelope full of money.
 						Delay(800);
-						Overlay_Remove("DR06ovr2");
-						Game_Flag_Reset(kFlagDR06MannequinHeadOpen);
-						Sound_Play(kSfxCEMENTL1, 100, 0, 0, 50);
-						Delay(800);
 						Actor_Voice_Over(850, kActorVoiceOver);
-						Actor_Voice_Over(860, kActorVoiceOver);
-						Actor_Clue_Acquire(kActorMcCoy, kClueEnvelope, true, kActorLance);
+						Actor_Voice_Over(860, kActorVoiceOver);	
 						Actor_Voice_Over(870, kActorVoiceOver); //99-0870.AUD	But I didn't expect to find hundreds of chinyen inside.
+						Actor_Clue_Acquire(kActorMcCoy, kClueEnvelope, true, kActorLance);
 						if (Player_Query_Agenda() == kPlayerAgendaSurly 
 						|| Player_Query_Agenda() == kPlayerAgendaErratic) {
 							Delay(1000);
-							Actor_Says(kActorMcCoy, 8525, 13); // 00-8525.AUD	Hmph.
+							Actor_Says(kActorMcCoy, 8525, -1); // 00-8525.AUD	Hmph.
 							Actor_Change_Animation_Mode(kActorMcCoy, 23);
 							Delay(2000);
 							Actor_Voice_Over(3480, kActorVoiceOver); //99-3480.AUD	Yeah, what a difference a day makes.
 							if (Query_Difficulty_Level() != kGameDifficultyEasy) {
 								Global_Variable_Increment(kVariableChinyen, 200);
 							}
-							Delay(1000);
+						} else {
+							Actor_Voice_Over(880, kActorVoiceOver); //99-0880.AUD	I didn't know what it was for but I'd bet the farm it wasn't on Runciter's books.
+						}
+						if (Player_Query_Agenda() == kPlayerAgendaSurly 
+						|| Player_Query_Agenda() == kPlayerAgendaErratic) {
+							Actor_Change_Animation_Mode(kActorMcCoy, 23);
+							Delay(800);
+							Overlay_Remove("DR06ovr2");
+							Game_Flag_Reset(kFlagDR06MannequinHeadOpen);
+							Sound_Play(kSfxCEMENTL1, 100, 0, 0, 50);
+							Delay(800);
+							Actor_Says(kActorMcCoy, 8525, -1); // 00-8525.AUD	Hmph.
 							Actor_Change_Animation_Mode(kActorMcCoy, 23);
 							Delay(800);
 							Overlay_Play("DR06ovr2", 0, true, false, 0);
@@ -297,19 +338,35 @@ bool SceneScriptDR06::ClickedOn3DObject(const char *objectName, bool a2) {
 							Unclickable_Object("X2_TORSO04HIRES");
 							Delay(1500);
 							Actor_Says(kActorMcCoy, 7275, 14); //  00-7275.AUD	Sometimes I just can't help myself.
-						} else {
-							Actor_Voice_Over(880, kActorVoiceOver); //99-0880.AUD	I didn't know what it was for but I'd bet the farm it wasn't on Runciter's books.
 						}
-					} else {
-						Actor_Voice_Over(850, kActorVoiceOver);
-						Item_Pickup_Spin_Effect(kModelAnimationEnvelope, 171, 280);
-						Actor_Voice_Over(860, kActorVoiceOver);
-						Actor_Voice_Over(870, kActorVoiceOver); //99-0870.AUD	But I didn't expect to find hundreds of chinyen inside.
-						Actor_Voice_Over(880, kActorVoiceOver); //99-0880.AUD	I didn't know what it was for but I'd bet the farm it wasn't on Runciter's books.
-						Actor_Clue_Acquire(kActorMcCoy, kClueEnvelope, true, kActorLance);
-						if (Query_Difficulty_Level() != kGameDifficultyEasy) {
-							Global_Variable_Increment(kVariableChinyen, 200);
-						}
+					} else if (Player_Query_Agenda() == kPlayerAgendaSurly 
+					|| Player_Query_Agenda() == kPlayerAgendaErratic) {
+						Delay(800);
+						Actor_Change_Animation_Mode(kActorMcCoy, 23);
+						Delay(800);
+						Overlay_Remove("DR06ovr2");
+						Game_Flag_Reset(kFlagDR06MannequinHeadOpen);
+						Sound_Play(kSfxCEMENTL1, 100, 0, 0, 50);
+						Delay(800);
+						Actor_Says(kActorMcCoy, 8525, -1); // 00-8525.AUD	Hmph.
+						Actor_Change_Animation_Mode(kActorMcCoy, 23);
+						Delay(800);
+						Overlay_Play("DR06ovr2", 0, true, false, 0);
+						Game_Flag_Set(kFlagDR06MannequinHeadOpen);	
+						Sound_Play(kSfxBIGPOT3, 100, 0, 0, 50);
+						Unclickable_Object("X2_TORSO04HIRES");
+						Delay(1500);
+						Actor_Says(kActorMcCoy, 7275, 14); //  00-7275.AUD	Sometimes I just can't help myself.
+					}
+				} else if (!Actor_Clue_Query(kActorMcCoy, kClueEnvelope)) {
+					Actor_Voice_Over(850, kActorVoiceOver);
+					Item_Pickup_Spin_Effect(kModelAnimationEnvelope, 171, 280);
+					Actor_Voice_Over(860, kActorVoiceOver);
+					Actor_Voice_Over(870, kActorVoiceOver); //99-0870.AUD	But I didn't expect to find hundreds of chinyen inside.
+					Actor_Voice_Over(880, kActorVoiceOver); //99-0880.AUD	I didn't know what it was for but I'd bet the farm it wasn't on Runciter's books.
+					Actor_Clue_Acquire(kActorMcCoy, kClueEnvelope, true, kActorLance);
+					if (Query_Difficulty_Level() != kGameDifficultyEasy) {
+						Global_Variable_Increment(kVariableChinyen, 200);			
 					}
 				}
 			} else {

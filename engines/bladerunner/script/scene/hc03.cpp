@@ -102,11 +102,6 @@ void SceneScriptHC03::SceneLoaded() {
 		Obstacle_Object("GPscisGate", true);
 	}
 	Unclickable_Object("GUITAR01");
-	if (_vm->_cutContent) {
-		if (!Game_Flag_Query(kFlagDragonflyEarringTaken)) {
-			Item_Add_To_World(kItemDragonflyEarring, kModelAnimationDragonflyEarring, kSetHC01_HC02_HC03_HC04, 570.85f, 25.75f, -118.81f, 0, 6, 6, false, true, false, true);
-		}
-	}
 }
 
 bool SceneScriptHC03::MouseClick(int x, int y) {
@@ -151,27 +146,6 @@ bool SceneScriptHC03::ClickedOnItem(int itemId, bool combatMode) {
 		return true;
 	}
 
-	if (_vm->_cutContent) {
-		if (itemId == kItemDragonflyEarring) {
-			if (Game_Flag_Query(kFlagHC03CageOpen)) {
-				if (!Loop_Actor_Walk_To_Item(kActorMcCoy, kItemDragonflyEarring, 12, true, false)) {
-					Actor_Face_Item(kActorMcCoy, kItemDragonflyEarring, true);
-					Actor_Change_Animation_Mode(kActorMcCoy, 23);
-					Delay(800);
-					Item_Remove_From_World(kItemDragonflyEarring);
-					Item_Pickup_Spin_Effect(kModelAnimationDragonflyEarring, 330, 239);
-					Delay(800);
-					Actor_Says(kActorMcCoy, 8765, 13); //00-8765.AUD	An earring.
-					Delay(1000);
-					Actor_Voice_Over(4190, kActorVoiceOver); //99-4190.AUD	Where have I seen that before?
-					if (!Actor_Clue_Query(kActorMcCoy, kClueDragonflyEarring)) {
-						Actor_Clue_Acquire(kActorMcCoy, kClueDragonflyEarring, true, kActorIzo);
-					}
-				}
-			}
-		}
-		return true;
-	}
 	return false;
 }
 

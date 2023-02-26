@@ -57,37 +57,36 @@ void AIScriptHysteriaPatron3::ReceivedClue(int clueId, int fromActorId) {
 void AIScriptHysteriaPatron3::ClickedByPlayer() {
 	if (_vm->_cutContent) {
 		Actor_Face_Actor(kActorMcCoy, kActorHysteriaPatron3, true);
-		if (_vm->_cutContent) {
-			if (Player_Query_Agenda() == kPlayerAgendaSurly 
-			|| Player_Query_Agenda() == kPlayerAgendaErratic) {
-				if (Global_Variable_Query(kVariableChinyen) >= 5
-				|| Query_Difficulty_Level() == kGameDifficultyEasy) {
-					Actor_Says(kActorMcCoy, 3970, 13); //00-3970.AUD	Hey.
-					Actor_Says(kActorMcCoy, 345, 16); //00-0345.AUD	Wanna make some money?
-					Delay(1000);
-					Actor_Change_Animation_Mode(kActorMcCoy, 23);
-					Delay(2000);
-					Actor_Says(kActorMcCoy, 8170, 13); //00-8170.AUD	There you go.
-					if (Query_Difficulty_Level() != kGameDifficultyEasy) {
-						Global_Variable_Decrement(kVariableChinyen, 5);
-					}
-				} else {
-					Actor_Change_Animation_Mode(kActorMcCoy, 23);
-					if (!Game_Flag_Query(kFlagHanoiDead)) {
-						Actor_Change_Animation_Mode(kActorMcCoy, 23);
-						Game_Flag_Set(kFlagNR08TouchedDektora);
-						Delay(1000);
-						AI_Movement_Track_Flush(kActorHanoi);
-						Actor_Force_Stop_Walking(kActorMcCoy);
-						Actor_Set_Goal_Number(kActorHanoi, kGoalHanoiThrowOutMcCoy);
-					}
+		if (Player_Query_Agenda() == kPlayerAgendaSurly 
+		|| Player_Query_Agenda() == kPlayerAgendaErratic) {
+			if (Global_Variable_Query(kVariableChinyen) >= 5
+			|| Query_Difficulty_Level() == kGameDifficultyEasy) {
+				Actor_Says(kActorMcCoy, 3970, 13); //00-3970.AUD	Hey.
+				Actor_Says(kActorMcCoy, 345, 16); //00-0345.AUD	Wanna make some money?
+				Delay(1000);
+				Actor_Change_Animation_Mode(kActorMcCoy, 23);
+				Delay(2000);
+				Actor_Says(kActorMcCoy, 8170, 13); //00-8170.AUD	There you go.
+				if (Query_Difficulty_Level() != kGameDifficultyEasy) {
+					Global_Variable_Decrement(kVariableChinyen, 5);
 				}
 			} else {
-				Actor_Says(kActorMcCoy, 8935, kAnimationModeTalk);
+				Actor_Says(kActorMcCoy, 8518, kAnimationModeTalk); // Hey, can I lick...
+				if (!Game_Flag_Query(kFlagHanoiDead)
+				&& Game_Flag_Query(kFlagHanoiIsReplicant)) {
+					Actor_Change_Animation_Mode(kActorMcCoy, 23);
+					Game_Flag_Set(kFlagNR08TouchedDektora);
+					Delay(1000);
+					AI_Movement_Track_Flush(kActorHanoi);
+					Actor_Force_Stop_Walking(kActorMcCoy);
+					Actor_Set_Goal_Number(kActorHanoi, kGoalHanoiThrowOutMcCoy);
+				}
 			}
 		} else {
 			Actor_Says(kActorMcCoy, 8935, kAnimationModeTalk);
 		}
+	} else {
+		Actor_Says(kActorMcCoy, 8935, kAnimationModeTalk);
 	}
 	//return false;
 }

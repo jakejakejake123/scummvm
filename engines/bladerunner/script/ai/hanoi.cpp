@@ -229,7 +229,7 @@ void AIScriptHanoi::OtherAgentEnteredCombatMode(int otherActorId, int combatMode
 			}
 			if (!Game_Flag_Query(kFlagHanoiIsReplicant)) {
 				Player_Set_Combat_Mode(false);
-				Actor_Says(kActorMcCoy, 725, -1); //00-0725.AUD	Relax! I hear ya.
+				Actor_Says(kActorMcCoy, 725, 3); //00-0725.AUD	Relax! I hear ya.
 			} else { 
 				Actor_Set_Goal_Number(kActorHanoi, kGoalHanoiThrowOutMcCoy);
 			}
@@ -255,7 +255,7 @@ void AIScriptHanoi::OtherAgentEnteredCombatMode(int otherActorId, int combatMode
 		}
 		if (!Game_Flag_Query(kFlagHanoiIsReplicant)) {
 			Player_Set_Combat_Mode(false);
-			Actor_Says(kActorMcCoy, 725, -1); //00-0725.AUD	Relax! I hear ya.
+			Actor_Says(kActorMcCoy, 725, 3); //00-0725.AUD	Relax! I hear ya.
 		} else { 
 			Actor_Set_Goal_Number(kActorHanoi, kGoalHanoiThrowOutMcCoy);
 		}	
@@ -499,9 +499,9 @@ bool AIScriptHanoi::GoalChanged(int currentGoalNumber, int newGoalNumber) {
 		if (_vm->_cutContent) {
 			if (Game_Flag_Query(kFlagHanoiIsReplicant)) {
 				Actor_Change_Animation_Mode(kActorHanoi, 4);
+				Delay (1000);
 				Actor_Face_Actor(kActorHanoi, kActorMcCoy, true);
 				Actor_Face_Actor(kActorMcCoy, kActorHanoi, true);
-				Delay (1000);
 				Actor_Says(kActorHanoi, 160, -1); //25-0160.AUD	Here, what’s this then?
 				Actor_Says(kActorMcCoy, 525, -1); //00-0525.AUD	I've seen you before...
 				Actor_Says(kActorMcCoy, 7260, -1); //00-7260.AUD	Didn't I see an incept tape at the—	
@@ -708,7 +708,9 @@ bool AIScriptHanoi::UpdateAnimation(int *animation, int *frame) {
 			_animationState = 8;
 			_animationFrame = 0;
 			*animation = kModelAnimationHanoiCombatIdle;
-			Actor_Set_Goal_Number(kActorHanoi, kGoalHanoiNR04ShootMcCoy);
+			if (!_vm->_cutContent) {
+				Actor_Set_Goal_Number(kActorHanoi, kGoalHanoiNR04ShootMcCoy);
+			}
 		}
 		break;
 
@@ -717,11 +719,15 @@ bool AIScriptHanoi::UpdateAnimation(int *animation, int *frame) {
 		++_animationFrame;
 
 		if (_animationFrame == 4) {
-			Ambient_Sounds_Play_Sound(kSfxSHOTCOK1, 77, 0, 0, 20);
+			if (!_vm->_cutContent) {
+				Ambient_Sounds_Play_Sound(kSfxSHOTCOK1, 77, 0, 0, 20);
+			}
 		}
 
 		if (_animationFrame == 6) {
-			Ambient_Sounds_Play_Sound(kSfxSHOTGUN1, 97, 0, 0, 20);
+			if (!_vm->_cutContent) {
+				Ambient_Sounds_Play_Sound(kSfxSHOTGUN1, 97, 0, 0, 20);
+			}
 		}
 
 		if (_animationFrame == 5) {

@@ -249,6 +249,13 @@ bool SceneScriptHC01::ClickedOnItem(int itemId, bool a2) {
 			Actor_Clue_Acquire(kActorMcCoy, kCluePhotoOfMcCoy2, true, kActorIzo);
 		}
 		Actor_Clue_Acquire(kActorMcCoy, kClueChinaBar, true, kActorIzo);
+		if (!Game_Flag_Query(kFlagDNARowAvailableTalk)) {
+			if (Player_Query_Agenda() == kPlayerAgendaSurly 
+			|| Player_Query_Agenda() == kPlayerAgendaErratic
+			|| !Game_Flag_Query(kFlagMcCoyIsHelpingReplicants)) {	
+				Player_Set_Combat_Mode(true);
+			}
+		}
 		return true;
 	}
 	return false;
@@ -805,29 +812,6 @@ void SceneScriptHC01::takePhotoAndRunAway() {
 		Actor_Says(kActorIzo, 120, kAnimationModeTalk);
 	}
 	Actor_Set_Goal_Number(kActorIzo, kGoalIzoTakePhoto);
-	if (_vm->_cutContent) {
-		Music_Stop(1u);
-		Music_Play(kMusicBatl226M, 50, 0, 2, -1, kMusicLoopPlayOnce, 0);
-		Delay(5000);
-		Actor_Face_Item(kActorMcCoy, kItemCamera, true);
-		Item_Remove_From_World(kItemCamera);
-		Item_Pickup_Spin_Effect(kModelAnimationIzoCamera, 361, 381);
-		Delay(1500);
-		Item_Pickup_Spin_Effect(kModelAnimationPhoto, 377, 397);
-		Delay(1500);
-		Item_Pickup_Spin_Effect(kModelAnimationPhoto, 330, 384);
-		if (Game_Flag_Query(kFlagAR02DektoraBoughtScorpions)) {
-			Actor_Clue_Acquire(kActorMcCoy, kCluePhotoOfMcCoy1, true, kActorIzo);
-		} else {
-			Actor_Clue_Acquire(kActorMcCoy, kCluePhotoOfMcCoy2, true, kActorIzo);
-		}
-		Actor_Clue_Acquire(kActorMcCoy, kClueChinaBar, true, kActorIzo);
-		if (Player_Query_Agenda() == kPlayerAgendaSurly 
-		|| Player_Query_Agenda() == kPlayerAgendaErratic
-		|| !Game_Flag_Query(kFlagMcCoyIsHelpingReplicants)) {	
-			Player_Set_Combat_Mode(true);
-		}
-	}
 }
 
 } // End of namespace BladeRunner

@@ -142,6 +142,31 @@ bool SceneScriptCT09::ClickedOnActor(int actorId) {
 							Actor_Says(kActorMcCoy, 625, 13); //00-0625.AUD	So, now there's nothing in there.
 							Actor_Says(kActorDeskClerk, 140, 13); //27-0140.AUD	Rumor has it the boss wants to rent it out. What a dump.
 							Actor_Says(kActorDeskClerk, 150, 15); //27-0150.AUD	Maybe if we paid you, someone would actually want to stay there. (laughs)
+							Actor_Says(kActorMcCoy, 4130, 13); //00-4130.AUD	Anything else?
+							Delay(500);
+							Actor_Says(kActorMcCoy, 8990, 14); //00-8990.AUD	What have you got there?
+							Actor_Change_Animation_Mode(kActorMcCoy, 23);
+							Actor_Change_Animation_Mode(kActorDeskClerk, 23);
+							Delay(800);
+							Item_Pickup_Spin_Effect_From_Actor(kModelAnimationCheese, kActorMcCoy, 0, 0);
+							Actor_Clue_Acquire(kActorMcCoy, kClueCheese, true, kActorDeskClerk);
+							Delay(800);
+							Actor_Says(kActorMcCoy, 8820, 14);	//00-8820.AUD	A piece of cheese.
+							Actor_Voice_Over(480, kActorVoiceOver);
+							Actor_Voice_Over(490, kActorVoiceOver);
+							Actor_Voice_Over(500, kActorVoiceOver);
+							Delay(500);
+							Actor_Says(kActorMcCoy, 5850, 13); //00-5850.AUD	Where did you get this?
+							Delay(500);
+							Actor_Face_Heading(kActorMcCoy, 240, false);
+							Actor_Face_Heading(kActorDeskClerk, 240, false);
+							Actor_Says(kActorDeskClerk, 170, 13);
+							Delay(500);
+							Actor_Face_Actor(kActorDeskClerk, kActorMcCoy, true);
+							Actor_Face_Actor(kActorMcCoy, kActorDeskClerk, true);
+							Actor_Says(kActorMcCoy, 8320, 18); //00-8320.AUD	Really?
+							Delay(1000);
+							Actor_Says(kActorMcCoy, 6975, kAnimationModeTalk); //00-6975.AUD	Interesting.
 							Game_Flag_Set(kFlagCT09DeskClerkTalk2);
 						} else {
 							Actor_Says(kActorDeskClerk, 110, 15); //27-0110.AUD	Mister, you don't want to know. It'd take a Level Four suit just to put a key in the door. 
@@ -162,6 +187,31 @@ bool SceneScriptCT09::ClickedOnActor(int actorId) {
 									Actor_Says(kActorMcCoy, 625, 13); //00-0625.AUD	So, now there's nothing in there.
 									Actor_Says(kActorDeskClerk, 140, 13); //27-0140.AUD	Rumor has it the boss wants to rent it out. What a dump.
 									Actor_Says(kActorDeskClerk, 150, 15); //27-0150.AUD	Maybe if we paid you, someone would actually want to stay there. (laughs)
+									Actor_Says(kActorMcCoy, 4130, 13); //00-4130.AUD	Anything else?
+									Delay(500);
+									Actor_Says(kActorMcCoy, 8990, 14); //00-8990.AUD	What have you got there?
+									Actor_Change_Animation_Mode(kActorMcCoy, 23);
+									Actor_Change_Animation_Mode(kActorDeskClerk, 23);
+									Delay(800);
+									Item_Pickup_Spin_Effect_From_Actor(kModelAnimationCheese, kActorMcCoy, 0, 0);
+									Actor_Clue_Acquire(kActorMcCoy, kClueCheese, true, kActorDeskClerk);
+									Delay(800);
+									Actor_Says(kActorMcCoy, 8820, 14);	//00-8820.AUD	A piece of cheese.
+									Actor_Voice_Over(480, kActorVoiceOver);
+									Actor_Voice_Over(490, kActorVoiceOver);
+									Actor_Voice_Over(500, kActorVoiceOver);
+									Delay(500);
+									Actor_Says(kActorMcCoy, 5850, 13); //00-5850.AUD	Where did you get this?
+									Delay(500);
+									Actor_Face_Heading(kActorMcCoy, 240, false);
+									Actor_Face_Heading(kActorDeskClerk, 240, false);
+									Actor_Says(kActorDeskClerk, 170, 13);
+									Delay(500);
+									Actor_Face_Actor(kActorDeskClerk, kActorMcCoy, true);
+									Actor_Face_Actor(kActorMcCoy, kActorDeskClerk, true);
+									Actor_Says(kActorMcCoy, 8320, 18); //00-8320.AUD	Really?
+									Delay(1000);
+									Actor_Says(kActorMcCoy, 6975, kAnimationModeTalk); //00-6975.AUD	Interesting.
 									Game_Flag_Set(kFlagCT09DeskClerkTalk2);
 								}
 							}
@@ -174,8 +224,7 @@ bool SceneScriptCT09::ClickedOnActor(int actorId) {
 							Actor_Says(kActorMcCoy, 660, 14); //00-0660.AUD	You seen any suspicious types around here lately?
 							Actor_Says(kActorDeskClerk, 230, 13); //27-0230.AUD	Hey, rest up them dogs right down in the lobby here.
 							Actor_Says(kActorDeskClerk, 240, 15); //27-0240.AUD	I assure you. You'll see a lot of fine people strolling through
-							if (Player_Query_Agenda() != kPlayerAgendaSurly 
-							&& Player_Query_Agenda() != kPlayerAgendaErratic) {
+							if (Player_Query_Agenda() == kPlayerAgendaPolite) {
 								Actor_Says(kActorMcCoy, 3140, 16); //00-3140.AUD	Thanks.
 							}
 							Player_Gains_Control();
@@ -286,7 +335,18 @@ void SceneScriptCT09::PlayerWalkedIn() {
 		Game_Flag_Reset(kFlagCT10toCT09);
 	} else if (Game_Flag_Query(kFlagCT08toCT09)) {
 		if (leonScene) {
-			Async_Actor_Walk_To_XYZ(kActorMcCoy, 206.0f, 348.52f, 599.0f, 0, false);
+			if (_vm->_cutContent) {
+				if (Player_Query_Agenda() == kPlayerAgendaPolite) {
+					Actor_Set_At_XYZ(kActorMcCoy, 206.0f, 348.52f, 599.0f, 0);
+					Actor_Face_Actor(kActorMcCoy, kActorLeon, true);
+					Delay(3000);
+					Player_Set_Combat_Mode(true);
+				} else {
+					Async_Actor_Walk_To_XYZ(kActorMcCoy, 206.0f, 348.52f, 599.0f, 0, false);
+				}
+			} else {
+				Async_Actor_Walk_To_XYZ(kActorMcCoy, 206.0f, 348.52f, 599.0f, 0, false);
+			}
 		} else {
 			Loop_Actor_Walk_To_XYZ(kActorMcCoy, 206.0f, 348.52f, 599.0f, 0, false, false, false);
 		}
@@ -300,10 +360,13 @@ void SceneScriptCT09::PlayerWalkedIn() {
 	}
 
 	if (Actor_Query_Goal_Number(kActorDeskClerk) == kGoalDeskClerkRecovered) {
+		if (_vm->_cutContent) {
+			Actor_Face_Actor(kActorMcCoy, kActorDeskClerk, true);
+			Delay(1000);
+			Actor_Says(kActorMcCoy, 755, 18);
+			Actor_Face_Actor(kActorDeskClerk, kActorMcCoy, true);
+		}
 		if (Game_Flag_Query(kFlagCT09LeonInterrupted)) {
-			if (_vm->_cutContent) {
-				Actor_Face_Actor(kActorDeskClerk, kActorMcCoy, true);
-			}
 			Actor_Says(kActorDeskClerk, 70, 13);
 			Actor_Face_Actor(kActorMcCoy, kActorDeskClerk, true);
 			Actor_Says(kActorMcCoy, 600, 17); //00-0600.AUD	He looked familiar.

@@ -198,6 +198,9 @@ void SceneScriptCT10::PlayerWalkedIn() {
 		Actor_Voice_Over(460, kActorVoiceOver);
 		Actor_Voice_Over(470, kActorVoiceOver);
 		Game_Flag_Set(kFlagCT10Entered);
+		if (_vm->_cutContent) {
+			Actor_Set_Goal_Number(kActorDeskClerk, kGoalDeskClerkRecovered);
+		}
 	}
 }
 

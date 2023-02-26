@@ -165,7 +165,7 @@ void AIScriptDektora::CompletedMovementTrack() {
 	// this is the case he is actually helping the replicants and he never harms Lucy. Also I made it so only replicant Dektora is willing to murder Early Q since I wanted
 	// to create further differences between the replicant and human versions of each character.
 	if (_vm->_cutContent) {
-		if (Random_Query(1, 3) == 1
+		if (Random_Query(1, 2) == 1
 		&& !Game_Flag_Query(kFlagEarlyQIsReplicant)
 		&& Game_Flag_Query(kFlagDektoraIsReplicant)
 		&& !Game_Flag_Query(kFlagInsectDealerArrested)
@@ -188,28 +188,16 @@ void AIScriptDektora::CompletedMovementTrack() {
 		break;
 
 	case kGoalDektoraWalkAroundAsHuman:
-	if (_vm->_cutContent) {
-		if (Random_Query(1, 3) == 1
-		&& !Game_Flag_Query(kFlagEarlyQIsReplicant)
-		&& Game_Flag_Query(kFlagDektoraIsReplicant)
-		&& !Game_Flag_Query(kFlagInsectDealerArrested)
-		&& !Game_Flag_Query(kFlagAR02DektoraWillBuyScorpions)
-		) {
+	if (Random_Query(1, 5) == 1
+		&& Actor_Query_Goal_Number(kActorEarlyQ) != 1
+		&& Actor_Query_Goal_Number(kActorEarlyQ) != 101
+	) {
+		if (!_vm->_cutContent) {
 			Game_Flag_Set(kFlagAR02DektoraWillBuyScorpions);
-			Actor_Set_Goal_Number(kActorDektora, kGoalDektoraStartWalkingAround);
-		} else {
 			Actor_Set_Goal_Number(kActorDektora, kGoalDektoraStartWalkingAround);
 		}
 	} else {
-		if (Random_Query(1, 5) == 1
-		 && Actor_Query_Goal_Number(kActorEarlyQ) != 1
-		 && Actor_Query_Goal_Number(kActorEarlyQ) != 101
-		) {
-			Game_Flag_Set(kFlagAR02DektoraWillBuyScorpions);
-			Actor_Set_Goal_Number(kActorDektora, kGoalDektoraStartWalkingAround);
-		} else {
-			Actor_Set_Goal_Number(kActorDektora, kGoalDektoraStartWalkingAround);
-		}
+		Actor_Set_Goal_Number(kActorDektora, kGoalDektoraStartWalkingAround);
 	}
 	break;
 
@@ -258,30 +246,6 @@ void AIScriptDektora::ClickedByPlayer() {
 				Delay(1000);
 				Actor_Says(kActorMcCoy, 8225, 13); //00-8225.AUD	Just relax.
 				Delay(1000);
-				if (Player_Query_Agenda() != kPlayerAgendaSurly 
-				&& Player_Query_Agenda() != kPlayerAgendaErratic) {
-					if (Actor_Clue_Query(kActorMcCoy, kClueDragonflyBelt)
-					|| Actor_Clue_Query(kActorMcCoy, kClueDektorasCard)) {
-						Actor_Says(kActorMcCoy, 5150, 18); //00-5150.AUD	One more thing.
-						Actor_Change_Animation_Mode(kActorMcCoy, 23);
-						Actor_Change_Animation_Mode(kActorDektora, 23);
-						Delay(800);
-						if (Actor_Clue_Query(kActorMcCoy, kClueDragonflyBelt)) {
-							Actor_Clue_Lose(kActorMcCoy, kClueDragonflyBelt);
-							Actor_Clue_Acquire(kActorDektora, kClueDragonflyBelt, true, -1);
-							Item_Pickup_Spin_Effect_From_Actor(kModelAnimationDragonflyBelt, kActorDektora, 0, 0);
-							Delay(1500);
-						} 
-						if (Actor_Clue_Query(kActorMcCoy, kClueDektorasCard)
-						&& Global_Variable_Query(kVariableAffectionTowards) != kAffectionTowardsDektora) {
-							Actor_Clue_Lose(kActorMcCoy, kClueDektorasCard);
-							Actor_Clue_Acquire(kActorDektora, kClueDektorasCard, true, -1);
-							Item_Pickup_Spin_Effect_From_Actor(kModelAnimationDektorasCard, kActorDektora, 0, 0);
-							Delay(1500);
-						}
-						Actor_Says(kActorMcCoy, 8170, 13); //00-8170.AUD	There you go.
-					}
-				}
 			}
 		}
 	}

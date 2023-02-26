@@ -421,14 +421,13 @@ void AIScriptLucy::Retired(int byActorId) {
 			Actor_Says(kActorMcCoy, 170, 19); //00-0170.AUD	Damn.
 			Delay(2000);
 			Actor_Clue_Acquire(kActorClovis, kClueMcCoyRetiredLucy, true, -1);
+			Actor_Clue_Acquire(kActorDektora, kClueMcCoyRetiredLucy, true, -1);
 			Actor_Modify_Friendliness_To_Other(kActorClovis, kActorMcCoy, -4);
 			Game_Flag_Set(kFlagMcCoyRetiredReplicant);
 			Game_Flag_Reset(kFlagMcCoyIsHelpingReplicants);
 			Actor_Modify_Friendliness_To_Other(kActorSteele, kActorMcCoy, 2);
 			Actor_Modify_Friendliness_To_Other(kActorGuzza, kActorMcCoy, 2);
 			Actor_Modify_Friendliness_To_Other(kActorGaff, kActorMcCoy, 2);
-			// Made it so you lose affection to both Lucy and Dektora if you retire Lucy.
-			Global_Variable_Set(kVariableAffectionTowards, kAffectionTowardsNone);
 			Actor_Set_Goal_Number(kActorLucy, kGoalLucyGone);
 		} else if (byActorId == kActorMcCoy
 		&& Actor_Query_In_Set(kActorLucy, kSetHF04)
@@ -606,12 +605,10 @@ bool AIScriptLucy::GoalChanged(int currentGoalNumber, int newGoalNumber) {
 			Actor_Modify_Friendliness_To_Other(kActorSteele, kActorMcCoy, -2);
 			Actor_Modify_Friendliness_To_Other(kActorGuzza, kActorMcCoy, -2);
 			Game_Flag_Set(kFlagMcCoyIsHelpingReplicants);
-			if (Global_Variable_Query(kVariableHollowayArrest) == 3) {
-				Actor_Clue_Acquire(kActorMcCoy, kClueMcCoyHelpedLucy, true, kActorLucy);
-			}
-			if (Global_Variable_Query(kVariableAffectionTowards) == kAffectionTowardsNone
-			&& (Actor_Query_Friendliness_To_Other(kActorClovis, kActorMcCoy) > 50
-			&& Actor_Query_Goal_Number(kActorDektora) < kGoalDektoraGone)) {
+			if (!Actor_Clue_Query(kActorLucy, kClueMcCoyRetiredZuben)
+			&& !Actor_Clue_Query(kActorLucy, kClueMcCoyRetiredDektora)
+			&& !Actor_Clue_Query(kActorLucy, kClueMcCoyRetiredGordo)
+			&& Global_Variable_Query(kVariableAffectionTowards) == kAffectionTowardsNone) {
 				Global_Variable_Set(kVariableAffectionTowards, kAffectionTowardsLucy);
 			}
 		}
@@ -676,9 +673,7 @@ bool AIScriptLucy::GoalChanged(int currentGoalNumber, int newGoalNumber) {
 			Actor_Says(kActorLucy, 370, 14);
 		}
 		if (_vm->_cutContent) {
-			if (Player_Query_Agenda() == kPlayerAgendaPolite) {
-				Actor_Says(kActorMcCoy, 1650, 13); //00-1650.AUD	Take care of yourself, kid.
-			}
+			Actor_Says(kActorMcCoy, 1650, 13); //00-1650.AUD	Take care of yourself, kid.
 		}
 		Actor_Set_Goal_Number(kActorLucy, kGoalLucyHF04WalkAway);
 
@@ -744,8 +739,17 @@ bool AIScriptLucy::GoalChanged(int currentGoalNumber, int newGoalNumber) {
 	case kGoalLucyStartChapter4:
 		Actor_Put_In_Set(kActorLucy, kSetFreeSlotA);
 		Actor_Set_At_Waypoint(kActorLucy, 33, 0);
-		if (Global_Variable_Query(kVariableAffectionTowards) == kAffectionTowardsLucy) {
-			Actor_Set_Goal_Number(kActorLucy, kGoalLucyUG01Wait);
+		if (_vm->_cutContent) {
+			if (!Actor_Clue_Query(kActorLucy, kClueMcCoyRetiredZuben)
+			&& !Actor_Clue_Query(kActorLucy, kClueMcCoyRetiredDektora)
+			&& !Actor_Clue_Query(kActorLucy, kClueMcCoyRetiredGordo)
+			&& Global_Variable_Query(kVariableAffectionTowards) == kAffectionTowardsLucy) {
+				Actor_Set_Goal_Number(kActorLucy, kGoalLucyUG01Wait);
+			}
+		} else {
+			if (Global_Variable_Query(kVariableAffectionTowards) == kAffectionTowardsLucy) {
+				Actor_Set_Goal_Number(kActorLucy, kGoalLucyUG01Wait);
+			}
 		}
 		break;
 
@@ -1204,8 +1208,7 @@ void AIScriptLucy::voightKampffTest() {
 				Actor_Says(kActorLucy, 1210, 17); //06-1210.AUD	I’m gonna stay with you.
 			} else {
 				Delay(250);
-				Actor_Says(kActorLucy, 450, -1); //39-0450.AUD	Inconclusive result.
-				Actor_Says(kActorLucy, 460, -1); //39-0460.AUD	Test terminated.
+				Actor_Says(kActorAnsweringMachine, 450, -1); //39-0450.AUD	Inconclusive result.
 				Delay(1000);
 				Actor_Says(kActorMcCoy, 2305, 13); //00-2305.AUD	I’m sorry.
 				Delay(500);

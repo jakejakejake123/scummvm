@@ -472,7 +472,9 @@ bool AIScriptEarlyQ::GoalChanged(int currentGoalNumber, int newGoalNumber) {
 					Actor_Clue_Acquire(kActorMcCoy, kClueEarlyQInterview, true, kActorEarlyQ);
 					if (Player_Query_Agenda() == kPlayerAgendaSurly 
 					|| (Player_Query_Agenda() == kPlayerAgendaErratic)) {
-						Actor_Says(kActorMcCoy, 2215, kAnimationModeCombatAim); //00-2215.AUD	That’s right.
+						if (!Game_Flag_Query(kFlagMcCoyIsHelpingReplicants)) {
+							Actor_Says(kActorMcCoy, 2215, kAnimationModeCombatAim); //00-2215.AUD	That’s right.
+						}
 					}
 					Delay(1000);
 					Actor_Says(kActorEarlyQ, 350, 16); 
@@ -501,6 +503,12 @@ bool AIScriptEarlyQ::GoalChanged(int currentGoalNumber, int newGoalNumber) {
 				if (!Actor_Clue_Query(kActorMcCoy, kClueEarlyQInterview)) {
 					Actor_Says_With_Pause(kActorEarlyQ, 140, 1.0f, kAnimationModeTalk); //18-0140.AUD	You want Dektora? Is that it? The girl with the Rep friends?
 					Actor_Clue_Acquire(kActorMcCoy, kClueEarlyQInterview, false, kActorEarlyQ);
+					if (Player_Query_Agenda() == kPlayerAgendaSurly 
+					|| (Player_Query_Agenda() == kPlayerAgendaErratic)) {
+						if (!Game_Flag_Query(kFlagMcCoyIsHelpingReplicants)) {
+							Actor_Says(kActorMcCoy, 2215, kAnimationModeCombatAim); //00-2215.AUD	That’s right.
+						}
+					}
 					Actor_Says_With_Pause(kActorEarlyQ, 150, 1.0f, kAnimationModeTalk);
 					Actor_Says(kActorMcCoy, 3405, kAnimationModeCombatAim);
 					Actor_Says(kActorEarlyQ, 160, kAnimationModeTalk);
@@ -569,6 +577,17 @@ bool AIScriptEarlyQ::GoalChanged(int currentGoalNumber, int newGoalNumber) {
 		Actor_Says(kActorEarlyQ, 10, kAnimationModeTalk);
 		Actor_Says(kActorEarlyQ, 20, kAnimationModeTalk);
 		Actor_Clue_Lose(kActorMcCoy, kClueEarlyQsClub);
+		if (_vm->_cutContent) {
+			if (Game_Flag_Query(kFlagEarlyQIsReplicant)
+			&& Game_Flag_Query(kFlagSadikIsReplicant)) {	
+				Actor_Clue_Lose(kActorMcCoy, kClueDNAMarcus);
+				Actor_Clue_Lose(kActorMcCoy, kClueDNASebastian);
+				Actor_Clue_Lose(kActorMcCoy, kClueDNAMoraji);
+				if (Actor_Clue_Query(kActorMcCoy, kClueDNAChew)) {
+					Actor_Clue_Lose(kActorMcCoy, kClueDNAChew);
+				}
+			}
+		}
 		// Made it so when McCoy is drugged by Early Q McCoy now appears in his apartment.
 		if (_vm->_cutContent) {
 			Actor_Set_Goal_Number(kActorEarlyQ, kGoalEarlyQNR04Leave);
@@ -595,27 +614,9 @@ bool AIScriptEarlyQ::GoalChanged(int currentGoalNumber, int newGoalNumber) {
 		Actor_Face_Actor(kActorMcCoy, kActorEarlyQ, true);
 		Actor_Face_Actor(kActorEarlyQ, kActorMcCoy, true);
 		Actor_Change_Animation_Mode(kActorEarlyQ, 23);
-		// Made it so if Early Q is a replicant the drink he hands McCoy is poisoned and McCoy dies when he drinks it.
-		if (_vm->_cutContent) {
-			if (!Game_Flag_Query(kFlagEarlyQIsReplicant)) {
-				Scene_Loop_Start_Special(kSceneLoopModeOnce, 2, false);
-				Ambient_Sounds_Play_Sound(kSfxDRUGOUT, 50, 99, 0, 0);
-				Actor_Set_Goal_Number(kActorMcCoy, kGoalMcCoyNR04Drink);
-			} else {
-				Actor_Change_Animation_Mode(kActorMcCoy, 23);
-				Delay(1500);
-				Actor_Change_Animation_Mode(kActorMcCoy, 75);
-				Delay(4000);
-				Actor_Change_Animation_Mode(kActorMcCoy, kAnimationModeDie);
-				Ambient_Sounds_Play_Sound(kSfxMALEHURT, 90, 99, 0, 0);
-				Delay(350);
-				Actor_Retired_Here(kActorMcCoy, 12, 12, true, -1);
-			}
-		} else {
-			Scene_Loop_Start_Special(kSceneLoopModeOnce, 2, false);
-			Ambient_Sounds_Play_Sound(kSfxDRUGOUT, 50, 99, 0, 0);
-			Actor_Set_Goal_Number(kActorMcCoy, kGoalMcCoyNR04Drink);
-		}
+		Scene_Loop_Start_Special(kSceneLoopModeOnce, 2, false);
+		Ambient_Sounds_Play_Sound(kSfxDRUGOUT, 50, 99, 0, 0);
+		Actor_Set_Goal_Number(kActorMcCoy, kGoalMcCoyNR04Drink);
 		break;
 
 	case kGoalEarlyQNR04GetShot:

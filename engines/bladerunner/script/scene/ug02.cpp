@@ -128,42 +128,7 @@ bool SceneScriptUG02::ClickedOn3DObject(const char *objectName, bool a2) {
 			Actor_Clue_Acquire(kActorMcCoy, kClueWeaponsCache, true, -1);
 			return true;
 		}
-		if (_vm->_cutContent) {
-			if (Global_Variable_Query(kVariableChapter) > 3) {
-				if (!Game_Flag_Query(kFlagIzoWarned)) {
-					Actor_Voice_Over(2510, kActorVoiceOver); //99-2510.AUD	Someone had really torn the place up.
-					Delay(1000);
-					Actor_Says(kActorMcCoy, 8580, 14); //00-8580.AUD	Nothing else there.
-				} else {
-				 	if (Actor_Clue_Query(kActorMcCoy, kClueWeaponsCache)
-					&& !Actor_Clue_Query(kActorMcCoy, kClueIzosStashRaided)) {
-						Actor_Voice_Over(2470, kActorVoiceOver);
-						Actor_Voice_Over(2480, kActorVoiceOver);
-						Actor_Voice_Over(2490, kActorVoiceOver);
-						Actor_Voice_Over(2500, kActorVoiceOver);
-						Actor_Clue_Acquire(kActorMcCoy, kClueIzosStashRaided, true, -1);
-					} else if (!Actor_Clue_Query(kActorMcCoy, kClueWeaponsCache)) {
-						Actor_Voice_Over(2510, kActorVoiceOver); //99-2510.AUD	Someone had really torn the place up.
-						Actor_Voice_Over(2520, kActorVoiceOver);
-						if (Game_Flag_Query(kFlagUG02toHC03)
-						|| Game_Flag_Query(kFlagHC03toUG02)) {	
-							Actor_Voice_Over(2530, kActorVoiceOver);				
-						}
-					} else if (!Game_Flag_Query(kFlagUG02AmmoTaken)) {
-						Actor_Change_Animation_Mode(kActorMcCoy, 23);
-						Delay(800);
-						Item_Pickup_Spin_Effect(kModelAnimationAmmoType02, 360, 440);
-						Delay(800);
-						Actor_Says(kActorMcCoy, 8525, 13);
-						Give_McCoy_Ammo(2, 18);
-						Game_Flag_Set(kFlagUG02AmmoTaken);
-					} else {
-						Actor_Says(kActorMcCoy, 8585, 14); //00-8585.AUD	Nothing more to find.
-					}
-				}
-				return true;
-			}
-		} else if (Global_Variable_Query(kVariableChapter) > 3) {
+		if (Global_Variable_Query(kVariableChapter) > 3) {
 			if ( Actor_Clue_Query(kActorMcCoy, kClueWeaponsCache)
 			 && !Actor_Clue_Query(kActorMcCoy, kClueIzosStashRaided)
 			) {
@@ -179,13 +144,22 @@ bool SceneScriptUG02::ClickedOn3DObject(const char *objectName, bool a2) {
 #if BLADERUNNER_ORIGINAL_BUGS
 				Actor_Voice_Over(2530, kActorVoiceOver); // But there was no way to tell what was missing without Izo standing there checking his inventory.
 #else
-				// This voice over says that Izo is there in Chapter 4 checking out his weapon's cache
-				// This does not happen in the original game (Izo being there) although this case can be triggered
-				// TODO Restore this quote ONLY IF we restore the related cut-content so that Izo may appear here in Chapter 4.
-				//Actor_Voice_Over(2530, kActorVoiceOver); // But there was no way to tell what was missing without Izo standing there checking his inventory.
+				if (_vm->_cutContent) {
+					if (Game_Flag_Query(kFlagUG02toHC03)
+					|| Game_Flag_Query(kFlagHC03toUG02)) {	
+						Actor_Voice_Over(2530, kActorVoiceOver);				
+					}
+				}
 #endif // BLADERUNNER_ORIGINAL_BUGS
 			} else if (!Game_Flag_Query(kFlagUG02AmmoTaken)) {
-				Item_Pickup_Spin_Effect(kModelAnimationAmmoType02, 360, 440);
+				if (_vm->_cutContent) {
+					Actor_Change_Animation_Mode(kActorMcCoy, 23);
+					Delay(800);
+					Item_Pickup_Spin_Effect(kModelAnimationAmmoType02, 360, 440);
+					Delay(800);
+				} else {
+					Item_Pickup_Spin_Effect(kModelAnimationAmmoType02, 360, 440);
+				}
 				Actor_Says(kActorMcCoy, 8525, 14);
 				Give_McCoy_Ammo(2, 18);
 				Game_Flag_Set(kFlagUG02AmmoTaken);

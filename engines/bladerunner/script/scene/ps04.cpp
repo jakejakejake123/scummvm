@@ -178,10 +178,10 @@ void SceneScriptPS04::PlayerWalkedIn() {
 		Actor_Face_Actor(kActorMcCoy, kActorGuzza, true);
 	}
 	if (_vm->_cutContent) {
-		if (!Actor_Clue_Query(kActorMcCoy, kClueMcCoyRetiredZuben) 
-		&& Game_Flag_Query(kFlagCT01TalkToHowieAfterZubenMissing)
+		if (Game_Flag_Query(kFlagCT01TalkToHowieAfterZubenMissing)
+		&& !Game_Flag_Query(kFlagZubenRetired)
 		&& !Game_Flag_Query(kFlagPS04GuzzaTalkIsFurious)
-		&& !Game_Flag_Query(kFlagMcCoyRetiredRunciter)
+		&& !Actor_Clue_Query(kActorMcCoy, kClueMcCoyKilledRunciter1)
 		&& !Game_Flag_Query(kFlagMcCoyShotRachael)
 		&& !Game_Flag_Query(kFlagMcCoyShotGrigorian)
 		&& !Game_Flag_Query(kFlagRunciterArrested)
@@ -427,7 +427,7 @@ void SceneScriptPS04::dialogueWithGuzza() {
 			&& Game_Flag_Query(kFlagCT01TalkToHowieAfterZubenMissing)
 			&& !Game_Flag_Query(kFlagGuzzaInformed)
 			&& (Game_Flag_Query(kFlagZubenRetired)
-			|| Game_Flag_Query(kFlagMcCoyRetiredRunciter))) {	
+			|| Actor_Clue_Query(kActorMcCoy, kClueMcCoyKilledRunciter1))) {	
 				Actor_Says(kActorMcCoy, 3920, 13); //00-3920.AUD	Bryant go on permanent leave and you get full use of the office, Lieutenant?
 				Actor_Says(kActorGuzza, 140, 30); //04-0140.AUD	You'd be amazed at how accommodating a man can be after his hemorrhoids get lanced.
 				Actor_Face_Current_Camera(kActorGuzza, true);
@@ -436,7 +436,7 @@ void SceneScriptPS04::dialogueWithGuzza() {
 				if (!Game_Flag_Query(kFlagMcCoyIsHelpingReplicants)) {
 					Actor_Says(kActorMcCoy, 3925, 18); //00-3925.AUD	Just doing the job.
 					Actor_Face_Actor(kActorGuzza, kActorMcCoy, true);
-					if (!Game_Flag_Query(kFlagMcCoyRetiredRunciter)) {
+					if (!Actor_Clue_Query(kActorMcCoy, kClueMcCoyKilledRunciter1)) {
 						Actor_Says(kActorGuzza, 170, 33); //04-0170.AUD	Yeah, well don't get too cocky. Those Sixes can be damn unpredictable.
 						Loop_Actor_Walk_To_XYZ(kActorMcCoy, -716.0f, -354.85f, 1042.0f, 0, false, false, true);
 						Actor_Face_Actor(kActorMcCoy, kActorGuzza, true);

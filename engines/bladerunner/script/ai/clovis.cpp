@@ -625,6 +625,7 @@ bool AIScriptClovis::GoalChanged(int currentGoalNumber, int newGoalNumber) {
 	case kGoalClovisKP07TalkToMcCoy:
 		// Made it so McCoy only says that all the reps are dead besides Clovis if that is the case.
 		if (_vm->_cutContent) {
+			Actor_Face_Actor(kActorMcCoy, kActorClovis, true);
 			if (Game_Flag_Query(kFlagGrigorianIsReplicant)) {
 				Global_Variable_Increment(kVariableReplicantsSurvivorsAtMoonbus, 1);
 			} 
@@ -710,7 +711,7 @@ bool AIScriptClovis::GoalChanged(int currentGoalNumber, int newGoalNumber) {
 		if (_vm->_cutContent) {
 			if (Player_Query_Agenda() == kPlayerAgendaSurly 
 			|| (Player_Query_Agenda() == kPlayerAgendaErratic)) {
-				if (!Actor_Clue_Query(kActorMcCoy, kClueMcCoyRetiredSadik)) {
+				if (!Game_Flag_Query(kFlagSadikIsReplicant)) {
 					Actor_Says(kActorMcCoy, 2355, 11); //00-2355.AUD	But after what you did to Maggie? No way.
 				}
 			}
@@ -843,8 +844,30 @@ bool AIScriptClovis::GoalChanged(int currentGoalNumber, int newGoalNumber) {
 					Actor_Change_Animation_Mode(kActorMcCoy, 23);
 					Actor_Change_Animation_Mode(kActorClovis, 23);
 					Delay(800);
-					Item_Pickup_Spin_Effect_From_Actor(kModelAnimationDNADataDisc, kActorClovis, 0, 0);
-					Delay(800);
+					if (Actor_Clue_Query(kActorMcCoy, kClueDNATyrell)) {
+						Item_Pickup_Spin_Effect_From_Actor(kModelAnimationDNADataDisc, kActorClovis, 0, 0);
+						Delay(1500);
+					}
+					if (Actor_Clue_Query(kActorMcCoy, kClueDNASebastian)) {
+						Item_Pickup_Spin_Effect_From_Actor(kModelAnimationDNADataDisc, kActorClovis, 0, 0);
+						Delay(1500);
+					}
+					if (Actor_Clue_Query(kActorMcCoy, kClueDNAChew)) {
+						Item_Pickup_Spin_Effect_From_Actor(kModelAnimationDNADataDisc, kActorClovis, 0, 0);
+						Delay(1500);
+					}
+					if (Actor_Clue_Query(kActorMcCoy, kClueDNAMoraji)) {
+						Item_Pickup_Spin_Effect_From_Actor(kModelAnimationDNADataDisc, kActorClovis, 0, 0);
+						Delay(1500);
+					}
+					if (Actor_Clue_Query(kActorMcCoy, kClueDNALutherLance)) {
+						Item_Pickup_Spin_Effect_From_Actor(kModelAnimationDNADataDisc, kActorClovis, 0, 0);
+						Delay(1500);
+					}
+					if (Actor_Clue_Query(kActorMcCoy, kClueDNAMarcus)) {
+						Item_Pickup_Spin_Effect_From_Actor(kModelAnimationDNADataDisc, kActorClovis, 0, 0);
+						Delay(1500);
+					}
 					Actor_Says(kActorMcCoy, 8170, kAnimationModeTalk); //00-8170.AUD	There you go.
 					Delay(1000);
 				}
@@ -866,36 +889,56 @@ bool AIScriptClovis::GoalChanged(int currentGoalNumber, int newGoalNumber) {
 		Actor_Says(kActorMcCoy, 8505, kAnimationModeTalk); //00-8505.AUD	It's true then. You've-- We've only got four years.
 		// Made it so Clovis will only say the DNA information will be enough to make a difference if McCoy has found ALL of the DNA information.
 		if (_vm->_cutContent) {
-			if (Actor_Clue_Query(kActorMcCoy, kClueDNATyrell)
-			&& Actor_Clue_Query(kActorMcCoy, kClueDNASebastian)
-			&& Actor_Clue_Query(kActorMcCoy, kClueDNAChew) 
-			&& Actor_Clue_Query(kActorMcCoy, kClueDNAMoraji) 
-			&& Actor_Clue_Query(kActorMcCoy, kClueDNALutherLance)
-			&& Actor_Clue_Query(kActorMcCoy, kClueDNAMarcus)) {
-				if (Actor_Query_Friendliness_To_Other(kActorClovis, kActorMcCoy) > 50
-				&& !Game_Flag_Query(kFlagMcCoyRetiredReplicant)) {
-					Actor_Says(kActorClovis, 1300, kAnimationModeTalk); //05-1300.AUD	Yes. Of course, I could be hit by lightning tomorrow but with the information 
+			if (Game_Flag_Query(kFlagSadikIsReplicant)) {
+				if (Actor_Clue_Query(kActorMcCoy, kClueDNATyrell)
+				&& Actor_Clue_Query(kActorMcCoy, kClueDNAChew)) {
+					if (Actor_Query_Friendliness_To_Other(kActorClovis, kActorMcCoy) > 50
+					&& !Game_Flag_Query(kFlagMcCoyRetiredReplicant)) {
+						Actor_Says(kActorClovis, 1300, kAnimationModeTalk); //05-1300.AUD	Yes. Of course, I could be hit by lightning tomorrow but with the information 
+					} else {
+						Delay(2000);
+						Actor_Says(kActorMcCoy, 1885, kAnimationModeTalk); //00-1885.AUD	I’ll take that as a yes.
+						Delay(1000);
+					}
 				} else {
 					Delay(2000);
 					Actor_Says(kActorMcCoy, 1885, kAnimationModeTalk); //00-1885.AUD	I’ll take that as a yes.
 					Delay(1000);
 				}
 			} else {
-				Delay(2000);
-				Actor_Says(kActorMcCoy, 1885, kAnimationModeTalk); //00-1885.AUD	I’ll take that as a yes.
-				Delay(1000);
+				if (Actor_Clue_Query(kActorMcCoy, kClueDNATyrell)
+				&& Actor_Clue_Query(kActorMcCoy, kClueDNASebastian)
+				&& Actor_Clue_Query(kActorMcCoy, kClueDNAChew)
+				&& Actor_Clue_Query(kActorMcCoy, kClueDNAMarcus)
+				&& Actor_Clue_Query(kActorMcCoy, kClueDNAMoraji)) {
+					if (Actor_Query_Friendliness_To_Other(kActorClovis, kActorMcCoy) > 50
+					&& !Game_Flag_Query(kFlagMcCoyRetiredReplicant)) {
+						Actor_Says(kActorClovis, 1300, kAnimationModeTalk); //05-1300.AUD	Yes. Of course, I could be hit by lightning tomorrow but with the information 
+					} else {
+						Delay(2000);
+						Actor_Says(kActorMcCoy, 1885, kAnimationModeTalk); //00-1885.AUD	I’ll take that as a yes.
+						Delay(1000);
+					}
+				} else {
+					Delay(2000);
+					Actor_Says(kActorMcCoy, 1885, kAnimationModeTalk); //00-1885.AUD	I’ll take that as a yes.
+					Delay(1000);
+				}
 			}
 		} else {
-			Actor_Says(kActorClovis, 1300, kAnimationModeTalk); //
+			Actor_Says(kActorClovis, 1300, kAnimationModeTalk); 
 		}
 #if BLADERUNNER_ORIGINAL_BUGS
 #else
-	Actor_Face_Heading(kActorClovis, 780, true);
+	if (!_vm->_cutContent) {
+		Actor_Face_Heading(kActorClovis, 780, true);
+	}
 #endif // BLADERUNNER_ORIGINAL_BUGS
 		// Made it so Clovis will only call Ray a friend if he didn't retire Dektora or Lucy and has high friendliness with Clovis.
 		if (_vm->_cutContent) {
 			if (Actor_Query_Friendliness_To_Other(kActorClovis, kActorMcCoy) > 50
 			&& !Game_Flag_Query(kFlagMcCoyRetiredReplicant)) {
+				Actor_Face_Heading(kActorClovis, 780, true);
 				Actor_Says(kActorClovis, 1310, kAnimationModeTalk); //05-1310.AUD	He’s a hunter no more. He has come home. It’s time to go, my friend.
 			}
 		} else {

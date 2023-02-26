@@ -170,11 +170,12 @@ void SceneScriptHF04::PlayerWalkedIn() {
 	 || Actor_Query_Goal_Number(kActorLucy) == kGoalLucyHF04Run1
 	) {
 		if (_vm->_cutContent) {
-			if (!Game_Flag_Query(kFlagMcCoyIsHelpingReplicants)
-			&& Player_Query_Agenda() != kPlayerAgendaPolite
-			&& Global_Variable_Query(kVariableAffectionTowards) != kAffectionTowardsLucy) {
+			if (Global_Variable_Query(kVariableHollowayArrest) == 3
+			|| !Game_Flag_Query(kFlagMcCoyIsHelpingReplicants)) {
 				Player_Set_Combat_Mode(true);
 			}
+		} else {
+			Player_Set_Combat_Mode(true);
 		}
 		Music_Play(kMusicBatl226M, 60, 0, 2, -1, kMusicLoopPlayOnce, 0);
 	}

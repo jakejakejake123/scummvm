@@ -302,13 +302,18 @@ void AIScriptGordo::ClickedByPlayer() {
 		Actor_Face_Actor(kActorMcCoy, kActorGordo, true);
 		// Made it so Gordo will have the Crazys involvement clue on him, but only if Dektora is also a replicant and they both went to Crazylegs place.
 		 if (_vm->_cutContent) {
-			if (!Actor_Clue_Query(kActorMcCoy, kClueCrazysInvolvement)
-			&& Game_Flag_Query(kFlagDektoraIsReplicant)
-			&& Game_Flag_Query(kFlagGordoIsReplicant)) {
-				Actor_Clue_Acquire(kActorMcCoy, kClueCrazysInvolvement, false, kActorGordo);
-				Item_Pickup_Spin_Effect_From_Actor(kModelAnimationTyrellSalesPamphlet, kActorGordo, 0, 0);
-				Delay(1000);
-				Actor_Says(kActorMcCoy, 6975, 12); // Interesting
+			if (!Actor_Clue_Query(kActorMcCoy, kClueGordoIncept)) {
+				Actor_Clue_Acquire(kActorMcCoy, kClueGordoIncept, false, kActorGordo);
+				Item_Pickup_Spin_Effect_From_Actor(kModelAnimationPhoto, kActorGordo, 0, 0);
+				Delay(1500);
+				if (!Actor_Clue_Query(kActorMcCoy, kClueCrazysInvolvement)	
+				&& Game_Flag_Query(kFlagDektoraIsReplicant)
+				&& Game_Flag_Query(kFlagGordoIsReplicant)) {
+					Actor_Clue_Acquire(kActorMcCoy, kClueCrazysInvolvement, false, kActorGordo);
+					Item_Pickup_Spin_Effect_From_Actor(kModelAnimationTyrellSalesPamphlet, kActorGordo, 0, 0);
+					Delay(1500);
+					Actor_Says(kActorMcCoy, 6975, 12); // Interesting
+				}
 			} else if (Player_Query_Agenda() == kPlayerAgendaSurly 
 			|| Player_Query_Agenda() == kPlayerAgendaErratic) {
 				Actor_Says(kActorMcCoy, 8590, 18); //00-8590.AUD	Not the talkative type
@@ -428,7 +433,7 @@ void AIScriptGordo::Retired(int byActorId) {
 		Actor_Set_Goal_Number(kActorGordo, kGoalGordoGone);
 		Delay(2000);
 		Player_Set_Combat_Mode(false);
-		if (_vm->_cutContent) {
+		if (_vm->_cutContent) {			
 			if (Player_Query_Agenda() != kPlayerAgendaSurly 
 			&& Player_Query_Agenda() != kPlayerAgendaErratic) {
 				Actor_Voice_Over(1410, kActorVoiceOver);
@@ -436,7 +441,10 @@ void AIScriptGordo::Retired(int byActorId) {
 				Actor_Voice_Over(1440, kActorVoiceOver);
 				Actor_Clue_Acquire(kActorMcCoy, kClueMcCoyRetiredGordo, true, -1);
 			} else {
+				Actor_Voice_Over(1440, kActorVoiceOver);
+				Delay(500);
 				Actor_Voice_Over(920, kActorVoiceOver); //99-0920.AUD	Easy money.
+				Actor_Clue_Acquire(kActorMcCoy, kClueMcCoyRetiredGordo, true, -1);
 			}	
 		} else {
 			Actor_Voice_Over(1410, kActorVoiceOver);
@@ -456,7 +464,9 @@ void AIScriptGordo::Retired(int byActorId) {
 			Actor_Modify_Friendliness_To_Other(kActorSteele, kActorMcCoy, 2);
 			Actor_Modify_Friendliness_To_Other(kActorClovis, kActorMcCoy, -2);
 			Actor_Modify_Friendliness_To_Other(kActorGuzza, kActorMcCoy, 2);
-			Actor_Modify_Friendliness_To_Other(kActorGaff, kActorMcCoy, 2);		
+			Actor_Modify_Friendliness_To_Other(kActorGaff, kActorMcCoy, 2);	
+			Actor_Clue_Acquire(kActorLucy, kClueMcCoyRetiredGordo, true, -1);
+			Actor_Clue_Acquire(kActorDektora, kClueMcCoyRetiredGordo, true, -1);
 		}
 		Player_Gains_Control();
 		Scene_Exits_Enable();
@@ -2086,11 +2096,12 @@ void AIScriptGordo::talkToMcCoyInCity() {
 			Actor_Says(kActorMcCoy, 8615, 14); //00-8615.AUD	Heard anything on the street?
 			Actor_Says(kActorGordo, 1030, 12); //02-1030.AUD	Sorry, Charlie.
 			Delay(1000);
-		} else {
-			Actor_Says(kActorGordo, 890, 14);
-			Actor_Says(kActorMcCoy, 6465, 15);
-		}
-		if (_vm->_cutContent) {
+			Actor_Says(kActorMcCoy, 6490, 12);
+			Actor_Says(kActorGordo, 990, 13);
+			Actor_Says(kActorGordo, 1000, 15);
+			Actor_Says(kActorMcCoy, 5310, 11); //00-5310.AUD	You spot anything you think I ought to know about, tell me.
+			Game_Flag_Set(kFlagGordoTalk2);
+			Delay(1000);
 			if (!Game_Flag_Query(kFlagGordoIsReplicant) 
 			&& Game_Flag_Query(kFlagGordoReceivedAutograph)) {
 				Actor_Says(kActorGordo, 900, 13); //02-0900.AUD	You ever get down to Nightclub Row, you ought to check out my act.
@@ -2104,11 +2115,10 @@ void AIScriptGordo::talkToMcCoyInCity() {
 				Actor_Says(kActorMcCoy, 6480, 14);
 				Actor_Says(kActorGordo, 960, 15);
 				Actor_Says(kActorGordo, 970, 12);
-			} else {
-				Actor_Says(kActorMcCoy, 5310, 11); //00-5310.AUD	You spot anything you think I ought to know about, tell me.
-				Delay(1000);
 			}
 		} else {
+			Actor_Says(kActorGordo, 890, 30);//02-0890.AUD	What's shaking baby? Haven't I seen you around these parts before?
+			Actor_Says(kActorMcCoy, 6465, 15); //00-6465.AUD	Could be. I get around.	
 			Actor_Says(kActorGordo, 900, 13); //02-0900.AUD	You ever get down to Nightclub Row, you ought to check out my act.
 			Actor_Says(kActorGordo, 910, 13);
 			Actor_Says(kActorMcCoy, 6470, 12);
@@ -2162,7 +2172,7 @@ void AIScriptGordo::talkToMcCoyInCity() {
 						Delay(1000);
 						Actor_Modify_Friendliness_To_Other(kActorGordo, kActorMcCoy, 2);
 						if (Query_Difficulty_Level() != kGameDifficultyEasy) {
-							Global_Variable_Decrement(kVariableChinyen, 5);
+							Global_Variable_Decrement(kVariableChinyen, 10);
 						}
 						Actor_Says(kActorMcCoy, 6485, 12);
 						Actor_Says(kActorGordo, 1010, 12); //02-1010.AUD	Bombing? I've never bombed in my life. My act is always happening. Always now.
@@ -2399,7 +2409,12 @@ void AIScriptGordo::dialogue1() {
 		if (Game_Flag_Query(kFlagDektoraIdentified)
 		|| Actor_Clue_Query(kActorMcCoy, kClueEarlyQInterview)
 		|| Actor_Clue_Query(kActorMcCoy, kClueCarWasStolen)) {
-			DM_Add_To_List_Never_Repeat_Once_Selected(780, 5, 5, 5); // BLOND WOMAN
+			if (Actor_Clue_Query(kActorMcCoy, kClueChinaBar)
+			|| Actor_Clue_Query(kActorMcCoy, kClueWomanInAnimoidRow)
+			|| Actor_Clue_Query(kActorMcCoy, kClueOuterDressingRoom)
+			|| Actor_Clue_Query(kActorMcCoy, kClueDektorasDressingRoom)) {
+				DM_Add_To_List_Never_Repeat_Once_Selected(780, 5, 5, 5); // BLOND WOMAN
+			}
 		}
 	} else if (Actor_Clue_Query(kActorMcCoy, kClueDektorasDressingRoom)
 	 || Actor_Clue_Query(kActorMcCoy, kClueWomanInAnimoidRow)

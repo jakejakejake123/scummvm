@@ -55,18 +55,34 @@ void SceneScriptTB06::SceneLoaded() {
 	if (!Game_Flag_Query(kFlagTB06DogCollarTaken)
 	 &&  Actor_Query_Goal_Number(kActorPhotographer) != 199
 	) {
-		Item_Add_To_World(kItemDogCollar, kModelAnimationDogCollar, kSetTB06, 36.54f, 149.48f, -565.67f, 0, 6, 6, false, true, false, true);
+		if (_vm->_cutContent) {
+			if (Game_Flag_Query(kFlagSadikIsReplicant)) {
+				Item_Add_To_World(kItemDogCollar, kModelAnimationDogCollar, kSetTB06, 36.54f, 149.48f, -565.67f, 0, 6, 6, false, true, false, true);
+			}
+		} else {
+			Item_Add_To_World(kItemDogCollar, kModelAnimationDogCollar, kSetTB06, 36.54f, 149.48f, -565.67f, 0, 6, 6, false, true, false, true);
+		}
 	}
 
-	if (!Game_Flag_Query(kFlagTB06KitchenBoxTaken)) {
-		Item_Add_To_World(kItemKitchenBox, kModelAnimationKingstonKitchenBox, kSetTB06, 18.0f, 149.65f, -599.0f, 0, 6, 6, false, true, false, true);
+	if (_vm->_cutContent) {
+		if (!Game_Flag_Query(kFlagTB06KitchenBoxTaken)) {
+			if (!Game_Flag_Query(kFlagSadikIsReplicant)) {
+				Item_Add_To_World(kItemKitchenBox, kModelAnimationKingstonKitchenBox, kSetTB06, 18.0f, 149.65f, -599.0f, 0, 6, 6, false, true, false, true);
+			}
+		} 
+	} else {
+		if (!Game_Flag_Query(kFlagTB06KitchenBoxTaken)) {
+			Item_Add_To_World(kItemKitchenBox, kModelAnimationKingstonKitchenBox, kSetTB06, 18.0f, 149.65f, -599.0f, 0, 6, 6, false, true, false, true);
+		} 
 	}
 
 	if (Actor_Query_Goal_Number(kActorPhotographer) != 199) {
 		if (_vm->_cutContent) {
-			Item_Add_To_World(kItemDeadDogA, kModelAnimationDeadDogA, kSetTB06, -46.82f, 149.6f, -666.88f, 200, 12, 12, false, true, false, true);
-			Item_Add_To_World(kItemDeadDogB, kModelAnimationDeadDogB, kSetTB06, -30.27f, 149.6f, -610.7f, 200, 15, 45, false, true, false, true);
-			Item_Add_To_World(kItemDeadDogC, kModelAnimationDeadDogC, kSetTB06, 9.87f, 149.6f, -683.5f, 800, 12, 12, false, true, false, true);
+			if (Game_Flag_Query(kFlagSadikIsReplicant)) {
+				Item_Add_To_World(kItemDeadDogA, kModelAnimationDeadDogA, kSetTB06, -46.82f, 149.6f, -666.88f, 200, 12, 12, false, true, false, true);
+				Item_Add_To_World(kItemDeadDogB, kModelAnimationDeadDogB, kSetTB06, -30.27f, 149.6f, -610.7f, 200, 15, 45, false, true, false, true);
+				Item_Add_To_World(kItemDeadDogC, kModelAnimationDeadDogC, kSetTB06, 9.87f, 149.6f, -683.5f, 800, 12, 12, false, true, false, true);
+			}
 		} else {
 			Item_Add_To_World(kItemDeadDogA, kModelAnimationDeadDogA, kSetTB06, -46.82f, 149.6f, -666.88f, 0, 12, 12, false, true, false, true);
 			Item_Add_To_World(kItemDeadDogB, kModelAnimationDeadDogB, kSetTB06, -30.27f, 149.6f, -610.7f, 0, 15, 45, false, true, false, true);
@@ -89,37 +105,27 @@ bool SceneScriptTB06::ClickedOnActor(int actorId) {
 			if (_vm->_cutContent) {
 				Actor_Face_Actor(kActorMcCoy, kActorMarcus, true);
 			}
-			if (!Actor_Clue_Query(kActorMcCoy, kClueDetonatorWire)) {
-				Actor_Voice_Over(2300, kActorVoiceOver);
-				if (_vm->_cutContent) {
+			if (_vm->_cutContent) {
+				if (!Game_Flag_Query(kFlagEisendullerExamined)) {
+					Actor_Voice_Over(2300, kActorVoiceOver);
 					if (Player_Query_Agenda() == kPlayerAgendaSurly
 					|| Player_Query_Agenda() == kPlayerAgendaErratic) {
-						Actor_Voice_Over(2310, kActorVoiceOver); //99-2310.AUD	And not just because he'd been plastered on the wall with a thousand strokes.			
+						Actor_Voice_Over(2310, kActorVoiceOver); //99-2310.AUD	And not just because he'd been plastered on the wall with a thousand strokes.
 					}
-				} else {
-					Actor_Voice_Over(2310, kActorVoiceOver); //99-2310.AUD	And not just because he'd been plastered on the wall with a thousand strokes.			
-				}	
-				if (_vm->_cutContent) {
-					Item_Pickup_Spin_Effect_From_Actor(kModelAnimationDetonatorWire, kActorMarcus, 0, 0);		
-				} else {
-					Item_Pickup_Spin_Effect(kModelAnimationDetonatorWire, 66, 397);
-				}
-				Actor_Voice_Over(2320, kActorVoiceOver);
-				if (Game_Flag_Query(kFlagSadikIsReplicant)) {
-					Actor_Voice_Over(2330, kActorVoiceOver);
-					Actor_Voice_Over(2340, kActorVoiceOver);
-				}
-				if (_vm->_cutContent) {
+					if (!Game_Flag_Query(kFlagSadikIsReplicant)) {
+						Item_Pickup_Spin_Effect_From_Actor(kModelAnimationDetonatorWire, kActorMarcus, 0, 0);
+						Actor_Voice_Over(2320, kActorVoiceOver);
+						Actor_Clue_Acquire(kActorMcCoy, kClueDetonatorWire, true, -1);
+					}
+					if (Game_Flag_Query(kFlagSadikIsReplicant)) {
+						Actor_Voice_Over(2330, kActorVoiceOver);
+						Actor_Voice_Over(2340, kActorVoiceOver);
+					}
 					if (Actor_Clue_Query(kActorMcCoy, kCluePoliceWeaponUsed)
 					|| Actor_Clue_Query(kActorMcCoy, kClueTyrellSecurityPhoto)) {
 						Actor_Voice_Over(2350, kActorVoiceOver);
 					}
 				} else {
-					Actor_Voice_Over(2350, kActorVoiceOver);
-				}
-				Actor_Clue_Acquire(kActorMcCoy, kClueDetonatorWire, true, -1);
-			} else { 
-				if (_vm->_cutContent) {
 					if (Player_Query_Agenda() == kPlayerAgendaSurly 
 					|| Player_Query_Agenda() == kPlayerAgendaErratic) {
 						Actor_Says(kActorMcCoy, 8665, 13); //00-8665.AUD	Disgusting.
@@ -130,9 +136,18 @@ bool SceneScriptTB06::ClickedOnActor(int actorId) {
 					} else {
 						Actor_Says(kActorMcCoy, 8630, 12);  // What a waste
 					}
-				} else {
-					Actor_Says(kActorMcCoy, 8665, 13);
 				}
+			} else { 
+				Actor_Voice_Over(2300, kActorVoiceOver);
+				Actor_Voice_Over(2310, kActorVoiceOver); //99-2310.AUD	And not just because he'd been plastered on the wall with a thousand strokes.
+				Item_Pickup_Spin_Effect_From_Actor(kModelAnimationDetonatorWire, kActorMarcus, 0, 0);
+				Actor_Voice_Over(2320, kActorVoiceOver);
+				if (Game_Flag_Query(kFlagSadikIsReplicant)) {
+					Actor_Voice_Over(2330, kActorVoiceOver);
+					Actor_Voice_Over(2340, kActorVoiceOver);
+				}	
+				Actor_Voice_Over(2350, kActorVoiceOver);
+				Actor_Clue_Acquire(kActorMcCoy, kClueDetonatorWire, true, -1);
 			}
 			return false;
 		}
@@ -143,25 +158,16 @@ bool SceneScriptTB06::ClickedOnActor(int actorId) {
 bool SceneScriptTB06::ClickedOnItem(int itemId, bool a2) {
 	if (itemId == kItemDogCollar) {
 		if (!Loop_Actor_Walk_To_Item(kActorMcCoy, kItemDogCollar, 12, true, false)) {
-			Actor_Face_Item(kActorMcCoy, kItemDogCollar, true);
+			Actor_Face_Item(kActorMcCoy, kItemDogCollar, true);				
+			Actor_Clue_Acquire(kActorMcCoy, kClueDogCollar1, true, -1);
+			Item_Pickup_Spin_Effect(kModelAnimationDogCollar, 341, 368);
+			Item_Remove_From_World(kItemDogCollar);
 			if (_vm->_cutContent) {
-				if (!Actor_Clue_Query(kActorMcCoy, kClueAttemptedFileAccess)) {
-					Actor_Says(kActorMcCoy, 8790, 13); //00-8790.AUD	A dog collar.
-					Actor_Says(kActorMcCoy, 8525, -1); // 00-8525.AUD	Hmph.
-				} else {
-					Item_Pickup_Spin_Effect(kModelAnimationDogCollar, 341, 368);
-					Item_Remove_From_World(kItemDogCollar);
-					Actor_Voice_Over(4160, kActorVoiceOver);
-					Game_Flag_Set(kFlagTB06DogCollarTaken);
-					Actor_Clue_Acquire(kActorMcCoy, kClueDogCollar1, true, -1);
-				}	
+				Actor_Says(kActorMcCoy, 8790, 13); //00-8790.AUD	A dog collar.
 			} else {
-				Actor_Clue_Acquire(kActorMcCoy, kClueDogCollar1, true, -1);
-				Item_Pickup_Spin_Effect(kModelAnimationDogCollar, 341, 368);
-				Item_Remove_From_World(kItemDogCollar);
 				Actor_Voice_Over(4160, kActorVoiceOver);
-				Game_Flag_Set(kFlagTB06DogCollarTaken);
 			}
+			Game_Flag_Set(kFlagTB06DogCollarTaken);
 			return true;
 		}
 	}
@@ -311,31 +317,33 @@ void SceneScriptTB06::PlayerWalkedIn() {
 					AI_Movement_Track_Unpause(kActorPhotographer);
 				} else {
 					Actor_Says(kActorMcCoy, 5295, kAnimationModeTalk); //00-5295.AUD	Learn anything?
-					Actor_Says(kActorPhotographer, 50, kAnimationModeTalk); //37-0050.AUD	Yeah, I dug up a couple of leads, let me clue you in.
-					Actor_Says(kActorMcCoy, 4940, 13); //00-4940.AUD	Okay, let's have it.
-					Delay(1000);
-					Actor_Says(kActorMcCoy, 8990, 14); //00-8990.AUD	What have you got there?
-					Player_Loses_Control();
-					Loop_Actor_Walk_To_Actor(kActorMcCoy, kActorPhotographer, 24, true, false);
-					Player_Gains_Control();
-					Actor_Change_Animation_Mode(kActorMcCoy, 23);
-					Actor_Change_Animation_Mode(kActorPhotographer, 23);
-					Delay(800);
-					Item_Pickup_Spin_Effect_From_Actor(kModelAnimationAmmoType00, kActorMcCoy, 0, 0);
-					Delay(1500);
-					Item_Pickup_Spin_Effect_From_Actor(kModelAnimationAmmoType00, kActorMcCoy, 0, 0);
-					Actor_Face_Heading(kActorMcCoy, 240, true);
-					Actor_Voice_Over(4200, kActorVoiceOver); //99-4200.AUD	Where have I seen those before?
-					Actor_Change_Animation_Mode(kActorMcCoy, 23);
-					Delay(1200);
-					Actor_Says(kActorMcCoy, 5690, -1); //00-5690.AUD	Huh?
-					Delay(1000);
-					Actor_Says(kActorMcCoy, 8705, 19); //00-8705.AUD	That's damn strange.
-					Actor_Clue_Acquire(kActorMcCoy, kCluePoliceWeaponUsed, true, kActorPhotographer);	
-					Delay(2000);
-					Actor_Face_Actor(kActorMcCoy, kActorPhotographer, true);
-					Actor_Face_Actor(kActorPhotographer, kActorMcCoy, true);
-					Actor_Says(kActorMcCoy, 4130, 18); //00-4130.AUD	Anything else?
+					if (!Game_Flag_Query(kFlagSadikIsReplicant)) {
+						Actor_Says(kActorPhotographer, 50, kAnimationModeTalk); //37-0050.AUD	Yeah, I dug up a couple of leads, let me clue you in.
+						Actor_Says(kActorMcCoy, 4940, 13); //00-4940.AUD	Okay, let's have it.
+						Delay(1000);
+						Actor_Says(kActorMcCoy, 8990, 14); //00-8990.AUD	What have you got there?
+						Player_Loses_Control();
+						Loop_Actor_Walk_To_Actor(kActorMcCoy, kActorPhotographer, 24, true, false);
+						Player_Gains_Control();
+						Actor_Change_Animation_Mode(kActorMcCoy, 23);
+						Actor_Change_Animation_Mode(kActorPhotographer, 23);
+						Delay(800);
+						Item_Pickup_Spin_Effect_From_Actor(kModelAnimationAmmoType00, kActorMcCoy, 0, 0);
+						Delay(1500);
+						Item_Pickup_Spin_Effect_From_Actor(kModelAnimationAmmoType00, kActorMcCoy, 0, 0);
+						Actor_Face_Heading(kActorMcCoy, 240, true);
+						Actor_Voice_Over(4200, kActorVoiceOver); //99-4200.AUD	Where have I seen those before?
+						Actor_Change_Animation_Mode(kActorMcCoy, 23);
+						Delay(1200);
+						Actor_Says(kActorMcCoy, 5690, -1); //00-5690.AUD	Huh?
+						Delay(1000);
+						Actor_Says(kActorMcCoy, 8705, 19); //00-8705.AUD	That's damn strange.
+						Actor_Clue_Acquire(kActorMcCoy, kCluePoliceWeaponUsed, true, kActorPhotographer);	
+						Delay(2000);
+						Actor_Face_Actor(kActorMcCoy, kActorPhotographer, true);
+						Actor_Face_Actor(kActorPhotographer, kActorMcCoy, true);
+						Actor_Says(kActorMcCoy, 4130, 18); //00-4130.AUD	Anything else?
+					}
 					Actor_Says(kActorPhotographer, 70, kAnimationModeTalk); //37-0070.AUD	Zero that would interest you, detective.
 					AI_Movement_Track_Unpause(kActorPhotographer);
 				}

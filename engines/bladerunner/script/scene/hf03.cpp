@@ -113,7 +113,9 @@ void SceneScriptHF03::dialogueWithLucy() {
 	case 850: // FATHER
 		Actor_Says(kActorMcCoy, 1635, 15);
 		if (_vm->_cutContent) {
-			if (Actor_Query_Friendliness_To_Other(kActorClovis, kActorMcCoy) < 51) {
+			if (Actor_Clue_Query(kActorLucy, kClueMcCoyRetiredZuben)
+			|| Actor_Clue_Query(kActorLucy, kClueMcCoyRetiredDektora)
+			|| Actor_Clue_Query(kActorLucy, kClueMcCoyRetiredGordo)) {
 				Actor_Says(kActorLucy, 2060, 13); //06-2060.AUD	No!
 			} else {	
 				Actor_Says(kActorLucy, 200, 13);
@@ -137,8 +139,9 @@ void SceneScriptHF03::dialogueWithLucy() {
 			 && Global_Variable_Query(kVariableAffectionTowards) == kAffectionTowardsNone
 			) {
 				if (_vm->_cutContent) {
-					if (Actor_Query_Friendliness_To_Other(kActorClovis, kActorMcCoy) > 50
-					&& Actor_Query_Goal_Number(kActorDektora) < kGoalDektoraGone) {
+					if (!Actor_Clue_Query(kActorLucy, kClueMcCoyRetiredZuben)
+					&& !Actor_Clue_Query(kActorLucy, kClueMcCoyRetiredDektora)
+					&& !Actor_Clue_Query(kActorLucy, kClueMcCoyRetiredGordo)) {
 						Global_Variable_Set(kVariableAffectionTowards, kAffectionTowardsLucy);
 						Actor_Says(kActorLucy, 940, 14); //06-0940.AUD	You’re a good man.
 						Actor_Says(kActorMcCoy, 6780, 11); //00-6780.AUD	Don’t jump to any conclusions.
@@ -192,10 +195,14 @@ void SceneScriptHF03::dialogueWithLucy() {
 			if (_vm->_cutContent) {
 				Actor_Says(kActorLucy, 220, 13); //06-0220.AUD	You’re not-- You’re not the hunter anymore?
 				Actor_Says(kActorMcCoy, 1660, 15); //00-1660.AUD	Go! Quickly.
-				if (Game_Flag_Query(kFlagLucyIsReplicant)) {
-					Actor_Says(kActorLucy, 230, 14); //06-0230.AUD	Thank you.
-				} else {
-					Actor_Says(kActorLucy, 1050, 17); //06-1050.AUD	Oh, thank you. Thank you for everything.
+				if (!Actor_Clue_Query(kActorLucy, kClueMcCoyRetiredZuben)
+				&& !Actor_Clue_Query(kActorLucy, kClueMcCoyRetiredDektora)
+				&& !Actor_Clue_Query(kActorLucy, kClueMcCoyRetiredGordo)) {
+					if (Game_Flag_Query(kFlagLucyIsReplicant)) {
+						Actor_Says(kActorLucy, 230, 14); //06-0230.AUD	Thank you.
+					} else {
+						Actor_Says(kActorLucy, 1050, 17); //06-1050.AUD	Oh, thank you. Thank you for everything.
+					}
 				}
 				Actor_Says(kActorMcCoy, 1650, 13); //00-1650.AUD	Take care of yourself, kid.
 				Actor_Modify_Friendliness_To_Other(kActorSteele, kActorMcCoy, -2);
@@ -224,7 +231,9 @@ void SceneScriptHF03::dialogueWithLucy() {
 	case 870: // RUNCITER
 		if (_vm->_cutContent) {
 			Actor_Says(kActorMcCoy, 1645, 18);
-			if (Actor_Query_Friendliness_To_Other(kActorClovis, kActorMcCoy) < 51) { 
+			if (Actor_Clue_Query(kActorLucy, kClueMcCoyRetiredZuben)
+			|| Actor_Clue_Query(kActorLucy, kClueMcCoyRetiredDektora)
+			|| Actor_Clue_Query(kActorLucy, kClueMcCoyRetiredGordo)) {
 				if (Game_Flag_Query(kFlagLucyIsReplicant)) {
 					Actor_Says(kActorLucy, 90, 13); //06-0090.AUD	Leave me alone.		
 				} else {
@@ -293,13 +302,20 @@ bool SceneScriptHF03::ClickedOnActor(int actorId) {
 						}
 					} else {
 						Actor_Says(kActorMcCoy, 1615, 16); //00-1615.AUD	I’ve been looking for you.
-						if (Actor_Query_Friendliness_To_Other(kActorClovis, kActorMcCoy) < 51) {
+						if (Actor_Clue_Query(kActorLucy, kClueMcCoyRetiredZuben)
+						|| Actor_Clue_Query(kActorLucy, kClueMcCoyRetiredDektora)
+						|| Actor_Clue_Query(kActorLucy, kClueMcCoyRetiredGordo)) {	
 							if (Game_Flag_Query(kFlagLucyIsReplicant)) {
 								Actor_Says(kActorLucy, 90, 13); //06-0090.AUD	Leave me alone.
 							} else {
 								Actor_Says(kActorLucy, 110, 13); //06-0110.AUD	Please, leave me alone.
 							}
-							Actor_Says(kActorLucy, 120, 13); //06-0120.AUD	Father told me to watch out for you.
+							if (Actor_Query_Friendliness_To_Other(kActorClovis, kActorMcCoy) < 51
+							|| Game_Flag_Query(kFlagMcCoyRetiredReplicant)) {
+								if (Game_Flag_Query(kFlagLucyIsReplicant)) {
+									Actor_Says(kActorLucy, 120, 13); //06-0120.AUD	Father told me to watch out for you.
+								}
+							}
 							if (Game_Flag_Query(kFlagMcCoyIsHelpingReplicants)
 							|| Player_Query_Agenda() == kPlayerAgendaPolite) {
 								Actor_Says(kActorMcCoy, 1620, 13); //00-1620.AUD	I’m not gonna hurt you.
@@ -319,7 +335,9 @@ bool SceneScriptHF03::ClickedOnActor(int actorId) {
 					Actor_Says(kActorMcCoy, 1620, 14);
 				}
 				if (_vm->_cutContent) {
-					if (Actor_Query_Friendliness_To_Other(kActorClovis, kActorMcCoy) > 50) {
+					if (!Actor_Clue_Query(kActorLucy, kClueMcCoyRetiredZuben)
+					&& !Actor_Clue_Query(kActorLucy, kClueMcCoyRetiredDektora)
+					&& !Actor_Clue_Query(kActorLucy, kClueMcCoyRetiredGordo)) {
 						Actor_Says(kActorLucy, 130, 17); //06-0130.AUD	Have you always lived on Terra?
 						Actor_Says(kActorMcCoy, 1625, 15);
 						if (Game_Flag_Query(kFlagLucyIsReplicant)) {

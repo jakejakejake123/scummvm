@@ -123,12 +123,16 @@ void SceneScriptKP01::SceneFrameAdvanced(int frame) {
 void SceneScriptKP01::ActorChangedGoal(int actorId, int newGoal, int oldGoal, bool currentSet) {
 	if (actorId == kActorSteele) {
 		if (newGoal == kGoalSteeleKP01Leave) {
-			if (Game_Flag_Query(kFlagDirectorsCut)) {
-				Delay(500);
-				Actor_Change_Animation_Mode(kActorMcCoy, 75);
-				Delay(4500);
-				Actor_Face_Current_Camera(kActorMcCoy, true);
-				Actor_Says(kActorMcCoy, 510, kAnimationModeTalk);
+			if (!_vm->_cutContent) {
+				if (Game_Flag_Query(kFlagDirectorsCut)) {
+					Delay(500);
+					Actor_Change_Animation_Mode(kActorMcCoy, 75);
+					Delay(4500);
+					Actor_Face_Current_Camera(kActorMcCoy, true);
+					Actor_Says(kActorMcCoy, 510, kAnimationModeTalk);
+				} else {
+					Delay(3000);
+				}
 			} else {
 				Delay(3000);
 			}
@@ -150,33 +154,25 @@ void SceneScriptKP01::ActorChangedGoal(int actorId, int newGoal, int oldGoal, bo
 void SceneScriptKP01::PlayerWalkedIn() {
 	if (_vm->_cutContent) {
 		Player_Set_Combat_Mode(false);
-	}
-	if (Game_Flag_Query(kFlagKP04toKP01)) {
-		Loop_Actor_Walk_To_XYZ(kActorMcCoy, -93.0f, -12.2f, -61.0f, 0, false, false, false);
-		Game_Flag_Reset(kFlagKP04toKP01);
-		return;
-	}
-
-	if (Game_Flag_Query(kFlagKP03toKP01)) {
-		Loop_Actor_Walk_To_XYZ(kActorMcCoy, -240.0f, -12.2f, -789.0f, 0, false, false, false);
-		Game_Flag_Reset(kFlagKP03toKP01);
-		return;
-	}
-	// Added code so McCoy appears immediately in the set and it won't look like Crystal teleports in.
-	if (_vm->_cutContent) {
 		if (Game_Flag_Query(kFlagMcCoyIsInnocent) 
 		&& Global_Variable_Query(kVariableAffectionTowards) != kAffectionTowardsDektora
 		&& Global_Variable_Query(kVariableAffectionTowards) != kAffectionTowardsLucy 
 		&& !Game_Flag_Query(kFlagMcCoyRetiredHuman)) {
 			Actor_Set_At_XYZ(kActorMcCoy, 211.0f, -12.2f, -146.0f, 0);
-		} else {
-			Loop_Actor_Walk_To_XYZ(kActorMcCoy, 211.0f, -12.2f, -146.0f, 0, false, false, false);
 		}
-	} else {
-		Loop_Actor_Walk_To_XYZ(kActorMcCoy, 211.0f, -12.2f, -146.0f, 0, false, false, false);
+	} else if (Game_Flag_Query(kFlagKP04toKP01)) {
+		Loop_Actor_Walk_To_XYZ(kActorMcCoy, -93.0f, -12.2f, -61.0f, 0, false, false, false);
+		Game_Flag_Reset(kFlagKP04toKP01);
+		return;
+	}
+	if (Game_Flag_Query(kFlagKP03toKP01)) {
+		Loop_Actor_Walk_To_XYZ(kActorMcCoy, -240.0f, -12.2f, -789.0f, 0, false, false, false);
+		Game_Flag_Reset(kFlagKP03toKP01);
+		return;
 	}
 	// Altered the conditions for Crystal meeting McCoy in the Kipple.
 	if (_vm->_cutContent) {
+		Player_Set_Combat_Mode(false);
 		if (Game_Flag_Query(kFlagMcCoyIsInnocent) 
 		&& Global_Variable_Query(kVariableAffectionTowards) != kAffectionTowardsDektora
 		&& Global_Variable_Query(kVariableAffectionTowards) != kAffectionTowardsLucy 
@@ -194,6 +190,104 @@ void SceneScriptKP01::PlayerWalkedIn() {
 	) {
 		Player_Loses_Control();
 		Actor_Set_Goal_Number(kActorSteele, kGoalSteeleKP01TalkToMcCoy);
+	}
+	if (_vm->_cutContent) {
+		Player_Set_Combat_Mode(false);
+		if (Game_Flag_Query(kFlagHanoiIsReplicant)
+		&& !Game_Flag_Query(kFlagMcCoyIsHelpingReplicants)
+		&& !Actor_Query_Is_In_Current_Set(kActorSteele)
+		&& !Game_Flag_Query(kFlagKP03BombExploded)) {
+			Loop_Actor_Walk_To_XYZ(kActorMcCoy, 70.56f, -11.81f, -176.38f, 0, false, false, false);
+			Actor_Face_Heading(kActorMcCoy, 300, false);
+			Actor_Put_In_Set(kActorHanoi, kSetKP01);
+			Actor_Set_At_XYZ(kActorHanoi, -125.0f, -12.2f, -61.0f, 0);
+			Actor_Change_Animation_Mode(kActorHanoi, 1);
+			Loop_Actor_Walk_To_Actor(kActorHanoi, kActorMcCoy, 24, true, false);
+			Actor_Change_Animation_Mode(kActorHanoi, 4);
+			Actor_Face_Actor(kActorHanoi, kActorMcCoy, true);
+			Actor_Face_Actor(kActorMcCoy, kActorHanoi, true);
+			Sound_Play(kSfxSHOTCOK1, 77, 0, 0, 20);
+			Delay(500);
+			if (!Game_Flag_Query(kFlagHanoiDead)) {
+				Actor_Says(kActorHanoi, 160, 4); //25-0160.AUD	Here, what’s this then?
+			}
+			Actor_Change_Animation_Mode(kActorHanoi, 4);
+			if (!Game_Flag_Query(kFlagHanoiDead)) {
+				Actor_Says(kActorMcCoy, 525, 13); //00-0525.AUD	I've seen you before...
+				Actor_Says(kActorMcCoy, 7260, 14); //00-7260.AUD	Didn't I see an incept tape at the—
+			} else {
+				Actor_Says(kActorMcCoy, 5690, -1); //00-5690.AUD	Huh?
+			}	
+			Delay(500);
+			Actor_Change_Animation_Mode(kActorHanoi, 71);
+			Delay(500);
+			Actor_Change_Animation_Mode(kActorMcCoy, 21);
+			Ambient_Sounds_Play_Sound(kSfxKICK2, 90, 99, 0, 0);
+			Music_Play(kMusicBeating1, 71, 0, 0, -1, kMusicLoopPlayOnce, 2);			
+			Delay(1000);
+			Actor_Change_Animation_Mode(kActorHanoi, 6);
+			Ambient_Sounds_Play_Sound(kSfxSHOTGUN1, 97, 0, 0, 20);
+			Loop_Actor_Walk_To_XYZ(kActorMcCoy, 15.06f, -11.75f, -274.50f, 0, false, true, false);
+			Actor_Face_Actor(kActorHanoi, kActorMcCoy, true);
+			Actor_Face_Actor(kActorMcCoy, kActorHanoi, true);
+			Sound_Play(kSfxGUNH1A, 100, 0, 0, 50);
+			Actor_Change_Animation_Mode(kActorMcCoy, 6);
+			Actor_Change_Animation_Mode(kActorHanoi, 21);
+			Delay(1000);
+			Loop_Actor_Walk_To_XYZ(kActorMcCoy, 87.68, -11.67, -396.62, 0, false, true, false);
+			Actor_Face_Actor(kActorHanoi, kActorMcCoy, true);
+			Actor_Face_Actor(kActorMcCoy, kActorHanoi, true);
+			Actor_Change_Animation_Mode(kActorMcCoy, 21);
+			Actor_Change_Animation_Mode(kActorHanoi, 6);
+			Ambient_Sounds_Play_Sound(kSfxSHOTGUN1, 97, 0, 0, 20);
+			Delay(1000);
+			Loop_Actor_Walk_To_XYZ(kActorMcCoy, 47.20, -11.58, -549.87, 0, false, true, false);
+			Actor_Face_Actor(kActorHanoi, kActorMcCoy, true);
+			Actor_Face_Actor(kActorMcCoy, kActorHanoi, true);
+			Sound_Play(kSfxGUNH1A, 100, 0, 0, 50);
+			Actor_Change_Animation_Mode(kActorMcCoy, 6);
+			Actor_Change_Animation_Mode(kActorHanoi, 21);
+			Delay(1000);
+			Actor_Change_Animation_Mode(kActorHanoi, 6);
+			Ambient_Sounds_Play_Sound(kSfxSHOTGUN1, 97, 0, 0, 20);
+			Actor_Change_Animation_Mode(kActorMcCoy, 22);
+			Delay(1000);
+			Loop_Actor_Walk_To_XYZ(kActorMcCoy, 18.87, -11.52, -631.33, 0, false, true, false);
+			Actor_Face_Actor(kActorHanoi, kActorMcCoy, true);
+			Actor_Face_Actor(kActorMcCoy, kActorHanoi, true);
+			Sound_Play(kSfxGUNH1A, 100, 0, 0, 50);
+			Actor_Change_Animation_Mode(kActorMcCoy, 6);
+			Actor_Change_Animation_Mode(kActorHanoi, 21);
+			Delay(1000);
+			Actor_Change_Animation_Mode(kActorHanoi, 6);
+			Ambient_Sounds_Play_Sound(kSfxSHOTGUN1, 97, 0, 0, 20);
+			Actor_Change_Animation_Mode(kActorMcCoy, 22);
+			Delay(1000);
+			Sound_Play(kSfxGUNH1A, 100, 0, 0, 50);
+			Actor_Change_Animation_Mode(kActorMcCoy, 6);
+			Actor_Change_Animation_Mode(kActorHanoi, 48);
+			Delay(2000);
+			Player_Set_Combat_Mode(false);
+			Delay(1000);
+			Player_Loses_Control();
+			Loop_Actor_Walk_To_XYZ(kActorMcCoy, -284.0f, -12.2f, -789.0f, 0, true, false, false);
+			Player_Gains_Control();
+			Ambient_Sounds_Remove_All_Non_Looping_Sounds(true);
+			Ambient_Sounds_Remove_All_Looping_Sounds(1u);
+			Game_Flag_Set(kFlagKP01toKP03);
+			Set_Enter(kSetKP03, kSceneKP03);
+		} else if (Game_Flag_Query(kFlagKP04toKP01)) {
+			Player_Set_Combat_Mode(false);
+			Loop_Actor_Walk_To_XYZ(kActorMcCoy, -93.0f, -12.2f, -61.0f, 0, false, false, false);
+			Game_Flag_Reset(kFlagKP04toKP01);
+			return;
+		}
+		if (Game_Flag_Query(kFlagKP03toKP01)) {
+			Player_Set_Combat_Mode(false);
+			Loop_Actor_Walk_To_XYZ(kActorMcCoy, -240.0f, -12.2f, -789.0f, 0, false, false, false);
+			Game_Flag_Reset(kFlagKP03toKP01);
+			return;
+		}
 	}
 }
 

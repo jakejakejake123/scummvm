@@ -221,15 +221,15 @@ bool SceneScriptDR02::ClickedOnActor(int actorId) {
 							Actor_Says(kActorMcCoy, 3935, kAnimationModeTalk); //00-3935.AUD	Thanks.
 						}
 						Actor_Face_Heading(kActorShoeshineMan, 524, false);
-					} else if (Game_Flag_Query(kFlagGordoIsReplicant) 
-					&& Game_Flag_Query(kFlagGordoRanAway)
-					&& !Actor_Clue_Query(kActorMcCoy, kClueGordoIncept)) {
+					} else if (Game_Flag_Query(kFlagDektoraIsReplicant) 
+					&& Global_Variable_Query(kVariableChapter) > 3 
+					&& !Actor_Clue_Query(kActorMcCoy, kClueDektoraIncept)) {
 						Actor_Says(kActorMcCoy, 8990, 17);//00-8990.AUD	What have you got there?
 						Actor_Change_Animation_Mode(kActorMcCoy, 23);
 						Delay(800);
 						Item_Pickup_Spin_Effect_From_Actor(kModelAnimationPhoto, kActorMcCoy, 0, 0);
 						Delay(800);
-						Actor_Clue_Acquire(kActorMcCoy, kClueGordoIncept, true, kActorShoeshineMan);
+						Actor_Clue_Acquire(kActorMcCoy, kClueDektoraIncept, true, kActorShoeshineMan);
 						Actor_Voice_Over(4080, kActorVoiceOver);
 						Delay(1000);
 						if (Player_Query_Agenda() == kPlayerAgendaPolite) {

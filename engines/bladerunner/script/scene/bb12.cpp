@@ -136,9 +136,7 @@ bool SceneScriptBB12::ClickedOnActor(int actorId) {
 			}
 			Delay(1000);
 			Actor_Says(kActorMcCoy, 7250, 13); //00-7250.AUD	She almost looks real.
-			if (Actor_Query_Friendliness_To_Other(kActorSebastian, kActorMcCoy) < 50) {
-				Actor_Says(kActorSebastian, 660, 14); //56-0660.AUD	She isn't. Believe you me.
-			} 
+			Actor_Says(kActorSebastian, 660, 14); //56-0660.AUD	She isn't. Believe you me.
 			Delay(1000);
 			Actor_Says(kActorMcCoy, 7255, 15); //00-7255.AUD	You know, I can't place her for sure but she looks familiar.
 			Actor_Face_Actor(kActorSebastian, kActorMcCoy, true);

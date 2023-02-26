@@ -402,6 +402,7 @@ bool ESPERScript::SCRIPT_ESPER_DLL_Special_Region_Selected(int photo, int region
 					Actor_Says(kActorMcCoy, 6945, 3);
 					Sound_Play(kSfxBR034_1A, 50, 0, 0, 50);
 					Actor_Clue_Acquire(kActorMcCoy, kClueWomanInAnimoidRow, true, -1);
+					Game_Flag_Set(kFlagDektoraIdentified);
 				} else {
 					Actor_Says(kActorMcCoy, 8525, 3); // 00-8525.AUD	Hmph.
 				}		
@@ -493,7 +494,8 @@ bool ESPERScript::SCRIPT_ESPER_DLL_Special_Region_Selected(int photo, int region
 				if (!Actor_Clue_Query(kActorMcCoy, kClueTyrellGuardInterview)) {	
 					Actor_Says(kActorMcCoy, 8525, 13); // 00-8525.AUD	Hmph.
 				} else {
-					if (!Actor_Clue_Query(kActorMcCoy, kClueKingstonKitchenBox2)) {
+					if (!Actor_Clue_Query(kActorMcCoy, kClueKingstonKitchenBox1)
+					&& !Actor_Clue_Query(kActorMcCoy, kClueKingstonKitchenBox2)) {
 						Actor_Says(kActorMcCoy, 6945, 3);
 						Sound_Play(kSfxBR034_1A, 50, 0, 0, 50);
 						Actor_Clue_Acquire(kActorMcCoy, kClueKingstonKitchenBox2, true, -1);
@@ -514,9 +516,12 @@ bool ESPERScript::SCRIPT_ESPER_DLL_Special_Region_Selected(int photo, int region
 					Actor_Says(kActorMcCoy, 8790, 3); //00-8790.AUD	A dog collar.
 					Actor_Says(kActorMcCoy, 8525, 13); // 00-8525.AUD	Hmph.
 				} else {
-					Actor_Voice_Over(4160, kActorVoiceOver);
-					if (Actor_Clue_Query(kActorMcCoy, kClueAttemptedFileAccess)) {
-						if (!Actor_Clue_Query(kActorMcCoy, kClueDogCollar2)) {
+					if (Actor_Clue_Query(kActorMcCoy, kClueDNAMarcus)) {
+						Actor_Says(kActorMcCoy, 8790, 3); //00-8790.AUD	A dog collar.
+					} else {
+						Actor_Voice_Over(4160, kActorVoiceOver);
+						if (!Actor_Clue_Query(kActorMcCoy, kClueDogCollar1)
+						&& !Actor_Clue_Query(kActorMcCoy, kClueDogCollar2)) {
 							Actor_Says(kActorMcCoy, 6945, 3);
 							Sound_Play(kSfxBR034_1A, 50, 0, 0, 50);
 							Actor_Clue_Acquire(kActorMcCoy, kClueDogCollar2, true, -1);

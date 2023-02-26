@@ -58,8 +58,16 @@ void SceneScriptTB05::InitializeScene() {
 void SceneScriptTB05::SceneLoaded() {
 	Clickable_Object("MONITOR05");
 	Unclickable_Object("SMUDGE_GLASS01");
-	if (!Actor_Clue_Query(kActorMcCoy, kClueDragonflyEarring)) {
-		Item_Add_To_World(kItemDragonflyEarring, kModelAnimationDragonflyEarring, kSetTB05, 76.16f, 147.36f, -235.15f, 0, 6, 6, false, true, false, true);
+	if (_vm->_cutContent) {
+		if (!Actor_Clue_Query(kActorMcCoy, kClueDragonflyEarring)) {
+			if (!Game_Flag_Query(kFlagSadikIsReplicant)) {
+				Item_Add_To_World(kItemDragonflyEarring, kModelAnimationDragonflyEarring, kSetTB05, 76.16f, 147.36f, -235.15f, 0, 6, 6, false, true, false, true);
+			}
+		} 
+	} else {
+		if (!Actor_Clue_Query(kActorMcCoy, kClueDragonflyEarring)) {
+			Item_Add_To_World(kItemDragonflyEarring, kModelAnimationDragonflyEarring, kSetTB05, 76.16f, 147.36f, -235.15f, 0, 6, 6, false, true, false, true);
+		} 
 	}
 	if (!Actor_Clue_Query(kActorMcCoy, kClueTyrellSalesPamphletEntertainModel)
 	 && !Actor_Clue_Query(kActorMcCoy, kClueTyrellSalesPamphletLolita)
@@ -67,7 +75,13 @@ void SceneScriptTB05::SceneLoaded() {
 	  || Game_Flag_Query(kFlagLucyIsReplicant)
 	 )
 	) {
-		Item_Add_To_World(kItemTyrellSalesPamphlet, kModelAnimationTyrellSalesPamphlet, kSetTB05, 129.01f, 147.12f, -162.98f, 0, 8, 8, false, true, false, true);
+		if (_vm->_cutContent) {
+			if (!Game_Flag_Query(kFlagSadikIsReplicant)) {
+				Item_Add_To_World(kItemTyrellSalesPamphlet, kModelAnimationTyrellSalesPamphlet, kSetTB05, 129.01f, 147.12f, -162.98f, 0, 8, 8, false, true, false, true);
+			}
+		} else {
+			Item_Add_To_World(kItemTyrellSalesPamphlet, kModelAnimationTyrellSalesPamphlet, kSetTB05, 129.01f, 147.12f, -162.98f, 0, 8, 8, false, true, false, true);
+		}
 	}
 }
 
@@ -104,39 +118,65 @@ bool SceneScriptTB05::ClickedOn3DObject(const char *objectName, bool a2) {
 				 || Actor_Clue_Query(kActorMcCoy, kClueDogCollar2)
 				) {
 					if (_vm->_cutContent) {
-						Actor_Clue_Acquire(kActorMcCoy, kClueDNAMarcus, true, kActorMarcus);
-					} else {
-						Actor_Clue_Acquire(kActorMcCoy, kClueDNAMarcus, true, -1);
-					}
-					if (_vm->_cutContent) {
-						Actor_Change_Animation_Mode(kActorMcCoy, 23);
-						Delay(2000);
-						Ambient_Sounds_Play_Sound(kSfxBEEPNEAT, 80, 0, 0, 99);
-						Delay(1000);
-						Actor_Voice_Over(2230, kActorVoiceOver);;
-						Actor_Change_Animation_Mode(kActorMcCoy, 23);
-						Delay(800);
-					} else {
-						Actor_Voice_Over(2230, kActorVoiceOver); //99-2230.AUD	Eisenduller had used his dog's name as a password.
-					}		
-					Item_Pickup_Spin_Effect(kModelAnimationDNADataDisc, 352, 333);
-					if (_vm->_cutContent) {
-						if (Player_Query_Agenda() != kPlayerAgendaSurly 
-						&& Player_Query_Agenda() != kPlayerAgendaErratic) {
-							Actor_Voice_Over(2240, kActorVoiceOver);
-							Actor_Voice_Over(2250, kActorVoiceOver);
-							Actor_Voice_Over(2260, kActorVoiceOver);
+						if (Game_Flag_Query(kFlagSadikIsReplicant)) {
+							Actor_Change_Animation_Mode(kActorMcCoy, 23);
+							Delay(2000);
+							Sound_Play(kSfxELEBAD1, 100, 0, 0, 50);
+							Delay(1000);
+							Actor_Voice_Over(2270, kActorVoiceOver); //99-2270.AUD	I couldn't even begin to guess what Eisenduller's password was.
+							Delay(1000);
+							Actor_Says(kActorMcCoy, 8525, -1); // 00-8525.AUD	Hmph.
+							Actor_Change_Animation_Mode(kActorMcCoy, 23);
+							Delay(800);
+							Actor_Voice_Over(4160, kActorVoiceOver); //99-4160.AUD	The dog collar has a name on it. "Rikki" maybe?
+							Actor_Change_Animation_Mode(kActorMcCoy, 23);
+							Delay(2000);
+							Actor_Says(kActorMcCoy, 8522, 14); // Locked
+							Actor_Voice_Over(2290, kActorVoiceOver); //99-2290.AUD	Tyrell security was even better than I'd heard.
+							Game_Flag_Set(kFlagTB05MonitorUnlockAttempt);
+							Game_Flag_Set(kFlagTB05MonitorDone);
 						} else {
-							Actor_Voice_Over(130, kActorVoiceOver); //99-0130.AUD	DNA research, incept dates.
-							Actor_Voice_Over(140, kActorVoiceOver); //99-0140.AUD	A lot of jargon but I bet my spinner it was valuable to somebody.
+							Actor_Change_Animation_Mode(kActorMcCoy, 23);
+							Delay(2000);
+							Sound_Play(kSfxELEBAD1, 100, 0, 0, 50);
+							Delay(1000);
+							Actor_Voice_Over(2270, kActorVoiceOver); //99-2270.AUD	I couldn't even begin to guess what Eisenduller's password was.
+							Delay(1000);
+							Actor_Says(kActorMcCoy, 8525, 13); // 00-8525.AUD	Hmph.
+							Actor_Change_Animation_Mode(kActorMcCoy, 23);
+							Delay(800);
+							Actor_Voice_Over(4160, kActorVoiceOver); //99-4160.AUD	The dog collar has a name on it. "Rikki" maybe?
+							Actor_Change_Animation_Mode(kActorMcCoy, 23);
+							Delay(2000);
+							Ambient_Sounds_Play_Sound(kSfxBEEPNEAT, 80, 0, 0, 99);
+							Delay(1000);
+							Actor_Voice_Over(2230, kActorVoiceOver);
+							Actor_Change_Animation_Mode(kActorMcCoy, 23);
+							Delay(800);
+							Item_Pickup_Spin_Effect(kModelAnimationDNADataDisc, 352, 333);
+							Actor_Clue_Acquire(kActorMcCoy, kClueDNAMarcus, true, kActorMarcus);
+							if (Player_Query_Agenda() != kPlayerAgendaSurly 
+							&& Player_Query_Agenda() != kPlayerAgendaErratic) {
+								Actor_Voice_Over(2240, kActorVoiceOver);
+								Actor_Voice_Over(2250, kActorVoiceOver);
+								Actor_Voice_Over(2260, kActorVoiceOver);
+							} else {
+								Actor_Voice_Over(130, kActorVoiceOver); //99-0130.AUD	DNA research, incept dates.
+								Actor_Voice_Over(140, kActorVoiceOver); //99-0140.AUD	A lot of jargon but I bet my spinner it was valuable to somebody.
+							}
+							Game_Flag_Set(kFlagTB05MonitorUnlockAttempt);
+							Game_Flag_Set(kFlagTB05MonitorDone);
 						}
 					} else {
+						Actor_Clue_Acquire(kActorMcCoy, kClueDNAMarcus, true, -1);
+						Actor_Voice_Over(2230, kActorVoiceOver); //99-2230.AUD	Eisenduller had used his dog's name as a password.
+						Item_Pickup_Spin_Effect(kModelAnimationDNADataDisc, 352, 333);
 						Actor_Voice_Over(2240, kActorVoiceOver);
 						Actor_Voice_Over(2250, kActorVoiceOver);
 						Actor_Voice_Over(2260, kActorVoiceOver);
+						Game_Flag_Set(kFlagTB05MonitorUnlockAttempt);
+						Game_Flag_Set(kFlagTB05MonitorDone);
 					}
-					Game_Flag_Set(kFlagTB05MonitorUnlockAttempt);
-					Game_Flag_Set(kFlagTB05MonitorDone);
 				} else {
 					if (_vm->_cutContent) {
 						Actor_Change_Animation_Mode(kActorMcCoy, 23);
@@ -157,37 +197,43 @@ bool SceneScriptTB05::ClickedOn3DObject(const char *objectName, bool a2) {
 				 || Actor_Clue_Query(kActorMcCoy, kClueDogCollar2)
 				) {
 					if (_vm->_cutContent) {
-						Actor_Clue_Acquire(kActorMcCoy, kClueDNAMarcus, true, kActorMarcus);
-					} else {
-						Actor_Clue_Acquire(kActorMcCoy, kClueDNAMarcus, true, -1);
-					}
-					if (_vm->_cutContent) {
-						Actor_Change_Animation_Mode(kActorMcCoy, 23);
-						Delay(2000);
-						Ambient_Sounds_Play_Sound(kSfxBEEPNEAT, 80, 0, 0, 99);
-						Delay(1000);
-						Actor_Voice_Over(2230, kActorVoiceOver);
-						Actor_Change_Animation_Mode(kActorMcCoy, 23);
-						Delay(800);
-					} else {
-						Actor_Voice_Over(2230, kActorVoiceOver); //99-2230.AUD	Eisenduller had used his dog's name as a password.
-					}				
-					Item_Pickup_Spin_Effect(kModelAnimationDNADataDisc, 352, 333);
-					if (_vm->_cutContent) {
-						if (Player_Query_Agenda() == kPlayerAgendaPolite) {
-							Actor_Voice_Over(2240, kActorVoiceOver);
-							Actor_Voice_Over(2250, kActorVoiceOver);
-							Actor_Voice_Over(2260, kActorVoiceOver);
+						if (Game_Flag_Query(kFlagSadikIsReplicant)) {
+							Actor_Voice_Over(3700, kActorVoiceOver);
+							Game_Flag_Set(kFlagTB05MonitorDone);
 						} else {
-							Actor_Voice_Over(130, kActorVoiceOver); //99-0130.AUD	DNA research, incept dates.
-							Actor_Voice_Over(140, kActorVoiceOver); //99-0140.AUD	A lot of jargon but I bet my spinner it was valuable to somebody.
+							Actor_Says(kActorMcCoy, 8525, -1); // 00-8525.AUD	Hmph.
+							Actor_Change_Animation_Mode(kActorMcCoy, 23);
+							Delay(800);
+							Actor_Voice_Over(4160, kActorVoiceOver); //99-4160.AUD	The dog collar has a name on it. "Rikki" maybe?
+							Actor_Change_Animation_Mode(kActorMcCoy, 23);
+							Delay(2000);
+							Ambient_Sounds_Play_Sound(kSfxBEEPNEAT, 80, 0, 0, 99);
+							Delay(1000);
+							Actor_Voice_Over(2230, kActorVoiceOver);
+							Actor_Change_Animation_Mode(kActorMcCoy, 23);
+							Delay(800);
+							Item_Pickup_Spin_Effect(kModelAnimationDNADataDisc, 352, 333);
+							Actor_Clue_Acquire(kActorMcCoy, kClueDNAMarcus, true, kActorMarcus);
+							if (Player_Query_Agenda() != kPlayerAgendaSurly 
+							&& Player_Query_Agenda() != kPlayerAgendaErratic) {
+								Actor_Voice_Over(2240, kActorVoiceOver);
+								Actor_Voice_Over(2250, kActorVoiceOver);
+								Actor_Voice_Over(2260, kActorVoiceOver);
+							} else {
+								Actor_Voice_Over(130, kActorVoiceOver); //99-0130.AUD	DNA research, incept dates.
+								Actor_Voice_Over(140, kActorVoiceOver); //99-0140.AUD	A lot of jargon but I bet my spinner it was valuable to somebody.
+							}
+							Game_Flag_Set(kFlagTB05MonitorDone);
 						}
 					} else {
+						Actor_Clue_Acquire(kActorMcCoy, kClueDNAMarcus, true, -1);
+						Actor_Voice_Over(2230, kActorVoiceOver); //99-2230.AUD	Eisenduller had used his dog's name as a password.
+						Item_Pickup_Spin_Effect(kModelAnimationDNADataDisc, 352, 333);
 						Actor_Voice_Over(2240, kActorVoiceOver);
 						Actor_Voice_Over(2250, kActorVoiceOver);
 						Actor_Voice_Over(2260, kActorVoiceOver);
+						Game_Flag_Set(kFlagTB05MonitorDone);
 					}
-					Game_Flag_Set(kFlagTB05MonitorDone);
 				} else {
 					if (_vm->_cutContent) {
 						Actor_Change_Animation_Mode(kActorMcCoy, 23);

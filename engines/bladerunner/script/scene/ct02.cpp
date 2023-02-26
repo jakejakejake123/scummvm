@@ -135,8 +135,11 @@ void SceneScriptCT02::SceneLoaded() {
 	Unclickable_Object("COFFEJUG IN FOREGRO");
 	Unclickable_Object("BACK-DOOR");
 	//Added in the candy wrapper clue. It is near McCoys feet when he enters the kitchen.
-	if (_vm->_cutContent && !Actor_Clue_Query(kActorMcCoy, kClueCandyWrapper)) {
-		Item_Add_To_World(kItemChopstickWrapper, kModelAnimationCandyWrapper, kSetCT02, -144.69, -145.51, 195.58, 0, 12, 12, false, true, false, true);
+	if (_vm->_cutContent) { 
+		if (!Actor_Clue_Query(kActorMcCoy, kClueCandyWrapper)
+		&& Game_Flag_Query(kFlagZubenIsReplicant)) {
+			Item_Add_To_World(kItemChopstickWrapper, kModelAnimationCandyWrapper, kSetCT02, -144.69, -145.51, 195.58, 0, 12, 12, false, true, false, true);
+		}
 	}
 	if (!Game_Flag_Query(kFlagCT02PotTipped)
 	&& !Game_Flag_Query(kFlagCT01TalkToHowieAfterZubenMissing)) {
@@ -244,7 +247,7 @@ void SceneScriptCT02::dialogueWithZuben() {
 	// -. Make McCoy able to VK Zuben even in Polite mode
 	//
 	if (_vm->_cutContent) {
-		if (evidenceCount > 3) { 
+		if (evidenceCount > 2) { 
 			if (Player_Query_Agenda() != kPlayerAgendaPolite) {
 				DM_Add_To_List_Never_Repeat_Once_Selected(290, 1, 3, 4); // VOIGT-KAMPFF
 			} else {
@@ -307,19 +310,21 @@ void SceneScriptCT02::dialogueWithZuben() {
 	case 290: // VOIGT-KAMPFF
 		Actor_Says(kActorMcCoy, 395, 9);
 		Actor_Says(kActorMcCoy, 400, 9);
-		Actor_Says(kActorZuben, 70, 17); //19-0070.AUD	Test? What kind of test?
-		// If McCoy is surly or erratic he won't answer Zubens question and instead will just forcefully tell him to sit down.
 		if (_vm->_cutContent) {
-			if (Player_Query_Agenda() == kPlayerAgendaSurly 
-			|| Player_Query_Agenda() == kPlayerAgendaErratic) {
-				Actor_Says(kActorMcCoy, 3405, 13); //00-3405.AUD	Sit down.
-				Delay(2000);
-				Actor_Says(kActorMcCoy, 3410, 14); //00-3410.AUD	Sit down!
-			} else {
-				Actor_Says(kActorMcCoy, 420, 10); //00-0420.AUD	Kind of a personality test. Totally routine.
-				Actor_Says(kActorZuben, 80, 14);
+			if (Game_Flag_Query(kFlagZubenIsReplicant)) {
+				Actor_Says(kActorZuben, 70, 17); //19-0070.AUD	Test? What kind of test?
+				if (Player_Query_Agenda() == kPlayerAgendaSurly 
+				|| Player_Query_Agenda() == kPlayerAgendaErratic) {
+					Actor_Says(kActorMcCoy, 3405, 13); //00-3405.AUD	Sit down.
+					Delay(2000);
+					Actor_Says(kActorMcCoy, 3410, 14); //00-3410.AUD	Sit down!
+				} else {
+					Actor_Says(kActorMcCoy, 420, 10); //00-0420.AUD	Kind of a personality test. Totally routine.
+					Actor_Says(kActorZuben, 80, 14);
+				}
 			}
 		} else {
+			Actor_Says(kActorZuben, 70, 17); //19-0070.AUD	Test? What kind of test?
 			Actor_Says(kActorMcCoy, 420, 10);
 			Actor_Says(kActorZuben, 80, 14);
 		}
@@ -397,8 +402,8 @@ bool SceneScriptCT02::ClickedOnActor(int actorId) {
 					}
 					// Made it Zuben mentions his name when McCoy firsts talks to him. In the original game it was possible for McCoy to mis the Howie Lee interview clue
 					// where he mentions Zuben by name yet somehow McCoy would still know Zubens name anyway. This change fixes that.
-					if (!Game_Flag_Query(kFlagZubenIsReplicant)) {
-						Actor_Says(kActorZuben, 20, 19); //19-0020.AUD	You not come back here. Air bad.
+					if (Game_Flag_Query(kFlagZubenIsReplicant)) {
+						Actor_Says(kActorZuben, 20, 19); //19-0020.AUD	You not come back here. Air bad.	
 						Actor_Says(kActorMcCoy, 4880, 18); // 00-4880.AUD	Is that right?
 					}
 					Actor_Says(kActorZuben, 100, 19); //19-0100.AUD	What do you want from Zuben?

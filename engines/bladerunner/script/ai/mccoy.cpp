@@ -271,7 +271,7 @@ void AIScriptMcCoy::ReceivedClue(int clueId, int fromActorId) {
 		}
 		break;
 	case kClueIzosStashRaided:
-		Global_Variable_Increment(kVariableCorruptedGuzzaEvidence, 2);
+		Global_Variable_Increment(kVariableCorruptedGuzzaEvidence, 3);
 		break;
 
 	case kClueDNATyrell:

@@ -60,8 +60,16 @@ void SceneScriptRC51::SceneLoaded() {
 	Unclickable_Object("DRAPE08");
 #endif // BLADERUNNER_ORIGINAL_BUGS
 
-	if (!Game_Flag_Query(kFlagRC51ChopstickWrapperTaken)) {
-		Item_Add_To_World(kItemChopstickWrapper, kModelAnimationChopstickWrapper, kSetRC02_RC51, 47.56f, -1238.89f, 108048.61f, 0, 6, 18, false, true, false, true);
+	if (_vm->_cutContent) {
+		if (!Game_Flag_Query(kFlagRC51ChopstickWrapperTaken)) {
+			if (Game_Flag_Query(kFlagZubenIsReplicant)) {
+				Item_Add_To_World(kItemChopstickWrapper, kModelAnimationChopstickWrapper, kSetRC02_RC51, 47.56f, -1238.89f, 108048.61f, 0, 6, 18, false, true, false, true);
+			}
+		} else {
+			if (!Game_Flag_Query(kFlagRC51ChopstickWrapperTaken)) {	
+				Item_Add_To_World(kItemChopstickWrapper, kModelAnimationChopstickWrapper, kSetRC02_RC51, 47.56f, -1238.89f, 108048.61f, 0, 6, 18, false, true, false, true);
+			}
+		}
 	}
 	if (!Game_Flag_Query(kFlagRC51CandyTaken)) {
 		Item_Add_To_World(kItemCandy, kModelAnimationCandy, kSetRC02_RC51, 67.28f, -1193.38f, 108011.27f, 0, 6, 6, false, true, false, true);
@@ -75,7 +83,9 @@ void SceneScriptRC51::SceneLoaded() {
 	}	
 	if (_vm->_cutContent) {	
 		if (!Game_Flag_Query(kFlagCardTaken)) {
-			Item_Add_To_World(kItemNote, kModelAnimationDektorasCard, kSetRC02_RC51, 49.59f, -1194.42f, 107997.89f, 0, 6, 6, false, true, false, true);
+			if (Game_Flag_Query(kFlagZubenIsReplicant)) {
+				Item_Add_To_World(kItemNote, kModelAnimationDektorasCard, kSetRC02_RC51, 49.59f, -1194.42f, 107997.89f, 0, 6, 6, false, true, false, true);
+			}
 		}
 	}
 }

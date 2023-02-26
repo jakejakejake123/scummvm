@@ -318,8 +318,10 @@ void AIScriptZuben::ClickedByPlayer() {
 						}
 						Actor_Says(kActorZuben, 320, 12); //19-0320.AUD	Clovis say Runciter love animals. Runciter still alive so he hurt now. Know what pain is.
 						Actor_Says(kActorZuben, 330, 12); //19-0330.AUD	Kill him, he not hurt. Just dead.
+						Actor_Says(kActorMcCoy, 7290, 12); //00-7290.AUD	Listen it's very important I talked to Clovis.
+						Actor_Says(kActorZuben, 180, 15); //19-0180.AUD	No way. You enemy of Clovis.
 						Actor_Clue_Acquire(kActorMcCoy, kClueZubensMotive, false, kActorZuben);
-						Delay(2000);
+						Delay(1000);
 						Actor_Face_Actor(kActorRunciter, kActorMcCoy, true);
 						Actor_Face_Actor(kActorZuben, kActorMcCoy, true);
 					}
@@ -396,7 +398,7 @@ void AIScriptZuben::OtherAgentEnteredCombatMode(int otherActorId, int combatMode
 		Game_Flag_Reset(kFlagCT07ZubenAttack);
 		AI_Movement_Track_Flush(kActorZuben);
 		if (_vm->_cutContent) {
-			Actor_Start_Speech_Sample(kActorMcCoy, 455);
+			Actor_Says(kActorMcCoy, 455, -1);
 		} else {
 			Actor_Says(kActorMcCoy, 455, 18);
 		}
@@ -663,6 +665,9 @@ bool AIScriptZuben::GoalChanged(int currentGoalNumber, int newGoalNumber) {
 			Actor_Modify_Friendliness_To_Other(kActorClovis, kActorMcCoy, -2);
 			Actor_Modify_Friendliness_To_Other(kActorGaff, kActorMcCoy, 2);	
 			Actor_Modify_Friendliness_To_Other(kActorHowieLee, kActorMcCoy, -2);
+			Actor_Clue_Acquire(kActorClovis, kClueMcCoyRetiredZuben, true, -1);
+			Actor_Clue_Acquire(kActorLucy, kClueMcCoyRetiredZuben, true, -1);
+			Actor_Clue_Acquire(kActorDektora, kClueMcCoyRetiredZuben, true, -1);
 			Game_Flag_Reset(kFlagMcCoyIsHelpingReplicants);
 			Game_Flag_Set(kFlagMcCoyRetiredReplicant);
 		}

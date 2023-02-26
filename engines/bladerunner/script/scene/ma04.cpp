@@ -539,10 +539,14 @@ void SceneScriptMA04::phoneCallWithDektora() {
 	Actor_Says(kActorDektora, 340, 3);
 	Actor_Says(kActorDektora, 350, 3);
 	if (_vm->_cutContent) {
-		if (Game_Flag_Query(kFlagCrazylegsArrested)
-		|| Actor_Query_Goal_Number(kActorCrazylegs) == kGoalCrazyLegsLeavesShowroom
-		|| Player_Query_Agenda() == kPlayerAgendaPolite) {
-			answer = 1170; // CLOVIS
+		if (!Game_Flag_Query(kFlagCrazylegsArrested)
+		&& Actor_Query_Goal_Number(kActorCrazylegs) != kGoalCrazyLegsLeavesShowroom
+		&& Player_Query_Agenda() != kPlayerAgendaPolite 
+		&& !Actor_Clue_Query(kActorDektora, kClueMcCoyRetiredZuben)
+		&& !Actor_Clue_Query(kActorDektora, kClueMcCoyRetiredLucy)
+		&& !Actor_Clue_Query(kActorDektora, kClueMcCoyRetiredGordo)
+		&& !Game_Flag_Query(kFlagGuzzaSaved)) {
+			answer = 1160; // OK
 		} else {
 			Dialogue_Menu_Clear_List();
 			DM_Add_To_List_Never_Repeat_Once_Selected(1160, 1, 2, 3); // OK
@@ -588,8 +592,8 @@ void SceneScriptMA04::phoneCallWithDektora() {
 				Actor_Says(kActorDektora, 410, 3); //03-0410.AUD	Watching everybody else die. If you won’t do it, I’ll go get the car myself.
 				Actor_Says(kActorMcCoy, 2525, 15);  //00-2525.AUD	I didn’t say I wasn’t gonna do it.
 			} else {
-				Delay(2000);
-				Actor_Says(kActorMcCoy, 3780, 13); //00-3780.AUD	Okay, uh--
+				Delay(500);
+				Actor_Says(kActorMcCoy, 3170, 13); //00-3170.AUD	I’m there.
 			}
 		} else {
 			Actor_Says(kActorDektora, 400, 3); //Well, it’s better than sitting out there in the Kipple waiting to die.
@@ -630,12 +634,10 @@ void SceneScriptMA04::phoneCallWithDektora() {
 		Actor_Says_With_Pause(kActorDektora, 470, 1.0f, 3);
 		Actor_Says(kActorDektora, 480, 3); //03-0480.AUD	I need you, Ray. I can’t watch my friends die. Not alone.
 		if (_vm->_cutContent) {
-			Actor_Says(kActorMcCoy, 3780, 13); //00-3780.AUD	Okay, uh--
-		}
-		if (_vm->_cutContent) {
 			if (Game_Flag_Query(kFlagDektoraIsReplicant)) {
 				Actor_Says(kActorDektora, 490, 3); //03-0490.AUD	And if you can’t come, adieu my love.
 			} else {
+				Actor_Says(kActorMcCoy, 1825, 13);	//00-1825.AUD	Okay
 				Actor_Says(kActorDektora, 420, 3); //03-0420.AUD	Then meet me there. I’ll be there within the hour.
 			}
 		} else {
@@ -657,8 +659,20 @@ void SceneScriptMA04::phoneCallWithDektora() {
 				Actor_Set_Goal_Number(kActorSadik, 414);
 			} else {
 				if (!Actor_Clue_Query(kActorMcCoy, kClueCrystalsCigarette)) {
-					Game_Flag_Reset(kFlagMcCoyIsHelpingReplicants);
-					Actor_Set_Goal_Number(kActorSadik, 411);
+					if (Actor_Query_Goal_Number(kActorSadik) < kGoalSadikGone
+					&& Game_Flag_Query(kFlagSadikIsReplicant)) {
+						Game_Flag_Reset(kFlagMcCoyIsHelpingReplicants);
+						Actor_Set_Goal_Number(kActorSadik, 411);
+					} else {
+						Actor_Set_Goal_Number(kActorMaggie, kGoalMaggieKP05Wait);
+						Actor_Put_In_Set(kActorClovis, kSetKP05_KP06);
+						Actor_Set_At_XYZ(kActorClovis, -961.0f, 0.0f, -778.0f, 150);
+						Game_Flag_Reset(kFlagMcCoyIsHelpingReplicants);
+						if (Actor_Query_Goal_Number(kActorSadik) < kGoalSadikGone) {
+							Actor_Put_In_Set(kActorSadik, kSetKP05_KP06);
+							Actor_Set_At_XYZ(kActorSadik, -1134.0f, 0.0f, 73.45f, 398);
+						}
+					}
 				} else {
 					Game_Flag_Set(kFlagMcCoyIsHelpingReplicants);
 					Actor_Set_Goal_Number(kActorClovis, kGoalClovisKP07Wait);
@@ -692,9 +706,27 @@ void SceneScriptMA04::phoneCallWithLucy() {
 	Actor_Says(kActorMcCoy, 2560, 17); //00-2560.AUD	Maybe we’ll do it after I talk to him.
 	Actor_Says(kActorLucy, 580, 3); // You promise?
 	if (_vm->_cutContent) {
-		if (Game_Flag_Query(kFlagCrazylegsArrested)
-		|| Actor_Query_Goal_Number(kActorCrazylegs) == kGoalCrazyLegsLeavesShowroom 
-		|| Player_Query_Agenda() == kPlayerAgendaPolite) {
+		if (!Game_Flag_Query(kFlagCrazylegsArrested)
+		&& Actor_Query_Goal_Number(kActorCrazylegs) != kGoalCrazyLegsLeavesShowroom
+		&& Player_Query_Agenda() != kPlayerAgendaPolite 
+		&& !Actor_Clue_Query(kActorLucy, kClueMcCoyRetiredZuben)
+		&& !Actor_Clue_Query(kActorLucy, kClueMcCoyRetiredDektora)
+		&& !Actor_Clue_Query(kActorLucy, kClueMcCoyRetiredGordo)
+		&& !Game_Flag_Query(kFlagGuzzaSaved)) {
+			Actor_Says(kActorLucy, 590, 3); //06-0590.AUD	We could buy a car. From that place next to the arcade.
+			Actor_Says(kActorMcCoy, 2565, 12);
+			Actor_Says(kActorLucy, 600, 3); //06-0600.AUD	One of those flying cars would though. 
+			Actor_Says(kActorLucy, 610, 3);
+			Actor_Says(kActorLucy, 620, 3);
+			Actor_Says(kActorMcCoy, 6805, 13); //00-6805.AUD	I-- I promise you. But for now we gotta be careful. You should stay hidden for a while.
+			Actor_Says_With_Pause(kActorLucy, 630, 0.0f, 3); //06-0630.AUD	I’ll meet you there, okay? At the place where he sells the cars.
+			Actor_Says_With_Pause(kActorMcCoy, 2575, 0.0f, 15);
+			Actor_Says(kActorLucy, 640, 3);
+			Sound_Play(kSfxSPNBEEP9, 100, 0, 0, 50);
+			Game_Flag_Set(kFlagCarEnding);
+			Actor_Clue_Acquire(kActorMcCoy, kCluePhoneCallLucy1, true, kActorLucy);
+			Actor_Set_Targetable(kActorLucy, false);
+		} else {
 			Actor_Says(kActorMcCoy, 6805, 13); //00-6805.AUD	I-- I promise you. But for now we gotta be careful. You should stay hidden for a while.
 			Actor_Says(kActorLucy, 640, 3);
 			Actor_Says_With_Pause(kActorMcCoy, 2570, 0.0f, 13); // Lucy, there's a good chance--
@@ -707,8 +739,20 @@ void SceneScriptMA04::phoneCallWithLucy() {
 				Actor_Set_Goal_Number(kActorSadik, 414);
 			} else {
 				if (!Actor_Clue_Query(kActorMcCoy, kClueCrystalsCigarette)) {
-					Game_Flag_Reset(kFlagMcCoyIsHelpingReplicants);
-					Actor_Set_Goal_Number(kActorSadik, 411);
+					if (Actor_Query_Goal_Number(kActorSadik) < kGoalSadikGone
+					&& Game_Flag_Query(kFlagSadikIsReplicant)) {
+						Game_Flag_Reset(kFlagMcCoyIsHelpingReplicants);
+						Actor_Set_Goal_Number(kActorSadik, 411);
+					} else {
+						Actor_Set_Goal_Number(kActorMaggie, kGoalMaggieKP05Wait);
+						Actor_Put_In_Set(kActorClovis, kSetKP05_KP06);
+						Actor_Set_At_XYZ(kActorClovis, -961.0f, 0.0f, -778.0f, 150);
+						Game_Flag_Reset(kFlagMcCoyIsHelpingReplicants);
+						if (Actor_Query_Goal_Number(kActorSadik) < kGoalSadikGone) {
+							Actor_Put_In_Set(kActorSadik, kSetKP05_KP06);
+							Actor_Set_At_XYZ(kActorSadik, -1134.0f, 0.0f, 73.45f, 398);
+						}
+					}
 				} else {
 					Game_Flag_Set(kFlagMcCoyIsHelpingReplicants);
 					Actor_Set_Goal_Number(kActorClovis, kGoalClovisKP07Wait);
@@ -716,22 +760,6 @@ void SceneScriptMA04::phoneCallWithLucy() {
 				}
 			}
 			Actor_Clue_Acquire(kActorMcCoy, kCluePhoneCallLucy2, true, kActorLucy);
-		} else {
-			Actor_Says(kActorLucy, 590, 3); //06-0590.AUD	We could buy a car. From that place next to the arcade.
-			Actor_Says(kActorMcCoy, 2565, 12);
-			Actor_Says(kActorLucy, 600, 3); //06-0600.AUD	One of those flying cars would though. 
-			Actor_Says(kActorLucy, 610, 3);
-			Actor_Says(kActorLucy, 620, 3);
-			Actor_Says(kActorMcCoy, 6805, 13); //00-6805.AUD	I-- I promise you. But for now we gotta be careful. You should stay hidden for a while.
-			Actor_Says_With_Pause(kActorLucy, 630, 0.0f, 3); //06-0630.AUD	I’ll meet you there, okay? At the place where he sells the cars.
-			Actor_Says_With_Pause(kActorMcCoy, 2575, 0.0f, 15);
-			if (!Game_Flag_Query(kFlagDirectorsCut)) {
-				Actor_Says(kActorLucy, 640, 3);
-			}
-			Sound_Play(kSfxSPNBEEP9, 100, 0, 0, 50);
-			Game_Flag_Set(kFlagCarEnding);
-			Actor_Clue_Acquire(kActorMcCoy, kCluePhoneCallLucy1, true, kActorLucy);
-			Actor_Set_Targetable(kActorLucy, false);
 		} 
 	} else if (Game_Flag_Query(kFlagCrazylegsArrested)
 	|| Actor_Query_Goal_Number(kActorCrazylegs) == kGoalCrazyLegsLeavesShowroom
@@ -847,17 +875,32 @@ void SceneScriptMA04::phoneCallWithSteele() {
 	}
 	Sound_Play(kSfxSPNBEEP9, 100, 0, 0, 50);
 	if (_vm->_cutContent) {
-		if (!Game_Flag_Query(kFlagMcCoyIsHelpingReplicants)) {
-			if (Actor_Query_Goal_Number(kActorSadik) < kGoalSadikGone) {
-				Actor_Set_Goal_Number(kActorSadik, 411);
-			} else {
-				Actor_Set_Goal_Number(kActorMaggie, kGoalMaggieKP05Wait);
-				Actor_Put_In_Set(kActorClovis, kSetKP05_KP06);
-				Actor_Set_At_XYZ(kActorClovis, -961.0f, 0.0f, -778.0f, 150);
-			}
-		} else {
-			Actor_Set_Goal_Number(kActorSadik, 414);
+		if (Actor_Query_Friendliness_To_Other(kActorClovis, kActorMcCoy) > 50
+		&& !Game_Flag_Query(kFlagMcCoyRetiredReplicant)) {
+			Game_Flag_Set(kFlagMcCoyIsHelpingReplicants);
 			Actor_Set_Goal_Number(kActorClovis, kGoalClovisKP07Wait);
+			Actor_Set_Goal_Number(kActorSadik, 414);
+		} else {
+			if (!Actor_Clue_Query(kActorMcCoy, kClueCrystalsCigarette)) {
+				if (Actor_Query_Goal_Number(kActorSadik) < kGoalSadikGone
+				&& Game_Flag_Query(kFlagSadikIsReplicant)) {
+					Game_Flag_Reset(kFlagMcCoyIsHelpingReplicants);
+					Actor_Set_Goal_Number(kActorSadik, 411);
+				} else {
+					Actor_Set_Goal_Number(kActorMaggie, kGoalMaggieKP05Wait);
+					Actor_Put_In_Set(kActorClovis, kSetKP05_KP06);
+					Actor_Set_At_XYZ(kActorClovis, -961.0f, 0.0f, -778.0f, 150);
+					Game_Flag_Reset(kFlagMcCoyIsHelpingReplicants);
+					if (Actor_Query_Goal_Number(kActorSadik) < kGoalSadikGone) {
+						Actor_Put_In_Set(kActorSadik, kSetKP05_KP06);
+						Actor_Set_At_XYZ(kActorSadik, -1134.0f, 0.0f, 73.45f, 398);
+					}
+				}
+			} else {
+				Game_Flag_Set(kFlagMcCoyIsHelpingReplicants);
+				Actor_Set_Goal_Number(kActorClovis, kGoalClovisKP07Wait);
+				Actor_Set_Goal_Number(kActorSadik, 414);
+			}
 		}
 		Actor_Clue_Acquire(kActorMcCoy, kCluePhoneCallCrystal, true, kActorSteele);
 	} else {
@@ -969,8 +1012,20 @@ void SceneScriptMA04::phoneCallWithClovis() {
 			Actor_Set_Goal_Number(kActorSadik, 414);
 		} else {
 			if (!Actor_Clue_Query(kActorMcCoy, kClueCrystalsCigarette)) {
-				Game_Flag_Reset(kFlagMcCoyIsHelpingReplicants);
-				Actor_Set_Goal_Number(kActorSadik, 411);
+				if (Actor_Query_Goal_Number(kActorSadik) < kGoalSadikGone
+				&& Game_Flag_Query(kFlagSadikIsReplicant)) {
+					Game_Flag_Reset(kFlagMcCoyIsHelpingReplicants);
+					Actor_Set_Goal_Number(kActorSadik, 411);
+				} else {
+					Actor_Set_Goal_Number(kActorMaggie, kGoalMaggieKP05Wait);
+					Actor_Put_In_Set(kActorClovis, kSetKP05_KP06);
+					Actor_Set_At_XYZ(kActorClovis, -961.0f, 0.0f, -778.0f, 150);
+					Game_Flag_Reset(kFlagMcCoyIsHelpingReplicants);
+					if (Actor_Query_Goal_Number(kActorSadik) < kGoalSadikGone) {
+						Actor_Put_In_Set(kActorSadik, kSetKP05_KP06);
+						Actor_Set_At_XYZ(kActorSadik, -1134.0f, 0.0f, 73.45f, 398);
+					}
+				}
 			} else {
 				Game_Flag_Set(kFlagMcCoyIsHelpingReplicants);
 				Actor_Set_Goal_Number(kActorClovis, kGoalClovisKP07Wait);
@@ -1077,7 +1132,7 @@ void SceneScriptMA04::sleep() {
 				}
 				Game_Flag_Set(kFlagZubenBountyPaid); // not a proper bug, but was missing from original code, so the flag would remain in non-consistent state in this case
 			}
-			if (!Game_Flag_Query(kFlagRunciterBountyPaid) && Game_Flag_Query(kFlagMcCoyRetiredRunciter)) { // get retirement money at end of day 1 only if Zuben was retired.
+			if (!Game_Flag_Query(kFlagRunciterBountyPaid) && Actor_Clue_Query(kActorMcCoy, kClueMcCoyKilledRunciter1)) { // get retirement money at end of day 1 only if Zuben was retired.
 				if (Query_Difficulty_Level() != kGameDifficultyEasy) {
 					Global_Variable_Increment(kVariableChinyen, 200);
 				}

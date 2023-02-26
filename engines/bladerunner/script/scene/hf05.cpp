@@ -669,6 +669,7 @@ void SceneScriptHF05::dialogueWithCrazylegs1() {
 #else
 	// Restored feature - Original: it is impossible to obtain this clue
 	if (Actor_Clue_Query(kActorMcCoy, kClueCrazysInvolvement)
+	&& !Actor_Clue_Query(kActorMcCoy, kClueCrazylegsInterview2)
 	 && Global_Variable_Query(kVariableChapter) == 3
 	) {
 		// This dialogue point does not talk about Grigorian's Note
@@ -684,7 +685,7 @@ void SceneScriptHF05::dialogueWithCrazylegs1() {
 	// Made it so McCoy can only ask about clues in regards to the car in act 3 since in act 4 he is too busy getting to the bottom of the conspiracy to have time to be investigating
 	// the animal murder case.
 	if (_vm->_cutContent) {
-		if (Game_Flag_Query(kFlagCrazylegsTalkCarRegistration)) {
+		if (Actor_Clue_Query(kActorMcCoy, kClueDektoraConfession)) {
 			if (Global_Variable_Query(kVariableChapter) == 3) {
 				DM_Add_To_List_Never_Repeat_Once_Selected(1190, 5, 7, 6); // WOMAN
 			}
@@ -705,7 +706,10 @@ void SceneScriptHF05::dialogueWithCrazylegs1() {
 	if (_vm->_cutContent) {
 		if (Game_Flag_Query(kFlagCrazylegsTalkWoman)) {
 			if (Global_Variable_Query(kVariableChapter) == 3) {
-				if (Actor_Clue_Query(kActorMcCoy, kClueChinaBar)) {
+				if (Actor_Clue_Query(kActorMcCoy, kClueChinaBar)
+				|| Actor_Clue_Query(kActorMcCoy, kClueWomanInAnimoidRow)
+				|| Actor_Clue_Query(kActorMcCoy, kClueOuterDressingRoom)
+				|| Actor_Clue_Query(kActorMcCoy, kClueDektorasDressingRoom)) {	
 					DM_Add_To_List_Never_Repeat_Once_Selected(1200, 5, 5, 6); // WOMAN'S PHOTO
 				}
 			}
@@ -751,7 +755,8 @@ void SceneScriptHF05::dialogueWithCrazylegs1() {
 	// in his conversation with Grigorian it makes sense for McCoy to have both clues for this option to be available.
 	if (Global_Variable_Query(kVariableChapter) == 3 
 	&& Actor_Clue_Query(kActorMcCoy, kClueGrigoriansNote)
-	&& Actor_Clue_Query(kActorMcCoy, kClueGrigoriansResources)) { // Restored feature - Original: it is impossible to obtain this clue either
+	&& Actor_Clue_Query(kActorMcCoy, kClueGrigoriansResources) // Restored feature - Original: it is impossible to obtain this clue either
+	&& !Actor_Clue_Query(kActorMcCoy, kClueCrazylegsInterview2)) {	
 		if (Actor_Clue_Query(kActorMcCoy, kClueCarRegistration1) 
 		|| Actor_Clue_Query(kActorMcCoy, kClueCarRegistration3)) {
 			// The chapter check is done for both cases:
@@ -846,6 +851,9 @@ void SceneScriptHF05::dialogueWithCrazylegs1() {
 			Actor_Says(kActorCrazylegs, 560, 15); //09-0560.AUD	I didn’t know! I mean it. I was just trying to make a sale--
 			Actor_Says(kActorCrazylegs, 570, 16); //09-0570.AUD	Hey, they came to me first. I didn’t go to them.
 			Actor_Says(kActorMcCoy, 1950, 17); //00-1950.AUD	Unscrupulous businessman, eh?
+		}
+		if (_vm->_cutContent) {
+			Actor_Clue_Acquire(kActorMcCoy, kClueCrazylegsInterview2, true, kActorCrazylegs);
 		}
 		dialogueWithCrazylegs2();
 		break;
@@ -1001,6 +1009,10 @@ void SceneScriptHF05::dialogueWithCrazylegs1() {
 				Actor_Says(kActorCrazylegs, 1030, 16); //09-1030.AUD	I don’t care whether they’re Reps or humans as long as the chinyen is real.
 			}
 		}
+		if (_vm->_cutContent) {
+			Game_Flag_Set(kFlagCrazylegsTalkGrigorian);
+			Actor_Clue_Acquire(kActorMcCoy, kClueCrazylegsInterview2, true, kActorCrazylegs);
+		}
 		dialogueWithCrazylegs2();
 		break;
 
@@ -1028,8 +1040,7 @@ void SceneScriptHF05::dialogueWithCrazylegs1() {
 						Actor_Says(kActorMcCoy, 2080, kAnimationModeTalk);
 						Actor_Says(kActorCrazylegs, 860, 16);
 						Actor_Says(kActorCrazylegs, 870, kAnimationModeTalk);
-						// Added in a flag so the woman option will activate after talking to Crazy about the car registration.
-						Game_Flag_Set(kFlagCrazylegsTalkCarRegistration);
+						Actor_Clue_Acquire(kActorMcCoy, kClueDektoraConfession, true, kActorCrazylegs);
 					}
 				} else {
 					Actor_Says(kActorCrazylegs, 830, 12); //09-0830.AUD	Oh-- Ooh, that Sedan.
@@ -1038,8 +1049,7 @@ void SceneScriptHF05::dialogueWithCrazylegs1() {
 					Actor_Says(kActorMcCoy, 2080, kAnimationModeTalk);
 					Actor_Says(kActorCrazylegs, 860, 16);
 					Actor_Says(kActorCrazylegs, 870, kAnimationModeTalk);
-					// Added in a flag so the woman option will activate after talking to Crazy about the car registration.
-					Game_Flag_Set(kFlagCrazylegsTalkCarRegistration);
+					Actor_Clue_Acquire(kActorMcCoy, kClueDektoraConfession, true, kActorCrazylegs);
 				}
 			} else {
 				Actor_Says(kActorCrazylegs, 830, 12); //09-0830.AUD	Oh-- Ooh, that Sedan.
@@ -1098,7 +1108,7 @@ void SceneScriptHF05::dialogueWithCrazylegs1() {
 						}
 						Actor_Says(kActorCrazylegs, 960, 16); //09-0960.AUD	Yeah. Pretty scary. But, heck, I never turn away a customer.
 						// Made it so you receive the Crazylegs interview 2 clue if Clovis bought the car. 
-						Actor_Clue_Acquire(kActorMcCoy, kClueCrazylegsInterview2, true, kActorCrazylegs);
+						Actor_Clue_Acquire(kActorMcCoy, kClueCrazylegsInterview1, true, kActorCrazylegs);
 					}
 				} else {
 					Actor_Says(kActorCrazylegs, 830, 12); //09-0830.AUD	Oh-- Ooh, that Sedan.
@@ -1124,7 +1134,7 @@ void SceneScriptHF05::dialogueWithCrazylegs1() {
 					}
 					Actor_Says(kActorCrazylegs, 960, 16); //09-0960.AUD	Yeah. Pretty scary. But, heck, I never turn away a customer.
 					// Made it so you receive the Crazylegs interview 2 clue if Clovis bought the car. 
-					Actor_Clue_Acquire(kActorMcCoy, kClueCrazylegsInterview2, true, kActorCrazylegs);
+					Actor_Clue_Acquire(kActorMcCoy, kClueCrazylegsInterview1, true, kActorCrazylegs);
 				}
 			} else {
 				Actor_Says(kActorCrazylegs, 830, 12); //09-0830.AUD	Oh-- Ooh, that Sedan.

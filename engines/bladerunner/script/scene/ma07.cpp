@@ -307,7 +307,6 @@ void SceneScriptMA07::PlayerWalkedIn() {
 					if (Game_Flag_Query(kFlagGordoIsReplicant))  {
 						Actor_Clue_Acquire(kActorMcCoy, kClueWarRecordsGordoFrizz, true, kActorSteele); 
 						Actor_Clue_Acquire(kActorMcCoy, kClueSightingGordo, true, kActorSteele);
-						Actor_Clue_Acquire(kActorMcCoy, kClueGordoIncept, true, kActorSteele);
 					}
 					if (!Game_Flag_Query(kFlagCrazylegsIsReplicant)) {
 						if (Random_Query(1, 3) == 1) {
@@ -391,7 +390,8 @@ void SceneScriptMA07::PlayerWalkedIn() {
 					// Made it so if Zuben escapes Crystal will track him down and retire him if she has enough clues. This will give you the Crystal retired Zuben clue. If she doesn't have enough clues
 					// she just finds Zuben by chance and doesn't have time to come up with a plan of attack so escapes into the sewers. This will give you the Zuben sighting clue.
 					if (Game_Flag_Query(kFlagZubenIsReplicant) 
-					&& Actor_Clue_Query(kActorMcCoy, kClueMcCoyLetZubenEscape)) {
+					&& !Game_Flag_Query(kFlagZubenRetired)) {
+						Actor_Clue_Acquire(kActorMcCoy, kClueMcCoyLetZubenEscape, true, kActorGaff);
 						Actor_Clue_Acquire(kActorMcCoy, kClueSightingZuben, true, kActorSteele);
 						if (Random_Query(1, 3) == 1) {
 							Actor_Set_Goal_Number(kActorZuben, kGoalZubenGone);
@@ -413,9 +413,6 @@ void SceneScriptMA07::PlayerWalkedIn() {
 								&& !Game_Flag_Query(kFlagNR04EarlyQStungByScorpions)) {							
 									Actor_Clue_Acquire(kActorMcCoy, kClueVKEarlyQReplicant, true, kActorSteele);
 									Game_Flag_Set(kFlagEarlyQDead);
-									if (Game_Flag_Query(kFlagHanoiIsReplicant)) {
-										Game_Flag_Set(kFlagHanoiDead);
-									}
 								}
 							} else {
 								Actor_Clue_Acquire(kActorMcCoy, kClueVKEarlyQHuman, true, kActorSteele);
@@ -423,6 +420,12 @@ void SceneScriptMA07::PlayerWalkedIn() {
 								Actor_Put_In_Set(kActorEarlyQ, kSetPS09);
 								Actor_Set_At_XYZ(kActorEarlyQ, -425.88f, 0.15f, -220.74f, 512);
 							}
+						}
+					}
+					if (Actor_Clue_Query(kActorMcCoy, kClueVKGrigorianReplicant)) {
+						if (Random_Query(1, 3) == 1) {
+							Game_Flag_Set(kFlagGrigorianDead);
+							Actor_Set_At_XYZ(kActorGrigorian, -728.0f, -354.0f, 1090.0f, 150);
 						}
 					}
 					if (Actor_Clue_Query(kActorMcCoy, kClueSpecialIngredient)) {

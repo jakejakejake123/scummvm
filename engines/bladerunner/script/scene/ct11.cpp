@@ -62,23 +62,8 @@ void SceneScriptCT11::SceneLoaded() {
 	Unobstacle_Object("BOX SOUTH 1", true);
 	if (Global_Variable_Query(kVariableChapter) < 4) {
 		if (_vm->_cutContent) {
-			if (!Game_Flag_Query(kFlagDektoraIsReplicant)
-		   	&& Game_Flag_Query(kFlagGordoIsReplicant)) {
-				if (!Game_Flag_Query(kFlagCT11DogWrapperTaken)) {
-					Item_Add_To_World(kItemDogWrapper, kModelAnimationLichenDogWrapper, kSetCT11, 640.21f, 30.0f, 470.0f, 512, 12, 12, false, true, false, true);
-					Scene_2D_Region_Add(0, 505, 316, 513, 321);
-					Game_Flag_Set(kFlagCT11DogWrapperAvailable);
-				}
-			} else if (Game_Flag_Query(kFlagDektoraIsReplicant)
-		   	&& Game_Flag_Query(kFlagGordoIsReplicant)) {
-				if (!Game_Flag_Query(kFlagCT11DogWrapperTaken)) {
-					Item_Add_To_World(kItemDogWrapper, kModelAnimationLichenDogWrapper, kSetCT11, 640.21f, 30.0f, 470.0f, 512, 12, 12, false, true, false, true);
-					Scene_2D_Region_Add(0, 505, 316, 513, 321);
-					Game_Flag_Set(kFlagCT11DogWrapperAvailable);
-				}
-			} else if (Game_Flag_Query(kFlagDektoraIsReplicant)
-		   	&& !Game_Flag_Query(kFlagGordoIsReplicant)) {
-				if (!Game_Flag_Query(kFlagCT11DogWrapperTaken)) {
+			if (!Game_Flag_Query(kFlagCT11DogWrapperTaken)) {
+				if (!Game_Flag_Query(kFlagGordoIsReplicant)) {
 					Item_Add_To_World(kItemDogWrapper, kModelAnimationLichenDogWrapper, kSetCT11, 640.21f, 30.0f, 470.0f, 512, 12, 12, false, true, false, true);
 					Scene_2D_Region_Add(0, 505, 316, 513, 321);
 					Game_Flag_Set(kFlagCT11DogWrapperAvailable);
@@ -91,16 +76,20 @@ void SceneScriptCT11::SceneLoaded() {
 				Game_Flag_Set(kFlagCT11DogWrapperAvailable);
 			}
 		}
+		if (_vm->_cutContent) {
+			if (!Actor_Clue_Query(kActorMcCoy, kClueLicensePlate)) {
+				if (!Game_Flag_Query(kFlagGordoIsReplicant)) {
+					Item_Add_To_World(kItemChopstickWrapper, kModelAnimationLicensePlate, kSetCT11, 617.45f, 0.81f, 654.48f, 512, 12, 12, false, true, false, true);
+					Scene_2D_Region_Add(5, 380, 370, 470, 377);
+				}
+			}
+		}
 		// Made it so Grigorians note will appear in the car under any circumstance other than Gordo being a replicant and Dektora being human. If that is the case the reps never would have gone to Crazylegs and
 		// Grigorians note to Crazylegs wouldn't be in the car.
 		if (_vm->_cutContent) {
 		    if (!Actor_Clue_Query(kActorMcCoy, kClueGrigoriansNote)) {
-		    	if (Game_Flag_Query(kFlagDektoraIsReplicant)
-		   		&& !Game_Flag_Query(kFlagGordoIsReplicant)) {
-					Item_Add_To_World(kItemNote, kModelAnimationGrigoriansNote, kSetCT11, 641.21f, 26.0f, 472.0f, 304, 12, 12, false, true, false, true);
-					Scene_2D_Region_Add(2, 505, 321, 519, 332);
-				} else if (Game_Flag_Query(kFlagDektoraIsReplicant)
-				&& Game_Flag_Query(kFlagGordoIsReplicant)) {
+				if (Game_Flag_Query(kFlagDektoraIsReplicant)
+				&& !Game_Flag_Query(kFlagGordoIsReplicant)) {
 					Item_Add_To_World(kItemNote, kModelAnimationGrigoriansNote, kSetCT11, 641.21f, 26.0f, 472.0f, 304, 12, 12, false, true, false, true);
 					Scene_2D_Region_Add(2, 505, 321, 519, 332);
 				} else if (!Game_Flag_Query(kFlagDektoraIsReplicant)
@@ -169,6 +158,44 @@ bool SceneScriptCT11::ClickedOnActor(int actorId) {
 }
 
 bool SceneScriptCT11::ClickedOnItem(int itemId, bool a2) {
+	if (itemId == kItemChopstickWrapper) {
+		if (!Loop_Actor_Walk_To_Item(kActorMcCoy, kItemChopstickWrapper, 36, true, false)) {
+			Actor_Face_Item(kActorMcCoy, kItemChopstickWrapper, true);
+			if (Actor_Clue_Query(kActorMcCoy, kCluePartialLicenseNumber)
+			|| Actor_Clue_Query(kActorMcCoy, kClueCar)) {	
+				Item_Pickup_Spin_Effect(kModelAnimationLicensePlate, 279, 388);
+				Item_Remove_From_World(kItemChopstickWrapper);
+				Actor_Says(kActorMcCoy, 8760, 13); //00-8760.AUD	A license plate.
+				Actor_Clue_Acquire(kActorMcCoy, kClueLicensePlate, true, -1);
+				if (Actor_Clue_Query(kActorMcCoy, kCluePartialLicenseNumber)) {
+					Delay(500);
+					Actor_Voice_Over(4190, kActorVoiceOver); //99-4190.AUD	Where have I seen that before?
+					Delay(1000);
+					Actor_Says(kActorMcCoy, 8525, 9); //00-8525.AUD	Hmph.
+					Actor_Change_Animation_Mode(kActorMcCoy, 23);
+					Delay(800);
+					Actor_Says(kActorAnsweringMachine, 390, kAnimationModeTalk); // 39-0390.AUD	Begin test.
+					Ambient_Sounds_Play_Sound(kSfxDATALOAD, 50, 0, 0, 99);
+					Delay(2000);
+					Ambient_Sounds_Play_Sound(kSfxBEEPNEAT, 80, 0, 0, 99);
+					Actor_Says(kActorAnsweringMachine, 420, 19); //39-0420.AUD	Positive result.
+					Actor_Says(kActorAnsweringMachine, 470, kAnimationModeTalk); //39-0470.AUD	End test.
+					Actor_Says(kActorMcCoy, 7200, 13); //00-7200.AUD	Bingo.
+					Actor_Clue_Acquire(kActorMcCoy, kClueLicensePlateMatch, true, -1); 
+					if (Game_Flag_Query(kFlagKleinCarIdentityTalk)
+					&& !Actor_Clue_Query(kActorMcCoy, kClueCar)
+					&& !Actor_Clue_Query(kActorMcCoy, kClueCarRegistration1)
+					&& !Actor_Clue_Query(kActorMcCoy, kClueCarRegistration2)
+					&& !Actor_Clue_Query(kActorMcCoy, kClueCarRegistration3)) {
+						Actor_Voice_Over(540, kActorVoiceOver); //99-0540.AUD	If I ran it through the Mainframe back at the station, I could ID the owner.
+					}
+				}
+			} else {
+				Actor_Says(kActorMcCoy, 8760, 13); //00-8760.AUD	A license plate.
+				Actor_Says(kActorMcCoy, 8525, 9); //00-8525.AUD	Hmph.
+			}
+		}
+	}
 	return false;
 }
 
@@ -208,6 +235,7 @@ bool SceneScriptCT11::ClickedOn2DRegion(int region) {
 			// Made it so McCoy will only pick up the lichen dog wrapper from within the car if he has found enough clues to deem the car suspicious.
 			if (_vm->_cutContent) {
 				if (Actor_Clue_Query(kActorMcCoy, kClueCar)
+				|| Actor_Clue_Query(kActorMcCoy, kClueLicensePlateMatch)
 				|| Game_Flag_Query(kFlagCarFound)) {
 					Item_Remove_From_World(kItemDogWrapper);		
 					Actor_Clue_Acquire(kActorMcCoy, kClueLichenDogWrapper, false, kActorMurray);
@@ -225,24 +253,24 @@ bool SceneScriptCT11::ClickedOn2DRegion(int region) {
 					Scene_2D_Region_Remove(0);
 		#endif // !BLADERUNNER_ORIGINAL_BUGS
 				} else {
-					Actor_Says(kActorMcCoy, 8865, 18); //00-8865.AUD	A lichen-dog wrapper.
-					Actor_Says(kActorMcCoy, 8525, 13); // 00-8525.AUD	Hmph.
+					Actor_Says(kActorMcCoy, 8865, 13); //00-8865.AUD	A lichen-dog wrapper.
+					Actor_Says(kActorMcCoy, 8525, -1); // 00-8525.AUD	Hmph.
 				}
 			} else {
 				Item_Remove_From_World(kItemDogWrapper);		
-					Actor_Clue_Acquire(kActorMcCoy, kClueLichenDogWrapper, false, kActorMurray);
-					Item_Pickup_Spin_Effect(kModelAnimationLichenDogWrapper, 510, 319);
-					Game_Flag_Reset(kFlagCT11DogWrapperAvailable);
-					Game_Flag_Set(kFlagCT11DogWrapperTaken);
-					Actor_Says(kActorMcCoy, 8865, 13); //00-8865.AUD	A lichen-dog wrapper.
-					Actor_Voice_Over(550, kActorVoiceOver);
-					Actor_Voice_Over(560, kActorVoiceOver);
-					Actor_Voice_Over(570, kActorVoiceOver);
-					Actor_Voice_Over(580, kActorVoiceOver);
+				Actor_Clue_Acquire(kActorMcCoy, kClueLichenDogWrapper, false, kActorMurray);
+				Item_Pickup_Spin_Effect(kModelAnimationLichenDogWrapper, 510, 319);
+				Game_Flag_Reset(kFlagCT11DogWrapperAvailable);
+				Game_Flag_Set(kFlagCT11DogWrapperTaken);
+				Actor_Says(kActorMcCoy, 8865, 13); //00-8865.AUD	A lichen-dog wrapper.
+				Actor_Voice_Over(550, kActorVoiceOver);
+				Actor_Voice_Over(560, kActorVoiceOver);
+				Actor_Voice_Over(570, kActorVoiceOver);
+				Actor_Voice_Over(580, kActorVoiceOver);
 		#if !BLADERUNNER_ORIGINAL_BUGS
-					// in the original game the hotspot would not be removed
-					// after picking up the lichendog Wrapper
-					Scene_2D_Region_Remove(0);
+				// in the original game the hotspot would not be removed
+				// after picking up the lichendog Wrapper
+				Scene_2D_Region_Remove(0);
 		#endif // !BLADERUNNER_ORIGINAL_BUGS
 			}
 		}
@@ -256,6 +284,7 @@ bool SceneScriptCT11::ClickedOn2DRegion(int region) {
 		if (!Loop_Actor_Walk_To_XYZ(kActorMcCoy, 686.0f, 0.0f, 658.0f, 12, true, false, false)) {
 			Actor_Face_Heading(kActorMcCoy, 47, false);
 			if (Actor_Clue_Query(kActorMcCoy, kClueCar)
+			|| Actor_Clue_Query(kActorMcCoy, kClueLicensePlateMatch)
 			|| Game_Flag_Query(kFlagCarFound)) {
 				Item_Remove_From_World(kItemNote);
 				Actor_Clue_Acquire(kActorMcCoy, kClueGrigoriansNote, false, -1);
@@ -263,7 +292,7 @@ bool SceneScriptCT11::ClickedOn2DRegion(int region) {
 				Actor_Says(kActorMcCoy, 8840, 13); //00-8840.AUD	A note.
 				Scene_2D_Region_Remove(2);
 			} else {
-				Actor_Says(kActorMcCoy, 8525, 13); // 00-8525.AUD	Hmph.
+				Actor_Says(kActorMcCoy, 8525, -1); // 00-8525.AUD	Hmph.
 			}
 		}
 		return true;
@@ -283,6 +312,9 @@ bool SceneScriptCT11::ClickedOn2DRegion(int region) {
 					++cluesFound;
 				}
 				if (Actor_Clue_Query(kActorMcCoy, kCluePaintTransfer)) {
+					++cluesFound;
+				}
+				if (Actor_Clue_Query(kActorMcCoy, kClueDispatchHitAndRun)) {
 					++cluesFound;
 				}
 				if (Actor_Clue_Query(kActorMcCoy, kClueLabPaintTransfer)) {
@@ -315,9 +347,14 @@ bool SceneScriptCT11::ClickedOn2DRegion(int region) {
 					&& !Actor_Clue_Query(kActorMcCoy, kClueCarRegistration2)
 					&& !Actor_Clue_Query(kActorMcCoy, kClueCarRegistration3)
 					) {
-						Actor_Voice_Over(520, kActorVoiceOver);
+						if (Game_Flag_Query(kFlagGordoIsReplicant)) {
+							Actor_Voice_Over(520, kActorVoiceOver); //99-0520.AUD	The driver had been smart enough to pull the license plate.
+						} else {
+							Actor_Says(kActorMcCoy, 8524, -1); //00-8524.AUD	That's a washout.
+							Delay(500);
+						}
 						Actor_Voice_Over(530, kActorVoiceOver);
-						Actor_Voice_Over(540, kActorVoiceOver);	
+						Actor_Voice_Over(540, kActorVoiceOver);
 					}
 					Scene_2D_Region_Remove(1);
 #if !BLADERUNNER_ORIGINAL_BUGS
@@ -389,25 +426,26 @@ void SceneScriptCT11::PlayerWalkedIn() {
 		Actor_Set_Immunity_To_Obstacles(kActorMcCoy, false);
 		Player_Gains_Control();
 	}
-		if (_vm->_cutContent) {
-			if (!Game_Flag_Query(kFlagCT11Visited)) {
-				Game_Flag_Set (kFlagCT11Visited);
-				ADQ_Add(kActorDispatcher, 220, kAnimationModeTalk); //38-0220.AUD	Attention all Sector 3 units.
-				ADQ_Add(kActorDispatcher, 230, kAnimationModeTalk); //38-0230.AUD	Be advised. 2-11 in progress. Kitty Hawk Savings and Loan. Corner of Peach and Lincoln.
-				ADQ_Add(kActorOfficerGrayford, 490, kAnimationModeTalk); // 24-0490.AUD	LA, 34 Metro 3. Copied. ETA two minutes. Be advised 34 is a two men Unit.
-				ADQ_Add(kActorDispatcher, 240, kAnimationModeTalk); //38-0240.AUD	Units responding identify..
-				ADQ_Add(kActorOfficerGrayford, 500, kAnimationModeTalk); //24-0500.AUD	LA, Two men Unit 32 Metro 3 is responding to provide backup. ETA three minutes.
-				ADQ_Add(kActorDispatcher, 250, kAnimationModeTalk); //38-0250.AUD	LA Copy. Units 34 and 32 en route. 2-11 in progress at Peach and Lincoln.
-				ADQ_Add(kActorDispatcher, 260, kAnimationModeTalk); //38-0260.AUD	All Sector 3 units. Hold your traffic until we confirm a Code 4.
-				ADQ_Add_Pause(1000);
-				ADQ_Add(kActorOfficerGrayford, 510, kAnimationModeTalk); //24-0510.AUD	LA, Units 34 and 32 are 10-97
-				ADQ_Add(kActorDispatcher, 270, kAnimationModeTalk); //38-0270.AUD	LA Copy. 34 and 32 at 10-97 at the scene. All Third Sector Units stand by.
-				ADQ_Add_Pause(1000);
-				ADQ_Add(kActorOfficerGrayford, 410 , kAnimationModeTalk); // 24-0410.AUD	LA, This is 32 Metro 3. Code 4. Two suspects in custody.
-				ADQ_Add(kActorDispatcher, 280, kAnimationModeTalk);	//38-0280.AUD	32 Metro 3. 10-4. LA Copy. Code 4. Two in custody.
-				ADQ_Add(kActorDispatcher, 290, kAnimationModeTalk); //38-0290.AUD	Attention all Third Sector units. We have a Code 4 at the Kitty Hawk Savings and Loan. LA clear. Resume normal traffic.
-			}	
-		}
+	if (_vm->_cutContent) {
+		if (!Game_Flag_Query(kFlagCT11Visited)) {
+			Game_Flag_Set (kFlagCT11Visited);
+			Actor_Set_Goal_Number(kActorDeskClerk, kGoalDeskClerkRecovered);
+			ADQ_Add(kActorDispatcher, 220, kAnimationModeTalk); //38-0220.AUD	Attention all Sector 3 units.
+			ADQ_Add(kActorDispatcher, 230, kAnimationModeTalk); //38-0230.AUD	Be advised. 2-11 in progress. Kitty Hawk Savings and Loan. Corner of Peach and Lincoln.
+			ADQ_Add(kActorOfficerGrayford, 490, kAnimationModeTalk); // 24-0490.AUD	LA, 34 Metro 3. Copied. ETA two minutes. Be advised 34 is a two men Unit.
+			ADQ_Add(kActorDispatcher, 240, kAnimationModeTalk); //38-0240.AUD	Units responding identify..
+			ADQ_Add(kActorOfficerGrayford, 500, kAnimationModeTalk); //24-0500.AUD	LA, Two men Unit 32 Metro 3 is responding to provide backup. ETA three minutes.
+			ADQ_Add(kActorDispatcher, 250, kAnimationModeTalk); //38-0250.AUD	LA Copy. Units 34 and 32 en route. 2-11 in progress at Peach and Lincoln.
+			ADQ_Add(kActorDispatcher, 260, kAnimationModeTalk); //38-0260.AUD	All Sector 3 units. Hold your traffic until we confirm a Code 4.
+			ADQ_Add_Pause(1000);
+			ADQ_Add(kActorOfficerGrayford, 510, kAnimationModeTalk); //24-0510.AUD	LA, Units 34 and 32 are 10-97
+			ADQ_Add(kActorDispatcher, 270, kAnimationModeTalk); //38-0270.AUD	LA Copy. 34 and 32 at 10-97 at the scene. All Third Sector Units stand by.
+			ADQ_Add_Pause(1000);
+			ADQ_Add(kActorOfficerGrayford, 410 , kAnimationModeTalk); // 24-0410.AUD	LA, This is 32 Metro 3. Code 4. Two suspects in custody.
+			ADQ_Add(kActorDispatcher, 280, kAnimationModeTalk);	//38-0280.AUD	32 Metro 3. 10-4. LA Copy. Code 4. Two in custody.
+			ADQ_Add(kActorDispatcher, 290, kAnimationModeTalk); //38-0290.AUD	Attention all Third Sector units. We have a Code 4 at the Kitty Hawk Savings and Loan. LA clear. Resume normal traffic.
+		}	
+	}
 }
 
 void SceneScriptCT11::PlayerWalkedOut() {
