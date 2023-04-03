@@ -183,12 +183,22 @@ bool SceneScriptUG10::ClickedOn2DRegion(int region) {
 			Actor_Says(kActorMcCoy, 8525, 3);
 		} else if (!Loop_Actor_Walk_To_XYZ(kActorMcCoy, 4.98f, 0.38f, 83.15f, 0, true, false, false)) {
 			if (!Game_Flag_Query(kFlagUG10GateOpen)) {
+				if (_vm->_cutContent) { 
+					Actor_Face_Object(kActorMcCoy, "SLUICEGATE_LEVER", true);
+					Actor_Change_Animation_Mode(kActorMcCoy, 23);
+					Delay(800);
+				}
 				Scene_Loop_Set_Default(4);
 				Scene_Loop_Start_Special(kSceneLoopModeOnce, 3, false);
 				Game_Flag_Set(kFlagUG10GateOpen);
 				Unobstacle_Object("BOX01 BRIDGE", true);
 				Player_Loses_Control();
 			} else {
+				if (_vm->_cutContent) { 
+					Actor_Face_Object(kActorMcCoy, "SLUICEGATE_LEVER", true);
+					Actor_Change_Animation_Mode(kActorMcCoy, 23);
+					Delay(800);
+				}
 				Scene_Loop_Set_Default(1);
 				Scene_Loop_Start_Special(kSceneLoopModeOnce, 0, false);
 				Game_Flag_Reset(kFlagUG10GateOpen);
@@ -241,6 +251,31 @@ void SceneScriptUG10::PlayerWalkedIn() {
 		Loop_Actor_Walk_To_XYZ(kActorMcCoy, -1.83f, 81.33f, -518.8f, 0, false, false, false);
 		Actor_Face_Heading(kActorMcCoy, 506, false);
 		Loop_Actor_Travel_Stairs(kActorMcCoy, 9, false, kAnimationModeIdle);
+		if (_vm->_cutContent) { 
+			if (!Actor_Clue_Query(kActorLucy, kClueMcCoyRetiredZuben)
+			&& !Actor_Clue_Query(kActorLucy, kClueMcCoyRetiredDektora)
+			&& !Actor_Clue_Query(kActorLucy, kClueMcCoyRetiredGordo)
+			&& !Game_Flag_Query(kFlagLucyMeetingAct4)
+			&& Global_Variable_Query(kVariableChapter) == 4
+			&& Global_Variable_Query(kVariableAffectionTowards) == kAffectionTowardsLucy) {
+				Player_Loses_Control();
+				Loop_Actor_Walk_To_XYZ(kActorMcCoy, 4.98f, 0.38f, 83.15f, 0, true, false, false);
+				Player_Gains_Control();
+				Actor_Face_Object(kActorMcCoy, "SLUICEGATE_LEVER", true);
+				Actor_Change_Animation_Mode(kActorMcCoy, 23);
+				Delay(800);
+				Scene_Loop_Set_Default(4);
+				Scene_Loop_Start_Special(kSceneLoopModeOnce, 3, false);
+				Game_Flag_Set(kFlagUG10GateOpen);
+				Unobstacle_Object("BOX01 BRIDGE", true);
+				Delay(4000);
+				Player_Loses_Control();
+				Loop_Actor_Walk_To_XYZ(kActorMcCoy, 235.0f, 1.15f, 29.0f, 0, true, false, false);
+				Player_Gains_Control();
+				Game_Flag_Set(kFlagUG10toUG01);
+				Set_Enter(kSetUG01, kSceneUG01);
+			}
+		}
 	}
 
 	if (Game_Flag_Query(kFlagUG10GateOpen)) {

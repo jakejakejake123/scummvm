@@ -868,9 +868,41 @@ void SceneScriptHF05::dialogueWithCrazylegs1() {
 				if (Player_Query_Agenda() == kPlayerAgendaSurly 
 				|| Player_Query_Agenda() == kPlayerAgendaErratic) {
 					Actor_Says(kActorMcCoy, 8519, 14);//00-8519.AUD	What do you say we dish each other the straight goods.
-					Actor_Says(kActorCrazylegs, 1160, 16); //09-1160.AUD	Take a ride, McCoy. I already told you everything.
-					Actor_Says(kActorMcCoy, 5075, 18); //00-5075.AUD	Hey, pal.
-					Actor_Modify_Friendliness_To_Other(kActorCrazylegs, kActorMcCoy, -2);
+					if (Game_Flag_Query(kFlagCrazylegsIsReplicant)) {
+						Actor_Says(kActorCrazylegs, 1160, 16); //09-1160.AUD	Take a ride, McCoy. I already told you everything.
+						Actor_Says(kActorMcCoy, 5075, 18); //00-5075.AUD	Hey, pal.
+						Actor_Modify_Friendliness_To_Other(kActorCrazylegs, kActorMcCoy, -2);
+					} else {
+						Delay(2000);
+						Actor_Says(kActorCrazylegs, 620, kAnimationModeTalk); //09-0620.AUD	Like I said, she was tall and blonde. Real woo bait.
+						Actor_Says(kActorCrazylegs, 630, 12); //09-0630.AUD	She was tooling around with a short guy in a bow tie.
+						Actor_Says(kActorMcCoy, 2000, 13); //00-2000.AUD	And she wanted a car.
+						Actor_Says(kActorCrazylegs, 640, 14); //09-0640.AUD	At first, she was looking for a very hard to find item.
+						Actor_Says(kActorCrazylegs, 650, 15); //09-0650.AUD	Something that doesn’t show up on the lot too often.
+						Actor_Says(kActorCrazylegs, 660, 16); //09-0660.AUD	A… police-issue vehicle.
+						Actor_Says(kActorMcCoy, 2005, kAnimationModeIdle); //00-2005.AUD	A Spinner?
+						Actor_Says(kActorMcCoy, 2010, kAnimationModeTalk); //00-2010.AUD	But you didn’t have one.
+						Actor_Says(kActorCrazylegs, 670, kAnimationModeTalk); //09-0670.AUD	Well, not one that would actually fly.
+						Actor_Says(kActorCrazylegs, 680, 12); //09-0680.AUD	I told them to check back in a couple of days.
+						Actor_Says(kActorCrazylegs, 690, 14); //09-0690.AUD	So, then they got looking at that Sedan.
+						if (Player_Query_Agenda() != kPlayerAgendaPolite) {
+							Actor_Says(kActorMcCoy, 2015, 14); //00-2015.AUD	You know how many years mandatory you’d get for selling a police Spinner?
+							Actor_Says(kActorCrazylegs, 700, 15); //09-0700.AUD	I was gonna report them, if they showed up again.
+							if (Player_Query_Agenda() != kPlayerAgendaSurly 
+							|| Player_Query_Agenda() == kPlayerAgendaErratic) {
+								Actor_Says(kActorMcCoy, 2020, 18); //00-2020.AUD	Sure you were.
+								Actor_Modify_Friendliness_To_Other(kActorCrazylegs, kActorMcCoy, -2);
+							}
+						} else {
+							Actor_Says(kActorMcCoy, 5065, 18); //00-5065.AUD	Is that right?
+							Actor_Says(kActorCrazylegs, 720, 15); //09-0720.AUD	Uh-huh.
+						}
+						// Made it so the crazylegs interview 1 clue is for this dialogue instead. The reason is it contains a lot more information than the car registration topic.
+						// I mean not only does Crazy describe Dektora in this topic, but he also mentions Gordo and how they asked for a police spinner. Pretty relevant information.
+						Actor_Clue_Acquire(kActorMcCoy, kClueCrazylegsInterview1, true, kActorCrazylegs);
+						// Inserted a flag to make the womans photo option available.
+						Game_Flag_Set(kFlagCrazylegsTalkWoman);
+					} 
 				}
 			} else {
 				Actor_Says(kActorCrazylegs, 620, kAnimationModeTalk); //09-0620.AUD	Like I said, she was tall and blonde. Real woo bait.
@@ -884,12 +916,14 @@ void SceneScriptHF05::dialogueWithCrazylegs1() {
 				Actor_Says(kActorCrazylegs, 670, kAnimationModeTalk); //09-0670.AUD	Well, not one that would actually fly.
 				Actor_Says(kActorCrazylegs, 680, 12); //09-0680.AUD	I told them to check back in a couple of days.
 				Actor_Says(kActorCrazylegs, 690, 14); //09-0690.AUD	So, then they got looking at that Sedan.
-				if (Player_Query_Agenda() == kPlayerAgendaSurly 
-				|| Player_Query_Agenda() == kPlayerAgendaErratic) {
+				if (Player_Query_Agenda() != kPlayerAgendaPolite) {
 					Actor_Says(kActorMcCoy, 2015, 14); //00-2015.AUD	You know how many years mandatory you’d get for selling a police Spinner?
 					Actor_Says(kActorCrazylegs, 700, 15); //09-0700.AUD	I was gonna report them, if they showed up again.
-					Actor_Says(kActorMcCoy, 2020, 18); //00-2020.AUD	Sure you were.
-					Actor_Modify_Friendliness_To_Other(kActorCrazylegs, kActorMcCoy, -2);
+					if (Player_Query_Agenda() != kPlayerAgendaSurly 
+					|| Player_Query_Agenda() == kPlayerAgendaErratic) {
+						Actor_Says(kActorMcCoy, 2020, 18); //00-2020.AUD	Sure you were.
+						Actor_Modify_Friendliness_To_Other(kActorCrazylegs, kActorMcCoy, -2);
+					}
 				} else {
 					Actor_Says(kActorMcCoy, 5065, 18); //00-5065.AUD	Is that right?
 					Actor_Says(kActorCrazylegs, 720, 15); //09-0720.AUD	Uh-huh.
@@ -1019,13 +1053,20 @@ void SceneScriptHF05::dialogueWithCrazylegs1() {
 	case 1230: // CAR REGISTRATION
 		Actor_Says(kActorMcCoy, 1915, 12);
 		if (Actor_Clue_Query(kActorMcCoy, kClueCarRegistration1)) {
-			Actor_Says(kActorCrazylegs, 820, kAnimationModeTalk);
-			Actor_Says(kActorMcCoy, 2075, 13); //00-2075.AUD	I’ve seen the registration. I know a woman bought it from you.
-			// Made it so Crazylegs is more resilient to answering McCoys question about the car registration if he is a replicant, but Crazylegs eventually relents
-			// when McCoy puts pressure on him.
 			if (_vm->_cutContent) {
-				if (Game_Flag_Query(kFlagCrazylegsIsReplicant)
-				|| Actor_Query_Friendliness_To_Other(kActorCrazylegs, kActorMcCoy) < 50) {
+				if (!Game_Flag_Query(kFlagCrazylegsIsReplicant)
+				&& Actor_Query_Friendliness_To_Other(kActorCrazylegs, kActorMcCoy) > 49) {
+					Actor_Says(kActorCrazylegs, 840, 14); //09-0840.AUD	Hey, look. A sexy blonde wants to pay top dollar for the ugliest car in the place…
+					Actor_Says(kActorCrazylegs, 850, 15);
+					Actor_Says(kActorMcCoy, 2080, kAnimationModeTalk);
+					Actor_Says(kActorCrazylegs, 860, 16);
+					Actor_Says(kActorCrazylegs, 870, kAnimationModeTalk);
+					Actor_Clue_Acquire(kActorMcCoy, kClueDektoraConfession, true, kActorCrazylegs);
+				} else {
+					Actor_Says(kActorCrazylegs, 820, kAnimationModeTalk);
+					Actor_Says(kActorMcCoy, 2075, 13); //00-2075.AUD	I’ve seen the registration. I know a woman bought it from you.
+					// Made it so Crazylegs is more resilient to answering McCoys question about the car registration if he is a replicant, but Crazylegs eventually relents
+					// when McCoy puts pressure on him.
 					Actor_Says(kActorCrazylegs, 1120, 15); //09-1120.AUD	I don’t know what you’re talking about.
 					if (Player_Query_Agenda() != kPlayerAgendaSurly 
 					&& Player_Query_Agenda() != kPlayerAgendaErratic) {
@@ -1033,7 +1074,7 @@ void SceneScriptHF05::dialogueWithCrazylegs1() {
 						Actor_Says(kActorCrazylegs, 1170, 16); //09-1170.AUD	I might lie about a sticker price but not about this.
 					} else {
 						Actor_Says(kActorMcCoy, 8519, 14);//00-8519.AUD	What do you say we dish each other the straight goods.
-						Delay (1000);
+						Delay (2000);
 						Actor_Says(kActorCrazylegs, 830, 12); //09-0830.AUD	Oh-- Ooh, that Sedan.
 						Actor_Says(kActorCrazylegs, 840, 14);
 						Actor_Says(kActorCrazylegs, 850, 15);
@@ -1042,15 +1083,7 @@ void SceneScriptHF05::dialogueWithCrazylegs1() {
 						Actor_Says(kActorCrazylegs, 870, kAnimationModeTalk);
 						Actor_Clue_Acquire(kActorMcCoy, kClueDektoraConfession, true, kActorCrazylegs);
 					}
-				} else {
-					Actor_Says(kActorCrazylegs, 830, 12); //09-0830.AUD	Oh-- Ooh, that Sedan.
-					Actor_Says(kActorCrazylegs, 840, 14);
-					Actor_Says(kActorCrazylegs, 850, 15);
-					Actor_Says(kActorMcCoy, 2080, kAnimationModeTalk);
-					Actor_Says(kActorCrazylegs, 860, 16);
-					Actor_Says(kActorCrazylegs, 870, kAnimationModeTalk);
-					Actor_Clue_Acquire(kActorMcCoy, kClueDektoraConfession, true, kActorCrazylegs);
-				}
+				} 
 			} else {
 				Actor_Says(kActorCrazylegs, 830, 12); //09-0830.AUD	Oh-- Ooh, that Sedan.
 				Actor_Says(kActorCrazylegs, 840, 14);
@@ -1069,14 +1102,12 @@ void SceneScriptHF05::dialogueWithCrazylegs1() {
 			}
 #endif // BLADERUNNER_ORIGINAL_BUGS
 		} else if (Actor_Clue_Query(kActorMcCoy, kClueCarRegistration3)) {
-			Actor_Says(kActorCrazylegs, 880, 12);
-			Actor_Says(kActorCrazylegs, 890, 14);
-			Actor_Says(kActorMcCoy, 2085, kAnimationModeTalk); //00-2085.AUD	You sold this to a Blake Williams. I’ve seen the registration.
-			// Made it so Crazylegs is more resilient to answering McCoys question about the car registration if he is a replicant, but Crazylegs eventually relents
-			// when McCoy threatens him.
 			if (_vm->_cutContent) {
 				if (Game_Flag_Query(kFlagCrazylegsIsReplicant)
 				|| Actor_Query_Friendliness_To_Other(kActorCrazylegs, kActorMcCoy) < 50) {
+					Actor_Says(kActorCrazylegs, 880, 12); //09-0880.AUD	Family type cars ain’t my specialty.
+					Actor_Says(kActorCrazylegs, 890, 14); //09-0890.AUD	I can hook you up though, if that’s really what you want.
+					Actor_Says(kActorMcCoy, 2085, kAnimationModeTalk); //00-2085.AUD	You sold this to a Blake Williams. I’ve seen the registration.
 					Actor_Says(kActorCrazylegs, 550, 15); //09-0550.AUD	That’s impossible.
 					Actor_Says(kActorMcCoy, 3910, 13);//00-3910.AUD	You’re lying.
 					Actor_Says(kActorCrazylegs, 1170, 16); //09-1170.AUD	I might lie about a sticker price but not about this.
@@ -1086,7 +1117,7 @@ void SceneScriptHF05::dialogueWithCrazylegs1() {
 						Actor_Says(kActorCrazylegs, 1150, 14); //09-1150.AUD	Only thing I know is that the best deals you can make are right in this showroom.
 					} else {
 						Actor_Says(kActorMcCoy, 8519, 14);//00-8519.AUD	What do you say we dish each other the straight goods.
-						Delay (1000);
+						Delay (2000);
 						Actor_Says(kActorCrazylegs, 830, 12); //09-0830.AUD	Oh-- Ooh, that Sedan.
 						Actor_Says(kActorMcCoy, 2090, 19); //00-2090.AUD	Blake Williams is a fake name.
 						Actor_Says(kActorCrazylegs, 910, 16); //09-0910.AUD	You just never know about some people.
@@ -1111,7 +1142,8 @@ void SceneScriptHF05::dialogueWithCrazylegs1() {
 						Actor_Clue_Acquire(kActorMcCoy, kClueCrazylegsInterview1, true, kActorCrazylegs);
 					}
 				} else {
-					Actor_Says(kActorCrazylegs, 830, 12); //09-0830.AUD	Oh-- Ooh, that Sedan.
+					Actor_Says(kActorMcCoy, 2085, kAnimationModeTalk); //00-2085.AUD	You sold this to a Blake Williams. I’ve seen the registration.
+					Actor_Says(kActorCrazylegs, 720, 15); //09-0720.AUD	Uh-huh.
 					Actor_Says(kActorMcCoy, 2090, 19); //00-2090.AUD	Blake Williams is a fake name.
 					Actor_Says(kActorCrazylegs, 910, 16); //09-0910.AUD	You just never know about some people.
 					if (Player_Query_Agenda() != kPlayerAgendaPolite) {
@@ -1137,6 +1169,7 @@ void SceneScriptHF05::dialogueWithCrazylegs1() {
 					Actor_Clue_Acquire(kActorMcCoy, kClueCrazylegsInterview1, true, kActorCrazylegs);
 				}
 			} else {
+				Actor_Says(kActorMcCoy, 2085, kAnimationModeTalk); //00-2085.AUD	You sold this to a Blake Williams. I’ve seen the registration.
 				Actor_Says(kActorCrazylegs, 830, 12); //09-0830.AUD	Oh-- Ooh, that Sedan.
 				Actor_Says(kActorMcCoy, 2090, 19); //00-2090.AUD	Blake Williams is a fake name.
 				Actor_Says(kActorCrazylegs, 910, 16);
@@ -1180,23 +1213,25 @@ void SceneScriptHF05::dialogueWithCrazylegs2() { // Restored feature - Original:
 				Actor_Says(kActorMcCoy, 6865, 14); //00-6865.AUD	You're a Replicant.
 				Actor_Says(kActorCrazylegs, 550, 13); //09-0550.AUD	That’s impossible.
 				Delay (1000);
-				Actor_Says(kActorMcCoy, 2755, 15); //00-2755.AUD	You all right? You look a little pale.
-				Delay (2000);
-				Actor_Says(kActorCrazylegs, 1000, 12); //09-1000.AUD	I got customers on the line, so I ain’t got time to chit chat.
-				Actor_Set_Goal_Number(kActorCrazylegs, kGoalCrazyLegsLeavesShowroom);
-				Actor_Says(kActorMcCoy, 8955, 16); //00-8955.AUD	Stop!
-				Actor_Set_Targetable(kActorCrazylegs, true);
-				Player_Set_Combat_Mode(true);
-				Player_Gains_Control();
-			} else {
-				Actor_Says(kActorMcCoy, 1980, 23); //00-1980.AUD	Give me your phone.
-				Actor_Change_Animation_Mode(kActorMcCoy, 23);
-				Actor_Change_Animation_Mode(kActorCrazylegs, 23);
-				Delay(2000);
-				if (Player_Query_Agenda() != kPlayerAgendaSurly 
-				|| Player_Query_Agenda() != kPlayerAgendaErratic) {
-					Actor_Says(kActorMcCoy, 1985, kAnimationModeTalk); //00-1985.AUD	I’ll try to clear it so you aren’t stuck in a cell with fifty mutant speed loaders
+				if (!Game_Flag_Query(kFlagMcCoyIsHelpingReplicants))  {				
+					Actor_Says(kActorMcCoy, 2755, 15); //00-2755.AUD	You all right? You look a little pale.
+					Delay (2000);
+					Actor_Says(kActorCrazylegs, 1000, 12); //09-1000.AUD	I got customers on the line, so I ain’t got time to chit chat.
+					Actor_Set_Goal_Number(kActorCrazylegs, kGoalCrazyLegsLeavesShowroom);
+					Actor_Says(kActorMcCoy, 8955, 16); //00-8955.AUD	Stop!
+					Actor_Set_Targetable(kActorCrazylegs, true);
+					Player_Set_Combat_Mode(true);
+					Player_Gains_Control();
+				} else {
+					Delay(1000);
+					Actor_Says(kActorMcCoy, 3690, 14); //00-3690.AUD	Look. I wanna warn you. There’s a woman looking for you and your friends.
+					Delay(1000);
+					Actor_Says(kActorMcCoy, 6720, 18); //00-6720.AUD	Watch your back.
+					Actor_Says(kActorCrazylegs, 610, 14); //09-0610.AUD	I gotta get my priorities straight. You’re right.
+					Actor_Says(kActorMcCoy, 2860, 14);                  // YouTakeCareOfYourself
+					Actor_Set_Friendliness_To_Other(kActorCrazylegs, kActorMcCoy, 60);
 				}
+			} else {
 				Actor_Says(kActorCrazylegs, 580, kAnimationModeTalk);
 				Actor_Says(kActorCrazylegs, 590, 15); //09-0590.AUD	You like that Bishy Caddy, right? I’ll give it to you at the absolute lowest price.
 				Actor_Says(kActorMcCoy, 1990, 17);
@@ -1226,6 +1261,15 @@ void SceneScriptHF05::dialogueWithCrazylegs2() { // Restored feature - Original:
 					Actor_Change_Animation_Mode(kActorCrazylegs, 23);
 					Delay(800);
 					Item_Pickup_Spin_Effect_From_Actor(kModelAnimationSpinnerKeys, kActorMcCoy, 0, 0);
+					Delay(1000);
+					Actor_Says(kActorMcCoy, 1980, 23); //00-1980.AUD	Give me your phone.
+					Actor_Change_Animation_Mode(kActorMcCoy, 23);
+					Actor_Change_Animation_Mode(kActorCrazylegs, 23);
+					Delay(2000);
+					if (Player_Query_Agenda() != kPlayerAgendaSurly 
+					|| Player_Query_Agenda() != kPlayerAgendaErratic) {
+						Actor_Says(kActorMcCoy, 1985, kAnimationModeTalk); //00-1985.AUD	I’ll try to clear it so you aren’t stuck in a cell with fifty mutant speed loaders
+					}
 					Delay(1000);
 					// Made it so you receive the Crazylegs grovels clue.
 					Actor_Clue_Acquire(kActorMcCoy, kClueCrazylegGrovels, true, kActorCrazylegs);
@@ -1297,7 +1341,7 @@ void SceneScriptHF05::dialogueWithCrazylegs2() { // Restored feature - Original:
 			Actor_Modify_Friendliness_To_Other(kActorClovis, kActorMcCoy, 1);
 			Actor_Modify_Friendliness_To_Other(kActorSteele, kActorMcCoy, -1);
 			Actor_Modify_Friendliness_To_Other(kActorGuzza, kActorMcCoy, -1);
-			Game_Flag_Set(kFlagMcCoyIsHelpingReplicants);
+			Actor_Set_Friendliness_To_Other(kActorCrazylegs, kActorMcCoy, 60);
 		}
 	}
 }
@@ -1548,7 +1592,8 @@ void SceneScriptHF05::talkWithCrazylegs3(int affectionTowardsActor) {
 		// Made it so Crazylegs only says this line if you talked to him about Dektora.
 		if (_vm->_cutContent) {
 			if (Actor_Query_Is_In_Current_Set(kActorDektora)) {
-				if (Actor_Clue_Query(kActorMcCoy, kClueCrazylegsInterview1)) {
+				if (Actor_Clue_Query(kActorMcCoy, kClueCrazylegsInterview1)
+				&& !Game_Flag_Query(kFlagCrazylegsIsReplicant)) {
 					Actor_Says(kActorCrazylegs, 10, 12); //09-0010.AUD	Wait a minute, I thought you was going to arrest her.
 					if (Player_Query_Agenda() == kPlayerAgendaSurly 
 					|| Player_Query_Agenda() == kPlayerAgendaErratic) {
@@ -1567,10 +1612,14 @@ void SceneScriptHF05::talkWithCrazylegs3(int affectionTowardsActor) {
 		Actor_Says(kActorMcCoy, 1725, kAnimationModeTalk); //00-1725.AUD	I gotta take it for a test drive.
 		if (_vm->_cutContent) {
 			if (Actor_Query_Friendliness_To_Other(kActorCrazylegs, kActorMcCoy) > 49) {
-				Actor_Says(kActorCrazylegs, 40, 16); //09-0040.AUD	Ray, I-- I always liked you…
-				Actor_Says(kActorCrazylegs, 50, kAnimationModeTalk); //09-0050.AUD	True, I hardly know you. You seem like a stand up guy.
-				Actor_Says(kActorCrazylegs, 60, 12); //09-0060.AUD	Eventually, when this fiasco is all over and done with I--
-				Actor_Says(kActorCrazylegs, 70, 13); //09-0070.AUD	I know you’ll get me on the com, right?
+				if (Actor_Query_Friendliness_To_Other(kActorCrazylegs, kActorMcCoy) == 60) {
+					Actor_Says(kActorCrazylegs, 40, 16); //09-0040.AUD	Ray, I-- I always liked you…
+					Actor_Says(kActorCrazylegs, 50, kAnimationModeTalk); //09-0050.AUD	True, I hardly know you. You seem like a stand up guy.
+				} else {
+					Delay(1000);
+					Actor_Says(kActorCrazylegs, 60, 12); //09-0060.AUD	Eventually, when this fiasco is all over and done with I--
+					Actor_Says(kActorCrazylegs, 70, 13); //09-0070.AUD	I know you’ll get me on the com, right?
+				}
 				if (Player_Query_Agenda() != kPlayerAgendaSurly 
 				&& Player_Query_Agenda() != kPlayerAgendaErratic) {
 					Actor_Says(kActorMcCoy, 1730, kAnimationModeTalk); //00-1730.AUD	You’re a stand up guy, Crazy.
@@ -1628,9 +1677,7 @@ void SceneScriptHF05::talkWithCrazylegs3(int affectionTowardsActor) {
 					Actor_Says(kActorMcCoy, 8519, 13);//00-8519.AUD	What do you say we dish each other the straight goods.
 					Delay(2000);
 					Actor_Says(kActorMcCoy, 8445, 14); //00-8445.AUD	Cough it up!
-					Delay(1500);
-					Actor_Says(kActorMcCoy, 1805, 14); //00-1805.AUD	Now!
-					Delay(1000); 
+					Delay(1000);
 					Loop_Actor_Walk_To_Actor(kActorCrazylegs, kActorMcCoy, 28, false, false);
 					Player_Gains_Control();
 					Actor_Change_Animation_Mode(kActorMcCoy, 23);
@@ -1827,8 +1874,8 @@ void SceneScriptHF05::talkWithCrazyLegs1() {
 		Delay(1000);
 	}
 	Actor_Says(kActorCrazylegs, 170, kAnimationModeTalk); //09-0170.AUD	Admiring that Bishy Caddy, ain’t ya?
-	Actor_Says(kActorCrazylegs, 180, 12);
-	Actor_Says(kActorCrazylegs, 190, 14);
+	Actor_Says(kActorCrazylegs, 180, 12); //09-0180.AUD	I don’t blame you. It’s a classic ride in a deluxe sport package.
+	Actor_Says(kActorCrazylegs, 190, 14); //09-0190.AUD	It will push 125 without so much as a shake.
 	Actor_Says(kActorCrazylegs, 200, 15);
 	Actor_Says(kActorMcCoy, 1815, 12); //00-1815.AUD	That’s always the problem.
 	Actor_Says(kActorCrazylegs, 210, 16); //09-0210.AUD	Crazylegs Larry Hirsch. Pleased to meet ya.
@@ -1877,7 +1924,6 @@ void SceneScriptHF05::talkWithCrazyLegs1() {
 				Actor_Says(kActorMcCoy, 7860, 14); //00-7860.AUD	Stay right where you are.
 				Delay(1000);
 				Actor_Says(kActorMcCoy, 4680, 11); // 00-4680.AUD	We're gonna have a little chat.
-				Delay(1000);
 			} else if (Player_Query_Agenda() == kPlayerAgendaPolite) {
 				Actor_Says(kActorMcCoy, 4190, 13); //00-4190.AUD	Nice set of wheels.
 				Actor_Modify_Friendliness_To_Other(kActorCrazylegs, kActorMcCoy, 2);

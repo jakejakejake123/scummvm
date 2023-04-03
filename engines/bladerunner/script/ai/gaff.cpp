@@ -227,13 +227,13 @@ void AIScriptGaff::ClickedByPlayer() {
 				} else {
 					Actor_Says(kActorMcCoy, 8514, 14);//00-8514.AUD	Got anything new to tell me?
 				}
-				Actor_Says(kActorGaff, 320, 13); //53-0320.AUD	Someone said you've been earning your stripes, McCoy.
-				if (!Game_Flag_Query(kFlagMcCoyIsHelpingReplicants)) {
-					Actor_Says(kActorMcCoy, 6915, 14); //00-6915.AUD	Trying to.
-				} else {
-					Actor_Says(kActorMcCoy, 4880, 13); //00-4880.AUD	Is that right?
-				}
 				if (Actor_Query_Friendliness_To_Other(kActorGaff, kActorMcCoy) > 50) {
+					Actor_Says(kActorGaff, 320, 13); //53-0320.AUD	Someone said you've been earning your stripes, McCoy.
+					if (!Game_Flag_Query(kFlagMcCoyIsHelpingReplicants)) {
+						Actor_Says(kActorMcCoy, 6915, 14); //00-6915.AUD	Trying to.
+					} else {
+						Actor_Says(kActorMcCoy, 4880, 13); //00-4880.AUD	Is that right?
+					}
 					Actor_Says(kActorGaff, 330, 13); //53-0330.AUD	You just might have a future in this business.
 					if (!Game_Flag_Query(kFlagMcCoyIsHelpingReplicants)) {
 						Actor_Says(kActorMcCoy, 6920, 16); //00-6920.AUD	I like to hear that.
@@ -248,8 +248,6 @@ void AIScriptGaff::ClickedByPlayer() {
 							Actor_Says(kActorMcCoy, 8320, kAnimationModeTalk); //00-8320.AUD	Really?
 						}
 					}
-				}
-				if (Actor_Query_Friendliness_To_Other(kActorGaff, kActorMcCoy) > 50) {
 					Actor_Says(kActorGaff, 70, kAnimationModeTalk);
 				} else {
 					Actor_Says(kActorGaff, 190, kAnimationModeTalk); //53-0190.AUD	It's like I said before. You retire a human, your career is over.

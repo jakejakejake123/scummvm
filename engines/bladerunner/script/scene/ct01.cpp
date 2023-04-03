@@ -436,16 +436,31 @@ bool SceneScriptCT01::ClickedOnActor(int actorId) {
 					} else {
 						Actor_Says(kActorMcCoy, 7805, 13); //00-7805.AUD	Answer the question.
 					}
-					Actor_Says(kActorGordo, 440, 30);  //02-0440.AUD	Between you and me I hear they are all over the place down here.
-					Actor_Says(kActorGordo, 450, 30); //02-0450.AUD	You ought to call in a few more of the hunters to clear the place out.
-					Actor_Says(kActorMcCoy, 3280, 15); //00-3280.AUD	Hunter? Ain’t too often I hear ‘em called that.
-					Actor_Clue_Acquire(kActorMcCoy, kClueGordoInterview3, false, kActorGordo);
-					Delay(1000);
+					if (Actor_Query_Intelligence(kActorGordo) == 60) {
+						Actor_Says(kActorGordo, 440, 30);  //02-0440.AUD	Between you and me I hear they are all over the place down here.
+						Actor_Says(kActorGordo, 450, 30); //02-0450.AUD	You ought to call in a few more of the hunters to clear the place out.
+						Actor_Says(kActorMcCoy, 3280, 15); //00-3280.AUD	Hunter? Ain’t too often I hear ‘em called that.
+						Actor_Clue_Acquire(kActorMcCoy, kClueGordoInterview3, false, kActorGordo);
+						Delay(1000);
+					}
 				} else {
-					Actor_Says(kActorGordo, 430, 30);  //02-0430.AUD	She was one of those skin-jobs?
-					Actor_Says(kActorMcCoy, 1885, kAnimationModeTalk); //00-1885.AUD	I’ll take that as a yes.
-					Delay(1000);
-					Actor_Says(kActorMcCoy, 5150, 18); //00-5150.AUD	One more thing.
+					if (Game_Flag_Query(kFlagSadikIsReplicant)) {
+						if (Actor_Query_Intelligence(kActorGordo) == 60) {
+							Actor_Says(kActorGordo, 430, 30);  //02-0430.AUD	She was one of those skin-jobs?
+							Actor_Says(kActorMcCoy, 1885, kAnimationModeTalk); //00-1885.AUD	I’ll take that as a yes.
+							Delay(1000);
+							Actor_Says(kActorMcCoy, 5150, 18); //00-5150.AUD	One more thing.
+						} else if (Actor_Query_Intelligence(kActorGordo) == 80) {
+							Delay(1000);
+						}
+					} else {
+						Actor_Says(kActorGordo, 470, 17); //02-0470.AUD	I think I slept with her just last night!
+						Actor_Says(kActorMcCoy, 3285, 16);
+						Actor_Says(kActorGordo, 480, 13); //02-0480.AUD	Just kidding, baby. Tell you the truth
+						Actor_Says(kActorGordo, 380, 16); //02-0380.AUD	You are one hell of a suspicious cat, McCoy.
+						Delay(1000);
+						Actor_Says(kActorMcCoy, 5150, 18); //00-5150.AUD	One more thing.
+					}
 				}
 				Actor_Says(kActorGordo, 40, 30); //02-0040.AUD	Unfortunately, my man, I got to book.
 				// McCoy will now receive the Gordo interview 3 clue regardless of Gordos replicant status. I have added in several new scenes involving Gordo and one of
@@ -739,23 +754,34 @@ void SceneScriptCT01::PlayerWalkedIn() {
 				}
 				Delay (1000);
 				Game_Flag_Set(kFlagCT01Visit);
-				ADQ_Add(kActorDispatcher, 80, kAnimationModeTalk);		
+				ADQ_Add(kActorDispatcher, 80, kAnimationModeTalk); //38-0080.AUD	31, Sector 3, LA.	
 				if (Game_Flag_Query(kFlagRC01PoliceDone)) {
-					ADQ_Add(kActorOfficerLeary, 340, kAnimationModeTalk);  // sector 3 - go ahead
+					if (Actor_Query_Intelligence(kActorOfficerLeary) == 60) {
+						ADQ_Add(kActorOfficerLeary, 340, kAnimationModeTalk);  // sector 3 - go ahead
+					}
 				} else {
-					ADQ_Add(kActorOfficerGrayford, 360, kAnimationModeTalk);  // sector 3 - go ahead
+					if (Actor_Query_Intelligence(kActorOfficerGrayford) == 50) {
+						ADQ_Add(kActorOfficerGrayford, 360, kAnimationModeTalk);  // sector 3 - go ahead
+					}
 				}
-				ADQ_Add(kActorDispatcher, 90, kAnimationModeTalk);
-				ADQ_Add(kActorDispatcher, 100, kAnimationModeTalk);
-				ADQ_Add(kActorDispatcher, 110, kAnimationModeTalk);
+				if (Actor_Query_Intelligence(kActorOfficerLeary) == 60
+				|| Actor_Query_Intelligence(kActorOfficerLeary) == 50) { 
+					ADQ_Add(kActorDispatcher, 90, kAnimationModeTalk);
+					ADQ_Add(kActorDispatcher, 100, kAnimationModeTalk);
+					ADQ_Add(kActorDispatcher, 110, kAnimationModeTalk);
+				}
 				if (Game_Flag_Query(kFlagRC01PoliceDone)) {
-					ADQ_Add(kActorOfficerLeary, 350, kAnimationModeTalk);  // sector 3 - responding code 3
-					Game_Flag_Set(kFlagLearyChecksCar);
+					if (Actor_Query_Intelligence(kActorOfficerLeary) == 60) {
+						ADQ_Add(kActorOfficerLeary, 350, kAnimationModeTalk);  // sector 3 - responding code 3
+						Game_Flag_Set(kFlagLearyChecksCar);
+					}
 				} else {
-					ADQ_Add(kActorOfficerGrayford, 370, kAnimationModeTalk);  // sector 3 - responding code 3
+					if (Actor_Query_Intelligence(kActorOfficerGrayford) == 50) {
+						ADQ_Add(kActorOfficerGrayford, 370, kAnimationModeTalk);  // sector 3 - responding code 3
+					}
 				}
 				ADQ_Add_Pause(1000);
-				ADQ_Add(kActorDispatcher, 120, kAnimationModeTalk);
+				ADQ_Add(kActorDispatcher, 120, kAnimationModeTalk); //38-0120.AUD	All units stand by for emergency traffic.
 				ADQ_Add(kActorDispatcher, 130, kAnimationModeTalk);
 				ADQ_Add(kActorDispatcher, 140, kAnimationModeTalk);
 				ADQ_Add(kActorDispatcher, 150, kAnimationModeTalk);

@@ -358,13 +358,17 @@ void SceneScriptDR01::PlayerWalkedIn() {
 					}  
 					Game_Flag_Set(kFlagDR01Visited);
 					ADQ_Add(kActorDispatcher, 170, kAnimationModeTalk);	//38-0170.AUD	Any Second Sector unit in position. Report of a possible jumper on the old 405 ped crossing at Jackson.
-					ADQ_Add(kActorOfficerLeary, 260, kAnimationModeTalk); //23-0260.AUD	LA, 38 Metro 3. Copied. Responding with an ETA momentarily.
-					ADQ_Add(kActorDispatcher, 470, kAnimationModeTalk); //38-0470.AUD	38 Metro 3. 10-4. LA copy. 10-97 in Code 4.
-					ADQ_Add(kActorOfficerGrayford, 470, kAnimationModeTalk); //24-0470.AUD	LA, 24 Metro 2. Copied. ETA thirty seconds.
-					ADQ_Add_Pause(1000);
-					ADQ_Add(kActorDispatcher, 200, kAnimationModeTalk); //38-0200.AUD	24, Metro 2, LA. Confirming ETA 30 seconds...?
-					ADQ_Add(kActorOfficerGrayford, 480, kAnimationModeTalk); //24-0480.AUD	LA, 24 Metro 2. That’s affirmative. You call, I answer.
-					ADQ_Add(kActorDispatcher, 210, kAnimationModeTalk); //38-0210.AUD	10-4. Mr Johnny on the spot.	
+					if (Actor_Query_Intelligence(kActorOfficerLeary) == 60) {
+						ADQ_Add(kActorOfficerLeary, 260, kAnimationModeTalk); //23-0260.AUD	LA, 38 Metro 3. Copied. Responding with an ETA momentarily.
+						ADQ_Add(kActorDispatcher, 470, kAnimationModeTalk); //38-0470.AUD	38 Metro 3. 10-4. LA copy. 10-97 in Code 4.
+					}
+					if (Actor_Query_Intelligence(kActorOfficerGrayford) == 50) {
+						ADQ_Add(kActorOfficerGrayford, 470, kAnimationModeTalk); //24-0470.AUD	LA, 24 Metro 2. Copied. ETA thirty seconds.
+						ADQ_Add_Pause(1000);
+						ADQ_Add(kActorDispatcher, 200, kAnimationModeTalk); //38-0200.AUD	24, Metro 2, LA. Confirming ETA 30 seconds...?
+						ADQ_Add(kActorOfficerGrayford, 480, kAnimationModeTalk); //24-0480.AUD	LA, 24 Metro 2. That’s affirmative. You call, I answer.
+						ADQ_Add(kActorDispatcher, 210, kAnimationModeTalk); //38-0210.AUD	10-4. Mr Johnny on the spot.	
+					}
 				}			
 			}
 		}

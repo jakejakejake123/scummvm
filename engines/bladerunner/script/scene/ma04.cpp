@@ -477,33 +477,31 @@ void SceneScriptMA04::phoneCallWithDektora() {
 	// With the new requirements I've added it can be possible for the player to reach this part without having the flag set.
 	// So I have set it here and also for Clovis and Lucys phone calls just to be safe.
 	Actor_Says(kActorDektora, 220, 3);
-	Actor_Says(kActorMcCoy, 2460, 0); 
+	Actor_Says(kActorMcCoy, 2460, 0);  //00-2460.AUD	Yeah.
+	Actor_Says(kActorDektora, 230, 3); //03-0230.AUD	Look, I think I got Clovis and Sadik to let you alone.
+	Actor_Says(kActorDektora, 240, 3);
 	if (_vm->_cutContent) {
-		if (Actor_Query_Friendliness_To_Other(kActorClovis, kActorMcCoy) > 50
-		&& !Game_Flag_Query(kFlagMcCoyRetiredReplicant)) {
-			Actor_Says(kActorDektora, 230, 3); //03-0230.AUD	Look, I think I got Clovis and Sadik to let you alone.
-			Actor_Says(kActorDektora, 240, 3);
-			if (Actor_Clue_Query(kActorMcCoy, kClueCrystalsCigarette)) { 
-				Actor_Says(kActorMcCoy, 2465, 0);
-				Actor_Says(kActorDektora, 250, 3); //03-0250.AUD	What’s the matter?
-				Actor_Says_With_Pause(kActorMcCoy, 2470, 1.5f, 17);
-				if (!Game_Flag_Query(kFlagDektoraIsReplicant)) {
-					Actor_Says(kActorDektora, 260, 3);
-					if (Player_Query_Agenda() != kPlayerAgendaPolite) {
-						Actor_Says(kActorMcCoy, 2475, 15); //00-2475.AUD	Not it. Her! Maggie.
-					} else {
-						Actor_Says(kActorMcCoy, 2460, 15); //00-2460.AUD	Yeah.
-					}
-				} 
+		if (Actor_Clue_Query(kActorMcCoy, kClueCrystalsCigarette)) { 	
+			Actor_Says(kActorMcCoy, 2465, 0);
+			Actor_Says(kActorDektora, 250, 3); //03-0250.AUD	What’s the matter?
+			Actor_Says_With_Pause(kActorMcCoy, 2470, 1.5f, 17);
+			if (!Game_Flag_Query(kFlagDektoraIsReplicant)) {
+				Actor_Says(kActorDektora, 260, 3);
+				if (Player_Query_Agenda() != kPlayerAgendaPolite) {
+					Actor_Says(kActorMcCoy, 2475, 15); //00-2475.AUD	Not it. Her! Maggie.
+				} else {
+					Actor_Says(kActorMcCoy, 2460, 15); //00-2460.AUD	Yeah.
+				}
+			} 
+			if (Actor_Query_Friendliness_To_Other(kActorClovis, kActorMcCoy) > 50
+			&& !Game_Flag_Query(kFlagMcCoyRetiredReplicant)) {
 				Actor_Says(kActorDektora, 270, 3); //03-0270.AUD	Clovis didn’t do it. I’m sure of that.
 				Actor_Says(kActorMcCoy, 2480, 0); //00-2480.AUD	No kidding.
-			} else {
-				Actor_Says(kActorMcCoy, 4880, 13); //00-4880.AUD	Is that right?
 			}
+		} else {
+			Actor_Says(kActorMcCoy, 4880, 13); //00-4880.AUD	Is that right?
 		}
 	} else {
-		Actor_Says(kActorDektora, 230, 3); //03-0230.AUD	Look, I think I got Clovis and Sadik to let you alone.
-		Actor_Says(kActorDektora, 240, 3);
 		Actor_Says(kActorMcCoy, 2465, 0);
 		Actor_Says(kActorDektora, 250, 3); //03-0250.AUD	What’s the matter?
 		Actor_Says(kActorDektora, 260, 3);
@@ -536,12 +534,19 @@ void SceneScriptMA04::phoneCallWithDektora() {
 			Actor_Says(kActorMcCoy, 2750, kAnimationModeTalk); //00-2750.AUD	Okay, I get the picture.
 		}
 	} 
-	Actor_Says(kActorDektora, 340, 3);
-	Actor_Says(kActorDektora, 350, 3);
+	if (_vm->_cutContent) {
+		if (Actor_Query_Intelligence(kActorDektora) == 90) {
+			Actor_Says(kActorDektora, 340, 3); //03-0340.AUD	But there’s another way. Why don’t you and I just go away from here?
+			Actor_Says(kActorDektora, 350, 3);
+		}
+	} else {
+		Actor_Says(kActorDektora, 340, 3); //03-0340.AUD	But there’s another way. Why don’t you and I just go away from here?
+		Actor_Says(kActorDektora, 350, 3);
+	}
 	if (_vm->_cutContent) {
 		if (!Game_Flag_Query(kFlagCrazylegsArrested)
 		&& Actor_Query_Goal_Number(kActorCrazylegs) != kGoalCrazyLegsLeavesShowroom
-		&& Player_Query_Agenda() != kPlayerAgendaPolite 
+		&& Actor_Query_Intelligence(kActorDektora) == 90 
 		&& !Actor_Clue_Query(kActorDektora, kClueMcCoyRetiredZuben)
 		&& !Actor_Clue_Query(kActorDektora, kClueMcCoyRetiredLucy)
 		&& !Actor_Clue_Query(kActorDektora, kClueMcCoyRetiredGordo)
@@ -621,7 +626,8 @@ void SceneScriptMA04::phoneCallWithDektora() {
 		Actor_Says_With_Pause(kActorMcCoy, 2505, 0.5f, 19);
 		Actor_Says(kActorDektora, 430, 3); //03-0430.AUD	He’s been struggling out in the Kipple. Trying to get the moonbus fixed.
 		if (_vm->_cutContent) {
-			if (Game_Flag_Query(kFlagDektoraIsReplicant)) {
+			if (Game_Flag_Query(kFlagDektoraIsReplicant)
+			&& Actor_Query_Intelligence(kActorSadik) == 70) {
 				Actor_Says(kActorDektora, 440, 3); //03-0440.AUD	If you could help repair it, maybe we can all leave together.
 			}
 		} else {
@@ -708,7 +714,7 @@ void SceneScriptMA04::phoneCallWithLucy() {
 	if (_vm->_cutContent) {
 		if (!Game_Flag_Query(kFlagCrazylegsArrested)
 		&& Actor_Query_Goal_Number(kActorCrazylegs) != kGoalCrazyLegsLeavesShowroom
-		&& Player_Query_Agenda() != kPlayerAgendaPolite 
+		&& Actor_Query_Intelligence(kActorLucy) == 70
 		&& !Actor_Clue_Query(kActorLucy, kClueMcCoyRetiredZuben)
 		&& !Actor_Clue_Query(kActorLucy, kClueMcCoyRetiredDektora)
 		&& !Actor_Clue_Query(kActorLucy, kClueMcCoyRetiredGordo)
@@ -824,9 +830,9 @@ void SceneScriptMA04::phoneCallWithSteele() {
 		Actor_Says(kActorSteele, 690, 3);
 		Actor_Says(kActorMcCoy, 2635, 18);
 	}
-	Actor_Says(kActorSteele, 700, 3);
+	Actor_Says(kActorSteele, 700, 3); //01-0700.AUD	I got a line on where the skin-jobs are holing up.
 	Actor_Says(kActorMcCoy, 2640, 14); //00-2640.AUD	Not the Yukon?
-	Actor_Says(kActorSteele, 710, 3);
+	Actor_Says(kActorSteele, 710, 3); //01-0710.AUD	Yesterdays news. Remember Gaff was talking about that moonbus massacre?
 	Actor_Says(kActorSteele, 720, 3); //01-0720.AUD	I found out where they crash-landed it. And five will get you ten they’ll be licking their wounds there.
 	if (_vm->_cutContent) {
 		if (!Game_Flag_Query(kFlagMcCoyIsHelpingReplicants)) {
@@ -933,8 +939,8 @@ void SceneScriptMA04::phoneCallWithClovis() {
 			Actor_Says(kActorMcCoy, 8305, 18); //00-8305.AUD	I think so.
 			Actor_Says(kActorClovis, 370, 3); //05-0370.AUD	(laughs) I’m calling to apologize, brother. I should have never recruited Guzza against you. I just had to make sure that you weren’t going to betray us.
 			Actor_Says(kActorMcCoy, 2595, 15); //00-2595.AUD	Guzza probably thought that he recruited you.
-			Actor_Says(kActorClovis, 390, 3); 
-			Actor_Says(kActorClovis, 400, 3); 
+			Actor_Says(kActorClovis, 390, 3); //05-0390.AUD	To be honest we had a sort of eh… business relationship
+			Actor_Says(kActorClovis, 400, 3); //05-0400.AUD	where our different interests converge.
 			Actor_Says(kActorClovis, 410, 3); //05-0410.AUD	But he was never to be trusted. Unlike you.
 			if (Player_Query_Agenda() != kPlayerAgendaSurly 
 			&& Player_Query_Agenda() != kPlayerAgendaErratic) {
@@ -974,24 +980,13 @@ void SceneScriptMA04::phoneCallWithClovis() {
 	Actor_Says(kActorClovis, 450, 3); //05-0450.AUD	Guzza must have programmed you as an experiment.
 	Actor_Says(kActorClovis, 460, 3); //05-0460.AUD	To see if you could really act as one of them.
 	Actor_Says(kActorClovis, 470, 3); //05-0470.AUD	He wiped out all your memories of our time together.
-	if (_vm->_cutContent) {
-		if (Actor_Query_Friendliness_To_Other(kActorClovis, kActorMcCoy) > 50
-		&& !Game_Flag_Query(kFlagMcCoyRetiredReplicant)) {
-			Actor_Says(kActorClovis, 480, 3); //05-0480.AUD	As soldiers during the Phobos wars.
-			Actor_Says(kActorClovis, 490, 3); //05-0490.AUD	The battle of the Gemini. Firefights on the top of the Olympus Mountains!
-		}
-	} else {
-		Actor_Says(kActorClovis, 480, 3); //05-0480.AUD	As soldiers during the Phobos wars.
-		Actor_Says(kActorClovis, 490, 3); //05-0490.AUD	The battle of the Gemini. Firefights on the top of the Olympus Mountains!
-	}
+	Actor_Says(kActorClovis, 480, 3); //05-0480.AUD	As soldiers during the Phobos wars.
+	Actor_Says(kActorClovis, 490, 3); //05-0490.AUD	The battle of the Gemini. Firefights on the top of the Olympus Mountains!
 	Actor_Says(kActorMcCoy, 2615, 17); //00-2615.AUD	I don’t remember.
 	//Restored some dialogue for the phone call.
 	if (_vm->_cutContent) {
-		if (Actor_Query_Friendliness_To_Other(kActorClovis, kActorMcCoy) > 50
-		&& !Game_Flag_Query(kFlagMcCoyRetiredReplicant)) {
-			Actor_Says(kActorClovis, 1230, 3); //05-1230.AUD	That’s what I remember.
-			Actor_Says(kActorMcCoy, 8565, 13); //00-8565.AUD	Really?
-		}
+		Actor_Says(kActorClovis, 1230, 3); //05-1230.AUD	That’s what I remember.
+		Actor_Says(kActorMcCoy, 8565, 13); //00-8565.AUD	Really?
 	}
 	Actor_Says(kActorClovis, 500, 3); //05-0500.AUD	But if you dig real deep and feel, you’ll know what’s real.
 	if (_vm->_cutContent) {

@@ -129,7 +129,6 @@ bool SceneScriptHC01::ClickedOnActor(int actorId) {
 				if (_vm->_cutContent) {
 					if (Player_Query_Agenda() != kPlayerAgendaPolite) {	
 						Actor_Says(kActorMcCoy, 4560, 23); //00-4560.AUD	McCoy, LPD.
-						Actor_Says(kActorMcCoy, 8920, 14); //00-8920.AUD	I gotta ask you a question.
 					} else {
 						Actor_Says(kActorMcCoy, 1280, 23); //00-1280.AUD	McCoy, LPD. Mind if I ask you a couple of questions?
 					}
@@ -143,8 +142,10 @@ bool SceneScriptHC01::ClickedOnActor(int actorId) {
 							Actor_Says(kActorMcCoy, 4880, 13); //00-4880.AUD	Is that right?
 						}
 						Actor_Says_With_Pause(kActorIzo, 30, 0.2f, 17); //07-0030.AUD	I don't encourage browsers.
-						Actor_Says_With_Pause(kActorIzo, 40, 0.0f, 13); //07-0040.AUD	What impresses me are people who know what they want
-						Actor_Says(kActorIzo, 50, 12); //07-0050.AUD	and are not afraid to pay for it.
+						if (Actor_Query_Intelligence(kActorIzo) == 85) {
+							Actor_Says_With_Pause(kActorIzo, 40, 0.0f, 13); //07-0040.AUD	What impresses me are people who know what they want
+							Actor_Says(kActorIzo, 50, 12); //07-0050.AUD	and are not afraid to pay for it.
+						}
 						Actor_Says(kActorMcCoy, 8320, 13); // 00-8320.AUD	Really?
 						Actor_Says(kActorIzo, 80, 18); //07-0080.AUD	Everything here is guaranteed. The finest most authentic anyone can get.
 						if (Player_Query_Agenda() == kPlayerAgendaSurly 
@@ -155,9 +156,13 @@ bool SceneScriptHC01::ClickedOnActor(int actorId) {
 							Actor_Modify_Friendliness_To_Other(kActorIzo, kActorMcCoy, -2);
 						} else {
 							Actor_Says_With_Pause(kActorMcCoy, 1040, 1.2f, 13); //00-1040.AUD	What's the most expensive thing you got in here?
-							Actor_Says(kActorIzo, 60, 16); //07-0060.AUD	Value is a relative notion.
-							Actor_Says_With_Pause(kActorIzo, 70, 1.0f, 13); //07-0070.AUD	What's significant to you might be meaningless to me.
-							Actor_Says_With_Pause(kActorMcCoy, 1045, 0.6f, 14); //00-1045.AUD	And vice versa.
+							if (Actor_Query_Intelligence(kActorIzo) == 85) {	
+								Actor_Says(kActorIzo, 60, 16); //07-0060.AUD	Value is a relative notion.
+								Actor_Says_With_Pause(kActorIzo, 70, 1.0f, 13); //07-0070.AUD	What's significant to you might be meaningless to me.
+								Actor_Says_With_Pause(kActorMcCoy, 1045, 0.6f, 14); //00-1045.AUD	And vice versa.
+							} else if (Actor_Query_Intelligence(kActorIzo) == 65) {
+								Actor_Says(kActorIzo, 80, 18); //07-0080.AUD	Everything here is guaranteed. The finest most authentic anyone can get.
+							}
 						}
 					} else {
 						Delay (1000);
@@ -171,12 +176,14 @@ bool SceneScriptHC01::ClickedOnActor(int actorId) {
 						} else {
 							Actor_Says(kActorMcCoy, 7940, 13); //00-7940.AUD	Right.
 							Delay(500);
-							Actor_Says(kActorMcCoy, 3415, kAnimationModeTalk); //00-3415.AUD	Let’s hear what you got.
-							Actor_Says(kActorIzo, 80, 18); //07-0080.AUD	Everything here is guaranteed. The finest most authentic anyone can get.
 							Actor_Says_With_Pause(kActorMcCoy, 1040, 1.2f, 13); //00-1040.AUD	What's the most expensive thing you got in here?
-							Actor_Says(kActorIzo, 60, 16); //07-0060.AUD	Value is a relative notion.
-							Actor_Says_With_Pause(kActorIzo, 70, 1.0f, 13); //07-0070.AUD	What's significant to you might be meaningless to me.
-							Actor_Says_With_Pause(kActorMcCoy, 1045, 0.6f, 14); //00-1045.AUD	And vice versa.
+							if (Actor_Query_Intelligence(kActorIzo) > 75) {	
+								Actor_Says(kActorIzo, 60, 16); //07-0060.AUD	Value is a relative notion.
+								Actor_Says_With_Pause(kActorIzo, 70, 1.0f, 13); //07-0070.AUD	What's significant to you might be meaningless to me.
+								Actor_Says_With_Pause(kActorMcCoy, 1045, 0.6f, 14); //00-1045.AUD	And vice versa.
+							} else if (Actor_Query_Intelligence(kActorIzo) == 65) {
+								Actor_Says(kActorIzo, 80, 18); //07-0080.AUD	Everything here is guaranteed. The finest most authentic anyone can get.
+							}
 						}		
 					}
 				} else {
@@ -372,14 +379,15 @@ void SceneScriptHC01::DialogueQueueFlushed(int a1) {
 void SceneScriptHC01::dialogueWithIzo() {
 	if (!Game_Flag_Query(kFlagHC01IzoTalk2)) {
 		Actor_Says(kActorMcCoy, 1055, 13);
-		Actor_Says(kActorIzo, 130, 13);
 		if (_vm->_cutContent) {
+			Actor_Says(kActorIzo, 130, 13);
 			if (Player_Query_Agenda() != kPlayerAgendaPolite) {
 				Actor_Says_With_Pause(kActorMcCoy, 1060, 0.2f, 13); //00-1060.AUD	Doesn't matter. I don't read anyhow. What's your name?
 			} else {
 				Actor_Says(kActorMcCoy, 7395, 13); //00-7395.AUD	What's your name?
 			}
 		} else {
+			Actor_Says(kActorIzo, 130, 13);
 			Actor_Says_With_Pause(kActorMcCoy, 1060, 0.2f, 13); //00-1060.AUD	Doesn't matter. I don't read anyhow. What's your name?
 		}
 		Actor_Says(kActorIzo, 140, 13);
@@ -453,11 +461,19 @@ void SceneScriptHC01::dialogueWithIzo() {
 	if (Dialogue_Menu_Query_List_Size() == 0) {
 		Actor_Says_With_Pause(kActorMcCoy, 1105, 1.2f, 13);
 		if (Actor_Query_Friendliness_To_Other(kActorIzo, kActorMcCoy) < 50) {
-			Actor_Says(kActorIzo, 550, 15);
 			if (_vm->_cutContent) {
-				Actor_Says(kActorMcCoy, 1220, 14); // you can bet...
-				Actor_Says(kActorIzo, 560, kAnimationModeTalk); // i'll be here
+				if (Game_Flag_Query(kFlagIzoIsReplicant)) {
+					Actor_Says(kActorIzo, 550, 15);
+				} else {
+					Delay(2000);
+					Actor_Says(kActorMcCoy, 8395, 18); //00-8395.AUD	You don't have anything to say?
+					Delay(1000);
+				}
+			} else {
+				Actor_Says(kActorIzo, 550, 15);
 			}
+			Actor_Says(kActorMcCoy, 1220, 14); // you can bet...
+			Actor_Says(kActorIzo, 560, kAnimationModeTalk); // i'll be here
 		} else {
 			Actor_Says(kActorIzo, 250, 13);
 			Actor_Modify_Friendliness_To_Other(kActorIzo, kActorMcCoy, -1);
@@ -487,17 +503,20 @@ void SceneScriptHC01::dialogueWithIzo() {
 				Actor_Says(kActorMcCoy, 1070, 13); //00-1070.AUD	Ever see this piece? Real elite stuff.
 			}
 			if (_vm->_cutContent) { 
-				if (Actor_Query_Friendliness_To_Other(kActorIzo, kActorMcCoy) < 50
-				|| Game_Flag_Query(kFlagIzoIsReplicant)) {
+				if (Actor_Query_Intelligence(kActorIzo) == 85) {
 					Actor_Says(kActorIzo, 150, kAnimationModeTalk); //07-0150.AUD	Not for many years. You should try elsewhere.
 				} else {
-					Actor_Says(kActorIzo, 200, 17);
-					Actor_Says(kActorIzo, 210, 12);
-					Actor_Says(kActorMcCoy, 1115, 12);
-					Actor_Says(kActorIzo, 220, 16);
-					Actor_Says(kActorIzo, 230, kAnimationModeTalk);
-					Actor_Says(kActorIzo, 240, 15);
-					Actor_Clue_Acquire(kActorMcCoy, kClueIzoInterview, false, kActorIzo);
+					if (Actor_Query_Friendliness_To_Other(kActorIzo, kActorMcCoy) > 49) {
+						Actor_Says(kActorIzo, 200, 17);
+						Actor_Says(kActorIzo, 210, 12);
+						Actor_Says(kActorMcCoy, 1115, 12);
+						Actor_Says(kActorIzo, 220, 16);
+						Actor_Says(kActorIzo, 230, kAnimationModeTalk);
+						Actor_Says(kActorIzo, 240, 15);
+						Actor_Clue_Acquire(kActorMcCoy, kClueIzoInterview, false, kActorIzo);
+					} else {
+						Actor_Says(kActorIzo, 150, kAnimationModeTalk); //07-0150.AUD	Not for many years. You should try elsewhere.
+					}
 				}
 			} else {
 				Actor_Says(kActorIzo, 200, 17);
@@ -515,13 +534,13 @@ void SceneScriptHC01::dialogueWithIzo() {
 		if (answer == 1020) { // DRAGONFLY JEWERLY
 			Dialogue_Menu_Remove_From_List(1020);
 			Actor_Says(kActorMcCoy, 1065, 15); //00-1065.AUD	You move a lot of valuable goods through here? Valuable and exotic?
-			if (_vm->_cutContent) { 
+			Actor_Says(kActorIzo, 160, kAnimationModeTalk); //07-0160.AUD	How exotic?
+			Actor_Says(kActorMcCoy, 1110, 16);
+			if (_vm->_cutContent) { 	
 				if (Actor_Query_Friendliness_To_Other(kActorIzo, kActorMcCoy) < 50
 				|| Game_Flag_Query(kFlagIzoIsReplicant)) {
 					Actor_Says(kActorIzo, 150, kAnimationModeTalk); //07-0150.AUD	Not for many years. You should try elsewhere.
 				} else {
-					Actor_Says(kActorIzo, 160, kAnimationModeTalk); //07-0160.AUD	How exotic?
-					Actor_Says(kActorMcCoy, 1110, 16);
 					Actor_Says(kActorIzo, 170, kAnimationModeTalk); //07-0170.AUD	Ah, they were so majestic.
 					Actor_Says(kActorIzo, 180, kAnimationModeTalk); //07-0180.AUD	I remember them from my childhood.
 					Actor_Says(kActorIzo, 190, 12); //07-0190.AUD	And that was the last time I've seen them.
@@ -590,8 +609,7 @@ void SceneScriptHC01::dialogueWithIzo() {
 				Actor_Says(kActorMcCoy, 1135, 15); //00-1135.AUD	Big difference.
 			}
 			if (_vm->_cutContent) { 
-				if (Actor_Query_Friendliness_To_Other(kActorIzo, kActorMcCoy) > 49
-				&& !Game_Flag_Query(kFlagIzoIsReplicant)) {
+				if (Actor_Query_Friendliness_To_Other(kActorIzo, kActorMcCoy) > 49) {
 					Actor_Says(kActorIzo, 290, 15); //07-0290.AUD	There was a time when men operated with a code of honor
 					Actor_Says(kActorIzo, 300, 12); //07-0300.AUD	Guns and rifles weren't necessary.
 					Actor_Says(kActorIzo, 310, 17); //07-0310.AUD	The very presence of a sword was enough to ensure stability.
@@ -652,7 +670,6 @@ void SceneScriptHC01::dialogueWithIzo() {
 			Actor_Says(kActorMcCoy, 5480, 15); //00-5480.AUD	Look, just come along with me. You’re gonna have to take a little personality test.
 			Actor_Modify_Friendliness_To_Other(kActorIzo, kActorMcCoy, -2);	
 			Game_Flag_Reset(kFlagMcCoyIsHelpingReplicants);
-			Game_Flag_Set(kFlagIzoFled);
 			Game_Flag_Set(kFlagIzoOnTheRun);
 			takePhotoAndRunAway();
 			end = true;
@@ -725,10 +742,25 @@ void SceneScriptHC01::dialogueWithIzo() {
 			Dialogue_Menu_Remove_From_List(1060);
 			Actor_Says(kActorMcCoy, 1095, 15); //00-1095.AUD	You say everything's top-quality here.
 			Actor_Says_With_Pause(kActorMcCoy, 1100, 1.2f, 18); // That go for your old buddy Spencer Grigorian, too?
-			Actor_Says(kActorIzo, 450, 12); //07-0450.AUD	I met him a while back. He bought some calfskin gloves from me.
-			Actor_Says(kActorIzo, 460, 13); //07-0460.AUD	Said he wanted to do some gardening.
-			Actor_Says(kActorMcCoy, 1185, 18); // Calfskin?
-			Actor_Says(kActorIzo, 470, 14); //
+			if (_vm->_cutContent) {
+				if (Actor_Query_Intelligence(kActorIzo) == 65) {
+					Actor_Says(kActorIzo, 450, 12); //07-0450.AUD	I met him a while back. He bought some calfskin gloves from me.
+					Actor_Says(kActorIzo, 460, 13); //07-0460.AUD	Said he wanted to do some gardening.
+					Actor_Says(kActorMcCoy, 1185, 18); // Calfskin?
+					Actor_Says(kActorIzo, 470, 14); //
+				} else if (Actor_Query_Intelligence(kActorIzo) == 85) {
+					Delay(2000);
+					Actor_Says(kActorMcCoy, 1170, 12); //00-1170.AUD	What would you say if I told you Grigorian named you as one of the people who was there when the Tyrell Building blew up.
+					Actor_Says(kActorIzo, 400, 13); //07-0400.AUD	There's a mistake somewhere along the chain of communication.
+					Actor_Says(kActorMcCoy, 1180, 14); // So, you're denying all involvement?
+					Actor_Says(kActorIzo, 440, 13); //07-0440.AUD	I am nothing but a humble salesman.
+				}
+			} else {
+				Actor_Says(kActorIzo, 450, 12); //07-0450.AUD	I met him a while back. He bought some calfskin gloves from me.
+				Actor_Says(kActorIzo, 460, 13); //07-0460.AUD	Said he wanted to do some gardening.
+				Actor_Says(kActorMcCoy, 1185, 18); // Calfskin?
+				Actor_Says(kActorIzo, 470, 14); //
+			}
 			if (_vm->_cutContent) {
 				if (!Game_Flag_Query(kFlagGrigorianIsReplicant)) {
 					Actor_Says(kActorMcCoy, 1190, 14); //00-1190.AUD	Grigorian said you were thrown out of C.A.R.S. for having violent tendencies.

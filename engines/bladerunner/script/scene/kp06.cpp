@@ -106,12 +106,7 @@ bool SceneScriptKP06::ClickedOnActor(int actorId) {
 				Delay(800);
 				Actor_Says(kActorMcCoy, 8170, 11); //00-8170.AUD	There you go.
 			}
-			if (_vm->_cutContent) {
-				if (Actor_Query_Friendliness_To_Other(kActorClovis, kActorMcCoy) > 50
-				&& !Game_Flag_Query(kFlagMcCoyRetiredReplicant)) { 
-					Actor_Says(kActorSadik, 280, kAnimationModeTalk); //08-0280.AUD	You for real I’m thinking.
-				}
-			} else {
+			if (!_vm->_cutContent) {
 				Actor_Says(kActorSadik, 280, kAnimationModeTalk); //08-0280.AUD	You for real I’m thinking.
 			}
 			Actor_Says(kActorSadik, 290, kAnimationModeTalk); //08-0290.AUD	Go in. You see Clovis. He not got too much time left.
@@ -373,7 +368,7 @@ void SceneScriptKP06::PlayerWalkedIn() {
 					Game_Over();
 				} else {		
 					// Made it so Crystal or Gaff only mentions McCoy getting a promotion and having a lot of bonuses if he retires enough reps to earn 1500 chinyen.
-					if (Actor_Query_Friendliness_To_Other(kActorGaff, kActorMcCoy) > 59) {
+					if (Actor_Query_Friendliness_To_Other(kActorGaff, kActorMcCoy) > 60) {
 						Actor_Says(kActorSteele, 2550, 12); //01-2550.AUD	I think you got a promotion coming. Not to mention all those retirement bonuses.
 						Actor_Says(kActorMcCoy, 6205, 14); //00-6205.AUD	As long as I get something like… twenty hours of sleep in the process.
 					}
@@ -387,7 +382,7 @@ void SceneScriptKP06::PlayerWalkedIn() {
 					Music_Stop(1u);
 					Ambient_Sounds_Remove_All_Non_Looping_Sounds(true);
 					Ambient_Sounds_Remove_All_Looping_Sounds(1u);
-					if (Actor_Query_Friendliness_To_Other(kActorSteele, kActorMcCoy) > 59) {
+					if (Actor_Query_Friendliness_To_Other(kActorSteele, kActorMcCoy) > 60) {
 						Outtake_Play(kOuttakeEnd6, false, -1);
 					}
 					Game_Over();	
@@ -438,7 +433,7 @@ void SceneScriptKP06::PlayerWalkedIn() {
 						Actor_Says(kActorGaff, 250, 14);
 						Delay(1000);
 					}
-					if (Actor_Query_Friendliness_To_Other(kActorGaff, kActorMcCoy) > 59) {
+					if (Actor_Query_Friendliness_To_Other(kActorGaff, kActorMcCoy) > 60) {
 						Actor_Says(kActorGaff, 260, 12); //53-0260.AUD	Chief Bryant wants to talk to you. He says you're really ready now.
 						Actor_Says(kActorMcCoy, 6260, 15); //00-6260.AUD	It never ends, does it?
 						Actor_Says(kActorGaff, 270, 13); //53-0270.AUD	Uh-uh,  you're a real Blade Runner now. Full retirement bonuses and everything.
@@ -464,7 +459,7 @@ void SceneScriptKP06::PlayerWalkedIn() {
 						Async_Actor_Walk_To_Waypoint(kActorGaff, 551, 0, false);
 						Actor_Says(kActorGaff, 310, -1); //53-0310.AUD	Whatever you want to believe, McCoy.
 					} else { 
-						if (Actor_Query_Friendliness_To_Other(kActorGaff, kActorMcCoy) > 59) {
+						if (Actor_Query_Friendliness_To_Other(kActorGaff, kActorMcCoy) > 60) {
 							Actor_Says(kActorGaff, 300, 15); //53-0300.AUD	Buy yourself another animal maybe. A real one, not a Tyrell fake.
 							Actor_Says(kActorMcCoy, 6270, 11);
 							Async_Actor_Walk_To_Waypoint(kActorMcCoy, 550, 0, false);

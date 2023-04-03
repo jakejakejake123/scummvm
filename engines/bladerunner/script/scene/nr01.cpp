@@ -303,12 +303,16 @@ void SceneScriptNR01::PlayerWalkedIn() {
 			Game_Flag_Set(kFlagNR01Visited);
 			ADQ_Add(kActorDispatcher, 410, kAnimationModeTalk); //38-0410.AUD	Any Sector 3 unit in position. We have a 4-15 in progress between an unknown vendor and customer.
 			ADQ_Add(kActorDispatcher, 430, kAnimationModeTalk); //38-0430.AUD	The dispute is causing traffic problems in Nightclub Row.
-			ADQ_Add(kActorOfficerGrayford, 540, kAnimationModeTalk); //24-0540.AUD	LA, 38 Metro 3. Copied. Responding with an ETA momentarily.
-			ADQ_Add(kActorDispatcher, 440, kAnimationModeTalk); //38-0440.AUD	38, Metro 3, LA. Copy.
-			ADQ_Add(kActorDispatcher, 450, kAnimationModeTalk); //38-0450.AUD	Be advised. A second caller reports one of the parties is being a possible 51-50.
-			ADQ_Add(kActorDispatcher, 460, kAnimationModeTalk); //38-0460.AUD	Use extreme caution on approach.
-			ADQ_Add(kActorOfficerLeary, 330, kAnimationModeTalk); //23-0330.AUD	LA, 38 Metro 3. Copied. Be advised I'll be 10-98 from the scene.
-			ADQ_Add(kActorDispatcher, 470, kAnimationModeTalk); //38-0470.AUD	38 Metro 3. 10-4. LA copy. 10-97 in Code 4.	
+			if (Actor_Query_Intelligence(kActorOfficerLeary) == 60) {
+				ADQ_Add(kActorOfficerGrayford, 540, kAnimationModeTalk); //24-0540.AUD	LA, 38 Metro 3. Copied. Responding with an ETA momentarily.
+				ADQ_Add(kActorDispatcher, 440, kAnimationModeTalk); //38-0440.AUD	38, Metro 3, LA. Copy.
+				ADQ_Add(kActorDispatcher, 450, kAnimationModeTalk); //38-0450.AUD	Be advised. A second caller reports one of the parties is being a possible 51-50.
+				ADQ_Add(kActorDispatcher, 460, kAnimationModeTalk); //38-0460.AUD	Use extreme caution on approach.
+			}
+			if (Actor_Query_Intelligence(kActorOfficerGrayford) == 50) {
+				ADQ_Add(kActorOfficerLeary, 330, kAnimationModeTalk); //23-0330.AUD	LA, 38 Metro 3. Copied. Be advised I'll be 10-98 from the scene.
+				ADQ_Add(kActorDispatcher, 470, kAnimationModeTalk); //38-0470.AUD	38 Metro 3. 10-4. LA copy. 10-97 in Code 4.	
+			}
 		}
 	}
 
@@ -339,8 +343,6 @@ void SceneScriptNR01::PlayerWalkedIn() {
 			Ambient_Sounds_Play_Sound(kSfxSHOTGUN1, 97, 0, 0, 20);
 			Loop_Actor_Walk_To_XYZ(kActorMcCoy, -173.89, 24.15, -321.90, 0, false, true, false);
 			Actor_Face_Actor(kActorHanoi, kActorMcCoy, true);
-			Player_Set_Combat_Mode(true);
-			Delay(1000);
 			Actor_Face_Actor(kActorMcCoy, kActorHanoi, true);
 			Sound_Play(kSfxGUNH1A, 100, 0, 0, 50);
 			Actor_Change_Animation_Mode(kActorMcCoy, 6);
@@ -375,6 +377,21 @@ void SceneScriptNR01::PlayerWalkedIn() {
 			Sound_Play(kSfxSHOTCOK1, 77, 0, 0, 20);
 			Actor_Change_Animation_Mode(kActorMcCoy, 29);
 			Delay(1000);
+			Sound_Play(kSfxGUNH1A, 100, 0, 0, 50);
+			Actor_Change_Animation_Mode(kActorMcCoy, kAnimationModeCombatAim);
+			Actor_Change_Animation_Mode(kActorMcCoy, kAnimationModeCombatAttack);
+			Actor_Change_Animation_Mode(kActorHanoi, 21);
+			Delay(600);
+			Sound_Play(kSfxGUNH1A, 100, 0, 0, 50);
+			Actor_Change_Animation_Mode(kActorMcCoy, kAnimationModeCombatAim);
+			Actor_Change_Animation_Mode(kActorMcCoy, kAnimationModeCombatAttack);
+			Actor_Change_Animation_Mode(kActorHanoi, 21);
+			Delay(600);
+			Sound_Play(kSfxGUNH1A, 100, 0, 0, 50);
+			Actor_Change_Animation_Mode(kActorMcCoy, kAnimationModeCombatAim);
+			Actor_Change_Animation_Mode(kActorMcCoy, kAnimationModeCombatAttack);
+			Actor_Change_Animation_Mode(kActorHanoi, 21);
+			Delay(600);
 			Sound_Play(kSfxGUNH1A, 100, 0, 0, 50);
 			Actor_Change_Animation_Mode(kActorMcCoy, 6);
 			Actor_Change_Animation_Mode(kActorHanoi, 48);
@@ -415,15 +432,18 @@ void SceneScriptNR01::PlayerWalkedIn() {
 			if (Player_Query_Agenda() == kPlayerAgendaPolite) {
 				Player_Loses_Control();
 				Actor_Says(kActorGordo, 70, 81);
-				Actor_Says(kActorSteele, 990, kAnimationModeTalk);
-				Actor_Says(kActorGordo, 80, 82);
-				Actor_Says(kActorGordo, 90, 81);
-				Actor_Says(kActorSteele, 1010, kAnimationModeTalk);
-				Actor_Says(kActorGordo, 100, 81);
-				Actor_Says(kActorSteele, 1020, kAnimationModeTalk);
-				Actor_Says(kActorGordo, 110, 82);
-				Actor_Says(kActorSteele, 1030, kAnimationModeTalk);
-				Actor_Says(kActorSteele, 1040, kAnimationModeTalk);
+				Actor_Says(kActorSteele, 990, kAnimationModeTalk); //01-0990.AUD	You got nowhere to go, Gordo! You’re a Replicant.
+				Actor_Says(kActorGordo, 80, 82); //02-0080.AUD	Everyone’s a critic.
+				Actor_Says(kActorGordo, 90, 81); //02-0090.AUD	I’ve died on stage plenty of times. I’m used to it.
+				if (Actor_Query_Intelligence(kActorSteele) == 90) {
+					Actor_Says(kActorSteele, 1010, kAnimationModeTalk); //01-1010.AUD	Why don’t you let her go then?
+					Actor_Says(kActorGordo, 100, 81); //02-0100.AUD	I didn’t say I was ready.
+					Actor_Says(kActorSteele, 1020, kAnimationModeTalk); //01-1020.AUD	This is only gonna end one way, Gordo. You really wanna take an innocent with you?
+					Actor_Says(kActorGordo, 110, 82); //02-0110.AUD	Nobody’s innocent down here, lady.
+				} else if (Actor_Query_Intelligence(kActorSteele) == 70) {
+					Actor_Says(kActorSteele, 1030, kAnimationModeTalk); //01-1030.AUD	I’d rather lose her than the dozen I’d lose if I let you go.
+				}
+				Actor_Says(kActorSteele, 1040, kAnimationModeTalk); //01-1040.AUD	You’re a killer, pal. And you’re not gonna change. That’s how Tyrell build you.
 				Actor_Says(kActorGordo, 1400, 82); //02-1400.AUD	That old killer instinct? That was just a bonus. But, heck, you gotta have it, if you wanna work in this town.
 				Actor_Says(kActorGordo, 120, 81); //02-0120.AUD	An entertainer. That’s all I ever was. That’s all I ever wanted to be.
 				Actor_Says(kActorGordo, 130, 82); //02-0130.AUD	Curtain call time, baby.
@@ -443,11 +463,11 @@ void SceneScriptNR01::PlayerWalkedIn() {
 				Actor_Says(kActorSteele, 1160, 15); //01-1160.AUD	Dah! What the hell?! Now we’ll never catch it.
 				Player_Set_Combat_Mode(false);
 				Actor_Says(kActorMcCoy, 3035, 14); //00-3035.AUD	You were gonna shoot!
-				if (Actor_Query_Friendliness_To_Other(kActorSteele, kActorMcCoy) < 60) {
-					Actor_Says(kActorSteele, 1170, 16); //01-1170.AUD	Damn straight!
-					Actor_Says(kActorMcCoy, 3040, 15); //00-3040.AUD	What about the hostage?
+				Actor_Says(kActorSteele, 1170, 16); //01-1170.AUD	Damn straight!
+				Actor_Says(kActorMcCoy, 3040, 15); //00-3040.AUD	What about the hostage?
+				if (Actor_Query_Intelligence(kActorSteele) == 70) {
 					Actor_Says(kActorSteele, 1180, 16); //01-1180.AUD	A small price to pay to juice that skin-job.
-				} else {
+				} else if (Actor_Query_Intelligence(kActorSteele) == 90) {
 					Delay(1000);
 				}
 				Actor_Says(kActorMcCoy, 3045, 15); //00-3045.AUD	You think Bryant is gonna keep you on if you start wasting civilians in the middle of the street?
@@ -460,11 +480,13 @@ void SceneScriptNR01::PlayerWalkedIn() {
 					Delay(2000);
 				}
 				Actor_Says(kActorSteele, 1210, 14); //01-1210.AUD	We’d better call this in. Maybe we can seal off the sewers and get a search team out here. Your vehicle close by?
+				Actor_Clue_Acquire(kActorMcCoy, kClueMcCoyHelpedGordo, true, kActorSteele);
+				Actor_Clue_Acquire(kActorGordo, kClueMcCoyHelpedGordo, true, -1);
+				Game_Flag_Set(kFlagMcCoyIsHelpingReplicants);
 				Game_Flag_Set(kFlagGordoEscaped);
 				Actor_Modify_Friendliness_To_Other(kActorSteele, kActorMcCoy, -2);
 				Actor_Modify_Friendliness_To_Other(kActorClovis, kActorMcCoy, 2);
 				Actor_Modify_Friendliness_To_Other(kActorGuzza, kActorMcCoy, -2);
-				Player_Set_Combat_Mode(false);
 				Music_Stop(1u);
 				Player_Gains_Control();
 				Actor_Set_Goal_Number(kActorSteele, kGoalSteeleTalkAboutMissingSpinner);
@@ -473,11 +495,14 @@ void SceneScriptNR01::PlayerWalkedIn() {
 				ADQ_Add(kActorSteele, 990, kAnimationModeTalk);
 				ADQ_Add(kActorGordo, 80, 82);
 				ADQ_Add(kActorGordo, 90, 81);
-				ADQ_Add(kActorSteele, 1010, kAnimationModeTalk);
-				ADQ_Add(kActorGordo, 100, 81);
-				ADQ_Add(kActorSteele, 1020, kAnimationModeTalk);
-				ADQ_Add(kActorGordo, 110, 82);
-				ADQ_Add(kActorSteele, 1030, kAnimationModeTalk);
+				if (Actor_Query_Intelligence(kActorSteele) == 90) {
+					ADQ_Add(kActorSteele, 1010, kAnimationModeTalk);
+					ADQ_Add(kActorGordo, 100, 81);
+					ADQ_Add(kActorSteele, 1020, kAnimationModeTalk);
+					ADQ_Add(kActorGordo, 110, 82);
+				} else if (Actor_Query_Intelligence(kActorSteele) == 70) {
+					ADQ_Add(kActorSteele, 1030, kAnimationModeTalk);
+				}
 				ADQ_Add(kActorSteele, 1040, kAnimationModeTalk);
 				ADQ_Add(kActorGordo, 1400, 82); //02-1400.AUD	That old killer instinct? That was just a bonus. But, heck, you gotta have it, if you wanna work in this town.
 				ADQ_Add(kActorGordo, 120, 81); //02-0120.AUD	An entertainer. That’s all I ever was. That’s all I ever wanted to be.
@@ -595,7 +620,8 @@ void SceneScriptNR01::PlayerWalkedIn() {
 				if (v0 == 1) { // Dektora called the fake cops
 					Actor_Says(kActorSteele, 1510, 15); //01-1510.AUD	That stripper you interviewed. She’s one of them.
 					if (_vm->_cutContent) {
-						if (Actor_Query_Friendliness_To_Other(kActorSteele, kActorMcCoy) > 59) {
+						if (Actor_Query_Friendliness_To_Other(kActorSteele, kActorMcCoy) > 59
+						&& Actor_Query_Intelligence(kActorSteele) == 90) {
 							Actor_Says(kActorSteele, 1520, 14); //01-1520.AUD	Figure it out! She must have made the call to Baker and that other Bozo.
 							Actor_Says(kActorMcCoy, 8320, 18); //00-8320.AUD	Really?
 							Delay(1000);
@@ -621,16 +647,22 @@ void SceneScriptNR01::PlayerWalkedIn() {
 				} else if (v0 == 2) { // Gordo called the fake cops
 					Actor_Says(kActorSteele, 1590, 15);
 					Actor_Says(kActorMcCoy, 3195, 14); //00-3195.AUD	Gordo?
-					Actor_Says(kActorSteele, 1600, 16); //01-1600.AUD	He’s one of them. You should have popped him right there on the stage.
 					if (_vm->_cutContent) {
-						if (Game_Flag_Query(kFlagMcCoyIsHelpingReplicants)
-						|| Player_Query_Agenda() == kPlayerAgendaPolite) {
-							Actor_Says(kActorMcCoy, 3200, 13); //00-3200.AUD	Yeah. That would have been good publicity for the Department.
-							if (Actor_Query_Friendliness_To_Other(kActorSteele, kActorMcCoy) < 60) {
-								Actor_Says(kActorSteele, 1610, 17); //01-1610.AUD	That’s your problem, McCoy. You worry too much about what people think.
+						if (Actor_Query_Intelligence(kActorSteele) == 70) {
+							Actor_Says(kActorSteele, 1600, 16); //01-1600.AUD	He’s one of them. You should have popped him right there on the stage.
+							if (Game_Flag_Query(kFlagMcCoyIsHelpingReplicants)
+							|| Player_Query_Agenda() == kPlayerAgendaPolite) {
+								Actor_Says(kActorMcCoy, 3200, 13); //00-3200.AUD	Yeah. That would have been good publicity for the Department.
+								if (Actor_Query_Friendliness_To_Other(kActorSteele, kActorMcCoy) < 60) {
+									Actor_Says(kActorSteele, 1610, 17); //01-1610.AUD	That’s your problem, McCoy. You worry too much about what people think.
+								}
+							} else {
+								Actor_Says(kActorMcCoy, 1025, 13); //00-1025.AUD	Absolutely.
 							}
-						} else {
-							Actor_Says(kActorMcCoy, 1025, 13); //00-1025.AUD	Absolutely.
+						} else if (Actor_Query_Intelligence(kActorSteele) == 90) {
+							Actor_Says(kActorSteele, 1660, 17); //01-1660.AUD	You see it anywhere?
+							Actor_Says(kActorMcCoy, 7815, 16); //00-7815.AUD	No.
+							Actor_Says(kActorSteele, 1690, 15); //01-1690.AUD	I don’t want this one giving us the blow-off.
 						}
 					} else {
 						Actor_Says(kActorMcCoy, 3200, 13); //00-3200.AUD	Yeah. That would have been good publicity for the Department.
@@ -639,10 +671,11 @@ void SceneScriptNR01::PlayerWalkedIn() {
 					if (_vm->_cutContent) {
 						if (Actor_Query_Friendliness_To_Other(kActorSteele, kActorMcCoy) < 60) {
 							Actor_Says(kActorSteele, 1620, 15); //01-1620.AUD	Now, excuse me while I go collect.
+						} else {
+						 	Actor_Says(kActorSteele, 1530, 14);  //01-1530.AUD	Let’s attend to some business.
+							Delay(500);
 							Actor_Says(kActorSteele, 1630, 14); //01-1630.AUD	You in or out?
 							Actor_Says(kActorMcCoy, 3205, 12); //00-3205.AUD	In.
-						} else {
-							Actor_Says(kActorSteele, 1530, 13); //01-1530.AUD	Let’s attend to some business.
 						}
 					} else {
 						Actor_Says(kActorSteele, 1620, 15); //01-1620.AUD	Now, excuse me while I go collect.
@@ -653,9 +686,19 @@ void SceneScriptNR01::PlayerWalkedIn() {
 				} else if (v0 == 3) { // Lucy called the fake cops
 					Actor_Says(kActorSteele, 1540, 15); //01-1540.AUD	That girl, the one from the arcade. She’s one of them.
 					Actor_Says(kActorMcCoy, 3175, 13); //00-3175.AUD	You sure? I didn’t get a chance to put her on the Machine.
-					Actor_Says(kActorSteele, 1550, 13); //01-1550.AUD	I’ve been sure since I’ve heard about all those dead animals in Runciter’s shop.
-					Actor_Says(kActorSteele, 1560, 16); //01-1560.AUD	You should have whacked her when you had the chance.
-					Actor_Says(kActorMcCoy, 3180, 15); //00-3180.AUD	Yeah, right in front of all the other children in the arcade. That would have been great publicity.
+					Actor_Says(kActorSteele, 1550, 13); //01-1550.AUD	I’ve been sure since I’ve heard about all those dead animals in Runciter’s shop.	
+					if (_vm->_cutContent) {
+						if (Actor_Query_Intelligence(kActorSteele) == 70) {
+							Actor_Says(kActorSteele, 1560, 16); //01-1560.AUD	You should have whacked her when you had the chance.
+							Actor_Says(kActorMcCoy, 3180, 15); //00-3180.AUD	Yeah, right in front of all the other children in the arcade. That would have been great publicity.
+							Delay(1000);
+						} else if (Actor_Query_Intelligence(kActorSteele) == 90) {
+							Delay(1000);
+						}
+					} else {
+						Actor_Says(kActorSteele, 1560, 16); //01-1560.AUD	You should have whacked her when you had the chance.
+						Actor_Says(kActorMcCoy, 3180, 15); //00-3180.AUD	Yeah, right in front of all the other children in the arcade. That would have been great publicity.
+					}
 					Actor_Says(kActorSteele, 1570, 12); //01-1570.AUD	I bet she’s still there, Slim.
 					if (_vm->_cutContent) {
 						if (Actor_Query_Friendliness_To_Other(kActorSteele, kActorMcCoy) < 60) {
@@ -680,7 +723,9 @@ void SceneScriptNR01::PlayerWalkedIn() {
 				if (!Game_Flag_Query(kFlagMcCoyIsHelpingReplicants)) {
 					if (Actor_Clue_Query(kActorMcCoy, kClueStolenCheese)  
 					|| Actor_Clue_Query(kActorMcCoy, kClueGordoInterview3)
-					|| Actor_Clue_Query(kActorMcCoy, kClueGordosLighterReplicant)) {
+					|| Actor_Clue_Query(kActorMcCoy, kClueGordosLighterReplicant)
+					|| Actor_Clue_Query(kActorMcCoy, kClueCrazylegsInterview1)
+					|| Actor_Clue_Query(kActorMcCoy, kClueLichenDogWrapper)) {
 						Music_Stop(1u);
 						Music_Play(kMusicMoraji, 71, 0, 0, -1, kMusicLoopPlayOnce, 2);
 						Player_Set_Combat_Mode(true);
@@ -714,7 +759,9 @@ void SceneScriptNR01::PlayerWalkedIn() {
 				} else {
 					if (Actor_Clue_Query(kActorMcCoy, kClueStolenCheese)  
 					|| Actor_Clue_Query(kActorMcCoy, kClueGordoInterview3)
-					|| Actor_Clue_Query(kActorMcCoy, kClueGordosLighterReplicant)) {
+					|| Actor_Clue_Query(kActorMcCoy, kClueGordosLighterReplicant)
+					|| Actor_Clue_Query(kActorMcCoy, kClueCrazylegsInterview1)
+					|| Actor_Clue_Query(kActorMcCoy, kClueLichenDogWrapper)) {
 						Actor_Face_Actor(kActorGordo, kActorMcCoy, true);
 						Actor_Face_Actor(kActorMcCoy, kActorGordo, true);
 						Player_Set_Combat_Mode(false);
@@ -785,8 +832,11 @@ void SceneScriptNR01::PlayerWalkedIn() {
 		Actor_Set_Goal_Number(kActorGordo, kGoalGordoNR01GiveUp);
 		if (!Player_Query_Combat_Mode()) {
 			if (_vm->_cutContent) {
-				if (Actor_Clue_Query(kActorMcCoy, kClueGordoConfession)
-				|| Actor_Clue_Query(kActorMcCoy, kClueGordoInterview3)) {
+				if (Actor_Clue_Query(kActorMcCoy, kClueStolenCheese)  
+				|| Actor_Clue_Query(kActorMcCoy, kClueGordoInterview3)
+				|| Actor_Clue_Query(kActorMcCoy, kClueGordosLighterReplicant)
+				|| Actor_Clue_Query(kActorMcCoy, kClueCrazylegsInterview1)
+				|| Actor_Clue_Query(kActorMcCoy, kClueLichenDogWrapper)) {
 					if (!Game_Flag_Query(kFlagMcCoyIsHelpingReplicants)
 					&& Player_Query_Agenda() != kPlayerAgendaPolite) {
 						Player_Set_Combat_Mode(true);

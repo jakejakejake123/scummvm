@@ -105,12 +105,19 @@ void SceneScriptRC02::SceneLoaded() {
 			Unclickable_Object("DRAPE06");
 			Unclickable_Object("DRAPE07");
 		}
-		// If Crystal retired Runciter she leaves a cigarette on the floor.
 		if (_vm->_cutContent) { 
 			if (Game_Flag_Query(kFlagPS05Entered)) {
 				if (!Actor_Clue_Query(kActorMcCoy, kClueCrystalVisitedRunciters)) { 
 					Item_Add_To_World(kItemCigarette, kModelAnimationCrystalsCigarette, kSetRC02_RC51, -88.19, -1238.74, 108483.28, 0, 12, 12, false, true, false, true);
 				}
+			}
+		}
+		if (_vm->_cutContent) {
+			if (Game_Flag_Query(kFlagLucyIsReplicant)
+			&& Actor_Query_Goal_Number(kActorRunciter) < kGoalRunciterDead
+			&& !Game_Flag_Query(kFlagRunciterArrested)
+			&& Global_Variable_Query(kVariableChapter) == 4) {
+				Item_Add_To_World(kItemChopstickWrapper, kModelAnimationCandyWrapper, kSetRC02_RC51, -50.20f, -1238.70f, 108448.80f, 0, 12, 12, false, true, false, true);
 			}
 		}
 	} else {
@@ -127,10 +134,12 @@ void SceneScriptRC02::SceneLoaded() {
 		Unclickable_Object("SCRTY CA03");
 	}
 	if (_vm->_cutContent) {
-		if (Game_Flag_Query(kFlagZubenIsReplicant)) {
-			Item_Add_To_World(kItemShellCasingA, kModelAnimationShellCasings, kSetRC02_RC51, -52.88f, -1238.89f, 108467.74f, 256, 6, 6, false, true, false, true);
-			Item_Add_To_World(kItemShellCasingB, kModelAnimationShellCasings, kSetRC02_RC51, -37.16f, -1238.89f, 108456.59f, 512, 6, 6, false, true, false, true);
-			Item_Add_To_World(kItemShellCasingC, kModelAnimationShellCasings, kSetRC02_RC51, -62.86f, -1238.89f, 108437.52f, 625, 6, 6, false, true, false, true);
+		if (!Game_Flag_Query(kFlagRC02ShellCasingsTaken)) {
+			if (Actor_Query_Intelligence(kActorClovis) == 80) {
+				Item_Add_To_World(kItemShellCasingA, kModelAnimationShellCasings, kSetRC02_RC51, -52.88f, -1238.89f, 108467.74f, 256, 6, 6, false, true, false, true);
+				Item_Add_To_World(kItemShellCasingB, kModelAnimationShellCasings, kSetRC02_RC51, -37.16f, -1238.89f, 108456.59f, 512, 6, 6, false, true, false, true);
+				Item_Add_To_World(kItemShellCasingC, kModelAnimationShellCasings, kSetRC02_RC51, -62.86f, -1238.89f, 108437.52f, 625, 6, 6, false, true, false, true);
+			}
 		}
 	} else {
 		if (!Game_Flag_Query(kFlagRC02ShellCasingsTaken)) {
@@ -141,7 +150,7 @@ void SceneScriptRC02::SceneLoaded() {
 	}
 	if (_vm->_cutContent) {
 		if (!Game_Flag_Query(kFlagRC51ChopstickWrapperTaken)) {
-			if (Game_Flag_Query(kFlagZubenIsReplicant)) {
+			if (Actor_Query_Intelligence(kActorZuben) == 10) {
 				Item_Add_To_World(kItemChopstickWrapper, kModelAnimationChopstickWrapper, kSetRC02_RC51, 47.56f, -1238.89f, 108048.61f, 0, 6, 18, false, true, false, true);
 			}
 		}
@@ -152,7 +161,7 @@ void SceneScriptRC02::SceneLoaded() {
 			Item_Add_To_World(kItemToyDog, kModelAnimationToyDog, kSetRC02_RC51, 17.43f, -1238.71f, 108002.29f, 256, 18, 18, false, true, false, true);
 		}
 		if (!Game_Flag_Query(kFlagCardTaken)) {
-			if (Game_Flag_Query(kFlagZubenIsReplicant)) {
+			if (Actor_Query_Intelligence(kActorZuben) == 10) {
 				Item_Add_To_World(kItemNote, kModelAnimationDektorasCard, kSetRC02_RC51, 49.59f, -1194.42f, 107997.89f, 0, 6, 6, false, true, false, true);
 			}
 		}
@@ -175,9 +184,9 @@ bool SceneScriptRC02::ClickedOn3DObject(const char *objectName, bool a2) {
 			Actor_Says(kActorMcCoy, 4545, 14);
 			Actor_Face_Actor(kActorRunciter, kActorMcCoy, true);
 			if (_vm->_cutContent) {
-				if (Game_Flag_Query(kFlagZubenIsReplicant)) {
+				if (Actor_Query_Intelligence(kActorClovis) == 80) {
 					Actor_Says(kActorRunciter, 360, 13);
-				} else {
+				} else if (Actor_Query_Intelligence(kActorClovis) == 100) {
 					Actor_Says(kActorRunciter, 0, 14);
 					Actor_Says(kActorRunciter, 10, 16);
 					if (Player_Query_Agenda() != kPlayerAgendaSurly 
@@ -238,7 +247,15 @@ bool SceneScriptRC02::ClickedOn3DObject(const char *objectName, bool a2) {
 			return true;
 		} else {
 			Actor_Face_Object(kActorMcCoy, "SCRTY CA03", true);
-			Actor_Voice_Over(2000, kActorVoiceOver);
+			if (_vm->_cutContent) {
+				if (Actor_Query_Intelligence(kActorClovis) == 80) {
+					Actor_Says(kActorMcCoy, 6975, kAnimationModeTalk); //00-6975.AUD	Interesting.
+				} else if (Actor_Query_Intelligence(kActorClovis) == 100) {
+					Actor_Voice_Over(2000, kActorVoiceOver); //99-2000.AUD	Security camera. It'd be a banner day, if it recorded anything before it was shot out.
+				}
+			} else {
+				Actor_Voice_Over(2000, kActorVoiceOver);
+			}
 			return true;
 		}
 	}
@@ -376,6 +393,7 @@ void SceneScriptRC02::dialogueWithRunciter() {
 		// McCoy automatically asks Runciter about Lucys appearance and where her desks is which he then he automatically walks over to. The Lucy topic will also play out a little differently because of this with Runciter not showing you Lucys 
 		// desks and certain parts of the conversation not playing out because they have been said already.
 		if (_vm->_cutContent) {
+			Actor_Face_Actor(kActorMcCoy, kActorRunciter, true);
 			Actor_Face_Actor(kActorRunciter, kActorMcCoy, true);
 			Actor_Says(kActorMcCoy, 4760, 13);//00-4760.AUD	About the girl.
 			Actor_Says(kActorMcCoy, 8514, 15);//00-8514.AUD	Got anything new to tell me?
@@ -536,11 +554,10 @@ void SceneScriptRC02::dialogueWithRunciter() {
 			if (Game_Flag_Query(kFlagRunciterIsReplicant)
 			&& Actor_Clue_Query(kActorMcCoy, kClueVKRunciterReplicant)) {
 				Actor_Says(kActorMcCoy, 6865, 14); //00-6865.AUD	You're a Replicant.
-				Actor_Says(kActorRunciter, 490, 14); //15-0490.AUD	No. You heard it wrong.
+				Actor_Says(kActorRunciter, 600, 17); //15-0600.AUD	That's ridiculous. I--.
 				Actor_Says(kActorRunciter, 1070, 15); //15-1070.AUD	I'm not a Replicant for heaven's sakes.
 				Actor_Says(kActorMcCoy, 1610, 15); //00-1610.AUD	Yes. You are.
-				Actor_Says(kActorRunciter, 600, 17); //15-0600.AUD	That's ridiculous. I--.
-				Actor_Says(kActorRunciter, 720, 18); //15-0720.AUD	I have nothing more to say to you, detective.
+				Actor_Says(kActorRunciter, 1690, 12); // 15-1690.AUD	Get out of my shop.
 				Player_Set_Combat_Mode(true);
 				Actor_Set_Targetable(kActorRunciter, true);
 				Actor_Says(kActorRunciter, 420, 12); //15-0420.AUD	What? Why?
@@ -577,8 +594,7 @@ void SceneScriptRC02::dialogueWithRunciter() {
 				Actor_Says(kActorMcCoy, 4600, 14); // A couple questions.
 				Actor_Face_Actor(kActorRunciter, kActorMcCoy, true);
 				if (!Game_Flag_Query(kFlagRunciterDiscovered)) {
-					if (Actor_Query_Friendliness_To_Other(kActorRunciter, kActorMcCoy) < 50
-					|| Game_Flag_Query(kFlagRunciterIsReplicant)) {
+					if (Actor_Query_Friendliness_To_Other(kActorRunciter, kActorMcCoy) < 50) {
 						Actor_Says(kActorRunciter, 100, 13); //15-0100.AUD	I'm all talked out. Shouldn't you be tracking down the girl?
 						Actor_Says(kActorMcCoy, 4595, 14);
 					} else {
@@ -667,6 +683,7 @@ bool SceneScriptRC02::ClickedOnActor(int actorId) {
 				// to talk about his friends again even if he did not talk about them before so this flag will fix that. Also made it so McCoy only says
 				// aggresively says we're going to have a little chat if he has the Zubens motive clue.
 				if (_vm->_cutContent) {
+					Actor_Face_Actor(kActorMcCoy, kActorRunciter, true);
 					if (Actor_Clue_Query(kActorMcCoy, kClueRuncitersConfession2) && Actor_Clue_Query(kActorMcCoy, kClueEnvelope)) {
 						Actor_Says(kActorMcCoy, 4690, 11); // 00-4690.AUD	I wanted to ask you about the Tyrell subcontractors again.
 						Actor_Says(kActorMcCoy, 4695, 13); // 00-4695.AUD	The ones down on DNA Row.
@@ -825,6 +842,7 @@ bool SceneScriptRC02::ClickedOnActor(int actorId) {
 					if (Actor_Query_Friendliness_To_Other(kActorRunciter, kActorMcCoy) < 50) {
 						Actor_Says(kActorRunciter, 9000, 15); 
 						if (Player_Query_Agenda() == kPlayerAgendaPolite) {
+							Delay(1000);
 							Actor_Says(kActorMcCoy, 4615, 13); //00-4615.AUD	Just wondering.
 						} else {
 							Delay(1000);
@@ -1060,28 +1078,31 @@ void SceneScriptRC02::PlayerWalkedIn() {
 					AI_Movement_Track_Unpause(kActorRunciter);
 					Delay(1000);
 				}
-				if (!Actor_Clue_Query(kActorMcCoy, kClueRuncitersConfession2) && Actor_Clue_Query(kActorMcCoy, kClueEnvelope)) {
+				if (Actor_Clue_Query(kActorMcCoy, kClueRuncitersConfession2) && Actor_Clue_Query(kActorMcCoy, kClueEnvelope)) {
 					Actor_Says(kActorMcCoy, 4690, 11); // 00-4690.AUD	I wanted to ask you about the Tyrell subcontractors again.
 					Actor_Says(kActorMcCoy, 4695, 13); // 00-4695.AUD	The ones down on DNA Row.
-				} else if (!Actor_Clue_Query(kActorMcCoy, kClueRuncitersConfession1) && Actor_Clue_Query(kActorMcCoy, kClueZubensMotive)) {
+				} else {
 					Actor_Says(kActorMcCoy, 4680, 11); // 00-4680.AUD	We're gonna have a little chat.
 				}
 				if (Actor_Clue_Query(kActorMcCoy, kClueRuncitersConfession2) && Actor_Clue_Query(kActorMcCoy, kClueEnvelope)) {
 					Actor_Says(kActorRunciter, 1670, 14); // 15-1670.AUD	Haven't we been already through this? Why would I have any dealings with those people?
-				} else if (!Actor_Clue_Query(kActorMcCoy, kClueRuncitersConfession2)
-				|| !Actor_Clue_Query(kActorMcCoy, kClueRuncitersConfession1)) {
+				} else {
 					Actor_Says(kActorRunciter, 1610, 11); // 15-1610.AUD	Detective, if I knew something you can be sure I'd tell you.	 		
 				}		
 				if (Actor_Clue_Query(kActorMcCoy, kClueLabCorpses)
 				&& !Actor_Clue_Query(kActorMcCoy, kClueRuncitersConfession3)) {
 					Actor_Says(kActorMcCoy, 4725, 17); //00-4725.AUD	I'm thinking it'll be worth a little tax payer money to check out those animals of yours.
 					Delay(2000);
-					Actor_Says(kActorRunciter, 1620, 12); //15-1620.AUD	Hmph! I don't think I want to talk to you anymore Mr. McCoy.
-					Actor_Says(kActorMcCoy, 4720, 16); //00-4720.AUD	Bone marrow tests are getting cheaper every day.
-					Actor_Says(kActorRunciter, 430, 16); //15-0430.AUD	Go away!
-					Actor_Says(kActorMcCoy, 6985, 16); //00-6985.AUD	Got the straight scoop for me or what?
-					Actor_Says(kActorRunciter, 1630, 17); //15-1630.AUD	What? Do you really think I'd lie to you? Preposterous,
-					Actor_Says(kActorMcCoy, 4740, 14); //00-4740.AUD	Lie to me. Go ahead. You'll only do it once.
+					if (!Game_Flag_Query(kFlagRunciterIsReplicant)) {
+						Actor_Says(kActorMcCoy, 6985, 16); //00-6985.AUD	Got the straight scoop for me or what?
+					} else {
+						Actor_Says(kActorRunciter, 1620, 12); //15-1620.AUD	Hmph! I don't think I want to talk to you anymore Mr. McCoy.
+						Actor_Says(kActorMcCoy, 4720, 16); //00-4720.AUD	Bone marrow tests are getting cheaper every day.
+						Actor_Says(kActorRunciter, 430, 16); //15-0430.AUD	Go away!
+						Actor_Says(kActorMcCoy, 6985, 16); //00-6985.AUD	Got the straight scoop for me or what?
+						Actor_Says(kActorRunciter, 1630, 17); //15-1630.AUD	What? Do you really think I'd lie to you? Preposterous,
+						Actor_Says(kActorMcCoy, 4740, 14); //00-4740.AUD	Lie to me. Go ahead. You'll only do it once.
+					}
 					Actor_Says(kActorRunciter, 500, 18); //15-0500.AUD	Animals. It was my animals. Some of them were...
 					Actor_Says_With_Pause(kActorRunciter, 510, 0.0f, 19); //15-0510.AUD	F-- fake. You won't-- You can't tell anyone. My reputation.
 					Actor_Says(kActorMcCoy, 4745, 14); //00-4745.AUD	Your reputation?!
@@ -1105,29 +1126,49 @@ void SceneScriptRC02::PlayerWalkedIn() {
 					Actor_Says(kActorMcCoy, 4765, 15); // 00-4765.AUD	Lucy. I know what you did.
 					Delay(1000);
 					Actor_Says(kActorMcCoy, 4770, 14); //00-4770.AUD	You raped her.
-					Actor_Says_With_Pause(kActorRunciter, 600, 0.0f, 17); //15-0600.AUD	That's ridiculous. I--
-					Actor_Says(kActorMcCoy, 4780, 14); //00-4780.AUD	Go ahead little man, lie to me. You'll only do it once.
-					Actor_Says(kActorRunciter, 620, 14); //15-0620.AUD	It wasn't like that.
-					Actor_Modify_Friendliness_To_Other(kActorRunciter, kActorMcCoy, -2);
-					if (Game_Flag_Query(kFlagLucyIsReplicant)) {
-						Actor_Says(kActorRunciter, 630, 12);
-						Actor_Says(kActorRunciter, 640, 17);
-						Actor_Says(kActorMcCoy, 4790, 18);
-						Actor_Says(kActorRunciter, 650, 18);
+					if (!Game_Flag_Query(kFlagRunciterIsReplicant)) {
+						Actor_Says(kActorRunciter, 590, 13); //15-1180.AUD	I…
+						Actor_Says(kActorMcCoy, 4780, 14); //00-4780.AUD	Go ahead little man, lie to me. You'll only do it once.
+						Actor_Says(kActorRunciter, 590, 14); //15-1170.AUD	No doubt I made a mistake.
 						Actor_Says(kActorMcCoy, 4800, 14); //00-4800.AUD	You son of a bitch she couldn't object.
+						if (Game_Flag_Query(kFlagLucyIsReplicant)) {
+							Actor_Says(kActorRunciter, 590, 16); //15-0660.AUD	Please, I wouldn't-- you know I wouldn't have done that to a human girl. I swear it.
+						} else {
+							Actor_Says(kActorRunciter, 590, 15); //15-0530.AUD	My precious one. She was my baby.
+						}
+						Actor_Says(kActorMcCoy, 2255, 15); //00-2255.AUD	She was innocent, you bastard!
+						Delay(1000);
+						Actor_Says(kActorRunciter, 590, 14); //15-0730.AUD	Please. Just leave me alone.
 						Actor_Clue_Acquire(kActorMcCoy, kClueRuncitersConfession1, true, kActorRunciter);
 					} else {
-						Actor_Says(kActorMcCoy, 4800, 14); //00-4800.AUD	You son of a bitch she couldn't object.
-						Actor_Says_With_Pause(kActorRunciter, 670, 0.0f, 18); //15-0670.AUD	She...
-						if (Player_Query_Agenda() == kPlayerAgendaSurly 
-						|| Player_Query_Agenda() == kPlayerAgendaErratic) {
-							Actor_Says(kActorMcCoy, 4795, 14); //00-4795.AUD	If you say she asked for it, you're dead.
+						Actor_Says_With_Pause(kActorRunciter, 600, 0.0f, 17); //15-0600.AUD	That's ridiculous. I--
+						Actor_Says(kActorMcCoy, 4780, 14); //00-4780.AUD	Go ahead little man, lie to me. You'll only do it once.
+						Actor_Says(kActorRunciter, 610, 15); // 15-0610.AUD	You're no better! No better than those thugs who attacked me.
+						Actor_Says(kActorMcCoy, 4785, 14); //00-4785.AUD	Maybe not, but I'm better than you. She's a little girl.
+						Actor_Says(kActorRunciter, 620, 14); //15-0620.AUD	It wasn't like that.
+						Actor_Modify_Friendliness_To_Other(kActorRunciter, kActorMcCoy, -2);
+						if (Game_Flag_Query(kFlagLucyIsReplicant)) {
+							Actor_Says(kActorRunciter, 630, 12);
+							Actor_Says(kActorRunciter, 640, 17);
+							Actor_Says(kActorMcCoy, 4790, 18);
+							Actor_Says(kActorRunciter, 650, 18);
+							Actor_Says(kActorMcCoy, 4800, 14); //00-4800.AUD	You son of a bitch she couldn't object.
+							Actor_Clue_Acquire(kActorMcCoy, kClueRuncitersConfession1, true, kActorRunciter);
 						} else {
-							Actor_Says(kActorMcCoy, 4320, 14); //00-4320.AUD	Save the pitch for someone who gives a shit.
-						}	
-						Actor_Clue_Acquire(kActorMcCoy, kClueRuncitersConfession1, true, kActorRunciter);	
-					}
-					Delay(1000);
+							Actor_Says(kActorMcCoy, 4800, 14); //00-4800.AUD	You son of a bitch she couldn't object.
+							Actor_Says_With_Pause(kActorRunciter, 670, 0.0f, 18); //15-0670.AUD	She...
+							if (Player_Query_Agenda() == kPlayerAgendaSurly 
+							|| Player_Query_Agenda() == kPlayerAgendaErratic) {
+								Actor_Says(kActorMcCoy, 4795, 14); //00-4795.AUD	If you say she asked for it, you're dead.
+							} else {
+								Actor_Says(kActorMcCoy, 4320, 14); //00-4320.AUD	Save the pitch for someone who gives a shit.
+							}	
+							Actor_Clue_Acquire(kActorMcCoy, kClueRuncitersConfession1, true, kActorRunciter);	
+						}
+						Actor_Says(kActorRunciter, 1530, 18); //15-1530.AUD	Get out of here!
+						Actor_Clue_Acquire(kActorMcCoy, kClueRuncitersConfession1, true, kActorRunciter);
+						Delay(1000);
+					}					
 				}
 				if (!Game_Flag_Query(kFlagRunciterTested)) {
 					Actor_Says(kActorMcCoy, 395, 14);
@@ -1140,11 +1181,10 @@ void SceneScriptRC02::PlayerWalkedIn() {
 					if (Game_Flag_Query(kFlagRunciterIsReplicant)
 					&& Actor_Clue_Query(kActorMcCoy, kClueVKRunciterReplicant)) {
 						Actor_Says(kActorMcCoy, 6865, 14); //00-6865.AUD	You're a Replicant.
-						Actor_Says(kActorRunciter, 490, 14); //15-0490.AUD	No. You heard it wrong.
+						Actor_Says(kActorRunciter, 600, 17); //15-0600.AUD	That's ridiculous. I--.
 						Actor_Says(kActorRunciter, 1070, 15); //15-1070.AUD	I'm not a Replicant for heaven's sakes.
 						Actor_Says(kActorMcCoy, 1610, 15); //00-1610.AUD	Yes. You are.
-						Actor_Says(kActorRunciter, 600, 17); //15-0600.AUD	That's ridiculous. I--.
-						Actor_Says(kActorRunciter, 720, 18); //15-0720.AUD	I have nothing more to say to you, detective.
+						Actor_Says(kActorRunciter, 1690, 12); // 15-1690.AUD	Get out of my shop.
 					} else if (!Game_Flag_Query(kFlagRunciterIsReplicant)
 					&& Actor_Clue_Query(kActorMcCoy, kClueVKRunciterHuman)) {
 						if (Actor_Query_Friendliness_To_Other(kActorRunciter, kActorMcCoy) < 50) {
@@ -1177,10 +1217,7 @@ void SceneScriptRC02::PlayerWalkedIn() {
 						Delay(2000);
 						Actor_Voice_Over(2050, kActorVoiceOver); //99-2050.AUD	Clovis wanted Runciter to suffer, but I wanted him dead.
 						Actor_Voice_Over(2080, kActorVoiceOver); //99-2080.AUD	I’d done the city a favor.
-						if (Player_Query_Agenda() != kPlayerAgendaSurly 
-						&& Player_Query_Agenda() != kPlayerAgendaErratic) {	
-							Actor_Voice_Over(2090, kActorVoiceOver); //99-2090.AUD	And maybe I’d done him a favor too, since his animals were all dead.
-						}
+						Actor_Voice_Over(2090, kActorVoiceOver); //99-2090.AUD	And maybe I’d done him a favor too, since his animals were all dead.
 						Delay(1000);
 						Actor_Voice_Over(920, kActorVoiceOver); //99-0920.AUD	Easy money.
 						Actor_Modify_Friendliness_To_Other(kActorSteele, kActorMcCoy, 2);
@@ -1196,11 +1233,12 @@ void SceneScriptRC02::PlayerWalkedIn() {
 							Global_Variable_Increment(kVariableChinyen, 200);
 						}
 					}
-				} else if (!Game_Flag_Query(kFlagRunciterIsReplicant)) {
-					Delay(1000);
+				} else if (!Game_Flag_Query(kFlagRunciterIsReplicant)
+				&& Actor_Clue_Query(kActorMcCoy, kClueVKRunciterHuman)) {
 					if (Actor_Clue_Query(kActorMcCoy, kClueLabCorpses)
 					&& (Player_Query_Agenda() == kPlayerAgendaSurly 
 					|| Player_Query_Agenda() == kPlayerAgendaErratic)) {
+						Delay(1000);
 						Actor_Says(kActorMcCoy, 3095, 14); //00-3095.AUD	Now we’re gonna take a little ride downtown.
 						Actor_Modify_Friendliness_To_Other(kActorSteele, kActorMcCoy, 1);
 						Actor_Modify_Friendliness_To_Other(kActorClovis, kActorMcCoy, 1);
@@ -1247,6 +1285,17 @@ void SceneScriptRC02::PlayerWalkedIn() {
 		}
 	}  
 	if (Game_Flag_Query(kFlagRC01toRC02)) {
+		if (_vm->_cutContent) {
+			if (Game_Flag_Query(kFlagLucyIsReplicant)
+			&& Actor_Query_Goal_Number(kActorRunciter) != kGoalRunciterDead
+			&& !Game_Flag_Query(kFlagRunciterArrested)
+			&& Global_Variable_Query(kVariableChapter) == 4) {
+				AI_Movement_Track_Flush(kActorRunciter);
+				Actor_Set_Goal_Number(kActorRunciter, kGoalRunciterMurdered);
+				Actor_Put_In_Set(kActorRunciter, kSetRC02_RC51);
+				Actor_Set_At_XYZ(kActorRunciter, -102.39f, -1238.70f, 108436.16f, 760);
+			}
+		}
 		Player_Loses_Control();
 		Loop_Actor_Walk_To_XYZ(kActorMcCoy, -72.2f, -1238.89f, 108496.73f, 0, false, false, false);
 		Player_Gains_Control();
@@ -1284,19 +1333,90 @@ void SceneScriptRC02::PlayerWalkedIn() {
 				Actor_Says(kActorMcCoy, 4675, 14);
 			}
 			Actor_Face_Heading(kActorRunciter, 1007, false);
-			Actor_Says(kActorRunciter, 400, 13);
 			if (_vm->_cutContent) {
 				Actor_Set_Targetable(kActorRunciter, false);
+				if (Game_Flag_Query(kFlagRunciterIsReplicant)) {
+					Actor_Says(kActorRunciter, 400, 13);
+				}
 				if (Actor_Query_Friendliness_To_Other(kActorRunciter, kActorMcCoy) > 49) {
 					Actor_Says(kActorRunciter, 410, 12);
-				} else {
-					Delay(1000);
 				}
+				Delay(1000);
 			} else {
+				Actor_Says(kActorRunciter, 400, 13);
 				Actor_Says(kActorRunciter, 410, 12);
 			}
 			Game_Flag_Set(kFlagRC02EnteredChapter4);
-		} 
+		} else if (Game_Flag_Query(kFlagLucyIsReplicant)
+		&& Actor_Query_Goal_Number(kActorRunciter) < kGoalRunciterDead
+		&& !Game_Flag_Query(kFlagRunciterArrested)
+		&& Global_Variable_Query(kVariableChapter) == 4) {
+			Delay(1000);
+			Actor_Face_Actor(kActorMcCoy, kActorRunciter, true);
+			Actor_Says(kActorMcCoy, 855, 18);
+			Player_Loses_Control();
+			Loop_Actor_Walk_To_Actor(kActorMcCoy, kActorRunciter, 24, true, false);
+			Player_Gains_Control();
+			Delay(1000);
+			Actor_Says(kActorMcCoy, 170, 14);
+			if (!Actor_Clue_Query(kActorMcCoy, kClueZubensMotive)
+			&& Player_Query_Agenda() != kPlayerAgendaSurly 
+			&& Player_Query_Agenda() != kPlayerAgendaErratic) {
+				Music_Play(kMusicBRBlues, 52, 0, 2, -1, kMusicLoopPlayOnce, 1);
+			}
+			Delay(1000);
+			Actor_Says(kActorMcCoy, 7125, -1); //00-7125.AUD	He was murdered. Probably by a Replicant.
+			if (Actor_Clue_Query(kActorMcCoy, kClueZubensMotive)) {
+				Actor_Voice_Over(1650, kActorVoiceOver); //99-1650.AUD	And he’d taken his dirty little secrets with him.
+			}
+			if (!Actor_Clue_Query(kActorMcCoy, kClueZubensMotive)
+			&& (Player_Query_Agenda() == kPlayerAgendaSurly
+			|| Player_Query_Agenda() == kPlayerAgendaErratic)) {
+				Actor_Voice_Over(1660, kActorVoiceOver); //99-1660.AUD	Someone had set him up, but my guess was that the bastard deserved it.
+				Actor_Voice_Over(1670, kActorVoiceOver); //99-1670.AUD	Still it was a hell of a way to go.
+			}
+			Delay(1000);
+			Actor_Face_Item(kActorMcCoy, kItemChopstickWrapper, true);	
+			Delay(1000);
+			Player_Loses_Control();
+			Loop_Actor_Walk_To_Item(kActorMcCoy, kItemChopstickWrapper, 24, true, false);
+			Player_Gains_Control();
+			Actor_Face_Item(kActorMcCoy, kItemChopstickWrapper, true);
+			Delay(1000);
+			if (Actor_Clue_Query(kActorMcCoy, kClueCandy)) {
+				Item_Pickup_Spin_Effect(kModelAnimationCandyWrapper, 399, 351);
+				Item_Remove_From_World(kItemChopstickWrapper);
+			}
+			Actor_Says(kActorMcCoy, 8875, 13); //00-8875.AUD	A brown cow candy wrapper.
+			if (Actor_Clue_Query(kActorMcCoy, kClueCandy)) {
+				Actor_Voice_Over(3300, kActorVoiceOver); //99-3300.AUD	I recognized the wrapper.
+				Actor_Voice_Over(3310, kActorVoiceOver); //99-3310.AUD	The same brand of candy that Lucy had on her desk at Runciter’s.
+				Delay(1000);
+				Actor_Voice_Over(1150, kActorVoiceOver); //99-1150.AUD	It wasn’t any mystery.
+				Actor_Clue_Acquire(kActorMcCoy, kClueCandyWrapper, true, -1);
+			} else {
+				Delay(1000);
+				Actor_Says(kActorMcCoy, 8525, 13); // 00-8525.AUD	Hmph.
+			}
+			Delay(2000);
+			Actor_Face_Actor(kActorMcCoy, kActorRunciter, true);
+			Delay(1000);
+			if (Actor_Clue_Query(kActorMcCoy, kClueZubensMotive)) {
+				Actor_Says(kActorMcCoy, 8715, 17);
+				Delay(1000);
+			}
+			Player_Loses_Control();
+			Loop_Actor_Walk_To_XYZ(kActorMcCoy, -71.51f, -1238.89f, 108587.15f, 0, true, false, false);
+			Player_Gains_Control();
+			Actor_Set_Goal_Number(kActorRunciter, kGoalRunciterDead);
+			Music_Stop(1u);
+			Game_Flag_Set(kFlagRC02toRC01);
+			Ambient_Sounds_Remove_All_Non_Looping_Sounds(true);
+			Ambient_Sounds_Remove_Looping_Sound(kSfxBRBED5,   1u);
+			Ambient_Sounds_Remove_Looping_Sound(kSfxWINDLOP8, 1u);
+			Ambient_Sounds_Adjust_Looping_Sound(kSfxRCRAIN1, 100, -101, 1u);
+			Set_Enter(kSetRC01, kSceneRC01);
+		}
 	} else {
 		Player_Loses_Control();
 		Loop_Actor_Walk_To_XYZ(kActorMcCoy, -20.2f, -1238.89f, 108152.73f, 0, false, false, false);

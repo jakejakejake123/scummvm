@@ -426,6 +426,7 @@ void SceneScriptKP07::PlayerWalkedIn() {
 						Delay(500);
 						Actor_Says(kActorMcCoy, 6180, 14); //00-6180.AUD	Your breath smells like you wiped your ass with your teeth..
 						Actor_Says(kActorClovis, 10, 3); //05-0010.AUD	Enough!
+						Game_Flag_Set(kFlagKP07BusActive);
 						if (Game_Flag_Query(kFlagSadikIsReplicant)) {
 							if (Actor_Query_Goal_Number(kActorSadik) == kGoalSadikKP06NeedsReactorCoreFromMcCoy) {
 								Actor_Put_In_Set(kActorSadik, kSetKP07);
@@ -449,6 +450,7 @@ void SceneScriptKP07::PlayerWalkedIn() {
 						Delay (1000);
 						Actor_Says(kActorMcCoy, 8500, 3);
 						Actor_Says(kActorClovis, 1250, 3);
+						Game_Flag_Set(kFlagKP07BusActive);
 						if (Game_Flag_Query(kFlagSadikIsReplicant)) {
 							if (Actor_Query_Goal_Number(kActorSadik) == kGoalSadikKP06NeedsReactorCoreFromMcCoy) {
 								Actor_Put_In_Set(kActorSadik, kSetKP07);
@@ -463,8 +465,9 @@ void SceneScriptKP07::PlayerWalkedIn() {
 				} else {
 					Actor_Face_Actor(kActorClovis, kActorMcCoy, true);
 					Actor_Says(kActorClovis, 1240, 3); //05-1240.AUD	Welcome, brother. We have very little time.
-					Actor_Says(kActorMcCoy, 8500, 3);
+					Actor_Says(kActorMcCoy, 8500, 13);
 					Actor_Says(kActorClovis, 1250, 3);
+					Game_Flag_Set(kFlagKP07BusActive);
 					if (Game_Flag_Query(kFlagSadikIsReplicant)) {
 						if (Actor_Query_Goal_Number(kActorSadik) == kGoalSadikKP06NeedsReactorCoreFromMcCoy) {
 							Actor_Put_In_Set(kActorSadik, kSetKP07);

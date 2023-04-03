@@ -60,7 +60,7 @@ void SceneScriptTB05::SceneLoaded() {
 	Unclickable_Object("SMUDGE_GLASS01");
 	if (_vm->_cutContent) {
 		if (!Actor_Clue_Query(kActorMcCoy, kClueDragonflyEarring)) {
-			if (!Game_Flag_Query(kFlagSadikIsReplicant)) {
+			if (Actor_Query_Intelligence(kActorSadik) == 70) {
 				Item_Add_To_World(kItemDragonflyEarring, kModelAnimationDragonflyEarring, kSetTB05, 76.16f, 147.36f, -235.15f, 0, 6, 6, false, true, false, true);
 			}
 		} 
@@ -69,17 +69,12 @@ void SceneScriptTB05::SceneLoaded() {
 			Item_Add_To_World(kItemDragonflyEarring, kModelAnimationDragonflyEarring, kSetTB05, 76.16f, 147.36f, -235.15f, 0, 6, 6, false, true, false, true);
 		} 
 	}
-	if (!Actor_Clue_Query(kActorMcCoy, kClueTyrellSalesPamphletEntertainModel)
-	 && !Actor_Clue_Query(kActorMcCoy, kClueTyrellSalesPamphletLolita)
-	 && (Game_Flag_Query(kFlagGordoIsReplicant)
-	  || Game_Flag_Query(kFlagLucyIsReplicant)
-	 )
-	) {
-		if (_vm->_cutContent) {
-			if (!Game_Flag_Query(kFlagSadikIsReplicant)) {
-				Item_Add_To_World(kItemTyrellSalesPamphlet, kModelAnimationTyrellSalesPamphlet, kSetTB05, 129.01f, 147.12f, -162.98f, 0, 8, 8, false, true, false, true);
-			}
-		} else {
+	if (!_vm->_cutContent) {
+		if (!Actor_Clue_Query(kActorMcCoy, kClueTyrellSalesPamphletEntertainModel)
+		&& !Actor_Clue_Query(kActorMcCoy, kClueTyrellSalesPamphletLolita)
+		&& (Game_Flag_Query(kFlagGordoIsReplicant)
+		|| Game_Flag_Query(kFlagLucyIsReplicant))
+		) {
 			Item_Add_To_World(kItemTyrellSalesPamphlet, kModelAnimationTyrellSalesPamphlet, kSetTB05, 129.01f, 147.12f, -162.98f, 0, 8, 8, false, true, false, true);
 		}
 	}
@@ -118,7 +113,7 @@ bool SceneScriptTB05::ClickedOn3DObject(const char *objectName, bool a2) {
 				 || Actor_Clue_Query(kActorMcCoy, kClueDogCollar2)
 				) {
 					if (_vm->_cutContent) {
-						if (Game_Flag_Query(kFlagSadikIsReplicant)) {
+						if (Actor_Query_Intelligence(kActorSadik) == 90) {
 							Actor_Change_Animation_Mode(kActorMcCoy, 23);
 							Delay(2000);
 							Sound_Play(kSfxELEBAD1, 100, 0, 0, 50);
@@ -135,7 +130,7 @@ bool SceneScriptTB05::ClickedOn3DObject(const char *objectName, bool a2) {
 							Actor_Voice_Over(2290, kActorVoiceOver); //99-2290.AUD	Tyrell security was even better than I'd heard.
 							Game_Flag_Set(kFlagTB05MonitorUnlockAttempt);
 							Game_Flag_Set(kFlagTB05MonitorDone);
-						} else {
+						} else if (Actor_Query_Intelligence(kActorSadik) == 70) {
 							Actor_Change_Animation_Mode(kActorMcCoy, 23);
 							Delay(2000);
 							Sound_Play(kSfxELEBAD1, 100, 0, 0, 50);
@@ -197,10 +192,10 @@ bool SceneScriptTB05::ClickedOn3DObject(const char *objectName, bool a2) {
 				 || Actor_Clue_Query(kActorMcCoy, kClueDogCollar2)
 				) {
 					if (_vm->_cutContent) {
-						if (Game_Flag_Query(kFlagSadikIsReplicant)) {
+						if (Actor_Query_Intelligence(kActorSadik) == 90) {
 							Actor_Voice_Over(3700, kActorVoiceOver);
 							Game_Flag_Set(kFlagTB05MonitorDone);
-						} else {
+						} else if (Actor_Query_Intelligence(kActorSadik) == 70) {
 							Actor_Says(kActorMcCoy, 8525, -1); // 00-8525.AUD	Hmph.
 							Actor_Change_Animation_Mode(kActorMcCoy, 23);
 							Delay(800);

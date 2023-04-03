@@ -247,12 +247,13 @@ bool SceneScriptRC03::ClickedOnExit(int exitId) {
 			// Made it so Bobs shop is open in act 3
 			if (_vm->_cutContent)  {
 				if (Global_Variable_Query(kVariableChapter) == 5
-				|| Game_Flag_Query(kFlagOfficerLearyKilledByBob)
+				|| Game_Flag_Query(kFlagOfficerLearyBobMeeting)
 				|| Game_Flag_Query(kFlagBulletBobArrested)
 				|| Game_Flag_Query(kFlagBobAttackedMcCoy)
 				|| Actor_Query_Goal_Number(kActorBulletBob) > kGoalBulletBobGone 
-				|| Actor_Clue_Query(kActorMcCoy, kClueCrystalRetiredBob)) {
-					Actor_Says(kActorMcCoy, 8522, 14);
+				|| Actor_Clue_Query(kActorMcCoy, kClueCrystalRetiredBob)
+				|| Actor_Clue_Query(kActorMcCoy, kClueBobShotInColdBlood)) {
+					Actor_Says(kActorMcCoy, 7815, 15); //00-7815.AUD	No.
 				} else {
 					Set_Enter(kSetRC04, kSceneRC04);
 				}
@@ -484,6 +485,7 @@ void SceneScriptRC03::PlayerWalkedIn() {
 			Actor_Says(kActorSteele, 1950, 59); //01-1950.AUD	I've been tracking Izo for a week and you ruined my whole plan in two seconds.
 			Game_Flag_Reset(kFlagIzoGotAway);
 			Game_Flag_Reset(kFlagIzoWarnedAboutCrystal);
+			Game_Flag_Set(kFlagIzoFled);
 			Actor_Set_Goal_Number(kActorIzo, kGoalIzoRC03RunAway);
 			if (!Game_Flag_Query(kFlagIzoWarned)) {
 				if (Player_Query_Agenda() == kPlayerAgendaPolite) {
@@ -513,7 +515,7 @@ void SceneScriptRC03::PlayerWalkedIn() {
 				Player_Gains_Control();
 				Actor_Set_Goal_Number(kActorSteele, kGoalSteeleLeaveRC03);
 			} else {
-				Actor_Says(kActorMcCoy, 8565, 15); //00-8565.AUD	Really?
+				Actor_Says(kActorMcCoy, 8320, 15); 
 				if (Actor_Query_Friendliness_To_Other(kActorSteele, kActorMcCoy) < 53) {
 					Actor_Says(kActorSteele, 1980, 60); //01-1980.AUD	If I didn't know any better, I'd think you wanted him to get away.
 					Actor_Says(kActorMcCoy, 4840, 16); //00-4840.AUD	You crazy? I've been tailing him myself.

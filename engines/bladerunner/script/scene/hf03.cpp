@@ -242,14 +242,18 @@ void SceneScriptHF03::dialogueWithLucy() {
 			} else {
 				Actor_Says(kActorLucy, 240, 14);
 				Actor_Says(kActorLucy, 250, 12);
-				Actor_Says(kActorLucy, 260, 13);
-				Actor_Says(kActorLucy, 270, 19);
+				Actor_Says(kActorLucy, 260, 13); //06-0260.AUD	It’s so funny. I’m worth less than those animals.
+				Actor_Says(kActorLucy, 270, 19); //06-0270.AUD	I guess I should hate them. But I don’t.
 				if (!Actor_Clue_Query(kActorMcCoy, kClueLabCorpses)) {
 					Actor_Says(kActorMcCoy, 1665, 18); //00-1665.AUD	So, all the animals were real?
-					Actor_Says(kActorLucy, 280, 13); //06-0280.AUD	Mr. Runciter also used to buy some of the… others.
-					Actor_Says(kActorMcCoy, 1670, 12); //00-1670.AUD	Artificial?
-					Actor_Says(kActorLucy, 290, 14); //06-0290.AUD	He used to tell me that he was protected.
-					Actor_Says(kActorLucy, 300, 16); //06-0300.AUD	That they came from somebody close to the source.
+					if (!Game_Flag_Query(kFlagRunciterIsReplicant)) {
+						Actor_Says(kActorLucy, 280, 13); //06-0280.AUD	Mr. Runciter also used to buy some of the… others.
+						Actor_Says(kActorMcCoy, 1670, 12); //00-1670.AUD	Artificial?
+						Actor_Says(kActorLucy, 290, 14); //06-0290.AUD	He used to tell me that he was protected.
+						Actor_Says(kActorLucy, 300, 16); //06-0300.AUD	That they came from somebody close to the source.
+					} else {
+						Actor_Says(kActorLucy, 1130, 13); //06-1130.AUD	Uh-huh.
+					}
 				}
 				Actor_Says(kActorMcCoy, 1675, 12); 
 				Actor_Says(kActorLucy, 310, 13);//06-0310.AUD	Father and uncle Zuben.
@@ -292,13 +296,17 @@ bool SceneScriptHF03::ClickedOnActor(int actorId) {
 				if (_vm->_cutContent) {
 					if (Game_Flag_Query(kFlagLucyIsReplicant)) {
 						Actor_Says(kActorMcCoy, 1605, 15); //00-1605.AUD	You’re sick, Lucy.
-						Actor_Says(kActorLucy, 100, 12);
-						if (Game_Flag_Query(kFlagMcCoyIsHelpingReplicants)
-						|| Player_Query_Agenda() == kPlayerAgendaPolite) {
-							Delay(1000);
-							Actor_Says(kActorMcCoy, 7330, 16); //00-7330.AUD	Let's hope so.
+						if (Actor_Query_Intelligence(kActorLucy) == 50) {
+							Actor_Says(kActorLucy, 100, 12);
+							if (Game_Flag_Query(kFlagMcCoyIsHelpingReplicants)
+							|| Player_Query_Agenda() == kPlayerAgendaPolite) {
+								Delay(1000);
+								Actor_Says(kActorMcCoy, 7330, 16); //00-7330.AUD	Let's hope so.
+							} else {
+								Actor_Says(kActorMcCoy, 1610, 14);
+							}
 						} else {
-							Actor_Says(kActorMcCoy, 1610, 14);
+							Actor_Says(kActorLucy, 1130, 12); //06-1130.AUD	Uh-huh.
 						}
 					} else {
 						Actor_Says(kActorMcCoy, 1615, 16); //00-1615.AUD	I’ve been looking for you.
@@ -335,6 +343,7 @@ bool SceneScriptHF03::ClickedOnActor(int actorId) {
 					Actor_Says(kActorMcCoy, 1620, 14);
 				}
 				if (_vm->_cutContent) {
+					Delay(1000);
 					if (!Actor_Clue_Query(kActorLucy, kClueMcCoyRetiredZuben)
 					&& !Actor_Clue_Query(kActorLucy, kClueMcCoyRetiredDektora)
 					&& !Actor_Clue_Query(kActorLucy, kClueMcCoyRetiredGordo)) {
@@ -350,7 +359,6 @@ bool SceneScriptHF03::ClickedOnActor(int actorId) {
 							Actor_Says(kActorLucy, 190, 15);
 						}
 					} else {
-						Delay(1000);
 						Actor_Says(kActorMcCoy, 8920, 14); //00-8920.AUD	I gotta ask you a question.
 					} 
 				} else {

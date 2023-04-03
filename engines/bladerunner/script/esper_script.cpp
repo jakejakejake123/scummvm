@@ -269,25 +269,22 @@ bool ESPERScript::SCRIPT_ESPER_DLL_Special_Region_Selected(int photo, int region
 			if (_vm->_cutContent) {
 				if (Actor_Clue_Query(kActorMcCoy, kClueAnimalMurderSuspect)) {
 					Actor_Voice_Over(4110, kActorVoiceOver);
+					if (!Actor_Clue_Query(kActorMcCoy, kClueMilitaryBoots)) {
+						Actor_Says(kActorMcCoy, 6945, 3);
+						Sound_Play(kSfxBR034_1A, 50, 0, 0, 50);
+						Actor_Clue_Acquire(kActorMcCoy, kClueMilitaryBoots, true, -1);
+					}
 				} else {
 					Actor_Says(kActorMcCoy, 8525, 3); // 00-8525.AUD	Hmph.
 				}
 			} else {
 				Actor_Voice_Over(4110, kActorVoiceOver);
-			}
-			if (!Actor_Clue_Query(kActorMcCoy, kClueMilitaryBoots)) {
-				if (_vm->_cutContent) {
-					if (Actor_Clue_Query(kActorMcCoy, kClueAnimalMurderSuspect)) {
-						Actor_Says(kActorMcCoy, 6945, 3);
-						Sound_Play(kSfxBR034_1A, 50, 0, 0, 50);
-						Actor_Clue_Acquire(kActorMcCoy, kClueMilitaryBoots, true, -1);
-					} 
-				} else {
+				if (!Actor_Clue_Query(kActorMcCoy, kClueMilitaryBoots)) {
 					Actor_Says(kActorMcCoy, 6945, 3);
 					Sound_Play(kSfxBR034_1A, 50, 0, 0, 50);
 					Actor_Clue_Acquire(kActorMcCoy, kClueMilitaryBoots, true, -1);
-				}
-			}
+				} 
+			}		
 		} else if (region == 5) {
 			Actor_Voice_Over(4120, kActorVoiceOver);	
 			if (!Actor_Clue_Query(kActorMcCoy, kCluePartialLicenseNumber)) {
@@ -296,6 +293,7 @@ bool ESPERScript::SCRIPT_ESPER_DLL_Special_Region_Selected(int photo, int region
 						Actor_Says(kActorMcCoy, 6935, 3); //00-6935.AUD	Enhance.
 						Actor_Says(kActorAnsweringMachine, 210, kAnimationModeTalk); //39-0210.AUD	Unable to enhance further.
 						Actor_Says(kActorMcCoy, 170, 3); //00-0170.AUD	Damn.
+						Delay(1000);
 						Actor_Says(kActorMcCoy, 6945, 3);
 						Sound_Play(kSfxBR034_1A, 50, 0, 0, 50);
 						Actor_Clue_Acquire(kActorMcCoy, kCluePartialLicenseNumber, true, -1);
@@ -576,6 +574,7 @@ bool ESPERScript::SCRIPT_ESPER_DLL_Special_Region_Selected(int photo, int region
 					}
 				} else {
 					Actor_Says(kActorMcCoy, 8525, 13); // 00-8525.AUD	Hmph.
+					Game_Flag_Set(kFlagMoonbusReflectionChecked);
 				}
 			} else {
 				Actor_Says(kActorMcCoy, 8705, 3);
@@ -587,21 +586,29 @@ bool ESPERScript::SCRIPT_ESPER_DLL_Special_Region_Selected(int photo, int region
 			}
 			break;
 
-		case 23:
-			if (!Actor_Clue_Query(kActorMcCoy, kClueMcCoyAtMoonbus)) {
-				Actor_Voice_Over(4240, kActorVoiceOver);
-				//Added in some dialogue where McCoy theorizes what the other McCoy at the moonbus could really be. Also McCoy concludes that it's not
-				//him if he found the moonbus reflection clue
-				if (_vm->_cutContent) {
+		case 23:			
+			//Added in some dialogue where McCoy theorizes what the other McCoy at the moonbus could really be. Also McCoy concludes that it's not
+			//him if he found the moonbus reflection clue
+			if (_vm->_cutContent) {
+				if (Game_Flag_Query(kFlagMoonbusReflectionChecked)) {
+					Actor_Voice_Over(4250, kActorVoiceOver); //99-4250.AUD	That's not me.
 					Actor_Voice_Over(4010, kActorVoiceOver); //99-4010.AUD	A cardboard cutout or maybe a mannequin.
 					Actor_Voice_Over(4020, kActorVoiceOver); //99-4020.AUD	I didn't know what it was but I did know it wasn't me.
-					if (Actor_Clue_Query(kActorMcCoy, kClueMoonbusReflection)) {
-						Actor_Voice_Over(4250, kActorVoiceOver); //99-4250.AUD	That's not me.
+				} else {
+					Actor_Voice_Over(4240, kActorVoiceOver);
+					if (!Actor_Clue_Query(kActorMcCoy, kClueMcCoyAtMoonbus)) {
+						Actor_Says(kActorMcCoy, 6945, 3);
+						Sound_Play(kSfxBR034_1A, 50, 0, 0, 50);
+						Actor_Clue_Acquire(kActorMcCoy, kClueMcCoyAtMoonbus, true, -1);
 					}
 				}
-				Actor_Says(kActorMcCoy, 6945, 3);
-				Sound_Play(kSfxBR034_1A, 50, 0, 0, 50);
-				Actor_Clue_Acquire(kActorMcCoy, kClueMcCoyAtMoonbus, true, -1);
+			} else {
+				Actor_Voice_Over(4240, kActorVoiceOver);
+				if (!Actor_Clue_Query(kActorMcCoy, kClueMcCoyAtMoonbus)) {
+					Actor_Says(kActorMcCoy, 6945, 3);
+					Sound_Play(kSfxBR034_1A, 50, 0, 0, 50);
+					Actor_Clue_Acquire(kActorMcCoy, kClueMcCoyAtMoonbus, true, -1);
+				}
 			}
 			break;
 
@@ -625,11 +632,10 @@ bool ESPERScript::SCRIPT_ESPER_DLL_Special_Region_Selected(int photo, int region
 			break;
 
 		case 25:
+			if (_vm->_cutContent) {
+				Actor_Voice_Over(4170, kActorVoiceOver); //99-4170.AUD	I've seen that guy around town.
+			}
 			if (!Actor_Clue_Query(kActorMcCoy, kClueSadikAtMoonbus)) {
-				//Added in some more dialogue.
-				if (_vm->_cutContent) {
-					Actor_Voice_Over(4170, kActorVoiceOver); //99-4170.AUD	I've seen that guy around town.
-				}
 				Actor_Says(kActorMcCoy, 6945, 3);
 				Sound_Play(kSfxBR034_1A, 50, 0, 0, 50);
 				Actor_Clue_Acquire(kActorMcCoy, kClueSadikAtMoonbus, true, -1);

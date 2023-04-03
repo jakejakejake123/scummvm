@@ -203,7 +203,6 @@ bool SceneScriptNR07::ClickedOnActor(int actorId) {
 }
 
 bool SceneScriptNR07::ClickedOnItem(int itemId, bool a2) {
-	// Code for picking up the dragonfly belt.
 	if (_vm->_cutContent) {
 		if (itemId == kItemDragonflyBelt) {
 			if (Actor_Query_Is_In_Current_Set(kActorDektora)) {
@@ -212,7 +211,8 @@ bool SceneScriptNR07::ClickedOnItem(int itemId, bool a2) {
 					Actor_Face_Actor(kActorDektora, kActorMcCoy, true);
 					Actor_Says(kActorMcCoy, 3625, 19);
 					if (Actor_Query_Friendliness_To_Other(kActorDektora, kActorMcCoy) < 50 
-					|| Game_Flag_Query(kFlagDektoraIsReplicant)) {
+					|| Game_Flag_Query(kFlagDektoraIsReplicant)
+					|| Actor_Query_Intelligence(kActorDektora) == 90) {
 						Actor_Says(kActorDektora, 1480, 30); //03-1480.AUD	Yes
 						Delay(1000);
 					} else {
@@ -225,14 +225,21 @@ bool SceneScriptNR07::ClickedOnItem(int itemId, bool a2) {
 						Actor_Clue_Acquire(kActorMcCoy, kClueDektoraInterview2, true, kActorDektora);
 					}
 					Actor_Face_Actor(kActorMcCoy, kActorDektora, true);
-					Actor_Start_Speech_Sample(kActorMcCoy, 3640);  // Tell you the truth, I'm from the LPD. (...)
+					Actor_Says(kActorMcCoy, 3640, 14);  // Tell you the truth, I'm from the LPD. (...)
 					Actor_Modify_Friendliness_To_Other(kActorDektora, kActorMcCoy, -2);
 					Game_Flag_Set(kFlagNR07McCoyIsCop);
-					Actor_Says_With_Pause(kActorDektora, 610, 0.0f, 31);
+					if (!Game_Flag_Query(kFlagEarlyQIsReplicant)) {
+						Actor_Says_With_Pause(kActorDektora, 610, 0.0f, 31); //03-0610.AUD	Is this about Early Q? Because I could tell you--
+					} else {
+						Delay(1000);
+						Actor_Says(kActorDektora, 1980, kAnimationModeSit); //03-1980.AUD	All right.
+						Delay(1000);
+					}
 					if (!Actor_Clue_Query(kActorMcCoy, kClueDragonflyCollection)) {
 						Actor_Says(kActorMcCoy, 3645, 12);
 						if (Actor_Query_Friendliness_To_Other(kActorDektora, kActorMcCoy) < 50 
-						|| Game_Flag_Query(kFlagDektoraIsReplicant)) {
+						|| Game_Flag_Query(kFlagDektoraIsReplicant)
+						|| Actor_Query_Intelligence(kActorDektora) == 90) {
 							Actor_Says(kActorDektora, 620, 30); //03-0620.AUD	I’m sure I don’t know what you mean.
 							if (Player_Query_Agenda() == kPlayerAgendaSurly 
 							|| Player_Query_Agenda() == kPlayerAgendaErratic) {
@@ -253,7 +260,9 @@ bool SceneScriptNR07::ClickedOnItem(int itemId, bool a2) {
 					Delay(1000);
 					if (Actor_Clue_Query(kActorMcCoy, kClueCarRegistration1)) {
 						Actor_Says(kActorMcCoy, 3615, 16);
-						if (Actor_Query_Friendliness_To_Other(kActorDektora, kActorMcCoy) < 50) {
+						if (Actor_Query_Friendliness_To_Other(kActorDektora, kActorMcCoy) < 50 
+						|| Game_Flag_Query(kFlagDektoraIsReplicant)
+						|| Actor_Query_Intelligence(kActorDektora) == 90) {
 							Actor_Says(kActorDektora, 2060, 30); //03-2060.AUD	No.
 							if (Player_Query_Agenda() == kPlayerAgendaSurly 
 							|| Player_Query_Agenda() == kPlayerAgendaErratic) {
@@ -306,7 +315,9 @@ bool SceneScriptNR07::ClickedOnItem(int itemId, bool a2) {
 							Actor_Says(kActorMcCoy, 3620, 19); //00-3620.AUD	You like scorpions, huh?
 							Actor_Says(kActorDektora, 840, 30); //03-0840.AUD	Scorpions?
 							Actor_Says(kActorMcCoy, 3745, 9); //00-3745.AUD	Insects. Fakes. From Animoid Row. You buy a box of them?
-							if (Actor_Query_Friendliness_To_Other(kActorDektora, kActorMcCoy) < 50) {
+							if (Actor_Query_Friendliness_To_Other(kActorDektora, kActorMcCoy) < 50 
+							|| Game_Flag_Query(kFlagDektoraIsReplicant)
+							|| Actor_Query_Intelligence(kActorDektora) == 90) {
 								Actor_Says(kActorDektora, 2360, 30); //03-2360.AUD	Of course not.
 								if (Player_Query_Agenda() == kPlayerAgendaSurly 
 								|| Player_Query_Agenda() == kPlayerAgendaErratic) {
@@ -341,7 +352,9 @@ bool SceneScriptNR07::ClickedOnItem(int itemId, bool a2) {
 						Actor_Says(kActorMcCoy, 3620, 19); //00-3620.AUD	You like scorpions, huh?
 						Actor_Says(kActorDektora, 840, 30); //03-0840.AUD	Scorpions?
 						Actor_Says(kActorMcCoy, 3745, 9); //00-3745.AUD	Insects. Fakes. From Animoid Row. You buy a box of them?
-						if (Actor_Query_Friendliness_To_Other(kActorDektora, kActorMcCoy) < 50) {
+						if (Actor_Query_Friendliness_To_Other(kActorDektora, kActorMcCoy) < 50 
+						|| Game_Flag_Query(kFlagDektoraIsReplicant)
+						|| Actor_Query_Intelligence(kActorDektora) == 90) {
 							Actor_Says(kActorDektora, 2060, 30); //03-2060.AUD	No.
 							if (Player_Query_Agenda() == kPlayerAgendaSurly 
 							|| Player_Query_Agenda() == kPlayerAgendaErratic) {
@@ -413,6 +426,7 @@ bool SceneScriptNR07::ClickedOnItem(int itemId, bool a2) {
 				if (!Actor_Clue_Query(kActorMcCoy, kClueDragonflyEarring)) {
 					Actor_Clue_Acquire(kActorMcCoy, kClueDragonflyEarring, true, kActorDektora);
 				}
+				Game_Flag_Set(kFlagDragonflyEarringTaken);
 			}
 		}
 	}
@@ -447,13 +461,49 @@ bool SceneScriptNR07::ClickedOn2DRegion(int region) {
 				if (!Game_Flag_Query(kFlagNR07McCoyIsCop)) {
 					Actor_Says(kActorMcCoy, 3610, 19);  // Sorry (McCoy fake fan voice)
 				} else {
-					Actor_Says(kActorMcCoy, 8525, 19);  // Hmph.
+					if (Player_Query_Agenda() == kPlayerAgendaSurly 
+					|| Player_Query_Agenda() == kPlayerAgendaErratic) {
+						Actor_Says(kActorMcCoy, 4475, 17); //00-4475.AUD	Yeah. I forgot you were keeping your lacy underthings in there.
+						Actor_Modify_Friendliness_To_Other(kActorDektora, kActorMcCoy, -2);
+					} else {
+						Actor_Says(kActorMcCoy, 8525, 19);  // Hmph.
+					}			
 				}
 			} else {
-				Actor_Change_Animation_Mode(kActorMcCoy, 23);
-				Sound_Play(kSfxDRAWER1, 90, 85, 85, 50);
-				Delay(1500);
-				Actor_Voice_Over(3700, kActorVoiceOver); // Nothing
+				if (Game_Flag_Query(kFlagDektoraIsReplicant)
+				&& Game_Flag_Query(kFlagZubenIsReplicant)
+				&& Actor_Query_Intelligence(kActorDektora) == 70) {
+					if (Actor_Clue_Query(kActorMcCoy, kClueCrazysInvolvement)) {
+						Actor_Says(kActorMcCoy, 8580, 12); // Nothing else there
+					} else {
+						Actor_Change_Animation_Mode(kActorMcCoy, 23);
+						Sound_Play(kSfxDRAWER1, 90, 85, 85, 50);
+						Delay(700);
+						Actor_Clue_Acquire(kActorMcCoy, kClueCrazysInvolvement, false, -1);
+						// McCoy picks up a sales brochure (it's CrazyLeg's -- but the model is the same as the Tyrell's Pamphlet)
+						Item_Pickup_Spin_Effect(kModelAnimationTyrellSalesPamphlet, 508, 401);
+						// McCoy finds something inside the brochure - CrazyLeg's note to the Replicants
+						// Logic is similar to HC03 (finding photos inside Izo's camera)
+						Actor_Voice_Over(3690, kActorVoiceOver); // Hmm
+						Delay(1200);
+						Item_Pickup_Spin_Effect(kModelAnimationLetter, 508, 401);
+						Actor_Says(kActorMcCoy, 6975, 12); // Interesting
+						// We don't remove the region after picking the clue
+						// McCoy will just point out that there's nothing more there to find.
+						// (Saves us from using up a flag and having to write extra code)
+						Actor_Change_Animation_Mode(kActorMcCoy, 23);
+						Delay(2000);
+						Item_Pickup_Spin_Effect(kModelAnimationPhoto, 508, 401);
+						Actor_Says(kActorMcCoy, 7960, 13); //00-7960.AUD	Dektora?
+						Delay(1500);
+						Actor_Says(kActorMcCoy, 6975, 12); // Interesting
+					}
+				} else {
+					Actor_Change_Animation_Mode(kActorMcCoy, 23);
+					Sound_Play(kSfxDRAWER1, 90, 85, 85, 50);
+					Delay(1500);
+					Actor_Voice_Over(3700, kActorVoiceOver); // Nothing
+				}
 			}
 			Player_Gains_Control();
 		}
@@ -512,12 +562,19 @@ void SceneScriptNR07::PlayerWalkedIn() {
 					Actor_Says(kActorMcCoy, 1820, 13); //00-1820.AUD	Ray McCoy.
 					Delay(1000);
 					Actor_Says(kActorDektora, 520, kAnimationModeSit); //03-0520.AUD	Is there something I can do for you, Mr. McCoy?
-					Actor_Start_Speech_Sample(kActorMcCoy, 3640);  // Tell you the truth, I'm from the LPD. (...)
-					Actor_Says_With_Pause(kActorDektora, 610, 0.0f, 31); //03-0610.AUD	Is this about Early Q? Because I could tell you--
+					Actor_Says(kActorMcCoy, 3640, 14);  // Tell you the truth, I'm from the LPD. (...)
+					if (!Game_Flag_Query(kFlagEarlyQIsReplicant)) {
+						Actor_Says_With_Pause(kActorDektora, 610, 0.0f, 31); //03-0610.AUD	Is this about Early Q? Because I could tell you--
+					} else {
+						Delay(1000);
+						Actor_Says(kActorDektora, 1980, kAnimationModeSit); //03-1980.AUD	All right.
+						Delay(1000);
+					}
 					if (!Actor_Clue_Query(kActorMcCoy, kClueDragonflyCollection)) {	
 						Actor_Says(kActorMcCoy, 3645, 12);
 						if (Actor_Query_Friendliness_To_Other(kActorDektora, kActorMcCoy) < 50 
-						|| Game_Flag_Query(kFlagDektoraIsReplicant)) {
+						|| Game_Flag_Query(kFlagDektoraIsReplicant)
+						|| Actor_Query_Intelligence(kActorDektora) == 90) {
 							Actor_Says(kActorDektora, 620, 30); //03-0620.AUD	I’m sure I don’t know what you mean.
 							if (Player_Query_Agenda() == kPlayerAgendaSurly 
 							|| Player_Query_Agenda() == kPlayerAgendaErratic) {
@@ -540,7 +597,9 @@ void SceneScriptNR07::PlayerWalkedIn() {
 					Delay(1000);
 					if (Actor_Clue_Query(kActorMcCoy, kClueCarRegistration1)) {
 						Actor_Says(kActorMcCoy, 3615, 16);
-						if (Actor_Query_Friendliness_To_Other(kActorDektora, kActorMcCoy) < 50) {
+						if (Actor_Query_Friendliness_To_Other(kActorDektora, kActorMcCoy) < 50 
+						|| Game_Flag_Query(kFlagDektoraIsReplicant)
+						|| Actor_Query_Intelligence(kActorDektora) == 90) {
 							Actor_Says(kActorDektora, 2060, 30); //03-2060.AUD	No.
 							if (Player_Query_Agenda() == kPlayerAgendaSurly 
 							|| Player_Query_Agenda() == kPlayerAgendaErratic) {
@@ -593,7 +652,9 @@ void SceneScriptNR07::PlayerWalkedIn() {
 							Actor_Says(kActorMcCoy, 3620, 19); //00-3620.AUD	You like scorpions, huh?
 							Actor_Says(kActorDektora, 840, 30); //03-0840.AUD	Scorpions?
 							Actor_Says(kActorMcCoy, 3745, 9); //00-3745.AUD	Insects. Fakes. From Animoid Row. You buy a box of them?
-							if (Actor_Query_Friendliness_To_Other(kActorDektora, kActorMcCoy) < 50) {
+							if (Actor_Query_Friendliness_To_Other(kActorDektora, kActorMcCoy) < 50 
+							|| Game_Flag_Query(kFlagDektoraIsReplicant)
+							|| Actor_Query_Intelligence(kActorDektora) == 90) {
 								Actor_Says(kActorDektora, 2360, 30); //03-2360.AUD	Of course not.
 								if (Player_Query_Agenda() == kPlayerAgendaSurly 
 								|| Player_Query_Agenda() == kPlayerAgendaErratic) {
@@ -627,7 +688,9 @@ void SceneScriptNR07::PlayerWalkedIn() {
 						Actor_Says(kActorMcCoy, 3620, 19); //00-3620.AUD	You like scorpions, huh?
 						Actor_Says(kActorDektora, 840, 30); //03-0840.AUD	Scorpions?
 						Actor_Says(kActorMcCoy, 3745, 9); //00-3745.AUD	Insects. Fakes. From Animoid Row. You buy a box of them?
-						if (Actor_Query_Friendliness_To_Other(kActorDektora, kActorMcCoy) < 50) {
+						if (Actor_Query_Friendliness_To_Other(kActorDektora, kActorMcCoy) < 50 
+						|| Game_Flag_Query(kFlagDektoraIsReplicant)
+						|| Actor_Query_Intelligence(kActorDektora) == 90) {
 							Actor_Says(kActorDektora, 2060, 30); //03-2060.AUD	No.
 							if (Player_Query_Agenda() == kPlayerAgendaSurly 
 							|| Player_Query_Agenda() == kPlayerAgendaErratic) {
@@ -819,7 +882,8 @@ void SceneScriptNR07::clickedOnVase() {
 				Actor_Says(kActorMcCoy, 3600, 19);  // The flowers are beautiful. (McCoy fake fan voice)
 				if (_vm->_cutContent) {					
 					if (Actor_Query_Friendliness_To_Other(kActorDektora, kActorMcCoy) < 50 
-					|| Game_Flag_Query(kFlagDektoraIsReplicant)) {
+					|| Game_Flag_Query(kFlagDektoraIsReplicant)
+					|| Actor_Query_Intelligence(kActorDektora) == 90) {
 						Actor_Says(kActorDektora, 1480, 30); //03-1480.AUD	Yes.
 					} else {
 						Actor_Says(kActorDektora, 550, 30); // And a extremely rare (...)
@@ -921,7 +985,8 @@ void SceneScriptNR07::talkAboutBelt1() {
 	Actor_Says(kActorMcCoy, 3625, 19);
 	if (_vm->_cutContent) {
 		if (Actor_Query_Friendliness_To_Other(kActorDektora, kActorMcCoy) < 50 
-		|| Game_Flag_Query(kFlagDektoraIsReplicant)) {
+		|| Game_Flag_Query(kFlagDektoraIsReplicant)
+		|| Actor_Query_Intelligence(kActorDektora) == 90) {
 			Actor_Says(kActorDektora, 1480, 30); //03-1480.AUD	Yes
 			Delay(2000);
 		} else {
@@ -939,10 +1004,16 @@ void SceneScriptNR07::talkAboutBelt1() {
 		Actor_Says_With_Pause(kActorDektora, 590, 1.0f, 30);
 		Actor_Says(kActorDektora, 600, 30);
 	}
-	Actor_Start_Speech_Sample(kActorMcCoy, 3640);  // Tell you the truth, I'm from the LPD. (...)
-	Loop_Actor_Walk_To_XYZ(kActorMcCoy, -109.0f, -73.0f, -89.0f, 0, false, false, false);
-	Actor_Face_Actor(kActorMcCoy, kActorDektora, true);
-	Actor_Face_Actor(kActorDektora, kActorMcCoy, true);
+	if (_vm->_cutContent) {
+		Actor_Says(kActorMcCoy, 3640, 14);  // Tell you the truth, I'm from the LPD. (...)
+	} else {
+		Actor_Start_Speech_Sample(kActorMcCoy, 3640);  // Tell you the truth, I'm from the LPD. (...)
+	}
+	if (!_vm->_cutContent) {
+		Loop_Actor_Walk_To_XYZ(kActorMcCoy, -109.0f, -73.0f, -89.0f, 0, false, false, false);
+		Actor_Face_Actor(kActorMcCoy, kActorDektora, true);
+		Actor_Face_Actor(kActorDektora, kActorMcCoy, true);
+	}
 	if (_vm->_cutContent) {
 		Actor_Modify_Friendliness_To_Other(kActorDektora, kActorMcCoy, -2);
 	}
@@ -981,13 +1052,24 @@ void SceneScriptNR07::talkAboutBelt2() {
 	Actor_Says(kActorDektora, 610, 31);
 #else
 	// Dektora is interrupted here
-	Actor_Says_With_Pause(kActorDektora, 610, 0.0f, 31); //03-0610.AUD	Is this about Early Q? Because I could tell you--
+	if (_vm->_cutContent) {
+		if (!Game_Flag_Query(kFlagEarlyQIsReplicant)) {
+			Actor_Says_With_Pause(kActorDektora, 610, 0.0f, 31); //03-0610.AUD	Is this about Early Q? Because I could tell you--
+		} else {
+			Delay(1000);
+			Actor_Says(kActorDektora, 1980, kAnimationModeSit); //03-1980.AUD	All right.
+			Delay(1000);
+		}
+	} else {
+		Actor_Says_With_Pause(kActorDektora, 610, 0.0f, 31); //03-0610.AUD	Is this about Early Q? Because I could tell you--
+	}
 #endif // BLADERUNNER_ORIGINAL_BUGS
 	if (_vm->_cutContent) {
 		if (!Actor_Clue_Query(kActorMcCoy, kClueDragonflyCollection)) {
 			Actor_Says(kActorMcCoy, 3645, 12);
 			if (Actor_Query_Friendliness_To_Other(kActorDektora, kActorMcCoy) < 50 
-			|| Game_Flag_Query(kFlagDektoraIsReplicant)) {
+			|| Game_Flag_Query(kFlagDektoraIsReplicant)
+			|| Actor_Query_Intelligence(kActorDektora) == 90) {
 				Actor_Says(kActorDektora, 620, 30); //03-0620.AUD	I’m sure I don’t know what you mean.
 				if (Player_Query_Agenda() == kPlayerAgendaSurly 
 				|| Player_Query_Agenda() == kPlayerAgendaErratic) {
@@ -1007,7 +1089,9 @@ void SceneScriptNR07::talkAboutBelt2() {
 		Actor_Says(kActorDektora, 1470, 30); //03-1470.AUD	Dektora.
 		if (Actor_Clue_Query(kActorMcCoy, kClueCarRegistration1)) {
 			Actor_Says(kActorMcCoy, 3615, 16);
-			if (Actor_Query_Friendliness_To_Other(kActorDektora, kActorMcCoy) < 50) {
+			if (Actor_Query_Friendliness_To_Other(kActorDektora, kActorMcCoy) < 50 
+			|| Game_Flag_Query(kFlagDektoraIsReplicant)
+			|| Actor_Query_Intelligence(kActorDektora) == 90) {
 				Actor_Says(kActorDektora, 2060, 30); //03-2060.AUD	No.
 				if (Player_Query_Agenda() == kPlayerAgendaSurly 
 				|| Player_Query_Agenda() == kPlayerAgendaErratic) {
@@ -1060,7 +1144,9 @@ void SceneScriptNR07::talkAboutBelt2() {
 				Actor_Says(kActorMcCoy, 3620, 19); //00-3620.AUD	You like scorpions, huh?
 				Actor_Says(kActorDektora, 840, 30); //03-0840.AUD	Scorpions?
 				Actor_Says(kActorMcCoy, 3745, 9); //00-3745.AUD	Insects. Fakes. From Animoid Row. You buy a box of them?
-				if (Actor_Query_Friendliness_To_Other(kActorDektora, kActorMcCoy) < 50) {
+				if (Actor_Query_Friendliness_To_Other(kActorDektora, kActorMcCoy) < 50 
+				|| Game_Flag_Query(kFlagDektoraIsReplicant)
+				|| Actor_Query_Intelligence(kActorDektora) == 90) {
 					Actor_Says(kActorDektora, 2360, 30); //03-2360.AUD	Of course not.
 					if (Player_Query_Agenda() == kPlayerAgendaSurly 
 					|| Player_Query_Agenda() == kPlayerAgendaErratic) {
@@ -1094,7 +1180,9 @@ void SceneScriptNR07::talkAboutBelt2() {
 			Actor_Says(kActorMcCoy, 3620, 19); //00-3620.AUD	You like scorpions, huh?
 			Actor_Says(kActorDektora, 840, 30); //03-0840.AUD	Scorpions?
 			Actor_Says(kActorMcCoy, 3745, 9); //00-3745.AUD	Insects. Fakes. From Animoid Row. You buy a box of them?
-			if (Actor_Query_Friendliness_To_Other(kActorDektora, kActorMcCoy) < 50) {
+			if (Actor_Query_Friendliness_To_Other(kActorDektora, kActorMcCoy) < 50 
+			|| Game_Flag_Query(kFlagDektoraIsReplicant)
+			|| Actor_Query_Intelligence(kActorDektora) == 90) {
 				Actor_Says(kActorDektora, 2060, 30); //03-2060.AUD	No.
 				if (Player_Query_Agenda() == kPlayerAgendaSurly 
 				|| Player_Query_Agenda() == kPlayerAgendaErratic) {
@@ -1169,9 +1257,10 @@ void SceneScriptNR07::talkAboutVoightKampff() {
 	}
 	if (_vm->_cutContent) {
 		if (Actor_Query_Goal_Number(kActorLucy) < kGoalLucyGone) {
-			Actor_Face_Actor(kActorDektora, kActorMcCoy, true);
-			Actor_Says(kActorDektora, 670, 31); //03-0670.AUD	This is insane. I have a family, a daughter for heaven’s sake.
-			Game_Flag_Reset(kFlagMcCoyIsHelpingReplicants);
+			if (Actor_Query_Intelligence(kActorDektora) == 90) {
+				Actor_Face_Actor(kActorDektora, kActorMcCoy, true);
+				Actor_Says(kActorDektora, 670, 31); //03-0670.AUD	This is insane. I have a family, a daughter for heaven’s sake.	
+			}
 		}
 	} else {
 		Actor_Face_Actor(kActorDektora, kActorMcCoy, true);
@@ -1186,10 +1275,10 @@ void SceneScriptNR07::talkAboutVoightKampff() {
 			Actor_Says(kActorMcCoy, 400, 14); //00-0400.AUD	It won't take too long.
 		} else {
 			Actor_Says(kActorDektora, 680, 30); //03-0680.AUD	Look, I’m willing to testify against Early Q.
-			Actor_Says(kActorDektora, 690, 31); //03-0690.AUD	A Replicant wouldn’t do that, would it?
-			if (!Game_Flag_Query(kFlagMcCoyIsHelpingReplicants)) {
-				Actor_Says(kActorMcCoy, 3670, 17);
-				if (Game_Flag_Query(kFlagDektoraIsReplicant)) {	
+			if (Actor_Query_Intelligence(kActorDektora) == 90) {				
+				Actor_Says(kActorDektora, 690, 31); //03-0690.AUD	A Replicant wouldn’t do that, would it?
+				if (!Game_Flag_Query(kFlagMcCoyIsHelpingReplicants)) {
+					Actor_Says(kActorMcCoy, 3670, 17);
 					Actor_Says(kActorDektora, 700, 30); //03-0700.AUD	Then, you must be a Replicant.
 					Actor_Says(kActorMcCoy, 3675, 19); 
 					Actor_Says(kActorDektora, 710, 30); //03-0710.AUD	How do you know you’re not a Replicant? Did you ever take that test yourself?

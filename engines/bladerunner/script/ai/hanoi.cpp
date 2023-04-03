@@ -505,6 +505,42 @@ bool AIScriptHanoi::GoalChanged(int currentGoalNumber, int newGoalNumber) {
 				Actor_Says(kActorHanoi, 160, -1); //25-0160.AUD	Here, what’s this then?
 				Actor_Says(kActorMcCoy, 525, -1); //00-0525.AUD	I've seen you before...
 				Actor_Says(kActorMcCoy, 7260, -1); //00-7260.AUD	Didn't I see an incept tape at the—	
+				Sound_Play(kSfxSHOTCOK1, 77, 0, 0, 20);
+				Delay(1000);
+				if (Player_Query_Agenda() == kPlayerAgendaSurly 
+				|| (Player_Query_Agenda() == kPlayerAgendaErratic)) {
+					Actor_Start_Speech_Sample(kActorMcCoy, 490); //00-0490.AUD	Suck on this, skin-job!
+				}
+				Sound_Play(kSfxGUNH1A, 100, 0, 0, 50);
+				Actor_Change_Animation_Mode(kActorMcCoy, kAnimationModeCombatAim);
+				Actor_Change_Animation_Mode(kActorMcCoy, kAnimationModeCombatAttack);
+				Actor_Change_Animation_Mode(kActorHanoi, 21);
+				Delay(600);
+				Sound_Play(kSfxGUNH1A, 100, 0, 0, 50);
+				Actor_Change_Animation_Mode(kActorMcCoy, kAnimationModeCombatAim);
+				Actor_Change_Animation_Mode(kActorMcCoy, kAnimationModeCombatAttack);
+				Actor_Change_Animation_Mode(kActorHanoi, 21);
+				Delay(600);
+				Sound_Play(kSfxGUNH1A, 100, 0, 0, 50);
+				Actor_Change_Animation_Mode(kActorMcCoy, kAnimationModeCombatAim);
+				Actor_Change_Animation_Mode(kActorMcCoy, kAnimationModeCombatAttack);
+				Actor_Change_Animation_Mode(kActorHanoi, 21);
+				Delay(600);
+				Sound_Play(kSfxGUNH1A, 100, 0, 0, 50);
+				Actor_Change_Animation_Mode(kActorMcCoy, kAnimationModeCombatAim);
+				Actor_Change_Animation_Mode(kActorMcCoy, kAnimationModeCombatAttack);
+				Actor_Change_Animation_Mode(kActorHanoi, 21);
+				Delay(600);
+				Sound_Play(kSfxGUNH1A, 100, 0, 0, 50);
+				Actor_Change_Animation_Mode(kActorMcCoy, kAnimationModeCombatAim);
+				Actor_Change_Animation_Mode(kActorMcCoy, kAnimationModeCombatAttack);
+				Actor_Change_Animation_Mode(kActorHanoi, 21);
+				Delay(600);
+				Sound_Play(kSfxGUNH1A, 100, 0, 0, 50);
+				Actor_Change_Animation_Mode(kActorMcCoy, kAnimationModeCombatAim);
+				Actor_Change_Animation_Mode(kActorMcCoy, kAnimationModeCombatAttack);
+				Actor_Change_Animation_Mode(kActorHanoi, 21);
+				Delay(2000);
 				Loop_Actor_Walk_To_XYZ(kActorHanoi, 47.04, 0.18, 321.63, 0, false, false, false);
 				Music_Stop(1u);
 				Actor_Face_Actor(kActorHanoi, kActorMcCoy, true);

@@ -266,8 +266,23 @@ void SceneScriptCT05::PlayerWalkedIn() {
 				Actor_Put_In_Set(kActorGaff, kSceneCT12);
 				Actor_Set_Goal_Number(kActorGaff, kGoalGaffCT12WaitForMcCoy);
 				Game_Flag_Reset(kFlagZubenEncounter);
-				Actor_Set_Goal_Number(kActorGordo, kGoalGordoCT05WalkThrough);
-				Scene_Exits_Disable();
+				if (Game_Flag_Query(kFlagGordoIsReplicant)) {
+					Scene_Exits_Disable();
+					Actor_Set_Goal_Number(kActorGordo, kGoalGordoCT05WalkThrough);		
+				} else if (!Game_Flag_Query(kFlagGordoIsReplicant)
+				&& Game_Flag_Query(kFlagSadikIsReplicant)) {
+					Scene_Exits_Disable();
+					Actor_Set_Goal_Number(kActorGordo, kGoalGordoCT05WalkThrough);	
+				} else {
+					Delay(1000);
+					Player_Loses_Control();
+					Loop_Actor_Walk_To_XYZ(kActorMcCoy, -128.42f, -109.91f, 112.83f, 0, true, false, false);
+					Player_Gains_Control();
+					Scene_Exits_Enable();
+					Overlay_Remove("ct05over");
+					Game_Flag_Set(kFlagCT05toCT12);
+					Set_Enter(kSetCT01_CT12, kSceneCT12);
+				}				
 			}
 		} 
 		if (!_vm->_cutContent) {

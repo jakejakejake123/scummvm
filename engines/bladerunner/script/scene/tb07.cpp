@@ -352,8 +352,8 @@ void SceneScriptTB07::McCoyTalkWithRachaelAndTyrell() {
 		Actor_Says_With_Pause(kActorMcCoy, 5385, 2.0f, 12); //00-5385.AUD	A little of both.
 	}
 	Actor_Says_With_Pause(kActorMcCoy, 5390, 2.0f, 14); //00-5390.AUD	You heard about the moonbus hijacking?
-	Actor_Says(kActorMcCoy, 5395, 15);
-	Actor_Says_With_Pause(kActorRachael, 630, 0.0f, 14);
+	Actor_Says(kActorMcCoy, 5395, 15); //00-5395.AUD	Yeah, I guess you would have. 50 people dead.
+	Actor_Says_With_Pause(kActorRachael, 630, 0.0f, 14);  //57-0630.AUD	You can't blame--
 	if (_vm->_cutContent) {
 		if (Player_Query_Agenda() == kPlayerAgendaSurly 
 		|| Player_Query_Agenda() == kPlayerAgendaErratic) {
@@ -392,7 +392,7 @@ void SceneScriptTB07::McCoyTalkWithRachaelAndTyrell() {
 		} else {
 			Actor_Says(kActorMcCoy, 8365, 16); //00-8365.AUD	How do you feel about that?
 			Actor_Modify_Friendliness_To_Other(kActorRachael, kActorMcCoy, 2);
-			Delay(1000);
+			Delay(2000);
 		}
 	} else {
 		Actor_Says(kActorMcCoy, 5420, 14); //00-5420.AUD	I'd probably get a little crazy too but I don't think I'd start killing people.
@@ -446,10 +446,10 @@ void SceneScriptTB07::McCoyTalkWithRachaelAndTyrell() {
 	Actor_Says(kActorTyrell, 90, 15);
 	if (_vm->_cutContent) {
 		if (Game_Flag_Query(kFlagMcCoyIsHelpingReplicants)) {
-			Actor_Says(kActorMcCoy, 5705, 13); //00-5705.AUD	Uh-huh.
-		} else {
 			Actor_Says_With_Pause(kActorMcCoy, 5450, 1.0f, 15);
 			Actor_Says(kActorMcCoy, 5455, 12); //00-5455.AUD	Yeah, maybe.
+		} else {
+			Actor_Says(kActorMcCoy, 5705, 13); //00-5705.AUD	Uh-huh.
 		}
 	} else {
 		Actor_Says_With_Pause(kActorMcCoy, 5450, 1.0f, 15);

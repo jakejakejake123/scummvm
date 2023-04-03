@@ -60,7 +60,7 @@ void SceneScriptBB07::InitializeScene() {
 
 	Overlay_Play("BB07OVER", 0, true, false, 0);
 	if (_vm->_cutContent) {
-		if (Game_Flag_Query(kFlagSadikIsReplicant)) {
+		if (Actor_Query_Intelligence(kActorSadik) == 90) {
 			Overlay_Play("BB07OVER", 1, false, true, 0);
 			Overlay_Play("BB07OVER", 2, true, false, 0);
 			Game_Flag_Set(kFlagBB07ElectricityOn);
@@ -86,7 +86,7 @@ bool SceneScriptBB07::ClickedOn3DObject(const char *objectName, bool a2) {
 			 && !Game_Flag_Query(kFlagBB07PrinterChecked)
 			) {
 				if (_vm->_cutContent) {
-					if (!Game_Flag_Query(kFlagSadikIsReplicant)) {
+					if (Actor_Query_Intelligence(kActorSadik) == 90) {
 						Actor_Voice_Over(130, kActorVoiceOver); //99-0130.AUD	DNA research, incept dates.		
 						Actor_Change_Animation_Mode(kActorMcCoy, 23);
 						Delay(800);

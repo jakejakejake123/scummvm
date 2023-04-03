@@ -667,12 +667,7 @@ bool AIScriptMaggie::GoalChanged(int currentGoalNumber, int newGoalNumber) {
 					Actor_Face_Actor(kActorMcCoy, kActorClovis, true);
 					Actor_Face_Actor(kActorClovis, kActorMcCoy, true);
 					Actor_Says(kActorClovis, 110, kAnimationModeTalk);
-					if (Player_Query_Agenda() == kPlayerAgendaSurly 
-					|| (Player_Query_Agenda() == kPlayerAgendaErratic)) {
-						Actor_Says(kActorMcCoy, 2255, kAnimationModeTalk); //00-2255.AUD	She was innocent, you bastard!
-					} else {
-						Actor_Says(kActorMcCoy, 2240, kAnimationModeTalk); //00-2240.AUD	You bastard! She was an innocent!
-					}
+					Actor_Says(kActorMcCoy, 2240, kAnimationModeTalk); //00-2240.AUD	You bastard! She was an innocent!
 					Actor_Says(kActorClovis, 120, kAnimationModeTalk); //05-0120.AUD	Can’t see it yet? You came down to Terra with us, McCoy.
 					Actor_Says(kActorClovis, 130, kAnimationModeTalk); //05-0130.AUD	The police got a hold of you and Tyrell created your past.
 					Actor_Says(kActorClovis, 140, kAnimationModeTalk);
@@ -685,12 +680,7 @@ bool AIScriptMaggie::GoalChanged(int currentGoalNumber, int newGoalNumber) {
 				} else {
 					if (Game_Flag_Query(kFlagSadikIsReplicant)) {
 						Actor_Says(kActorSadik, 60, 3);
-						if (Player_Query_Agenda() == kPlayerAgendaSurly 
-						|| (Player_Query_Agenda() == kPlayerAgendaErratic)) {
-							Actor_Says(kActorMcCoy, 2255, kAnimationModeTalk); //00-2255.AUD	She was innocent, you bastard!
-						} else {
-							Actor_Says(kActorMcCoy, 2240, kAnimationModeTalk); //00-2240.AUD	You bastard! She was an innocent!
-						}
+						Actor_Says(kActorMcCoy, 2240, kAnimationModeTalk); //00-2240.AUD	You bastard! She was an innocent!
 						Actor_Says(kActorSadik, 70, 3);
 						Actor_Says(kActorSadik, 80, 3);
 						Actor_Says(kActorMcCoy, 2245, 3);

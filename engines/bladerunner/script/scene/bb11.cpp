@@ -71,7 +71,9 @@ void SceneScriptBB11::SceneLoaded() {
 	}
 	// Added in the Sadik incept clue.
 	if (_vm->_cutContent) {
-		if (!Actor_Clue_Query(kActorMcCoy, kClueSadikIncept) && (Game_Flag_Query(kFlagSadikIsReplicant))) {
+		if (!Actor_Clue_Query(kActorMcCoy, kClueSadikIncept) 
+		&& (Game_Flag_Query(kFlagSadikIsReplicant))
+		&& Actor_Query_Intelligence(kActorSadik) == 70) {
 			Item_Add_To_World(kItemNote, kModelAnimationPhoto, kSetBB11, 103.42, -30.74, 217.77, 0, 12, 12, false, true, false, true);
 		}
 	}
@@ -159,10 +161,6 @@ void SceneScriptBB11::PlayerWalkedIn() {
 		Actor_Set_Goal_Number(kActorSadik, kGoalSadikBB11ThrowMcCoy);
 		Music_Play(kMusicBeating1, 61, 0, 1, -1, kMusicLoopPlayOnce, 0);
 		Player_Loses_Control();
-	}
-	// Added in this flag so the scene with the new doll will be initiated when you return to set bb07.
-	if (Global_Variable_Query(kVariableChapter) == 3) {
-		Game_Flag_Set(kFlagBB11Visited);
 	}
 }
 

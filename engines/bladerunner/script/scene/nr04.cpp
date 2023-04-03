@@ -100,7 +100,8 @@ bool SceneScriptNR04::ClickedOn3DObject(const char *objectName, bool a2) {
 							Actor_Voice_Over(1600, kActorVoiceOver);
 							Actor_Voice_Over(1610, kActorVoiceOver);
 						} else {
-							if (!Actor_Clue_Query(kActorMcCoy, kClueCollectionReceipt)) {
+							if (Game_Flag_Query(kFlagEarlyQTalkJewelry)
+							&& !Actor_Clue_Query(kActorMcCoy, kClueCollectionReceipt)) {
 								Actor_Clue_Acquire(kActorMcCoy, kClueCollectionReceipt, false, kActorEarlyQ);
 								Actor_Change_Animation_Mode(kActorMcCoy, 23);
 								Delay(800);
@@ -122,7 +123,7 @@ bool SceneScriptNR04::ClickedOn3DObject(const char *objectName, bool a2) {
 								Delay(1000);
 								Actor_Says(kActorMcCoy, 8525, kAnimationModeTalk); //00-8525.AUD	Hmph.
 								Actor_Clue_Acquire(kActorMcCoy, kClueDragonflyAnklet, false, kActorEarlyQ);
-							} else {
+							} else {	
 								Actor_Says(kActorMcCoy, 8580, 13); //00-8580.AUD	Nothing else there.
 							}
 						}
@@ -169,9 +170,12 @@ bool SceneScriptNR04::ClickedOn3DObject(const char *objectName, bool a2) {
 		Actor_Face_Object(kActorMcCoy, "TORUS01", true);
 		if (_vm->_cutContent) {
 			if (Game_Flag_Query(kFlagEarlyQIsReplicant)
-			&& Game_Flag_Query(kFlagSadikIsReplicant)) {
+			&& Actor_Query_Intelligence(kActorClovis) == 100 
+			&& Actor_Query_Intelligence(kActorSadik) == 90) {
 				Actor_Change_Animation_Mode(kActorMcCoy, 23);
 				Delay(800);
+				Item_Pickup_Spin_Effect(kModelAnimationDNADataDisc, 358, 160);
+				Delay(1500);
 				Item_Pickup_Spin_Effect(kModelAnimationDNADataDisc, 358, 160);
 				Delay(1500);
 				Item_Pickup_Spin_Effect(kModelAnimationDNADataDisc, 358, 160);
@@ -183,7 +187,33 @@ bool SceneScriptNR04::ClickedOn3DObject(const char *objectName, bool a2) {
 				Actor_Clue_Acquire(kActorMcCoy, kClueDNAMarcus, true, kActorEarlyQ);
 				Actor_Clue_Acquire(kActorMcCoy, kClueDNASebastian, true, kActorEarlyQ);
 				Actor_Clue_Acquire(kActorMcCoy, kClueDNAMoraji, true, kActorEarlyQ);
-				Delay(1000);
+				Actor_Clue_Acquire(kActorMcCoy, kClueDNAChew, true, kActorEarlyQ);
+			} else if (Game_Flag_Query(kFlagEarlyQIsReplicant)
+			&& Actor_Query_Intelligence(kActorClovis) == 80 
+			&& Actor_Query_Intelligence(kActorSadik) == 90) {
+				Actor_Change_Animation_Mode(kActorMcCoy, 23);
+				Delay(800);
+				Item_Pickup_Spin_Effect(kModelAnimationDNADataDisc, 358, 160);
+				Delay(1500);
+				Item_Pickup_Spin_Effect(kModelAnimationDNADataDisc, 358, 160);
+				Delay(1500);
+				Actor_Voice_Over(130, kActorVoiceOver); //99-0130.AUD	DNA research, incept dates.
+				Actor_Voice_Over(140, kActorVoiceOver); //99-0140.AUD	A lot of jargon but I bet my spinner it was valuable to somebody.
+				Actor_Clue_Acquire(kActorMcCoy, kClueDNAMarcus, true, kActorEarlyQ);
+				Actor_Clue_Acquire(kActorMcCoy, kClueDNASebastian, true, kActorEarlyQ);
+			} else if (Game_Flag_Query(kFlagEarlyQIsReplicant)
+			&& Actor_Query_Intelligence(kActorClovis) == 100 
+			&& Actor_Query_Intelligence(kActorSadik) == 70) {
+				Actor_Change_Animation_Mode(kActorMcCoy, 23);
+				Delay(800);
+				Item_Pickup_Spin_Effect(kModelAnimationDNADataDisc, 358, 160);
+				Delay(1500);
+				Item_Pickup_Spin_Effect(kModelAnimationDNADataDisc, 358, 160);
+				Delay(1500);
+				Actor_Voice_Over(130, kActorVoiceOver); //99-0130.AUD	DNA research, incept dates.
+				Actor_Voice_Over(140, kActorVoiceOver); //99-0140.AUD	A lot of jargon but I bet my spinner it was valuable to somebody.
+				Actor_Clue_Acquire(kActorMcCoy, kClueDNAMoraji, true, kActorEarlyQ);
+				Actor_Clue_Acquire(kActorMcCoy, kClueDNAChew, true, kActorEarlyQ);
 			}
 			Actor_Change_Animation_Mode(kActorMcCoy, 23);
 			Delay(800);
@@ -350,23 +380,50 @@ void SceneScriptNR04::ActorChangedGoal(int actorId, int newGoal, int oldGoal, bo
 			}
 			Actor_Says(kActorEarlyQ, 70, kAnimationModeTalk);//18-0070.AUD	I got ya. You want a trade. The disc for… what?
 			if (_vm->_cutContent) {
-				if (Player_Query_Agenda() != kPlayerAgendaPolite) {
+				if (!Game_Flag_Query(kFlagEarlyQIsReplicant)) {
 					Actor_Says(kActorMcCoy, 3415, kAnimationModeTalk); //00-3415.AUD	Let’s hear what you got.
 				} else {
 					Actor_Says(kActorMcCoy, 8370, kAnimationModeTalk); //00-8370.AUD	It's okay. I got what I need. 
 				}
 			} else {
 				Actor_Says(kActorMcCoy, 3415, kAnimationModeTalk); //00-3415.AUD	Let’s hear what you got.
-			}		
-			Actor_Says(kActorEarlyQ, 80, kAnimationModeTalk); //
-			Player_Gains_Control();
-			Actor_Set_Goal_Number(kActorEarlyQ, kGoalEarlyQNR04GoToBar);
+			}	
 			if (_vm->_cutContent) {
-				if (Player_Query_Agenda() == kPlayerAgendaSurly 
-				|| Player_Query_Agenda() == kPlayerAgendaErratic) {
-					Delay(1000);
-					Player_Set_Combat_Mode(true);
+				if (!Game_Flag_Query(kFlagEarlyQIsReplicant)) {
+					if (!Game_Flag_Query(kFlagEarlyQTalkLucy)) {
+						Delay(1000);
+						Actor_Says(kActorMcCoy, 5600, 14);               // Let me ask you.
+						Actor_Says(kActorMcCoy, 3510, 23); //00-3510.AUD	This girl one of yours?
+						Actor_Says_With_Pause(kActorEarlyQ, 530, 1.2f, kAnimationModeTalk); //18-0530.AUD	This ain’t no daycare center, General.
+						Actor_Says(kActorEarlyQ, 540, 15); //18-0540.AUD	Of course, she ain’t half bad looking. My pappy always used to say ‘if there’s grass on the field, it’s time to play ball’.			
+						Actor_Voice_Over(4260, kActorVoiceOver); //99-4260.AUD	Early, you sick bastard.
+						Delay(500);
+						Player_Set_Combat_Mode(true);
+					} else {
+						Delay(1000);
+						Actor_Says(kActorMcCoy, 4760, 13);//00-4760.AUD	About the girl.
+						Actor_Says(kActorMcCoy, 8514, 15);//00-8514.AUD	Got anything new to tell me?
+						Delay(1000);
+						Actor_Says(kActorEarlyQ, 570, 13); //18-0570.AUD	Talk to Taffy. He gets most of the peddy business around here.
+						Actor_Says(kActorMcCoy, 2140, 14); //00-2140.AUD	Bullshit.
+						Delay(500);
+						Player_Set_Combat_Mode(true);
+					}
+				} else {
+					Actor_Says(kActorEarlyQ, 80, kAnimationModeTalk); //
+					if (Player_Query_Agenda() == kPlayerAgendaSurly 
+					|| (Player_Query_Agenda() == kPlayerAgendaErratic)) {
+						Delay(500);
+						Player_Set_Combat_Mode(true);
+					} else {
+						Player_Gains_Control();
+						Actor_Set_Goal_Number(kActorEarlyQ, kGoalEarlyQNR04GoToBar);
+					}
 				}
+			} else {
+				Actor_Says(kActorEarlyQ, 80, kAnimationModeTalk); //
+				Player_Gains_Control();
+				Actor_Set_Goal_Number(kActorEarlyQ, kGoalEarlyQNR04GoToBar);
 			}
 			//return true;
 			break;
@@ -384,7 +441,7 @@ void SceneScriptNR04::ActorChangedGoal(int actorId, int newGoal, int oldGoal, bo
 				Actor_Says(kActorMcCoy, 3390, 3); //00-3390.AUD	Not interested.
 			}
 			if (_vm->_cutContent) {
-				Actor_Says(kActorEarlyQ, 140, 16); //18-0140.AUD	You want Dektora? Is that it? The girl with the Rep friends?
+				Actor_Says(kActorEarlyQ, 140, 74); //18-0140.AUD	You want Dektora? Is that it? The girl with the Rep friends?
 				Actor_Clue_Acquire(kActorMcCoy, kClueEarlyQInterview, true, kActorEarlyQ);
 				Delay(1000);
 				if (Game_Flag_Query(kFlagEarlyQIsReplicant)) {
@@ -465,59 +522,31 @@ void SceneScriptNR04::ActorChangedGoal(int actorId, int newGoal, int oldGoal, bo
 							Actor_Set_Goal_Number(kActorHanoi, kGoalHanoiNR04Enter);
 						} else {
 							Player_Gains_Control();
+							Scene_Exits_Enable();
 						}
 					} else {
 						if (Player_Query_Agenda() == kPlayerAgendaPolite) {
 							Actor_Says(kActorMcCoy, 8512, 15); // 00-8512.AUD	The disc? I'm keeping it for now.
 							Delay(1000);
-							Actor_Face_Actor(kActorEarlyQ, kActorMcCoy, true);
-							Actor_Face_Actor(kActorMcCoy, kActorEarlyQ, true);
-							Actor_Says(kActorEarlyQ, 340, 12); //18-0340.AUD	No more free drinks for you, buddy boy.
-							Actor_Says(kActorMcCoy, 3465, 12); //00-3465.AUD	I didn’t get free drinks before.
-							Actor_Says(kActorEarlyQ, 350, 16);
-							Actor_Set_Goal_Number(kActorEarlyQ, kGoalEarlyQNR04Leave);
-							Delay(8000);
-							Player_Loses_Control();
-							Loop_Actor_Walk_To_XYZ(kActorMcCoy, 45.0f, 0.0f, -106.0f, 0, true, false, false);
-							Player_Gains_Control();
-							Ambient_Sounds_Remove_All_Non_Looping_Sounds(true);
-							Ambient_Sounds_Remove_All_Looping_Sounds(1u);
-							Game_Flag_Set(kFlagNR04toNR03);
-							Set_Enter(kSetNR03, kSceneNR03);
-							Scene_Exits_Enable();
-							Player_Gains_Control();
+							Actor_Says(kActorEarlyQ, 120, 74);
 						} else {
 							Actor_Says(kActorMcCoy, 3385, 3); //00-3385.AUD	I want information.
 							Actor_Says(kActorEarlyQ, 120, 74);
-							Actor_Face_Actor(kActorEarlyQ, kActorMcCoy, true);
-							Actor_Set_Goal_Number(kActorEarlyQ, kGoalEarlyQNR04GoToMcCoy);
 						}
+						Actor_Face_Actor(kActorEarlyQ, kActorMcCoy, true);
+						Actor_Set_Goal_Number(kActorEarlyQ, kGoalEarlyQNR04GoToMcCoy);
 					}
 				} else {
 					if (Player_Query_Agenda() == kPlayerAgendaPolite) {
 						Actor_Says(kActorMcCoy, 8512, 15); 
 						Delay(1000);
-						Actor_Face_Actor(kActorEarlyQ, kActorMcCoy, true);
-						Actor_Face_Actor(kActorMcCoy, kActorEarlyQ, true);
-						Actor_Says(kActorEarlyQ, 340, 12); //18-0340.AUD	No more free drinks for you, buddy boy.
-						Actor_Says(kActorMcCoy, 3465, 12); //00-3465.AUD	I didn’t get free drinks before.
-						Actor_Says(kActorEarlyQ, 350, 16);
-						Actor_Set_Goal_Number(kActorEarlyQ, kGoalEarlyQNR04Leave);
-						Delay(8000);
-						Player_Loses_Control();
-						Loop_Actor_Walk_To_XYZ(kActorMcCoy, 45.0f, 0.0f, -106.0f, 0, true, false, false);
-						Player_Gains_Control();
-						Ambient_Sounds_Remove_All_Non_Looping_Sounds(true);
-						Ambient_Sounds_Remove_All_Looping_Sounds(1u);
-						Game_Flag_Set(kFlagNR04toNR03);
-						Set_Enter(kSetNR03, kSceneNR03);
-						Scene_Exits_Enable();
-						Player_Gains_Control();
+						Actor_Says(kActorEarlyQ, 120, 74);
 					} else {
 						Actor_Says(kActorMcCoy, 3385, 3); //00-3385.AUD	I want information.
 						Actor_Says(kActorEarlyQ, 120, 74);
-						Actor_Set_Goal_Number(kActorEarlyQ, kGoalEarlyQNR04GoToMcCoy);
 					}
+					Actor_Face_Actor(kActorEarlyQ, kActorMcCoy, true);
+					Actor_Set_Goal_Number(kActorEarlyQ, kGoalEarlyQNR04GoToMcCoy);
 				}
 			} else {
 				Actor_Face_Actor(kActorEarlyQ, kActorMcCoy, true);
@@ -545,10 +574,29 @@ void SceneScriptNR04::ActorChangedGoal(int actorId, int newGoal, int oldGoal, bo
 		case kGoalEarlyQNR04Talk2:
 			Actor_Face_Actor(kActorMcCoy, kActorEarlyQ, true);
 			Delay(3000);
-			Actor_Says(kActorEarlyQ, 170, 30);
-			Actor_Says(kActorMcCoy, 3415, kAnimationModeTalk); //00-3415.AUD	Let’s hear what you got.
-			Actor_Says(kActorEarlyQ, 180, 30);
-			Actor_Says_With_Pause(kActorMcCoy, 3420, 1.5f, kAnimationModeTalk);
+			if (_vm->_cutContent) {
+				if (Game_Flag_Query(kFlagEarlyQIsReplicant)) {
+					Actor_Says(kActorEarlyQ, 140, 30); //18-0140.AUD	You want Dektora? Is that it? The girl with the Rep friends?
+					Actor_Clue_Acquire(kActorMcCoy, kClueEarlyQInterview, true, kActorEarlyQ);
+					if (Player_Query_Agenda() == kPlayerAgendaSurly 
+					|| (Player_Query_Agenda() == kPlayerAgendaErratic)) {
+						if (!Game_Flag_Query(kFlagMcCoyIsHelpingReplicants)) {
+							Actor_Says(kActorMcCoy, 2215, -1); //00-2215.AUD	That’s right.
+						}
+					}
+					Delay(2000);
+				} else {
+					Actor_Says(kActorEarlyQ, 170, 30); //
+					Actor_Says(kActorMcCoy, 3415, kAnimationModeTalk); //00-3415.AUD	Let’s hear what you got.
+					Actor_Says(kActorEarlyQ, 180, 30); //
+					Actor_Says_With_Pause(kActorMcCoy, 3420, 1.5f, kAnimationModeTalk);
+				}
+			} else {
+				Actor_Says(kActorEarlyQ, 170, 30); //
+				Actor_Says(kActorMcCoy, 3415, kAnimationModeTalk); //00-3415.AUD	Let’s hear what you got.
+				Actor_Says(kActorEarlyQ, 180, 30); //
+				Actor_Says_With_Pause(kActorMcCoy, 3420, 1.5f, kAnimationModeTalk);
+			}
 			if (_vm->_cutContent) {
 				Scene_Exits_Disable();
 				if (Game_Flag_Query(kFlagEarlyQIsReplicant)) {
@@ -558,12 +606,21 @@ void SceneScriptNR04::ActorChangedGoal(int actorId, int newGoal, int oldGoal, bo
 					Actor_Says(kActorMcCoy, 6865, -1); //00-6865.AUD	You're a Replicant.
 					Delay (2000);
 					Actor_Says(kActorEarlyQ, 90, 30);
-				}
-				if (Player_Query_Agenda() == kPlayerAgendaPolite) {
-					Delay(1000);
-					Actor_Set_Goal_Number(kActorEarlyQ, kGoalEarlyQNR04Talk3);
+					if (Player_Query_Agenda() == kPlayerAgendaPolite
+					|| Game_Flag_Query(kFlagMcCoyIsHelpingReplicants)) {
+						Delay(1000);
+						Actor_Set_Goal_Number(kActorEarlyQ, kGoalEarlyQNR04Talk3);
+					} else {
+						Actor_Set_Goal_Number(kActorEarlyQ, kGoalEarlyQNR04WaitForPulledGun);
+						Player_Gains_Control();
+					}
 				} else {
-					Actor_Set_Goal_Number(kActorEarlyQ, kGoalEarlyQNR04WaitForPulledGun);
+					if (Player_Query_Agenda() == kPlayerAgendaPolite) {
+						Delay(1000);
+						Actor_Set_Goal_Number(kActorEarlyQ, kGoalEarlyQNR04Talk3);						
+					} else {
+						Player_Gains_Control();
+					}
 				}
 			} else {
 				Actor_Says(kActorEarlyQ, 190, 30); //18-0190.AUD	You’re cold, General.
@@ -592,6 +649,7 @@ void SceneScriptNR04::ActorChangedGoal(int actorId, int newGoal, int oldGoal, bo
 					Player_Loses_Control();
 					Loop_Actor_Walk_To_Actor(kActorMcCoy, kActorEarlyQ, 24, true, false);
 					Player_Gains_Control();
+					Actor_Face_Actor(kActorMcCoy, kActorEarlyQ, true);
 					Actor_Change_Animation_Mode(kActorMcCoy, 23);
 					Delay (800);
 					Actor_Clue_Acquire(kActorMcCoy, kClueCollectionReceipt, false, kActorEarlyQ);
@@ -617,10 +675,12 @@ void SceneScriptNR04::ActorChangedGoal(int actorId, int newGoal, int oldGoal, bo
 					}
 					Actor_Set_Goal_Number(kActorEarlyQ, kGoalEarlyQNR04AskForDisk);
 				} else { 
-					Actor_Start_Speech_Sample(kActorMcCoy, 3); //00-4940.AUD	Okay, let's have it.
+					Player_Set_Combat_Mode(false);
+					Actor_Says(kActorMcCoy, 4940, -1); //00-4940.AUD	Okay, let's have it.
 					Player_Loses_Control();
 					Loop_Actor_Walk_To_Actor(kActorMcCoy, kActorEarlyQ, 24, true, false);
 					Player_Gains_Control();
+					Actor_Face_Actor(kActorMcCoy, kActorEarlyQ, true);
 					Actor_Change_Animation_Mode(kActorMcCoy, 23);
 					Delay (800);
 					Actor_Clue_Acquire(kActorMcCoy, kClueDektorasDressingRoom, false, kActorEarlyQ);
@@ -728,6 +788,7 @@ if (_vm->_cutContent) {
 		if (Actor_Clue_Query(kActorMcCoy, kClueEarlyQAndLucy)
 		&& !Game_Flag_Query(kFlagNR04EarlyQStungByScorpions)
 		&& !Game_Flag_Query(kFlagEarlyQDead)
+		&& !Game_Flag_Query(kFlagEarlyQIsReplicant)
 		&& !Game_Flag_Query(kFlagEarlyQArrested)) {
 			Actor_Put_In_Set(kActorEarlyQ, kSetNR04);
 			Actor_Set_At_XYZ(kActorEarlyQ,  48.79, 0.32, 34.30, 126);
@@ -801,7 +862,7 @@ void SceneScriptNR04::dialogueWithEarlyQ() {
 	Dialogue_Menu_Clear_List();
 	if (_vm->_cutContent) {
 		DM_Add_To_List(1530, 10, 5, 3); // GIVE DISC
-		DM_Add_To_List(1540, 3, 6, 10); // KEEP IT		
+		DM_Add_To_List(1540, 3, 6, 10); // KEEP IT
 	} else {
 		DM_Add_To_List(1530, 10, 5, 3); // GIVE DISC
 		DM_Add_To_List(1540, 3, 5, 10); // KEEP IT
@@ -819,7 +880,8 @@ void SceneScriptNR04::dialogueWithEarlyQ() {
 			Item_Pickup_Spin_Effect_From_Actor(kModelAnimationVideoDisc, kActorEarlyQ, 0, 0);
 			Delay(800);
 			if (Game_Flag_Query(kFlagEarlyQIsReplicant)
-			&& Game_Flag_Query(kFlagSadikIsReplicant)
+			&& Actor_Query_Intelligence(kActorClovis) == 100 
+			&& Actor_Query_Intelligence(kActorSadik) == 90
 			&& Game_Flag_Query(kFlagMcCoyIsHelpingReplicants)) {
 				Delay(1500);
 				Item_Pickup_Spin_Effect_From_Actor(kModelAnimationDNADataDisc, kActorEarlyQ, 0, 0);
@@ -828,59 +890,202 @@ void SceneScriptNR04::dialogueWithEarlyQ() {
 				Delay(1500);
 				Item_Pickup_Spin_Effect_From_Actor(kModelAnimationDNADataDisc, kActorEarlyQ, 0, 0);
 				Delay(1500);
-				if (Actor_Clue_Query(kActorMcCoy, kClueDNAChew)) {
-					Item_Pickup_Spin_Effect_From_Actor(kModelAnimationDNADataDisc, kActorEarlyQ, 0, 0);
-					Delay(1500);
-					Actor_Clue_Lose(kActorMcCoy, kClueDNAChew);
-				}
+				Item_Pickup_Spin_Effect_From_Actor(kModelAnimationDNADataDisc, kActorEarlyQ, 0, 0);
+				Delay(1500);
 				Actor_Clue_Lose(kActorMcCoy, kClueDNAMarcus);
 				Actor_Clue_Lose(kActorMcCoy, kClueDNASebastian);
-				Actor_Clue_Lose(kActorMcCoy, kClueDNAMoraji);			
+				Actor_Clue_Lose(kActorMcCoy, kClueDNAMoraji);	
+				Actor_Clue_Lose(kActorMcCoy, kClueDNAChew);	
+			} else if (Game_Flag_Query(kFlagEarlyQIsReplicant)
+			&& Actor_Query_Intelligence(kActorClovis) == 80 
+			&& Actor_Query_Intelligence(kActorSadik) == 90
+			&& Game_Flag_Query(kFlagMcCoyIsHelpingReplicants)) {
+				Delay(1500);
+				Item_Pickup_Spin_Effect_From_Actor(kModelAnimationDNADataDisc, kActorEarlyQ, 0, 0);
+				Delay(1500);
+				Item_Pickup_Spin_Effect_From_Actor(kModelAnimationDNADataDisc, kActorEarlyQ, 0, 0);
+				Delay(1500);
+				Actor_Clue_Lose(kActorMcCoy, kClueDNAMarcus);
+				Actor_Clue_Lose(kActorMcCoy, kClueDNASebastian);
+			} else if (Game_Flag_Query(kFlagEarlyQIsReplicant)
+			&& Actor_Query_Intelligence(kActorClovis) == 100 
+			&& Actor_Query_Intelligence(kActorSadik) == 70
+			&& Game_Flag_Query(kFlagMcCoyIsHelpingReplicants)) {
+				Delay(1500);
+				Item_Pickup_Spin_Effect_From_Actor(kModelAnimationDNADataDisc, kActorEarlyQ, 0, 0);
+				Delay(1500);
+				Item_Pickup_Spin_Effect_From_Actor(kModelAnimationDNADataDisc, kActorEarlyQ, 0, 0);
+				Delay(1500);
+				Actor_Clue_Lose(kActorMcCoy, kClueDNAMoraji);	
+				Actor_Clue_Lose(kActorMcCoy, kClueDNAChew);		
 			}
 		} else {
 			Delay(1500);
 		}
-		Actor_Says(kActorEarlyQ, 300, kAnimationModeTalk);
+		if (_vm->_cutContent) {
+			Actor_Says(kActorMcCoy, 8170, kAnimationModeTalk); //00-8170.AUD	There you go.
+			if (!Game_Flag_Query(kFlagEarlyQIsReplicant)) {
+				Actor_Says(kActorEarlyQ, 300, kAnimationModeTalk);
+			}
+		} else {
+			Actor_Says(kActorEarlyQ, 300, kAnimationModeTalk);
+		}
 		Actor_Change_Animation_Mode(kActorMcCoy, kAnimationModeIdle);
 		Actor_Change_Animation_Mode(kActorEarlyQ, kAnimationModeIdle);
-		Actor_Says(kActorEarlyQ, 310, kAnimationModeTalk); 
 		if (_vm->_cutContent) {
-			Actor_Says(kActorMcCoy, 3450, kAnimationModeTalk);
-			Delay(1000);	
-			Actor_Says(kActorMcCoy, 5150, 18); //00-5150.AUD	One more thing.
-			Actor_Says(kActorEarlyQ, 410, 12); //18-0410.AUD	Sorry, General. I’ve got a major crisis backstage. One of my girls ran full steam into a pencil and we’re fresh out of tampons.
-			ADQ_Add(kActorMcCoy, 3525, kAnimationModeTalk); //00-3525.AUD	Ouch.
+			if (!Game_Flag_Query(kFlagEarlyQIsReplicant)) {
+				Actor_Says(kActorEarlyQ, 310, kAnimationModeTalk); 
+				Actor_Says(kActorMcCoy, 3450, kAnimationModeTalk);
+				Delay(1000);	
+				Actor_Says(kActorMcCoy, 5150, 18); //00-5150.AUD	One more thing.
+				Actor_Says(kActorEarlyQ, 410, 12); //18-0410.AUD	Sorry, General. I’ve got a major crisis backstage. One of my girls ran full steam into a pencil and we’re fresh out of tampons.
+				ADQ_Add(kActorMcCoy, 3525, kAnimationModeTalk); //00-3525.AUD	Ouch.
+			} else {
+				Delay(1000);
+				Actor_Says(kActorMcCoy, 3690, 18); //00-3690.AUD	Look. I wanna warn you. There’s a woman looking for you and your friends.
+				Actor_Says(kActorMcCoy, 3700, 13); // If I found you, so will she.
+				Delay(500);
+				Actor_Says(kActorMcCoy, 6450, 18); //00-6450.AUD	It’s too dangerous for you around here. You gotta hide. Go underground.
+				Delay(1000);
+				Actor_Says(kActorMcCoy, 6720, 14); //00-6720.AUD	Watch your back.
+				Delay(1000);
+			} 
 		} else {
+			Actor_Says(kActorEarlyQ, 310, kAnimationModeTalk); 
 			ADQ_Add(kActorMcCoy, 3450, kAnimationModeTalk);	
 		}
 		Actor_Set_Targetable(kActorEarlyQ, false);
 		Actor_Set_Goal_Number(kActorEarlyQ, kGoalEarlyQNR04Leave);
 		Actor_Clue_Lose(kActorMcCoy, kClueEarlyQsClub);
 		Scene_Exits_Enable();
+		if (_vm->_cutContent) {
+			if (Game_Flag_Query(kFlagHanoiIsReplicant)
+			&& !Game_Flag_Query(kFlagMcCoyIsHelpingReplicants)) {
+				Delay(9500);
+				Actor_Set_Goal_Number(kActorHanoi, kGoalHanoiNR04Enter);
+			}
+		}
 	} else if (answer == 1540) { // KEEP IT
 		Actor_Says(kActorMcCoy, 8512, 15); 
-		Actor_Says(kActorEarlyQ, 320, 12); 
 		if (_vm->_cutContent) {
-			if (Player_Query_Agenda() != kPlayerAgendaSurly 
-			&& Player_Query_Agenda() != kPlayerAgendaErratic) {
-				Actor_Says(kActorMcCoy, 3455, 13); //00-3455.AUD	You’ll get it back, if you behave.
-				Actor_Says(kActorEarlyQ, 330, 15); //18-0330.AUD	Ah, so it’s blackmail.
-				Actor_Says(kActorMcCoy, 3460, 12); //00-3460.AUD	Insurance.
+			if (!Game_Flag_Query(kFlagEarlyQIsReplicant)) {
+				Actor_Says(kActorEarlyQ, 320, 12); 
+				if (Player_Query_Agenda() != kPlayerAgendaSurly 
+				&& Player_Query_Agenda() != kPlayerAgendaErratic) {
+					Actor_Says(kActorMcCoy, 3455, 13); //00-3455.AUD	You’ll get it back, if you behave.
+					Actor_Says(kActorEarlyQ, 330, 15); //18-0330.AUD	Ah, so it’s blackmail.
+					Actor_Says(kActorMcCoy, 3460, 12); //00-3460.AUD	Insurance.
+				}
+				Delay(2000);
+				Actor_Says(kActorEarlyQ, 340, 12); //18-0340.AUD	No more free drinks for you, buddy boy.
+				Actor_Says(kActorMcCoy, 3465, 12); //00-3465.AUD	I didn’t get free drinks before.
+				Actor_Says(kActorEarlyQ, 350, 16); 
+				Actor_Set_Targetable(kActorEarlyQ, false);
+				Actor_Set_Goal_Number(kActorEarlyQ, kGoalEarlyQNR04Leave);
+				Scene_Exits_Enable();
+				if (Game_Flag_Query(kFlagHanoiIsReplicant)
+				&& !Game_Flag_Query(kFlagMcCoyIsHelpingReplicants)) {
+					Delay(9500);
+					Actor_Set_Goal_Number(kActorHanoi, kGoalHanoiNR04Enter);
+				} else {
+					Player_Gains_Control();
+					Scene_Exits_Enable();
+				}
 			} else {
-				Actor_Says(kActorMcCoy, 8080, 14); //00-8080.AUD	It doesn't matter.
+				Music_Stop(1u);
+				Delay(2000);
+				Music_Play(kMusicMoraji, 71, 0, 0, -1, kMusicLoopPlayOnce, 2);
+				Actor_Change_Animation_Mode(kActorEarlyQ, 4);		
+				Delay(500);		
+				Player_Loses_Control();
+				Loop_Actor_Walk_To_XYZ(kActorMcCoy, 31.22f, 0.0f, 267.51f, 0, true, true, false);
+				Player_Gains_Control();
+				Actor_Face_Actor(kActorEarlyQ, kActorMcCoy, true);
+				Actor_Face_Actor(kActorMcCoy, kActorEarlyQ, true);
+				Actor_Change_Animation_Mode(kActorEarlyQ, kAnimationModeCombatAttack);
+				Actor_Change_Animation_Mode(kActorMcCoy, 21);
 				Delay(1000);
+				Sound_Play(kSfxGUNH1A, 100, 0, 0, 50);
+				Actor_Change_Animation_Mode(kActorMcCoy, 6);
+				Actor_Change_Animation_Mode(kActorEarlyQ, 21);
+				Delay(1000);	
+				Actor_Change_Animation_Mode(kActorEarlyQ, kAnimationModeCombatAttack);
+				Actor_Change_Animation_Mode(kActorMcCoy, 21);
+				Delay(1000);
+				if (Player_Query_Agenda() == kPlayerAgendaSurly 
+				|| (Player_Query_Agenda() == kPlayerAgendaErratic)) {
+					Actor_Start_Speech_Sample(kActorMcCoy, 490); //00-0490.AUD	Suck on this, skin-job!
+				}
+				Sound_Play(kSfxGUNH1A, 100, 0, 0, 50);
+				Actor_Change_Animation_Mode(kActorMcCoy, kAnimationModeCombatAim);
+				Actor_Change_Animation_Mode(kActorMcCoy, kAnimationModeCombatAttack);
+				Actor_Change_Animation_Mode(kActorEarlyQ, 21);
+				Delay(600);				
+				Sound_Play(kSfxGUNH1A, 100, 0, 0, 50);
+				Actor_Change_Animation_Mode(kActorMcCoy, kAnimationModeCombatAim);
+				Actor_Change_Animation_Mode(kActorMcCoy, kAnimationModeCombatAttack);
+				Actor_Change_Animation_Mode(kActorEarlyQ, 21);
+				Delay(600);			
+				Sound_Play(kSfxGUNH1A, 100, 0, 0, 50);
+				Actor_Change_Animation_Mode(kActorMcCoy, kAnimationModeCombatAim);
+				Actor_Change_Animation_Mode(kActorMcCoy, kAnimationModeCombatAttack);
+				Actor_Change_Animation_Mode(kActorEarlyQ, 21);
+				Delay(600);				
+				Sound_Play(kSfxGUNH1A, 100, 0, 0, 50);
+				Actor_Change_Animation_Mode(kActorMcCoy, kAnimationModeCombatAim);
+				Actor_Change_Animation_Mode(kActorMcCoy, kAnimationModeCombatAttack);
+				Actor_Change_Animation_Mode(kActorEarlyQ, 21);
+				Delay(600);			
+				Sound_Play(kSfxGUNH1A, 100, 0, 0, 50);
+				Actor_Change_Animation_Mode(kActorMcCoy, kAnimationModeCombatAim);
+				Actor_Change_Animation_Mode(kActorMcCoy, kAnimationModeCombatAttack);
+				Actor_Change_Animation_Mode(kActorEarlyQ, 21);
+				Delay(600);			
+				Sound_Play(kSfxGUNH1A, 100, 0, 0, 50);
+				Actor_Change_Animation_Mode(kActorMcCoy, kAnimationModeCombatAim);
+				Actor_Change_Animation_Mode(kActorMcCoy, kAnimationModeCombatAttack);
+				Actor_Change_Animation_Mode(kActorEarlyQ, 21);
+				AI_Movement_Track_Flush(kActorEarlyQ);
+				Actor_Change_Animation_Mode(kActorEarlyQ, kAnimationModeDie);
+				Delay(250);
+				Actor_Set_At_XYZ(kActorEarlyQ, 109.0, 0.0, 374.0, 0);
+				Delay(2000);
+				Game_Flag_Set(kFlagEarlyQDead);
+				Game_Flag_Reset(kFlagMcCoyIsHelpingReplicants);
+				Actor_Modify_Friendliness_To_Other(kActorSteele, kActorMcCoy, 2);
+				Actor_Modify_Friendliness_To_Other(kActorClovis, kActorMcCoy, -2);
+				Actor_Modify_Friendliness_To_Other(kActorGuzza, kActorMcCoy, 2);
+				Actor_Modify_Friendliness_To_Other(kActorGaff, kActorMcCoy, 2);
+				Actor_Set_Targetable(kActorEarlyQ, false);
+				if (Query_Difficulty_Level() != kGameDifficultyEasy) {
+					Global_Variable_Increment (kVariableChinyen, 200);
+				}
+				if (Game_Flag_Query(kFlagHanoiIsReplicant)) {
+					Actor_Set_Goal_Number(kActorHanoi, kGoalHanoiNR04Enter);
+				} else {
+					Player_Gains_Control();
+					Scene_Exits_Enable();
+				}
 			}
 		} else {
+			Actor_Says(kActorEarlyQ, 320, 12); 
 			Actor_Says(kActorMcCoy, 3455, 13); //00-3455.AUD	You’ll get it back, if you behave.
 			Actor_Says(kActorEarlyQ, 330, 15); //18-0330.AUD	Ah, so it’s blackmail.
 			Actor_Says(kActorMcCoy, 3460, 12); //00-3460.AUD	Insurance.
+			Actor_Says(kActorEarlyQ, 340, 12); //18-0340.AUD	No more free drinks for you, buddy boy.
+			Actor_Says(kActorMcCoy, 3465, 12); //00-3465.AUD	I didn’t get free drinks before.
+			Actor_Says(kActorEarlyQ, 350, 16); 
+			Actor_Set_Targetable(kActorEarlyQ, false);
+			Actor_Set_Goal_Number(kActorEarlyQ, kGoalEarlyQNR04Leave);
+			Scene_Exits_Enable();
 		}
-		Actor_Says(kActorEarlyQ, 340, 12); //18-0340.AUD	No more free drinks for you, buddy boy.
-		Actor_Says(kActorMcCoy, 3465, 12); //00-3465.AUD	I didn’t get free drinks before.
-		Actor_Says(kActorEarlyQ, 350, 16); 
-		Actor_Set_Targetable(kActorEarlyQ, false);
-		Actor_Set_Goal_Number(kActorEarlyQ, kGoalEarlyQNR04Leave);
-		Scene_Exits_Enable();
+		if (_vm->_cutContent) {
+			if (Game_Flag_Query(kFlagHanoiIsReplicant)
+			&& !Game_Flag_Query(kFlagMcCoyIsHelpingReplicants)) {
+				Delay(9500);
+				Actor_Set_Goal_Number(kActorHanoi, kGoalHanoiNR04Enter);
+			}
+		}
 	}
 }
 

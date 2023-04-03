@@ -130,14 +130,17 @@ bool SceneScriptPS07::ClickedOnActor(int actorId) {
 					}
 				} else {
 					Actor_Says(kActorMcCoy, 4135, 13);
-				}
-				Actor_Says(kActorKlein, 60, 15);
-				Actor_Says(kActorKlein, 70, 12);
+				} 
+				Actor_Says(kActorKlein, 60, 15); //30-0060.AUD	They're from an Ender rifle. It's standard-issue Off-World military hardware.
 				if (_vm->_cutContent) {
+					if (Actor_Query_Friendliness_To_Other(kActorKlein, kActorMcCoy) < 50) {
+						Actor_Says(kActorKlein, 70, 12); //30-0070.AUD	Heavy caliber. That puppy can punch right through a tank.
+					}
 					if (!Actor_Clue_Query(kActorMcCoy, kClueBobInterview1)) {
 						Actor_Says(kActorMcCoy, 4140, 13); //00-4140.AUD	What can I conclude from that?
 					}
 				} else {
+					Actor_Says(kActorKlein, 70, 12); //30-0070.AUD	Heavy caliber. That puppy can punch right through a tank.
 					Actor_Says(kActorMcCoy, 4140, 13);
 				}
 				Actor_Says(kActorKlein, 80, 14);
@@ -206,16 +209,18 @@ bool SceneScriptPS07::ClickedOnActor(int actorId) {
 						if (Actor_Clue_Query(kActorMcCoy, kClueSightingMcCoyRuncitersShop)) {
 							Actor_Says(kActorMcCoy, 4165, 18);
 							Actor_Says(kActorKlein, 160, 13);
-							if (!Game_Flag_Query(kFlagMcCoyIsHelpingReplicants)) {
-								Actor_Says(kActorMcCoy, 4170, 19); // 00-4170.AUD	Nice bunch of Reps I'm tailing.
-								Actor_Says(kActorMcCoy, 4175, 18); // 00-4175.AUD	Hope you're not pulling a meat cleaver out of my back next week.
-								if (Actor_Query_Friendliness_To_Other(kActorKlein, kActorMcCoy) > 49) {
-									Actor_Says(kActorKlein, 210, 12); //30-0210.AUD  	Ha, you're a real funny guy, McCoy.
-									Actor_Modify_Friendliness_To_Other(kActorKlein, kActorMcCoy, 3);
-								}
+						}
+						if (!Game_Flag_Query(kFlagMcCoyIsHelpingReplicants)) {
+							Actor_Says(kActorMcCoy, 4170, 19); // 00-4170.AUD	Nice bunch of Reps I'm tailing.
+							Actor_Says(kActorMcCoy, 4175, 18); // 00-4175.AUD	Hope you're not pulling a meat cleaver out of my back next week.
+							if (Actor_Query_Friendliness_To_Other(kActorKlein, kActorMcCoy) > 49) {
+								Actor_Says(kActorKlein, 210, 12); //30-0210.AUD  	Ha, you're a real funny guy, McCoy.
+								Actor_Modify_Friendliness_To_Other(kActorKlein, kActorMcCoy, 3);
+							} else {
+								Actor_Says(kActorKlein, 280, 13); //30-0280.AUD	Come back at me when you got something worthwhile, McCoy.
 							}
 						} else {
-							Actor_Says(kActorMcCoy, 7835, 18); //00-7835.AUD	Is that so?
+							Actor_Says(kActorMcCoy, 4880, 13); //00-4880.AUD	Is that right?
 						}
 						Actor_Set_Goal_Number(kActorKlein, kGoalKleinMovingInLab01);
 					}	
@@ -255,28 +260,44 @@ bool SceneScriptPS07::ClickedOnActor(int actorId) {
 				Actor_Says(kActorKlein, 190, 13);
 #else
 				// Dino's quote 190 is continued in quote 200, and needs 0.0f pause to sound better flowing
-				Actor_Says_With_Pause(kActorKlein, 190, 0.0f, 13);
+				Actor_Says_With_Pause(kActorKlein, 190, 0.0f, 13); //30-0190.AUD	And there ain't too many spinner drivers klutzy enough…
 #endif // BLADERUNNER_ORIGINAL_BUGS
 				// Made it so McCoy only makes that mean spirited joke towards Dinos wife if he is surly or erratic.
 				// Also adjusted the friendliness loss towards Dino so doesn't walk off when McCoy insults his wife.
 				// Seems a bit unfair to punish the player so harshly by having Dino  walk off because of a single comment.
-				Actor_Says(kActorKlein, 200, 16);
+				Actor_Says(kActorKlein, 200, 16); //30-0200.AUD	to smack a street-level hydrant in VTOL mode.
 				if (_vm->_cutContent) {
 					if (Player_Query_Agenda() == kPlayerAgendaSurly 
 					|| Player_Query_Agenda() == kPlayerAgendaErratic) {
 						Actor_Says(kActorMcCoy, 4185, 18); //00-4185.AUD	I heard your wife got her license back.
 						Delay(1000);
 						Actor_Says(kActorKlein, 280, 13); //30-0280.AUD	Come back at me when you got something worthwhile, McCoy.
-						Actor_Modify_Friendliness_To_Other(kActorKlein, kActorMcCoy, -3);
+						Actor_Modify_Friendliness_To_Other(kActorKlein, kActorMcCoy, -6);
 						if (!Game_Flag_Query(kFlagKleinCarIdentityTalk)) {
 							Actor_Says(kActorMcCoy, 5150, 18); //00-5150.AUD	One more thing.
 							Actor_Says(kActorMcCoy, 4195, 13);
 							Actor_Says(kActorKlein, 240, 16); 
 							Game_Flag_Set(kFlagKleinCarIdentityTalk);
 							Actor_Set_Goal_Number(kActorKlein, kGoalKleinMovingInLab01);
+						} else {
+							Actor_Says(kActorMcCoy, 8320, 13); //00-8320.AUD	Really?
+							Delay(500);
+							Actor_Says(kActorMcCoy, 8525, -1); // 00-8525.AUD	Hmph.
 						}
 						Actor_Set_Goal_Number(kActorKlein, kGoalKleinMovingInLab01);
-				    }
+				    } else {
+						if (!Game_Flag_Query(kFlagKleinCarIdentityTalk)) {
+							Actor_Says(kActorMcCoy, 5150, 18); //00-5150.AUD	One more thing.
+							Actor_Says(kActorMcCoy, 4195, 13);
+							Actor_Says(kActorKlein, 240, 16); 
+							Game_Flag_Set(kFlagKleinCarIdentityTalk);
+							Actor_Set_Goal_Number(kActorKlein, kGoalKleinMovingInLab01);
+						} else {
+							Actor_Says(kActorMcCoy, 8320, 13); //00-8320.AUD	Really?
+							Delay(500);
+							Actor_Says(kActorMcCoy, 8525, -1); // 00-8525.AUD	Hmph.
+						}
+					}
 				} else {
 					Actor_Says(kActorKlein, 200, 16);
 					Actor_Says(kActorMcCoy, 4185, 18);
@@ -294,25 +315,24 @@ bool SceneScriptPS07::ClickedOnActor(int actorId) {
 				Game_Flag_Set(kFlagPS07KleinTalkChromeDebris);
 				Actor_Says(kActorKlein, 220, 12);
 				if (_vm->_cutContent) {
-					if (Player_Query_Agenda() == kPlayerAgendaPolite) {
-						Actor_Says(kActorMcCoy, 4190, 13); //00-4190.AUD	Nice set of wheels.
-						if (Actor_Query_Friendliness_To_Other(kActorKlein, kActorMcCoy) > 49) {
-							Actor_Says(kActorKlein, 230, 14);
-						}
+					if (Player_Query_Agenda() == kPlayerAgendaSurly 
+					|| Player_Query_Agenda() == kPlayerAgendaErratic) {
+						Actor_Says(kActorMcCoy, 8575, 14); //00-8575.AUD	More useless junk.
 					} else {
-						Actor_Says(kActorMcCoy, 5065, 18); //00-5065.AUD	Is that right?
+						Actor_Says(kActorMcCoy, 4190, 13); //00-4190.AUD	Nice set of wheels.
 					}
+					if (Actor_Query_Friendliness_To_Other(kActorKlein, kActorMcCoy) > 49) {
+						Actor_Says(kActorKlein, 230, 14);
+					} else {
+						Delay(1000);
+					}
+					Actor_Says(kActorMcCoy, 4195, 13); //00-4195.AUD	Any way to find the car's owner?
+					Actor_Says(kActorKlein, 240, 16); 
+					Game_Flag_Set(kFlagKleinCarIdentityTalk);
+					Actor_Set_Goal_Number(kActorKlein, kGoalKleinMovingInLab01);
 				} else {
 					Actor_Says(kActorMcCoy, 4190, 13); //00-4190.AUD	Nice set of wheels.
 					Actor_Says(kActorKlein, 230, 14);
-				}
-				if (_vm->_cutContent) {
-					if (!Game_Flag_Query(kFlagKleinCarIdentityTalk)) {
-						Actor_Says(kActorMcCoy, 4195, 13); //00-4195.AUD	Any way to find the car's owner?
-						Actor_Says(kActorKlein, 240, 16); 
-						Game_Flag_Set(kFlagKleinCarIdentityTalk);
-						Actor_Set_Goal_Number(kActorKlein, kGoalKleinMovingInLab01);
-					}
 				}
 				// Car VIN
 				// quote 250 is *boop* in ENG version

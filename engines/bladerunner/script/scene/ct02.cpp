@@ -134,13 +134,6 @@ void SceneScriptCT02::SceneLoaded() {
 	Unclickable_Object("COUNTER-2");
 	Unclickable_Object("COFFEJUG IN FOREGRO");
 	Unclickable_Object("BACK-DOOR");
-	//Added in the candy wrapper clue. It is near McCoys feet when he enters the kitchen.
-	if (_vm->_cutContent) { 
-		if (!Actor_Clue_Query(kActorMcCoy, kClueCandyWrapper)
-		&& Game_Flag_Query(kFlagZubenIsReplicant)) {
-			Item_Add_To_World(kItemChopstickWrapper, kModelAnimationCandyWrapper, kSetCT02, -144.69, -145.51, 195.58, 0, 12, 12, false, true, false, true);
-		}
-	}
 	if (!Game_Flag_Query(kFlagCT02PotTipped)
 	&& !Game_Flag_Query(kFlagCT01TalkToHowieAfterZubenMissing)) {
 		Preload(kModelAnimationMcCoyWithGunIdle);
@@ -311,7 +304,7 @@ void SceneScriptCT02::dialogueWithZuben() {
 		Actor_Says(kActorMcCoy, 395, 9);
 		Actor_Says(kActorMcCoy, 400, 9);
 		if (_vm->_cutContent) {
-			if (Game_Flag_Query(kFlagZubenIsReplicant)) {
+			if (Actor_Query_Intelligence(kActorZuben) == 10) {
 				Actor_Says(kActorZuben, 70, 17); //19-0070.AUD	Test? What kind of test?
 				if (Player_Query_Agenda() == kPlayerAgendaSurly 
 				|| Player_Query_Agenda() == kPlayerAgendaErratic) {
@@ -432,26 +425,6 @@ bool SceneScriptCT02::ClickedOnActor(int actorId) {
 }
 
 bool SceneScriptCT02::ClickedOnItem(int itemId, bool a2) {
-	//Added in the candy wrapper clue. If McCoy found the candy clue at Runciters he will make a comment on that.
-	//The player finding the candy wrapper clue in Zubens kitchen confirms that Lucy has been there and interacted with Zuben.
-	if (itemId == kItemChopstickWrapper) {
-		if (!Loop_Actor_Walk_To_Item(kActorMcCoy, kItemChopstickWrapper, 12, true, false)) {
-			Actor_Face_Item(kActorMcCoy, kItemChopstickWrapper, true);
-			if (Actor_Clue_Query(kActorMcCoy, kClueCandy)) {
-				Actor_Clue_Acquire(kActorMcCoy, kClueCandyWrapper, true, kActorLucy);
-				Item_Pickup_Spin_Effect(kModelAnimationCandyWrapper, 434, 388);
-				Item_Remove_From_World(kItemChopstickWrapper);
-				Actor_Says(kActorMcCoy, 8875, 13); //00-8875.AUD	A brown cow candy wrapper.
-				Actor_Voice_Over(3300, kActorVoiceOver); //99-3300.AUD	I recognized the wrapper.
-				Actor_Voice_Over(3310, kActorVoiceOver); //99-3310.AUD	The same brand of candy that Lucy had on her desk at Runciter’s.
-			} else {
-				Actor_Says(kActorMcCoy, 8875, 13); //00-8875.AUD	A brown cow candy wrapper.
-				Actor_Says(kActorMcCoy, 8525, 14); // 00-8525.AUD	Hmph.
-			}
-			return true;
-		}
-			
-	}	
 	return false;
 }
 

@@ -209,7 +209,7 @@ void SceneScriptRC01::SceneLoaded() {
 
 	if (_vm->_cutContent) {
 		if (!Game_Flag_Query(kFlagRC01ChromeDebrisTaken)) {
-			if (Game_Flag_Query(kFlagZubenIsReplicant)) {
+			if (Game_Flag_Query(kFlagGordoIsReplicant)) {
 				Item_Add_To_World(kItemChromeDebris, kModelAnimationChromeDebris, kSetRC01, -148.60f, -0.30f, 225.15f, 256, 24, 24, false, true, false, true);
 			}
 		}
@@ -269,14 +269,22 @@ bool SceneScriptRC01::ClickedOn3DObject(const char *objectName, bool a2) {
 			} else {		
 				if (_vm->_cutContent) {
 					if (!Actor_Clue_Query(kActorMcCoy, kClueCrowdInterviewB)) {
-						Actor_Says(kActorMcCoy, 8524, 13); //00-8524.AUD	That's a washout.
-						Actor_Says(kActorMcCoy, 8525, -1); // 00-8525.AUD	Hmph.
-						Game_Flag_Set(kFlagHydrantChecked);	
+						if (Game_Flag_Query(kFlagGordoIsReplicant)) {
+							Actor_Says(kActorMcCoy, 8524, 13); //00-8524.AUD	That's a washout.
+							Actor_Says(kActorMcCoy, 8525, -1); // 00-8525.AUD	Hmph.
+							Game_Flag_Set(kFlagHydrantChecked);
+						} else {
+							Actor_Says(kActorMcCoy, 8528, 13); //00-8528.AUD	Totally uninteresting.
+						}		
 					} else {
-						Actor_Voice_Over(1880, kActorVoiceOver);
-						Actor_Voice_Over(1890, kActorVoiceOver);
-						I_Sez("JM: That McCoy--he's one funny guy! Jet-black fire truck, hehehehe...");
-						Actor_Clue_Acquire(kActorMcCoy, kCluePaintTransfer, true, -1);
+						if (Game_Flag_Query(kFlagGordoIsReplicant)) {
+							Actor_Voice_Over(1880, kActorVoiceOver);
+							Actor_Voice_Over(1890, kActorVoiceOver);
+							I_Sez("JM: That McCoy--he's one funny guy! Jet-black fire truck, hehehehe...");
+							Actor_Clue_Acquire(kActorMcCoy, kCluePaintTransfer, true, -1);
+						} else {
+							Actor_Says(kActorMcCoy, 8525, -1); // 00-8525.AUD	Hmph.
+						}
 					}
 				} else {
 					Actor_Voice_Over(1880, kActorVoiceOver);
@@ -304,19 +312,20 @@ bool SceneScriptRC01::ClickedOn3DObject(const char *objectName, bool a2) {
 						I_Sez("JM: Chrome...is that what that is?");
 						Actor_Says(kActorMcCoy, 4505, 13);
 						// Jake - Added in a line where Leary is annoyed at McCoy for him being condescending towards him. 
-						Actor_Says(kActorOfficerLeary, 30, 14);
-						Actor_Face_Actor(kActorMcCoy, kActorOfficerLeary, true);
-						if (Player_Query_Agenda() == kPlayerAgendaSurly 
-						|| Player_Query_Agenda() == kPlayerAgendaErratic) {
-							Actor_Says(kActorMcCoy, 4510, 14); //00-4510.AUD	No, I think it's horse chrome. Bag it and tag it.
-							Actor_Says(kActorOfficerLeary, 170, 13); //23-0170.AUD	You ain't talking to some flunky, McCoy.
-							Actor_Modify_Friendliness_To_Other(kActorOfficerLeary, kActorMcCoy, -2);
-							Actor_Clue_Acquire(kActorMcCoy, kClueChromeDebris, true, -1);
-						} else {
-							Actor_Says(kActorMcCoy, 1025, 13); //00-1025.AUD	Absolutely.
-							Delay (500);
-							Actor_Says(kActorMcCoy, 5310, 11); //00-5310.AUD	You spot anything you think I ought to know about, tell me.
-							Actor_Clue_Acquire(kActorMcCoy, kClueChromeDebris, true, -1);
+						if (Actor_Query_Intelligence(kActorOfficerLeary) == 40) {
+							Actor_Face_Actor(kActorOfficerLeary, kActorMcCoy, true);
+							Actor_Says(kActorOfficerLeary, 30, 14);
+							Actor_Face_Actor(kActorMcCoy, kActorOfficerLeary, true);
+							if (Player_Query_Agenda() == kPlayerAgendaSurly 
+							|| Player_Query_Agenda() == kPlayerAgendaErratic) {
+								Actor_Says(kActorMcCoy, 4510, 14); //00-4510.AUD	No, I think it's horse chrome. Bag it and tag it.
+								Actor_Says(kActorOfficerLeary, 170, 13); //23-0170.AUD	You ain't talking to some flunky, McCoy.
+								Actor_Modify_Friendliness_To_Other(kActorOfficerLeary, kActorMcCoy, -2);
+							} else {
+								Actor_Says(kActorMcCoy, 1025, 13);
+								Delay (500);
+								Actor_Says(kActorMcCoy, 5310, 11); //00-5310.AUD	You spot anything you think I ought to know about, tell me.
+							}
 						}
 						Delay(1000);
 						ADQ_Add(kActorDispatcher, 70, kAnimationModeTalk); //38-0070.AUD	BR-61661, report to precinct Headquarters. Code 3, repeat, code 3.
@@ -389,7 +398,7 @@ bool SceneScriptRC01::ClickedOn3DObject(const char *objectName, bool a2) {
 			if (_vm->_cutContent) {
 				if (Global_Variable_Query(kVariableChapter) == 1) {
 					if (!Actor_Clue_Query(kActorMcCoy, kClueSightingMcCoyRuncitersShop)) {
-						if (Game_Flag_Query(kFlagZubenIsReplicant)) {
+						if (Actor_Query_Intelligence(kActorZuben) == 10) {
 							Ambient_Sounds_Play_Sound(kSfxGARBAGE, 45, 30, 30, 0);
 							Actor_Change_Animation_Mode(kActorMcCoy, 23);
 							Delay(2000);
@@ -398,7 +407,10 @@ bool SceneScriptRC01::ClickedOn3DObject(const char *objectName, bool a2) {
 							Delay(2000);
 							Actor_Says(kActorMcCoy, 6975, kAnimationModeTalk); //00-6975.AUD	Interesting.
 							Actor_Clue_Acquire(kActorMcCoy, kClueSightingMcCoyRuncitersShop, true, -1);
-						} else {
+						} else if (Actor_Query_Intelligence(kActorZuben) == 30) {
+							Actor_Change_Animation_Mode(kActorMcCoy, 23);
+							Ambient_Sounds_Play_Sound(kSfxGARBAGE, 45, 30, 30, 0);
+							Delay(2000);
 							Actor_Voice_Over(1810, kActorVoiceOver);
 							Actor_Voice_Over(1820, kActorVoiceOver);
 						}
@@ -464,10 +476,12 @@ bool SceneScriptRC01::ClickedOnActor(int actorId) {
 					Actor_Says(kActorOfficerLeary, 130, 14);
 					I_Sez("JM: Did it have a huge, ugly piece of chrome on it?");
 					if (_vm->_cutContent) {
-						Delay(500);
-						Actor_Says(kActorOfficerLeary, 280, 13); //23-0280.AUD	Sounds like another nutcase overdosed on too many lichen-dogs.
-						Actor_Says(kActorMcCoy, 8320, 18); //00-8320.AUD	Really?
-						Actor_Says(kActorOfficerLeary, 460, 13); //23-0460.AUD	Either that or another street punk that sucked one too many sugar cubes.
+						if (Actor_Query_Intelligence(kActorOfficerLeary) == 40) {
+							Delay(500);
+							Actor_Says(kActorOfficerLeary, 280, 13); //23-0280.AUD	Sounds like another nutcase overdosed on too many lichen-dogs.
+							Actor_Says(kActorMcCoy, 8320, 18); //00-8320.AUD	Really?
+							Actor_Says(kActorOfficerLeary, 460, 13); //23-0460.AUD	Either that or another street punk that sucked one too many sugar cubes.
+						}
 					}
 					Actor_Clue_Acquire(kActorMcCoy, kClueCrowdInterviewB, true, kActorOfficerLeary);
 					Game_Flag_Reset(kFlagRC01McCoyAndOfficerLearyTalking);
@@ -503,18 +517,20 @@ bool SceneScriptRC01::ClickedOnActor(int actorId) {
 							Actor_Clue_Acquire(kActorMcCoy, kClueChromeDebris, true, -1);
 							I_Sez("JM: Chrome...is that what that is?");
 							Actor_Says(kActorMcCoy, 4505, 13);
-							// Jake - Added in a line where Leary is annoyed at McCoy for him being condescending towards him. 
-							Actor_Says(kActorOfficerLeary, 30, 14);
-							Actor_Face_Actor(kActorMcCoy, kActorOfficerLeary, true);
-							if (Player_Query_Agenda() == kPlayerAgendaSurly 
-							|| Player_Query_Agenda() == kPlayerAgendaErratic) {
-								Actor_Says(kActorMcCoy, 4510, 14); //00-4510.AUD	No, I think it's horse chrome. Bag it and tag it.
-								Actor_Says(kActorOfficerLeary, 170, 13); //23-0170.AUD	You ain't talking to some flunky, McCoy.
-								Actor_Modify_Friendliness_To_Other(kActorOfficerLeary, kActorMcCoy, -2);
-							} else {
-								Actor_Says(kActorMcCoy, 1025, 13); //00-1025.AUD	Absolutely.
-								Delay (500);
-								Actor_Says(kActorMcCoy, 5310, 11); //00-5310.AUD	You spot anything you think I ought to know about, tell me.
+							if (Actor_Query_Intelligence(kActorOfficerLeary) == 40) {
+								Actor_Face_Actor(kActorOfficerLeary, kActorMcCoy, true);
+								Actor_Says(kActorOfficerLeary, 30, 14);
+								Actor_Face_Actor(kActorMcCoy, kActorOfficerLeary, true);
+								if (Player_Query_Agenda() == kPlayerAgendaSurly 
+								|| Player_Query_Agenda() == kPlayerAgendaErratic) {
+									Actor_Says(kActorMcCoy, 4510, 14); //00-4510.AUD	No, I think it's horse chrome. Bag it and tag it.
+									Actor_Says(kActorOfficerLeary, 170, 13); //23-0170.AUD	You ain't talking to some flunky, McCoy.
+									Actor_Modify_Friendliness_To_Other(kActorOfficerLeary, kActorMcCoy, -2);
+								} else {
+									Actor_Says(kActorMcCoy, 1025, 13);
+									Delay (500);
+									Actor_Says(kActorMcCoy, 5310, 11); //00-5310.AUD	You spot anything you think I ought to know about, tell me.
+								}
 							}
 							Delay(1000);
 							ADQ_Add(kActorDispatcher, 70, kAnimationModeTalk); //38-0070.AUD	BR-61661, report to precinct Headquarters. Code 3, repeat, code 3.
@@ -569,15 +585,21 @@ bool SceneScriptRC01::ClickedOnActor(int actorId) {
 							Actor_Says(kActorMcCoy, 4520, 18);
 							Actor_Says(kActorOfficerLeary, 70, 16);
 							Actor_Says(kActorMcCoy, 4525, 14);
-							Actor_Says(kActorOfficerLeary, 80, 18);
-							Actor_Says(kActorMcCoy, 4130, 18); //00-4130.AUD	Anything else?
-							if (Game_Flag_Query(kFlagZubenIsReplicant)) {	
-								Actor_Says(kActorOfficerLeary, 180, 14); //23-0180.AUD	Gaff said you didn't need to hear this, but I guess you deserve to know.
-								Actor_Says(kActorMcCoy, 2635, 18); //00-2635.AUD	I’m all ears.. 
-								Actor_Says(kActorOfficerLeary, 0, 12); //23-0000.AUD	I already checked for a crowbar or some kind of tool. No luck but it looks like we've got some latents. 
-								Actor_Says(kActorMcCoy, 4495, 13); //00-4495.AUD	Make sure the lab boys run them through the mainframe. Human and Rep.	
-							} else {
-								Actor_Says(kActorOfficerLeary, 160, 19); //23-0160.AUD	Zero that would interest you, detective.
+							if (Actor_Query_Intelligence(kActorOfficerLeary) == 40) {
+								Delay(2000);
+								Actor_Says(kActorMcCoy, 8395, 18); //00-8395.AUD	You don't have anything to say?
+								Actor_Says(kActorOfficerLeary, 150, 16); //23-0150.AUD	I've hit a brick, McCoy. You're running this investigation, right?
+							} else if (Actor_Query_Intelligence(kActorOfficerLeary) == 60) {
+								Actor_Says(kActorOfficerLeary, 80, 18);
+								Actor_Says(kActorMcCoy, 4130, 18); //00-4130.AUD	Anything else?
+								if (Actor_Query_Intelligence(kActorZuben) < 20) {
+									Actor_Says(kActorOfficerLeary, 180, 14); //23-0180.AUD	Gaff said you didn't need to hear this, but I guess you deserve to know.
+									Actor_Says(kActorMcCoy, 2635, 18); //00-2635.AUD	I’m all ears.. 
+									Actor_Says(kActorOfficerLeary, 0, 12); //23-0000.AUD	I already checked for a crowbar or some kind of tool. No luck but it looks like we've got some latents. 
+									Actor_Says(kActorMcCoy, 4495, 13); //00-4495.AUD	Make sure the lab boys run them through the mainframe. Human and Rep.	
+								} else {
+									Actor_Says(kActorOfficerLeary, 160, 19); //23-0160.AUD	Zero that would interest you, detective.
+								}
 							}
 						} else {
 							Actor_Says(kActorMcCoy, 4530, 15);
@@ -637,19 +659,21 @@ bool SceneScriptRC01::ClickedOnItem(int itemId, bool a2) {
 					Actor_Clue_Acquire(kActorMcCoy, kClueChromeDebris, true, -1);
 					I_Sez("JM: Chrome...is that what that is?");
 					Actor_Says(kActorMcCoy, 4505, 13);
-					// Jake - Added in a line where Leary is annoyed at McCoy for him being condescending towards him. 
-					Actor_Face_Actor(kActorOfficerLeary, kActorMcCoy, true);
-					Actor_Says(kActorOfficerLeary, 30, 14);
-					Actor_Face_Actor(kActorMcCoy, kActorOfficerLeary, true);
-					if (Player_Query_Agenda() == kPlayerAgendaSurly 
-					|| Player_Query_Agenda() == kPlayerAgendaErratic) {
-						Actor_Says(kActorMcCoy, 4510, 14); //00-4510.AUD	No, I think it's horse chrome. Bag it and tag it.
-						Actor_Says(kActorOfficerLeary, 170, 13); //23-0170.AUD	You ain't talking to some flunky, McCoy.
-						Actor_Modify_Friendliness_To_Other(kActorOfficerLeary, kActorMcCoy, -2);
-					} else {
-						Actor_Says(kActorMcCoy, 1025, 13);
-						Delay (500);
-						Actor_Says(kActorMcCoy, 5310, 11); //00-5310.AUD	You spot anything you think I ought to know about, tell me.
+					// Jake - Added in a line where Leary is annoyed at McCoy for him being condescending towards him. 	
+					if (Actor_Query_Intelligence(kActorOfficerLeary) == 40) {
+						Actor_Face_Actor(kActorOfficerLeary, kActorMcCoy, true);
+						Actor_Says(kActorOfficerLeary, 30, 14);
+						Actor_Face_Actor(kActorMcCoy, kActorOfficerLeary, true);
+						if (Player_Query_Agenda() == kPlayerAgendaSurly 
+						|| Player_Query_Agenda() == kPlayerAgendaErratic) {
+							Actor_Says(kActorMcCoy, 4510, 14); //00-4510.AUD	No, I think it's horse chrome. Bag it and tag it.
+							Actor_Says(kActorOfficerLeary, 170, 13); //23-0170.AUD	You ain't talking to some flunky, McCoy.
+							Actor_Modify_Friendliness_To_Other(kActorOfficerLeary, kActorMcCoy, -2);
+						} else {
+							Actor_Says(kActorMcCoy, 1025, 13);
+							Delay (500);
+							Actor_Says(kActorMcCoy, 5310, 11); //00-5310.AUD	You spot anything you think I ought to know about, tell me.
+						}
 					}
 					if (!Actor_Clue_Query(kActorMcCoy, kCluePaintTransfer)) {
 						Delay(1000);
@@ -716,15 +740,12 @@ bool SceneScriptRC01::ClickedOnExit(int exitId) {
 			|| Game_Flag_Query(kFlagRunciterArrested)
 			|| Actor_Query_Goal_Number(kActorRunciter) > kGoalRunciterDead
 			|| Actor_Clue_Query(kActorMcCoy, kClueCrystalRetiredRunciter1)
-			|| Actor_Clue_Query(kActorMcCoy, kClueMcCoyKilledRunciter1)) {
+			|| Actor_Clue_Query(kActorMcCoy, kClueMcCoyKilledRunciter1)
+			|| Actor_Clue_Query(kActorMcCoy, kClueCandyWrapper)) {
 				if (!_vm->_cutContent) {	
 					Actor_Says(kActorMcCoy, 8522, 14); // Locked
 				} else {
-					if (Game_Flag_Query(kFlagRC02RunciterTalkWithGun)) {
-						Actor_Says(kActorMcCoy, 8522, 14); // Locked
-					} else {
-						Actor_Says(kActorMcCoy, 7815, 13); //00-7815.AUD	No.
-					}
+					Actor_Says(kActorMcCoy, 7815, 13); //00-7815.AUD	No.
 				}
 			} else {
 				switch (Global_Variable_Query(kVariableChapter)) {
@@ -766,6 +787,10 @@ bool SceneScriptRC01::ClickedOnExit(int exitId) {
 						Actor_Voice_Over(3480, kActorVoiceOver); //99-3480.AUD	Yeah, what a difference a day makes.
 						Delay(1000);
 						Actor_Voice_Over(3510, kActorVoiceOver); //99-3510.AUD	The picture was still a little blurry.
+					} else if (Game_Flag_Query(kFlagDragonflyEarringTaken)) {
+						Actor_Voice_Over(3480, kActorVoiceOver); //99-3480.AUD	Yeah, what a difference a day makes.
+						Delay(1000);
+						Actor_Voice_Over(3510, kActorVoiceOver); //99-3510.AUD	The picture was still a little blurry.
 					} else {
 						Actor_Voice_Over(4310, kActorVoiceOver); // 99-4310.AUD	I was fresh out of leads.	
 					}
@@ -775,14 +800,16 @@ bool SceneScriptRC01::ClickedOnExit(int exitId) {
 				if (_vm->_cutContent) {
 					if (!Actor_Clue_Query(kActorMcCoy, kClueWeaponsCache)
 					&& !Actor_Clue_Query(kActorMcCoy, kClueBobShotInSelfDefense)
-					&& !Game_Flag_Query(kFlagMcCoyShotIzo)) {
+					&& !Game_Flag_Query(kFlagMcCoyShotIzo)
+					&& !Game_Flag_Query(kFlagDragonflyEarringTaken)) {
 						Actor_Voice_Over(4320, kActorVoiceOver); //99-4320.AUD	Poking around Hawker's Circle had been a waste of time.
 					}
 				} else {
 					Actor_Voice_Over(4320, kActorVoiceOver); //99-4320.AUD	Poking around Hawker's Circle had been a waste of time.
 				}
 				if (_vm->_cutContent) {
-					if (!Actor_Clue_Query(kActorMcCoy, kClueWeaponsCache)) {
+					if (!Actor_Clue_Query(kActorMcCoy, kClueWeaponsCache)
+					&& !Game_Flag_Query(kFlagDragonflyEarringTaken)) {
 						Actor_Voice_Over(4330, kActorVoiceOver); //99-4330.AUD	I had nothing to connect this Izo character to the Eisenduller murder.
 					} else if (Actor_Clue_Query(kActorMcCoy, kClueWeaponsCache)
 					&& (!Actor_Clue_Query(kActorMcCoy, kClueDetonatorWire)
@@ -969,7 +996,9 @@ void SceneScriptRC01::interrogateCrowd() {
 			Actor_Says(kActorOfficerLeary, 10, 14);
 			if (_vm->_cutContent) {
 				Actor_Clue_Acquire(kActorOfficerLeary, kClueCrowdInterviewA, true, -1);
-				Actor_Clue_Acquire(kActorOfficerLeary, kClueCrowdInterviewB, true, -1);
+				if (Game_Flag_Query(kFlagGordoIsReplicant)) {
+					Actor_Clue_Acquire(kActorOfficerLeary, kClueCrowdInterviewB, true, -1);
+				}
 			}
 			Actor_Set_Goal_Number(kActorOfficerLeary, kGoalOfficerLearyRC01WalkToCrowd);	
 		}
@@ -1047,7 +1076,7 @@ void SceneScriptRC01::PlayerWalkedIn() {
 					Actor_Voice_Over(1910, kActorVoiceOver); //99-1910.AUD	It didn't add up. Animal murders, the lack of any theft.
 					Actor_Voice_Over(1920, kActorVoiceOver); //99-1920.AUD	The small animals alone were worth a good chunk of change on the street.
 					Actor_Voice_Over(1930, kActorVoiceOver); //99-1930.AUD	It seemed more like an act of vengeance.
-					Delay(500);
+					Delay(1000);
 				} 
 				Actor_Voice_Over(1940, kActorVoiceOver); //99-1940.AUD	I'd never seen so many authentic animals under the same roof. It was beautiful... and horrendous.
 				// Note: Quote 1950 is *boop* in ENG version

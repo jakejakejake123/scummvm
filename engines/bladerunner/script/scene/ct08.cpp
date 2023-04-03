@@ -89,7 +89,8 @@ void SceneScriptCT08::SceneLoaded() {
 		Item_Add_To_World(kItemRagDoll, kModelAnimationRagDoll, kSetCT08_CT51_UG12, 44.0f, 0.0f, -95.0f, 540, 12, 12, false, true, false, true);
 #else
 		if (_vm->_cutContent) {
-			if (Game_Flag_Query(kFlagIzoIsReplicant)) {
+			if (Actor_Query_Intelligence(kActorIzo) == 85
+			&& Game_Flag_Query(kFlagIzoFled)) {
 				Item_Add_To_World(kItemRagDoll, kModelAnimationRagDoll, kSetCT08_CT51_UG12, 44.0f, 3.0f, -100.0f, 540, 12, 12, false, true, false, true);
 			} else {
 				Item_Add_To_World(kItemRagDoll, kModelAnimationRagDoll, kSetCT08_CT51_UG12, -122.00f, 0.32f, -139.72f, 540, 12, 12, false, true, false, true);

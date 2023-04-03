@@ -161,12 +161,11 @@ bool SceneScriptCT09::ClickedOnActor(int actorId) {
 							Actor_Face_Heading(kActorMcCoy, 240, false);
 							Actor_Face_Heading(kActorDeskClerk, 240, false);
 							Actor_Says(kActorDeskClerk, 170, 13);
-							Delay(500);
-							Actor_Face_Actor(kActorDeskClerk, kActorMcCoy, true);
-							Actor_Face_Actor(kActorMcCoy, kActorDeskClerk, true);
-							Actor_Says(kActorMcCoy, 8320, 18); //00-8320.AUD	Really?
 							Delay(1000);
-							Actor_Says(kActorMcCoy, 6975, kAnimationModeTalk); //00-6975.AUD	Interesting.
+							Actor_Says(kActorMcCoy, 615, -1); //00-0615.AUD	The back room.
+							Delay(1000);
+							Actor_Says(kActorMcCoy, 6975, -1); //00-6975.AUD	Interesting.
+							Actor_Face_Actor(kActorDeskClerk, kActorMcCoy, true);
 							Game_Flag_Set(kFlagCT09DeskClerkTalk2);
 						} else {
 							Actor_Says(kActorDeskClerk, 110, 15); //27-0110.AUD	Mister, you don't want to know. It'd take a Level Four suit just to put a key in the door. 
@@ -206,12 +205,11 @@ bool SceneScriptCT09::ClickedOnActor(int actorId) {
 									Actor_Face_Heading(kActorMcCoy, 240, false);
 									Actor_Face_Heading(kActorDeskClerk, 240, false);
 									Actor_Says(kActorDeskClerk, 170, 13);
-									Delay(500);
-									Actor_Face_Actor(kActorDeskClerk, kActorMcCoy, true);
-									Actor_Face_Actor(kActorMcCoy, kActorDeskClerk, true);
-									Actor_Says(kActorMcCoy, 8320, 18); //00-8320.AUD	Really?
 									Delay(1000);
-									Actor_Says(kActorMcCoy, 6975, kAnimationModeTalk); //00-6975.AUD	Interesting.
+									Actor_Says(kActorMcCoy, 615, -1); //00-0615.AUD	The back room.
+									Delay(1000);
+									Actor_Says(kActorMcCoy, 6975, -1); //00-6975.AUD	Interesting.
+									Actor_Face_Actor(kActorDeskClerk, kActorMcCoy, true);
 									Game_Flag_Set(kFlagCT09DeskClerkTalk2);
 								}
 							}

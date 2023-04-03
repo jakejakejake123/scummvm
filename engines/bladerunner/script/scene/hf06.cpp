@@ -173,7 +173,8 @@ void SceneScriptHF06::ActorChangedGoal(int actorId, int newGoal, int oldGoal, bo
 		Actor_Says(kActorSteele, 260, -1); //01-0260.AUD	I’ll see you again. Real soon.
 		// If McCoy is found to be innocent Crystal won't refer to him as a rep.
 		if (_vm->_cutContent) {
-			if (!Game_Flag_Query(kFlagMcCoyIsInnocent)) {
+			if (!Game_Flag_Query(kFlagMcCoyIsInnocent)
+			&& Actor_Query_Intelligence(kActorSteele) == 90) {
 				Actor_Says(kActorSteele, 270, -1); //01-0270.AUD	(laughs) Oh, I forgot. You Reps don’t have a soul.
 			}
 		} else {

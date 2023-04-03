@@ -86,14 +86,18 @@ void SceneScriptCT10::checkCabinet() {
 			Delay(800);
 			Sound_Play(kSfxDRAWER1, 100, 0, 0, 50);
 			Delay(800);
-			if (Actor_Clue_Query(kActorMcCoy, kClueHoldensBadge)
+			if (Actor_Query_Intelligence(kActorSteele) == 90) {
+				Actor_Voice_Over(3700, kActorVoiceOver);
+			} else if (Actor_Clue_Query(kActorMcCoy, kClueHoldensBadge)
 			&& Actor_Clue_Query(kActorMcCoy, kClueInceptShotsLeon)) { 
 				Actor_Voice_Over(3700, kActorVoiceOver);
-			} else if (!Actor_Clue_Query(kActorMcCoy, kClueHoldensBadge)) {
+			} else if (!Actor_Clue_Query(kActorMcCoy, kClueHoldensBadge)
+			&& Actor_Query_Intelligence(kActorSteele) == 70) {
 				Item_Pickup_Spin_Effect(kModelAnimationBadge, 435, 258);
 				Actor_Says(kActorMcCoy, 8860, 12); //00-8860.AUD	Holden's badge.
 				Actor_Clue_Acquire(kActorMcCoy, kClueHoldensBadge, true, kActorLeon);	
-			} else if (Actor_Clue_Query(kActorMcCoy, kClueHoldensBadge)) {
+			} else if (Actor_Clue_Query(kActorMcCoy, kClueHoldensBadge)
+			&& Actor_Query_Intelligence(kActorSteele) == 70) {
 				Actor_Clue_Acquire(kActorMcCoy, kClueInceptShotsLeon, true, kActorLeon);
 				Item_Pickup_Spin_Effect(kModelAnimationPhoto, 435, 320);
 				Delay (2000);
@@ -119,13 +123,24 @@ bool SceneScriptCT10::ClickedOn3DObject(const char *objectName, bool a2) {
 			Delay(1000);
 			Sound_Play(kSfxCURTAIN1, 33, 0, 0, 50);
 			Delay(3000);
-			if (Actor_Clue_Query(kActorMcCoy, kClueStrangeScale1)) {
-				Actor_Voice_Over(3700, kActorVoiceOver);
+			if (_vm->_cutContent) {
+				if (Actor_Query_Intelligence(kActorSteele) == 90) {
+					Actor_Voice_Over(3700, kActorVoiceOver);
+				} else if (Actor_Query_Intelligence(kActorSteele) == 70) {
+					if (Actor_Clue_Query(kActorMcCoy, kClueStrangeScale1)) {
+						Actor_Voice_Over(3700, kActorVoiceOver);
+					} else {
+						Actor_Clue_Acquire(kActorMcCoy, kClueStrangeScale1, true, -1);
+						Item_Pickup_Spin_Effect(kModelAnimationStrangeScale, 364, 214);
+						Actor_Says(kActorMcCoy, 8830, 12); //00-8830.AUD	A strange scale.
+					}
+				}
 			} else {
-				Actor_Clue_Acquire(kActorMcCoy, kClueStrangeScale1, true, -1);
-				Item_Pickup_Spin_Effect(kModelAnimationStrangeScale, 364, 214);
-				if (_vm->_cutContent) {
-					Actor_Says(kActorMcCoy, 8830, 12); //00-8830.AUD	A strange scale.
+				if (Actor_Clue_Query(kActorMcCoy, kClueStrangeScale1)) {
+					Actor_Voice_Over(3700, kActorVoiceOver);
+				} else {
+					Actor_Clue_Acquire(kActorMcCoy, kClueStrangeScale1, true, -1);
+					Item_Pickup_Spin_Effect(kModelAnimationStrangeScale, 364, 214);
 				}
 			}
 			Delay(1000);

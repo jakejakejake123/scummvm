@@ -465,9 +465,9 @@ void AIScriptSteele::EnteredSet(int setId) {
 	
 	if (Actor_Query_Goal_Number(kActorSteele) == kGoalSteeleGoToRC02) {
 		if (_vm->_cutContent) {
-			if (!Game_Flag_Query(kFlagRC51ChopstickWrapperTaken)
-			) {		
-				if (Game_Flag_Query(kFlagZubenIsReplicant)) {
+			if (!Game_Flag_Query(kFlagRC51ChopstickWrapperTaken)) {		
+				if (Game_Flag_Query(kFlagZubenIsReplicant)
+				&& Actor_Query_Intelligence(kActorSteele) == 90) {	
 					Actor_Clue_Acquire(kActorSteele, kClueChopstickWrapper, true, -1);
 					Game_Flag_Set(kFlagRC51ChopstickWrapperTaken);
 
@@ -476,10 +476,9 @@ void AIScriptSteele::EnteredSet(int setId) {
 					}
 
 					Global_Variable_Increment(kVariableMcCoyEvidenceMissed, 1);
-					return;  //true;
 				}
 			}
-		} else {
+		} else {	
 			if (!Game_Flag_Query(kFlagRC51ChopstickWrapperTaken)
 			&&  Random_Query(1, 3) == 1
 				) {		
@@ -496,14 +495,15 @@ void AIScriptSteele::EnteredSet(int setId) {
 		}
 		if (_vm->_cutContent) {
 			if (!Game_Flag_Query(kFlagRC51CandyTaken)
-			) {
+			&& Actor_Query_Intelligence(kActorSteele) == 90) {	
 				Actor_Clue_Acquire(kActorSteele, kClueCandy, true, -1);
 				Game_Flag_Set(kFlagRC51CandyTaken);
 
 				if (Game_Flag_Query(kFlagRC51Discovered)) {
 					Item_Remove_From_World(kItemCandy);
 				}
-				return;  //true;
+
+				Global_Variable_Increment(kVariableMcCoyEvidenceMissed, 1);
 			}		
 		} else {
 			if (!Game_Flag_Query(kFlagRC51CandyTaken)
@@ -521,14 +521,15 @@ void AIScriptSteele::EnteredSet(int setId) {
 
 		if (_vm->_cutContent) {
 			if (!Game_Flag_Query(kFlagRC51ToyDogTaken)
-			) {
+			&& Actor_Query_Intelligence(kActorSteele) == 90) {	
 				Actor_Clue_Acquire(kActorSteele, kClueToyDog, true, -1);
 				Game_Flag_Set(kFlagRC51ToyDogTaken);
 
 				if (Game_Flag_Query(kFlagRC51Discovered)) {
 					Item_Remove_From_World(kItemToyDog);
 				}
-				return; //true;
+
+				Global_Variable_Increment(kVariableMcCoyEvidenceMissed, 1);
 			}
 		} else {
 			if (!Game_Flag_Query(kFlagRC51ToyDogTaken)
@@ -541,6 +542,26 @@ void AIScriptSteele::EnteredSet(int setId) {
 					Item_Remove_From_World(kItemToyDog);
 				}	
 				return; //true;
+			}
+		}
+		if (_vm->_cutContent) {
+			if (!Actor_Clue_Query(kActorMcCoy, kClueShellCasings)
+			&& Actor_Query_Intelligence(kActorSteele) == 90 
+			&& Actor_Query_Intelligence(kActorClovis) == 80) {
+				Actor_Clue_Acquire(kActorSteele, kClueShellCasings, true, -1);
+				Item_Remove_From_World(kItemShellCasingA);
+				Item_Remove_From_World(kItemShellCasingB);
+				Item_Remove_From_World(kItemShellCasingC);
+				Global_Variable_Increment(kVariableMcCoyEvidenceMissed, 1);
+			}
+		}
+		if (_vm->_cutContent) {
+			if (!Actor_Clue_Query(kActorMcCoy, kClueChromeDebris)
+			&& Actor_Query_Intelligence(kActorSteele) == 90 
+			&& Game_Flag_Query(kFlagGordoIsReplicant)) {
+				Actor_Clue_Acquire(kActorSteele, kClueChromeDebris, true, -1);
+				Item_Remove_From_World(kClueChromeDebris);
+				Global_Variable_Increment(kVariableMcCoyEvidenceMissed, 1);
 			}
 		}
 	}
@@ -593,8 +614,6 @@ bool AIScriptSteele::ShotAtAndHit() {
 }
 
 void AIScriptSteele::Retired(int byActorId) {
-	Game_Flag_Set(kFlagSteeleDead);
-
 	if (Actor_Query_Goal_Number(kActorSteele) == 450) {
 		Scene_Exits_Enable();
 		Game_Flag_Set(kFlagKP03BombDisarmed);
@@ -884,6 +903,7 @@ bool AIScriptSteele::GoalChanged(int currentGoalNumber, int newGoalNumber) {
 			} else {
 				Actor_Says(kActorSteele, 1860, kAnimationModeTalk); //01-1860.AUD	You blew your retirement loot this time, Slim.	
 				Actor_Says(kActorSteele, 2650, kAnimationModeTalk); //01-2650.AUD	No wonder you can’t afford a better suit.
+				Delay(500);
 				Actor_Says(kActorSteele, 2660, kAnimationModeTalk); //01-2660.AUD	Ever think of a new line of work?
 				Actor_Says(kActorSteele, 2670, kAnimationModeTalk); //01-2670.AUD	Maybe you’ll have better luck finding that than all those skin-jobs that are running roughshod over you.
 			}
@@ -905,30 +925,31 @@ bool AIScriptSteele::GoalChanged(int currentGoalNumber, int newGoalNumber) {
 				Actor_Says(kActorSteele, 1890, kAnimationModeTalk); //01-1890.AUD	Maybe you should find another line of work.
 				Actor_Says(kActorSteele, 1900, kAnimationModeTalk); //01-1900.AUD	Just in case I'm not around to bail you out next time.		
 			}	
-			Actor_Says(kActorSteele, 1910, kAnimationModeTalk); //01-1910.AUD	I'll wait for the uniforms. Why don't you grab yourself a slice of quiche or something.
-			if (Actor_Query_Friendliness_To_Other(kActorSteele, kActorMcCoy) > 52) {
-				Actor_Face_Actor(kActorMcCoy, kActorIzo, true);
-				Actor_Face_Actor(kActorSteele, kActorIzo, true);
-				Actor_Says(kActorSteele, 90, kAnimationModeTalk); //01-0090.AUD	Just another stroll in the park.
-				Actor_Clue_Acquire(kActorMcCoy, kClueCrystalRetiredIzo, true, kActorSteele);
-			} else {
-				Actor_Face_Actor(kActorSteele, kActorIzo, true);
-				Actor_Face_Actor(kActorMcCoy, kActorIzo, true);
-				Actor_Says(kActorSteele, 1920, kAnimationModeTalk); //01-1920.AUD	And pick up a bottle of scotch for the real Blade Runner, will ya?
-				Actor_Face_Actor(kActorMcCoy, kActorSteele, true);
-				Actor_Face_Actor(kActorSteele, kActorMcCoy, true); 
-				if (Player_Query_Agenda() == kPlayerAgendaSurly
-				||  Player_Query_Agenda() == kPlayerAgendaErratic) {
-					Actor_Says(kActorMcCoy, 6295, 18); //00-6295.AUD	Who made you queen of the world?
-				} else {
-					Actor_Says(kActorMcCoy, 855, 18); //00-0855.AUD	What?
+			if (Actor_Query_Friendliness_To_Other(kActorSteele, kActorMcCoy) < 53) {
+				if (Actor_Query_Intelligence(kActorSteele) == 90) {
+					Actor_Says(kActorSteele, 2140, kAnimationModeTalk); //01-2140.AUD	I can handle it from here, Slim. Why don't you go buy yourself a lollipop? Something else to suck on.
+					Actor_Says(kActorMcCoy, 4850, kAnimationModeTalk);
+					Actor_Says(kActorSteele, 2150, kAnimationModeTalk); //01-2150.AUD	But I wasn't trying to be.
+				} else if (Actor_Query_Intelligence(kActorSteele) == 70) {
+					Actor_Says(kActorSteele, 1910, kAnimationModeTalk); //01-1910.AUD	I'll wait for the uniforms. Why don't you grab yourself a slice of quiche or something.
+					Actor_Says(kActorSteele, 1920, kAnimationModeTalk); //01-1920.AUD	And pick up a bottle of scotch for the real Blade Runner, will ya?
+					Actor_Face_Actor(kActorMcCoy, kActorSteele, true);
+					Actor_Face_Actor(kActorSteele, kActorMcCoy, true); 
+					if (Player_Query_Agenda() == kPlayerAgendaSurly
+					||  Player_Query_Agenda() == kPlayerAgendaErratic) {
+						Actor_Says(kActorMcCoy, 6295, 18); //00-6295.AUD	Who made you queen of the world?
+					} else {
+						Actor_Says(kActorMcCoy, 855, 18); //00-0855.AUD	What?
+					}
+					Actor_Says(kActorSteele, 1930, kAnimationModeTalk); //01-1930.AUD	Just kidding, Slim.
 				}
-				Actor_Says(kActorSteele, 1930, kAnimationModeTalk); //01-1930.AUD	Just kidding, Slim.
-				Actor_Clue_Acquire(kActorMcCoy, kClueCrystalRetiredIzo, true, kActorSteele);
-				Actor_Modify_Friendliness_To_Other(kActorSteele, kActorMcCoy, -1);
-				Actor_Modify_Friendliness_To_Other(kActorGuzza, kActorMcCoy, -1);
-				Actor_Modify_Friendliness_To_Other(kActorClovis, kActorMcCoy, -1);
+			} else {
+				Actor_Says(kActorSteele, 90, kAnimationModeTalk); //01-0090.AUD	Just another stroll in the park.
 			}
+			Actor_Clue_Acquire(kActorMcCoy, kClueCrystalRetiredIzo, true, kActorSteele);
+			Actor_Modify_Friendliness_To_Other(kActorSteele, kActorMcCoy, -1);
+			Actor_Modify_Friendliness_To_Other(kActorGuzza, kActorMcCoy, -1);
+			Actor_Modify_Friendliness_To_Other(kActorClovis, kActorMcCoy, -1);
 			Actor_Set_Goal_Number(kActorSteele, kGoalSteeleLeaveRC03);
 		} else {
 			Actor_Force_Stop_Walking(kActorMcCoy);
@@ -965,20 +986,45 @@ bool AIScriptSteele::GoalChanged(int currentGoalNumber, int newGoalNumber) {
 		Actor_Face_Actor(kActorSteele, kActorIzo, true);
 		Actor_Change_Animation_Mode(kActorIzo, kAnimationModeIdle);
 		Actor_Face_Actor(kActorIzo, kActorSteele, true);
-		Actor_Says_With_Pause(kActorSteele, 2010, 0.0f, kAnimationModeCombatIdle);
+		if (_vm->_cutContent) {
+			if (Actor_Query_Intelligence(kActorSteele) == 90) {
+				Actor_Says(kActorIzo, 2510, kAnimationModeTalk); //01-2510.AUD	Freeze! Don't even go for it!
+				Delay(2000);
+			} else if (Actor_Query_Intelligence(kActorSteele) == 70) {
+				Actor_Change_Animation_Mode(kActorSteele, kAnimationModeCombatIdle);
+				Loop_Actor_Walk_To_Actor(kActorSteele, kActorIzo, 60, false, false);
+				Actor_Change_Animation_Mode(kActorSteele, kAnimationModeCombatIdle);
+				_animationState = 23;
+				_animationFrame = 0;
+				Actor_Says(kActorIzo, 660, kAnimationModeTalk);
+				Actor_Says_With_Pause(kActorSteele, 2020, 0.0f, kAnimationModeCombatIdle); //01-2020.AUD	Whatever.
+			}
+		} else {
+			Actor_Change_Animation_Mode(kActorSteele, kAnimationModeCombatIdle);
+			Loop_Actor_Walk_To_Actor(kActorSteele, kActorIzo, 60, false, false);
+			Actor_Change_Animation_Mode(kActorSteele, kAnimationModeCombatIdle);
+			_animationState = 23;
+			_animationFrame = 0;
+			Actor_Says(kActorIzo, 660, kAnimationModeTalk);
+			Actor_Says_With_Pause(kActorSteele, 2020, 0.0f, kAnimationModeCombatIdle); //01-2020.AUD	Whatever.
+		}
+		Actor_Says_With_Pause(kActorSteele, 2030, 0.0f, kAnimationModeCombatIdle); //01-2030.AUD	Been keeping yourself busy?
 		Actor_Change_Animation_Mode(kActorSteele, kAnimationModeCombatIdle);
-		Loop_Actor_Walk_To_Actor(kActorSteele, kActorIzo, 60, false, false);
-		Actor_Change_Animation_Mode(kActorSteele, kAnimationModeCombatIdle);
-		_animationState = 23;
-		_animationFrame = 0;
-		Actor_Says(kActorIzo, 660, kAnimationModeTalk);
-		Actor_Says_With_Pause(kActorSteele, 2020, 0.0f, kAnimationModeCombatIdle);
-		Actor_Says_With_Pause(kActorSteele, 2030, 0.0f, kAnimationModeCombatIdle);
-		Actor_Change_Animation_Mode(kActorSteele, kAnimationModeCombatIdle);
-		Actor_Says(kActorIzo, 670, kAnimationModeTalk);
-		Actor_Says(kActorSteele, 2040, kAnimationModeCombatIdle);
-		Actor_Says(kActorIzo, 680, kAnimationModeTalk);
-		Actor_Says(kActorSteele, 2050, kAnimationModeTalk);
+		if (_vm->_cutContent) {
+			if (Actor_Query_Intelligence(kActorIzo) == 65) {
+				Actor_Says(kActorIzo, 670, kAnimationModeTalk);
+				Actor_Says(kActorSteele, 2040, kAnimationModeCombatIdle);
+				Actor_Says(kActorIzo, 680, kAnimationModeTalk);
+				Actor_Says(kActorSteele, 2050, kAnimationModeTalk);
+			} else if (Actor_Query_Intelligence(kActorIzo) == 85) {
+				Actor_Says(kActorIzo, 580, kAnimationModeTalk); //07-0580.AUD	I wish I had something to say.
+			}
+		} else {
+			Actor_Says(kActorIzo, 670, kAnimationModeTalk);
+			Actor_Says(kActorSteele, 2040, kAnimationModeCombatIdle);
+			Actor_Says(kActorIzo, 680, kAnimationModeTalk);
+			Actor_Says(kActorSteele, 2050, kAnimationModeTalk);
+		}
 		Actor_Face_Actor(kActorSteele, kActorMcCoy, true);
 		if (_vm->_cutContent) {
 			Actor_Face_Actor(kActorMcCoy, kActorSteele, true);
@@ -990,7 +1036,15 @@ bool AIScriptSteele::GoalChanged(int currentGoalNumber, int newGoalNumber) {
 			Actor_Face_Actor(kActorSteele, kActorMcCoy, true);
 		}
 		Actor_Says(kActorMcCoy, 4845, kAnimationModeTalk);
-		Actor_Says(kActorSteele, 2070, kAnimationModeTalk); //01-2070.AUD	I've been tracking this boy for a week. He thinks he's pretty clever.
+		if (_vm->_cutContent) {
+			if (Actor_Query_Intelligence(kActorIzo) == 65) {
+				Actor_Says(kActorSteele, 2070, kAnimationModeTalk); //01-2070.AUD	I've been tracking this boy for a week. He thinks he's pretty clever.
+			} else if (Actor_Query_Intelligence(kActorIzo) == 85) {
+				Actor_Says(kActorSteele, 1870, kAnimationModeTalk); //01-1870.AUD	Tracking this piece of shit.
+			}
+		} else {
+			Actor_Says(kActorSteele, 2070, kAnimationModeTalk); //01-2070.AUD	I've been tracking this boy for a week. He thinks he's pretty clever.
+		}
 		if (_vm->_cutContent) {
 			if (Actor_Query_Friendliness_To_Other(kActorSteele, kActorMcCoy) > 52) {
 				Actor_Says(kActorSteele, 2080, kAnimationModeTalk); //01-2080.AUD	He's a material witness in a case I'm working.
@@ -1019,14 +1073,23 @@ bool AIScriptSteele::GoalChanged(int currentGoalNumber, int newGoalNumber) {
 		if (_vm->_cutContent) {
 			Actor_Face_Actor(kActorMcCoy, kActorSteele, true);
 			if (Actor_Query_Friendliness_To_Other(kActorSteele, kActorMcCoy) < 53) {
-				Actor_Says(kActorSteele, 2140, kAnimationModeTalk); //01-2140.AUD	I can handle it from here, Slim. Why don't you go buy yourself a lollipop? Something else to suck on.
-				if (Player_Query_Agenda() != kPlayerAgendaSurly 
-				&& Player_Query_Agenda() != kPlayerAgendaErratic) {
+				if (Actor_Query_Intelligence(kActorSteele) == 90) {
+					Actor_Says(kActorSteele, 2140, kAnimationModeTalk); //01-2140.AUD	I can handle it from here, Slim. Why don't you go buy yourself a lollipop? Something else to suck on.
 					Actor_Says(kActorMcCoy, 4850, kAnimationModeTalk);
-				} else {
-					Actor_Says(kActorMcCoy, 665, 16); //00-0665.AUD	Real funny, pal.
+					Actor_Says(kActorSteele, 2150, kAnimationModeTalk); //01-2150.AUD	But I wasn't trying to be.
+				} else if (Actor_Query_Intelligence(kActorSteele) == 70) {
+					Actor_Says(kActorSteele, 1910, kAnimationModeTalk); //01-1910.AUD	I'll wait for the uniforms. Why don't you grab yourself a slice of quiche or something.
+					Actor_Says(kActorSteele, 1920, kAnimationModeTalk); //01-1920.AUD	And pick up a bottle of scotch for the real Blade Runner, will ya?
+					Actor_Face_Actor(kActorMcCoy, kActorSteele, true);
+					Actor_Face_Actor(kActorSteele, kActorMcCoy, true); 
+					if (Player_Query_Agenda() == kPlayerAgendaSurly
+					||  Player_Query_Agenda() == kPlayerAgendaErratic) {
+						Actor_Says(kActorMcCoy, 6295, 18); //00-6295.AUD	Who made you queen of the world?
+					} else {
+						Actor_Says(kActorMcCoy, 855, 18); //00-0855.AUD	What?
+					}
+					Actor_Says(kActorSteele, 1930, kAnimationModeTalk); //01-1930.AUD	Just kidding, Slim.
 				}
-				Actor_Says(kActorSteele, 2150, kAnimationModeTalk); //01-2150.AUD	But I wasn't trying to be.
 			} else {
 				Actor_Says(kActorSteele, 90, kAnimationModeTalk); //01-0090.AUD	Just another stroll in the park.
 			}
@@ -1086,7 +1149,8 @@ bool AIScriptSteele::GoalChanged(int currentGoalNumber, int newGoalNumber) {
 					}
 				}
 				Actor_Says(kActorSteele, 1990, 60); //01-1990.AUD	A little word of advice, Slim. Stay out of my way.
-				if (Actor_Query_Friendliness_To_Other(kActorSteele, kActorMcCoy) < 53) {
+				if (Actor_Query_Friendliness_To_Other(kActorSteele, kActorMcCoy) < 53
+				&& Actor_Query_Intelligence(kActorSteele) == 70) {
 					Actor_Says(kActorSteele, 2000, kAnimationModeTalk); //01-2000.AUD	Next time I'm not gonna worry about who's in my line of fire, understand?
 				}
 				Actor_Modify_Friendliness_To_Other(kActorSteele, kActorMcCoy, -2);
@@ -1406,12 +1470,7 @@ bool AIScriptSteele::GoalChanged(int currentGoalNumber, int newGoalNumber) {
 				Actor_Face_Actor(kActorSteele, kActorLucy, true);
 				Actor_Face_Actor(kActorMcCoy, kActorLucy, true);
 				Actor_Says(kActorSteele, 50, 12); //01-0050.AUD	That’s funny. Sometimes I actually feel bad for these poor Lolita models. 
-				if (Player_Query_Agenda() != kPlayerAgendaSurly 
-				&& Player_Query_Agenda() != kPlayerAgendaErratic) {
-					Actor_Says(kActorMcCoy, 1555, 13); //00-1555.AUD	You do?
-				} else {
-					Actor_Says(kActorMcCoy, 8190, -1);	// 00-8190.AUD	Why?
-				}
+				Actor_Says(kActorMcCoy, 1555, 13); //00-1555.AUD	You do?
 				Actor_Says(kActorSteele, 60, 12); //01-0060.AUD	There ain’t nothing in this world, even a skin-job, who deserves to be sold into sexual slavery.
 				Actor_Face_Actor(kActorSteele, kActorMcCoy, true);
 				Actor_Face_Actor(kActorMcCoy, kActorSteele, true);
@@ -1473,7 +1532,13 @@ bool AIScriptSteele::GoalChanged(int currentGoalNumber, int newGoalNumber) {
 		if (_vm->_cutContent) {
 			Actor_Says(kActorSteele, 90, 13); //01-0090.AUD	Just another stroll in the park.
 		}
-		Actor_Says(kActorSteele, 100, 13); //01-0100.AUD	Unless Tyrell can design a faster brain processor, I’m gonna get pretty damn bored with this gig.
+		if (_vm->_cutContent) {
+			if (Actor_Query_Intelligence(kActorSteele) == 70) {
+				Actor_Says(kActorSteele, 100, 13); //01-0100.AUD	Unless Tyrell can design a faster brain processor, I’m gonna get pretty damn bored with this gig.
+			} 
+		} else {
+			Actor_Says(kActorSteele, 100, 13); //01-0100.AUD	Unless Tyrell can design a faster brain processor, I’m gonna get pretty damn bored with this gig.
+		}
 		if (_vm->_cutContent) {
 			Actor_Says(kActorMcCoy, 1575, 13); //00-1575.AUD	You don’t feel bad about juicing a little girl?
 			if (Actor_Query_Friendliness_To_Other(kActorSteele, kActorMcCoy) < 60) {
@@ -1522,6 +1587,12 @@ bool AIScriptSteele::GoalChanged(int currentGoalNumber, int newGoalNumber) {
 				Actor_Says(kActorSteele, 180, 17); //01-0180.AUD	If you can’t even retire a freaking Lolita, how do you expect to dance with a combat Six?
 				Actor_Says(kActorMcCoy, 1590, 17);
 				Actor_Says(kActorSteele, 200, 15); //01-0200.AUD	Don’t even ask me who’d be doing the leading, Rookie.
+			} else { 
+				Delay(1000);
+				Actor_Says(kActorSteele, 50, 12); //01-0050.AUD	That’s funny. Sometimes I actually feel bad for these poor Lolita models. 
+				Actor_Says(kActorMcCoy, 1555, 13); //00-1555.AUD	You do?
+				Actor_Says(kActorSteele, 60, 12); //01-0060.AUD	There ain’t nothing in this world, even a skin-job, who deserves to be sold into sexual slavery.
+				Actor_Says(kActorSteele, 80, 16); //01-0080.AUD	That Tyrell is one sick dude.
 			}
 		} else {
 			Actor_Says(kActorSteele, 170, 16); //01-0170.AUD	What’s the problem, Slim?
@@ -1692,8 +1763,15 @@ bool AIScriptSteele::GoalChanged(int currentGoalNumber, int newGoalNumber) {
 		if (_vm->_cutContent) {
 			Actor_Face_Actor(kActorMcCoy, kActorGordo, true);
 		}
-		Actor_Says(kActorSteele, 1100, 13); //01-1100.AUD	Pathetic. Maybe he wasn’t a combat model after all.
-		Actor_Says(kActorSteele, 1110, 17); //01-1110.AUD	Heard Tyrell was making a few lounge act versions. You know, for the troop shows Off-World.
+		if (_vm->_cutContent) {
+			if (Actor_Query_Intelligence(kActorSteele) == 70) {
+				Actor_Says(kActorSteele, 1100, 13); //01-1100.AUD	Pathetic. Maybe he wasn’t a combat model after all.
+				Actor_Says(kActorSteele, 1110, 17); //01-1110.AUD	Heard Tyrell was making a few lounge act versions. You know, for the troop shows Off-World.
+			}
+		} else {
+			Actor_Says(kActorSteele, 1100, 13); //01-1100.AUD	Pathetic. Maybe he wasn’t a combat model after all.
+			Actor_Says(kActorSteele, 1110, 17); //01-1110.AUD	Heard Tyrell was making a few lounge act versions. You know, for the troop shows Off-World.
+		}
 		if (_vm->_cutContent) {
 			if (Player_Query_Agenda() == kPlayerAgendaSurly 
 			|| Player_Query_Agenda() == kPlayerAgendaErratic) {
@@ -1745,20 +1823,16 @@ bool AIScriptSteele::GoalChanged(int currentGoalNumber, int newGoalNumber) {
 		Actor_Face_Actor(kActorSteele, kActorMcCoy, true);
 		Actor_Says(kActorSteele, 1160, 15); //01-1160.AUD	Dah! What the hell?! Now we’ll never catch it.
 		Actor_Face_Actor(kActorMcCoy, kActorSteele, true);
-		Actor_Says(kActorMcCoy, 3035, 14); //00-3035.AUD	You were gonna shoot!
+		Actor_Says(kActorMcCoy, 3035, 14); //00-3035.AUD	You were gonna shoot!		
+		Actor_Says(kActorSteele, 1170, 16); //01-1170.AUD	Damn straight!
+		Actor_Says(kActorMcCoy, 3040, 15); //00-3040.AUD	What about the hostage?
 		if (_vm->_cutContent) {
-			if (Actor_Query_Friendliness_To_Other(kActorSteele, kActorMcCoy) < 60) {
-				Actor_Says(kActorSteele, 1170, 16); //01-1170.AUD	Damn straight!
-				if (Player_Query_Agenda() == kPlayerAgendaPolite) {
-					Actor_Says(kActorMcCoy, 3040, 15); //00-3040.AUD	What about the hostage?
-					Actor_Says(kActorSteele, 1180, 16); //01-1180.AUD	A small price to pay to juice that skin-job.
-				}
-			} else {
+			if (Actor_Query_Intelligence(kActorSteele) == 70) {
+				Actor_Says(kActorSteele, 1180, 16); //01-1180.AUD	A small price to pay to juice that skin-job.
+			} else if (Actor_Query_Intelligence(kActorSteele) == 90) {
 				Delay(1000);
 			}
 		} else {
-			Actor_Says(kActorSteele, 1170, 16); //01-1170.AUD	Damn straight!
-			Actor_Says(kActorMcCoy, 3040, 15); //00-3040.AUD	What about the hostage?
 			Actor_Says(kActorSteele, 1180, 16); //01-1180.AUD	A small price to pay to juice that skin-job.
 		}
 		Actor_Says(kActorMcCoy, 3045, 15); //00-3045.AUD	You think Bryant is gonna keep you on if you start wasting civilians in the middle of the street?
@@ -1779,6 +1853,7 @@ bool AIScriptSteele::GoalChanged(int currentGoalNumber, int newGoalNumber) {
 		Actor_Says(kActorSteele, 1210, 14); //01-1210.AUD	We’d better call this in. Maybe we can seal off the sewers and get a search team out here. Your vehicle close by?
 		if (_vm->_cutContent) {
 			Actor_Clue_Acquire(kActorMcCoy, kClueMcCoyHelpedGordo, true, kActorSteele);
+			Actor_Clue_Acquire(kActorGordo, kClueMcCoyHelpedGordo, true, -1);
 			Game_Flag_Set(kFlagMcCoyIsHelpingReplicants);
 			Game_Flag_Set(kFlagGordoEscaped);
 			Actor_Modify_Friendliness_To_Other(kActorSteele, kActorMcCoy, -2);
@@ -1864,7 +1939,7 @@ bool AIScriptSteele::GoalChanged(int currentGoalNumber, int newGoalNumber) {
 			if (!Game_Flag_Query(kFlagMcCoyShotIzo)) {
 				Actor_Says(kActorMcCoy, 2985, 13); //00-2985.AUD	I didn’t kill Izo.
 			} else {
-				Actor_Says(kActorMcCoy, 8320, 15); //00-8320.AUD	Really?
+				Actor_Says(kActorMcCoy, 855, 18); //00-0855.AUD	What?
 			}
 		} else {
 			Actor_Says(kActorMcCoy, 2985, 13); //00-2985.AUD	I didn’t kill Izo.
@@ -1878,9 +1953,7 @@ bool AIScriptSteele::GoalChanged(int currentGoalNumber, int newGoalNumber) {
 				Actor_Says(kActorSteele, 890, 18); //01-0890.AUD	The minute you start to feel something for skin-jobs you’re in big trouble.
 				if (Player_Query_Agenda() == kPlayerAgendaPolite) { 
 					Actor_Says(kActorMcCoy, 2995, 12); //00-2995.AUD	Maybe I just got too much empathy.
-					if (Actor_Query_Friendliness_To_Other(kActorSteele, kActorMcCoy) < 60) {
-						Actor_Says(kActorSteele, 900, 13); //01-0900.AUD	In all the wrong places.
-					}
+					Actor_Says(kActorSteele, 900, 13); //01-0900.AUD	In all the wrong places.
 				}
 			}
 		} else {
@@ -1890,9 +1963,14 @@ bool AIScriptSteele::GoalChanged(int currentGoalNumber, int newGoalNumber) {
 			Actor_Says(kActorSteele, 900, 13);
 		}
 		if (_vm->_cutContent) {
-			Actor_Says(kActorSteele, 1370, 12); //01-1370.AUD	The uniforms know you’re down here. They already towed your Spinner.
-			Actor_Says(kActorMcCoy, 3125, 15); //00-3125.AUD	I was wondering where it went.
-			Delay(1000);
+			if (Actor_Query_Intelligence(kActorSteele) == 90) {
+				Delay(1000);
+				Actor_Says(kActorSteele, 1370, 12); //01-1370.AUD	The uniforms know you’re down here. They already towed your Spinner.
+				Actor_Says(kActorMcCoy, 3125, 15); //00-3125.AUD	I was wondering where it went.
+				Delay(1000);
+			} else if (Actor_Query_Intelligence(kActorSteele) == 70) {
+				Delay(1000);
+			}
 		}
 		Actor_Says(kActorMcCoy, 3000, 13); //00-3000.AUD	You wanna put me on the Machine?
 		if (_vm->_cutContent) {
@@ -1929,6 +2007,7 @@ bool AIScriptSteele::GoalChanged(int currentGoalNumber, int newGoalNumber) {
 				}
 			} else {
 				Actor_Says(kActorSteele, 640, 12); //01-0640.AUD	No chance.
+				Delay(1000);
 				Actor_Says(kActorSteele, 1420, 12); //01-1420.AUD	Go, if you’re going. I’m gonna talk to Guzza before I do anything.
 				Actor_Says(kActorMcCoy, 8565, 15); //00-8565.AUD	Really?
 				Actor_Says(kActorSteele, 960, 15); //01-0960.AUD	Guzza must have messed up somehow. I’ll check it out, see what’s going on and then...
@@ -2027,7 +2106,14 @@ bool AIScriptSteele::GoalChanged(int currentGoalNumber, int newGoalNumber) {
 
 	case kGoalSteeleKP03Walk:
 		Actor_Face_Actor(kActorMcCoy, kActorSteele, true);
-		Actor_Says(kActorSteele, 430, 14);
+		if (_vm->_cutContent) {
+			if (Actor_Query_Intelligence(kActorSteele) == 90) {
+				Actor_Says(kActorSteele, 430, 14);
+				if (Game_Flag_Query(kFlagMcCoyIsHelpingReplicants)) {
+					Actor_Says(kActorMcCoy, 8225, 14); //00-8225.AUD	Just relax.
+				}
+			}
+		}
 		// If McCoy is on the Crystal betrayal path he will automatically let Crystal trigger the bomb.
 		if (_vm->_cutContent) {
 			if (Game_Flag_Query(kFlagMcCoyIsHelpingReplicants)) {
@@ -2070,7 +2156,9 @@ bool AIScriptSteele::GoalChanged(int currentGoalNumber, int newGoalNumber) {
 				// Also the player will now gain control.
 				Actor_Clue_Acquire(kActorSadik, kClueMcCoyBetrayal, true, kActorSteele);
 				Actor_Clue_Acquire(kActorMcCoy, kClueMcCoyBetrayal, true, kActorSteele);
+				Actor_Set_Targetable(kActorSteele, false);
 				Actor_Set_Goal_Number(kActorSteele, kGoalSteeleGone);
+				Actor_Retired_Here(kActorSteele, 60, 12, true, -1);
 				Player_Gains_Control();
 			} else {
 				Actor_Says(kActorSteele, 440, 3);
@@ -2098,11 +2186,11 @@ bool AIScriptSteele::GoalChanged(int currentGoalNumber, int newGoalNumber) {
 				Delay(2000);
 				if (Actor_Query_Friendliness_To_Other(kActorSteele, kActorMcCoy) > 59) {
 					Actor_Says(kActorMcCoy, 2390, kAnimationModeIdle); //00-2390.AUD	Oh, God. No.
-					Delay(2000);
+					Delay(1000);
 				} else if (Player_Query_Agenda() != kPlayerAgendaSurly 
 				&& Player_Query_Agenda() != kPlayerAgendaErratic) {
 					Actor_Says(kActorMcCoy, 2390, kAnimationModeIdle); //00-2390.AUD	Oh, God. No.
-					Delay(2000);
+					Delay(1000);
 				}
 				if (Actor_Query_Friendliness_To_Other(kActorSteele, kActorMcCoy) > 59) {
 					Actor_Says(kActorMcCoy, 2305, 13); //00-2305.AUD	I’m sorry.
@@ -2112,7 +2200,9 @@ bool AIScriptSteele::GoalChanged(int currentGoalNumber, int newGoalNumber) {
 				} else {
 					Actor_Says(kActorMcCoy, 170, 19); //00-0170.AUD	Damn.
 				}
+				Actor_Set_Targetable(kActorSteele, false);
 				Actor_Set_Goal_Number(kActorSteele, kGoalSteeleGone);
+				Actor_Retired_Here(kActorSteele, 60, 12, true, -1);
 			}
 		} else {
 			Actor_Says(kActorSteele, 440, 3);
@@ -2133,7 +2223,6 @@ bool AIScriptSteele::GoalChanged(int currentGoalNumber, int newGoalNumber) {
 
 	case kGoalSteeleKP03Dead:
 		Actor_Set_Targetable(kActorSteele, false);
-		Game_Flag_Set(kFlagSteeleDead);
 		Actor_Set_Goal_Number(kActorSteele, kGoalSteeleGone);
 		Actor_Retired_Here(kActorSteele, 60, 12, true, -1);
 		return true;
@@ -2151,6 +2240,9 @@ bool AIScriptSteele::GoalChanged(int currentGoalNumber, int newGoalNumber) {
 		// Removed the delay so the conversation happens immediately.
 		if (!_vm->_cutContent) {
 			Delay(2000);
+		}
+		if (_vm->_cutContent) {
+			Actor_Face_Actor(kActorMcCoy, kActorSteele, true);
 		}
 		Actor_Face_Actor(kActorSteele, kActorMcCoy, true);
 		if (_vm->_cutContent) {
@@ -2191,7 +2283,18 @@ bool AIScriptSteele::GoalChanged(int currentGoalNumber, int newGoalNumber) {
 			Actor_Says(kActorMcCoy, 2160, 18); //00-2160.AUD	Hell, yeah.
 		}
 		Actor_Says(kActorSteele, 390, 13);
-		Actor_Set_Goal_Number(kActorSteele, kGoalSteeleKP01Leave);
+		if (_vm->_cutContent) {
+			if (Game_Flag_Query(kFlagHanoiIsReplicant)
+			&& !Game_Flag_Query(kFlagMcCoyIsHelpingReplicants)
+			&& !Game_Flag_Query(kFlagKP03BombExploded)) {
+				Loop_Actor_Walk_To_XYZ(kActorSteele, -125.0f, -12.2f, -61.0f, 0, true, false, false);
+				Actor_Put_In_Set(kActorSteele, kSceneKP05);
+			} else {
+				Actor_Set_Goal_Number(kActorSteele, kGoalSteeleKP01Leave);
+			}
+		} else {
+			Actor_Set_Goal_Number(kActorSteele, kGoalSteeleKP01Leave);
+		}
 		return true;
 
 	case kGoalSteeleKP01Leave:
@@ -2223,6 +2326,12 @@ bool AIScriptSteele::GoalChanged(int currentGoalNumber, int newGoalNumber) {
 		AI_Movement_Track_Flush(kActorSteele);
 		AI_Movement_Track_Append_Run(kActorSteele, 542, 0);
 		AI_Movement_Track_Repeat(kActorSteele);
+		return true;
+
+	case kGoalSteeleBlownUp:
+		AI_Movement_Track_Flush(kActorSteele);
+		_animationState = 34;
+		_animationFrame = Slice_Animation_Query_Number_Of_Frames(kModelAnimationSteeleShotDead) - 1;
 		return true;
 
 	case 450:

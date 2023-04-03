@@ -537,7 +537,8 @@ void AIScriptSebastian::dialogue() {
 				Actor_Says(kActorSebastian, 470, 12); //56-0470.AUD	I don't think they'd ever do a mean thing to anybody.
 			}
 			if (_vm->_cutContent) {
-				if (Actor_Query_Friendliness_To_Other(kActorSebastian, kActorMcCoy) > 49) {
+				if (Actor_Query_Friendliness_To_Other(kActorSebastian, kActorMcCoy) > 49
+				&& Game_Flag_Query(kFlagLutherLanceIsReplicant)) {
 					Actor_Says(kActorSebastian, 480, 13); //56-0480.AUD	They're real smart, too. Almost as smart as Dr. Tyrell.
 					Actor_Says(kActorMcCoy, 7160, 18); //00-7160.AUD	Maybe they're too smart to keep around. Too much competition for the old man.
 					Actor_Says(kActorSebastian, 490, 14); //56-0490.AUD	Oh, they could never take Dr. Tyrell's place.

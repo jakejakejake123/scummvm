@@ -397,7 +397,7 @@ void SceneScriptNR05::talkToEarlyQ() {
 					Delay(6000);
 				} else {
 					Actor_Says(kActorMcCoy, 3390, 14); //00-3390.AUD	Not interested.
-					Actor_Says(kActorEarlyQ, 110, 74);
+					Actor_Says(kActorEarlyQ, 110, 18);
 					Actor_Says(kActorMcCoy, 9045, 14); //00-9045.AUD	Not these days.
 					Delay(1000);
 				}
@@ -510,16 +510,33 @@ void SceneScriptNR05::talkToEarlyQ() {
 		// Made it so Early Q will be resistant to answering McCoys question about the jewelry if he is a replicant. In fact Early Q won't answer the question at all if he is a rep.
 		// However if Early Q is human he will answer McCoys question about the jewelry, he won't even resist.
 		if (_vm->_cutContent) {
-			Actor_Says(kActorEarlyQ, 420, 12); //18-0420.AUD	Who’s asking?
-			Actor_Says(kActorEarlyQ, 430, 13); //18-0430.AUD	You ain’t with Robbery-Homicide.
-			Actor_Says(kActorMcCoy, 3530, 15); //00-3530.AUD	No, sir.
-			Actor_Says(kActorEarlyQ, 730, kAnimationModeTalk); //18-0730.AUD	I’m working right now, General. Ask me later.
-			if (Player_Query_Agenda() == kPlayerAgendaSurly
-			|| (Player_Query_Agenda() == kPlayerAgendaErratic)) {
-				Actor_Says(kActorMcCoy, 8519, 14);//00-8519.AUD	What do you say we dish each other the straight goods.
-				Delay(2000);
-				Actor_Says(kActorMcCoy, 8445, 14); //00-8445.AUD	Cough it up!
-				Delay(1000);
+			if (Game_Flag_Query(kFlagEarlyQIsReplicant)) {
+				Actor_Says(kActorEarlyQ, 420, 12); //18-0420.AUD	Who’s asking?
+				Actor_Says(kActorEarlyQ, 430, 13); //18-0430.AUD	You ain’t with Robbery-Homicide.
+				Actor_Says(kActorMcCoy, 3530, 15); //00-3530.AUD	No, sir.
+				Actor_Says(kActorEarlyQ, 730, kAnimationModeTalk); //18-0730.AUD	I’m working right now, General. Ask me later.
+				if (Player_Query_Agenda() == kPlayerAgendaSurly
+				|| (Player_Query_Agenda() == kPlayerAgendaErratic)) {
+					Actor_Says(kActorMcCoy, 8519, 14);//00-8519.AUD	What do you say we dish each other the straight goods.
+					Delay(2000);
+					Actor_Says(kActorMcCoy, 8445, 14); //00-8445.AUD	Cough it up!
+					Delay(1000);
+					Actor_Says(kActorEarlyQ, 440, 15); //18-0440.AUD	Eh, those pieces ain’t hot. I got the papers to prove it. I picked them up at a legitimate auction. Cost me nearly a pound of flesh too.
+					Actor_Says(kActorMcCoy, 3535, 13);
+					Actor_Says(kActorEarlyQ, 460, 16); //18-0460.AUD	You kiddin’? I ain’t that stupid. No, no, no, no. I was letting one of my dancers use the stuff in her act. Kind of a tribute to the ancient swamp lands, you know what I mean?
+					Actor_Says(kActorMcCoy, 3540, 15);
+					Actor_Says(kActorEarlyQ, 490, 16); //18-0490.AUD	Hecuba. She’s going on in a few.
+					Actor_Says(kActorEarlyQ, 500, 13); //18-0500.AUD	She’s one of my biggest earners too. She ain’t in any trouble now, is she?
+					if (!Game_Flag_Query(kFlagMcCoyIsHelpingReplicants)
+					|| Player_Query_Agenda() != kPlayerAgendaPolite) {
+						Actor_Says(kActorMcCoy, 3545, 15);
+					} else {
+						Actor_Says(kActorMcCoy, 7815, 15); //00-7815.AUD	No.
+					}
+					Actor_Says(kActorEarlyQ, 520, 12); //18-0520.AUD	(sighs) Good, good. Wouldn’t wanna slaughter the goose that lays them golden eggs.
+					Actor_Clue_Acquire(kActorMcCoy, kClueEarlyInterviewA, true, kActorEarlyQ);
+				}
+			} else {
 				Actor_Says(kActorEarlyQ, 440, 15); //18-0440.AUD	Eh, those pieces ain’t hot. I got the papers to prove it. I picked them up at a legitimate auction. Cost me nearly a pound of flesh too.
 				Actor_Says(kActorMcCoy, 3535, 13);
 				Actor_Says(kActorEarlyQ, 460, 16); //18-0460.AUD	You kiddin’? I ain’t that stupid. No, no, no, no. I was letting one of my dancers use the stuff in her act. Kind of a tribute to the ancient swamp lands, you know what I mean?
@@ -534,11 +551,9 @@ void SceneScriptNR05::talkToEarlyQ() {
 				}
 				Actor_Says(kActorEarlyQ, 520, 12); //18-0520.AUD	(sighs) Good, good. Wouldn’t wanna slaughter the goose that lays them golden eggs.
 				Actor_Clue_Acquire(kActorMcCoy, kClueEarlyInterviewA, true, kActorEarlyQ);
-				Game_Flag_Set(kFlagEarlyQTalkJewelry);
-				Actor_Face_Heading(kActorEarlyQ, 849, false);
-			} else {
-				Actor_Face_Heading(kActorEarlyQ, 849, false);
 			}
+			Game_Flag_Set(kFlagEarlyQTalkJewelry);
+			Actor_Face_Heading(kActorEarlyQ, 849, false);
 		} else {
 			Actor_Modify_Friendliness_To_Other(kActorEarlyQ, kActorMcCoy, -1);
 			Actor_Says(kActorEarlyQ, 420, 12); //18-0420.AUD	Who’s asking?
@@ -561,7 +576,11 @@ void SceneScriptNR05::talkToEarlyQ() {
 		break;
 
 	case 900: // LUCY
-		Actor_Says(kActorMcCoy, 3510, 15); //00-3510.AUD	This girl one of yours?
+		if (_vm->_cutContent) {	
+			Actor_Says(kActorMcCoy, 3510, 23); //00-3510.AUD	This girl one of yours?
+		} else {
+			Actor_Says(kActorMcCoy, 3510, 15); //00-3510.AUD	This girl one of yours?
+		}
 		if (!_vm->_cutContent) {
 			Actor_Modify_Friendliness_To_Other(kActorEarlyQ, kActorMcCoy, -1);
 		}
@@ -583,9 +602,11 @@ void SceneScriptNR05::talkToEarlyQ() {
 			if (Game_Flag_Query(kFlagEarlyQIsReplicant)) {
 				Actor_Says(kActorEarlyQ, 570, 13); //18-0570.AUD	Talk to Taffy. He gets most of the peddy business around here.
 				Actor_Says(kActorMcCoy, 3555, 12); //00-3555.AUD	It’s men like you that made this country great, Early.
+				Game_Flag_Set(kFlagEarlyQTalkLucy);
 			} else {
 				Actor_Says(kActorMcCoy, 2485, 19); //00-2485.AUD	I’ve a hard time believing that.
-				Delay(1000);
+				Delay(2000);
+				Game_Flag_Set(kFlagEarlyQTalkLucy);
 			}
 		} else {
 			Actor_Says(kActorEarlyQ, 570, 13); //18-0570.AUD	Talk to Taffy. He gets most of the peddy business around here.
@@ -652,7 +673,7 @@ void SceneScriptNR05::talkToEarlyQ() {
 					Actor_Says(kActorMcCoy, 4880, 16); //00-4880.AUD	Is that right?
 					Actor_Says(kActorEarlyQ, 740, 15); // 18-0740.AUD	Hey, would this face lie to you?
 					Actor_Says(kActorMcCoy, 5705, 18); //00-5705.AUD	Uh-huh.
-					Delay(1000);
+					Delay(2000);
 					Actor_Says(kActorMcCoy, 745, 14); //00-0745.AUD	I'm watching you, pal.
 				}
 			} else {

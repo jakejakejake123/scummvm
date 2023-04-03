@@ -225,11 +225,14 @@ void SceneScriptNR02::PlayerWalkedIn() {
 				if (!Game_Flag_Query(kFlagDektoraTalkAct4)
 				&& !Actor_Clue_Query(kActorDektora, kClueMcCoyRetiredZuben)
 				&& !Actor_Clue_Query(kActorDektora, kClueMcCoyRetiredLucy)
-				&& !Actor_Clue_Query(kActorDektora, kClueMcCoyRetiredGordo)) {
+				&& !Actor_Clue_Query(kActorDektora, kClueMcCoyRetiredGordo)
+				&& Actor_Clue_Query(kActorMcCoy, kClueFolder)
+				&& Actor_Clue_Query(kActorMcCoy, kClueGuzzaFramedMcCoy)) {
 					Actor_Put_In_Set(kActorDektora, kSetNR02);
 					Actor_Set_At_XYZ(kActorDektora, -141.56, -23.67, 356.49, 0);
 					Actor_Face_Actor(kActorMcCoy, kActorDektora, true);
 					Actor_Face_Actor(kActorDektora, kActorMcCoy, true);
+					Delay(1000);
 					if (Player_Query_Agenda() != kPlayerAgendaPolite) {
 						Actor_Says(kActorMcCoy, 6425, 14); //00-6425.AUD	You shouldn’t be here!
 						Actor_Says(kActorDektora, 1280, 12); //03-1280.AUD	I had to see you.
@@ -256,8 +259,14 @@ void SceneScriptNR02::PlayerWalkedIn() {
 						}
 						Actor_Says(kActorDektora, 1300, 12); //03-1300.AUD	The police know what I am.
 						Actor_Says(kActorMcCoy, 6435, 14); //00-6435.AUD	Legally, it can’t be proved unless they put you on the Machine
-						Actor_Says(kActorDektora, 1310, 13); //03-1310.AUD	Crystal Steele won’t bother with formalities.
-						Actor_Says(kActorDektora, 1320, 14); //03-1320.AUD	And they’ve found my incept photo or my records, it won’t matter anyway
+						if (Actor_Query_Intelligence(kActorDektora) == 90) {
+							Actor_Says(kActorDektora, 1310, 13); //03-1310.AUD	Crystal Steele won’t bother with formalities.
+							Actor_Says(kActorDektora, 1320, 14); //03-1320.AUD	And they’ve found my incept photo or my records, it won’t matter anyway
+						} else if (Actor_Query_Intelligence(kActorDektora) == 70) {
+							Delay(1000);
+							Actor_Says(kActorDektora, 1980, 14); //03-1980.AUD	All right.
+							Delay(1000);
+						}
 					} else {
 						if (!Actor_Clue_Query(kActorMcCoy, kClueVKDektoraReplicant)) {
 							Delay(1000);
@@ -289,12 +298,12 @@ void SceneScriptNR02::PlayerWalkedIn() {
 							Actor_Says(kActorMcCoy, 8510, 11); //00-8510.AUD	You got a real thing for machines, don't ya?
 							Delay(2000);
 						}
-					}
-					Actor_Says(kActorMcCoy, 6380, 12); //00-6380.AUD	Clovis is pretty low priority right now. I’ve been framed and I got the rest of the LPD trying to find me.
+					}				
 					Actor_Says(kActorDektora, 1170, 13); //03-1170.AUD	We’re both running then.
-					Actor_Says(kActorDektora, 1180, 14); //03-1180.AUD	From Clovis.
 					Actor_Says(kActorMcCoy, 6375, 13); //00-6375.AUD	Are we?
-					Actor_Says(kActorDektora, 1190, 13); //03-1190.AUD	Blade Runners?
+					Actor_Says(kActorDektora, 1180, 14); //03-1180.AUD	From Clovis.
+					Actor_Says(kActorMcCoy, 6380, 12); //00-6380.AUD	Clovis is pretty low priority right now. I’ve been framed and I got the rest of the LPD trying to find me.
+					Actor_Says(kActorDektora, 1190, 13); //03-1190.AUD	Blade Runners?		
 					Actor_Says(kActorMcCoy, 6390, 16); //00-6390.AUD	They think I’m a Replicant.
 					if (Game_Flag_Query(kFlagDektoraIsReplicant)) {
 						Actor_Says(kActorDektora, 1200, 13); //03-1200.AUD	Do they now?
@@ -331,6 +340,10 @@ void SceneScriptNR02::PlayerWalkedIn() {
 					Loop_Actor_Walk_To_XYZ(kActorDektora, -300.18, -23.44, 44.75, 48, true, false, false);
 					Music_Stop(1u);
 					Game_Flag_Set(kFlagDektoraTalkAct4);
+					Loop_Actor_Walk_To_XYZ(kActorMcCoy, -191.9f, -24.0f, 62.15f, 0, true, false, false);
+					Actor_Face_Heading(kActorMcCoy, 13, false);
+					Actor_Set_Goal_Number(kActorMcCoy, kGoalMcCoyCallWithGuzza);
+					Game_Flag_Set(kFlagCallWithGuzza);
 				}
 			}
 		}

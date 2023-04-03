@@ -221,7 +221,8 @@ void SceneScriptUG15::ActorChangedGoal(int actorId, int newGoal, int oldGoal, bo
 void SceneScriptUG15::PlayerWalkedIn() {
 	if (_vm->_cutContent) {
 		Music_Stop(1u);
-		if (Actor_Clue_Query(kActorMcCoy, kClueFolder)) {
+		if (Game_Flag_Query(kFlagCallWithGuzza)
+		&& Global_Variable_Query(kVariableChapter) == 4) {
 			if (Game_Flag_Query(kFlagHanoiIsReplicant)
 			&& !Game_Flag_Query(kFlagMcCoyIsHelpingReplicants)) {
 				Loop_Actor_Walk_To_XYZ(kActorMcCoy, -62.0f, 48.07f, 102.0f, 0, false, false, false);
@@ -285,9 +286,30 @@ void SceneScriptUG15::PlayerWalkedIn() {
 				Ambient_Sounds_Play_Sound(kSfxSHOTGUN1, 97, 0, 0, 20);
 				Delay(1000);
 				Sound_Play(kSfxGUNH1A, 100, 0, 0, 50);
-				Actor_Change_Animation_Mode(kActorMcCoy, 6);
+				Actor_Change_Animation_Mode(kActorMcCoy, kAnimationModeCombatAim);
+				Actor_Change_Animation_Mode(kActorMcCoy, kAnimationModeCombatAttack);
 				Actor_Change_Animation_Mode(kActorHanoi, 21);
-				Delay(1000);
+				Delay(600);
+				Sound_Play(kSfxGUNH1A, 100, 0, 0, 50);
+				Actor_Change_Animation_Mode(kActorMcCoy, kAnimationModeCombatAim);
+				Actor_Change_Animation_Mode(kActorMcCoy, kAnimationModeCombatAttack);
+				Actor_Change_Animation_Mode(kActorHanoi, 21);
+				Delay(600);
+				Sound_Play(kSfxGUNH1A, 100, 0, 0, 50);
+				Actor_Change_Animation_Mode(kActorMcCoy, kAnimationModeCombatAim);
+				Actor_Change_Animation_Mode(kActorMcCoy, kAnimationModeCombatAttack);
+				Actor_Change_Animation_Mode(kActorHanoi, 21);
+				Delay(600);
+				Sound_Play(kSfxGUNH1A, 100, 0, 0, 50);
+				Actor_Change_Animation_Mode(kActorMcCoy, kAnimationModeCombatAim);
+				Actor_Change_Animation_Mode(kActorMcCoy, kAnimationModeCombatAttack);
+				Actor_Change_Animation_Mode(kActorHanoi, 21);
+				Delay(600);
+				Sound_Play(kSfxGUNH1A, 100, 0, 0, 50);
+				Actor_Change_Animation_Mode(kActorMcCoy, kAnimationModeCombatAim);
+				Actor_Change_Animation_Mode(kActorMcCoy, kAnimationModeCombatAttack);
+				Actor_Change_Animation_Mode(kActorHanoi, 21);
+				Delay(2000);
 				Actor_Change_Animation_Mode(kActorHanoi, 6);
 				Delay(500);
 				Game_Flag_Set(kFlagUG15BridgeBreaks);

@@ -61,7 +61,10 @@ void SceneScriptKP03::InitializeScene() {
 		if (Actor_Query_Goal_Number(kActorSteele) != kGoalSteeleGone
 		&& !Game_Flag_Query(kFlagKP03BombExploded)
 		&& !Game_Flag_Query(kFlagKP03BombDisarmed)) {
- 			if (!Game_Flag_Query(kFlagMcCoyRetiredHuman)
+			if (Game_Flag_Query(kFlagHanoiIsReplicant)
+			&& !Game_Flag_Query(kFlagMcCoyIsHelpingReplicants)) {
+				Actor_Put_In_Set(kActorSteele, kSceneKP02);
+			} else if (!Game_Flag_Query(kFlagMcCoyRetiredHuman)
 			&& Global_Variable_Query(kVariableAffectionTowards) != kAffectionTowardsDektora
 			&& Global_Variable_Query(kVariableAffectionTowards) != kAffectionTowardsLucy 
 			&& Game_Flag_Query(kFlagMcCoyIsInnocent)) {
@@ -314,7 +317,47 @@ void SceneScriptKP03::PlayerWalkedIn() {
 			&& !Game_Flag_Query(kFlagMcCoyRetiredHuman)) {
 				Scene_Exits_Disable();
 				Delay(1000);
-				Actor_Set_Goal_Number(kActorSteele, kGoalSteeleKP03Walk);
+				if (Game_Flag_Query(kFlagMcCoyIsHelpingReplicants)) {
+					Actor_Set_Goal_Number(kActorSteele, kGoalSteeleKP03Walk);
+				} else {
+					if (Actor_Query_Intelligence(kActorSteele) == 70) {
+						Actor_Set_Goal_Number(kActorSteele, kGoalSteeleKP03Walk);	
+					} else if (Actor_Query_Intelligence(kActorSteele) == 90) {
+						Player_Loses_Control();
+						Actor_Face_Actor(kActorMcCoy, kActorSteele, true);
+						Actor_Says(kActorSteele, 430, 14);
+						Actor_Change_Animation_Mode(kActorSteele, kAnimationModeCombatIdle);
+						Delay(2000);
+						Loop_Actor_Walk_To_XYZ(kActorSteele, -137.0f, -36.55f, 26.0f, 0, false, false, false);
+						Actor_Face_Object(kActorSteele, "BRACK MID", true);
+						Delay(1000);
+						Actor_Says(kActorSteele, 490, 58);
+						Actor_Says(kActorSteele, 500, 58);
+						Actor_Says(kActorSteele, 510, 59);
+						Actor_Says(kActorSteele, 520, 60);
+						if (Actor_Query_Friendliness_To_Other(kActorSteele, kActorMcCoy) > 59) {
+							Actor_Says(kActorMcCoy, 2195, 14);
+						}
+						Game_Flag_Set(kFlagKP03BombDisarmed);
+						Game_Flag_Reset(kFlagKP03BombActive);
+						Scene_Loop_Set_Default(kKP03MainLoopBombNoWire);
+						Scene_Loop_Start_Special(kSceneLoopModeOnce, kKP03MainLoopBombNoWire, false);
+						Actor_Set_Goal_Number(kActorSteele, kGoalSteeleKP03Leave);
+						if (Actor_Query_Friendliness_To_Other(kActorSteele, kActorMcCoy) > 59) {
+							Actor_Says(kActorMcCoy, 2195, 14);
+						}
+						Ambient_Sounds_Play_Sound(kSfxLABMISC6, 40, -60, -60, 0);
+						Loop_Actor_Walk_To_XYZ(kActorMcCoy, 1.0f, -36.55f, 111.0f, 0, false, false, false);
+						Actor_Set_Goal_Number(kActorSteele, kGoalSteeleKP05Enter);
+						Ambient_Sounds_Remove_All_Non_Looping_Sounds(true);
+						Ambient_Sounds_Remove_All_Looping_Sounds(1u);
+						Game_Flag_Reset(kFlagKP01toKP03);
+						Game_Flag_Reset(kFlagKP05toKP03);
+						Game_Flag_Set(kFlagKP03toKP05);
+						Set_Enter(kSetKP05_KP06, kSceneKP05);
+						Player_Gains_Control();
+					}
+				}
 			}
 		} else if (Game_Flag_Query(kFlagMcCoyIsHelpingReplicants)) {
 			if (Game_Flag_Query(kFlagKP05toKP03)) {
@@ -323,19 +366,22 @@ void SceneScriptKP03::PlayerWalkedIn() {
 			return;
 		}
 
-		if (!Game_Flag_Query(kFlagKP03BombExploded)
-		 && !Game_Flag_Query(kFlagKP03BombDisarmed)
-		 &&  Game_Flag_Query(kFlagKP01toKP03)
-		) {
-			Scene_Exits_Disable();
-			Delay(1000);
-			Actor_Set_Goal_Number(kActorSteele, kGoalSteeleKP03Walk);
+		if (!_vm->_cutContent) {
+			if (!Game_Flag_Query(kFlagKP03BombExploded)
+			&& !Game_Flag_Query(kFlagKP03BombDisarmed)
+			&&  Game_Flag_Query(kFlagKP01toKP03)
+			) {
+				Scene_Exits_Disable();
+				Delay(1000);
+				Actor_Set_Goal_Number(kActorSteele, kGoalSteeleKP03Walk);
+			}
 		}
-	}
+	} 
 	if (_vm->_cutContent) {
 		if (Game_Flag_Query(kFlagHanoiIsReplicant)
 		&& !Game_Flag_Query(kFlagMcCoyIsHelpingReplicants)
-		&& !Actor_Query_Is_In_Current_Set(kActorSteele)) {
+		&& !Actor_Query_Is_In_Current_Set(kActorSteele)
+		&& !Game_Flag_Query(kFlagKP03BombExploded)) {
 			Loop_Actor_Walk_To_XYZ(kActorMcCoy, -132.54f, -33.77f, 26.54f, 0, false, false, false);
 			Actor_Face_Object(kActorMcCoy, "BRACK MID", true);
 			Delay(2000);
@@ -379,6 +425,11 @@ void SceneScriptKP03::PlayerWalkedIn() {
 			Ambient_Sounds_Play_Sound(kSfxSHOTGUN1, 97, 0, 0, 20);
 			Actor_Change_Animation_Mode(kActorMcCoy, 22);
 			Delay(1000);
+			Sound_Play(kSfxGUNH1A, 100, 0, 0, 50);
+			Actor_Change_Animation_Mode(kActorMcCoy, kAnimationModeCombatAim);
+			Actor_Change_Animation_Mode(kActorMcCoy, kAnimationModeCombatAttack);
+			Actor_Change_Animation_Mode(kActorHanoi, 21);
+			Delay(1000);
 			Actor_Change_Animation_Mode(kActorHanoi, 6);
 			Ambient_Sounds_Play_Sound(kSfxSHOTGUN1, 97, 0, 0, 20);
 			Player_Loses_Control();
@@ -394,7 +445,13 @@ void SceneScriptKP03::PlayerWalkedIn() {
 			Game_Flag_Reset(kFlagKP03BombActive);
 			Unclickable_Object("BRACK MID");
 			Scene_Exits_Enable();
-			Delay(5000);
+			Delay(6000);
+			if (Game_Flag_Query(kFlagMcCoyIsInnocent) 
+			&& Global_Variable_Query(kVariableAffectionTowards) != kAffectionTowardsDektora
+			&& Global_Variable_Query(kVariableAffectionTowards) != kAffectionTowardsLucy 
+			&& !Game_Flag_Query(kFlagMcCoyRetiredHuman)) {
+				Actor_Set_Goal_Number(kActorSteele, kGoalSteeleKP05Enter);
+			}
 			if (!Game_Flag_Query(kFlagHanoiDead)) {
 				Game_Flag_Set(kFlagHanoiDead);
 				Actor_Modify_Friendliness_To_Other(kActorGaff, kActorMcCoy, 2);
@@ -412,6 +469,79 @@ void SceneScriptKP03::PlayerWalkedIn() {
 			Game_Flag_Reset(kFlagKP05toKP03);
 			Game_Flag_Set(kFlagKP03toKP05);
 			Set_Enter(kSetKP05_KP06, kSceneKP05);
+		} else if (Game_Flag_Query(kFlagKP03BombExploded)
+		&& Actor_Query_Intelligence(kActorSteele) == 70
+		&& Actor_Query_Goal_Number(kActorSteele) < kGoalSteeleGone) {
+			if (!Game_Flag_Query(kFlagMcCoyIsInnocent)) {
+				Actor_Put_In_Set(kActorSteele, kSetKP03);
+				Actor_Set_At_XYZ(kActorSteele, -48.83f, -36.55f, 69.98f, 280);
+				Actor_Set_Goal_Number(kActorSteele, kGoalSteeleBlownUp);
+				Loop_Actor_Walk_To_Actor(kActorMcCoy, kActorSteele, 36, false, true);
+				Actor_Face_Actor(kActorMcCoy, kActorSteele, true);
+				Delay(2000);
+				if (Player_Query_Agenda() == kPlayerAgendaSurly 
+				|| Player_Query_Agenda() == kPlayerAgendaErratic) {
+					Actor_Says(kActorMcCoy, 2120, 14);
+				} else {
+					Actor_Says(kActorMcCoy, 2165, 14); //00-2165.AUD	You should have left them alone.
+				}
+				Actor_Says(kActorSteele, 410, -1);
+				Actor_Says(kActorMcCoy, 2170, 13); //00-2170.AUD	And my animal? Guzza tell you to get rid of her? Or did you do that on your own?
+				Actor_Says(kActorSteele, 420, -1);
+				Actor_Clue_Acquire(kActorSadik, kClueMcCoyBetrayal, true, kActorSteele);
+				Actor_Clue_Acquire(kActorMcCoy, kClueMcCoyBetrayal, true, kActorSteele);
+				Actor_Set_Targetable(kActorSteele, false);
+				Actor_Set_Goal_Number(kActorSteele, kGoalSteeleGone);
+				Actor_Retired_Here(kActorSteele, 60, 12, true, -1);
+				Player_Gains_Control();
+			} else if (Global_Variable_Query(kVariableAffectionTowards) == kAffectionTowardsDektora
+			|| Global_Variable_Query(kVariableAffectionTowards) == kAffectionTowardsLucy) {
+				if (Game_Flag_Query(kFlagDektoraIsReplicant)) {
+					Actor_Put_In_Set(kActorSteele, kSetKP03);
+					Actor_Set_At_XYZ(kActorSteele, -48.83f, -36.55f, 69.98f, 280);
+					Actor_Set_Goal_Number(kActorSteele, kGoalSteeleBlownUp);
+					Loop_Actor_Walk_To_Actor(kActorMcCoy, kActorSteele, 36, false, true);
+					Actor_Face_Actor(kActorMcCoy, kActorSteele, true);
+					Delay(2000);
+					if (Player_Query_Agenda() == kPlayerAgendaSurly 
+					|| Player_Query_Agenda() == kPlayerAgendaErratic) {
+						Actor_Says(kActorMcCoy, 2120, 14);
+					} else {
+						Actor_Says(kActorMcCoy, 2165, 14); //00-2165.AUD	You should have left them alone.
+					}
+					Actor_Says(kActorSteele, 410, -1);
+					Actor_Says(kActorMcCoy, 2170, 13); //00-2170.AUD	And my animal? Guzza tell you to get rid of her? Or did you do that on your own?
+					Actor_Says(kActorSteele, 420, -1);
+					Actor_Clue_Acquire(kActorSadik, kClueMcCoyBetrayal, true, kActorSteele);
+					Actor_Clue_Acquire(kActorMcCoy, kClueMcCoyBetrayal, true, kActorSteele);
+					Actor_Set_Targetable(kActorSteele, false);
+					Actor_Set_Goal_Number(kActorSteele, kGoalSteeleGone);
+					Actor_Retired_Here(kActorSteele, 60, 12, true, -1);
+					Player_Gains_Control();
+				} else if (Game_Flag_Query(kFlagLucyIsReplicant)) {
+					Actor_Put_In_Set(kActorSteele, kSetKP03);
+					Actor_Set_At_XYZ(kActorSteele, -48.83f, -36.55f, 69.98f, 280);
+					Actor_Set_Goal_Number(kActorSteele, kGoalSteeleBlownUp);
+					Loop_Actor_Walk_To_Actor(kActorMcCoy, kActorSteele, 36, false, true);
+					Actor_Face_Actor(kActorMcCoy, kActorSteele, true);
+					Delay(2000);
+					if (Player_Query_Agenda() == kPlayerAgendaSurly 
+					|| Player_Query_Agenda() == kPlayerAgendaErratic) {
+						Actor_Says(kActorMcCoy, 2120, 14);
+					} else {
+						Actor_Says(kActorMcCoy, 2165, 14); //00-2165.AUD	You should have left them alone.
+					}
+					Actor_Says(kActorSteele, 410, -1);
+					Actor_Says(kActorMcCoy, 2170, 13); //00-2170.AUD	And my animal? Guzza tell you to get rid of her? Or did you do that on your own?
+					Actor_Says(kActorSteele, 420, -1);
+					Actor_Clue_Acquire(kActorSadik, kClueMcCoyBetrayal, true, kActorSteele);
+					Actor_Clue_Acquire(kActorMcCoy, kClueMcCoyBetrayal, true, kActorSteele);
+					Actor_Set_Targetable(kActorSteele, false);
+					Actor_Set_Goal_Number(kActorSteele, kGoalSteeleGone);
+					Actor_Retired_Here(kActorSteele, 60, 12, true, -1);
+					Player_Gains_Control();
+				}
+			}
 		}
 	}
 }

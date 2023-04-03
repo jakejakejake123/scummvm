@@ -152,6 +152,18 @@ void SceneScriptKP01::ActorChangedGoal(int actorId, int newGoal, int oldGoal, bo
 }
 
 void SceneScriptKP01::PlayerWalkedIn() {
+ 	if (Game_Flag_Query(kFlagKP04toKP01)) {
+		Loop_Actor_Walk_To_XYZ(kActorMcCoy, -93.0f, -12.2f, -61.0f, 0, false, false, false);
+		Game_Flag_Reset(kFlagKP04toKP01);
+		return;
+	}
+
+	if (Game_Flag_Query(kFlagKP03toKP01)) {
+		Loop_Actor_Walk_To_XYZ(kActorMcCoy, -240.0f, -12.2f, -789.0f, 0, false, false, false);
+		Game_Flag_Reset(kFlagKP03toKP01);
+		return;
+	}
+
 	if (_vm->_cutContent) {
 		Player_Set_Combat_Mode(false);
 		if (Game_Flag_Query(kFlagMcCoyIsInnocent) 
@@ -159,31 +171,22 @@ void SceneScriptKP01::PlayerWalkedIn() {
 		&& Global_Variable_Query(kVariableAffectionTowards) != kAffectionTowardsLucy 
 		&& !Game_Flag_Query(kFlagMcCoyRetiredHuman)) {
 			Actor_Set_At_XYZ(kActorMcCoy, 211.0f, -12.2f, -146.0f, 0);
-		}
-	} else if (Game_Flag_Query(kFlagKP04toKP01)) {
-		Loop_Actor_Walk_To_XYZ(kActorMcCoy, -93.0f, -12.2f, -61.0f, 0, false, false, false);
-		Game_Flag_Reset(kFlagKP04toKP01);
-		return;
-	}
-	if (Game_Flag_Query(kFlagKP03toKP01)) {
-		Loop_Actor_Walk_To_XYZ(kActorMcCoy, -240.0f, -12.2f, -789.0f, 0, false, false, false);
-		Game_Flag_Reset(kFlagKP03toKP01);
-		return;
-	}
-	// Altered the conditions for Crystal meeting McCoy in the Kipple.
-	if (_vm->_cutContent) {
-		Player_Set_Combat_Mode(false);
-		if (Game_Flag_Query(kFlagMcCoyIsInnocent) 
-		&& Global_Variable_Query(kVariableAffectionTowards) != kAffectionTowardsDektora
-		&& Global_Variable_Query(kVariableAffectionTowards) != kAffectionTowardsLucy 
-		&& !Game_Flag_Query(kFlagMcCoyRetiredHuman)) {
 			Actor_Put_In_Set(kActorSteele, kSetKP01);
 			Actor_Set_At_XYZ(kActorSteele, 20.0f, -12.2f, -97.0f, 907);
 			Actor_Change_Animation_Mode(kActorSteele, 43);
 			Player_Loses_Control();
 			Actor_Set_Goal_Number(kActorSteele, kGoalSteeleKP01TalkToMcCoy);
+		} else {
+			Loop_Actor_Walk_To_XYZ(kActorMcCoy, 211.0f, -12.2f, -146.0f, 0, false, false, false);
 		}
-	} else if (!Game_Flag_Query(kFlagMcCoyIsHelpingReplicants)
+	}
+
+	if (!_vm->_cutContent) {	
+		Loop_Actor_Walk_To_XYZ(kActorMcCoy, 211.0f, -12.2f, -146.0f, 0, false, false, false);
+	}
+
+	 if (!_vm->_cutContent
+	 && !Game_Flag_Query(kFlagMcCoyIsHelpingReplicants)
 	 && !Game_Flag_Query(kFlagMcCoyAttackedReplicants)
 	 &&  Actor_Query_Goal_Number(kActorSteele) == kGoalSteeleKP01Wait
 	 &&  Actor_Query_Goal_Number(kActorSteele) != kGoalSteeleGone
@@ -191,12 +194,74 @@ void SceneScriptKP01::PlayerWalkedIn() {
 		Player_Loses_Control();
 		Actor_Set_Goal_Number(kActorSteele, kGoalSteeleKP01TalkToMcCoy);
 	}
+
 	if (_vm->_cutContent) {
-		Player_Set_Combat_Mode(false);
-		if (Game_Flag_Query(kFlagHanoiIsReplicant)
+		if (!Game_Flag_Query(kFlagKP03BombExploded)
+		&& Actor_Query_Intelligence(kActorSteele) == 70
+		&& Actor_Query_Goal_Number(kActorSteele) < kGoalSteeleGone
+		&& !Actor_Query_Is_In_Current_Set(kActorSteele)) {
+			if (!Game_Flag_Query(kFlagMcCoyIsInnocent)) {
+				Actor_Face_Heading(kActorMcCoy, 0, false);
+				Ambient_Sounds_Play_Sound(kSfxCRYEXPL1, 99, -60, 100, 99);
+				Game_Flag_Set(kFlagKP03BombExploded);
+				Game_Flag_Reset(kFlagKP03BombActive);
+				Delay(3000);
+				Actor_Says(kActorMcCoy, 855, 13);
+				Player_Loses_Control();
+				Loop_Actor_Walk_To_XYZ(kActorMcCoy, -284.0f, -12.2f, -789.0f, 0, true, true, false);
+				Player_Gains_Control();
+				Actor_Put_In_Set(kActorSteele, kSetKP03);
+				Actor_Set_At_XYZ(kActorSteele, -48.83f, -36.55f, 69.98f, 280);
+				Actor_Set_Goal_Number(kActorSteele, kGoalSteeleBlownUp);
+				Ambient_Sounds_Remove_All_Non_Looping_Sounds(true);
+				Ambient_Sounds_Remove_All_Looping_Sounds(1u);
+				Game_Flag_Set(kFlagKP01toKP03);
+				Set_Enter(kSetKP03, kSceneKP03);
+			} else if (Global_Variable_Query(kVariableAffectionTowards) == kAffectionTowardsDektora
+			|| Global_Variable_Query(kVariableAffectionTowards) == kAffectionTowardsLucy) {
+				if (Game_Flag_Query(kFlagDektoraIsReplicant)) {
+					Actor_Face_Heading(kActorMcCoy, 0, false);
+					Ambient_Sounds_Play_Sound(kSfxCRYEXPL1, 99, -60, 100, 99);
+					Game_Flag_Set(kFlagKP03BombExploded);
+					Game_Flag_Reset(kFlagKP03BombActive);
+					Delay(3000);
+					Actor_Says(kActorMcCoy, 855, 13);
+					Player_Loses_Control();
+					Loop_Actor_Walk_To_XYZ(kActorMcCoy, -284.0f, -12.2f, -789.0f, 0, true, true, false);
+					Player_Gains_Control();
+					Actor_Put_In_Set(kActorSteele, kSetKP03);
+					Actor_Set_At_XYZ(kActorSteele, -48.83f, -36.55f, 69.98f, 280);
+					Actor_Set_Goal_Number(kActorSteele, kGoalSteeleBlownUp);
+					Ambient_Sounds_Remove_All_Non_Looping_Sounds(true);
+					Ambient_Sounds_Remove_All_Looping_Sounds(1u);
+					Game_Flag_Set(kFlagKP01toKP03);
+					Set_Enter(kSetKP03, kSceneKP03);
+				} else if (Game_Flag_Query(kFlagLucyIsReplicant)) {
+					Actor_Face_Heading(kActorMcCoy, 0, false);
+					Ambient_Sounds_Play_Sound(kSfxCRYEXPL1, 99, -60, 100, 99);
+					Game_Flag_Set(kFlagKP03BombExploded);
+					Game_Flag_Reset(kFlagKP03BombActive);
+					Delay(3000);
+					Actor_Says(kActorMcCoy, 855, 13);
+					Player_Loses_Control();
+					Loop_Actor_Walk_To_XYZ(kActorMcCoy, -284.0f, -12.2f, -789.0f, 0, true, true, false);
+					Player_Gains_Control();
+					Actor_Put_In_Set(kActorSteele, kSetKP03);
+					Actor_Set_At_XYZ(kActorSteele, -48.83f, -36.55f, 69.98f, 280);
+					Actor_Set_Goal_Number(kActorSteele, kGoalSteeleBlownUp);
+					Ambient_Sounds_Remove_All_Non_Looping_Sounds(true);
+					Ambient_Sounds_Remove_All_Looping_Sounds(1u);
+					Game_Flag_Set(kFlagKP01toKP03);
+					Set_Enter(kSetKP03, kSceneKP03);
+				}
+			}
+		} else if (Game_Flag_Query(kFlagHanoiIsReplicant)
 		&& !Game_Flag_Query(kFlagMcCoyIsHelpingReplicants)
 		&& !Actor_Query_Is_In_Current_Set(kActorSteele)
 		&& !Game_Flag_Query(kFlagKP03BombExploded)) {
+			Actor_Face_Heading(kActorMcCoy, 0, false);
+			Delay(2000);
+			Actor_Says(kActorMcCoy, 8525, -1); // generic "hmph"
 			Loop_Actor_Walk_To_XYZ(kActorMcCoy, 70.56f, -11.81f, -176.38f, 0, false, false, false);
 			Actor_Face_Heading(kActorMcCoy, 300, false);
 			Actor_Put_In_Set(kActorHanoi, kSetKP01);
@@ -207,7 +272,7 @@ void SceneScriptKP01::PlayerWalkedIn() {
 			Actor_Face_Actor(kActorHanoi, kActorMcCoy, true);
 			Actor_Face_Actor(kActorMcCoy, kActorHanoi, true);
 			Sound_Play(kSfxSHOTCOK1, 77, 0, 0, 20);
-			Delay(500);
+			Delay(1000);
 			if (!Game_Flag_Query(kFlagHanoiDead)) {
 				Actor_Says(kActorHanoi, 160, 4); //25-0160.AUD	Here, what’s this then?
 			}
@@ -231,9 +296,15 @@ void SceneScriptKP01::PlayerWalkedIn() {
 			Actor_Face_Actor(kActorHanoi, kActorMcCoy, true);
 			Actor_Face_Actor(kActorMcCoy, kActorHanoi, true);
 			Sound_Play(kSfxGUNH1A, 100, 0, 0, 50);
-			Actor_Change_Animation_Mode(kActorMcCoy, 6);
+			Actor_Change_Animation_Mode(kActorMcCoy, kAnimationModeCombatAim);
+			Actor_Change_Animation_Mode(kActorMcCoy, kAnimationModeCombatAttack);
 			Actor_Change_Animation_Mode(kActorHanoi, 21);
-			Delay(1000);
+			Delay(600);
+			Sound_Play(kSfxGUNH1A, 100, 0, 0, 50);
+			Actor_Change_Animation_Mode(kActorMcCoy, kAnimationModeCombatAim);
+			Actor_Change_Animation_Mode(kActorMcCoy, kAnimationModeCombatAttack);
+			Actor_Change_Animation_Mode(kActorHanoi, 21);
+			Delay(600);
 			Loop_Actor_Walk_To_XYZ(kActorMcCoy, 87.68, -11.67, -396.62, 0, false, true, false);
 			Actor_Face_Actor(kActorHanoi, kActorMcCoy, true);
 			Actor_Face_Actor(kActorMcCoy, kActorHanoi, true);
@@ -241,13 +312,24 @@ void SceneScriptKP01::PlayerWalkedIn() {
 			Actor_Change_Animation_Mode(kActorHanoi, 6);
 			Ambient_Sounds_Play_Sound(kSfxSHOTGUN1, 97, 0, 0, 20);
 			Delay(1000);
+			Sound_Play(kSfxGUNH1A, 100, 0, 0, 50);
+			Actor_Change_Animation_Mode(kActorMcCoy, kAnimationModeCombatAim);
+			Actor_Change_Animation_Mode(kActorMcCoy, kAnimationModeCombatAttack);
+			Actor_Change_Animation_Mode(kActorHanoi, 21);
+			Delay(600);
+			Sound_Play(kSfxGUNH1A, 100, 0, 0, 50);
+			Actor_Change_Animation_Mode(kActorMcCoy, kAnimationModeCombatAim);
+			Actor_Change_Animation_Mode(kActorMcCoy, kAnimationModeCombatAttack);
+			Actor_Change_Animation_Mode(kActorHanoi, 21);
+			Delay(600);
 			Loop_Actor_Walk_To_XYZ(kActorMcCoy, 47.20, -11.58, -549.87, 0, false, true, false);
 			Actor_Face_Actor(kActorHanoi, kActorMcCoy, true);
 			Actor_Face_Actor(kActorMcCoy, kActorHanoi, true);
 			Sound_Play(kSfxGUNH1A, 100, 0, 0, 50);
-			Actor_Change_Animation_Mode(kActorMcCoy, 6);
+			Actor_Change_Animation_Mode(kActorMcCoy, kAnimationModeCombatAim);
+			Actor_Change_Animation_Mode(kActorMcCoy, kAnimationModeCombatAttack);
 			Actor_Change_Animation_Mode(kActorHanoi, 21);
-			Delay(1000);
+			Delay(600);
 			Actor_Change_Animation_Mode(kActorHanoi, 6);
 			Ambient_Sounds_Play_Sound(kSfxSHOTGUN1, 97, 0, 0, 20);
 			Actor_Change_Animation_Mode(kActorMcCoy, 22);
@@ -256,15 +338,32 @@ void SceneScriptKP01::PlayerWalkedIn() {
 			Actor_Face_Actor(kActorHanoi, kActorMcCoy, true);
 			Actor_Face_Actor(kActorMcCoy, kActorHanoi, true);
 			Sound_Play(kSfxGUNH1A, 100, 0, 0, 50);
-			Actor_Change_Animation_Mode(kActorMcCoy, 6);
+			Actor_Change_Animation_Mode(kActorMcCoy, kAnimationModeCombatAim);
+			Actor_Change_Animation_Mode(kActorMcCoy, kAnimationModeCombatAttack);
 			Actor_Change_Animation_Mode(kActorHanoi, 21);
-			Delay(1000);
+			Delay(600);
+			Sound_Play(kSfxGUNH1A, 100, 0, 0, 50);
+			Actor_Change_Animation_Mode(kActorMcCoy, kAnimationModeCombatAim);
+			Actor_Change_Animation_Mode(kActorMcCoy, kAnimationModeCombatAttack);
+			Actor_Change_Animation_Mode(kActorHanoi, 21);
+			Delay(600);
 			Actor_Change_Animation_Mode(kActorHanoi, 6);
 			Ambient_Sounds_Play_Sound(kSfxSHOTGUN1, 97, 0, 0, 20);
 			Actor_Change_Animation_Mode(kActorMcCoy, 22);
 			Delay(1000);
 			Sound_Play(kSfxGUNH1A, 100, 0, 0, 50);
-			Actor_Change_Animation_Mode(kActorMcCoy, 6);
+			Actor_Change_Animation_Mode(kActorMcCoy, kAnimationModeCombatAim);
+			Actor_Change_Animation_Mode(kActorMcCoy, kAnimationModeCombatAttack);
+			Actor_Change_Animation_Mode(kActorHanoi, 21);
+			Delay(600);
+			Sound_Play(kSfxGUNH1A, 100, 0, 0, 50);
+			Actor_Change_Animation_Mode(kActorMcCoy, kAnimationModeCombatAim);
+			Actor_Change_Animation_Mode(kActorMcCoy, kAnimationModeCombatAttack);
+			Actor_Change_Animation_Mode(kActorHanoi, 21);
+			Delay(600);
+			Sound_Play(kSfxGUNH1A, 100, 0, 0, 50);
+			Actor_Change_Animation_Mode(kActorMcCoy, kAnimationModeCombatAim);
+			Actor_Change_Animation_Mode(kActorMcCoy, kAnimationModeCombatAttack);
 			Actor_Change_Animation_Mode(kActorHanoi, 48);
 			Delay(2000);
 			Player_Set_Combat_Mode(false);
@@ -276,17 +375,6 @@ void SceneScriptKP01::PlayerWalkedIn() {
 			Ambient_Sounds_Remove_All_Looping_Sounds(1u);
 			Game_Flag_Set(kFlagKP01toKP03);
 			Set_Enter(kSetKP03, kSceneKP03);
-		} else if (Game_Flag_Query(kFlagKP04toKP01)) {
-			Player_Set_Combat_Mode(false);
-			Loop_Actor_Walk_To_XYZ(kActorMcCoy, -93.0f, -12.2f, -61.0f, 0, false, false, false);
-			Game_Flag_Reset(kFlagKP04toKP01);
-			return;
-		}
-		if (Game_Flag_Query(kFlagKP03toKP01)) {
-			Player_Set_Combat_Mode(false);
-			Loop_Actor_Walk_To_XYZ(kActorMcCoy, -240.0f, -12.2f, -789.0f, 0, false, false, false);
-			Game_Flag_Reset(kFlagKP03toKP01);
-			return;
 		}
 	}
 }

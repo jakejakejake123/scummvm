@@ -104,22 +104,12 @@ bool SceneScriptUG05::ClickedOnActor(int actorId) {
 				}
 				Actor_Says(kActorMcCoy, 5540, 14); //00-5540.AUD	Your friends will be coming soon. You’ll live.
 				Actor_Says(kActorOfficerGrayford, 230, -1); //24-0230.AUD	What do you care?
-				if (!Game_Flag_Query(kFlagMcCoyIsInnocent)) {
-					if (Player_Query_Agenda() != kPlayerAgendaSurly 
-					&& Player_Query_Agenda() != kPlayerAgendaErratic) {
-						Actor_Says(kActorMcCoy, 5545, 17); //00-5545.AUD	I feel sorry for you. Who knows? Maybe I’m not a Rep after all.	
-						if (Game_Flag_Query(kFlagMcCoyRetiredHuman)) {	
-							Actor_Says(kActorOfficerGrayford, 240, -1);
-							Actor_Says(kActorMcCoy, 5550, 3); //00-5550.AUD	They gotta find me first.
-						} else if (Global_Variable_Query(kVariableAffectionTowards) == kAffectionTowardsDektora 
-						&& Game_Flag_Query(kFlagDektoraIsReplicant)) {	
-							Actor_Says(kActorOfficerGrayford, 240, -1);
-							Actor_Says(kActorMcCoy, 5550, 3); //00-5550.AUD	They gotta find me first.
-						} else if (Global_Variable_Query(kVariableAffectionTowards) == kAffectionTowardsLucy 
-						&& Game_Flag_Query(kFlagLucyIsReplicant)) {	
-							Actor_Says(kActorOfficerGrayford, 240, -1);
-							Actor_Says(kActorMcCoy, 5550, 3); //00-5550.AUD	They gotta find me first.
-						}
+				if (Player_Query_Agenda() != kPlayerAgendaSurly 
+				&& Player_Query_Agenda() != kPlayerAgendaErratic) {
+					Actor_Says(kActorMcCoy, 5545, 17); //00-5545.AUD	I feel sorry for you. Who knows? Maybe I’m not a Rep after all.	
+					if (!Game_Flag_Query(kFlagMcCoyIsInnocent)) {
+						Actor_Says(kActorOfficerGrayford, 240, -1);
+						Actor_Says(kActorMcCoy, 5550, 3); //00-5550.AUD	They gotta find me first.
 					}
 				}
 			} else {

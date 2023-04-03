@@ -207,51 +207,56 @@ bool SceneScriptUG13::ClickedOnActor(int actorId) {
 				} else if (!Actor_Clue_Query(kActorMcCoy, kClueHomelessManInterview1) || !Actor_Clue_Query(kActorMcCoy, kClueHomelessManInterview2)) {
 					dialogueWithHomeless1();
 				} else {
-					Actor_Set_Goal_Number(kActorTransient, 391);
-					if (Actor_Clue_Query(kActorMcCoy, kClueFlaskOfAbsinthe)
-					&& !Actor_Clue_Query(kActorMcCoy, kClueBigManLimping)) {
-						dialogueWithHomeless1();
-					} else {
-						Actor_Face_Actor(kActorMcCoy, kActorTransient, true);
-						if (_vm->_cutContent) {
-							if (!Actor_Clue_Query(kActorTransient, kClueFlaskOfAbsinthe)
-							&& !Actor_Clue_Query(kActorMcCoy, kClueBigManLimping)) {
-								Actor_Says(kActorTransient, 130, 53); //12-0130.AUD	You got something so's I can wet my whistle?
-								Actor_Says(kActorMcCoy, 7815, 13); //00-7815.AUD	No.
-								if (Player_Query_Agenda() == kPlayerAgendaPolite) {
-									Actor_Says(kActorMcCoy, 2305, 18); //00-2305.AUD	I’m sorry.
-								}
+					if (_vm->_cutContent) {
+						Actor_Set_Goal_Number(kActorTransient, 391);
+						if (Actor_Clue_Query(kActorMcCoy, kClueFlaskOfAbsinthe)
+						&& !Actor_Clue_Query(kActorMcCoy, kClueBigManLimping)) {
+							dialogueWithHomeless1();
+						} else if (!Actor_Clue_Query(kActorMcCoy, kClueFlaskOfAbsinthe)
+						&& !Actor_Clue_Query(kActorMcCoy, kClueBigManLimping)) {
+							Actor_Face_Actor(kActorMcCoy, kActorTransient, true);
+							Actor_Says(kActorTransient, 130, 53); //12-0130.AUD	You got something so's I can wet my whistle?
+							Actor_Says(kActorMcCoy, 7815, 13); //00-7815.AUD	No.
+							if (Player_Query_Agenda() == kPlayerAgendaPolite) {
+								Actor_Says(kActorMcCoy, 2305, 18); //00-2305.AUD	I’m sorry.
+							}
+							Delay(1000);
+							Actor_Says(kActorMcCoy, 5600, 14);               // Let me ask you
+							Actor_Says(kActorTransient, 280, 32);  //12-0280.AUD	You got anything to drink? My throat’s awful dry.
+							Actor_Says(kActorMcCoy, 5605, 18); // I'm talking to you...
+							Delay(2000);
+							Actor_Says(kActorTransient, 160, 31); //12-0160.AUD	Sure you don’t got that drink?
+							Delay(1000);
+							Actor_Says(kActorMcCoy, 8525, 13); // generic "hmph"
+							Delay(1000);
+							Game_Flag_Set(kFlagUG10GateOpen);
+							Game_Flag_Set(kFlagRC03UnlockedToUG01);
+							Game_Flag_Set(kFlagHC04toHC02);
+							Set_Enter(kSetHC01_HC02_HC03_HC04, kSceneHC02);
+						} else if (Game_Flag_Query(kFlagTransientDead)) {
+							if (Player_Query_Agenda() == kPlayerAgendaSurly 
+							|| Player_Query_Agenda() == kPlayerAgendaErratic) {
+								Actor_Says(kActorMcCoy, 8665, 13); //00-8665.AUD	Disgusting.
+							} else if (Player_Query_Agenda() == kPlayerAgendaPolite) {
 								Delay(1000);
-								Actor_Says(kActorMcCoy, 5600, 14);               // Let me ask you
-								Actor_Says(kActorTransient, 160, 31); //12-0160.AUD	Sure you don’t got that drink?
-								Actor_Says(kActorMcCoy, 5620, 9); // Maybe later
-								Delay(1500);
-								Actor_Says(kActorTransient, 280, 32);  //12-0280.AUD	You got anything to drink? My throat’s awful dry.
-								Actor_Says(kActorMcCoy, 5605, 18); // I'm talking to you...
-								Delay(2500);
-								Actor_Says(kActorTransient, 160, 31); //12-0160.AUD	Sure you don’t got that drink?
-								Delay(1500);
+								Actor_Says(kActorMcCoy, 2305, 13); //00-2305.AUD	I’m sorry.
+								Delay(1000);
 							} else {
-								if (Game_Flag_Query(kFlagTransientDead)) {
-									if (Player_Query_Agenda() == kPlayerAgendaSurly 
-									|| Player_Query_Agenda() == kPlayerAgendaErratic) {
-										Actor_Says(kActorMcCoy, 8665, 13); //00-8665.AUD	Disgusting.
-									} else if (Player_Query_Agenda() == kPlayerAgendaPolite) {
-										Delay(1000);
-										Actor_Says(kActorMcCoy, 2305, 13); //00-2305.AUD	I’m sorry.
-										Delay(1000);
-									} else {
-										Actor_Says(kActorMcCoy, 8630, 12);  // What a waste
-									}
-								} else {
-									Actor_Says(kActorMcCoy, 5600, 14);               // Let me ask you
-									Actor_Says(kActorTransient, 100, 53);            // sleeping, mumbling
-									Actor_Says(kActorMcCoy, 5605, 18);               // I'm talking to you...
-									Actor_Start_Speech_Sample(kActorTransient, 110); // sleeping, mumbling
-									Actor_Set_Goal_Number(kActorTransient, 395);
-								}
+								Actor_Says(kActorMcCoy, 8630, 12);  // What a waste
 							}
 						} else {
+							Actor_Says(kActorMcCoy, 5600, 14);               // Let me ask you
+							Actor_Says(kActorTransient, 100, 53);            // sleeping, mumbling
+							Actor_Says(kActorMcCoy, 5605, 18);               // I'm talking to you...
+							Actor_Start_Speech_Sample(kActorTransient, 110); // sleeping, mumbling
+							Actor_Set_Goal_Number(kActorTransient, 395);
+						} 
+					} else {
+						Actor_Set_Goal_Number(kActorTransient, 391);
+						if (Actor_Clue_Query(kActorMcCoy, kClueFlaskOfAbsinthe)) {
+							dialogueWithHomeless1();
+						} else {
+							Actor_Face_Actor(kActorMcCoy, kActorTransient, true);
 							Actor_Says(kActorMcCoy, 5600, 14);               // Let me ask you
 							Actor_Says(kActorTransient, 100, 53);            // sleeping, mumbling
 							Actor_Says(kActorMcCoy, 5605, 18);               // I'm talking to you...
@@ -354,10 +359,8 @@ bool SceneScriptUG13::ClickedOnExit(int exitId) {
 					) {
 						Actor_Says(kActorMcCoy, 8522, 14); // Locked
 					} else {
-						if (!Game_Flag_Query(kFlagGuzzaSaved)) {
-							Actor_Says(kActorMcCoy, 5555, 14); // How do I get this thing open?
-							Actor_Says(kActorTransient, 60, 31); // Nah, it only happens when they want it to open.
-						}
+						Actor_Says(kActorMcCoy, 5555, 14); // How do I get this thing open?
+						Actor_Says(kActorTransient, 60, 31); // Nah, it only happens when they want it to open.
 					}
 					// turn back
 					Actor_Face_Heading(kActorMcCoy, 325, false);
@@ -433,13 +436,9 @@ void SceneScriptUG13::PlayerWalkedIn() {
 				Player_Loses_Control();
 				Loop_Actor_Walk_To_XYZ(kActorMcCoy, -248.0f, 44.0f, -390.0f, 12, true, false, false);
 				Actor_Face_Actor(kActorMcCoy, kActorTransient, true);
-				if (Player_Query_Agenda() != kPlayerAgendaSurly 
-				&& Player_Query_Agenda() != kPlayerAgendaErratic) {
-					Actor_Says(kActorMcCoy, 2175, 13); //00-2175.AUD	Hold on, I’ll get an ambulance out here.
-				}
-				Music_Play(kMusicBRBlues, 52, 0, 2, -1, kMusicLoopPlayOnce, 1);
 				Delay(1000);
 				Actor_Says(kActorMcCoy, 3970, 14); //00-3970.AUD	Hey.
+				Music_Play(kMusicBRBlues, 52, 0, 2, -1, kMusicLoopPlayOnce, 1);
 				Delay(2000);
 				if (Player_Query_Agenda() == kPlayerAgendaPolite) {
 					Actor_Says(kActorMcCoy, 2390, kAnimationModeIdle); //00-2390.AUD	Oh, God. No.
@@ -560,43 +559,63 @@ void SceneScriptUG13::talkAboutGuzza() {
 	}
 	Actor_Says(kActorTransient, 220, 30); // Bunch of times. Last time weren't that long ago.
 	Actor_Says(kActorMcCoy, 5640, 19);    // What was he doing?
-	Actor_Says(kActorTransient, 230, 33); // Collecting guns like always.
 	if (_vm->_cutContent) {
-		Player_Set_Combat_Mode(true);
-	}
-	Actor_Says(kActorMcCoy, 5645, 16);    // Handguns? A blaster like mine?
-	if (_vm->_cutContent) {
-		Player_Set_Combat_Mode(false);
-	}
-	Actor_Says(kActorTransient, 240, 30); // Handguns, rifles. A whole armful. Took them through that gate.
-#if BLADERUNNER_ORIGINAL_BUGS
-	Actor_Says(kActorTransient, 250, 33); // Dumped them it a sewer. They're gone now. You sure you ain't got nothing to drink?
-#else
-	if (!Actor_Clue_Query(kActorMcCoy, kClueBigManLimping)) {
+		if (!Game_Flag_Query(kFlagGuzzaIsStupid)) {
+			Actor_Says(kActorTransient, 230, 33); // Collecting guns like always.
+			Player_Set_Combat_Mode(true);
+			Actor_Says(kActorMcCoy, 5645, 16);    // Handguns? A blaster like mine?
+			Player_Set_Combat_Mode(false);
+			Actor_Says(kActorTransient, 240, 30); // Handguns, rifles. A whole armful. Took them through that gate.
+			if (!Actor_Clue_Query(kActorMcCoy, kClueBigManLimping)) {
+				Actor_Says(kActorTransient, 250, 33); // Dumped them it a sewer. They're gone now. You sure you ain't got nothing to drink?
+			}
+			Actor_Says(kActorMcCoy, 5650, 14);    // Can you describe him?
+			Actor_Says(kActorTransient, 260, 32); // Eh, rough guy. Barks out orders a lot. Everybody listens when he's around. A natural.
+		} else {
+			Delay(2000);
+			Actor_Says(kActorMcCoy, 3970, 14); //00-3970.AUD	Hey.
+			Delay(1000);
+			Actor_Says(kActorMcCoy, 5660, 13); // Stay with me for a minute, pal.
+		}
+		if (Actor_Clue_Query(kActorMcCoy, kClueBigManLimping)
+		&& !Actor_Clue_Query(kActorMcCoy, kClueFolder)) {
+			Player_Gains_Control();
+			Loop_Actor_Walk_To_Actor(kActorMcCoy, kActorTransient, 36, false, true);
+			Player_Loses_Control();
+			Actor_Face_Actor(kActorMcCoy, kActorTransient, true);
+			dialogueWithHomeless2();
+		}
+	} else {
+		Actor_Says(kActorTransient, 230, 33); // Collecting guns like always.
+		Actor_Says(kActorMcCoy, 5645, 16);    // Handguns? A blaster like mine?
+		Actor_Says(kActorTransient, 240, 30); // Handguns, rifles. A whole armful. Took them through that gate.
 		Actor_Says(kActorTransient, 250, 33); // Dumped them it a sewer. They're gone now. You sure you ain't got nothing to drink?
-	}
-#endif // BLADERUNNER_ORIGINAL_BUGS
-
-	Actor_Says(kActorMcCoy, 5650, 14);    // Can you describe him?
-	Actor_Says(kActorTransient, 260, 32); // Eh, rough guy. Barks out orders a lot. Everybody listens when he's around. A natural.
+		Actor_Says(kActorMcCoy, 5650, 14);    // Can you describe him?
+		Actor_Says(kActorTransient, 260, 32); // Eh, rough guy. Barks out orders a lot. Everybody listens when he's around. A natural.
+	}	
 }
 
 void SceneScriptUG13::dialogueWithHomeless1() {
 	Dialogue_Menu_Clear_List();
 	DM_Add_To_List_Never_Repeat_Once_Selected(1320, 6, 3, 1); // OTHERS
-	if (Actor_Clue_Query(kActorMcCoy, kClueHomelessManInterview1)
-	&& !Actor_Clue_Query(kActorMcCoy, kClueFolder)) {
+	if (_vm->_cutContent) {
+		if (Actor_Clue_Query(kActorMcCoy, kClueHomelessManInterview1)
+		&& !Actor_Clue_Query(kActorMcCoy, kClueFolder)) {
+			DM_Add_To_List_Never_Repeat_Once_Selected(1330, 5, 8, 5); // FAT MAN
+		}
+	} else if (Actor_Clue_Query(kActorMcCoy, kClueHomelessManInterview1)) {
 		DM_Add_To_List_Never_Repeat_Once_Selected(1330, 5, 8, 5); // FAT MAN
 	}
 	if (_vm->_cutContent) {
-		DM_Add_To_List_Never_Repeat_Once_Selected(1340, 8, 7, 6); // SEWERS
+		DM_Add_To_List_Never_Repeat_Once_Selected(1340, 8, 9, 6); // SEWERS
 	} else {
 		DM_Add_To_List_Never_Repeat_Once_Selected(1340, 2, 4, 6); // SEWERS
 	}
 	if (_vm->_cutContent) {
 		if (Actor_Clue_Query(kActorMcCoy, kClueFlaskOfAbsinthe)
 		&& Actor_Clue_Query(kActorMcCoy, kClueHomelessManInterview2)
-		&& !Actor_Clue_Query(kActorMcCoy, kClueBigManLimping)) {
+		&& !Actor_Clue_Query(kActorMcCoy, kClueBigManLimping)
+		&& !Actor_Clue_Query(kActorMcCoy, kClueFolder)) {
 			DM_Add_To_List_Never_Repeat_Once_Selected(1350, 1, 2, 3); // GIVE FLASK
 		}
 	} else {
@@ -656,7 +675,7 @@ void SceneScriptUG13::dialogueWithHomeless1() {
 		Actor_Says(kActorTransient, 190, 32); // Right! Seen them twice. And a two headed guy and a fat man.
 		// Made it so if McCoy never interacted with the homeless man in act 1 he doesn't mention chasing Zuben since the homeless man wouldn't know. McCoy now simply asks if he knows him.
 		if (_vm->_cutContent) {
-			if (Actor_Clue_Query(kActorMcCoy, kClueBigManLimping)) {
+			if (Game_Flag_Query(kFlagCT04HomelessTalk)) {
 				Actor_Says(kActorMcCoy, 5635, 15); //00-5635.AUD	Fat man? The one I was chasing from the sushi bar.
 			} else {
 				Actor_Says(kActorMcCoy, 3230, 15); //00-3230.AUD	You know the chef at Howie’s?
@@ -667,16 +686,6 @@ void SceneScriptUG13::dialogueWithHomeless1() {
 		Actor_Says(kActorTransient, 200, 31); // Nah, the other fat man. You know him.
 		if (_vm->_cutContent) {
 			Actor_Says(kActorTransient, 210, 31); // Saw him wail...
-			if (Actor_Clue_Query(kActorMcCoy, kClueBigManLimping)) {
-				Delay(2000);
-				Actor_Says(kActorMcCoy, 3970, 14); //00-3970.AUD	Hey.
-				Delay(1000);
-				Loop_Actor_Walk_To_Actor(kActorMcCoy, kActorTransient, 36, false, true);
-				Actor_Face_Actor(kActorMcCoy, kActorTransient, true);
-				Delay(1000);
-				Actor_Says(kActorMcCoy, 5660, 13); // Stay with me for a minute, pal.
-				dialogueWithHomeless2();
-			}
 		}
 		break;
 
@@ -710,6 +719,7 @@ void SceneScriptUG13::dialogueWithHomeless1() {
 			Player_Loses_Control();
 			Loop_Actor_Walk_To_Actor(kActorMcCoy, kActorTransient, 36, false, true);
 			Actor_Face_Actor(kActorMcCoy, kActorTransient, true);
+			Player_Gains_Control();
 		}
 		Actor_Clue_Acquire(kActorTransient, kClueFlaskOfAbsinthe, false, kActorMcCoy);
 		if (_vm->_cutContent) {
@@ -726,8 +736,9 @@ void SceneScriptUG13::dialogueWithHomeless1() {
 			Item_Pickup_Spin_Effect(kModelAnimationFlaskOfAbsinthe, 193, 325);
 			Actor_Says(kActorTransient, 290, 33); // Mucho obligado, senor.
 		}
-		Actor_Says(kActorMcCoy, 5660, 13); // Stay with me for a minute, pal.
-		Player_Gains_Control();
+		if (!_vm->_cutContent) {
+			Actor_Says(kActorMcCoy, 5660, 13); // Stay with me for a minute, pal.
+		}
 		Actor_Clue_Lose(kActorMcCoy, kClueFlaskOfAbsinthe);
 		dialogueWithHomeless2();
 		break;

@@ -69,22 +69,23 @@ void SceneScriptUG02::SceneLoaded() {
 	Clickable_Object("CRATE_3");
 	Footstep_Sounds_Set(0, 0);
 	Footstep_Sounds_Set(8, 2);
-
-	if (!Game_Flag_Query(kFlagUG02RadiationGogglesTaken)
-	  && Game_Flag_Query(kFlagIzoIsReplicant)
-	) {
-		// Adjusted the position for the radiation goggles so they are a little easier to see.
-		if (_vm->_cutContent) {
+	if (_vm->_cutContent) {
+		if (!Game_Flag_Query(kFlagUG02RadiationGogglesTaken)
+		&& Game_Flag_Query(kFlagIzoIsReplicant)
+		&& Actor_Query_Intelligence(kActorIzo) == 65) {
 			Item_Add_To_World(kItemRadiationGoogles, kModelAnimationRadiationGoggles, kSetUG02,  -265.71, 120.23, 71.33, 0, 8, 8, false, true, false, true);
-		} else {
-			Item_Add_To_World(kItemRadiationGoogles, kModelAnimationRadiationGoggles, kSetUG02, -300.37f, 120.16f, -81.31f, 0, 8, 8, false, true, false, true);
 		}
+	} else if (!Game_Flag_Query(kFlagUG02RadiationGogglesTaken)
+	&& Game_Flag_Query(kFlagIzoIsReplicant)) {
+		Item_Add_To_World(kItemRadiationGoogles, kModelAnimationRadiationGoggles, kSetUG02, -300.37f, 120.16f, -81.31f, 0, 8, 8, false, true, false, true);
 	}
 	// Added in the the Izo incept photo into the scene if he is a replicant.
+	if (_vm->_cutContent) {
 		if (!Actor_Clue_Query(kActorMcCoy, kClueIzoIncept)
-	  && Game_Flag_Query(kFlagIzoIsReplicant)
-	) {
-		Item_Add_To_World(kItemNote, kModelAnimationPhoto, kSetUG02, -193.29, 120.49, -145.52, 0, 12, 12, false, true, false, true);
+		&& Game_Flag_Query(kFlagIzoIsReplicant)
+		&& Actor_Query_Intelligence(kActorIzo) == 65) {
+			Item_Add_To_World(kItemNote, kModelAnimationPhoto, kSetUG02, -193.29, 120.49, -145.52, 0, 12, 12, false, true, false, true);
+		}
 	}
 }
 
@@ -123,12 +124,97 @@ bool SceneScriptUG02::ClickedOn3DObject(const char *objectName, bool a2) {
 			Actor_Voice_Over(2430, kActorVoiceOver);
 			Actor_Voice_Over(2440, kActorVoiceOver);
 			Actor_Voice_Over(2450, kActorVoiceOver);
-			Actor_Voice_Over(2460, kActorVoiceOver);
+			if (_vm->_cutContent) {
+				if (!Game_Flag_Query(kFlagMcCoyIsHelpingReplicants)) {
+					Actor_Voice_Over(2460, kActorVoiceOver); //99-2460.AUD	The exact arms that renegade Replicants would be looking for to survive in the big city.
+				}
+			} else {
+				Actor_Voice_Over(2460, kActorVoiceOver); //99-2460.AUD	The exact arms that renegade Replicants would be looking for to survive in the big city.
+			}
+			Actor_Voice_Over(2460, kActorVoiceOver); //99-2460.AUD	The exact arms that renegade Replicants would be looking for to survive in the big city.
 			Game_Flag_Set(kFlagUG02WeaponsChecked);
 			Actor_Clue_Acquire(kActorMcCoy, kClueWeaponsCache, true, -1);
+			if (_vm->_cutContent) {
+				if (Actor_Clue_Query(kActorMcCoy, kClueBobShotInColdBlood)) {
+					Delay(1000);
+					Actor_Change_Animation_Mode(kActorMcCoy, 23);
+					Delay(800);
+					Item_Pickup_Spin_Effect(kModelAnimationAmmoType01, 360, 440);
+					Delay(800);
+					Actor_Voice_Over(4190, kActorVoiceOver); //99-4190.AUD	Where have I seen that before?
+					Delay(1000);
+					Actor_Says(kActorMcCoy, 8525, 9); //00-8525.AUD	Hmph.
+					Actor_Change_Animation_Mode(kActorMcCoy, 23);
+					Delay(800);
+					Actor_Says(kActorAnsweringMachine, 390, kAnimationModeTalk); // 39-0390.AUD	Begin test.
+					Ambient_Sounds_Play_Sound(kSfxDATALOAD, 50, 0, 0, 99);
+					Delay(2000);
+					Ambient_Sounds_Play_Sound(kSfxBEEPNEAT, 80, 0, 0, 99);
+					Actor_Says(kActorAnsweringMachine, 420, 19); //39-0420.AUD	Positive result.
+					Actor_Says(kActorAnsweringMachine, 470, kAnimationModeTalk); //39-0470.AUD	End test.
+					Actor_Says(kActorMcCoy, 7200, 13); //00-7200.AUD	Bingo.
+					Actor_Clue_Acquire(kActorMcCoy, kCluePoliceWeaponUsed, true, -1);
+				}
+			}
 			return true;
 		}
-		if (Global_Variable_Query(kVariableChapter) > 3) {
+		if (_vm->_cutContent) {
+			if (Global_Variable_Query(kVariableChapter) > 3) { 
+				if (Actor_Clue_Query(kActorMcCoy, kClueWeaponsCache)
+				&& !Actor_Clue_Query(kActorMcCoy, kClueIzosStashRaided)) {
+					if (Game_Flag_Query(kFlagIzoWarned)) {
+						if (!Game_Flag_Query(kFlagGuzzaIsStupid)) {
+							Actor_Voice_Over(2470, kActorVoiceOver);
+							Actor_Voice_Over(2480, kActorVoiceOver);
+							Actor_Voice_Over(2490, kActorVoiceOver);
+							Actor_Voice_Over(2500, kActorVoiceOver);
+							Actor_Clue_Acquire(kActorMcCoy, kClueIzosStashRaided, true, -1);
+						} else {
+							Actor_Says(kActorMcCoy, 8570, 14); //00-8570.AUD	I've gotten all I can from that.
+						}
+					} else {
+						Actor_Says(kActorMcCoy, 8526, 14); //00-8526.AUD	Nothing.
+					}
+				} else if (!Actor_Clue_Query(kActorMcCoy, kClueWeaponsCache)) {
+					Actor_Says(kActorMcCoy, 8526, 14); //00-8526.AUD	Nothing.
+				} else if (!Game_Flag_Query(kFlagUG02AmmoTaken) 
+				&& Game_Flag_Query(kFlagIzoWarned)
+				&& Game_Flag_Query(kFlagGuzzaIsStupid)
+				&& Actor_Clue_Query(kActorMcCoy, kClueWeaponsCache)) {
+					Actor_Change_Animation_Mode(kActorMcCoy, 23);
+					Delay(800);
+					Item_Pickup_Spin_Effect(kModelAnimationAmmoType02, 360, 440);
+					Delay(800);
+					Actor_Says(kActorMcCoy, 8525, 14);
+					Give_McCoy_Ammo(2, 18);
+					Game_Flag_Set(kFlagUG02AmmoTaken);
+					if (Actor_Clue_Query(kActorMcCoy, kClueBobShotInColdBlood)
+					&& !Actor_Clue_Query(kActorMcCoy, kCluePoliceWeaponUsed)) {
+						Delay(1000);
+						Actor_Change_Animation_Mode(kActorMcCoy, 23);
+						Delay(800);
+						Item_Pickup_Spin_Effect(kModelAnimationAmmoType01, 360, 440);
+						Delay(800);
+						Actor_Voice_Over(4190, kActorVoiceOver); //99-4190.AUD	Where have I seen that before?
+						Delay(1000);
+						Actor_Says(kActorMcCoy, 8525, 9); //00-8525.AUD	Hmph.
+						Actor_Change_Animation_Mode(kActorMcCoy, 23);
+						Delay(800);
+						Actor_Says(kActorAnsweringMachine, 390, kAnimationModeTalk); // 39-0390.AUD	Begin test.
+						Ambient_Sounds_Play_Sound(kSfxDATALOAD, 50, 0, 0, 99);
+						Delay(2000);
+						Ambient_Sounds_Play_Sound(kSfxBEEPNEAT, 80, 0, 0, 99);
+						Actor_Says(kActorAnsweringMachine, 420, 19); //39-0420.AUD	Positive result.
+						Actor_Says(kActorAnsweringMachine, 470, kAnimationModeTalk); //39-0470.AUD	End test.
+						Actor_Says(kActorMcCoy, 7200, 13); //00-7200.AUD	Bingo.
+						Actor_Clue_Acquire(kActorMcCoy, kCluePoliceWeaponUsed, true, -1);
+					}
+				} else {
+					Actor_Says(kActorMcCoy, 8580, 14);
+				}
+				return true;
+			} 
+		} else if (Global_Variable_Query(kVariableChapter) > 3) {
 			if ( Actor_Clue_Query(kActorMcCoy, kClueWeaponsCache)
 			 && !Actor_Clue_Query(kActorMcCoy, kClueIzosStashRaided)
 			) {
@@ -144,12 +230,6 @@ bool SceneScriptUG02::ClickedOn3DObject(const char *objectName, bool a2) {
 #if BLADERUNNER_ORIGINAL_BUGS
 				Actor_Voice_Over(2530, kActorVoiceOver); // But there was no way to tell what was missing without Izo standing there checking his inventory.
 #else
-				if (_vm->_cutContent) {
-					if (Game_Flag_Query(kFlagUG02toHC03)
-					|| Game_Flag_Query(kFlagHC03toUG02)) {	
-						Actor_Voice_Over(2530, kActorVoiceOver);				
-					}
-				}
 #endif // BLADERUNNER_ORIGINAL_BUGS
 			} else if (!Game_Flag_Query(kFlagUG02AmmoTaken)) {
 				if (_vm->_cutContent) {

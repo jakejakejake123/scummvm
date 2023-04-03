@@ -27,9 +27,6 @@ namespace BladeRunner {
 void SceneScriptTB06::InitializeScene() {
 	Setup_Scene_Information(-16.0f, 149.0f, -466.0f, 990);
 	Scene_Exit_Add_2D_Exit(0, 330, 195, 417, 334, 0);
-	if (_vm->_cutContent && !Game_Flag_Query(kFlagMcCoyCommentsOnBurnMarks)) {
-		Scene_2D_Region_Add(0, 1, 1, 280, 325); 
-	}
 	Ambient_Sounds_Add_Looping_Sound(kSfxTB5LOOP1, 50, 0, 1);
 	Ambient_Sounds_Add_Looping_Sound(kSfxTB5LOOP2, 50, 0, 1);
 	Ambient_Sounds_Add_Looping_Sound(kSfxTBLOOP1,  66, 0, 1);
@@ -50,7 +47,13 @@ void SceneScriptTB06::SceneLoaded() {
 	Obstacle_Object("DOOR", true);
 	Unobstacle_Object("GLASS01", true);
 	Clickable_Object("DOOR");
-	Unclickable_Object("SMUDGE_GLASS01");
+	if (_vm->_cutContent) {
+		if (!Game_Flag_Query(kFlagTB06Introduction)) {
+			Clickable_Object("SMUDGE_GLASS01");
+		}
+	} else {
+		Unclickable_Object("SMUDGE_GLASS01");
+	}
 
 	if (!Game_Flag_Query(kFlagTB06DogCollarTaken)
 	 &&  Actor_Query_Goal_Number(kActorPhotographer) != 199
@@ -66,7 +69,7 @@ void SceneScriptTB06::SceneLoaded() {
 
 	if (_vm->_cutContent) {
 		if (!Game_Flag_Query(kFlagTB06KitchenBoxTaken)) {
-			if (!Game_Flag_Query(kFlagSadikIsReplicant)) {
+			if (Actor_Query_Intelligence(kActorSadik) == 70) {
 				Item_Add_To_World(kItemKitchenBox, kModelAnimationKingstonKitchenBox, kSetTB06, 18.0f, 149.65f, -599.0f, 0, 6, 6, false, true, false, true);
 			}
 		} 
@@ -108,11 +111,13 @@ bool SceneScriptTB06::ClickedOnActor(int actorId) {
 			if (_vm->_cutContent) {
 				if (!Game_Flag_Query(kFlagEisendullerExamined)) {
 					Actor_Voice_Over(2300, kActorVoiceOver);
-					if (Player_Query_Agenda() == kPlayerAgendaSurly
-					|| Player_Query_Agenda() == kPlayerAgendaErratic) {
-						Actor_Voice_Over(2310, kActorVoiceOver); //99-2310.AUD	And not just because he'd been plastered on the wall with a thousand strokes.
+					if (Actor_Query_Intelligence(kActorSadik) == 70) {
+						if (Player_Query_Agenda() == kPlayerAgendaSurly
+						|| Player_Query_Agenda() == kPlayerAgendaErratic) {
+							Actor_Voice_Over(2310, kActorVoiceOver); //99-2310.AUD	And not just because he'd been plastered on the wall with a thousand strokes.
+						}
 					}
-					if (!Game_Flag_Query(kFlagSadikIsReplicant)) {
+					if (Actor_Query_Intelligence(kActorSadik) == 70) {
 						Item_Pickup_Spin_Effect_From_Actor(kModelAnimationDetonatorWire, kActorMarcus, 0, 0);
 						Actor_Voice_Over(2320, kActorVoiceOver);
 						Actor_Clue_Acquire(kActorMcCoy, kClueDetonatorWire, true, -1);
@@ -121,10 +126,7 @@ bool SceneScriptTB06::ClickedOnActor(int actorId) {
 						Actor_Voice_Over(2330, kActorVoiceOver);
 						Actor_Voice_Over(2340, kActorVoiceOver);
 					}
-					if (Actor_Clue_Query(kActorMcCoy, kCluePoliceWeaponUsed)
-					|| Actor_Clue_Query(kActorMcCoy, kClueTyrellSecurityPhoto)) {
-						Actor_Voice_Over(2350, kActorVoiceOver);
-					}
+					Actor_Voice_Over(2350, kActorVoiceOver);
 				} else {
 					if (Player_Query_Agenda() == kPlayerAgendaSurly 
 					|| Player_Query_Agenda() == kPlayerAgendaErratic) {
@@ -240,13 +242,10 @@ bool SceneScriptTB06::ClickedOnExit(int exitId) {
 bool SceneScriptTB06::ClickedOn2DRegion(int region) {
 	// Made it so the player can now click on the burn marks on the wall and McCoy comments on it. 
 	if (_vm->_cutContent) {
-		if (!Game_Flag_Query(kFlagMcCoyCommentsOnBurnMarks)) {
-			Game_Flag_Set(kFlagMcCoyCommentsOnBurnMarks);
-			Actor_Face_Heading(kActorMcCoy, 400, false);
-			Actor_Says(kActorMcCoy, 5285, 13);
-			Scene_2D_Region_Remove(0);
-			return true;
-		}
+		Actor_Face_Object(kActorMcCoy, "SMUDGE_GLASS01", true);
+		Actor_Says(kActorMcCoy, 5285, 13);
+		Unclickable_Object("SMUDGE_GLASS01");
+		return true;
 	}
 	return false;
 }
@@ -308,16 +307,18 @@ void SceneScriptTB06::PlayerWalkedIn() {
 					Actor_Face_Actor(kActorPhotographer, kActorMcCoy, true);
 					Delay(1000);
 					Actor_Face_Actor(kActorMcCoy, kActorMarcus, true);
-					Delay(1500);
+					Delay(1000);
 					Actor_Face_Actor(kActorMcCoy, kActorPhotographer, true);
-					Delay(1500);
+					Delay(1000);
 					Actor_Says(kActorMcCoy, 665, 16); //00-0665.AUD	Real funny, pal.
 					Actor_Says(kActorMcCoy, 4130, 18); //00-4130.AUD	Anything else?
 					Actor_Says(kActorPhotographer, 60, kAnimationModeTalk); //37-0060.AUD	I've hit a brick, McCoy. You're running this investigation, right?
 					AI_Movement_Track_Unpause(kActorPhotographer);
 				} else {
 					Actor_Says(kActorMcCoy, 5295, kAnimationModeTalk); //00-5295.AUD	Learn anything?
-					if (!Game_Flag_Query(kFlagSadikIsReplicant)) {
+					if (Actor_Query_Intelligence(kActorSadik) == 70
+					&& (Game_Flag_Query(kFlagGordoIsReplicant)
+					|| Game_Flag_Query(kFlagLucyIsReplicant))) {
 						Actor_Says(kActorPhotographer, 50, kAnimationModeTalk); //37-0050.AUD	Yeah, I dug up a couple of leads, let me clue you in.
 						Actor_Says(kActorMcCoy, 4940, 13); //00-4940.AUD	Okay, let's have it.
 						Delay(1000);
@@ -328,18 +329,18 @@ void SceneScriptTB06::PlayerWalkedIn() {
 						Actor_Change_Animation_Mode(kActorMcCoy, 23);
 						Actor_Change_Animation_Mode(kActorPhotographer, 23);
 						Delay(800);
-						Item_Pickup_Spin_Effect_From_Actor(kModelAnimationAmmoType00, kActorMcCoy, 0, 0);
-						Delay(1500);
-						Item_Pickup_Spin_Effect_From_Actor(kModelAnimationAmmoType00, kActorMcCoy, 0, 0);
-						Actor_Face_Heading(kActorMcCoy, 240, true);
-						Actor_Voice_Over(4200, kActorVoiceOver); //99-4200.AUD	Where have I seen those before?
-						Actor_Change_Animation_Mode(kActorMcCoy, 23);
-						Delay(1200);
-						Actor_Says(kActorMcCoy, 5690, -1); //00-5690.AUD	Huh?
+						Item_Pickup_Spin_Effect_From_Actor(kModelAnimationTyrellSalesPamphlet, kActorMcCoy, 0, 0);
+						Delay(800);
+						Actor_Says(kActorMcCoy, 8780, 13); //00-8780.AUD	A sales pamphlet.
+						Actor_Voice_Over(4280, kActorVoiceOver);
+						if (Game_Flag_Query(kFlagGordoIsReplicant)) {
+							Actor_Voice_Over(4290, kActorVoiceOver);
+							Actor_Clue_Acquire(kActorMcCoy, kClueTyrellSalesPamphletEntertainModel, true, -1);
+						} else if (Game_Flag_Query(kFlagLucyIsReplicant)) {
+							Actor_Voice_Over(4300, kActorVoiceOver);
+							Actor_Clue_Acquire(kActorMcCoy, kClueTyrellSalesPamphletLolita, true, -1);
+						}
 						Delay(1000);
-						Actor_Says(kActorMcCoy, 8705, 19); //00-8705.AUD	That's damn strange.
-						Actor_Clue_Acquire(kActorMcCoy, kCluePoliceWeaponUsed, true, kActorPhotographer);	
-						Delay(2000);
 						Actor_Face_Actor(kActorMcCoy, kActorPhotographer, true);
 						Actor_Face_Actor(kActorPhotographer, kActorMcCoy, true);
 						Actor_Says(kActorMcCoy, 4130, 18); //00-4130.AUD	Anything else?

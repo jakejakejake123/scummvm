@@ -33,8 +33,15 @@ void AIScriptHysteriaPatron2::Initialize() {
 	_animationStateNext = 0;
 	_animationNext = 0;
 
-	Actor_Put_In_Set(kActorHysteriaPatron2, kSetNR05_NR08);
-	Actor_Set_At_XYZ(kActorHysteriaPatron2, -516.0f, 0.0f, -190.0f, 452);
+	if (_vm->_cutContent) {
+		if (!Game_Flag_Query(kFlagEarlyQIsReplicant)) {
+			Actor_Put_In_Set(kActorHysteriaPatron2, kSetNR05_NR08);
+			Actor_Set_At_XYZ(kActorHysteriaPatron2, -516.0f, 0.0f, -190.0f, 452);
+		}
+	} else {
+		Actor_Put_In_Set(kActorHysteriaPatron2, kSetNR05_NR08);
+		Actor_Set_At_XYZ(kActorHysteriaPatron2, -516.0f, 0.0f, -190.0f, 452);
+	}
 }
 
 bool AIScriptHysteriaPatron2::Update() {

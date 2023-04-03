@@ -219,7 +219,7 @@ void AIScriptMcCoy::ReceivedClue(int clueId, int fromActorId) {
 		Global_Variable_Increment(kVariableCorruptedGuzzaEvidence, 1);
 		break;
 
-	case kCluePoliceWeaponUsed:
+	case kClueGuzzasCash:
 		if (_vm->_cutContent) {
 			Global_Variable_Increment(kVariableCorruptedGuzzaEvidence, 1);
 		}
@@ -238,7 +238,7 @@ void AIScriptMcCoy::ReceivedClue(int clueId, int fromActorId) {
 		break;
 
 	case kCluePoliceIssueWeapons:
-		if (!_vm->_cutContent) {
+		if (_vm->_cutContent) {
 			Global_Variable_Increment(kVariableCorruptedGuzzaEvidence, 1);
 		}
 		break;
@@ -326,9 +326,11 @@ void AIScriptMcCoy::ReceivedClue(int clueId, int fromActorId) {
 				Actor_Voice_Over(3360, kActorVoiceOver); //99-3360.AUD	Nothing wrong with a little graft…
 				Actor_Voice_Over(3370, kActorVoiceOver);
 				Actor_Voice_Over(3380, kActorVoiceOver);
-				Actor_Voice_Over(3390, kActorVoiceOver); //99-3390.AUD	I used to think Guzza was a pretty smart guy…
-				Actor_Voice_Over(3400, kActorVoiceOver); //99-3400.AUD	but letting Baker and Holloway work their bogus interrogation deal with all that LPD equipment was a suicide move.
-				Actor_Voice_Over(3420, kActorVoiceOver);
+				if (Game_Flag_Query(kFlagGuzzaIsStupid)) {
+					Actor_Voice_Over(3390, kActorVoiceOver); //99-3390.AUD	I used to think Guzza was a pretty smart guy…
+					Actor_Voice_Over(3400, kActorVoiceOver); //99-3400.AUD	but letting Baker and Holloway work their bogus interrogation deal with all that LPD equipment was a suicide move.
+					Actor_Voice_Over(3420, kActorVoiceOver); //99-3420.AUD	And those two morons weren’t sharp enough to keep the stuff out of my sight.
+				}
 			}
 			break;
 

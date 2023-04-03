@@ -121,9 +121,7 @@ bool SceneScriptUG07::ClickedOnExit(int exitId) {
 				|| Game_Flag_Query(kFlagMcCoyRetiredReplicant)) {
 					if (!Loop_Actor_Walk_To_XYZ(kActorMcCoy, 49.0f, -12.21f, -130.0f, 0, true, false, false)) {
 						Game_Flag_Set(kFlagUG07ClovisCaughtMcCoy);
-						if (_vm->_cutContent) {
-							Music_Play(kMusicBeating1, 71, 0, 0, -1, kMusicLoopPlayOnce, 2);
-						}
+						Music_Play(kMusicBeating1, 71, 0, 0, -1, kMusicLoopPlayOnce, 2);
 						Actor_Put_In_Set(kActorClovis, kSetUG07);
 						Actor_Set_At_XYZ(kActorClovis, 118.02f, -12.21f, -154.0f, 768);
 						Player_Set_Combat_Mode(true);
@@ -243,6 +241,28 @@ void SceneScriptUG07::PlayerWalkedIn() {
 	) {
 		Actor_Set_Goal_Number(kActorOfficerLeary, kGoalOfficerLearyBlockingUG07);
 		Actor_Set_Goal_Number(kActorOfficerGrayford, kGoalOfficerGrayfordBlockingUG07);
+	}
+	
+	if (_vm->_cutContent) {
+		if (!Game_Flag_Query(kFlagIzoTalkAct4)
+		&& Game_Flag_Query(kFlagUG07Empty)
+		&& Game_Flag_Query(kFlagIzoFled)
+		&& !Game_Flag_Query(kFlagIzoArrested)
+		&& !Game_Flag_Query(kFlagMcCoyShotIzo)
+		&& !Actor_Clue_Query(kActorMcCoy, kClueCrystalRetiredIzo)) {
+			Actor_Put_In_Set(kActorIzo, kSetUG07);
+			Actor_Set_At_XYZ(kActorIzo, -40.15f, -21.26f, -570.55f, 0);
+			Actor_Face_Actor(kActorMcCoy, kActorIzo, true);
+			Loop_Actor_Walk_To_XYZ(kActorIzo, -94.0f, -12.21f, -710.0f, 0, true, false, false);
+			Actor_Put_In_Set(kActorIzo, kSetUG09);
+			Actor_Says(kActorMcCoy, 8910, 11); //00-8910.AUD	Hey you.
+			Player_Loses_Control();
+			Loop_Actor_Walk_To_XYZ(kActorMcCoy, -94.0f, -12.21f, -710.0f, 0, true, true, false);
+			Player_Gains_Control();
+			Ambient_Sounds_Remove_All_Non_Looping_Sounds(true);
+			Ambient_Sounds_Remove_All_Looping_Sounds(1u);
+			Set_Enter(kSetUG09, kSceneUG09);
+		}
 	}
 
 	if (Game_Flag_Query(kFlagUG08toUG07)) {

@@ -230,6 +230,81 @@ bool SceneScriptDR02::ClickedOnActor(int actorId) {
 						Item_Pickup_Spin_Effect_From_Actor(kModelAnimationPhoto, kActorMcCoy, 0, 0);
 						Delay(800);
 						Actor_Clue_Acquire(kActorMcCoy, kClueDektoraIncept, true, kActorShoeshineMan);
+						Actor_Voice_Over(4090, kActorVoiceOver); //99-4090.AUD	She looks familiar.
+						Delay(1000);
+						if (Player_Query_Agenda() == kPlayerAgendaPolite) {
+							Actor_Says(kActorMcCoy, 3935, kAnimationModeTalk); //00-3935.AUD	Thanks.
+						}
+						Actor_Face_Heading(kActorShoeshineMan, 524, false);
+					} else if (Game_Flag_Query(kFlagGordoIsReplicant) 
+					&& Global_Variable_Query(kVariableChapter) > 3 
+					&& !Actor_Clue_Query(kActorMcCoy, kClueGordoIncept)) {
+						Actor_Says(kActorMcCoy, 8990, 17);//00-8990.AUD	What have you got there?
+						Actor_Change_Animation_Mode(kActorMcCoy, 23);
+						Delay(800);
+						Item_Pickup_Spin_Effect_From_Actor(kModelAnimationPhoto, kActorMcCoy, 0, 0);
+						Delay(800);
+						Actor_Clue_Acquire(kActorMcCoy, kClueGordoIncept, true, kActorShoeshineMan);
+						Actor_Voice_Over(4080, kActorVoiceOver);
+						Delay(1000);
+						if (Player_Query_Agenda() == kPlayerAgendaPolite) {
+							Actor_Says(kActorMcCoy, 3935, kAnimationModeTalk); //00-3935.AUD	Thanks.
+						}
+						Actor_Face_Heading(kActorShoeshineMan, 524, false);	
+					} else if (Game_Flag_Query(kFlagIzoIsReplicant) 
+					&& Global_Variable_Query(kVariableChapter) > 2 
+					&& !Actor_Clue_Query(kActorMcCoy, kClueIzoIncept)) {
+						Actor_Says(kActorMcCoy, 8990, 17);//00-8990.AUD	What have you got there?
+						Actor_Change_Animation_Mode(kActorMcCoy, 23);
+						Delay(800);
+						Item_Pickup_Spin_Effect_From_Actor(kModelAnimationPhoto, kActorMcCoy, 0, 0);
+						Delay(800);
+						Actor_Clue_Acquire(kActorMcCoy, kClueIzoIncept, true, kActorShoeshineMan);
+						Actor_Voice_Over(4080, kActorVoiceOver);
+						Delay(1000);
+						if (Player_Query_Agenda() == kPlayerAgendaPolite) {
+							Actor_Says(kActorMcCoy, 3935, kAnimationModeTalk); //00-3935.AUD	Thanks.
+						}
+						Actor_Face_Heading(kActorShoeshineMan, 524, false);
+					} else if (Game_Flag_Query(kFlagLucyIsReplicant) 
+					&& Global_Variable_Query(kVariableChapter) > 1 
+					&& !Actor_Clue_Query(kActorMcCoy, kClueLucyIncept)) {
+						Actor_Says(kActorMcCoy, 8990, 17);//00-8990.AUD	What have you got there?
+						Actor_Change_Animation_Mode(kActorMcCoy, 23);
+						Delay(800);
+						Item_Pickup_Spin_Effect_From_Actor(kModelAnimationPhoto, kActorMcCoy, 0, 0);
+						Delay(800);
+						Actor_Clue_Acquire(kActorMcCoy, kClueLucyIncept, true, kActorShoeshineMan);
+						Actor_Voice_Over(4090, kActorVoiceOver); //99-4090.AUD	She looks familiar.
+						Delay(1000);
+						if (Player_Query_Agenda() == kPlayerAgendaPolite) {
+							Actor_Says(kActorMcCoy, 3935, kAnimationModeTalk); //00-3935.AUD	Thanks.
+						}
+						Actor_Face_Heading(kActorShoeshineMan, 524, false);
+					} else if (Game_Flag_Query(kFlagZubenIsReplicant) 
+					&& Global_Variable_Query(kVariableChapter) > 1 
+					&& !Actor_Clue_Query(kActorMcCoy, kClueZubenIncept)) {
+						Actor_Says(kActorMcCoy, 8990, 17);//00-8990.AUD	What have you got there?
+						Actor_Change_Animation_Mode(kActorMcCoy, 23);
+						Delay(800);
+						Item_Pickup_Spin_Effect_From_Actor(kModelAnimationPhoto, kActorMcCoy, 0, 0);
+						Delay(800);
+						Actor_Clue_Acquire(kActorMcCoy, kClueZubenIncept, true, kActorShoeshineMan);
+						Actor_Voice_Over(4080, kActorVoiceOver);
+						Delay(1000);
+						if (Player_Query_Agenda() == kPlayerAgendaPolite) {
+							Actor_Says(kActorMcCoy, 3935, kAnimationModeTalk); //00-3935.AUD	Thanks.
+						}
+						Actor_Face_Heading(kActorShoeshineMan, 524, false);
+					} else if (Game_Flag_Query(kFlagSadikIsReplicant) 
+					&& Global_Variable_Query(kVariableChapter) > 2 
+					&& !Actor_Clue_Query(kActorMcCoy, kClueSadikIncept)) {
+						Actor_Says(kActorMcCoy, 8990, 17);//00-8990.AUD	What have you got there?
+						Actor_Change_Animation_Mode(kActorMcCoy, 23);
+						Delay(800);
+						Item_Pickup_Spin_Effect_From_Actor(kModelAnimationPhoto, kActorMcCoy, 0, 0);
+						Delay(800);
+						Actor_Clue_Acquire(kActorMcCoy, kClueSadikIncept, true, kActorShoeshineMan);
 						Actor_Voice_Over(4080, kActorVoiceOver);
 						Delay(1000);
 						if (Player_Query_Agenda() == kPlayerAgendaPolite) {

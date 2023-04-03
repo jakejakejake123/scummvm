@@ -59,7 +59,13 @@ void SceneScriptKP05::SceneLoaded() {
 	if (!Actor_Clue_Query(kActorMcCoy, kCluePowerSource)
 	 &&  Game_Flag_Query(kFlagMcCoyIsHelpingReplicants)
 	) {
-		Item_Add_To_World(kItemPowerSource, kModelAnimationPowerSource, kSetKP05_KP06, -1095.0f, 0.0f, 770.0f, 256, 24, 24, false, true, false, true);
+		if (_vm->_cutContent) {
+			if (Actor_Query_Intelligence(kActorSadik) == 70) {
+				Item_Add_To_World(kItemPowerSource, kModelAnimationPowerSource, kSetKP05_KP06, -1095.0f, 0.0f, 770.0f, 256, 24, 24, false, true, false, true);
+			}
+		} else {
+			Item_Add_To_World(kItemPowerSource, kModelAnimationPowerSource, kSetKP05_KP06, -1095.0f, 0.0f, 770.0f, 256, 24, 24, false, true, false, true);
+		}
 	}
 }
 

@@ -73,19 +73,15 @@ bool AIScriptIzo::Update() {
 	) {
 		Actor_Set_Goal_Number(kActorIzo, kGoalIzoGoToHC03);
 	}
-	if (_vm->_cutContent) {
-		if	(!Game_Flag_Query(kFlagUG09Visited) 
-		// Added code so Izo will only appear in UG09 if he got away in act 2.
-		&& Game_Flag_Query(kFlagIzoGotAway)
-		&& (Global_Variable_Query(kVariableChapter) == 4)) {
-			Actor_Set_Goal_Number(kActorIzo, kGoalIzoWaitAtUG09);
+	
+	if (!_vm->_cutContent) {
+		if (Global_Variable_Query(kVariableChapter) == 4
+		&& Actor_Query_Goal_Number(kActorIzo) < kGoalIzoGone
+		&& Actor_Query_Goal_Number(kActorIzo) < 300
+		&& Actor_Query_Goal_Number(kActorIzo) != kGoalIzoGotArrested
+		) {
+			Actor_Set_Goal_Number(kActorIzo, 300);
 		}
-	} else if (Global_Variable_Query(kVariableChapter) == 4
-	 && Actor_Query_Goal_Number(kActorIzo) < kGoalIzoGone
-	 && Actor_Query_Goal_Number(kActorIzo) < 300
-	 && Actor_Query_Goal_Number(kActorIzo) != kGoalIzoGotArrested
-	) {
-		Actor_Set_Goal_Number(kActorIzo, 300);
 	}
 
 	if (Global_Variable_Query(kVariableChapter) == 5
@@ -227,14 +223,24 @@ void AIScriptIzo::ClickedByPlayer() {
 	if (Actor_Query_Goal_Number(kActorIzo) > 500) { // Dead
 		Actor_Face_Actor(kActorMcCoy, kActorIzo, true);
 		if (_vm->_cutContent) {
-			if (Player_Query_Agenda() == kPlayerAgendaSurly 
+			if (Game_Flag_Query(kFlagIzoIsReplicant)
+			&& Actor_Query_Intelligence(kActorIzo == 85)
+			&& !Actor_Clue_Query(kActorMcCoy, kClueRadiationGoggles)) {
+				Actor_Clue_Acquire(kActorIzo, kClueIzoIncept, true, -1);
+				Item_Pickup_Spin_Effect_From_Actor(kModelAnimationPhoto, kActorIzo, 0, 0);
+				Delay(1500);
+				Actor_Clue_Acquire(kActorIzo, kClueRadiationGoggles, true, -1);
+				Item_Pickup_Spin_Effect_From_Actor(kModelAnimationRadiationGoggles, kActorIzo, 0, 0);
+				Actor_Says(kActorMcCoy, 8785, 14); //00-8785.AUD	Radiation goggles.
+				Delay(1000);
+			} else if (Player_Query_Agenda() == kPlayerAgendaSurly 
 			|| Player_Query_Agenda() == kPlayerAgendaErratic) {
 				Actor_Says(kActorMcCoy, 8590, 18); //00-8590.AUD	Not the talkative type
 			} else if (Player_Query_Agenda() == kPlayerAgendaPolite) {	
 				Actor_Says(kActorMcCoy, 8630, 12);  // What a waste
 			} else {
 				Actor_Says(kActorMcCoy, 8665, 13); //00-8665.AUD	Disgusting.	
-			}
+			}		
 		} else {
 			Actor_Says(kActorMcCoy, 8585, 13);
 		}
@@ -358,6 +364,9 @@ bool AIScriptIzo::ShotAtAndHit() {
 					Game_Flag_Set(kFlagMcCoyShotIzo);
 					Game_Flag_Set(kFlagMcCoyRetiredReplicant);
 					Game_Flag_Reset (kFlagMcCoyIsHelpingReplicants);
+					Actor_Set_Goal_Number(kActorSteele, kGoalSteeleLeaveRC03);
+					Actor_Retired_Here(kActorIzo, 36, 12, true, -1);
+					Actor_Set_Goal_Number(kActorIzo, kGoalIzoDie);
 					Actor_Modify_Friendliness_To_Other(kActorSteele, kActorMcCoy, 2);
 					Actor_Modify_Friendliness_To_Other(kActorGuzza, kActorMcCoy, 2);
 					Actor_Modify_Friendliness_To_Other(kActorClovis, kActorMcCoy, -2);
@@ -1017,7 +1026,7 @@ bool AIScriptIzo::UpdateAnimation(int *animation, int *frame) {
 			_animationFrame = 0;
 			_animationState = 0;
 			if (_vm->_cutContent) {
-				if (!Game_Flag_Query(kFlagIzoIsReplicant)) {
+				if (Actor_Query_Intelligence(kActorIzo) == 65) { 
 					Item_Add_To_World(kItemCamera, kModelAnimationIzoCamera, kSetHC01_HC02_HC03_HC04, 597.46f, 0.14f, 49.92f, 0, 12, 12, false, true, false, false);
 				}
 			} else {

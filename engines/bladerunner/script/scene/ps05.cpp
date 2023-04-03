@@ -95,7 +95,8 @@ bool SceneScriptPS05::ClickedOn3DObject(const char *objectName, bool a2) {
 		// the game gives you control of McCoy so you can exit the area and escape Leon. Also I put the poster in the trashcan because someone is trying 
 		// to cover for the reps, Guzza perhaps?
 		if (_vm->_cutContent) {
-			if (!Actor_Clue_Query (kActorMcCoy, kClueWantedPoster)) {
+			if (!Actor_Clue_Query(kActorMcCoy, kClueWantedPoster)
+			&& !Game_Flag_Query(kFlagGuzzaIsStupid)) {
 				Ambient_Sounds_Play_Sound(kSfxGARBAGE, 45, 30, 30, 0);
 				Delay(1000);
 				Item_Pickup_Spin_Effect(kModelAnimationGrigoriansNote, 513, 285);	
@@ -112,7 +113,20 @@ bool SceneScriptPS05::ClickedOn3DObject(const char *objectName, bool a2) {
 	}
 	if (Object_Query_Click("WANTED POSTERS", objectName) && !Loop_Actor_Walk_To_Scene_Object(kActorMcCoy, "WANTED POSTERS", 12, true, false)) {
 		Actor_Face_Object(kActorMcCoy, "WANTED POSTERS", true);
-		Actor_Voice_Over(1800, kActorVoiceOver);
+		if (_vm->_cutContent) {
+			if (!Actor_Clue_Query (kActorMcCoy, kClueWantedPoster)
+			&& Game_Flag_Query(kFlagGuzzaIsStupid)) {
+				Actor_Change_Animation_Mode(kActorMcCoy, 23);						
+				Delay(800);
+				Item_Pickup_Spin_Effect(kModelAnimationGrigoriansNote, 601, 207);	
+				Actor_Voice_Over(4080, kActorVoiceOver); //	99-4080.AUD	He looks familiar.		
+				Actor_Clue_Acquire(kActorMcCoy, kClueWantedPoster, true, -1); 
+			} else {
+				Actor_Voice_Over(1800, kActorVoiceOver);
+			}	
+		} else {
+			Actor_Voice_Over(1800, kActorVoiceOver);
+		}
 	}
 	return false;
 }
@@ -277,7 +291,7 @@ void SceneScriptPS05::turnOnTV() {
 			Overlay_Play("PS05OVER", 0, true, false, 0);
 			if (_vm->_cutContent) {
 				Game_Flag_Set(kFlagZhoraNewsReport);
-				if (Actor_Query_Friendliness_To_Other(kActorGuzza, kActorMcCoy) > 50) {
+				if (!Game_Flag_Query(kFlagGuzzaIsStupid)) {
 					ADQ_Add(kActorNewscaster, 120, kAnimationModeTalk);
 					ADQ_Add(kActorNewscaster, 130, kAnimationModeTalk);
 					ADQ_Add(kActorNewscaster, 140, kAnimationModeTalk);

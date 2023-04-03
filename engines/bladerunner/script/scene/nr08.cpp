@@ -225,13 +225,21 @@ void SceneScriptNR08::PlayerWalkedIn() {
 		Actor_Face_Heading(kActorDektora, 831, false);
 		Loop_Actor_Travel_Stairs(kActorDektora, 7, true, kAnimationModeIdle);
 #endif // BLADERUNNER_ORIGINAL_BUGS
-		Actor_Set_Goal_Number(kActorDektora, kGoalDektoraNR08GoToNR10);
+		if (_vm->_cutContent) {
+			if (Actor_Query_Intelligence(kActorDektora) == 90) {
+				Actor_Set_Goal_Number(kActorDektora, kGoalDektoraNR08GoToNR10);
+			} else {
+				Actor_Set_Goal_Number(kActorDektora, kGoalDektoraNR11Hiding);
+			}
+		} else {
+			Actor_Set_Goal_Number(kActorDektora, kGoalDektoraNR08GoToNR10);
+		}
 	}
 
 	if (Actor_Query_Goal_Number(kActorSteele) == kGoalSteeleNR01GoToNR08) {
 		Actor_Says(kActorSteele, 1640, 12);
 		if (_vm->_cutContent) {
-			if (Player_Query_Agenda() == kPlayerAgendaPolite) {
+			if (Player_Query_Agenda() != kPlayerAgendaPolite) {
 				Actor_Says(kActorMcCoy, 7835, 13); //00-7835.AUD	Is that so?
 				Delay(1000);
 			} else {
@@ -253,8 +261,15 @@ void SceneScriptNR08::PlayerWalkedIn() {
 			Actor_Says(kActorMcCoy, 3795, 16); //00-3795.AUD	Not yet. You’re sure she’s in here?
 		}
 		Actor_Says(kActorSteele, 1670, 13); //01-1670.AUD	I’m gonna look backstage.
-		Actor_Says(kActorSteele, 1680, 14); //01-1680.AUD	Check the balcony and cover the exit.
-		Actor_Says(kActorSteele, 1690, 15); //01-1690.AUD	I don’t want this one giving us the blow-off.
+		if (_vm->_cutContent) {
+			if (Actor_Query_Intelligence(kActorSteele) == 90) {
+				Actor_Says(kActorSteele, 1680, 14); //01-1680.AUD	Check the balcony and cover the exit.
+				Actor_Says(kActorSteele, 1690, 15); //01-1690.AUD	I don’t want this one giving us the blow-off.
+			}
+		} else {
+			Actor_Says(kActorSteele, 1680, 14); //01-1680.AUD	Check the balcony and cover the exit.
+			Actor_Says(kActorSteele, 1690, 15); //01-1690.AUD	I don’t want this one giving us the blow-off.
+		}
 		// Added in some dialogue for Crystal and McCoy.
 		if (_vm->_cutContent) {
 			Actor_Face_Actor(kActorMcCoy, kActorSteele, true);

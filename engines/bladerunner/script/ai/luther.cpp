@@ -121,16 +121,23 @@ bool AIScriptLuther::Update() {
 				Player_Set_Combat_Mode(false);
 				Delay(2000);
 				Actor_Voice_Over(300, kActorVoiceOver); //99-0300.AUD	I'd screwed up. Plain and simple.
-				Actor_Voice_Over(2120, kActorVoiceOver); //99-2120.AUD	I didn't have a lot of time and my options were pretty lousy.
-				Actor_Voice_Over(2130, kActorVoiceOver); //99-2130.AUD	Stay and face the music or take off and hope I didn't get caught.
-				Game_Flag_Set(kFlagMcCoyRetiredHuman);
-				Game_Flag_Reset(kFlagMcCoyIsHelpingReplicants);
-				Actor_Modify_Friendliness_To_Other(kActorClovis, kActorMcCoy, -4);
-				Actor_Modify_Friendliness_To_Other(kActorSteele, kActorMcCoy, -4);
-				Actor_Modify_Friendliness_To_Other(kActorGuzza, kActorMcCoy, -4);
+				if (Player_Query_Agenda() == kPlayerAgendaSurly 
+				|| Player_Query_Agenda() == kPlayerAgendaErratic) {
+					Actor_Voice_Over(2120, kActorVoiceOver); //99-2120.AUD	I didn't have a lot of time and my options were pretty lousy.
+					Actor_Voice_Over(2130, kActorVoiceOver); //99-2130.AUD	Stay and face the music or take off and hope I didn't get caught.
+					Game_Flag_Set(kFlagMcCoyRetiredHuman);
+					Game_Flag_Reset(kFlagMcCoyIsHelpingReplicants);
+					Actor_Modify_Friendliness_To_Other(kActorClovis, kActorMcCoy, -4);
+					Actor_Modify_Friendliness_To_Other(kActorSteele, kActorMcCoy, -4);
+					Actor_Modify_Friendliness_To_Other(kActorGuzza, kActorMcCoy, -4);
+				} else {
+					Actor_Says(kActorMcCoy, 2305, 13); //00-2305.AUD	I’m sorry.
+					Delay(2000);
+					Outtake_Play(kOuttakeAway1, true, -1);
+					Actor_Set_Goal_Number(kActorMcCoy, kGoalMcCoyArrested);	
+				}
 			}
 		}
-		
 		return false;
 	}
 

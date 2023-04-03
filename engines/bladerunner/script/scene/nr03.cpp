@@ -75,9 +75,17 @@ void SceneScriptNR03::InitializeScene() {
 			Scene_Loop_Set_Default(kNR03LoopMainLoop);
 		}
 	} else {
-		Actor_Set_Goal_Number(kActorGuzza, kGoalGuzzaSitAtNR03);
-		Scene_Loop_Start_Special(kSceneLoopModeLoseControl, kNR03LoopTableSwivel, false);
-		Scene_Loop_Set_Default(kNR03LoopMainLoop);
+		if (_vm->_cutContent) {
+			if (Game_Flag_Query(kFlagEarlyQIsReplicant)) {
+				Actor_Set_Goal_Number(kActorGuzza, kGoalGuzzaSitAtNR03);
+				Scene_Loop_Start_Special(kSceneLoopModeLoseControl, kNR03LoopTableSwivel, false);
+				Scene_Loop_Set_Default(kNR03LoopMainLoop);
+			}
+		} else {
+			Actor_Set_Goal_Number(kActorGuzza, kGoalGuzzaSitAtNR03);
+			Scene_Loop_Start_Special(kSceneLoopModeLoseControl, kNR03LoopTableSwivel, false);
+			Scene_Loop_Set_Default(kNR03LoopMainLoop);
+		}
 	}
 
 	// Guarding in NR03

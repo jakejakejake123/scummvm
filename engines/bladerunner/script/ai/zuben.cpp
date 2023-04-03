@@ -77,19 +77,16 @@ bool AIScriptZuben::Update() {
 		Actor_Set_Goal_Number(kActorZuben, kGoalZubenCT01WalkToCT02);
 		return true;
 	}
-	// New code for Zuben appearing outside hysteria hall.
-	if (_vm->_cutContent) {
-		if (Global_Variable_Query(kVariableChapter) == 4
-		&& Actor_Query_Goal_Number(kActorZuben) < kGoalZubenGone) {
-			Actor_Set_Goal_Number(kActorZuben, kGoalZubenWaitAtHF01);
+
+	if (!_vm->_cutContent) {
+		if ( Global_Variable_Query(kVariableChapter) >= 4
+		&& !Game_Flag_Query(kFlagZubenRetired)
+		&&  Actor_Query_Goal_Number(kActorZuben) < 200
+		) {
+			AI_Movement_Track_Flush(kActorZuben);
+			Actor_Set_Goal_Number(kActorZuben, 200);
+			return true;
 		}
-	} else if ( Global_Variable_Query(kVariableChapter) >= 4
-	 && !Game_Flag_Query(kFlagZubenRetired)
-	 &&  Actor_Query_Goal_Number(kActorZuben) < 200
-	) {
-		AI_Movement_Track_Flush(kActorZuben);
-		Actor_Set_Goal_Number(kActorZuben, 200);
-		return true;
 	}
 
 	if ( Global_Variable_Query(kVariableChapter) == 5

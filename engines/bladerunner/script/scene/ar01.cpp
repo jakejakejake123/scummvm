@@ -448,6 +448,10 @@ bool SceneScriptAR01::ClickedOnExit(int exitId) {
 						Actor_Voice_Over(3480, kActorVoiceOver); //99-3480.AUD	Yeah, what a difference a day makes.
 						Delay(1000);
 						Actor_Voice_Over(3510, kActorVoiceOver); //99-3510.AUD	The picture was still a little blurry.
+					} else if (Game_Flag_Query(kFlagDragonflyEarringTaken)) {
+						Actor_Voice_Over(3480, kActorVoiceOver); //99-3480.AUD	Yeah, what a difference a day makes.
+						Delay(1000);
+						Actor_Voice_Over(3510, kActorVoiceOver); //99-3510.AUD	The picture was still a little blurry.
 					} else {
 						Actor_Voice_Over(4310, kActorVoiceOver); // 99-4310.AUD	I was fresh out of leads.	
 					}
@@ -457,14 +461,16 @@ bool SceneScriptAR01::ClickedOnExit(int exitId) {
 				if (_vm->_cutContent) {
 					if (!Actor_Clue_Query(kActorMcCoy, kClueWeaponsCache)
 					&& !Actor_Clue_Query(kActorMcCoy, kClueBobShotInSelfDefense)
-					&& !Game_Flag_Query(kFlagMcCoyShotIzo)) {
+					&& !Game_Flag_Query(kFlagMcCoyShotIzo)
+					&& !Game_Flag_Query(kFlagDragonflyEarringTaken)) {
 						Actor_Voice_Over(4320, kActorVoiceOver); //99-4320.AUD	Poking around Hawker's Circle had been a waste of time.
 					}
 				} else {
 					Actor_Voice_Over(4320, kActorVoiceOver); //99-4320.AUD	Poking around Hawker's Circle had been a waste of time.
 				}
 				if (_vm->_cutContent) {
-					if (!Actor_Clue_Query(kActorMcCoy, kClueWeaponsCache)) {
+					if (!Actor_Clue_Query(kActorMcCoy, kClueWeaponsCache)
+					&& !Game_Flag_Query (kFlagDragonflyEarringTaken)) {
 						Actor_Voice_Over(4330, kActorVoiceOver); //99-4330.AUD	I had nothing to connect this Izo character to the Eisenduller murder.
 					} else if (Actor_Clue_Query(kActorMcCoy, kClueWeaponsCache)
 					&& (!Actor_Clue_Query(kActorMcCoy, kClueDetonatorWire)
@@ -668,14 +674,16 @@ void SceneScriptAR01::PlayerWalkedIn() {
 			Actor_Says(kActorFishDealer, 230, -1); // 29-0230.AUD	You buy fish? Highest quality.
 			Delay (3000);	
 			Game_Flag_Set(kFlagAR01Entered);
-			ADQ_Add(kActorOfficerLeary, 300, kAnimationModeTalk); //23-0300.AUD	LA, 38 Metro 3. Subject check.
-			ADQ_Add(kActorDispatcher, 480, kAnimationModeTalk); //38-0480.AUD	Sector 3 unit was under check. Go ahead.
-			ADQ_Add(kActorOfficerLeary, 290, kAnimationModeTalk);  // 23-0290.AUD	Subject check on a Willard Mack. M-A-C-K. White male, six foot, 180 pounds, brown and brown with a DOB of 10-30-1995.
-			ADQ_Add(kActorDispatcher, 490, kAnimationModeTalk); //38-0490.AUD	38 Metro 3 LA. 10-4. Stand by.
-			ADQ_Add_Pause(1000);
-			ADQ_Add(kActorDispatcher, 500, kAnimationModeTalk); //38-0500.AUD	38 Metro 3 LA. No hits locally around CIC on subject Willard Mack. M-A-C-K.
-			ADQ_Add(kActorOfficerLeary, 450, kAnimationModeTalk);  // 23-0450.AUD	LA, 13 Metro 1. Copied. No wants.
-			ADQ_Add(kActorDispatcher, 510, kAnimationModeTalk); //38-0510.AUD	10-4. LA Copy. 10-98.
+			if (Actor_Query_Intelligence(kActorOfficerLeary) == 40) { 
+				ADQ_Add(kActorOfficerLeary, 300, kAnimationModeTalk); //23-0300.AUD	LA, 38 Metro 3. Subject check.
+				ADQ_Add(kActorDispatcher, 480, kAnimationModeTalk); //38-0480.AUD	Sector 3 unit was under check. Go ahead.
+				ADQ_Add(kActorOfficerLeary, 290, kAnimationModeTalk);  // 23-0290.AUD	Subject check on a Willard Mack. M-A-C-K. White male, six foot, 180 pounds, brown and brown with a DOB of 10-30-1995.
+				ADQ_Add(kActorDispatcher, 490, kAnimationModeTalk); //38-0490.AUD	38 Metro 3 LA. 10-4. Stand by.
+				ADQ_Add_Pause(1000);
+				ADQ_Add(kActorDispatcher, 500, kAnimationModeTalk); //38-0500.AUD	38 Metro 3 LA. No hits locally around CIC on subject Willard Mack. M-A-C-K.
+				ADQ_Add(kActorOfficerLeary, 450, kAnimationModeTalk);  // 23-0450.AUD	LA, 13 Metro 1. Copied. No wants.
+				ADQ_Add(kActorDispatcher, 510, kAnimationModeTalk); //38-0510.AUD	10-4. LA Copy. 10-98.
+			}
 		}
 	}
 	if (Actor_Query_Goal_Number(kActorPhotographer) < 199) {

@@ -122,10 +122,15 @@ bool SceneScriptHC04::ClickedOnActor(int actorId) {
 							if (Player_Query_Agenda() != kPlayerAgendaPolite) {	
 								Actor_Says(kActorMcCoy, 4560, 23); //00-4560.AUD	McCoy, LPD.
 								Actor_Says(kActorMcCoy, 8920, 14); //00-8920.AUD	I gotta ask you a question.
-								Actor_Says(kActorIsabella, 20, kAnimationModeTalk);
 							} else {
 								Actor_Says(kActorMcCoy, 1280, 23); //00-1280.AUD	McCoy, LPD. Mind if I ask you a couple of questions?
+							}
+							if (Game_Flag_Query(kFlagSadikIsReplicant)) {
 								Actor_Says(kActorIsabella, 20, kAnimationModeTalk);
+							} else {
+								Actor_Says(kActorIsabella, 150, kAnimationModeTalk); //59-0150.AUD	This is a clean place man. Mama Isabella law-abiding soul.
+								Delay(2000);
+								Actor_Says(kActorMcCoy, 5705, 13); //00-5705.AUD	Uh-huh.
 							}
 						}
 					}
@@ -243,7 +248,7 @@ void SceneScriptHC04::dialogueWithIsabella() {
 	if (_vm->_cutContent) {
 		if (Global_Variable_Query(kVariableChapter) < 4) {
 			if (Actor_Clue_Query(kActorMcCoy, kClueSpecialIngredient)) {
-				DM_Add_To_List_Never_Repeat_Once_Selected(380, 6, 7, 8); // MIA AND MURRAY INFO
+				DM_Add_To_List_Never_Repeat_Once_Selected(380, 2, 3, 4); // MIA AND MURRAY INFO
 			}
 		}
 	} else if (Actor_Clue_Query(kActorMcCoy, kClueSpecialIngredient)) {
@@ -277,22 +282,53 @@ void SceneScriptHC04::dialogueWithIsabella() {
 	case 350: // DELIVERYMEN
 		// Altered deliverymen dialogue to also contain the dialogue for the Sadiks photo option.
 		if (_vm->_cutContent) {
-			if (Actor_Query_Friendliness_To_Other(kActorIsabella, kActorMcCoy) > 49) {
+			if (Actor_Query_Friendliness_To_Other(kActorIsabella, kActorMcCoy) < 50) {
 				Actor_Says(kActorMcCoy, 1290, kAnimationModeTalk); //00-1290.AUD	How many delivery men you got working here?
-				Actor_Says(kActorIsabella, 70, kAnimationModeTalk); //59-0070.AUD	Two. Sometimes three on the busy night.
-				Actor_Says(kActorIsabella, 80, kAnimationModeTalk); //59-0080.AUD	Usual two riders. They Chinese. Third guy part timer. He Moroccan I think.
-				Actor_Says(kActorMcCoy, 1340, kAnimationModeTalk); //00-1340.AUD	A big guy with dreadlocks?
-				Actor_Says(kActorIsabella, 90, kAnimationModeTalk); //59-0090.AUD	Oh no. Shaved head. Real short.
-				Actor_Says(kActorMcCoy, 1335, kAnimationModeTalk); //00-1335.AUD	Any Rastafarians?
-				Delay(500);
-				Actor_Says(kActorMcCoy, 1285, 23); //00-1285.AUD	This guy work for you?
+				Delay(2000);
+				Actor_Says(kActorMcCoy, 6985, 14); //00-6985.AUD	Got the straight scoop for me or what?
+				Delay(1000);
+			} else {
+				Actor_Says(kActorMcCoy, 1290, kAnimationModeTalk); //00-1290.AUD	How many delivery men you got working here?
+			}
+			Actor_Says(kActorIsabella, 70, kAnimationModeTalk); //59-0070.AUD	Two. Sometimes three on the busy night.
+			Actor_Says(kActorIsabella, 80, kAnimationModeTalk); //59-0080.AUD	Usual two riders. They Chinese. Third guy part timer. He Moroccan I think.
+			Actor_Says(kActorMcCoy, 1340, kAnimationModeTalk); //00-1340.AUD	A big guy with dreadlocks?
+			Actor_Says(kActorIsabella, 90, kAnimationModeTalk); //59-0090.AUD	Oh no. Shaved head. Real short.
+			Actor_Says(kActorMcCoy, 1335, kAnimationModeTalk); //00-1335.AUD	Any Rastafarians?
+			Delay(500);
+			Actor_Says(kActorMcCoy, 1285, 23); //00-1285.AUD	This guy work for you?
+			if (Game_Flag_Query(kFlagSadikIsReplicant)) {
 				Actor_Says(kActorIsabella, 50, kAnimationModeTalk);  //59-0050.AUD	No, but I wish he do. He be one fine-looking man.
 				Actor_Says(kActorMcCoy, 1330, kAnimationModeTalk); //00-1330.AUD	You sure? Never seen him before?
 				Actor_Says(kActorIsabella, 60, kAnimationModeTalk); //59-0060.AUD	I'd remember him for sure.
 			} else {
-				Actor_Says(kActorMcCoy, 1290, kAnimationModeTalk); //00-1290.AUD	How many delivery men you got working here?
-				Delay(2000);
-				Actor_Says(kActorMcCoy, 8590, 13);  // Not the talkative type
+				Delay (2000);
+				Actor_Says(kActorMcCoy, 1885, kAnimationModeTalk); //00-1885.AUD	I’ll take that as a yes.
+				Delay (500);
+				Actor_Says(kActorMcCoy, 875, 17); //00-0875.AUD	Where do I find him?
+				Delay (2000);
+				Actor_Says(kActorMcCoy, 8395, 18); //00-8395.AUD	You don't have anything to say?
+				Delay(1000);
+				if (Player_Query_Agenda() != kPlayerAgendaSurly
+				&& (Player_Query_Agenda() != kPlayerAgendaErratic)) {
+					Actor_Says(kActorMcCoy, 745, 14); //00-0745.AUD	I'm watching you, pal.
+				} else {
+					Actor_Says(kActorMcCoy, 4360, 16); //00-4360.AUD	Tell it straight or I'm gonna make sure you get the same as he gets. Full conspiracy, payable for 25.
+					Delay(2000);	
+					Actor_Says(kActorMcCoy, 1955, 14); //00-1955.AUD	We’re taking a little drive downtown.
+					Game_Flag_Set(kFlagIsabellaArrested);
+					Music_Stop(1u);
+					Delay (1000);
+					Actor_Put_In_Set(kActorIsabella, kSetPS09);
+					Actor_Set_At_XYZ(kActorIsabella, -450.0f, 0.2f, -195.0f, 518);
+					Game_Flag_Reset(kFlagSpinnerAtAR01);
+					Game_Flag_Set(kFlagSpinnerAtPS01);
+					Scene_Exits_Enable();
+					Game_Flag_Reset(kFlagMcCoyInHawkersCircle);
+					Game_Flag_Set(kFlagMcCoyInPoliceStation);
+					Outtake_Play(kOuttakeAway1, true, -1);
+					Set_Enter(kSetPS09, kScenePS09);
+				}
 			}
 		} else {
 			Actor_Says(kActorMcCoy, 1290, kAnimationModeTalk);
@@ -307,27 +343,35 @@ void SceneScriptHC04::dialogueWithIsabella() {
 
 	case 360: // MARCUS EISENDULLER
 		if (_vm->_cutContent) {
+			Actor_Says(kActorMcCoy, 1295, kAnimationModeTalk);
 			if (Actor_Query_Friendliness_To_Other(kActorIsabella, kActorMcCoy) > 49) {
-				Actor_Says(kActorMcCoy, 1295, kAnimationModeTalk);
 				Actor_Says(kActorIsabella, 100, kAnimationModeTalk);
 				Actor_Says(kActorMcCoy, 1350, kAnimationModeTalk);
-				Actor_Says(kActorIsabella, 110, kAnimationModeTalk);
-				Actor_Says(kActorMcCoy, 1355, kAnimationModeTalk);
-				Actor_Says(kActorIsabella, 130, kAnimationModeTalk);
-				if (Player_Query_Agenda() == kPlayerAgendaPolite) {
-					Actor_Says(kActorMcCoy, 1360, kAnimationModeTalk); //00-1360.AUD	You may have a little trouble collecting. He's dead.
-					Delay(2000);
-					Actor_Says(kActorMcCoy, 2305, 13); //00-2305.AUD	I’m sorry.
-					Actor_Modify_Friendliness_To_Other(kActorIsabella, kActorMcCoy, 2);
+				if (Game_Flag_Query(kFlagSadikIsReplicant)) {
+					Actor_Says(kActorIsabella, 110, kAnimationModeTalk); //59-0110.AUD	No sir. No deliveries to him no more. Not since last month. He be way behind on his bill.
+					Actor_Says(kActorMcCoy, 1355, kAnimationModeTalk);
+					Actor_Says(kActorIsabella, 130, kAnimationModeTalk);
+					if (Player_Query_Agenda() == kPlayerAgendaPolite) {
+						Actor_Says(kActorMcCoy, 1360, kAnimationModeTalk); //00-1360.AUD	You may have a little trouble collecting. He's dead.
+						Delay(2000);
+						Actor_Says(kActorMcCoy, 2305, 13); //00-2305.AUD	I’m sorry.
+						Actor_Modify_Friendliness_To_Other(kActorIsabella, kActorMcCoy, 2);
+					} else {
+						Actor_Says(kActorMcCoy, 4880, 13); //00-4880.AUD	Is that right?
+					}
 				} else {
-					Actor_Says(kActorMcCoy, 4880, 13); //00-4880.AUD	Is that right?
+					Delay(2000);
+					Actor_Says(kActorMcCoy, 1885, kAnimationModeTalk); //00-1885.AUD	I’ll take that as a yes.
+					Delay(2000);
+					Actor_Says(kActorMcCoy, 2755, 18);                  // AreYouAlrightALittlePale
+					Delay(1000);
+					Actor_Says(kActorMcCoy, 8525, kAnimationModeTalk); // generic "hmph"
 				}
 			} else {
-				Actor_Says(kActorMcCoy, 1295, kAnimationModeTalk);
 				Delay(2000);
 				Actor_Says(kActorMcCoy, 7995, kAnimationModeTalk); //00-7995.AUD	No?
 				Delay(2000);
-				Actor_Says(kActorMcCoy, 1535, 19);  //00-1535.AUD	Ah, never mind.
+				Actor_Says(kActorMcCoy, 8590, 13);  // Not the talkative type
 			}
 		} else {
 			Actor_Says(kActorMcCoy, 1295, kAnimationModeTalk);
@@ -404,16 +448,20 @@ void SceneScriptHC04::dialogueWithIsabella() {
 				Delay(1000);
 				Actor_Says(kActorIsabella, 180, kAnimationModeTalk); //59-0180.AUD	My sister. She got connections.
 				Actor_Says(kActorMcCoy, 1380, kAnimationModeTalk);
-				Actor_Says(kActorIsabella, 190, kAnimationModeTalk);
-				Actor_Says(kActorIsabella, 210, kAnimationModeTalk);
-				Actor_Says(kActorIsabella, 240, kAnimationModeTalk);
-				Actor_Says(kActorMcCoy, 1385, kAnimationModeTalk);
-				Actor_Says(kActorIsabella, 260, kAnimationModeTalk);
-				Actor_Says(kActorMcCoy, 1390, kAnimationModeTalk);
-				Actor_Says(kActorIsabella, 300, kAnimationModeTalk);
-				Actor_Says(kActorIsabella, 310, kAnimationModeTalk);
-				Actor_Says(kActorIsabella, 320, kAnimationModeTalk); 
-				Actor_Clue_Acquire(kActorMcCoy, kClueStolenCheese, false, kActorIsabella);
+				Actor_Says(kActorIsabella, 190, kAnimationModeTalk); //59-0190.AUD	She back in Jamaica, mon. Far away from here. She send me cheese once maybe twice a month.
+				if (Game_Flag_Query(kFlagSadikIsReplicant)) {
+					Actor_Says(kActorIsabella, 210, kAnimationModeTalk); //59-0210.AUD	You know, funny thing you asking about the cheese. Last week this ugly little man, he ran by. Grab whole box of empty takeout cartons right off the counter.
+					Actor_Says(kActorIsabella, 240, kAnimationModeTalk);
+					Actor_Says(kActorMcCoy, 1385, kAnimationModeTalk);
+					Actor_Says(kActorIsabella, 260, kAnimationModeTalk);
+					Actor_Says(kActorMcCoy, 1390, kAnimationModeTalk);
+					Actor_Says(kActorIsabella, 300, kAnimationModeTalk);
+					Actor_Says(kActorIsabella, 310, kAnimationModeTalk);
+					Actor_Says(kActorIsabella, 320, kAnimationModeTalk);  //59-0320.AUD	I'm thinking you not really care about the cheese.
+					Actor_Clue_Acquire(kActorMcCoy, kClueStolenCheese, false, kActorIsabella);
+				} else {
+					Actor_Says(kActorIsabella, 320, kAnimationModeTalk); //59-0320.AUD	I'm thinking you not really care about the cheese.
+				}
 				if (Player_Query_Agenda() == kPlayerAgendaPolite) {
 					Actor_Says(kActorMcCoy, 1395, kAnimationModeTalk); //00-1395.AUD	You're right. But I still think you ought to get yourself a different secret ingredient.
 					Actor_Says(kActorIsabella, 330, kAnimationModeTalk); //59-0330.AUD	You bet, mon. That cheese’s been nothing but trouble for Mama Isabella.
@@ -422,19 +470,19 @@ void SceneScriptHC04::dialogueWithIsabella() {
 					Actor_Change_Animation_Mode(kActorIsabella, 23);
 					Delay(800);
 					Actor_Clue_Lose(kActorMcCoy, kClueCheese);
-					Actor_Clue_Acquire(kActorLucy, kClueCheese, true, -1);
+					Actor_Clue_Acquire(kActorIsabella, kClueCheese, true, -1);
 					Item_Pickup_Spin_Effect_From_Actor(kModelAnimationCheese, kActorIsabella, 0, 0);
 					Delay(1500);
 					if (Actor_Clue_Query(kActorMcCoy, kClueKingstonKitchenBox1)) {
 						Actor_Clue_Lose(kActorMcCoy, kClueKingstonKitchenBox1);
-						Actor_Clue_Acquire(kActorLucy, kClueKingstonKitchenBox1, true, -1);
+						Actor_Clue_Acquire(kActorIsabella, kClueKingstonKitchenBox1, true, -1);
 						Item_Pickup_Spin_Effect_From_Actor(kModelAnimationKingstonKitchenBox, kActorIsabella, 0, 0);
 						Delay(1500);
 					}
 					Actor_Says(kActorMcCoy, 8170, 13); //00-8170.AUD	There you go.
 					Delay(1000);
 					Actor_Says(kActorMcCoy, 2860, 14); //00-2860.AUD	You take care of yourself.
-					Actor_Modify_Friendliness_To_Other(kActorIsabella, kActorMcCoy, 2);
+					Actor_Modify_Friendliness_To_Other(kActorIsabella, kActorMcCoy, 2);			
 				} else {
 					Actor_Says(kActorMcCoy, 7815, 13); //00-7815.AUD	No.
 				}		
@@ -482,9 +530,9 @@ void SceneScriptHC04::dialogueWithIsabella() {
 				Actor_Says(kActorIsabella, 30, kAnimationModeTalk); //59-0030.AUD	All in special recipe. (laughs) But if I be telling you what's in it, you might be thinking twice about eating it.
 				Delay(2000);
 				Actor_Says(kActorMcCoy, 1325, 13); //00-1325.AUD	Uh... I'm not that hungry anyway.
-				Delay(1000);
 				if (Player_Query_Agenda() == kPlayerAgendaSurly 
 				|| Player_Query_Agenda() == kPlayerAgendaErratic) {
+					Delay(1000);
 					Actor_Says(kActorMcCoy, 5685, 15); //00-5685.AUD	Triple-A you ain’t.
 					Actor_Modify_Friendliness_To_Other(kActorIsabella, kActorMcCoy, -2);
 					Actor_Says(kActorIsabella, 170, kAnimationModeTalk); //59-0170.AUD	Why you pick on Mama Isabella? I never do you no harm.		

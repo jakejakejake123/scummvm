@@ -388,7 +388,13 @@ bool AIScriptOfficerLeary::GoalChanged(int currentGoalNumber, int newGoalNumber)
 			) {
 				Actor_Clue_Acquire(kActorOfficerLeary, kClueCrowdInterviewA, false, -1);
 			} else if (!Actor_Clue_Query(kActorOfficerLeary, kClueCrowdInterviewB)) {
-				Actor_Clue_Acquire(kActorOfficerLeary, kClueCrowdInterviewB, false, -1);
+				if (_vm->_cutContent) {
+					if (Game_Flag_Query(kFlagGordoIsReplicant)) {
+						Actor_Clue_Acquire(kActorOfficerLeary, kClueCrowdInterviewB, false, -1);
+					}
+				} else {
+					Actor_Clue_Acquire(kActorOfficerLeary, kClueCrowdInterviewB, false, -1);
+				}
 			}
 		}
 		if (Game_Flag_Query(kFlagMcCoyInRunciters)) {

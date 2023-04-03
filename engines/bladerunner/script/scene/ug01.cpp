@@ -236,7 +236,7 @@ void SceneScriptUG01::PlayerWalkedIn() {
 			Actor_Says(kActorIzo, 720, 17); //07-0720.AUD	I know. She came into the store once.
 			if (!Game_Flag_Query(kFlagIzoIsReplicant)) {
 				Actor_Says(kActorIzo, 800, 17); //07-0800.AUD	I’m no Replicant. She can run tests on me all day long. It won’t make a difference!
-				Actor_Says(kActorMcCoy, 4880, 13); //00-4880.AUD	Is that right?
+				Actor_Says(kActorMcCoy, 8320, 13); //00-8320.AUD	Really?
 				Delay (500);
 			} 
 			if (Actor_Clue_Query(kActorMcCoy, kClueWeaponsCache)) {
@@ -260,6 +260,8 @@ void SceneScriptUG01::PlayerWalkedIn() {
 			// Flag for determining the ending added.
 			Game_Flag_Set(kFlagIzoWarned);
 			Game_Flag_Set(kFlagMcCoyIsHelpingReplicants);
+			Game_Flag_Set(kFlagIzoFled);
+			Game_Flag_Set(kFlagIzoGotAway);
 			Actor_Modify_Friendliness_To_Other(kActorClovis, kActorMcCoy, 2);
 			Actor_Modify_Friendliness_To_Other(kActorIzo, kActorMcCoy, 2);
 			Player_Loses_Control();

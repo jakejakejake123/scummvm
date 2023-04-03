@@ -1128,10 +1128,10 @@ void AIScriptLucy::voightKampffTest() {
 			Actor_Says(kActorMcCoy, 6185, 19); //00-6185.AUD	(sighs) You got any idea how glad I am to see ya?
 			Actor_Says(kActorLucy, 390, 13); //06-0390.AUD	I’m scared, Ray.
 			Actor_Says(kActorMcCoy, 8320, 11); //00-8320.AUD	Really?
-			Actor_Says(kActorLucy, 1130, 11); //06-1130.AUD	Uh-huh.
 			Delay(500);
 			Actor_Says(kActorLucy, 1530, 16); //06-1530.AUD	I'm always afraid.
 			Actor_Says(kActorMcCoy, 8190, -1);	// 00-8190.AUD	Why?
+			Delay(1000);
 			Actor_Says(kActorLucy, 1750, 13); //06-1750.AUD	I don't wanna tell you.
 			Delay(1000);
 			Actor_Says(kActorMcCoy, 7985, 13); //00-7985.AUD	It's okay.
@@ -1152,12 +1152,16 @@ void AIScriptLucy::voightKampffTest() {
 	}
 #endif // BLADERUNNER_ORIGINAL_BUGS
 	Actor_Says(kActorLucy, 1090, 13); //06-1090.AUD	That thing you do to see if a person is human?
-	if (!Game_Flag_Query(kFlagDirectorsCut)) {
+	if (_vm->_cutContent) {
+		Actor_Says(kActorMcCoy, 6825, 13);
+	} else if (!Game_Flag_Query(kFlagDirectorsCut)) {
 		Actor_Says(kActorMcCoy, 6825, 13);
 	}
 	Actor_Says(kActorMcCoy, 6830, 12); //00-6830.AUD	You want it?
-	Actor_Says(kActorLucy, 1100, 14); //06-1100.AUD	Is it always right?
-	Actor_Says(kActorMcCoy, 6835, 14); //00-6835.AUD	Usually.
+	if (Actor_Query_Intelligence(kActorLucy) == 70) {
+		Actor_Says(kActorLucy, 1100, 14); //06-1100.AUD	Is it always right?
+		Actor_Says(kActorMcCoy, 6835, 14); //00-6835.AUD	Usually.
+	}
 	Actor_Says(kActorLucy, 1110, 15); //06-1110.AUD	Give it to me. Father won’t tell me anything anymore.
 	// Made it so McCoy only VKs Lucy if he is not Surly or Erratic.
 	if (_vm->_cutContent) {
@@ -1167,45 +1171,57 @@ void AIScriptLucy::voightKampffTest() {
 			Actor_Says(kActorMcCoy, 6905, 13); //00-6905.AUD	Now is not a good time.
 			Actor_Says(kActorLucy, 1230, 17); //06-1230.AUD	It’s never a good time!
 			Actor_Says(kActorMcCoy, 6910, 13); //00-6910.AUD	Listen! You have to be patient, you have to trust me. It's not safe here.
+			Game_Flag_Set(kFlagLucyMeetingAct4);
 			Delay(2000);
 			Player_Gains_Control();
 			Actor_Set_Goal_Number(kActorLucy, kGoalLucyUG01RunAway);
 		} else {
+			Actor_Says_With_Pause(kActorMcCoy, 6840, 0.0f, 13); //00-6840.AUD	Is that why he was angry? Because you asked him--
 			Delay(1000);
 			Actor_Says(kActorMcCoy, 6845, 12); //00-6845.AUD	You deserve it.
 			Delay(500);
 			Actor_Says(kActorMcCoy, 6850, 12); //00-6850.AUD	You know how this works? I set up situations and you respond.
-			Actor_Says(kActorLucy, 1120, 14); //06-1120.AUD	Okay. Is it hard? Like a test in school?
-			Actor_Says(kActorMcCoy, 6855, 13); //00-6855.AUD	No. Sometimes it can be disturbing.
+			if (Actor_Query_Intelligence(kActorLucy) == 70) {
+				Actor_Says(kActorLucy, 1120, 14); //06-1120.AUD	Okay. Is it hard? Like a test in school?
+				Actor_Says(kActorMcCoy, 6855, 13); //00-6855.AUD	No. Sometimes it can be disturbing.
+			} else if (Actor_Query_Intelligence(kActorLucy) == 50) {
+				Delay(1000);
+			}
 			Actor_Says(kActorMcCoy, 6860, 13); //00-6860.AUD	Are you ready?
 			Actor_Says(kActorLucy, 1130, 14); //06-1130.AUD	Uh-huh.
 			Player_Gains_Control();
 			Voight_Kampff_Activate(kActorLucy, 40);
 			Player_Loses_Control();
-			if (Actor_Clue_Query(kActorMcCoy, kClueVKLucyReplicant)) {
+			if (Actor_Clue_Query(kActorMcCoy, kClueVKLucyReplicant)
+			&& Game_Flag_Query(kFlagLucyIsReplicant)) {
 				Delay(250);
 				Actor_Says(kActorLucy, 1140, 14); //06-1140.AUD	Tell me.
 				Actor_Says(kActorMcCoy, 6865, 14);
+				Delay(1000);
 				Actor_Says(kActorLucy, 1150, 16); //06-1150.AUD	Then father was right. I shouldn’t have taken the test.
 				if (Game_Flag_Query(kFlagMcCoyIsHelpingReplicants)) {
 					Actor_Says(kActorMcCoy, 6870, 14); //00-6870.AUD	No. But you had to know.
 				}
 				Delay(500);
-				Actor_Says(kActorMcCoy, 6875, 13); //00-6875.AUD	I gotta go.
-				Actor_Says(kActorLucy, 1160, 16); //06-1160.AUD	I wanna stay with you.
-			} else if (Actor_Clue_Query(kActorMcCoy, kClueVKLucyHuman)) {
+			} else if (Actor_Clue_Query(kActorMcCoy, kClueVKLucyHuman)
+			&& !Game_Flag_Query(kFlagLucyIsReplicant)) {
 				Actor_Says(kActorMcCoy, 6880, 13);
 				Actor_Says(kActorLucy, 1170, 13); //06-1170.AUD	Really?
-				Actor_Says(kActorLucy, 1180, 16); //06-1180.AUD	Why didn’t father tell me?
-				if (Actor_Query_Friendliness_To_Other(kActorClovis, kActorMcCoy) > 50) {
-					Actor_Says(kActorMcCoy, 6890, 15); //00-6890.AUD	Maybe he wanted to keep his... family together.
-					Actor_Says(kActorLucy, 1190, 15); //06-1190.AUD	I’m not a little girl anymore.
-					Actor_Says(kActorLucy, 1200, 17); //06-1200.AUD	It’s not fair!
-					Actor_Says(kActorMcCoy, 6885, 13); //00-6885.AUD	No. But it's understandable.
-				} else {
+				if (Actor_Query_Intelligence(kActorLucy) == 50) { 
+					Actor_Says(kActorLucy, 1180, 16); //06-1180.AUD	Why didn’t father tell me?
+					if (Actor_Query_Friendliness_To_Other(kActorClovis, kActorMcCoy) > 50) {
+						Actor_Says(kActorMcCoy, 6890, 15); //00-6890.AUD	Maybe he wanted to keep his... family together.
+						Actor_Says(kActorLucy, 1190, 15); //06-1190.AUD	I’m not a little girl anymore.
+						Actor_Says(kActorLucy, 1200, 17); //06-1200.AUD	It’s not fair!
+						Actor_Says(kActorMcCoy, 6885, 13); //00-6885.AUD	No. But it's understandable.
+					} else {
+						Actor_Says(kActorMcCoy, 5450, 15); //00-5450.AUD	I'm not sure.
+						Delay(1000);
+					}
+				} else if (Actor_Query_Intelligence(kActorLucy) == 70) { 
+					Actor_Says(kActorMcCoy, 1625, 15); //00-1625.AUD	Yes.
 					Delay(1000);
 				}
-				Actor_Says(kActorLucy, 1210, 17); //06-1210.AUD	I’m gonna stay with you.
 			} else {
 				Delay(250);
 				Actor_Says(kActorAnsweringMachine, 450, -1); //39-0450.AUD	Inconclusive result.
@@ -1214,16 +1230,23 @@ void AIScriptLucy::voightKampffTest() {
 				Delay(500);
 				Actor_Says(kActorLucy, 1200, 17); //06-1200.AUD	It’s not fair!
 				Delay(2000);
+			}
+			Actor_Says(kActorMcCoy, 6875, 13); //00-6875.AUD	I gotta go.
+			if (Actor_Query_Intelligence(kActorLucy) == 50) { 
 				if (Game_Flag_Query(kFlagLucyIsReplicant)) {
 					Actor_Says(kActorLucy, 1160, 16); //06-1160.AUD	I wanna stay with you.
 				} else {
 					Actor_Says(kActorLucy, 1210, 17); //06-1210.AUD	I’m gonna stay with you.
 				}
+				Actor_Says(kActorMcCoy, 6895, 15); //00-6895.AUD	Don't you understand? It's not safe.
+				if (Actor_Clue_Query(kActorMcCoy, kClueVKLucyReplicant)
+				&& Game_Flag_Query(kFlagLucyIsReplicant)) {
+					Actor_Says_With_Pause(kActorMcCoy, 6900, 0.0f, 11); //00-6900.AUD	There's a hunter out here. If she finds out where you are--
+				}
 			}
-			Actor_Says(kActorMcCoy, 6895, 15); //00-6895.AUD	Don't you understand? It's not safe.
-			Actor_Says_With_Pause(kActorMcCoy, 6900, 0.0f, 11); //00-6900.AUD	There's a hunter out here. If she finds out where you are--
 			Actor_Says(kActorLucy, 1220, 16); //06-1220.AUD	Can’t you come back with me?
 			Actor_Says(kActorMcCoy, 6910, 13); //00-6910.AUD	Listen! You have to be patient, you have to trust me. It's not safe here.
+			Game_Flag_Set(kFlagLucyMeetingAct4);
 			Delay(2000);
 			Player_Gains_Control();
 			Actor_Set_Goal_Number(kActorLucy, kGoalLucyUG01RunAway);

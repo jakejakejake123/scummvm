@@ -214,7 +214,7 @@ bool SceneScriptHC02::ClickedOnActor(int actorId) {
 				}
 				Actor_Says(kActorMcCoy, 1245, 13);
 			} else if (Actor_Clue_Query(kActorMcCoy, kClueHomelessManInterview2)
-			&& !Actor_Clue_Query(kActorMcCoy, kClueFlaskOfAbsinthe)
+			&& !Game_Flag_Query(kFlagObtainedFlask)
 			&& !Actor_Clue_Query(kActorMcCoy, kClueBigManLimping)
 			&& _vm->_cutContent) {	
 				Actor_Says(kActorMcCoy, 1230, 13);
@@ -232,6 +232,7 @@ bool SceneScriptHC02::ClickedOnActor(int actorId) {
 						Delay(800);
 						Item_Pickup_Spin_Effect_From_Actor(kModelAnimationFlaskOfAbsinthe, kActorMcCoy, 0, 0);
 						Actor_Clue_Acquire(kActorMcCoy, kClueFlaskOfAbsinthe, true, kActorHawkersBarkeep);
+						Game_Flag_Set(kFlagObtainedFlask);
 						Delay(800);
 						Actor_Says_With_Pause(kActorHawkersBarkeep, 50, 1.6f, 17);
 						if (Query_Difficulty_Level() != kGameDifficultyEasy) {
@@ -253,6 +254,7 @@ bool SceneScriptHC02::ClickedOnActor(int actorId) {
 						Delay(800);
 						Item_Pickup_Spin_Effect_From_Actor(kModelAnimationFlaskOfAbsinthe, kActorMcCoy, 0, 0);
 						Actor_Clue_Acquire(kActorMcCoy, kClueFlaskOfAbsinthe, true, kActorHawkersBarkeep);
+						Game_Flag_Set(kFlagObtainedFlask);
 						Delay(800);
 					}
 				} else {
@@ -458,6 +460,58 @@ void SceneScriptHC02::PlayerWalkedIn() {
 	if (Game_Flag_Query(kFlagHC04toHC02)) {
 		Loop_Actor_Walk_To_XYZ(kActorMcCoy, -76.0f, 0.14f, -339.0f, 0, false, false, false);
 		Game_Flag_Reset(kFlagHC04toHC02);
+	}
+	if (_vm->_cutContent) {
+		if (Actor_Clue_Query(kActorMcCoy, kClueHomelessManInterview2)
+		&& !Game_Flag_Query(kFlagObtainedFlask)
+		&& !Actor_Clue_Query(kActorMcCoy, kClueBigManLimping)) {
+			Player_Loses_Control();
+			Loop_Actor_Walk_To_XYZ(kActorMcCoy, -150.51f, 0.14f, 62.74f, 0, true, false, false);
+			Player_Gains_Control();
+			Actor_Face_Actor(kActorMcCoy, kActorHawkersBarkeep, true);
+			Actor_Face_Actor(kActorHawkersBarkeep, kActorMcCoy, true);
+			Actor_Says(kActorMcCoy, 1230, 13);
+			Actor_Says(kActorHawkersBarkeep, 20, 12);
+			Actor_Says(kActorMcCoy, 1235, 13);
+			Actor_Says(kActorHawkersBarkeep, 30, 15);
+			Actor_Says(kActorMcCoy, 1240, 13);
+			if (!Game_Flag_Query(kFlagHawkersBarkeepHappy)) {
+				Actor_Says(kActorHawkersBarkeep, 40, 14);  //32-0040.AUD	Cost you extra.
+				if (Global_Variable_Query(kVariableChinyen) >= 20
+				|| Query_Difficulty_Level() == kGameDifficultyEasy) {
+					Actor_Says(kActorMcCoy, 4940, 13); //00-4940.AUD	Okay, let's have it.
+					Actor_Change_Animation_Mode(kActorHawkersBarkeep, 23);
+					Actor_Change_Animation_Mode(kActorMcCoy, 23);
+					Delay(800);
+					Item_Pickup_Spin_Effect_From_Actor(kModelAnimationFlaskOfAbsinthe, kActorMcCoy, 0, 0);
+					Actor_Clue_Acquire(kActorMcCoy, kClueFlaskOfAbsinthe, true, kActorHawkersBarkeep);
+					Game_Flag_Set(kFlagObtainedFlask);
+					Delay(800);
+					Actor_Says_With_Pause(kActorHawkersBarkeep, 50, 1.6f, 17);
+					if (Query_Difficulty_Level() != kGameDifficultyEasy) {
+						Global_Variable_Decrement(kVariableChinyen, 20);
+					}
+					if (Player_Query_Agenda() != kPlayerAgendaSurly 
+					&& Player_Query_Agenda() != kPlayerAgendaErratic) {
+						Actor_Says(kActorMcCoy, 1245, 13); //00-1245.AUD	It's for a friend.
+					}
+				} else {
+					Actor_Says(kActorMcCoy, 125, 13); //00-0125.AUD	I'm a little strapped for cash right now.
+					Actor_Says(kActorMcCoy, 1260, 13); // 00-1260.AUD	How about you run a tab?
+					Actor_Says(kActorHawkersBarkeep, 70, 15); //32-0070.AUD	This ain't a non-profit operation, buddy. No kale, no sale.
+					Actor_Says(kActorMcCoy, 8445, 14); //00-8445.AUD	Cough it up!
+					Delay(1000);
+					Actor_Says(kActorHawkersBarkeep, 180, 14); //32-0180.AUD	But if you're gonna sit there until I cough it up, well, here it is.
+					Actor_Change_Animation_Mode(kActorHawkersBarkeep, 23);
+					Actor_Change_Animation_Mode(kActorMcCoy, 23);
+					Delay(800);
+					Item_Pickup_Spin_Effect_From_Actor(kModelAnimationFlaskOfAbsinthe, kActorMcCoy, 0, 0);
+					Actor_Clue_Acquire(kActorMcCoy, kClueFlaskOfAbsinthe, true, kActorHawkersBarkeep);
+					Game_Flag_Set(kFlagObtainedFlask);
+					Delay(800);
+				}
+			}
+		}
 	}
 }
 

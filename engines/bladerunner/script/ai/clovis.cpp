@@ -412,20 +412,31 @@ bool AIScriptClovis::GoalChanged(int currentGoalNumber, int newGoalNumber) {
 		Actor_Face_Actor(kActorClovis, kActorSadik, true);
 		Actor_Says(kActorClovis, 20, 13);
 		Actor_Says(kActorClovis, 30, 12);
-		Actor_Face_Actor(kActorSadik, kActorClovis, true);
-		Actor_Says(kActorSadik, 10, kAnimationModeTalk);
-		Actor_Says(kActorClovis, 40, 17);
-		Actor_Says(kActorSadik, 20, kAnimationModeTalk); //08-0020.AUD	We got problem now, mon.
-		Actor_Face_Actor(kActorClovis, kActorMcCoy, true);
-		Actor_Face_Actor(kActorSadik, kActorMcCoy, true);
-		// Made it so Clovis says that McCoy is not a problem but an opportunity if he has high friendliness with him.
 		if (_vm->_cutContent) {
-			if (Actor_Query_Friendliness_To_Other(kActorClovis, kActorMcCoy) > 50
-			&& !Game_Flag_Query(kFlagMcCoyRetiredReplicant)) {		
-				Actor_Says(kActorClovis, 50, 14); //05-0050.AUD	This one? He's not a problem. He's an opportunity.
+			if (Actor_Query_Intelligence(kActorSadik) == 70) {
+				Actor_Face_Actor(kActorSadik, kActorClovis, true);
+				Actor_Says(kActorSadik, 10, kAnimationModeTalk);
+				Actor_Says(kActorClovis, 40, 17);
+				Actor_Says(kActorSadik, 20, kAnimationModeTalk); //08-0020.AUD	We got problem now, mon.
+				Actor_Face_Actor(kActorClovis, kActorMcCoy, true);
+				Actor_Face_Actor(kActorSadik, kActorMcCoy, true);
+				if (Actor_Query_Friendliness_To_Other(kActorClovis, kActorMcCoy) > 50
+				&& !Game_Flag_Query(kFlagMcCoyRetiredReplicant)) {		
+					Actor_Says(kActorClovis, 50, 14); //05-0050.AUD	This one? He's not a problem. He's an opportunity.
+				}
+			} else {
+				Actor_Face_Actor(kActorClovis, kActorMcCoy, true);
+				Actor_Face_Actor(kActorSadik, kActorMcCoy, true);
+				Delay(500);
 			}
 		} else {
-			Actor_Says(kActorClovis, 50, 14);
+			Actor_Face_Actor(kActorSadik, kActorClovis, true);
+			Actor_Says(kActorSadik, 10, kAnimationModeTalk);
+			Actor_Says(kActorClovis, 40, 17);
+			Actor_Says(kActorSadik, 20, kAnimationModeTalk); //08-0020.AUD	We got problem now, mon.
+			Actor_Face_Actor(kActorClovis, kActorMcCoy, true);
+			Actor_Face_Actor(kActorSadik, kActorMcCoy, true);
+			Actor_Says(kActorClovis, 50, 14); //05-0050.AUD	This one? He's not a problem. He's an opportunity.
 		}
 		Actor_Change_Animation_Mode(kActorClovis, kAnimationModeSit);
 		return true;
@@ -445,7 +456,8 @@ bool AIScriptClovis::GoalChanged(int currentGoalNumber, int newGoalNumber) {
 			Actor_Says(kActorClovis, 60, 30); //05-0060.AUD	You're weak my friend. I expected so much more from you.
 		}
 		if (_vm->_cutContent) {
-			if (Actor_Query_Friendliness_To_Other(kActorClovis, kActorMcCoy) > 50 
+			if (Game_Flag_Query(kFlagSadikIsReplicant)
+			&& Actor_Query_Friendliness_To_Other(kActorClovis, kActorMcCoy) > 50
 			&& !Game_Flag_Query(kFlagMcCoyRetiredReplicant)) {		
 				Actor_Says(kActorSadik, 30, kAnimationModeTalk); //08-0030.AUD	I'm thinkin' our brother not hearin' too good.
 				Actor_Says(kActorClovis, 70, 30);
@@ -461,7 +473,6 @@ bool AIScriptClovis::GoalChanged(int currentGoalNumber, int newGoalNumber) {
 		// Adding in this line here recifies that.
 		if (_vm->_cutContent) {
 			Actor_Says(kActorSadik, 220, kAnimationModeTalk);//08-0220.AUD	Clovis wants to see you. Bring you back into family.
-			Delay (1000);
 		}	
 		if (_vm->_cutContent) {
 			if (Actor_Query_Friendliness_To_Other(kActorClovis, kActorMcCoy) > 50 
@@ -479,7 +490,7 @@ bool AIScriptClovis::GoalChanged(int currentGoalNumber, int newGoalNumber) {
 			Actor_Face_Current_Camera(5, true);
 			Actor_Says(kActorClovis, 100, 17);
 		}
-		Delay(1000);
+		Delay(2000);
 		if (!Game_Flag_Query(kFlagSadikIsReplicant)) {
 			Actor_Clue_Acquire(kActorMcCoy, kClueStaggeredbyPunches, true, kActorSadik);
 		}
@@ -867,6 +878,19 @@ bool AIScriptClovis::GoalChanged(int currentGoalNumber, int newGoalNumber) {
 					if (Actor_Clue_Query(kActorMcCoy, kClueDNAMarcus)) {
 						Item_Pickup_Spin_Effect_From_Actor(kModelAnimationDNADataDisc, kActorClovis, 0, 0);
 						Delay(1500);
+						if (Actor_Query_Is_In_Current_Set(kActorSadik)
+						&& Actor_Query_Friendliness_To_Other(kActorClovis, kActorMcCoy) > 50
+						&& Actor_Query_Intelligence(kActorSadik) == 90
+						&& !Game_Flag_Query(kFlagMcCoyRetiredReplicant)) {
+							Actor_Face_Actor(kActorSadik, kActorMcCoy, true);
+							Actor_Face_Actor(kActorMcCoy, kActorSadik, true);
+							Actor_Face_Actor(kActorClovis, kActorSadik, true);
+							Actor_Says(kActorSadik, 280, kAnimationModeTalk); //08-0280.AUD	You for real I’m thinking.
+							Actor_Says(kActorMcCoy, 2215, 14); //00-2215.AUD	That’s right.
+							Delay(1000);
+							Actor_Face_Actor(kActorMcCoy, kActorClovis, true);
+							Actor_Face_Actor(kActorClovis, kActorMcCoy, true);	
+						}				
 					}
 					Actor_Says(kActorMcCoy, 8170, kAnimationModeTalk); //00-8170.AUD	There you go.
 					Delay(1000);
@@ -889,9 +913,9 @@ bool AIScriptClovis::GoalChanged(int currentGoalNumber, int newGoalNumber) {
 		Actor_Says(kActorMcCoy, 8505, kAnimationModeTalk); //00-8505.AUD	It's true then. You've-- We've only got four years.
 		// Made it so Clovis will only say the DNA information will be enough to make a difference if McCoy has found ALL of the DNA information.
 		if (_vm->_cutContent) {
-			if (Game_Flag_Query(kFlagSadikIsReplicant)) {
-				if (Actor_Clue_Query(kActorMcCoy, kClueDNATyrell)
-				&& Actor_Clue_Query(kActorMcCoy, kClueDNAChew)) {
+			if (Actor_Query_Intelligence(kActorClovis) == 100 
+			&& Actor_Query_Intelligence(kActorSadik) == 90) {
+				if (Actor_Clue_Query(kActorMcCoy, kClueDNATyrell)) {
 					if (Actor_Query_Friendliness_To_Other(kActorClovis, kActorMcCoy) > 50
 					&& !Game_Flag_Query(kFlagMcCoyRetiredReplicant)) {
 						Actor_Says(kActorClovis, 1300, kAnimationModeTalk); //05-1300.AUD	Yes. Of course, I could be hit by lightning tomorrow but with the information 
@@ -905,7 +929,44 @@ bool AIScriptClovis::GoalChanged(int currentGoalNumber, int newGoalNumber) {
 					Actor_Says(kActorMcCoy, 1885, kAnimationModeTalk); //00-1885.AUD	I’ll take that as a yes.
 					Delay(1000);
 				}
-			} else {
+			} else if (Actor_Query_Intelligence(kActorClovis) == 80 
+			&& Actor_Query_Intelligence(kActorSadik) == 90) {
+				if (Actor_Clue_Query(kActorMcCoy, kClueDNATyrell)
+				&& Actor_Clue_Query(kActorMcCoy, kClueDNAChew)
+				&& Actor_Clue_Query(kActorMcCoy, kClueDNAMoraji)) {
+					if (Actor_Query_Friendliness_To_Other(kActorClovis, kActorMcCoy) > 50
+					&& !Game_Flag_Query(kFlagMcCoyRetiredReplicant)) {
+						Actor_Says(kActorClovis, 1300, kAnimationModeTalk); //05-1300.AUD	Yes. Of course, I could be hit by lightning tomorrow but with the information 
+					} else {
+						Delay(2000);
+						Actor_Says(kActorMcCoy, 1885, kAnimationModeTalk); //00-1885.AUD	I’ll take that as a yes.
+						Delay(1000);
+					}
+				} else {
+					Delay(2000);
+					Actor_Says(kActorMcCoy, 1885, kAnimationModeTalk); //00-1885.AUD	I’ll take that as a yes.
+					Delay(1000);
+				}
+			} else if (Actor_Query_Intelligence(kActorClovis) == 100 
+			&& Actor_Query_Intelligence(kActorSadik) == 70) {
+				if (Actor_Clue_Query(kActorMcCoy, kClueDNATyrell)
+				&& Actor_Clue_Query(kActorMcCoy, kClueDNASebastian)
+				&& Actor_Clue_Query(kActorMcCoy, kClueDNAMarcus)) {
+					if (Actor_Query_Friendliness_To_Other(kActorClovis, kActorMcCoy) > 50
+					&& !Game_Flag_Query(kFlagMcCoyRetiredReplicant)) {
+						Actor_Says(kActorClovis, 1300, kAnimationModeTalk); //05-1300.AUD	Yes. Of course, I could be hit by lightning tomorrow but with the information 
+					} else {
+						Delay(2000);
+						Actor_Says(kActorMcCoy, 1885, kAnimationModeTalk); //00-1885.AUD	I’ll take that as a yes.
+						Delay(1000);
+					}
+				} else {
+					Delay(2000);
+					Actor_Says(kActorMcCoy, 1885, kAnimationModeTalk); //00-1885.AUD	I’ll take that as a yes.
+					Delay(1000);
+				}
+			} else if (Actor_Query_Intelligence(kActorClovis) == 80 
+			&& Actor_Query_Intelligence(kActorSadik) == 70) {
 				if (Actor_Clue_Query(kActorMcCoy, kClueDNATyrell)
 				&& Actor_Clue_Query(kActorMcCoy, kClueDNASebastian)
 				&& Actor_Clue_Query(kActorMcCoy, kClueDNAChew)

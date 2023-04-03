@@ -123,6 +123,11 @@ void SceneScriptBB08::ActorChangedGoal(int actorId, int newGoal, int oldGoal, bo
 }
 
 void SceneScriptBB08::PlayerWalkedIn() {
+	if (_vm->_cutContent) {
+		if (Global_Variable_Query(kVariableChapter) == 3) {
+			Game_Flag_Set(kFlagBB08Visited); 
+		}
+	}
 	if (Game_Flag_Query(kFlagBB09toBB08)) {
 #if BLADERUNNER_ORIGINAL_BUGS
 #else

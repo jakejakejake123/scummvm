@@ -159,7 +159,9 @@ void SceneScriptPS14::PlayerWalkedIn() {
 			Actor_Says(kActorOfficerGrayford, 300, kAnimationModeTalk); //24-0300.AUD	Over there!
 			Actor_Says(kActorOfficerGrayford, 0, kAnimationModeTalk); //24-0000.AUD	It’s that Rep McCoy! Take it down!
 			Actor_Says(kActorOfficerGrayford, 10, kAnimationModeTalk); //24-0010.AUD	Get Guzza on the horn ASAP. We got him cornered.
-			Actor_Says(kActorOfficerGrayford, 260, kAnimationModeTalk); //24-0260.AUD	We’re gonna nail your ass, McCoy!
+			if (Actor_Query_Intelligence(kActorOfficerGrayford) == 30) {	
+				Actor_Says(kActorOfficerGrayford, 260, kAnimationModeTalk); //24-0260.AUD	We’re gonna nail your ass, McCoy!
+			}
 			// If McCoy doesn't have the evidence or retired a human he is arrested and it is game over.
 			if (!Actor_Clue_Query(kActorMcCoy, kClueBriefcase)) {
 				Actor_Change_Animation_Mode(kActorOfficerGrayford, kAnimationModeCombatAttack);
@@ -170,35 +172,43 @@ void SceneScriptPS14::PlayerWalkedIn() {
 				Actor_Change_Animation_Mode(kActorMcCoy, kAnimationModeDie);
 				Actor_Retired_Here(kActorMcCoy, 12, 12, true, -1);
 			} else {
-				Actor_Says(kActorMcCoy, 710, 23); //00-0710.AUD	Hold it! I'm not a Replicant, I got proof!		 
-				Actor_Says(kActorOfficerGrayford, 20, kAnimationModeTalk); //24-0020.AUD	Don’t bullshit, McCoy!
-				Actor_Says(kActorMcCoy, 715, 23); //00-0715.AUD	It's all in there!
-				Actor_Says(kActorOfficerGrayford, 30, kAnimationModeTalk); //24-0030.AUD	Let’s get the bomb squad out here!
-				//The Crystal will vouch for me line will only play if you are on good terms with Crystal meaning not having Lucy and Dektoras global affection goals activated.	 
-				if (Global_Variable_Query(kVariableAffectionTowards) == kAffectionTowardsDektora 	 
-				|| Global_Variable_Query(kVariableAffectionTowards) == kAffectionTowardsLucy) {
-					if (Actor_Query_Friendliness_To_Other(kActorSteele, kActorMcCoy) > 59) {
-						Actor_Says(kActorMcCoy, 720, kAnimationModeTalk); //00-0720.AUD	Talk to Crystal Steele, she'll vouch for me.
-					}
+				Actor_Says(kActorMcCoy, 710, 23); //00-0710.AUD	Hold it! I'm not a Replicant, I got proof!	
+				if (Actor_Query_Intelligence(kActorOfficerGrayford) == 30) {	 
+					Actor_Says(kActorOfficerGrayford, 20, kAnimationModeTalk); //24-0020.AUD	Don’t bullshit, McCoy!
 				}
-				Actor_Says(kActorOfficerGrayford, 40, kAnimationModeTalk); //24-0040.AUD	Drop your gun, put your hands in the air and then we’ll talk.
-				Actor_Change_Animation_Mode(kActorMcCoy, 4);
-				Delay(400);
-				Actor_Change_Animation_Mode(kActorMcCoy, 0);
+				Actor_Says(kActorMcCoy, 715, 23); //00-0715.AUD	It's all in there!
+				if (Actor_Query_Intelligence(kActorOfficerGrayford) == 50) {	 
+					Actor_Says(kActorOfficerGrayford, 30, kAnimationModeTalk); //24-0030.AUD	Let’s get the bomb squad out here!
+				}
+				//The Crystal will vouch for me line will only play if you are on good terms with Crystal meaning not having Lucy and Dektoras global affection goals activated.	 
+				if (Global_Variable_Query(kVariableAffectionTowards) != kAffectionTowardsDektora 	 
+				&& Global_Variable_Query(kVariableAffectionTowards) != kAffectionTowardsLucy
+				&& Actor_Query_Friendliness_To_Other(kActorSteele, kActorMcCoy) > 59
+				&& !Game_Flag_Query(kFlagMcCoyRetiredHuman)) {
+					Actor_Says(kActorMcCoy, 720, kAnimationModeTalk); //00-0720.AUD	Talk to Crystal Steele, she'll vouch for me.
+				}
+				if (Actor_Query_Intelligence(kActorOfficerGrayford) == 50) {	
+					Actor_Says(kActorOfficerGrayford, 40, kAnimationModeTalk); //24-0040.AUD	Drop your gun, put your hands in the air and then we’ll talk.
+					Actor_Change_Animation_Mode(kActorMcCoy, 4);
+					Delay(400);
+					Actor_Change_Animation_Mode(kActorMcCoy, 0);
+				}
 				Actor_Says(kActorOfficerGrayford, 50, kAnimationModeTalk); //24-0050.AUD	Okay. Come on out!
-				//McCoy walks up to Grayford
 				Player_Loses_Control();
 				Loop_Actor_Walk_To_Actor(kActorMcCoy, kActorOfficerGrayford, 48, true, false);
-				Actor_Says(kActorOfficerGrayford, 60, kAnimationModeTalk); //24-0060.AUD	If you don’t follow my exact instructions, we’re gonna shred you into a thousand pieces.
-				Actor_Says(kActorMcCoy, 725, 13); //00-0725.AUD	Relax! I hear ya.
+				Player_Gains_Control();
+				if (Actor_Query_Intelligence(kActorOfficerGrayford) == 30) {	
+					Actor_Says(kActorOfficerGrayford, 60, kAnimationModeTalk); //24-0060.AUD	If you don’t follow my exact instructions, we’re gonna shred you into a thousand pieces.
+					Actor_Says(kActorMcCoy, 725, 13); //00-0725.AUD	Relax! I hear ya.
+				}
 				Actor_Says(kActorOfficerGrayford, 70, kAnimationModeTalk); //24-0070.AUD	All right, assume the position. On the ground!
-				Actor_Says(kActorOfficerGrayford, 80, kAnimationModeTalk); //24-0080.AUD	I swear to God, McCoy…
-				Actor_Says(kActorOfficerGrayford, 90, kAnimationModeTalk); //24-0090.AUD	if you are lying, if you’ve killed any humans in the process…
-				Actor_Says(kActorOfficerGrayford, 100, kAnimationModeTalk); //24-0100.AUD	you gonna wish we disposed you right here and now.
+				if (Actor_Query_Intelligence(kActorOfficerGrayford) == 30) {	
+					Actor_Says(kActorOfficerGrayford, 80, kAnimationModeTalk); //24-0080.AUD	I swear to God, McCoy…
+					Actor_Says(kActorOfficerGrayford, 90, kAnimationModeTalk); //24-0090.AUD	if you are lying, if you’ve killed any humans in the process…
+					Actor_Says(kActorOfficerGrayford, 100, kAnimationModeTalk); //24-0100.AUD	you gonna wish we disposed you right here and now.
+				}
 				Actor_Says(kActorOfficerGrayford, 110, kAnimationModeTalk); //24-0110.AUD	Take him in!
 				Music_Stop(1u);
-				Player_Gains_Control();
-				// Removed invisibility code, instead placed Grayford outside of the set.
 				Actor_Set_At_XYZ(kActorOfficerGrayford, 180.04, 11.73, -5.42, 0);
 				Game_Flag_Set(kFlagMcCoyFreedOfAccusations);
 				// Added in flag for the endgame.

@@ -187,6 +187,13 @@ bool SceneScriptDR06::ClickedOn3DObject(const char *objectName, bool a2) {
 						Delay(2000);
 						Actor_Says(kActorMcCoy, 170, 13); //00-0170.AUD	Damn.
 						Actor_Says(kActorMcCoy, 8575, 14); // More useless junk.
+						Delay(2000);
+						Actor_Says(kActorMcCoy, 8525, kAnimationModeTalk); // generic "hmph"
+						Delay(1000);
+						Ambient_Sounds_Remove_All_Non_Looping_Sounds(true);
+						Ambient_Sounds_Remove_All_Looping_Sounds(1u);
+						Game_Flag_Set(kFlagNR01toNR02);
+						Set_Enter(kSetNR02, kSceneNR02);
 					} else {
 						Actor_Change_Animation_Mode(kActorMcCoy, 23);
 						Delay(800);

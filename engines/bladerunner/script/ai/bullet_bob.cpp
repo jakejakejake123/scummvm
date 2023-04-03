@@ -462,10 +462,19 @@ bool AIScriptBulletBob::GoalChanged(int currentGoalNumber, int newGoalNumber) {
 	if (_vm->_cutContent) {
 		if ( newGoalNumber == kGoalBulletBobDead
 		&& !Game_Flag_Query(kFlagBulletBobIsReplicant)
-		&& Player_Query_Current_Scene() == kSceneRC04) {
+		&& Player_Query_Current_Scene() == kSceneRC04
+		&& !Actor_Clue_Query(kActorMcCoy, kClueBobShotInColdBlood)) {
 			Delay(2000);
-			if (Player_Query_Agenda() != kPlayerAgendaSurly 
-			&& Player_Query_Agenda() != kPlayerAgendaErratic) {
+			if (Player_Query_Agenda() == kPlayerAgendaSurly 
+			&& Player_Query_Agenda() == kPlayerAgendaErratic) {
+				Actor_Voice_Over(2110, kActorVoiceOver);
+				Delay(1000);
+				Actor_Voice_Over(2080, kActorVoiceOver); //99-2080.AUD	I’d done the city a favor.
+				Game_Flag_Set(kFlagMcCoyRetiredHuman);
+				Actor_Modify_Friendliness_To_Other(kActorClovis, kActorMcCoy, 2);
+				Actor_Modify_Friendliness_To_Other(kActorSteele, kActorMcCoy, -2);
+				Actor_Modify_Friendliness_To_Other(kActorGuzza, kActorMcCoy, -2);
+			} else if (Player_Query_Agenda() == kPlayerAgendaPolite) {
 				Actor_Voice_Over(2100, kActorVoiceOver);
 				Actor_Voice_Over(2110, kActorVoiceOver); //99-2110.AUD	Bob was a psychopath but I was almost sure he wasn't a Replicant.
 				Actor_Voice_Over(2420, kActorVoiceOver); //99-2420.AUD	I got the cold cut boys down here and they performed a bone-marrow on him.
@@ -473,9 +482,10 @@ bool AIScriptBulletBob::GoalChanged(int currentGoalNumber, int newGoalNumber) {
 				Outtake_Play(kOuttakeAway1, true, -1);
 				Actor_Set_Goal_Number(kActorMcCoy, kGoalMcCoyArrested);
 			} else {
+				Actor_Voice_Over(2100, kActorVoiceOver);
 				Actor_Voice_Over(2110, kActorVoiceOver);
-				Delay(1000);
-				Actor_Voice_Over(2080, kActorVoiceOver); //99-2080.AUD	I’d done the city a favor.
+				Actor_Voice_Over(2120, kActorVoiceOver);
+				Actor_Voice_Over(2130, kActorVoiceOver);
 				Game_Flag_Set(kFlagMcCoyRetiredHuman);
 				Actor_Modify_Friendliness_To_Other(kActorClovis, kActorMcCoy, 2);
 				Actor_Modify_Friendliness_To_Other(kActorSteele, kActorMcCoy, -2);

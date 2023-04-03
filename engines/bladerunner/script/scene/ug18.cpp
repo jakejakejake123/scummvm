@@ -337,8 +337,6 @@ void SceneScriptUG18::ActorChangedGoal(int actorId, int newGoal, int oldGoal, bo
 			Actor_Face_Actor(kActorClovis, kActorMcCoy, true);
 			Actor_Face_Actor(kActorMcCoy, kActorSadik, true);
 			Actor_Face_Actor(kActorSadik, kActorMcCoy, true);
-			Sound_Play(kSfxSHOTCOK1, 100, 0, 100, 50);
-			Delay(1000);
 			Music_Play(kMusicMoraji, 71, 0, 0, -1, kMusicLoopPlayOnce, 2);
 			Ambient_Sounds_Play_Sound(kSfxKICK1, 90, 99, 0, 0);
 			Actor_Change_Animation_Mode(kActorSadik, 62);
@@ -579,23 +577,8 @@ void SceneScriptUG18::DialogueQueueFlushed(int a1) {
 		Player_Gains_Control();
 		ADQ_Add_Pause(2000);
 		if (_vm->_cutContent) {
-			if (Actor_Query_Friendliness_To_Other(kActorClovis, kActorMcCoy) < 51
-			|| Game_Flag_Query(kFlagMcCoyRetiredReplicant)) { 
-				Actor_Set_Targetable(kActorClovis, false);
-				Delay(2000);
-				Actor_Says(kActorClovis, 650, 14);
-				Actor_Says(kActorSadik, 370, 14);
-				Actor_Says(kActorClovis, 1320, 14);
-				Actor_Clue_Acquire(kActorMcCoy, kClueClovisOrdersMcCoysDeath, true, kActorClovis);
-				Game_Flag_Set(kFlagMcCoyRetiredHuman);
-				Player_Loses_Control();
-				Loop_Actor_Walk_To_XYZ(kActorMcCoy, -684.71f, 0.0f, 171.59f, 0, false, true, false);
-				Player_Gains_Control();
-				Ambient_Sounds_Remove_All_Non_Looping_Sounds(true);
-				Ambient_Sounds_Remove_All_Looping_Sounds(1u);
-				Game_Flag_Set(kFlagUG18toUG13);
-				Set_Enter(kSetUG13, kSceneUG13);
-			} else {
+			if (Actor_Query_Friendliness_To_Other(kActorClovis, kActorMcCoy) > 50
+			&& !Game_Flag_Query(kFlagMcCoyRetiredReplicant)) { 
 				Actor_Says(kActorSadik, 360, 13); //08-0360.AUD	The Hunter? He do us a favor, mon. He bagged us a traitor.
 				Actor_Says(kActorSadik, 380, 13); //08-0380.AUD	You better than I thought, mon.
 				Actor_Says(kActorClovis, 660, 13); // Brother, you killed a human...
@@ -616,6 +599,21 @@ void SceneScriptUG18::DialogueQueueFlushed(int a1) {
 				Actor_Modify_Friendliness_To_Other(kActorClovis, kActorMcCoy, 2);
 				Actor_Set_Goal_Number(kActorSadik, kGoalSadikUG18Leave);
 				Actor_Set_Goal_Number(kActorClovis, kGoalClovisUG18Leave);
+				Player_Loses_Control();
+				Loop_Actor_Walk_To_XYZ(kActorMcCoy, -684.71f, 0.0f, 171.59f, 0, false, true, false);
+				Player_Gains_Control();
+				Ambient_Sounds_Remove_All_Non_Looping_Sounds(true);
+				Ambient_Sounds_Remove_All_Looping_Sounds(1u);
+				Game_Flag_Set(kFlagUG18toUG13);
+				Set_Enter(kSetUG13, kSceneUG13);	
+			} else {
+				Actor_Set_Targetable(kActorClovis, false);
+				Delay(2000);
+				Actor_Says(kActorClovis, 650, 14);
+				Actor_Says(kActorSadik, 370, 14);
+				Actor_Says(kActorClovis, 1320, 14);
+				Actor_Clue_Acquire(kActorMcCoy, kClueClovisOrdersMcCoysDeath, true, kActorClovis);
+				Game_Flag_Set(kFlagMcCoyRetiredHuman);
 				Player_Loses_Control();
 				Loop_Actor_Walk_To_XYZ(kActorMcCoy, -684.71f, 0.0f, 171.59f, 0, false, true, false);
 				Player_Gains_Control();
@@ -678,15 +676,8 @@ void SceneScriptUG18::DialogueQueueFlushed(int a1) {
 		ADQ_Add_Pause(2000);
 		if (_vm->_cutContent) {
 			Actor_Set_Targetable(kActorClovis, false);
-			if (Game_Flag_Query(kFlagMcCoyRetiredReplicant)) { 
-				ADQ_Add(kActorClovis, 650, 14);
-				ADQ_Add(kActorSadik, 370, 14);
-				ADQ_Add(kActorClovis, 1320, 14);
-				Actor_Set_Goal_Number(kActorGuzza, kGoalGuzzaUG18ShotBySadik);
-				Actor_Retired_Here(kActorGuzza, 72, 32, true, kActorSadik);
-				Actor_Set_Goal_Number(kActorClovis, kGoalClovisUG18GuzzaDied);
-				Scene_Exits_Enable();
-			} else {
+			if (Actor_Query_Friendliness_To_Other(kActorClovis, kActorMcCoy) > 50
+			&& !Game_Flag_Query(kFlagMcCoyRetiredReplicant)) { 
 				ADQ_Add(kActorClovis, 60, 13); //05-0060.AUD	You're weak my friend. I expected so much more from you.
 				Scene_Exits_Enable();
 				Player_Loses_Control();
@@ -696,6 +687,14 @@ void SceneScriptUG18::DialogueQueueFlushed(int a1) {
 				Ambient_Sounds_Remove_All_Looping_Sounds(1u);
 				Game_Flag_Set(kFlagUG18toUG13);
 				Set_Enter(kSetUG13, kSceneUG13);
+			} else {
+				ADQ_Add(kActorClovis, 650, 14);
+				ADQ_Add(kActorSadik, 370, 14);
+				ADQ_Add(kActorClovis, 1320, 14);
+				Actor_Set_Goal_Number(kActorGuzza, kGoalGuzzaUG18ShotBySadik);
+				Actor_Retired_Here(kActorGuzza, 72, 32, true, kActorSadik);
+				Actor_Set_Goal_Number(kActorClovis, kGoalClovisUG18GuzzaDied);
+				Scene_Exits_Enable();
 			}
 		} else {
 			ADQ_Add(kActorClovis, 650, 14);
@@ -751,7 +750,9 @@ void SceneScriptUG18::talkWithGuzza() {
 	Actor_Says(kActorMcCoy, 5875, 13); //00-5875.AUD	Let me guess. Clovis gave them to you.
 	if (_vm->_cutContent) {
 		if (Actor_Query_Friendliness_To_Other(kActorGuzza, kActorMcCoy) > 50) {
-			Actor_Says(kActorGuzza, 830, 3); //04-0830.AUD	I must seem pretty gullible but it sounded on the level.
+			if (!Game_Flag_Query(kFlagGuzzaIsStupid)) {
+				Actor_Says(kActorGuzza, 830, 3); //04-0830.AUD	I must seem pretty gullible but it sounded on the level.
+			}
 			Actor_Says(kActorGuzza, 840, 12); //04-0840.AUD	He called you his brother. Said you came down in the moonbus with all of them.
 			Actor_Says(kActorGuzza, 850, 14); //04-0850.AUD	He said Tyrell was using you to get inside the LPD.
 			Actor_Says(kActorGuzza, 860, 13); //04-0860.AUD	You hadn’t been on the job too long, so I thought… maybe.
@@ -776,19 +777,24 @@ void SceneScriptUG18::talkWithGuzza() {
 	Loop_Actor_Walk_To_XYZ(kActorMcCoy, -205.13f, 0.0f, -184.47f, 0, false, false, false);
 	Actor_Face_Actor(kActorMcCoy, kActorGuzza, true);
 	Actor_Says(kActorMcCoy, 5900, 15); //00-5900.AUD	I got it all right here. Photos, files, discs, the works. It ain’t a pretty sight.
-	Actor_Says(kActorGuzza, 880, 13); //04-0880.AUD	You can’t blame a guy for trying to better himself.
 	if (_vm->_cutContent) {
-		if (Player_Query_Agenda() == kPlayerAgendaPolite) {
-			Actor_Says(kActorMcCoy, 5905, 9); //
-			Actor_Says(kActorMcCoy, 5910, 12); //
-			// Made it so McCoy only mentions what Guzza did to the pimps if Walls told him about it. It could have been mentioned in the folder but since Walls mentions it so casually
-			// it doesn't exactly seem to be hidden. 
-			if (Game_Flag_Query(kFlagWallsUpset)) {
-				Actor_Says(kActorMcCoy, 5915, 13); //00-5915.AUD	Torching two pimps who wouldn’t pay you off when you were working Vice?
-				Actor_Says(kActorGuzza, 890, 16); //04-0890.AUD	Hey! Those two had it coming.
-			}	
+		if (Actor_Query_Friendliness_To_Other(kActorGuzza, kActorMcCoy) < 51) {
+			Actor_Says(kActorGuzza, 880, 13); //04-0880.AUD	You can’t blame a guy for trying to better himself.
+			if (Player_Query_Agenda() == kPlayerAgendaPolite) {
+				Actor_Says(kActorMcCoy, 5905, 9); //
+				Actor_Says(kActorMcCoy, 5910, 12); //
+				if (Game_Flag_Query(kFlagGuzzaIsStupid)) {
+					Actor_Says(kActorMcCoy, 5915, 13); //00-5915.AUD	Torching two pimps who wouldn’t pay you off when you were working Vice?
+					Actor_Says(kActorGuzza, 890, 16); //04-0890.AUD	Hey! Those two had it coming.
+				}
+			}
+		} else {
+			Delay(2000);
+			Actor_Says(kActorMcCoy, 8395, 18); //00-8395.AUD	You don't have anything to say?
+			Delay(2000);
 		}
 	} else {
+		Actor_Says(kActorGuzza, 880, 13); //04-0880.AUD	You can’t blame a guy for trying to better himself.
 		Actor_Says(kActorMcCoy, 5905, 9); //
 		Actor_Says(kActorMcCoy, 5910, 12); //
 		Actor_Says(kActorMcCoy, 5915, 13); //00-5915.AUD	Torching two pimps who wouldn’t pay you off when you were working Vice?
@@ -801,20 +807,25 @@ void SceneScriptUG18::talkWithGuzza() {
 		if (Actor_Query_Friendliness_To_Other(kActorGuzza, kActorMcCoy) > 50) {
 			Actor_Says(kActorGuzza, 900, 15); //04-0900.AUD	It finally reaches the point where you don’t even think about what happened yesterday.
 			Actor_Says(kActorGuzza, 910, 12); //04-0910.AUD	Only what’s coming to you tomorrow.
+		} else {
+			Actor_Says(kActorGuzza, 920, 16); //04-0920.AUD	Twenty years in the job, kid. And nobody was gonna touch me.
+			Actor_Says(kActorGuzza, 930, 15);
 		}
 	} else {
 		Actor_Says(kActorGuzza, 900, 15); //04-0900.AUD	It finally reaches the point where you don’t even think about what happened yesterday.
 		Actor_Says(kActorGuzza, 910, 12); //04-0910.AUD	Only what’s coming to you tomorrow.
-	}
-	Actor_Says(kActorGuzza, 920, 16); //04-0920.AUD	Twenty years in the job, kid. And nobody was gonna touch me.
-	if (_vm->_cutContent) {
-		Actor_Says(kActorGuzza, 930, 15);
+		Actor_Says(kActorGuzza, 920, 16); //04-0920.AUD	Twenty years in the job, kid. And nobody was gonna touch me.
 	}
 	if (_vm->_cutContent) {
 		if (!Game_Flag_Query(kFlagMcCoyIsHelpingReplicants)) {
 			Actor_Says(kActorMcCoy, 5925, 14); //00-5925.AUD	Helping Reps also part of the job?
-			Actor_Says(kActorGuzza, 940, 14); //04-0940.AUD	I was gonna whack them myself once the heat was off. Tie up those loose ends.
-			Actor_Says(kActorMcCoy, 5930, 18); //00-5930.AUD	Once I was out of the way.
+			if (!Game_Flag_Query(kFlagGuzzaIsStupid)
+			&& Actor_Query_Friendliness_To_Other(kActorGuzza, kActorMcCoy) > 50) {
+				Actor_Says(kActorGuzza, 940, 14); //04-0940.AUD	I was gonna whack them myself once the heat was off. Tie up those loose ends.
+				Actor_Says(kActorMcCoy, 5930, 18); //00-5930.AUD	Once I was out of the way.
+			} else {
+				Delay(1000);
+			}
 		} else {
 			Delay(1000);
 		}
@@ -848,10 +859,12 @@ void SceneScriptUG18::talkWithGuzza() {
 			|| Player_Query_Agenda() == kPlayerAgendaErratic) {
 				Actor_Says(kActorMcCoy, 5970, 14); //00-5970.AUD	Just give me the goddamn briefcase.
 			}
-			Actor_Says(kActorGuzza, 1000, 3); //04-1000.AUD	What the hell good are you now? You’re still gonna have to stand trial, you’re still gonna have to go on the Machine. You’ve got nothing to trade, kid. It’s over.
-			if (Player_Query_Agenda() == kPlayerAgendaSurly
-			|| Player_Query_Agenda() == kPlayerAgendaErratic) {
-				Actor_Says(kActorMcCoy, 5975, 15); //00-5975.AUD	I’ll be the one to decide that, fat man.
+			if (Actor_Query_Friendliness_To_Other(kActorGuzza, kActorMcCoy) < 51) {
+				Actor_Says(kActorGuzza, 1000, 3); //04-1000.AUD	What the hell good are you now? You’re still gonna have to stand trial, you’re still gonna have to go on the Machine. You’ve got nothing to trade, kid. It’s over.
+				if (Player_Query_Agenda() == kPlayerAgendaSurly
+				|| Player_Query_Agenda() == kPlayerAgendaErratic) {
+					Actor_Says(kActorMcCoy, 5975, 15); //00-5975.AUD	I’ll be the one to decide that, fat man.
+				}
 			}
 			Actor_Says(kActorGuzza, 990, 13); //04-0990.AUD	I thought we could help each other out. Now, shit! There’s no turning back.
 			Actor_Says(kActorMcCoy, 3910, 16); //00-3910.AUD	You’re lying.
@@ -897,8 +910,8 @@ void SceneScriptUG18::talkWithGuzza() {
 			
 			}
 		} else if (!Game_Flag_Query(kFlagMcCoyIsHelpingReplicants)
-			&& Global_Variable_Query(kVariableAffectionTowards) != kAffectionTowardsDektora 
-			&& Global_Variable_Query(kVariableAffectionTowards) != kAffectionTowardsLucy) {
+		&& Global_Variable_Query(kVariableAffectionTowards) != kAffectionTowardsDektora 
+		&& Global_Variable_Query(kVariableAffectionTowards) != kAffectionTowardsLucy) {
 			// McCoy acted like a true blade runner.
 			Actor_Says(kActorMcCoy, 5935, 14); //00-5935.AUD	That’s my job, Guzza. I’m still a Blade Runner.
 			if (Player_Query_Agenda() == kPlayerAgendaSurly
@@ -978,20 +991,39 @@ void SceneScriptUG18::talkWithClovis() {
 	Actor_Set_Goal_Number(kActorGuzza, kGoalGuzzaUG18Target);
 	ADQ_Add(kActorSadik, 350, 13);
 	ADQ_Add_Pause(1500);
-	ADQ_Add(kActorGuzza, 1150, 58);
-	ADQ_Add(kActorClovis, 600, 13);
+	ADQ_Add(kActorGuzza, 1150, 58); //04-1150.AUD	You might as well give it up, Clovis. You and your people don’t have a chance.
+	ADQ_Add(kActorClovis, 600, 13); //05-0600.AUD	We stand a greater chance of success than you, Lieutenant.
 	ADQ_Add_Pause(1000);
-	ADQ_Add(kActorGuzza, 1160, 58);
-	ADQ_Add_Pause(500);
-	ADQ_Add(kActorGuzza, 1170, 59);
-	ADQ_Add(kActorGuzza, 1180, 58);
-	ADQ_Add(kActorClovis, 610, 13);
-	ADQ_Add(kActorGuzza, 1190, 58);
-	ADQ_Add(kActorClovis, 620, 13); // Lieutenant, we have everything we need...
-	ADQ_Add(kActorGuzza, 1200, 59);
-	// Added in a line.
+	if (_vm->_cutContent) {	
+		if (Game_Flag_Query(kFlagGuzzaIsStupid)) {
+			ADQ_Add(kActorGuzza, 1160, 58); //04-1160.AUD	McCoy and I were just talking about how to get you guys out of your jam.
+			ADQ_Add_Pause(500);
+			ADQ_Add(kActorGuzza, 1170, 59); //04-1170.AUD	We came up with a plan.
+			ADQ_Add(kActorGuzza, 1180, 58); //04-1180.AUD	But you got to show yourself first. We-- we got to do this in person.	
+		} else {
+			ADQ_Add(kActorGuzza, 1190, 58); //04-1190.AUD	Without me, you for sure ain’t going nowhere.
+		}
+	} else {
+		ADQ_Add(kActorGuzza, 1160, 58); //04-1160.AUD	McCoy and I were just talking about how to get you guys out of your jam.
+		ADQ_Add_Pause(500);
+		ADQ_Add(kActorGuzza, 1170, 59); //04-1170.AUD	We came up with a plan.
+		ADQ_Add(kActorGuzza, 1180, 58); //04-1180.AUD	But you got to show yourself first. We-- we got to do this in person.
+	}
+	ADQ_Add(kActorClovis, 610, 13); //05-0610.AUD	(laughs) And if I told you that Sadik has a pulse rifle trained right at your heart?	
 	if (_vm->_cutContent) {
-		ADQ_Add(kActorGuzza, 9000, 59); //04-9000.AUD	Help!
+		ADQ_Add_Pause(1000);
+	} else {
+		ADQ_Add(kActorGuzza, 1190, 58); //04-1190.AUD	Without me, you for sure ain’t going nowhere.
+	}
+	ADQ_Add(kActorClovis, 620, 13); // Lieutenant, we have everything we need...
+	if (_vm->_cutContent) {
+		if (!Game_Flag_Query(kFlagGuzzaIsStupid)) {
+			ADQ_Add(kActorGuzza, 9000, 59); //04-9000.AUD	Help!
+		} else {
+			ADQ_Add(kActorGuzza, 1200, 59); //04-1200.AUD	Too bad. We were becoming such good friends.
+		}
+	} else {
+		ADQ_Add(kActorGuzza, 1200, 59); //04-1200.AUD	Too bad. We were becoming such good friends.	
 	}
 }
 

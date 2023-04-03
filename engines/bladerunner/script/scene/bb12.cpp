@@ -41,7 +41,7 @@ void SceneScriptBB12::InitializeScene() {
 	// know it's her and will assume it's Pris.
 	// Made it so Sebastian has to be conscious and not know that McCoy is a blade runner so he will appear and talk to McCoy about the doll.
 	if (_vm->_cutContent) {
-		if  (Game_Flag_Query(kFlagBB11Visited) 
+		if (Game_Flag_Query(kFlagBB08Visited) 
 		&& !Game_Flag_Query(kFlagSebastianKnockedOut) 
 		&& !Actor_Clue_Query(kActorSebastian, kClueMcCoyIsABladeRunner)
 		&& !Game_Flag_Query(kFlagNewDoll)

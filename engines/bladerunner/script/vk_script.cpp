@@ -713,7 +713,13 @@ void VKScript::askLucy(int questionId) {
 		VK_Play_Speech_Line(kActorLucy, 1390, 0.5f);
 		break;
 	case 7425:                          // Low 06
-		VK_Play_Speech_Line(kActorLucy, 1400, 0.5f);
+		if (_vm->_cutContent) {
+			if (Actor_Query_Intelligence(kActorLucy) == 70) {
+				VK_Play_Speech_Line(kActorLucy, 1400, 0.5f);
+			}
+		} else {
+			VK_Play_Speech_Line(kActorLucy, 1400, 0.5f);
+		}
 		if (Game_Flag_Query(kFlagLucyIsReplicant)) {
 			VK_Subject_Reacts(20, -2, 9, -2);
 		} else {
@@ -724,14 +730,21 @@ void VKScript::askLucy(int questionId) {
 	case 7430:                          // Low 07
 		// Lucy cuts her sentence short here.
 		// She is not interrupted.
-		VK_Play_Speech_Line(kActorLucy, 1420, 0.5f);
+		VK_Play_Speech_Line(kActorLucy, 1420, 0.5f); //06-1420.AUD	I'm not married. And I never--
 		if (Game_Flag_Query(kFlagLucyIsReplicant)) {
 			VK_Subject_Reacts(20, -1, 9, -3);
 		} else {
 			VK_Subject_Reacts(30, 9, -1, -3);
 		}
-		VK_Play_Speech_Line(kActorLucy, 1430, 0.5f);
-		VK_Play_Speech_Line(kActorMcCoy, 7940, 0.5f);
+		if (_vm->_cutContent) {
+			if (Actor_Query_Intelligence(kActorLucy) == 70) {
+				VK_Play_Speech_Line(kActorLucy, 1430, 0.5f); //06-1430.AUD	Oh, I see. It's a game, like you said.
+			} else if (Actor_Query_Intelligence(kActorLucy) == 50) {
+				VK_Play_Speech_Line(kActorMcCoy, 8075, 0.5f); //00-8075.AUD	Let's move on.
+			}
+		} else {
+			VK_Play_Speech_Line(kActorMcCoy, 7940, 0.5f);
+		}
 		VK_Eye_Animates(2);
 		break;
 	case 7435:                          // Low 08
@@ -898,7 +911,13 @@ void VKScript::askLucy(int questionId) {
 		}
 		VK_Play_Speech_Line(kActorLucy, 1770, 0.5f);
 		VK_Eye_Animates(2);
-		VK_Play_Speech_Line(kActorLucy, 1780, 0.5f);
+		if (_vm->_cutContent) {
+			if (Actor_Query_Intelligence(kActorLucy) == 50) {
+				VK_Play_Speech_Line(kActorLucy, 1780, 0.5f);
+			}
+		} else {
+			VK_Play_Speech_Line(kActorLucy, 1780, 0.5f);
+		}
 		break;
 	case 7515:                          // Medium 06
 		if (Game_Flag_Query(kFlagLucyIsReplicant)) {
@@ -929,17 +948,27 @@ void VKScript::askLucy(int questionId) {
 		} else {
 			VK_Subject_Reacts(20, 9, -1, 0);
 		}
-		VK_Play_Speech_Line(kActorLucy, 1840, 0.5f);
-		VK_Play_Speech_Line(kActorLucy, 1850, 0.5f);
+		if (_vm->_cutContent) {
+			if (Actor_Query_Intelligence(kActorLucy) == 70) {
+				VK_Play_Speech_Line(kActorLucy, 1840, 0.5f); //06-1840.AUD	Oh, I see what you mean. They should be left to grow in the wild. 
+			}
+		} else {
+			VK_Play_Speech_Line(kActorLucy, 1840, 0.5f); //06-1840.AUD	Oh, I see what you mean. They should be left to grow in the wild. 
+		}
+		VK_Play_Speech_Line(kActorLucy, 1850, 0.5f); //06-1850.AUD	But they don't anymore, do they?
 		VK_Play_Speech_Line(kActorMcCoy, 8005, 0.5f);
 		break;
 	case 7540:                          // Medium 09
 		if (Game_Flag_Query(kFlagLucyIsReplicant)) {
 			VK_Eye_Animates(3);
-			VK_Play_Speech_Line(kActorLucy, 1860, 0.5f);
-			VK_Play_Speech_Line(kActorMcCoy, 8010, 0.5f);
+			if (_vm->_cutContent) {
+				if (Actor_Query_Intelligence(kActorLucy) == 50) {
+					VK_Play_Speech_Line(kActorLucy, 1860, 0.5f); //06-1860.AUD	What's fishing?
+					VK_Play_Speech_Line(kActorMcCoy, 8010, 0.5f);
+				}
+			}
 			VK_Subject_Reacts(50, -2, 12, 5);
-			VK_Play_Speech_Line(kActorLucy, 1870, 0.5f);
+			VK_Play_Speech_Line(kActorLucy, 1870, 0.5f); //06-1870.AUD	Oh, I could never do that.
 		} else {
 			VK_Subject_Reacts(60, 12, -2, 5);
 			VK_Play_Speech_Line(kActorLucy, 1880, 0.5f);
@@ -952,12 +981,15 @@ void VKScript::askLucy(int questionId) {
 		} else {
 			VK_Subject_Reacts(10, 8, -1, -2);
 		}
-		VK_Play_Speech_Line(kActorLucy, 1900, 0.5f);
 		if (_vm->_cutContent) {
-			if (Player_Query_Agenda() == kPlayerAgendaPolite) {
-				VK_Play_Speech_Line(kActorMcCoy, 8015, 0.5f); 
+			if (Actor_Query_Intelligence(kActorLucy) == 70) {
+				VK_Play_Speech_Line(kActorLucy, 1900, 0.5f);
+				if (Player_Query_Agenda() == kPlayerAgendaPolite) {
+					VK_Play_Speech_Line(kActorMcCoy, 8015, 0.5f); 
+				}
 			}
 		} else {
+			VK_Play_Speech_Line(kActorLucy, 1900, 0.5f);
 			VK_Play_Speech_Line(kActorMcCoy, 8015, 0.5f);
 		}
 		break;
@@ -983,7 +1015,11 @@ void VKScript::askLucy(int questionId) {
 			if (Player_Query_Agenda() != kPlayerAgendaSurly 
 			&& Player_Query_Agenda() != kPlayerAgendaErratic) {
 				VK_Play_Speech_Line(kActorMcCoy, 8025, 0.5f); //00-8025.AUD	Wasps sting.
-				VK_Play_Speech_Line(kActorLucy, 1940, 0.5f);
+				if (Actor_Query_Intelligence(kActorLucy) == 70) {
+					VK_Play_Speech_Line(kActorLucy, 1940, 0.5f); //06-2030.AUD	Ugh…
+				} else if (Actor_Query_Intelligence(kActorLucy) == 50) {
+					VK_Play_Speech_Line(kActorLucy, 1940, 0.5f); //06-1940.AUD	It'd be worth it.
+				}
 			}
 		} else {
 			VK_Play_Speech_Line(kActorMcCoy, 8025, 0.5f); //00-8025.AUD	Wasps sting.
@@ -996,6 +1032,7 @@ void VKScript::askLucy(int questionId) {
 		VK_Play_Speech_Line(kActorMcCoy, 8030, 0.5f);
 #else
 		// McCoy is interrupted here
+		Delay(1500u);
 		VK_Play_Speech_Line(kActorMcCoy, 8030, 0.0f);
 #endif // BLADERUNNER_ORIGINAL_BUGS
 		VK_Play_Speech_Line(kActorLucy, 1960, 0.5f);
@@ -1059,7 +1096,13 @@ void VKScript::askLucy(int questionId) {
 		} else {
 			VK_Subject_Reacts(50, 10, -3, 15);
 		}
-		VK_Play_Speech_Line(kActorLucy, 2080, 0.5f);
+		if (_vm->_cutContent) {
+			if (Actor_Query_Intelligence(kActorLucy) == 70) {
+				VK_Play_Speech_Line(kActorLucy, 2080, 0.5f); //06-2080.AUD	They're not really friends, are they?
+			}
+		} else {
+			VK_Play_Speech_Line(kActorLucy, 2080, 0.5f); //06-2080.AUD	They're not really friends, are they?
+		}
 		break;
 	case 7620:                          // High 02
 		if (Game_Flag_Query(kFlagLucyIsReplicant)) {
@@ -1092,12 +1135,24 @@ void VKScript::askLucy(int questionId) {
 		break;
 	case 7670:                          // High 04
 		if (Game_Flag_Query(kFlagLucyIsReplicant)) {
-			VK_Play_Speech_Line(kActorLucy, 2130, 0.5f);
+			VK_Play_Speech_Line(kActorLucy, 2130, 0.5f); //06-2130.AUD	I'm sure I did something.
 			VK_Subject_Reacts(30, -3, 11, 8);
-			VK_Play_Speech_Line(kActorLucy, 2140, 0.5f);
+			if (_vm->_cutContent) {
+				if (Actor_Query_Intelligence(kActorLucy) == 50) {
+					VK_Play_Speech_Line(kActorLucy, 2140, 0.5f);
+				}
+			} else {
+				VK_Play_Speech_Line(kActorLucy, 2140, 0.5f);
+			}
 		} else {
 			VK_Subject_Reacts(20, 10, 0, 5);
-			VK_Play_Speech_Line(kActorLucy, 2150, 0.5f);
+			if (_vm->_cutContent) {
+				if (Actor_Query_Intelligence(kActorLucy) == 50) {
+					VK_Play_Speech_Line(kActorLucy, 2150, 0.5f); //06-2150.AUD	Father says I make mistakes a lot.
+				}
+			} else {
+				VK_Play_Speech_Line(kActorLucy, 2150, 0.5f); //06-2150.AUD	Father says I make mistakes a lot.
+			}
 			VK_Play_Speech_Line(kActorLucy, 2160, 0.5f);
 		}
 		break;
@@ -1117,11 +1172,24 @@ void VKScript::askLucy(int questionId) {
 		} else {
 			VK_Subject_Reacts(50, 13, 0, 0);
 		}
-		VK_Play_Speech_Line(kActorLucy, 2190, 0.5f);
-		VK_Play_Speech_Line(kActorMcCoy, 8060, 0.5f);
-		VK_Play_Speech_Line(kActorLucy, 2200, 0.5f);
-		VK_Subject_Reacts(30, -4, -4, -5);
-		VK_Play_Speech_Line(kActorLucy, 2210, 0.5f);
+		if (_vm->_cutContent) {
+			if (Actor_Query_Intelligence(kActorLucy) == 50) {
+				VK_Play_Speech_Line(kActorLucy, 2190, 0.5f); //06-2190.AUD	You're cruel.
+				VK_Play_Speech_Line(kActorMcCoy, 8060, 0.5f);
+				VK_Play_Speech_Line(kActorLucy, 2200, 0.5f);
+				VK_Subject_Reacts(30, -4, -4, -5);
+				VK_Play_Speech_Line(kActorLucy, 2210, 0.5f);
+			} else if (Actor_Query_Intelligence(kActorLucy) == 70) {
+				VK_Play_Speech_Line(kActorLucy, 1990, 0.5f);
+				VK_Subject_Reacts(30, -4, -4, -5);
+			}
+		} else {
+			VK_Play_Speech_Line(kActorLucy, 2190, 0.5f); //06-2190.AUD	You're cruel.
+			VK_Play_Speech_Line(kActorMcCoy, 8060, 0.5f);
+			VK_Play_Speech_Line(kActorLucy, 2200, 0.5f);
+			VK_Subject_Reacts(30, -4, -4, -5);
+			VK_Play_Speech_Line(kActorLucy, 2210, 0.5f);
+		}
 		break;
 	case 7705:                          // High 07
 		if (Game_Flag_Query(kFlagLucyIsReplicant)) {
@@ -1269,7 +1337,13 @@ void VKScript::askGrigorian(int questionId) {
 		}
 		break;
 	case 7405:                          // Low 02
-		VK_Play_Speech_Line(kActorGrigorian, 510, 0.5f);
+		if (_vm->_cutContent) {
+			if (Game_Flag_Query(kFlagGrigorianIsReplicant)) {
+				VK_Play_Speech_Line(kActorGrigorian, 510, 0.5f); //11-0510.AUD	Crying?
+			}
+		} else {
+			VK_Play_Speech_Line(kActorGrigorian, 510, 0.5f); //11-0510.AUD	Crying?
+		}
 		if (_vm->_cutContent) {
 			if (Game_Flag_Query(kFlagGrigorianIsReplicant)) {
 				VK_Subject_Reacts(40, -5, 14, 10);
@@ -1351,7 +1425,15 @@ void VKScript::askGrigorian(int questionId) {
 		} else {
 			VK_Subject_Reacts(10, 6, 8, -5);
 		}
-		VK_Play_Speech_Line(kActorGrigorian, 580, 0.5f);
+		if (_vm->_cutContent) {
+			if (!Game_Flag_Query(kFlagGrigorianIsReplicant)) {
+				VK_Play_Speech_Line(kActorGrigorian, 580, 0.5f); //11-0580.AUD	I'd donate it to a family that couldn't afford an animal.
+			} else {
+				VK_Play_Speech_Line(kActorGrigorian, 780, 0.5f); //11-0780.AUD	Well, it sounds like I deserved it.
+			}
+		} else {
+			VK_Play_Speech_Line(kActorGrigorian, 580, 0.5f); //11-0580.AUD	I'd donate it to a family that couldn't afford an animal.
+		}
 		break;
 	case 7425:                          // Low 06
 		if (_vm->_cutContent) {
@@ -1363,15 +1445,7 @@ void VKScript::askGrigorian(int questionId) {
 		} else {
 			VK_Subject_Reacts(30, 8, -2, 5);
 		}
-		if (_vm->_cutContent) {
-			if (Game_Flag_Query(kFlagGrigorianIsReplicant)) {
-				VK_Play_Speech_Line(kActorGrigorian, 840, 0.5f); //11-0840.AUD	Ridiculous.
-			} else {
-				VK_Play_Speech_Line(kActorGrigorian, 590, 0.5f); //11-0580.AUD	I'd donate it to a family that couldn't afford an animal.
-			}
-		} else {
-			VK_Play_Speech_Line(kActorGrigorian, 590, 0.5f); //11-0580.AUD	I'd donate it to a family that couldn't afford an animal.
-		}
+		VK_Play_Speech_Line(kActorGrigorian, 590, 0.5f); //11-0590.AUD	I'd call the police.
 		break;
 	case 7430:                          // Low 07
 		VK_Eye_Animates(2);
@@ -1412,7 +1486,15 @@ void VKScript::askGrigorian(int questionId) {
 		}
 		break;
 	case 7435:                          // Low 08
-		VK_Play_Speech_Line(kActorGrigorian, 620, 0.5f); //11-0620.AUD	Safe.
+		if (_vm->_cutContent) {
+			if (Game_Flag_Query(kFlagGrigorianIsReplicant)) {
+				VK_Play_Speech_Line(kActorGrigorian, 770, 0.5f); // 11-0770.AUD	I'm not answering that.
+			} else {
+				VK_Play_Speech_Line(kActorGrigorian, 620, 0.5f); //11-0620.AUD	Safe.
+			}
+		} else {
+			VK_Play_Speech_Line(kActorGrigorian, 620, 0.5f); //11-0620.AUD	Safe.
+		}
 		if (_vm->_cutContent) {
 			if (Game_Flag_Query(kFlagGrigorianIsReplicant)) {
 				VK_Subject_Reacts(40, -5, 14, 10);
@@ -1528,7 +1610,15 @@ void VKScript::askGrigorian(int questionId) {
 		} else {
 			VK_Subject_Reacts(5, 7, -4, -7);
 		}
-		VK_Play_Speech_Line(kActorGrigorian, 710, 0.5f);
+		if (_vm->_cutContent) {
+			if (Game_Flag_Query(kFlagGrigorianIsReplicant)) {
+				VK_Play_Speech_Line(kActorGrigorian, 600, 0.5f); //11-0600.AUD	That's offensive.
+			} else {
+				VK_Play_Speech_Line(kActorGrigorian, 710, 0.5f);
+			}
+		} else {
+			VK_Play_Speech_Line(kActorGrigorian, 710, 0.5f);
+		}
 		break;
 	case 7470:                          // Low 15
 		if (_vm->_cutContent) {
@@ -1669,7 +1759,7 @@ void VKScript::askGrigorian(int questionId) {
 		} else {
 			VK_Subject_Reacts(30, 8, 5, 8);
 		}
-		VK_Play_Speech_Line(kActorGrigorian, 820, 0.5f);
+		VK_Play_Speech_Line(kActorGrigorian, 820, 0.5f); //11-0820.AUD	I wouldn't eat it and I'd confront him.
 		break;
 	case 7535:                          // Medium 08
 		if (_vm->_cutContent) {
@@ -1750,8 +1840,15 @@ void VKScript::askGrigorian(int questionId) {
 		}
 		break;
 	case 7580:                          // Medium 12
-		VK_Play_Speech_Line(kActorGrigorian, 900, 0.5f);
-		VK_Play_Speech_Line(kActorMcCoy, 8180, 0.5f);
+		if (_vm->_cutContent) {
+			if (!Game_Flag_Query(kFlagGrigorianIsReplicant)) {
+				VK_Play_Speech_Line(kActorGrigorian, 900, 0.5f);
+				VK_Play_Speech_Line(kActorMcCoy, 8180, 0.5f);
+			}
+		} else {
+			VK_Play_Speech_Line(kActorGrigorian, 900, 0.5f);
+			VK_Play_Speech_Line(kActorMcCoy, 8180, 0.5f);
+		}
 		if (_vm->_cutContent) {
 			if (Game_Flag_Query(kFlagGrigorianIsReplicant)) {
 				VK_Subject_Reacts(40, -5, 14, 10);
@@ -1761,15 +1858,7 @@ void VKScript::askGrigorian(int questionId) {
 		} else {
 			VK_Subject_Reacts(20, 8, 3, 6);
 		}
-		if (_vm->_cutContent) {
-			if (Game_Flag_Query(kFlagGrigorianIsReplicant)) {
-				VK_Play_Speech_Line(kActorGrigorian, 960, 0.5f); //11-0960.AUD	I'd leave.
-			} else {
-				VK_Play_Speech_Line(kActorGrigorian, 910, 0.5f);
-			}
-		} else {
-			VK_Play_Speech_Line(kActorGrigorian, 910, 0.5f);
-		}
+		VK_Play_Speech_Line(kActorGrigorian, 910, 0.5f);
 		break;
 	case 7585:                          // Medium 13
 		if (_vm->_cutContent) {
@@ -1802,15 +1891,14 @@ void VKScript::askGrigorian(int questionId) {
 			VK_Subject_Reacts(25, 8, -3, 5);
 		}
 		VK_Play_Speech_Line(kActorGrigorian, 920, 0.5f);
-		if (_vm->_cutContent) {
-				VK_Play_Speech_Line(kActorMcCoy, 8185, 0.5f); //00-8185.AUD	You wouldn't report him?
-			if (Game_Flag_Query(kFlagGrigorianIsReplicant)) {
+		VK_Play_Speech_Line(kActorMcCoy, 8185, 0.5f); //00-8185.AUD	You wouldn't report him?
+		if (_vm->_cutContent) {	
+			if (!Game_Flag_Query(kFlagGrigorianIsReplicant)) {
 				VK_Play_Speech_Line(kActorMcCoy, 550, 0.5f); //11-0550.AUD	No.
 			} else {
 				VK_Play_Speech_Line(kActorGrigorian, 930, 0.5f);
 			}
 		} else {
-			VK_Play_Speech_Line(kActorMcCoy, 8185, 0.5f); //00-8185.AUD	You wouldn't report him?
 			VK_Play_Speech_Line(kActorGrigorian, 930, 0.5f);
 		}
 		break;
@@ -1928,7 +2016,16 @@ void VKScript::askGrigorian(int questionId) {
 			if (Game_Flag_Query(kFlagGrigorianIsReplicant)) {
 				VK_Play_Speech_Line(kActorGrigorian, 1040, 0.5f); //11-1040.AUD	I'd say that's frightening, wouldn't you?
 			}
-			VK_Play_Speech_Line(kActorMcCoy, 8535, 0.5f);     // M: yeah...
+			if (_vm->_cutContent) {
+				if (Game_Flag_Query(kFlagMcCoyIsHelpingReplicants)
+				|| Player_Query_Agenda() == kPlayerAgendaPolite) {
+					VK_Play_Speech_Line(kActorMcCoy, 8535, 0.5f);     // M: yeah...
+				} else {
+					VK_Play_Speech_Line(kActorMcCoy, 8345, 0.5f); //00-8345.AUD	I wouldn't know.
+				}
+			} else {
+				VK_Play_Speech_Line(kActorMcCoy, 8535, 0.5f);     // M: yeah...
+			}
 		} else {
 			VK_Play_Speech_Line(kActorMcCoy, 8190, 0.5f);
 			VK_Play_Speech_Line(kActorGrigorian, 1020, 0.5f);
@@ -1960,9 +2057,11 @@ void VKScript::askGrigorian(int questionId) {
 		break;
 	case 7705:                          // High 07
 		VK_Eye_Animates(3);
-		VK_Play_Speech_Line(kActorGrigorian, 1070, 0.5f);
 		if (_vm->_cutContent) {
-			VK_Play_Speech_Line(kActorMcCoy, 8536, 0.5f);     // M: But if you did...
+			if (!Game_Flag_Query(kFlagGrigorianIsReplicant)) {
+				VK_Play_Speech_Line(kActorGrigorian, 1070, 0.5f);
+				VK_Play_Speech_Line(kActorMcCoy, 8536, 0.5f);     // M: But if you did...
+			}
 		}
 		VK_Play_Speech_Line(kActorMcCoy, 7720, 0.5f);
 		VK_Play_Speech_Line(kActorMcCoy, 7725, 0.5f);
@@ -2249,15 +2348,18 @@ void VKScript::askDektora(int questionId) {
 		} else {
 			VK_Subject_Reacts(60, 7, 7, 20);
 		}
-		VK_Play_Speech_Line(kActorDektora, 1740, 0.5f);
 		if (_vm->_cutContent) {
-			if (Player_Query_Agenda() != kPlayerAgendaSurly 
-			&& Player_Query_Agenda() != kPlayerAgendaErratic) {
-				VK_Play_Speech_Line(kActorMcCoy, 7380, 0.5f); // M: Just answer the question please.
-			} else {
-				VK_Play_Speech_Line(kActorMcCoy, 7805, 0.5f); //00-7805.AUD	Answer the question.
+			if (Actor_Query_Intelligence(kActorDektora) == 70) {
+				VK_Play_Speech_Line(kActorDektora, 1740, 0.5f); //03-1740.AUD	Do you mean, what makes me afraid?
+				if (Player_Query_Agenda() != kPlayerAgendaSurly 
+				&& Player_Query_Agenda() != kPlayerAgendaErratic) {
+					VK_Play_Speech_Line(kActorMcCoy, 7380, 0.5f); // M: Just answer the question please.
+				} else {
+					VK_Play_Speech_Line(kActorMcCoy, 7805, 0.5f); //00-7805.AUD	Answer the question.
+				}
 			}
 		} else {
+			VK_Play_Speech_Line(kActorDektora, 1740, 0.5f); //03-1740.AUD	Do you mean, what makes me afraid?
 			VK_Play_Speech_Line(kActorMcCoy, 7805, 0.5f);
 		}
 		VK_Eye_Animates(2);
@@ -2272,7 +2374,13 @@ void VKScript::askDektora(int questionId) {
 		VK_Play_Speech_Line(kActorMcCoy, 7806, 0.5f); // M: They are meant to provoke a reaction.
 		break;
 	case 7455:                          // Low 12
-		VK_Play_Speech_Line(kActorDektora, 1780, 0.5f);
+		if (_vm->_cutContent) {
+			if (Actor_Query_Intelligence(kActorDektora) == 70) {
+				VK_Play_Speech_Line(kActorDektora, 1780, 0.5f);
+			}
+		} else {
+			VK_Play_Speech_Line(kActorDektora, 1780, 0.5f);
+		}
 		VK_Subject_Reacts(35, 3, 5, 0);
 		VK_Play_Speech_Line(kActorDektora, 1790, 0.5f);
 		if (_vm->_cutContent) {
@@ -2393,9 +2501,17 @@ void VKScript::askDektora(int questionId) {
 		if (Game_Flag_Query(kFlagDektoraIsReplicant)) {
 			VK_Play_Speech_Line(kActorDektora, 2000, 0.5f);
 			VK_Subject_Reacts(72, -3, 12, 2);
-			VK_Play_Speech_Line(kActorDektora, 2010, 0.5f);
-			VK_Play_Speech_Line(kActorMcCoy, 7835, 0.5f);
-			VK_Play_Speech_Line(kActorDektora, 2020, 0.5f);
+			if (_vm->_cutContent) {
+				if (Actor_Query_Intelligence(kActorDektora) == 70) {
+					VK_Play_Speech_Line(kActorDektora, 2010, 0.5f); //03-2010.AUD	The army doesn't do that kind of thing anymore.
+					VK_Play_Speech_Line(kActorMcCoy, 7835, 0.5f);
+					VK_Play_Speech_Line(kActorDektora, 2020, 0.5f);
+				}
+			} else {
+				VK_Play_Speech_Line(kActorDektora, 2010, 0.5f); //03-2010.AUD	The army doesn't do that kind of thing anymore.
+				VK_Play_Speech_Line(kActorMcCoy, 7835, 0.5f);
+				VK_Play_Speech_Line(kActorDektora, 2020, 0.5f);
+			}
 		} else {
 			VK_Subject_Reacts(60, 16, -1, 2);
 			VK_Play_Speech_Line(kActorDektora, 2030, 0.5f);
@@ -2425,9 +2541,17 @@ void VKScript::askDektora(int questionId) {
 		break;
 	case 7535:                          // Medium 08
 		if (Game_Flag_Query(kFlagDektoraIsReplicant)) {
-			VK_Play_Speech_Line(kActorDektora, 2080, 0.5f);
-			VK_Play_Speech_Line(kActorMcCoy, 7845, 0.5f);
-			VK_Play_Speech_Line(kActorDektora, 2090, 0.5f);
+			if (_vm->_cutContent) {
+				if (Actor_Query_Intelligence(kActorDektora) == 70) {
+					VK_Play_Speech_Line(kActorDektora, 2080, 0.5f);
+					VK_Play_Speech_Line(kActorMcCoy, 7845, 0.5f);
+					VK_Play_Speech_Line(kActorDektora, 2090, 0.5f);
+				}
+			} else {
+				VK_Play_Speech_Line(kActorDektora, 2080, 0.5f);
+				VK_Play_Speech_Line(kActorMcCoy, 7845, 0.5f);
+				VK_Play_Speech_Line(kActorDektora, 2090, 0.5f);
+			}
 			VK_Subject_Reacts(60, -6, 11, 0);
 			VK_Play_Speech_Line(kActorDektora, 2100, 0.5f);
 		} else {
@@ -2456,7 +2580,8 @@ void VKScript::askDektora(int questionId) {
 			VK_Subject_Reacts(80, 17, -1, 80);
 			VK_Play_Speech_Line(kActorDektora, 2150, 1.0f);
 			if (_vm->_cutContent) {
-				if (Actor_Query_Friendliness_To_Other(kActorDektora, kActorMcCoy) < 50) {
+				if (Actor_Query_Friendliness_To_Other(kActorDektora, kActorMcCoy) < 50
+				&& Actor_Query_Intelligence(kActorDektora) == 70) {
 					VK_Play_Speech_Line(kActorDektora, 2160, 0.5f);
 					if (Player_Query_Agenda() == kPlayerAgendaSurly 
 					|| Player_Query_Agenda() == kPlayerAgendaErratic) {
@@ -2623,7 +2748,8 @@ void VKScript::askDektora(int questionId) {
 				VK_Play_Speech_Line(kActorMcCoy, 7890, 0.5f);
 				VK_Play_Speech_Line(kActorDektora, 2390, 0.5f);
 				VK_Subject_Reacts(90, -3, 14, 50);
-				if (Actor_Query_Friendliness_To_Other(kActorDektora, kActorMcCoy) < 50) {
+				if (Actor_Query_Friendliness_To_Other(kActorDektora, kActorMcCoy) < 50
+				&& Actor_Query_Intelligence(kActorDektora) == 70) {
 					VK_Play_Speech_Line(kActorDektora, 2400, 0.5f); // D: You want to kidnap me, don't you.
 					VK_Play_Speech_Line(kActorMcCoy, 7895, 0.0f);
 				}
@@ -2631,7 +2757,8 @@ void VKScript::askDektora(int questionId) {
 				VK_Subject_Reacts(80, 18, -3, 10);
 				VK_Play_Speech_Line(kActorDektora, 2410, 0.5f);
 				VK_Play_Speech_Line(kActorMcCoy, 8534, 0.0f); //00-8534.AUD	Just answer--
-				if (Actor_Query_Friendliness_To_Other(kActorDektora, kActorMcCoy) < 50) {
+				if (Actor_Query_Friendliness_To_Other(kActorDektora, kActorMcCoy) < 50
+				&& Actor_Query_Intelligence(kActorDektora) == 70) {
 					VK_Play_Speech_Line(kActorDektora, 2430, 0.5f);
 				} else {
 					VK_Play_Speech_Line(kActorDektora, 2060, 0.5f); //03-2060.AUD	No.
@@ -2675,8 +2802,7 @@ void VKScript::askDektora(int questionId) {
 		break;
 	case 7690:                          // High 06
 		if (_vm->_cutContent) {
-			if (Actor_Query_Friendliness_To_Other(kActorDektora, kActorMcCoy) < 50
-			|| Game_Flag_Query(kFlagDektoraIsReplicant)) {
+			if (Actor_Query_Intelligence(kActorDektora) == 90) {
 				VK_Play_Speech_Line(kActorDektora, 2470, 0.5f);
 			}
 		} else {
@@ -2708,7 +2834,7 @@ void VKScript::askDektora(int questionId) {
 			VK_Play_Speech_Line(kActorDektora, 2500, 0.5f);
 			VK_Subject_Reacts(85, 7, 14, 20);
 			if (_vm->_cutContent) {
-				if (Actor_Query_Friendliness_To_Other(kActorDektora, kActorMcCoy) < 50) {
+				if (Actor_Query_Intelligence(kActorDektora) == 70) {
 					VK_Play_Speech_Line(kActorDektora, 2510, 0.5f); //03-2510.AUD	You create these… these situations and expect a response.
 					VK_Play_Speech_Line(kActorMcCoy, 7905, 0.5f); // M: Let's keep going, all right?
 				}
@@ -2743,9 +2869,18 @@ void VKScript::askDektora(int questionId) {
 		break;
 	case 7750:                          // High 09
 		if (Game_Flag_Query(kFlagDektoraIsReplicant)) {
-			VK_Play_Speech_Line(kActorDektora, 2580, 0.5f); //03-2580.AUD	Well, that's a charming little scenario you've created.
 			if (_vm->_cutContent) {
-				if (Actor_Query_Friendliness_To_Other(kActorDektora, kActorMcCoy) < 50) {
+				if (Actor_Query_Intelligence(kActorDektora) == 70) {
+					VK_Play_Speech_Line(kActorDektora, 2580, 0.5f); //03-2580.AUD	Well, that's a charming little scenario you've created.
+				} else if (Actor_Query_Intelligence(kActorDektora) == 90) {
+					VK_Play_Speech_Line(kActorDektora, 2150, 1.0f);
+				}
+			} else {
+				VK_Play_Speech_Line(kActorDektora, 2580, 0.5f); //03-2580.AUD	Well, that's a charming little scenario you've created.
+			}
+			if (_vm->_cutContent) {
+				if (Actor_Query_Friendliness_To_Other(kActorDektora, kActorMcCoy) < 50
+				&& Actor_Query_Intelligence(kActorDektora) == 70) {
 					VK_Subject_Reacts(90, -5, 14, 20);
 					VK_Play_Speech_Line(kActorDektora, 2590, 0.5f); //03-2590.AUD	You make me sick.
 					VK_Play_Speech_Line(kActorMcCoy, 7920, 0.5f);
@@ -2757,7 +2892,8 @@ void VKScript::askDektora(int questionId) {
 		} else {
 			VK_Subject_Reacts(90, 17, 3, 20);
 			if (_vm->_cutContent) {
-				if (Actor_Query_Friendliness_To_Other(kActorDektora, kActorMcCoy) < 50) {
+				if (Actor_Query_Friendliness_To_Other(kActorDektora, kActorMcCoy) < 50
+				&& Actor_Query_Intelligence(kActorDektora) == 70) {
 					VK_Play_Speech_Line(kActorDektora, 2600, 0.5f); //03-2600.AUD	My God! You're insane.
 					VK_Eye_Animates(3);
 					VK_Play_Speech_Line(kActorMcCoy, 7925, 0.5f);
@@ -3090,7 +3226,15 @@ void VKScript::askRunciter(int questionId) {
 			} else {
 				VK_Subject_Reacts(5, 6, 0, 0);
 			}
-			VK_Play_Speech_Line(kActorRunciter, 1120, 0.5f); // R: Fifty three
+			if (_vm->_cutContent) {
+				if (Game_Flag_Query(kFlagRunciterIsReplicant)) {
+					VK_Play_Speech_Line(kActorRunciter, 1190, 0.5f); //15-1190.AUD	I'm not answering that.
+				} else {
+					VK_Play_Speech_Line(kActorRunciter, 1120, 0.5f); // R: Fifty three
+				}
+			} else {
+				VK_Play_Speech_Line(kActorRunciter, 1120, 0.5f); // R: Fifty three
+			}
 			break;
 		case 7470:                          // Low 15
 			VK_Eye_Animates(2);
@@ -3126,8 +3270,16 @@ void VKScript::askRunciter(int questionId) {
 				}
 			} else {
 				VK_Subject_Reacts(50, 18, -1, 1);
-			}
-			VK_Play_Speech_Line(kActorRunciter, 1150, 0.5f); // R: Childhood is full of harsh...
+			} 
+			if (_vm->_cutContent) {
+				if (Game_Flag_Query(kFlagRunciterIsReplicant)) {
+					VK_Play_Speech_Line(kActorRunciter, 1030, 0.5f); //15-1030.AUD	And your point is?
+				} else {
+					VK_Play_Speech_Line(kActorRunciter, 1150, 0.5f); // R: Childhood is full of harsh...
+				}
+			} else {
+					VK_Play_Speech_Line(kActorRunciter, 1150, 0.5f); // R: Childhood is full of harsh...
+			}		
 			break;
 		case 7480:                          // Medium 02
 			if (_vm->_cutContent) {
@@ -3242,7 +3394,15 @@ void VKScript::askRunciter(int questionId) {
 			} else {
 				VK_Subject_Reacts(28, 12, 3, 1);
 			}
-			VK_Play_Speech_Line(kActorRunciter, 1230, 0.5f); // R: A Shameful waste...
+			if (_vm->_cutContent) {
+				if (Game_Flag_Query(kFlagRunciterIsReplicant)) {
+					VK_Play_Speech_Line(kActorRunciter, 1230, 0.5f); // R: A Shameful waste...
+				} else {
+					VK_Play_Speech_Line(kActorRunciter, 1080, 0.5f); //15-1080.AUD	I'd try to forgive him.
+				}
+			} else {
+				VK_Play_Speech_Line(kActorRunciter, 1080, 0.5f); //15-1080.AUD	I'd try to forgive him.
+			}		
 			break;
 		case 7535:                          // Medium 08
 			if (_vm->_cutContent) {
@@ -3286,7 +3446,14 @@ void VKScript::askRunciter(int questionId) {
 			} else {
 				VK_Subject_Reacts(8, 8, 2, 0);
 			}
-			VK_Play_Speech_Line(kActorRunciter, 1260, 0.5f); // R: Sometimes-
+			if (_vm->_cutContent) {
+				if (Actor_Query_Friendliness_To_Other(kActorRunciter, kActorMcCoy) < 50
+				|| Game_Flag_Query(kFlagRunciterIsReplicant)) {
+					VK_Play_Speech_Line(kActorRunciter, 1260, 0.5f); // R: Sometimes-
+				}
+			} else {
+				VK_Play_Speech_Line(kActorRunciter, 1260, 0.5f); // R: Sometimes-
+			}
 			VK_Play_Speech_Line(kActorMcCoy, 7555, 0.5f);
 			VK_Play_Speech_Line(kActorMcCoy, 7560, 0.5f);
 			VK_Eye_Animates(3);
@@ -3299,7 +3466,16 @@ void VKScript::askRunciter(int questionId) {
 			} else {
 				VK_Subject_Reacts(25, 12, -2, 1);
 			}
-			VK_Play_Speech_Line(kActorRunciter, 1270, 0.5f); // R: We all...
+			if (_vm->_cutContent) {
+				if (Actor_Query_Friendliness_To_Other(kActorRunciter, kActorMcCoy) < 50
+				|| Game_Flag_Query(kFlagRunciterIsReplicant)) {
+					VK_Play_Speech_Line(kActorRunciter, 1270, 0.5f); // R: We all...
+				} else {
+					VK_Play_Speech_Line(kActorRunciter, 1350, 0.5f); //15-1350.AUD	That's insane.
+				}
+			} else {
+				VK_Play_Speech_Line(kActorRunciter, 1270, 0.5f); // R: We all...
+			}		
 			break;
 		case 7565:                          // Medium 11
 			if (_vm->_cutContent) {
@@ -3389,7 +3565,15 @@ void VKScript::askRunciter(int questionId) {
 			} else {
 				VK_Subject_Reacts(68, 19, 4, 1);
 			}
-			VK_Play_Speech_Line(kActorRunciter, 1340, 0.5f); // R: A child...
+			if (_vm->_cutContent) {
+				if (Game_Flag_Query(kFlagRunciterIsReplicant)) {
+					VK_Play_Speech_Line(kActorRunciter, 1340, 0.5f); // R: A child...
+				} else {
+					VK_Play_Speech_Line(kActorRunciter, 1350, 0.5f); // R: That's insane
+				}
+			} else {
+				VK_Play_Speech_Line(kActorRunciter, 1340, 0.5f); // R: A child...
+			}
 			break;
 		case 7605:                          // High 01
 			if (_vm->_cutContent) {
@@ -3460,7 +3644,13 @@ void VKScript::askRunciter(int questionId) {
 			} else {
 				VK_Subject_Reacts(38, 16, 6, 3);
 			}
-			VK_Play_Speech_Line(kActorRunciter, 1390, 0.5f); // R: This test was written by a psychopath
+			if (_vm->_cutContent) {
+				if (!Game_Flag_Query(kFlagRunciterIsReplicant)) {
+					VK_Play_Speech_Line(kActorRunciter, 1390, 0.5f); // R: This test was written by a psychopath
+				}
+			} else {
+				VK_Play_Speech_Line(kActorRunciter, 1390, 0.5f); // R: This test was written by a psychopath
+			}
 			VK_Play_Speech_Line(kActorMcCoy, 7655, 0.5f);
 			VK_Play_Speech_Line(kActorMcCoy, 7660, 0.5f);
 			VK_Play_Speech_Line(kActorMcCoy, 7665, 0.5f);
@@ -3638,6 +3828,7 @@ void VKScript::askRunciter(int questionId) {
 			break;
 		case 7740:                          // High 08
 			if (_vm->_cutContent) {
+
 				if (Game_Flag_Query(kFlagRunciterIsReplicant)) {
 					VK_Subject_Reacts(40, -5, 14, 10);
 				} else {
@@ -3931,8 +4122,17 @@ void VKScript::askBulletBob(int questionId) {
 		break;
 	case 7390:                          // Calibration 02
 		VK_Subject_Reacts(48, 0, 0, 3);
-		VK_Play_Speech_Line(kActorBulletBob, 920, 0.5f);
-		VK_Play_Speech_Line(kActorMcCoy, 8230, 0.5f);
+		if (_vm->_cutContent) {
+			if (Actor_Query_Friendliness_To_Other(kActorBulletBob, kActorMcCoy) > 49
+			&& !Game_Flag_Query(kFlagBulletBobIsReplicant)) {
+				VK_Play_Speech_Line(kActorBulletBob, 920, 0.5f); //14-0970.AUD	What kind of candy-ass question is that?
+			} else {
+				VK_Play_Speech_Line(kActorBulletBob, 920, 0.5f); //14-0920.AUD	I sell Donuts. Come on is the whole thing gonna be this dull?
+			}
+		} else {
+			VK_Play_Speech_Line(kActorBulletBob, 920, 0.5f); //14-0920.AUD	I sell Donuts. Come on is the whole thing gonna be this dull?
+		}
+		VK_Play_Speech_Line(kActorMcCoy, 8230, 0.5f); //00-8230.AUD	Just answer the questions as truthfully as you can.
 		break;
 	case 7395:                          // Calibration 03
 		VK_Play_Speech_Line(kActorBulletBob, 930, 0.5f);
@@ -3953,7 +4153,15 @@ void VKScript::askBulletBob(int questionId) {
 		}
 		break;
 	case 7400:                          // Low 01
-		VK_Play_Speech_Line(kActorBulletBob, 950, 0.5f);
+		if (_vm->_cutContent) {
+			if (Game_Flag_Query(kFlagBulletBobIsReplicant)) {
+				VK_Play_Speech_Line(kActorBulletBob, 1350, 0.5f); //14-1350.AUD	I'd beat the crap out of him.
+			} else {
+				VK_Play_Speech_Line(kActorBulletBob, 950, 0.5f);
+			}
+		} else {
+			VK_Play_Speech_Line(kActorBulletBob, 950, 0.5f);
+		}
 		VK_Eye_Animates(1);
 		if (_vm->_cutContent) {
 			if (Game_Flag_Query(kFlagBulletBobIsReplicant)) {
@@ -3965,7 +4173,7 @@ void VKScript::askBulletBob(int questionId) {
 			VK_Subject_Reacts(10, -5, -6, 2);
 		}
 		if (_vm->_cutContent) {
-			if (Game_Flag_Query(kFlagBulletBobIsReplicant)) {
+			if (!Game_Flag_Query(kFlagBulletBobIsReplicant)) {
 				VK_Play_Speech_Line(kActorBulletBob, 960, 0.5f);
 			}
 		} else {
@@ -4041,7 +4249,15 @@ void VKScript::askBulletBob(int questionId) {
 		} else {
 			VK_Subject_Reacts(25, 9, 6, 5);
 		}
-		VK_Play_Speech_Line(kActorBulletBob, 1020, 0.5f);
+		if (_vm->_cutContent) {
+			if (!Game_Flag_Query(kFlagBulletBobIsReplicant)) {
+				VK_Play_Speech_Line(kActorBulletBob, 1020, 0.5f);
+			} else {
+				VK_Play_Speech_Line(kActorBulletBob, 970, 0.5f); //14-0970.AUD	What kind of candy-ass question is that?
+			}
+		} else {
+			VK_Play_Speech_Line(kActorBulletBob, 1020, 0.5f);
+		}
 		break;
 	case 7420:                          // Low 05
 		VK_Eye_Animates(1);
@@ -4061,8 +4277,6 @@ void VKScript::askBulletBob(int questionId) {
 			if (!Game_Flag_Query(kFlagBulletBobIsReplicant)) {
 				VK_Eye_Animates(3);
 				VK_Play_Speech_Line(kActorBulletBob, 1040, 0.5f); //14-1040.AUD	She'd better damn well get me what I want.
-			} else {
-				VK_Play_Speech_Line(kActorBulletBob, 1510, 0.5f); //14-1510.AUD	Oh, man. Why did you have to ruin it?
 			}
 		} else {
 			VK_Eye_Animates(3);
@@ -4228,16 +4442,21 @@ void VKScript::askBulletBob(int questionId) {
 			}
 		} else {
 			VK_Subject_Reacts(15, 5, 3, -5);
-		}
-		VK_Play_Speech_Line(kActorBulletBob, 1200, 0.5f);
-		VK_Eye_Animates(2);
+		}		
 		if (_vm->_cutContent) {
-			if (Actor_Query_Friendliness_To_Other(kActorBulletBob, kActorMcCoy) < 50
-			|| Game_Flag_Query(kFlagBulletBobIsReplicant)) {
-				VK_Play_Speech_Line(kActorBulletBob, 1210, 0.5f);
-				VK_Eye_Animates(1);
+			if (Game_Flag_Query(kFlagBulletBobIsReplicant)) {
+				VK_Play_Speech_Line(kActorBulletBob, 970, 0.5f); //14-0970.AUD	What kind of candy-ass question is that?				
+			} else {
+				VK_Play_Speech_Line(kActorBulletBob, 1200, 0.5f); //14-1200.AUD	Thirty five.	
+				if (Actor_Query_Friendliness_To_Other(kActorBulletBob, kActorMcCoy) < 50) {	
+					VK_Eye_Animates(2);	
+					VK_Play_Speech_Line(kActorBulletBob, 1210, 0.5f);
+					VK_Eye_Animates(1);
+				}
 			}
 		} else {
+			VK_Play_Speech_Line(kActorBulletBob, 1200, 0.5f); //14-1200.AUD	Thirty five.
+			VK_Eye_Animates(2);
 			VK_Play_Speech_Line(kActorBulletBob, 1210, 0.5f);
 			VK_Eye_Animates(1);
 		}
@@ -4287,7 +4506,15 @@ void VKScript::askBulletBob(int questionId) {
 		}
 		break;
 	case 7475:                          // Medium 01
-		VK_Play_Speech_Line(kActorBulletBob, 1250, 0.5f);
+		if (_vm->_cutContent) {
+			if (Game_Flag_Query(kFlagBulletBobIsReplicant)) {
+				VK_Play_Speech_Line(kActorBulletBob, 1250, 0.5f);
+			} else {
+				VK_Play_Speech_Line(kActorBulletBob, 1550, 0.5f); //14-1550.AUD	I'd kick the crap out of that sicko.
+			}
+		} else {
+			VK_Play_Speech_Line(kActorBulletBob, 1250, 0.5f);
+		}
 		if (_vm->_cutContent) {
 			if (Game_Flag_Query(kFlagBulletBobIsReplicant)) {
 				VK_Subject_Reacts(40, -5, 14, 10);
@@ -4297,7 +4524,13 @@ void VKScript::askBulletBob(int questionId) {
 		} else {
 			VK_Subject_Reacts(30, 9, 7, -5);
 		}
-		VK_Play_Speech_Line(kActorBulletBob, 1260, 0.5f);
+		if (_vm->_cutContent) {
+			if (Game_Flag_Query(kFlagBulletBobIsReplicant)) {
+				VK_Play_Speech_Line(kActorBulletBob, 1260, 0.5f);
+			} 
+		} else {
+			VK_Play_Speech_Line(kActorBulletBob, 1260, 0.5f);
+		}
 		break;
 	case 7480:                          // Medium 02
 		if (_vm->_cutContent) {
@@ -4358,7 +4591,15 @@ void VKScript::askBulletBob(int questionId) {
 		break;
 	case 7495:                          // Medium 05
 		VK_Eye_Animates(2);
-		VK_Play_Speech_Line(kActorBulletBob, 1320, 0.5f);
+		if (_vm->_cutContent) {
+			if (Game_Flag_Query(kFlagBulletBobIsReplicant)) {
+				VK_Play_Speech_Line(kActorBulletBob, 1320, 0.5f); //14-1320.AUD	Good for him.			
+			} else {
+				VK_Play_Speech_Line(kActorBulletBob, 1430, 0.5f); //14-1430.AUD	Man, that takes me back.
+			}
+		} else {
+			VK_Play_Speech_Line(kActorBulletBob, 1320, 0.5f); //14-1320.AUD	Good for him.
+		}
 		if (_vm->_cutContent) {
 			if (Game_Flag_Query(kFlagBulletBobIsReplicant)) {
 				VK_Subject_Reacts(40, -5, 14, 10);
@@ -4431,13 +4672,16 @@ void VKScript::askBulletBob(int questionId) {
 		VK_Play_Speech_Line(kActorMcCoy, 8280, 0.5f);
 		VK_Eye_Animates(1);
 		VK_Play_Speech_Line(kActorBulletBob, 1380, 0.5f);
-		VK_Play_Speech_Line(kActorBulletBob, 1390, 0.5f);
 		if (_vm->_cutContent) {
-			if (Player_Query_Agenda() != kPlayerAgendaSurly 
-			&& Player_Query_Agenda() != kPlayerAgendaErratic) {
-				VK_Play_Speech_Line(kActorMcCoy, 8285, 0.5f);
+			if (!Game_Flag_Query(kFlagBulletBobIsReplicant)) {
+				VK_Play_Speech_Line(kActorBulletBob, 1390, 0.5f);
+				if (Player_Query_Agenda() != kPlayerAgendaSurly 
+				&& Player_Query_Agenda() != kPlayerAgendaErratic) {
+					VK_Play_Speech_Line(kActorMcCoy, 8285, 0.5f);
+				}
 			}
 		} else {
+			VK_Play_Speech_Line(kActorBulletBob, 1390, 0.5f);
 			VK_Play_Speech_Line(kActorMcCoy, 8285, 0.5f);
 		}
 		break;
@@ -4532,7 +4776,13 @@ void VKScript::askBulletBob(int questionId) {
 		VK_Play_Speech_Line(kActorBulletBob, 1490, 0.5f);
 		break;
 	case 7585:                          // Medium 13
-		VK_Play_Speech_Line(kActorBulletBob, 1500, 0.5f);
+		if (_vm->_cutContent) {
+			if (!Game_Flag_Query(kFlagBulletBobIsReplicant)) {
+				VK_Play_Speech_Line(kActorBulletBob, 1500, 0.5f);
+			}
+		} else {
+			VK_Play_Speech_Line(kActorBulletBob, 1500, 0.5f);
+		}
 		VK_Play_Speech_Line(kActorMcCoy, 7590, 0.5f);
 		VK_Eye_Animates(1);
 		if (_vm->_cutContent) {
@@ -4545,14 +4795,21 @@ void VKScript::askBulletBob(int questionId) {
 			VK_Subject_Reacts(10, 8, 7, 5);
 		}
 		if (_vm->_cutContent) {
-			if (Actor_Query_Friendliness_To_Other(kActorBulletBob, kActorMcCoy) < 50
-			|| !Game_Flag_Query(kFlagBulletBobIsReplicant)) {
+			if (!Game_Flag_Query(kFlagBulletBobIsReplicant)) {
 				VK_Play_Speech_Line(kActorBulletBob, 1510, 0.5f);
 			}
 		} else {
 			VK_Play_Speech_Line(kActorBulletBob, 1510, 0.5f);
 		}
-		VK_Play_Speech_Line(kActorBulletBob, 1520, 0.5f);
+		if (_vm->_cutContent) {
+			if (!Game_Flag_Query(kFlagBulletBobIsReplicant)) {
+				VK_Play_Speech_Line(kActorBulletBob, 1520, 0.5f);
+			} else {
+				VK_Play_Speech_Line(kActorBulletBob, 1580, 0.5f); //14-1580.AUD	I'd burn the book.
+			}
+		} else {
+			VK_Play_Speech_Line(kActorBulletBob, 1520, 0.5f);
+		}
 		break;
 	case 7595:                          // Medium 14
 		VK_Eye_Animates(1);
@@ -4586,7 +4843,15 @@ void VKScript::askBulletBob(int questionId) {
 		} else {
 			VK_Subject_Reacts(20, 8, 8, 5);
 		}
-		VK_Play_Speech_Line(kActorBulletBob, 1540, 0.5f);
+		if (_vm->_cutContent) {
+			if (Game_Flag_Query(kFlagBulletBobIsReplicant)) {
+				VK_Play_Speech_Line(kActorBulletBob, 1540, 0.5f); //14-1540.AUD	I'd beat some sense into him, and then toss the collection.
+			} else {
+				VK_Play_Speech_Line(kActorBulletBob, 1640, 0.5f); //14-1640.AUD	Scary.
+			}
+		} else {
+			VK_Play_Speech_Line(kActorBulletBob, 1540, 0.5f); //14-1540.AUD	I'd beat some sense into him, and then toss the collection.
+		}
 		break;
 	case 7605:                          // High 01
 		VK_Eye_Animates(1);
